@@ -1,18 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import "./Header.css";
 
 function Header() {
   return (
-    <div class="container header-container">
+    <div className="container-fluid header-container">
       <text>aut-bot</text>
-      <ul>
-          <li>
-              <Link to="/">Login</Link>
-          </li>
-          <li>
-              <Link to="/home">Home</Link>
-          </li>
-      </ul>
+      <div className="header-item">
+        <Link to="/">Login</Link>
+      </div>
+      <div className="header-item">
+        <Link to="/home">Home</Link>
+      </div>
     </div>
   );
 }

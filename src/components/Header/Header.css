@@ -1,6 +1,10 @@
 .header-container {
+    display: flex;
+    background-color: #f5f5f5;
     flex-direction: row;
-    justify-content: space-evenly;
-    align-items: center;
-    background-color: "green";
+    justify-content: space-around;
+}
+
+.header-item {
+    display: inline-block;
 }
