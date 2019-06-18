@@ -1,0 +1,41 @@
+@import './colors';
+@import './fonts';
+
+// Bootstrap config options
+$enable-rounded: true !default;
+$enable-shadows: true !default;
+$enable-gradients: false !default;
+$enable-transitions: true !default;
+$enable-hover-media-query: false !default;
+$enable-grid-classes: true !default;
+$enable-print-styles: true !default;
+
+// Grid containers
+$container-max-widths: (
+    sm: 540px,
+    md: 640px,
+    lg: 960px,
+    xl: 1140px,
+) !default;
+
+// Body
+$body-bg: $-light !default;
+$body-color: $-dark !default;
+$inverse-bg: $-primary !default;
+$inverse-color: $-light !default;
+
+// Links
+$link-decoration: none !default;
+$link-hover-decoration: none !default;
+
+// Base Bootstrap
+@import './bootstrap';
+
+* {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+hr {
+    border-top: 1px solid rgba($-dark, 0.25);
+}
