@@ -1,10 +1,33 @@
-.header-container {
-    display: flex;
-    background-color: #f5f5f5;
-    flex-direction: row;
-    justify-content: space-around;
-}
+@import '../../scss/colors';
 
-.header-item {
-    display: inline-block;
+.navbar {
+    padding: {
+        top: 0.75rem;
+        bottom: 0.85rem;
+    }
+
+    .navbar-brand {
+        font-weight: 600;
+        border: 2px $-light solid;
+        margin: {
+            right: 1.25rem;
+        }
+        padding: {
+            top: 0;
+            bottom: 3px;
+            left: 10px;
+            right: 10px;
+        }
+    }
+    
+    .nav-item {
+        a {
+            color: $-light;
+            &:hover,
+            &:active,
+            &.active {
+                color: rgba($-light, 0.8);
+            }
+        }
+    }
 }

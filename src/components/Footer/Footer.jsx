@@ -4,7 +4,7 @@ import "./Footer.scss";
 function Footer() {
   return (
     <div className="footer">
-      <text>made by johnyburd and lucas smile</text>
+      <p>made by johnyburd and lucas smile <em>(and me smile)</em></p>
     </div>
   );
 }
