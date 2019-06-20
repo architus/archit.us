@@ -32,6 +32,11 @@ function tryLoadAuthToken() {
   if (urlCode !== "") {
     authToken = urlCode;
     window.localStorage.setItem("authToken", urlCode);
+    window.history.replaceState(
+      {},
+      window.document.title,
+      `${window.location.protocol}//${window.location.host}${window.location.pathname}`
+    );
   }
   // 2. from local storage
   else {

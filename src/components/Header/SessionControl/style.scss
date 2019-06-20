@@ -1,0 +1,15 @@
+@import '../../../scss/colors';
+
+#session-dropdown {
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+
+    &:hover {
+        background-color: rgba($-light, 0.075);
+    }
+
+    &:active {
+        background-color: rgba($-light, 0.15);
+    }
+}
