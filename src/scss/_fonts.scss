@@ -31,6 +31,7 @@ $headings-font-family: inherit !default;
 $headings-font-weight: 500 !default;
 $headings-line-height: 1.1 !default;
 $headings-letter-spacing: 0.025rem !default;
+$headings-margin-bottom: 1.5rem !default;
 $headings-color: inherit !default;
 
 h1,
@@ -46,6 +47,7 @@ h6,
 .h5,
 .h6 {
     letter-spacing: $headings-letter-spacing;
+    margin-bottom: $headings-margin-bottom;
 }
 
 $display1-size: 8rem !default;

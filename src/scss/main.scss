@@ -30,6 +30,7 @@ $link-hover-decoration: none !default;
 
 // Base Bootstrap
 @import './bootstrap';
+@import 'node_modules/bootstrap/scss/mixins/buttons';
 
 * {
     -webkit-font-smoothing: antialiased;
@@ -39,3 +40,5 @@ $link-hover-decoration: none !default;
 hr {
     border-top: 1px solid rgba($-dark, 0.25);
 }
+
+.btn-discord { @include button-variant($discord, lighten($discord, 5%)); }
