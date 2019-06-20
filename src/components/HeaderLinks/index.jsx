@@ -1,4 +1,8 @@
+
 import React from "react";
+import { mapStateToLoggedIn } from "../../util";
+import { connect } from "react-redux";
+
 import NavLink from "../NavLink";
 
 const LoggedInLinks = () => (
@@ -6,14 +10,15 @@ const LoggedInLinks = () => (
 )
 
 const LoggedOutLinks = () => (
-  <NavLink to="/" exact>Login</NavLink>
+  <NavLink to="/login" exact>Login</NavLink>
 );
 
-const NavLinkList = ({ loggedIn }) => {
+const HeaderLinks = ({ loggedIn }) => {
   return (
     <ul className="navbar-nav">
       {loggedIn ? <LoggedInLinks /> : <LoggedOutLinks />}
     </ul>
   );
 };
-export default NavLinkList;
+
+export default connect(mapStateToLoggedIn)(HeaderLinks);

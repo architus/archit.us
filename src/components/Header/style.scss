@@ -1,10 +1,13 @@
 @import '../../scss/colors';
+@import '../../scss/theme';
 
 .navbar {
     padding: {
         top: 0.75rem;
         bottom: 0.85rem;
     }
+    box-shadow: $drop-shadow-slight;
+    border-bottom: 1px solid darken($-primary, 10%);
 
     .navbar-brand {
         font-weight: 600;
@@ -20,16 +23,14 @@
         }
     }
     
-    .nav-item {
-        a {
-            color: $-light;
-            &:hover,
-            &:active {
-                color: rgba($-light, 0.8);
-            }
-            &.active {
-                font-weight: 600;
-            }
+    .nav-link {
+        color: $-light;
+        &:hover,
+        &:active {
+            opacity: 0.8;
+        }
+        &.active {
+            font-weight: 600;
         }
     }
 }
