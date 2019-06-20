@@ -24,9 +24,11 @@
         a {
             color: $-light;
             &:hover,
-            &:active,
-            &.active {
+            &:active {
                 color: rgba($-light, 0.8);
+            }
+            &.active {
+                font-weight: 600;
             }
         }
     }

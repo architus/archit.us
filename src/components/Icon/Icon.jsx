@@ -7,25 +7,23 @@ import { faDiscord } from "@fortawesome/free-brands-svg-icons";
 // } from '@fortawesome/free-solid-svg-icons'
 library.add(faDiscord);
 const typeResolutionMap = {
-  fab: [
-    "discord"
-  ]
+  fab: ["discord"]
 };
 
 const baseStyle = { display: "inline-block", height: "1em", width: "1em" };
 const resolveTypeClass = name => {
-  let foundClass = 'fas' // default
+  let foundClass = "fas"; // default
   for (var typeClass in typeResolutionMap) {
     if (typeResolutionMap[typeClass].includes(name)) {
-      foundClass = typeClass
-      break
+      foundClass = typeClass;
+      break;
     }
   }
-  return foundClass
+  return foundClass;
 };
 const resolveIcon = name => {
-  return [resolveTypeClass(name), name]
-}
+  return [resolveTypeClass(name), name];
+};
 
 const Icon = ({ className, name }) => {
   return (
