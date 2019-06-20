@@ -5,12 +5,12 @@ import { mapStateToLoggedIn } from "../../util";
 import { Route } from "react-router-dom";
 import Login from "../../pages/Login";
 
-const RestrictedRoute = ({ loggedIn, component, ...rest }) => {
+const RestrictedRoute = ({ loggedIn, component: Component, ...rest }) => {
   return (
     <Route
       {...rest}
-      render={({ loggedIn }) =>
-        loggedIn ? component : <Login fromRestricted={true} />
+      render={() =>
+        loggedIn ? <Component /> : <Login fromRestricted={true} />
       }
     />
   );

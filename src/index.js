@@ -1,12 +1,21 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./scss/main.scss";
-import App from "./App";
 import { createStore } from "redux";
-import reducer from "./store/reducers";
+import { store as reducer, initialState } from "./store/reducers";
+import { getUrlParameter } from "./util";
+
+import App from "./App";
 import { Provider } from "react-redux";
 
-const store = createStore(reducer);
+import "./scss/main.scss";
+
+const authToken = tryLoadAuthToken();
+const initialStoreState =
+  authToken !== null
+    ? Object.assign({}, initialState, { authToken })
+    : initialState;
+const store = createStore(reducer, initialStoreState);
+window.store = store;
 
 ReactDOM.render(
   <Provider store={store}>
@@ -14,3 +23,22 @@ ReactDOM.render(
   </Provider>,
   document.getElementById("root")
 );
+
+function tryLoadAuthToken() {
+  // Load auth token:
+  let authToken = null;
+  // 1. from URL param
+  const urlCode = getUrlParameter("code");
+  if (urlCode !== "") {
+    authToken = urlCode;
+    window.localStorage.setItem("authToken", urlCode);
+  }
+  // 2. from local storage
+  else {
+    const fromStorage = window.localStorage.getItem("authToken");
+    if (fromStorage !== null) {
+      authToken = fromStorage;
+    }
+  }
+  return authToken;
+}

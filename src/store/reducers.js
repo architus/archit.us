@@ -1,10 +1,10 @@
 import { LOAD_AUTH_TOKEN } from "./actions";
 
-const initialState = {
+export const initialState = {
   authToken: ""
 };
 
-export default function store(state = initialState, action) {
+export function store(state = initialState, action) {
   switch (action.type) {
     case LOAD_AUTH_TOKEN:
       return Object.assign({}, state, {
