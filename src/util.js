@@ -29,3 +29,23 @@ export const multiplyDimension = (dimension, scalar) => {
     }`;
   }
 };
+
+export const isNil = value => value == null;
+
+export const isEmptyOrNil = string =>
+  isNil(string) || string.toString().trim() === "";
+
+export const processIfNotEmptyOrNil = (string, apply) =>
+  isEmptyOrNil(string) ? string : apply(string);
+
+export const constructAvatarUrl = (clientId, hash, size) =>
+  !isEmptyOrNil(clientId) && !isEmptyOrNil(hash) && !isNil(size)
+    ? `https://cdn.discordapp.com/avatars/${clientId}/${hash}.png?size=${size}`
+    : "";
+
+export const clearUrlQueries = () =>
+  window.history.replaceState(
+    {},
+    window.document.title,
+    `${window.location.protocol}//${window.location.host}${window.location.pathname}`
+  );

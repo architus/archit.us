@@ -1,34 +1,38 @@
 import React from "react";
 import classNames from "classnames";
 import PropTypes from "prop-types";
+import { processIfNotEmptyOrNil, isNil, constructAvatarUrl } from "../../util";
+
 import Placeholder from "../Placeholder";
-import PlaceholderText from "../PlaceholderText";
 
 import "./style.scss";
+
+const avatarSize = 40;
 
 function UserDisplay({
   className,
   avatarUrl,
+  clientId,
+  avatarHash,
   username,
   discriminator,
   ...rest
 }) {
+  const effectiveAvatarUrl = !isNil(avatarUrl)
+    ? avatarUrl
+    : constructAvatarUrl(clientId, avatarHash, avatarSize);
   return (
     <div className={classNames("user-display", className)} {...rest}>
-      <Avatar avatarUrl={avatarUrl} />
+      <Avatar avatarUrl={effectiveAvatarUrl} />
       <div>
-        <PlaceholderText
+        <Placeholder.Text
           text={username}
           className="username"
           width={120}
           light
         />
-        <PlaceholderText
-          text={
-            discriminator && discriminator.toString().trim()
-              ? `#${discriminator}`
-              : null
-          }
+        <Placeholder.Text
+          text={processIfNotEmptyOrNil(discriminator, d => `#${d}`)}
           className="discriminator"
           size="0.9em"
           width={60}
@@ -44,6 +48,8 @@ export default UserDisplay;
 UserDisplay.propTypes = {
   className: PropTypes.string,
   avatarUrl: PropTypes.string,
+  clientId: PropTypes.string,
+  avatarHash: PropTypes.string,
   username: PropTypes.string,
   discriminator: PropTypes.number
 };
@@ -52,22 +58,26 @@ UserDisplay.propTypes = {
 // ? Helper components
 // ? =================
 
-const Avatar = ({ avatarUrl, className, ...rest }) =>
-  avatarUrl && avatarUrl.trim() ? (
+const Avatar = ({ avatarUrl, className, ...rest }) => (
+  <Placeholder.Custom
+    value={avatarUrl}
+    className={classNames("avatar", className)}
+    width={avatarSize}
+    light
+    circle
+  >
     <div
-      className={classNames("avatar avatar-image", className)}
-      style={{ backgroundImage: `url(${avatarUrl})` }}
+      className={classNames("avatar-image", className)}
+      style={{
+        backgroundImage: `url(${avatarUrl})`,
+        width: `${avatarSize}px`,
+        height: `${avatarSize}px`
+      }}
       {...rest}
     />
-  ) : (
-    <Placeholder
-      width={40}
-      className={classNames("avatar", className)}
-      light
-      circle
-      {...rest}
-    />
-  );
+  </Placeholder.Custom>
+);
+
 Avatar.propTypes = {
   avatarUrl: PropTypes.string,
   className: PropTypes.string

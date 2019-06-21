@@ -25,13 +25,3 @@ $light-highlight-color: rgba($-light, 0.3);
         background-image: linear-gradient(to right, $light-color 4%, $light-highlight-color 25%, $light-color 36%);
     }
 }
-
-
-@keyframes shimmer {
-    0% {
-      background-position: -1000px 0;
-    }
-    100% {
-      background-position: 1000px 0;
-    }
-  }

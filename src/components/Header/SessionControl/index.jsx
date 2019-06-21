@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { mapStateToLoggedIn } from "../../../util";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
@@ -50,3 +51,9 @@ class SessionControl extends React.Component {
 }
 
 export default connect(mapStateToLoggedIn)(withRouter(SessionControl));
+
+SessionControl.propTypes = {
+  history: PropTypes.object,
+  dispatch: PropTypes.func,
+  loggedIn: PropTypes.bool.isRequired
+};
