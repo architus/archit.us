@@ -1,5 +1,6 @@
 @import '../../scss/colors';
 @import '../../scss/theme';
+@import '../../scss/media';
 
 .navbar {
     padding: {
@@ -8,6 +9,10 @@
     }
     box-shadow: $drop-shadow-slight;
     border-bottom: 1px solid darken($-primary, 10%);
+
+    @include respond-above(sm) {
+        height: 68px;
+    }
 
     .navbar-brand {
         font-weight: 600;
@@ -22,7 +27,7 @@
             right: 10px;
         }
     }
-    
+
     .nav-link {
         color: $-light;
         &:hover,

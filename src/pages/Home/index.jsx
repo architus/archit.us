@@ -1,10 +1,11 @@
 import React from "react";
+import { Container } from "react-bootstrap";
 
 function Home() {
   return (
-    <div>
-      <p>HOME SCREEN</p>
-    </div>
+    <Container className="py-4">
+      <h2>Home</h2>
+    </Container>
   );
 }
 

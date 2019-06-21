@@ -1,0 +1,21 @@
+@import '../../scss/colors';
+@import '../../scss/animation';
+
+.placeholder-content {
+    background-color: $-dark;
+    display: block;
+    opacity: .1;
+    animation: pulsing 1.5s infinite;
+
+    &.inline {
+        display: inline-block;
+    }
+
+    &.shape-circle {
+        border-radius: 200rem;
+    }
+
+    &.light {
+        background-color: $-light;
+    }
+}

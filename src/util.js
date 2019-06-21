@@ -13,3 +13,6 @@ export const getUrlParameter = name => {
     ? ""
     : decodeURIComponent(results[1].replace(/\+/g, " "));
 };
+
+export const addMissingUnit = dimension =>
+  isNaN(dimension) ? dimension : `${dimension}px`;

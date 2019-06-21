@@ -28,11 +28,9 @@ class SessionControl extends React.Component {
     const { loggedIn } = this.props;
 
     return loggedIn ? (
-      <Dropdown>
-        <Dropdown.Toggle id="session-dropdown">
-          <span className="mr-2">
-            <UserDisplay />
-          </span>
+      <Dropdown className="session-dropdown">
+        <Dropdown.Toggle id="session-dropdown-button">
+          <UserDisplay />
         </Dropdown.Toggle>
         <Dropdown.Menu alignRight>
           <Dropdown.Item onClick={this.signOut}>Sign Out</Dropdown.Item>
