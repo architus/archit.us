@@ -1,3 +1,13 @@
+@keyframes shimmer {
+    0% {
+        background-position: -468px 0;
+    }
+
+    100% {
+        background-position: 468px 0;
+    }
+}
+
 @keyframes pulsing {
     0% {
         opacity: .1;

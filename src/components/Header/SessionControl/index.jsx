@@ -30,7 +30,7 @@ class SessionControl extends React.Component {
     return loggedIn ? (
       <Dropdown className="session-dropdown">
         <Dropdown.Toggle id="session-dropdown-button">
-          <UserDisplay />
+          <UserDisplay className="mr-2" />
         </Dropdown.Toggle>
         <Dropdown.Menu alignRight>
           <Dropdown.Item onClick={this.signOut}>Sign Out</Dropdown.Item>

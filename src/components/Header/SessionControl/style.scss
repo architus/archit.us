@@ -3,7 +3,7 @@
 
 .session-dropdown {
     #session-dropdown-button {
-        background-color: transparent;
+        background-color: rgba($-dark, 0.1);
         border: none;
         box-shadow: none;
 
@@ -12,15 +12,15 @@
         }
 
         &:hover {
-            background-color: rgba($-light, 0.075);
+            background-color: rgba($-dark, 0.2);
         }
 
         &:active {
-            background-color: rgba($-light, 0.15);
+            background-color: rgba($-dark, 0.25);
         }
 
         &:focus {
-            box-shadow: 0 0 0 0.2rem rgba($-light, 0.1);
+            box-shadow: 0 0 0 0.2rem rgba($-dark, 0.2);
         }
     }
 

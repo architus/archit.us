@@ -5,9 +5,9 @@ import { addMissingUnit } from "../../util";
 
 import "./style.scss";
 
-function PlaceholderContent({
-  shape = "rect",
-  inline = false,
+function Placeholder({
+  circle = false,
+  block = false,
   light = false,
   width,
   style,
@@ -18,15 +18,13 @@ function PlaceholderContent({
   return (
     <span
       className={classNames(
-        "placeholder-content",
-        { inline, light },
-        `shape-${shape}`,
+        "placeholder",
+        { inline: !block, light, circle },
         className
       )}
       style={{
         width: addMissingUnit(width),
-        height:
-          shape === "circle" ? addMissingUnit(width) : addMissingUnit(height),
+        height: circle ? addMissingUnit(width) : addMissingUnit(height),
         ...style
       }}
       {...rest}
@@ -34,11 +32,11 @@ function PlaceholderContent({
   );
 }
 
-export default PlaceholderContent;
+export default Placeholder;
 
-PlaceholderContent.propTypes = {
-  shape: PropTypes.string,
-  inline: PropTypes.bool,
+Placeholder.propTypes = {
+  circle: PropTypes.bool,
+  block: PropTypes.bool,
   light: PropTypes.bool,
   className: PropTypes.string,
   style: PropTypes.object,

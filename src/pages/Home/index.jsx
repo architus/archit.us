@@ -3,7 +3,7 @@ import { Container } from "react-bootstrap";
 
 function Home() {
   return (
-    <Container className="py-4">
+    <Container className="py-5">
       <h2>Home</h2>
     </Container>
   );
