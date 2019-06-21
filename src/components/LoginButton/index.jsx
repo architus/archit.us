@@ -1,6 +1,7 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { mapStateToLoggedIn } from "../../util";
+import { mapStateToLoggedIn } from "../../store/reducers/session";
 
 import Icon from "../Icon";
 import { Button } from "react-bootstrap";
@@ -27,3 +28,7 @@ function LoginButton({ loggedIn }) {
 }
 
 export default connect(mapStateToLoggedIn)(LoginButton);
+
+LoginButton.propTypes = {
+  loggedIn: PropTypes.bool
+};

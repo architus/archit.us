@@ -1,7 +1,8 @@
 import React from "react";
-import { mapStateToLoggedIn } from "../../../util";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import classNames from "classnames";
+import { mapStateToLoggedIn } from "../../../store/reducers/session";
 
 import NavLink from "../../NavLink";
 
@@ -22,3 +23,8 @@ const HeaderLinks = ({ loggedIn, className, ...rest }) => {
 };
 
 export default connect(mapStateToLoggedIn)(HeaderLinks);
+
+HeaderLinks.propTypes = {
+  loggedIn: PropTypes.bool.isRequired,
+  className: PropTypes.string
+};

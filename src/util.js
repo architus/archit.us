@@ -1,9 +1,3 @@
-export const mapStateToLoggedIn = state => {
-  return {
-    loggedIn: state.authToken !== ""
-  };
-};
-
 // Sourced from A-Frame VR toolkit
 export const getUrlParameter = name => {
   name = name.replace(/[[]/, "\\[").replace(/[\]]/, "\\]");
@@ -49,3 +43,23 @@ export const clearUrlQueries = () =>
     window.document.title,
     `${window.location.protocol}//${window.location.host}${window.location.pathname}`
   );
+
+// probably will be enough
+export const HttpVerbs = {
+  GET: "GET",
+  POST: "POST",
+  PUT: "PUT",
+  PATCH: "PATCH",
+  DELETE: "DELETE"
+};
+
+export const pick = (sourceObject, keys) => {
+  const newObject = {};
+  keys.forEach(key => {
+    newObject[key] = sourceObject[key];
+  });
+  return newObject;
+};
+
+const logPrefix = "Aut-bot App";
+export const log = message => console.log(`[${logPrefix}] ${message}`);

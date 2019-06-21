@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { mapStateToLoggedIn } from "../../../util";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { signOut } from "../../../store/actions";
+import { mapStateToLoggedIn } from "../../../store/reducers/session";
 
 import { NavLink as RouterLink } from "react-router-dom";
 import { Dropdown } from "react-bootstrap";
@@ -20,9 +20,7 @@ class SessionControl extends React.Component {
   signOut(e) {
     const { history, dispatch } = this.props;
     e.preventDefault();
-    window.localStorage.clear();
-    dispatch(signOut());
-    history.push("/");
+    dispatch(signOut(history));
   }
 
   render() {

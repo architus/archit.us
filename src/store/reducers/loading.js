@@ -1,0 +1,26 @@
+import * as ApiLabels from "../api/labels";
+import { API_START, API_END, API_ERROR } from "../api/actions";
+
+export const initial = Object.fromEntries(
+  Object.keys(ApiLabels).map(label => [label, false])
+);
+
+export function reducer(state = initial, action) {
+  switch (action.type) {
+    case API_START:
+      return {
+        ...state,
+        [action.payload]: true
+      };
+
+    case API_ERROR:
+    case API_END:
+      return {
+        ...state,
+        [action.payload]: false
+      };
+
+    default:
+      return state;
+  }
+}
