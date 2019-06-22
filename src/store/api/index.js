@@ -1,11 +1,15 @@
 import axios from "axios";
 import { API } from "../actions";
-import { HttpVerbs } from "../../util";
+import { HttpVerbs, isNil } from "../../util";
 import { apiError, apiStart, apiEnd } from "./actions";
 
 // axios default configs
 axios.defaults.baseURL = process.env.REACT_APP_BASE_URL || "";
 axios.defaults.headers.common["Content-Type"] = "application/json";
+
+const dispatchNonNil = (dispatch, action) => {
+  if (!isNil(action)) dispatch(action);
+};
 
 const ApiMiddleware = ({ dispatch }) => next => action => {
   next(action);
@@ -26,7 +30,7 @@ const ApiMiddleware = ({ dispatch }) => next => action => {
     : "data";
 
   if (label) {
-    dispatch(apiStart(label));
+    dispatchNonNil(dispatch, apiStart(label));
   }
 
   const request = {
@@ -35,19 +39,18 @@ const ApiMiddleware = ({ dispatch }) => next => action => {
     headers,
     [dataOrParams]: data
   };
-  console.log(request);
 
   axios(request)
     .then(({ data }) => {
-      dispatch(onSuccess(data));
+      dispatchNonNil(dispatch, onSuccess(data));
     })
     .catch(error => {
-      dispatch(apiError(error));
-      dispatch(onFailure(error));
+      dispatchNonNil(dispatch, apiError(error));
+      dispatchNonNil(dispatch, onFailure(error));
     })
     .finally(() => {
       if (label) {
-        dispatch(apiEnd(label));
+        dispatchNonNil(dispatch, apiEnd(label));
       }
     });
 };

@@ -17,7 +17,6 @@ export const multiplyDimension = (dimension, scalar) => {
   else {
     const dimensionRegex = /^([0-9]*\.?[0-9]*)([A-Za-z%]+)$/g;
     const matches = dimensionRegex.exec(dimension);
-    console.log({ dimension, scalar, matches });
     return `${(Number.parseFloat(matches[1]) * scalar).toFixed(3)}${
       matches[2]
     }`;

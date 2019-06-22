@@ -6,9 +6,3 @@
 
 [build]
   environment = { REACT_APP_BASE_URL = "https://aut-bot.com" }
-
-[[headers]]
-  for = "/*"
-
-  [headers.values]
-    Access-Control-Allow-Origin = "https://api.aut-bot.com"

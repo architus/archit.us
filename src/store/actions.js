@@ -1,4 +1,4 @@
-import { HttpVerbs, pick } from "../util";
+import { HttpVerbs, pick, log } from "../util";
 import { TOKEN_EXCHANGE, IDENTIFY_SESSION } from "./api/labels";
 
 export const SIGN_OUT = "SIGN_OUT";
@@ -13,8 +13,8 @@ function apiAction({
   url = "",
   method = HttpVerbs.GET,
   data = null,
-  onSuccess = () => {},
-  onFailure = () => {},
+  onSuccess = () => null,
+  onFailure = () => null,
   label = "",
   ...rest
 }) {
@@ -27,12 +27,12 @@ function apiAction({
       onSuccess,
       onFailure,
       label,
-      rest
+      ...rest
     }
   };
 }
 
-function authApiAction({ headers, accessToken, ...rest }) {
+function authApiAction(accessToken, { headers, ...rest }) {
   return apiAction({
     headers: { ...headers, Authorization: accessToken },
     ...rest
@@ -44,6 +44,7 @@ function authApiAction({ headers, accessToken, ...rest }) {
 // ? =======
 
 export function signOut(history) {
+  log("Signed out");
   return {
     type: SIGN_OUT,
     payload: history
@@ -51,14 +52,12 @@ export function signOut(history) {
 }
 
 export function exchangeTokens(authCode) {
+  log("Initiating token exchange");
   return apiAction({
     url: `https://api.aut-bot.com/token_exchange`,
     method: HttpVerbs.POST,
     data: {
       code: authCode
-    },
-    headers: {
-      "Access-Control-Allow-Origin": "*"
     },
     onSuccess: data => loadSession({ ...data, newToken: true }),
     onFailure: signOut,
@@ -67,19 +66,21 @@ export function exchangeTokens(authCode) {
 }
 
 export function identifySession(accessToken) {
-  return authApiAction({
+  log("Identifying session");
+  return authApiAction(accessToken, {
     url: "https://api.aut-bot.com/identify",
-    accessToken,
     onSuccess: data => loadSession({ ...data, newToken: false }),
-    onFailure: signOut,
+    // TODO re-enable
+    // onFailure: signOut,
     label: IDENTIFY_SESSION
   });
 }
 
 export function loadSession(data) {
-  const payload = pick(data, [
-    "accessToken",
-    "expiresIn",
+  log("Loading session data from network");
+  const { access_token, expires_in, ...rest } = pick(data, [
+    "access_token",
+    "expires_in",
     "newToken",
     "username",
     "discriminator",
@@ -88,6 +89,10 @@ export function loadSession(data) {
   ]);
   return {
     type: LOAD_SESSION,
-    payload
+    payload: {
+      ...rest,
+      accessToken: access_token,
+      expiresIn: expires_in
+    }
   };
 }

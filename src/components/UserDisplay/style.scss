@@ -11,12 +11,11 @@
     .avatar {
         margin-right: 0.6rem;
 
-        &.avatar-image {
+        &.avatar-image, .avatar-image {
             background-position: center;
             background-size: cover;
             background-repeat: no-repeat;
             background-color: rgba($-light, 0.15);
-            border-radius: 200rem;
             box-shadow: 0 0 4px rgba(black, 0.3);
         }
     }

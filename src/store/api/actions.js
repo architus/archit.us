@@ -1,3 +1,5 @@
+import { log } from "../../util";
+
 export const API_START = "API_START";
 export const API_END = "API_END";
 export const API_ERROR = "API_ERROR";
@@ -12,7 +14,10 @@ export const apiEnd = label => ({
   payload: label
 });
 
-export const apiError = error => ({
-  type: API_ERROR,
-  error
-});
+export const apiError = error => {
+  log(error);
+  return {
+    type: API_ERROR,
+    error
+  };
+};

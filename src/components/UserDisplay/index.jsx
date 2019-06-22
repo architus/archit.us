@@ -28,14 +28,14 @@ function UserDisplay({
         <Placeholder.Text
           text={username}
           className="username"
-          width={120}
+          width={90}
           light
         />
         <Placeholder.Text
           text={processIfNotEmptyOrNil(discriminator, d => `#${d}`)}
           className="discriminator"
           size="0.9em"
-          width={60}
+          width={40}
           light
         />
       </div>
@@ -51,7 +51,7 @@ UserDisplay.propTypes = {
   clientId: PropTypes.string,
   avatarHash: PropTypes.string,
   username: PropTypes.string,
-  discriminator: PropTypes.number
+  discriminator: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 };
 
 // ? =================
@@ -63,8 +63,8 @@ const Avatar = ({ avatarUrl, className, ...rest }) => (
     value={avatarUrl}
     className={classNames("avatar", className)}
     width={avatarSize}
+    height={avatarSize}
     light
-    circle
   >
     <div
       className={classNames("avatar-image", className)}

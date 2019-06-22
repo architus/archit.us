@@ -12,8 +12,6 @@ const store = createStore(
   { ...initialState, session: tryLoadSession() },
   applyMiddleware(ApiMiddleware, SagaMiddleware)
 );
-// TODO remove
-window.store = store;
 export default store;
 
 SagaMiddleware.run(saga);

@@ -6,14 +6,14 @@ import {
   log
 } from "../../util";
 
-const LOCAL_STORAGE_KEY = "session";
+export const LOCAL_STORAGE_KEY = "session";
 
 export const initial = {
   loggedIn: false,
   connectedToDiscord: false,
   discordAuthCode: "",
   accessToken: "",
-  expiresAt: ""
+  expiresAt: null
 };
 
 export const mapStateToLoggedIn = state => {
@@ -27,6 +27,7 @@ export const tryLoadSession = () => {
   const urlCode = getUrlParameter("code");
   if (!isEmptyOrNil(urlCode) && window.location.pathname === "/home") {
     clearUrlQueries();
+    log("Loaded authorization code from discord oauth");
     // State will initiate token exchange when /home is loaded
     return {
       ...initial,
@@ -38,22 +39,32 @@ export const tryLoadSession = () => {
   // Load session from local storage
   const storageSession = window.localStorage.getItem(LOCAL_STORAGE_KEY);
   if (!isEmptyOrNil(storageSession)) {
-    const { expiresAtString, accessToken } = JSON.parse(storageSession);
-    const expiresAt = new Date(expiresAtString);
-    const now = new Date();
-    if (expiresAt - now < 0) {
-      log("Session has expired; clearing");
-      window.localStorage.set(LOCAL_STORAGE_KEY, null);
-      return initial;
-    } else {
-      return {
-        ...initial,
-        loggedIn: true,
-        connectedToDiscord: true,
-        accessToken,
-        expiresAt
-      };
+    const { expiresAt: expiresAtString, accessToken } = JSON.parse(
+      storageSession
+    );
+
+    let expiresAt = null;
+    if (
+      !isEmptyOrNil(expiresAtString) &&
+      expiresAtString.toString().trim() !== "null"
+    ) {
+      expiresAt = new Date(expiresAtString);
+      const now = new Date();
+      if (expiresAt - now < 0) {
+        log("Session has expired; clearing");
+        window.localStorage.set(LOCAL_STORAGE_KEY, null);
+        return initial;
+      }
     }
+    log("Loaded session from local storage");
+
+    return {
+      ...initial,
+      loggedIn: true,
+      connectedToDiscord: true,
+      accessToken,
+      expiresAt
+    };
   }
 
   // Default: start un-authenticated
@@ -68,15 +79,9 @@ export function reducer(state = initial, action) {
     case LOAD_SESSION:
       // Load the new token to the session state if applicable
       let addendum = {};
-      if (action.newToken) {
-        const { expiresIn, accessToken } = action.payload;
-        let expiresAt = new Date();
-        expiresAt.setSeconds(expiresAt.getSeconds() + parseInt(expiresIn));
-        addendum = { expiresAt, accessToken };
-        window.localStorage.setItem(
-          LOCAL_STORAGE_KEY,
-          JSON.stringify(addendum)
-        );
+      if (action.payload.newToken) {
+        const { accessToken } = action.payload;
+        addendum = { accessToken };
       }
 
       const { username, discriminator, id, avatar } = action.payload;

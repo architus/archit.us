@@ -10,8 +10,8 @@ function Home() {
         <Container>
           <h1>Aut-bot Website</h1>
           <p>
-            General purpose Discord bot supporting advanced customization, custom emotes
-            for non-nitro users, and custom response commands
+            General purpose Discord bot supporting advanced customization,
+            custom emotes for non-nitro users, and custom response commands
           </p>
         </Container>
       </Jumbotron>
