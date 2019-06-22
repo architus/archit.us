@@ -18,6 +18,8 @@
     .input-border {
         margin: 0;
         border-bottom: 1px solid $discord-input-border;
+        border-top: none;
+        margin-right: 32px;
     }
 }
 
