@@ -1,0 +1,33 @@
+@import '../../../scss/colors';
+@import '../../../scss/media';
+
+.session-dropdown {
+    #session-dropdown-button {
+        background-color: rgba($-dark, 0.1);
+        border: none;
+        box-shadow: none;
+
+        &::after {
+            vertical-align: 0.1em;
+        }
+
+        &:hover {
+            background-color: rgba($-dark, 0.2);
+        }
+
+        &:active {
+            background-color: rgba($-dark, 0.25);
+        }
+
+        &:focus {
+            box-shadow: 0 0 0 0.2rem rgba($-dark, 0.2);
+        }
+    }
+
+    .dropdown-menu {
+        @include respond-below(sm) {
+            left: 0 !important;
+            right: auto !important;
+        }
+    }
+}

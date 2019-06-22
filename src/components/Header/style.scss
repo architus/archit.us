@@ -1,9 +1,17 @@
 @import '../../scss/colors';
+@import '../../scss/theme';
+@import '../../scss/media';
 
 .navbar {
     padding: {
         top: 0.75rem;
         bottom: 0.85rem;
+    }
+    box-shadow: $drop-shadow-slight;
+    border-bottom: 1px solid darken($-primary, 10%);
+
+    @include respond-above(sm) {
+        height: 68px;
     }
 
     .navbar-brand {
@@ -19,15 +27,15 @@
             right: 10px;
         }
     }
-    
-    .nav-item {
-        a {
-            color: $-light;
-            &:hover,
-            &:active,
-            &.active {
-                color: rgba($-light, 0.8);
-            }
+
+    .nav-link {
+        color: $-light;
+        &:hover,
+        &:active {
+            opacity: 0.8;
+        }
+        &.active {
+            font-weight: 600;
         }
     }
 }

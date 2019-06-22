@@ -1,5 +1,6 @@
 @import './colors';
 @import './fonts';
+@import './theme';
 
 // Bootstrap config options
 $enable-rounded: true !default;
@@ -42,3 +43,13 @@ hr {
 }
 
 .btn-discord { @include button-variant($discord, lighten($discord, 5%)); }
+
+.card {
+    background-color: white;
+    padding: 2rem;
+    box-shadow: $drop-shadow;
+}
+
+button, [type="button"], [type="reset"], [type="submit"] {
+    -webkit-appearance: none;
+}

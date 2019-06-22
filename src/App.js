@@ -1,20 +1,28 @@
 import React from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
-import Header from "./components/Header/Header";
-import Footer from "./components/Footer/Footer"
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
-import Login from "./login/Login";
-import Home from "./home/Home";
+import Home from "./pages/Home";
+import Index from "./pages/Index";
+import Login from "./pages/Login";
+import NotFound from "./pages/NotFound";
+
+import Footer from "./components/Footer";
+import Header from "./components/Header";
+import RestrictedRoute from "./components/RestrictedRoute";
 
 function App() {
   return (
     <Router>
       <div>
         <Header />
-        <div>
-          <Route exact path="/" component={Login} />
-          <Route exact path="/home" component={Home} />
-        </div>
+        <main>
+          <Switch>
+            <Route exact path="/" component={Index} />
+            <Route exact path="/login" component={Login} />
+            <RestrictedRoute exact path="/home" component={Home} />
+            <Route component={NotFound} />
+          </Switch>
+        </main>
         <Footer />
       </div>
     </Router>

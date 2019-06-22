@@ -12,10 +12,10 @@ $gray-900: #212529 !default;
 $black: #000 !default;
 
 // Theme colors
-$porcelain: #F6F8F9 !default;
-$highland: #709D6C !default;
-$nevada: #626B73 !default;
-$tundora: #453E3E !default;
+$porcelain: #f6f8f9 !default;
+$linh-blue: #6496c4 !default;
+$nevada: #626b73 !default;
+$tundora: #453e3e !default;
 $mine-shaft: #222020 !default;
 $neptune: #73a3ba !default;
 $equator: #e3c75b !default;
@@ -36,7 +36,7 @@ $cyan: #00bcd4 !default;
 
 // Custom color scheme
 $theme-colors: (
-    primary: $highland,
+    primary: $linh-blue,
     secondary: $nevada,
     tertiary: $tundora,
     success: $aqua-forest,
@@ -44,7 +44,7 @@ $theme-colors: (
     warning: $equator,
     danger: $burnt-sienna,
     light: $porcelain,
-    dark: $mine-shaft,
+    dark: $mine-shaft
 ) !default;
 
 // Color aliases:
@@ -59,4 +59,4 @@ $-light: map-get($theme-colors, light);
 $-dark: map-get($theme-colors, dark);
 
 // Additional colors
-$discord: #7289DA;
+$discord: #7289da;
