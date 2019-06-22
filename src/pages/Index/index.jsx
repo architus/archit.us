@@ -16,7 +16,7 @@ function Index() {
         <Container>
           <Row as="section" className="head">
             <Col sm={6} lg={8}>
-              <h1>Aut-bot</h1>
+              <h1>aut-bot</h1>
               <p>
                 General purpose Discord bot supporting{" "}
                 <em>advanced role management</em>,{" "}
@@ -30,7 +30,7 @@ function Index() {
             <Col sm={6} lg={4}>
               <Card as="aside">
                 <h2>Getting Started</h2>
-                <p className="mb-4">Sign in to add Aut-bot to a server</p>
+                <p className="mb-4">Sign in to add aut-bot to a server</p>
                 <LoginButton />
               </Card>
             </Col>

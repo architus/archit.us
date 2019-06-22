@@ -60,7 +60,7 @@ export function exchangeTokens(authCode) {
       code: authCode
     },
     onSuccess: data => loadSession({ ...data, newToken: true }),
-    onFailure: signOut,
+    // onFailure: signOut,
     label: TOKEN_EXCHANGE
   });
 }

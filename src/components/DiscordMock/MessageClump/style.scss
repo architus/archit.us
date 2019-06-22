@@ -1,0 +1,41 @@
+@import "../../../scss/colors";
+
+.message-clump {
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid $discord-message-border;
+    padding-bottom: 1rem;
+    padding-top: 0.5rem;
+    margin-bottom: 0.75rem;
+
+    & > div:first-child {
+        flex-grow: 0;
+    }
+
+    & > div:not(:first-child) {
+        margin-left: 1.1rem;
+        flex-grow: 1;
+    }
+
+    .message-header {
+        margin-top: -0.25rem;
+
+        .username {
+            font-weight: 600;
+            margin-right: 0.6rem;
+            font-size: 1.05rem !important;
+        }
+
+        .timestamp:not(.placeholder) {
+            opacity: 0.5;
+        }
+
+        .timestamp.placeholder, .username.placeholder {
+            margin-bottom: 0.35rem;
+        }
+    }
+
+    &.clump-last {
+        border-bottom: none;
+    }
+}
