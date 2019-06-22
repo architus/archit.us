@@ -1,0 +1,23 @@
+@import "../../scss/colors";
+@import "../../scss/theme";
+
+.discord-mock {
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    padding: {
+        bottom: $window-padding - $window-padding-bottom;
+        left: $window-padding;
+    }
+    color: $discord-fg;
+
+    & > * {
+        flex-grow: 0;
+    }
+
+    .input-border {
+        margin: 0;
+        border-bottom: 1px solid $discord-input-border;
+    }
+}
+

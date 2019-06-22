@@ -45,11 +45,17 @@ hr {
 .btn-discord { @include button-variant($discord, lighten($discord, 5%)); }
 
 .card {
-    background-color: white;
+    background-color: rgba(white, 0.75);
     padding: 2rem;
-    box-shadow: $drop-shadow;
+    border-radius: $border-radius;
+    border: 1px solid rgba($-dark, 0.25);
 }
 
 button, [type="button"], [type="reset"], [type="submit"] {
     -webkit-appearance: none;
+}
+
+.jumbotron {
+    background-color: $jumbotron-background;
+    border-bottom: 1px solid rgba($-dark, 0.2);
 }

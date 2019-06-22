@@ -6,7 +6,8 @@ import Index from "./pages/Index";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 
-import Footer from "./components/Footer";
+// TODO redo this
+// import Footer from "./components/Footer";
 import Header from "./components/Header";
 import RestrictedRoute from "./components/RestrictedRoute";
 
@@ -23,7 +24,7 @@ function App() {
             <Route component={NotFound} />
           </Switch>
         </main>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </Router>
   );

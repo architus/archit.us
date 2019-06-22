@@ -1,2 +1,9 @@
+@import "./colors.scss";
+
 $drop-shadow: 0 4px 8px 0 rgba(black, 0.15);
 $drop-shadow-slight: 0 2px 8px 0 rgba(black, 0.3);
+$border-radius: 8px;
+$border-radius-sm: 4px;
+$jumbotron-background: darken($-light, 5%);
+$window-padding: 1.25rem;
+$window-padding-bottom: 0.5rem;

@@ -9,7 +9,14 @@ import "./style.scss";
 
 function Header(props) {
   return (
-    <Navbar expand="md" bg="primary" variant="dark" collapseOnSelect {...props}>
+    <Navbar
+      expand="md"
+      bg="primary"
+      variant="dark"
+      collapseOnSelect
+      {...props}
+      sticky={"top"}
+    >
       <div className="container">
         <RouterLink className="nav-link navbar-brand" to="/" exact>
           aut-bot

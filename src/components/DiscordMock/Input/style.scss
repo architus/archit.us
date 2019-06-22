@@ -1,0 +1,27 @@
+@import "../../../scss/colors";
+@import "../../../scss/theme";
+@import "../../../scss/util";
+
+.discord-input {
+    padding: {
+        top: $window-padding;
+        right: $window-padding;
+    }
+    input {
+        background-color: $discord-input-bg;
+        border-radius: $border-radius-sm;
+        border: none;
+        width: 100%;
+        height: 36px;
+        outline: none !important;
+        transition: box-shadow 0.25s;
+        padding: 0.1rem 0.75rem;
+        color: white;
+
+        &::placeholder {
+            color: rgba(white, 0.4);
+            opacity: 1;
+            font-style: italic;
+        }
+    }
+}
