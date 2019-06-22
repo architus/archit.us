@@ -1,0 +1,8 @@
+# Reroute all URLs to the React app
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[build]
+  environment = { REACT_APP_BASE_URL = "https://aut-bot.com" }

@@ -1,0 +1,19 @@
+.login {
+    .header {
+        h1 {
+            margin: {
+                bottom: 0.2rem;
+            }
+        }
+    
+        h2 {
+            font-size: 1em;
+            font-weight: 400;
+            font-style: italic;
+        }
+
+        &:last-child {
+            margin-bottom: 0!important;
+        }
+    }
+}
