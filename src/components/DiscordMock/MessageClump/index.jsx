@@ -16,7 +16,7 @@ const placeholderMessageWidth = index => 100 - ((index * 37) % 10) * 6;
 class MessageClump extends PureComponent {
   render() {
     const {
-      sender,
+      sender = {},
       timestamp,
       className,
       first = false,

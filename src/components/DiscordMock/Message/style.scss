@@ -8,6 +8,33 @@
         margin-bottom: 0.5rem !important;
     }
 
+    p {
+        white-space: pre-wrap;
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    a {
+        color: $discord-link !important;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    .emoji {
+        display: inline-block;
+        height: 26px;
+        width: 25px;
+        background-position: center;
+        background-size: 24px;
+        background-repeat: no-repeat;
+        vertical-align: bottom;
+        user-select: text;
+        position: relative;
+        top: 2px;
+    }
+
     code {
         color: rgba($discord-fg, 0.9);
         font-size: 92.5%;
@@ -18,7 +45,7 @@
             top: 0.1rem;
             bottom: 0.1rem;
             left: 0.2rem;
-            right: 0.2rem
+            right: 0.2rem;
         }
         margin: {
             top: -0.1rem;
@@ -40,9 +67,6 @@
     .mention {
         color: $discord;
         background-color: rgba($discord, 0.15);
-        padding: {
-            bottom: 0.2rem;
-        }
 
         &:hover {
             color: white;
@@ -53,7 +77,12 @@
     &.mentions-user {
         background-color: rgba($discord-mention, 0.1);
         position: relative;
-        padding: 0.125rem 0.75rem;
+        padding: {
+            top: 0.125rem;
+            bottom: 0.25rem;
+            left: 0.75rem;
+            right: 0.75rem;
+        }
         margin-left: -6px;
 
         &::before {
@@ -63,7 +92,7 @@
             bottom: 0;
             content: " ";
             width: 2px;
-            background: rgba($discord-mention,.2);
+            background: rgba($discord-mention, 0.2);
             border-left: 4px solid $discord-mention;
             border-radius: 3px 0 0 3px;
         }

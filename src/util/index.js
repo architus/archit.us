@@ -124,3 +124,15 @@ export const takeOrReplenish = (map, key, nextKey, source) => {
     return takeOrReplenish(map, key, nextKey, source);
   } else return result;
 };
+
+// Fastest html escaping function according to https://jsperf.com/htmlencoderegex/35
+export const escapeHtml = string =>
+  window.document
+    .createElement("div")
+    .appendChild(window.document.createTextNode(string)).parentNode.innerHTML;
+
+export const escapeMarkdown = string =>
+  string
+    .replace(/\[/g, "&lsqb;", "g")
+    .replace(/\]/g, "&rsqb;", "g")
+    .replace(/!/g, "&excl;", "g");
