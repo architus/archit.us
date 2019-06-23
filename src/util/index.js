@@ -100,3 +100,27 @@ export const generateName = (noSpace = false) => {
   const rv = right[ri];
   return noSpace ? `${lv}_${rv}` : `${lv} ${rv}`;
 };
+
+export const randomDigitString = length =>
+  (~~(Math.random() * 10 ** length)).toString().padStart(length, "0");
+
+export const takeOrReplenish = (map, key, nextKey, source) => {
+  const take = (map, key) => {
+    let currentKey = key;
+    while (isNil(map[currentKey])) {
+      currentKey = nextKey(currentKey);
+      if (currentKey === key) return null;
+    }
+    const value = map[currentKey];
+    map[currentKey] = null;
+    return value;
+  };
+  const replenish = (map, source) => {
+    Object.keys(source).forEach(k => (map[k] = source[k]));
+  };
+  const result = take(map, key);
+  if (isNil(result)) {
+    replenish(map, source);
+    return takeOrReplenish(map, key, nextKey, source);
+  } else return result;
+};
