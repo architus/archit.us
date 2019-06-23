@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
+import ReactionList from "../ReactionList";
 import Placeholder from "../../Placeholder";
 
 import "./style.scss";
@@ -12,23 +13,32 @@ function Message({
   amount = 80,
   mentionsUser = false,
   reactions = [],
+  edited = false,
   ...rest
 }) {
   return (
-    <div
-      className={classNames("message", className, {
-        "mentions-user": mentionsUser
-      })}
-      {...rest}
-    >
-      <Placeholder.Multiline
-        text={contentHtml}
-        amount={amount}
-        size="0.9em"
-        light
+    <div {...rest}>
+      <div
+        className={classNames("message", className, {
+          "mentions-user": mentionsUser
+        })}
       >
-        <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
-      </Placeholder.Multiline>
+        <Placeholder.Multiline
+          text={contentHtml}
+          amount={amount}
+          size="0.9em"
+          light
+        >
+          <div
+            dangerouslySetInnerHTML={{
+              __html: edited
+                ? `${contentHtml}<span class="edited">(edited)</span>`
+                : contentHtml
+            }}
+          />
+        </Placeholder.Multiline>
+      </div>
+      <ReactionList reactions={reactions} />
     </div>
   );
 }
@@ -39,6 +49,7 @@ Message.propTypes = {
   contentHtml: PropTypes.string,
   className: PropTypes.string,
   amount: PropTypes.number,
+  edited: PropTypes.bool,
   reactions: PropTypes.arrayOf(PropTypes.object),
   mentionsUser: PropTypes.bool
 };

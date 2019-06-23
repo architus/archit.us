@@ -19,6 +19,11 @@ const autBotUser = {
   nameColor: "#d34c4f",
   bot: true
 };
+const makeEmojiResponseUser = baseUser => ({
+  ...baseUser,
+  nameColor: "white",
+  bot: true
+});
 
 const discriminators = { 0: 0, 1: 1, 2: 2, 3: 3, 4: 4 };
 let discriminatorPool = { ...discriminators };
@@ -54,6 +59,7 @@ class DiscordMock extends React.Component {
   render() {
     const { height = 100, channelName = "channel" } = this.props;
     const { mockUser } = this.state;
+    const mockEmojiResponseUser = makeEmojiResponseUser(mockUser);
 
     const message1 = {
       sender: mockUser,
@@ -63,17 +69,50 @@ class DiscordMock extends React.Component {
     const message2 = {
       sender: autBotUser,
       messages: [
+        `normal message 1`,
         {
-          reactions: [{ emote: "💕", amount: 2 }],
-          content: `<code>johny</code> <em>ur</em> <strike>really</strike> <b>bad</b> <u>(nice brain)</u> <span class="mention">@dr diet pepp</span>`,
+          content: `message with mention: <span class="mention">@dr diet pepp</span>`,
           mentionsUser: true
-        }
+        },
+        `message with formatting: <code>johny</code> <em>ur</em> <strike>really</strike> <b>bad</b> <u>(nice brain)</u>. now it's even longer to test line wrapping in a more controlled way.`,
+        {
+          reactions: [
+            {
+              emoji: `<img class="emoji" draggable="false" alt="❤️" src="https://twemoji.maxcdn.com/36x36/2764.png"/>`,
+              number: 2,
+              userHasReacted: false
+            }
+          ],
+          content: `message with reactions`
+        },
+        {
+          content: `this message has been edited`,
+          edited: true
+        },
+        {
+          reactions: [
+            {
+              emoji: `<img class="emoji" draggable="false" alt="❤️" src="https://twemoji.maxcdn.com/36x36/2764.png"/>`,
+              number: 3,
+              userHasReacted: false
+            },
+            {
+              emoji: `<img class="emoji" draggable="false" alt="❤️" src="https://twemoji.maxcdn.com/36x36/2764.png"/>`,
+              number: 7,
+              userHasReacted: true
+            }
+          ],
+          content: `<span class="mention">@dr diet pepp</span> test with reactions`,
+          mentionsUser: true
+        },
+        `normal message 2`
       ],
       timestamp: new Date()
     };
     const message3 = {
-      sender: {},
-      messages: ["", ""]
+      sender: mockEmojiResponseUser,
+      messages: [`💕`],
+      timestamp: new Date()
     };
     const exampleClumps = [
       message1,

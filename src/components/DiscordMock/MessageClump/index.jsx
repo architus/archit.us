@@ -74,6 +74,7 @@ class MessageClump extends PureComponent {
               <Message
                 key={`${index}-${message.substring(10)}`}
                 contentHtml={message}
+                edited={message.edited}
                 amount={placeholderMessageWidth(index)}
               />
             ) : (
@@ -82,6 +83,7 @@ class MessageClump extends PureComponent {
                 contentHtml={message.content}
                 mentionsUser={message.mentionsUser}
                 reactions={message.reactions}
+                edited={message.edited}
                 amount={placeholderMessageWidth(index)}
               />
             )

@@ -1,6 +1,9 @@
 @import "../../../scss/colors";
 
 .message {
+    line-height: 1.35;
+    margin-bottom: 0.25rem;
+
     .placeholder:last-child {
         margin-bottom: 0.5rem !important;
     }
@@ -17,11 +20,21 @@
             left: 0.2rem;
             right: 0.2rem
         }
+        margin: {
+            top: -0.1rem;
+            bottom: -0.1rem;
+        }
         border-radius: 4px;
 
         &:first-child {
             margin-left: -0.2rem;
         }
+    }
+
+    .edited {
+        color: rgba($discord-fg, 0.3);
+        font-size: 0.67rem;
+        margin-left: 0.35rem;
     }
 
     .mention {
