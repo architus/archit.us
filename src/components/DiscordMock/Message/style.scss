@@ -23,16 +23,11 @@
     }
 
     .emoji {
-        display: inline-block;
-        height: 26px;
-        width: 25px;
-        background-position: center;
-        background-size: 24px;
-        background-repeat: no-repeat;
-        vertical-align: bottom;
-        user-select: text;
+        height: 24px;
+        width: 24px;
+        margin: 0 0.05em 0 0.1em;
         position: relative;
-        top: 2px;
+        top: -1px;
     }
 
     code {

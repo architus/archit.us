@@ -1,11 +1,13 @@
 import marked from "marked";
 import twemoji from "twemoji";
-import emojiLibrary from "emoji-js";
-import { escapeHtml, escapeMarkdown, processIfNotEmptyOrNil } from "../../util";
-
-const emoji = new emojiLibrary.EmojiConvertor();
-
-emoji.img_sets.apple.path = "https://twemoji.maxcdn.com/36x36/";
+import aliases from "./aliases.json";
+import { hasEmoji, get } from "node-emoji";
+import {
+  escapeHtml,
+  escapeMarkdown,
+  processIfNotEmptyOrNil,
+  isNil
+} from "../../util";
 
 const markedRenderer = new marked.Renderer();
 markedRenderer.link = function(href, title, text) {
@@ -22,6 +24,8 @@ marked.setOptions({
 
 const underlineRegex = /__(.*)__/gs;
 const mentionRegex = /(?:[<]|(?:&lt;))[@]([-0-9]+)(?:[>]|(?:&gt;))/g;
+const emojiRegex = /:([a-zA-Z0-9_-]+):/g;
+const emojiHtmlRegex = /alt=".*?"/g;
 const applyExtensions = (markdown, users) => {
   const underlineTransformed = markdown.replace(
     underlineRegex,
@@ -39,8 +43,32 @@ const applyExtensions = (markdown, users) => {
       )}</span>`;
     }
   );
+  const emojiTransformed = mentionTransformed.replace(
+    emojiRegex,
+    (_match, p1) => {
+      let shortcode = p1;
+      let hasShortcode = hasEmoji(shortcode);
+      const wrapped = `:${shortcode}:`;
+      // Try to replace by discord-specific aliases
+      if (!hasShortcode) {
+        const potentialAlias = aliases[shortcode];
+        if (!isNil(potentialAlias)) {
+          shortcode = potentialAlias;
+          hasShortcode = true;
+        }
+      }
+
+      if (!hasShortcode) {
+        return wrapped; // unchanged
+      } else {
+        return twemoji
+          .parse(get(shortcode))
+          .replace(emojiHtmlRegex, `alt="${wrapped}"`);
+      }
+    }
+  );
   return {
-    transformed: mentionTransformed,
+    transformed: emojiTransformed,
     mentions
   };
 };
@@ -49,8 +77,5 @@ export const transformMessage = (rawText, users = {}) => {
   const escaped = escapeMarkdown(escapeHtml(rawText));
   const { transformed, mentions } = applyExtensions(escaped, users);
   const markdown = marked(transformed);
-  // alert(emoji.replace_mode);
-  var colonsReplaced = emoji.replace_colons(transformed);
-  // TODO emoji
-  return { result: colonsReplaced, mentions };
+  return { result: markdown, mentions };
 };

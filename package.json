@@ -9,7 +9,6 @@
     "axios": "^0.19.0",
     "bootstrap": "^4.3.1",
     "classnames": "^2.2.6",
-    "emoji-js": "^3.4.1",
     "express": "^4.17.1",
     "marked": "^0.6.2",
     "node-emoji": "^1.10.0",
