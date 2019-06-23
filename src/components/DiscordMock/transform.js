@@ -1,7 +1,7 @@
 import marked from "marked";
 import twemoji from "twemoji";
 import aliases from "./aliases.json";
-import { hasEmoji, get } from "node-emoji";
+import { hasEmoji, get, unemojify } from "node-emoji";
 import {
   escapeHtml,
   escapeMarkdown,
@@ -22,10 +22,15 @@ marked.setOptions({
   sanitize: false
 });
 
-const underlineRegex = /__(.*)__/gs;
+const convertUnicodeEmoji = text =>
+  twemoji
+    .parse(text)
+    .replace(emojiHtmlRegex, (_match, p1) => `alt="${unemojify(p1)}"`);
+
+const underlineRegex = /__(.*?)__/gs;
 const mentionRegex = /(?:[<]|(?:&lt;))[@]([-0-9]+)(?:[>]|(?:&gt;))/g;
 const emojiRegex = /:([a-zA-Z0-9_-]+):/g;
-const emojiHtmlRegex = /alt=".*?"/g;
+const emojiHtmlRegex = /alt="(.*?)"/g;
 const applyExtensions = (markdown, users) => {
   const underlineTransformed = markdown.replace(
     underlineRegex,
@@ -67,8 +72,9 @@ const applyExtensions = (markdown, users) => {
       }
     }
   );
+  const unicodeEmojiTransformed = convertUnicodeEmoji(emojiTransformed);
   return {
-    transformed: emojiTransformed,
+    transformed: unicodeEmojiTransformed,
     mentions
   };
 };
@@ -79,3 +85,5 @@ export const transformMessage = (rawText, users = {}) => {
   const markdown = marked(transformed);
   return { result: markdown, mentions };
 };
+
+export const transformReaction = emoji => convertUnicodeEmoji(emoji);

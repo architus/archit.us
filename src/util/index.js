@@ -136,3 +136,13 @@ export const escapeMarkdown = string =>
     .replace(/\[/g, "&lsqb;", "g")
     .replace(/\]/g, "&rsqb;", "g")
     .replace(/!/g, "&excl;", "g");
+
+// from https://codereview.stackexchange.com/questions/61632/object-key-value-map-reversal
+const id = x => x;
+export const reverseMapFromMap = (map, f) =>
+  Object.keys(map).reduce(function(acc, k) {
+    acc[map[k]] = (acc[map[k]] || []).concat((f || id)(k));
+    return acc;
+  }, {});
+
+export const includes = (array, func) => array.findIndex(func) !== -1;
