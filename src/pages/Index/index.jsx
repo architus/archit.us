@@ -43,7 +43,7 @@ function Index() {
         </h2>
         <Feature
           left
-          lead="Make aut-bot listen for predefined phrases"
+          lead="Have aut-bot listen for predefined phrases"
           header="Automatic Responses"
           content={
             <p>

@@ -9,6 +9,9 @@ import Message from "../Message";
 
 import "./style.scss";
 
+// pseudorandom yet determinate placeholder amount
+const placeholderMessageWidth = index => 100 - ((index * 37) % 10) * 6;
+
 function MessageClump({
   avatarUrl,
   clientId,
@@ -49,13 +52,23 @@ function MessageClump({
             className="timestamp"
           />
         </div>
-        {messages.map((message, index) => (
-          <Message
-            key={`${index}-${message.substring(10)}`}
-            content={message}
-            amount={100 - ((index * 37) % 10) * 6}
-          />
-        ))}
+        {messages.map((message, index) =>
+          typeof message === "string" ? (
+            <Message
+              key={`${index}-${message.substring(10)}`}
+              contentHtml={message}
+              amount={placeholderMessageWidth(index)}
+            />
+          ) : (
+            <Message
+              key={`${index}-${message.content.substring(10)}`}
+              contentHtml={message.content}
+              mentionsUser={message.mentionsUser}
+              reactions={message.reactions}
+              amount={placeholderMessageWidth(index)}
+            />
+          )
+        )}
       </div>
     </div>
   );
@@ -74,6 +87,8 @@ MessageClump.propTypes = {
     PropTypes.string
   ]),
   last: PropTypes.bool,
-  messages: PropTypes.arrayOf(PropTypes.string),
+  messages: PropTypes.arrayOf(
+    PropTypes.oneOfType([PropTypes.object, PropTypes.string])
+  ),
   color: PropTypes.string
 };

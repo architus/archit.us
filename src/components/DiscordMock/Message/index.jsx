@@ -6,11 +6,28 @@ import Placeholder from "../../Placeholder";
 
 import "./style.scss";
 
-function Message({ content, className, amount = 80, ...rest }) {
+function Message({
+  contentHtml,
+  className,
+  amount = 80,
+  mentionsUser = false,
+  reactions = [],
+  ...rest
+}) {
   return (
-    <div className={classNames("message", className)} {...rest}>
-      <Placeholder.Multiline text={content} amount={amount} size="0.9em" light>
-        {content}
+    <div
+      className={classNames("message", className, {
+        "mentions-user": mentionsUser
+      })}
+      {...rest}
+    >
+      <Placeholder.Multiline
+        text={contentHtml}
+        amount={amount}
+        size="0.9em"
+        light
+      >
+        <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
       </Placeholder.Multiline>
     </div>
   );
@@ -19,7 +36,9 @@ function Message({ content, className, amount = 80, ...rest }) {
 export default Message;
 
 Message.propTypes = {
-  content: PropTypes.string,
+  contentHtml: PropTypes.string,
   className: PropTypes.string,
-  amount: PropTypes.number
+  amount: PropTypes.number,
+  reactions: PropTypes.arrayOf(PropTypes.object),
+  mentionsUser: PropTypes.bool
 };
