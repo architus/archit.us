@@ -24,6 +24,7 @@ function UserDisplay({
         avatarUrl={avatarUrl}
         avatarHash={avatarHash}
         clientId={clientId}
+        discriminator={discriminator}
       />
       <div>
         <Placeholder.Text
@@ -67,11 +68,12 @@ const Avatar = ({
   className,
   circle = false,
   size = avatarSize,
+  discriminator = 0,
   ...rest
 }) => {
   const effectiveAvatarUrl = !isNil(avatarUrl)
     ? avatarUrl
-    : constructAvatarUrl(clientId, avatarHash, size);
+    : constructAvatarUrl(clientId, avatarHash, size, discriminator);
   return (
     <Placeholder.Custom
       value={effectiveAvatarUrl}
@@ -82,7 +84,7 @@ const Avatar = ({
       light
     >
       <div
-        className={classNames("avatar-image", className)}
+        className={classNames("avatar-image", className, { circle })}
         style={{
           backgroundImage: `url(${effectiveAvatarUrl})`,
           width: `${size}px`,
@@ -96,11 +98,12 @@ const Avatar = ({
 
 Avatar.propTypes = {
   avatarUrl: PropTypes.string,
-  clientId: PropTypes.string,
+  clientId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   avatarHash: PropTypes.string,
   className: PropTypes.string,
   circle: PropTypes.bool,
-  size: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
+  size: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  discriminator: PropTypes.number
 };
 
 UserDisplay.Avatar = Avatar;

@@ -24,6 +24,7 @@ class MessageView extends React.Component {
     const { clumps, className, ...rest } = this.props;
     const { listHeight, listWidth } = this.state;
 
+    // eslint-disable-next-line react/prop-types
     const RefForwardedRow = React.forwardRef(({ style, data, index }, ref) => (
       <MessageClump style={style} {...data[index]} forwardedRef={ref} />
     ));

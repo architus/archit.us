@@ -58,7 +58,11 @@ function Index() {
           }
         >
           <Window variant="discord">
-            <DiscordMock height={400} channelName="auto-response-demo" />
+            <DiscordMock
+              height={400}
+              channelName="auto-response-demo"
+              index={0}
+            />
           </Window>
         </Feature>
         <Feature
@@ -78,7 +82,11 @@ function Index() {
           }
         >
           <Window variant="discord">
-            <DiscordMock height={400} channelName="custom-emoji-demo" />
+            <DiscordMock
+              height={400}
+              channelName="custom-emoji-demo"
+              index={1}
+            />
           </Window>
         </Feature>
         <Feature
@@ -98,7 +106,11 @@ function Index() {
           }
         >
           <Window variant="discord">
-            <DiscordMock height={400} channelName="polls-schedules-demo" />
+            <DiscordMock
+              height={400}
+              channelName="polls-schedules-demo"
+              index={2}
+            />
           </Window>
         </Feature>
       </Container>

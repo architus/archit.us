@@ -2,7 +2,7 @@ import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { processIfNotEmptyOrNil, toHumanTime } from "../../../util";
-import { Badge } from "react-bootstrap"
+import { Badge } from "react-bootstrap";
 
 import UserDisplay from "../../UserDisplay";
 import Placeholder from "../../Placeholder";
@@ -16,20 +16,24 @@ const placeholderMessageWidth = index => 100 - ((index * 37) % 10) * 6;
 class MessageClump extends PureComponent {
   render() {
     const {
-      avatarUrl,
-      clientId,
-      avatarHash,
-      username,
+      sender,
       timestamp,
       className,
-      color = "white",
       last = false,
       forwardedRef,
       messages = [],
-      bot = false,
       ...rest
     } = this.props;
-    const avatarProps = { avatarUrl, clientId, avatarHash };
+    const {
+      avatarUrl,
+      clientId,
+      avatarHash,
+      discriminator,
+      username,
+      nameColor = "white",
+      bot = false
+    } = sender;
+    const avatarProps = { avatarUrl, clientId, avatarHash, discriminator };
     return (
       <div
         className={classNames(className, "message-clump", {
@@ -49,7 +53,7 @@ class MessageClump extends PureComponent {
               width={100}
               light
               className="username"
-              style={{ color }}
+              style={{ color: nameColor }}
             >
               {username}
               {bot ? <Badge variant="bot">bot</Badge> : null}
@@ -89,20 +93,15 @@ class MessageClump extends PureComponent {
 export default MessageClump;
 
 MessageClump.propTypes = {
-  avatarUrl: PropTypes.string,
-  clientId: PropTypes.string,
-  avatarHash: PropTypes.string,
+  sender: PropTypes.object,
   className: PropTypes.string,
-  username: PropTypes.string,
   timestamp: PropTypes.oneOfType([
     PropTypes.instanceOf(Date),
     PropTypes.string
   ]),
-  bot: PropTypes.bool,
   last: PropTypes.bool,
   messages: PropTypes.arrayOf(
     PropTypes.oneOfType([PropTypes.object, PropTypes.string])
   ),
-  color: PropTypes.string,
   forwardedRef: PropTypes.func
 };

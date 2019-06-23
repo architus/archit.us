@@ -7,13 +7,7 @@ import Input from "../Input";
 
 import "./style.scss";
 
-function DiscordView({
-  clumps = [],
-  channelName = "channel",
-  className,
-  onSend,
-  ...rest
-}) {
+function DiscordView({ clumps = [], channelName, className, onSend, ...rest }) {
   return (
     <div className={classNames("discord-view", className)} {...rest}>
       <MessageView clumps={clumps} style={{ flexGrow: 1 }} />

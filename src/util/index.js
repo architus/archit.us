@@ -1,3 +1,5 @@
+import { left, right } from "./names";
+
 // Sourced from A-Frame VR toolkit
 export const getUrlParameter = name => {
   name = name.replace(/[[]/, "\\[").replace(/[\]]/, "\\]");
@@ -31,10 +33,26 @@ export const isEmptyOrNil = string =>
 export const processIfNotEmptyOrNil = (string, apply) =>
   isEmptyOrNil(string) ? string : apply(string);
 
-export const constructAvatarUrl = (clientId, hash, size) =>
-  !isEmptyOrNil(clientId) && !isEmptyOrNil(hash) && !isNil(size)
-    ? `https://cdn.discordapp.com/avatars/${clientId}/${hash}.png?size=${size}`
-    : "";
+const avatarSizes = [16, 32, 40, 64, 128, 256, 512, 1024];
+const nextLargerSize = size => {
+  const number = parseInt(size);
+  for (let avatarSize of avatarSizes) {
+    if (avatarSize > number) return avatarSize;
+  }
+  return avatarSizes[avatarSizes.length - 1];
+};
+export const constructAvatarUrl = (clientId, hash, size, discriminator) => {
+  if (!isEmptyOrNil(clientId)) {
+    if (!isEmptyOrNil(hash)) {
+      const sizeAppend = !isNil(size) ? `?size=${nextLargerSize(size)}` : "";
+      return `https://cdn.discordapp.com/avatars/${clientId}/${hash}.png${sizeAppend}`;
+    } else {
+      // default avatar
+      const avatarNumber = discriminator % 5;
+      return `https://cdn.discordapp.com/embed/avatars/${avatarNumber}.png`;
+    }
+  }
+};
 
 export const clearUrlQueries = () =>
   window.history.replaceState(
@@ -74,3 +92,11 @@ const formatAMPM = date => {
   return strTime;
 };
 export const toHumanTime = date => `Today at ${formatAMPM(date)}`;
+
+export const generateName = (noSpace = false) => {
+  const li = Math.floor(Math.random() * left.length);
+  const ri = Math.floor(Math.random() * right.length);
+  const lv = left[li];
+  const rv = right[ri];
+  return noSpace ? `${lv}_${rv}` : `${lv} ${rv}`;
+};
