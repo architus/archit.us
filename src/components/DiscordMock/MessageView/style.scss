@@ -17,7 +17,15 @@
         }
     }
     &::-webkit-scrollbar-track {
-        background: linear-gradient(to right, $discord-bg 0%, $discord-bg 23%, $discord-scroll-track 24%, $discord-scroll-track 76%, $discord-bg 77%, $discord-bg 100%);
+        background: linear-gradient(
+            to right,
+            $discord-bg 0%,
+            $discord-bg 23%,
+            $discord-scroll-track 24%,
+            $discord-scroll-track 76%,
+            $discord-bg 77%,
+            $discord-bg 100%
+        );
     }
 }
 
@@ -27,12 +35,12 @@
     color: inherit;
     margin-right: 12px;
 
+    @extend %scrollbar;
+
     .inner {
         padding: {
             right: 0.75rem;
             top: 16px;
         }
     }
-
-    @extend %scrollbar;
 }

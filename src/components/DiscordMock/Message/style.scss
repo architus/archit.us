@@ -41,7 +41,7 @@
     &.mentions-user {
         background-color: rgba($discord-mention, 0.1);
         position: relative;
-        padding: 0.25rem 0.75rem;
+        padding: 0.125rem 0.75rem;
         margin-left: -6px;
 
         &::after {

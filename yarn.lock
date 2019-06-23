@@ -6523,10 +6523,10 @@ mem@^4.0.0:
     mimic-fn "^2.0.0"
     p-is-promise "^2.0.0"
 
-"memoize-one@>=3.1.1 <6":
-  version "5.0.4"
-  resolved "https://registry.yarnpkg.com/memoize-one/-/memoize-one-5.0.4.tgz#005928aced5c43d890a4dfab18ca908b0ec92cbc"
-  integrity sha512-P0z5IeAH6qHHGkJIXWw0xC2HNEgkx/9uWWBQw64FJj3/ol14VYdfVGWWr0fXfjhhv3TKVIqUq65os6O4GUNksA==
+memoize-one@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/memoize-one/-/memoize-one-3.1.1.tgz#ef609811e3bc28970eac2884eece64d167830d17"
+  integrity sha512-YqVh744GsMlZu6xkhGslPSqSurOv6P+kLN2J3ysBZfagLcL5FdRK/0UpgLoL8hwjjEvvAVkjJZyFP+1T6p1vgA==
 
 memory-fs@^0.4.0, memory-fs@^0.4.1, memory-fs@~0.4.1:
   version "0.4.1"
@@ -8773,13 +8773,13 @@ react-transition-group@^4.0.0:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
-react-window@^1.8.3:
-  version "1.8.3"
-  resolved "https://registry.yarnpkg.com/react-window/-/react-window-1.8.3.tgz#0b2b9c39ef2ce3cd1714a6a7fe23961427f5112a"
-  integrity sha512-F3UI7QCytY101u/I9zEzN1rKZmhcQyhMCeRgkuNVluE3bU4MuLm07r3MWnUm4yf4N0d6zas6x+ZxaFVrO1FzGg==
+react-window@^1.6.0-alpha.1:
+  version "1.6.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/react-window/-/react-window-1.6.0-alpha.1.tgz#6ffbf8168a1325512fe0127582ee2672ecadb67a"
+  integrity sha512-Q4Yg/rnVHTSjHdqVuTnZFTD3cwEzXFxFMyEZ5ihK3qu/NLiiFA67M1WM/Q558VmGUQumtJAW5oxKoo5JcdqoOQ==
   dependencies:
     "@babel/runtime" "^7.0.0"
-    memoize-one ">=3.1.1 <6"
+    memoize-one "^3.1.1"
 
 react@^16.8.6:
   version "16.8.6"

@@ -3,55 +3,49 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 
 import MessageClump from "../MessageClump";
+import { DynamicSizeList as List } from "react-window";
 
 import "./style.scss";
 
-function MessageView({ clumps, className, channelName, ...rest }) {
-  clumps = [
-    {
-      avatarUrl: "",
-      username: "dr diet pepp",
-      messages: [`<span class="mention">@Linh</span> ur sooooo good`],
-      timestamp: new Date(),
-      color: "#099700"
-    },
-    {
-      avatarUrl: "",
-      username: "aut-bot",
-      messages: [
-        {
-          reactions: [{ emote: "💕", amount: 2 }],
-          content: `<code>johny</code> <em>ur</em> <strike>really</strike> <b>bad</b> <u>(nice brain)</u> <span class="mention">@dr diet pepp</span>`,
-          mentionsUser: true
-        }
-      ],
-      timestamp: new Date(),
-      color: "#ba393c",
-      bot: true
-    },
-    {
-      avatarUrl: "",
-      username: "",
-      messages: ["", ""],
-      last: true
-    }
-  ];
+class MessageView extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { listHeight: 100, listWidth: 100 };
+  }
 
-  // TODO remove test messages
-  return (
-    <div className={classNames(className, "discord-messages")} {...rest}>
-      <article className="inner">
-        {clumps.map((clump, index) => (
-          <MessageClump key={`${clump.username}_${index}`} {...clump} />
-        ))}
+  componentDidMount() {
+    this.setState({
+      listHeight: this.outerRef.clientHeight,
+      listWidth: this.outerRef.clientWidth
+    });
+  }
+
+  render() {
+    const { clumps, className, ...rest } = this.props;
+    const { listHeight, listWidth } = this.state;
+
+    const RefForwardedRow = React.forwardRef(({ style, data, index }, ref) => (
+      <MessageClump style={style} {...data[index]} forwardedRef={ref} />
+    ));
+
+    return (
+      <article {...rest} ref={element => (this.outerRef = element)}>
+        <List
+          itemData={clumps}
+          itemCount={clumps.length}
+          height={listHeight}
+          width={listWidth}
+          className={classNames(className, "discord-messages")}
+        >
+          {RefForwardedRow}
+        </List>
       </article>
-    </div>
-  );
+    );
+  }
 }
 export default MessageView;
 
 MessageView.propTypes = {
   clumps: PropTypes.arrayOf(PropTypes.object),
   className: PropTypes.string,
-  channelName: PropTypes.string
 };

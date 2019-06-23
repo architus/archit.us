@@ -1,7 +1,8 @@
-import React from "react";
+import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { processIfNotEmptyOrNil, toHumanTime } from "../../../util";
+import { Badge } from "react-bootstrap"
 
 import UserDisplay from "../../UserDisplay";
 import Placeholder from "../../Placeholder";
@@ -12,66 +13,77 @@ import "./style.scss";
 // pseudorandom yet determinate placeholder amount
 const placeholderMessageWidth = index => 100 - ((index * 37) % 10) * 6;
 
-function MessageClump({
-  avatarUrl,
-  clientId,
-  avatarHash,
-  username,
-  timestamp,
-  className,
-  color = "white",
-  last = false,
-  messages = [],
-  ...rest
-}) {
-  const avatarProps = { avatarUrl, clientId, avatarHash };
-  return (
-    <div
-      className={classNames(className, "message-clump", { "clump-last": last })}
-    >
-      <div>
-        <UserDisplay.Avatar {...avatarProps} circle size={44} />
-      </div>
-      <div>
-        <div className="message-header">
-          <Placeholder.Text
-            text={username}
-            size="1em"
-            width={100}
-            light
-            inline
-            className="username"
-            style={{ color }}
-          />
-          <Placeholder.Text
-            text={processIfNotEmptyOrNil(timestamp, t => toHumanTime(t))}
-            size="0.7em"
-            width={90}
-            light
-            inline
-            className="timestamp"
-          />
+class MessageClump extends PureComponent {
+  render() {
+    const {
+      avatarUrl,
+      clientId,
+      avatarHash,
+      username,
+      timestamp,
+      className,
+      color = "white",
+      last = false,
+      forwardedRef,
+      messages = [],
+      bot = false,
+      ...rest
+    } = this.props;
+    const avatarProps = { avatarUrl, clientId, avatarHash };
+    return (
+      <div
+        className={classNames(className, "message-clump", {
+          "clump-last": last
+        })}
+        ref={forwardedRef}
+        {...rest}
+      >
+        <div>
+          <UserDisplay.Avatar {...avatarProps} circle size={44} />
         </div>
-        {messages.map((message, index) =>
-          typeof message === "string" ? (
-            <Message
-              key={`${index}-${message.substring(10)}`}
-              contentHtml={message}
-              amount={placeholderMessageWidth(index)}
+        <div>
+          <div className="message-header">
+            <Placeholder.Custom
+              value={username}
+              height="1.1em"
+              width={100}
+              light
+              className="username"
+              style={{ color }}
+            >
+              {username}
+              {bot ? <Badge variant="bot">bot</Badge> : null}
+            </Placeholder.Custom>
+            <Placeholder.Text
+              text={processIfNotEmptyOrNil(timestamp, t => toHumanTime(t))}
+              size="0.7em"
+              width={90}
+              light
+              inline
+              className="timestamp"
             />
-          ) : (
-            <Message
-              key={`${index}-${message.content.substring(10)}`}
-              contentHtml={message.content}
-              mentionsUser={message.mentionsUser}
-              reactions={message.reactions}
-              amount={placeholderMessageWidth(index)}
-            />
-          )
-        )}
+          </div>
+          {messages.map((message, index) =>
+            typeof message === "string" ? (
+              <Message
+                key={`${index}-${message.substring(10)}`}
+                contentHtml={message}
+                amount={placeholderMessageWidth(index)}
+              />
+            ) : (
+              <Message
+                key={`${index}-${message.content.substring(10)}`}
+                contentHtml={message.content}
+                mentionsUser={message.mentionsUser}
+                reactions={message.reactions}
+                amount={placeholderMessageWidth(index)}
+              />
+            )
+          )}
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
 
 export default MessageClump;
@@ -86,9 +98,11 @@ MessageClump.propTypes = {
     PropTypes.instanceOf(Date),
     PropTypes.string
   ]),
+  bot: PropTypes.bool,
   last: PropTypes.bool,
   messages: PropTypes.arrayOf(
     PropTypes.oneOfType([PropTypes.object, PropTypes.string])
   ),
-  color: PropTypes.string
+  color: PropTypes.string,
+  forwardedRef: PropTypes.func
 };
