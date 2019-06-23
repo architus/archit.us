@@ -43,15 +43,15 @@
         padding: 0.125rem 0.75rem;
         margin-left: -6px;
 
-        &::after {
+        &::before {
             position: absolute;
             top: 0;
             left: -2px;
             bottom: 0;
             content: " ";
             width: 2px;
-            background: rgba(250,166,26,.2);
-            border-left: 4px solid #faa61a;
+            background: rgba($discord-mention,.2);
+            border-left: 4px solid $discord-mention;
             border-radius: 3px 0 0 3px;
         }
 

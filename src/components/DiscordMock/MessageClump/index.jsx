@@ -19,6 +19,7 @@ class MessageClump extends PureComponent {
       sender,
       timestamp,
       className,
+      first = false,
       last = false,
       forwardedRef,
       messages = [],
@@ -37,6 +38,7 @@ class MessageClump extends PureComponent {
     return (
       <div
         className={classNames(className, "message-clump", {
+          "clump-first": first,
           "clump-last": last
         })}
         ref={forwardedRef}
@@ -99,6 +101,7 @@ MessageClump.propTypes = {
     PropTypes.instanceOf(Date),
     PropTypes.string
   ]),
+  first: PropTypes.bool,
   last: PropTypes.bool,
   messages: PropTypes.arrayOf(
     PropTypes.oneOfType([PropTypes.object, PropTypes.string])

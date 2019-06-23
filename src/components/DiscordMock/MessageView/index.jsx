@@ -4,49 +4,46 @@ import classNames from "classnames";
 
 import MessageClump from "../MessageClump";
 import { DynamicSizeList as List } from "react-window";
+import AutoSizer from "react-virtualized-auto-sizer";
 
 import "./style.scss";
 
-class MessageView extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { listHeight: 100, listWidth: 100 };
-  }
+function MessageView({ clumps, className, ...rest }) {
+  const itemCount = clumps.length;
 
-  componentDidMount() {
-    this.setState({
-      listHeight: this.outerRef.clientHeight,
-      listWidth: this.outerRef.clientWidth
-    });
-  }
+  // eslint-disable-next-line react/prop-types
+  const RefForwardedRow = React.forwardRef(({ style, data, index }, ref) => (
+    <MessageClump
+      style={style}
+      {...data[index]}
+      forwardedRef={ref}
+      last={index === itemCount - 1}
+      first={index === 0}
+    />
+  ));
 
-  render() {
-    const { clumps, className, ...rest } = this.props;
-    const { listHeight, listWidth } = this.state;
-
-    // eslint-disable-next-line react/prop-types
-    const RefForwardedRow = React.forwardRef(({ style, data, index }, ref) => (
-      <MessageClump style={style} {...data[index]} forwardedRef={ref} />
-    ));
-
-    return (
-      <article {...rest} ref={element => (this.outerRef = element)}>
-        <List
-          itemData={clumps}
-          itemCount={clumps.length}
-          height={listHeight}
-          width={listWidth}
-          className={classNames(className, "discord-messages")}
-        >
-          {RefForwardedRow}
-        </List>
-      </article>
-    );
-  }
+  return (
+    <article {...rest}>
+      <AutoSizer>
+        {({ height, width }) => (
+          <List
+            itemData={clumps}
+            itemCount={itemCount}
+            className={classNames(className, "discord-messages")}
+            height={height}
+            width={width}
+          >
+            {RefForwardedRow}
+          </List>
+        )}
+      </AutoSizer>
+    </article>
+  );
 }
+
 export default MessageView;
 
 MessageView.propTypes = {
   clumps: PropTypes.arrayOf(PropTypes.object),
-  className: PropTypes.string,
+  className: PropTypes.string
 };
