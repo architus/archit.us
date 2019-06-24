@@ -151,6 +151,8 @@ class DiscordMock extends React.Component {
       bot: false
     };
     const emojiResponder = makeEmojiResponseUser(mockUser);
+    // escape hatch to scroll to bottom imperatively
+    this.view = React.createRef();
     this.state = {
       guildId,
       thisUser: mockUser,
@@ -160,6 +162,7 @@ class DiscordMock extends React.Component {
         [emojiResponder.clientId]: emojiResponder,
         [autBotUser.clientId]: autBotUser
       },
+      needsScroll: false,
       // TODO temp
       messageQueue: [
         {
@@ -191,6 +194,13 @@ class DiscordMock extends React.Component {
           clientId: autBotUser.clientId,
           messageId: 4,
           guildId
+        },
+        {
+          content: "I change previous reactions",
+          reactions: [[6, "\u2705"]],
+          messageId: 13,
+          guildId,
+          clientId: mockClientId
         },
         {
           content: `message with reactions`,
@@ -229,6 +239,17 @@ class DiscordMock extends React.Component {
         users[msg.clientId],
         msg.reactions
       );
+    }
+  }
+
+  componentDidUpdate(_prevProps, prevState) {
+    if (!prevState.needsScroll && this.state.needsScroll) {
+      if (!isNil(this.view.current)) {
+        this.view.current.scrollToBottom();
+      }
+      this.setState({
+        needsScroll: false
+      });
     }
   }
 
@@ -281,7 +302,8 @@ class DiscordMock extends React.Component {
       }
 
       return {
-        clumps: newClumps
+        clumps: newClumps,
+        needsScroll: true
       };
     });
   }
@@ -296,6 +318,7 @@ class DiscordMock extends React.Component {
         channelName={channelName}
         onSend={message => log(message)}
         clumps={clumps}
+        ref={this.view}
       />
     );
   }

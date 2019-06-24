@@ -8,37 +8,57 @@ import AutoSizer from "react-virtualized-auto-sizer";
 
 import "./style.scss";
 
-function MessageView({ clumps, className, ...rest }) {
-  const itemCount = clumps.length;
+class MessageView extends React.Component {
+  constructor(props) {
+    super(props);
+    this.listView = React.createRef();
+  }
 
-  // eslint-disable-next-line react/prop-types
-  const RefForwardedRow = React.forwardRef(({ style, data, index }, ref) => (
-    <MessageClump
-      style={style}
-      {...data[index]}
-      forwardedRef={ref}
-      last={index === itemCount - 1}
-      first={index === 0}
-    />
-  ));
+  scrollToBottom() {
+    const { clumps } = this.props;
+    this.listView.current.scrollToItem(clumps.length - 1, "bottom");
+    this.listView.current.scrollToItem(clumps.length - 1, "bottom");
+    this.listView.current.scrollToItem(clumps.length - 1, "bottom");
+  }
 
-  return (
-    <article {...rest}>
-      <AutoSizer>
-        {({ height, width }) => (
-          <List
-            itemData={clumps}
-            itemCount={itemCount}
-            className={classNames(className, "discord-messages")}
-            height={height}
-            width={width}
-          >
-            {RefForwardedRow}
-          </List>
-        )}
-      </AutoSizer>
-    </article>
-  );
+  render() {
+    const { clumps, className, ...rest } = this.props;
+    const itemCount = clumps.length;
+
+    // eslint-disable-next-line react/prop-types
+    const RefForwardedRow = React.forwardRef(({ style, data, index }, ref) =>
+      index === itemCount ? (
+        <MessageClump style={style} forwardedRef={ref} ghost />
+      ) : (
+        <MessageClump
+          style={style}
+          {...data[index]}
+          forwardedRef={ref}
+          first={index === 0}
+          last={index === itemCount - 1}
+        />
+      )
+    );
+
+    return (
+      <article {...rest}>
+        <AutoSizer>
+          {({ height, width }) => (
+            <List
+              itemData={clumps}
+              itemCount={itemCount}
+              className={classNames(className, "discord-messages")}
+              height={height}
+              width={width}
+              ref={this.listView}
+            >
+              {RefForwardedRow}
+            </List>
+          )}
+        </AutoSizer>
+      </article>
+    );
+  }
 }
 
 export default MessageView;

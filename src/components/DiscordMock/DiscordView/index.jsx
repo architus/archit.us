@@ -7,14 +7,30 @@ import Input from "../Input";
 
 import "./style.scss";
 
-function DiscordView({ clumps = [], channelName, className, onSend, ...rest }) {
-  return (
-    <div className={classNames("discord-view", className)} {...rest}>
-      <MessageView clumps={clumps} style={{ flexGrow: 1 }} />
-      <hr className="input-border" />
-      <Input channelName={channelName} onSend={onSend} />
-    </div>
-  );
+class DiscordView extends React.Component {
+  constructor(props) {
+    super(props);
+    this.listView = React.createRef();
+  }
+
+  scrollToBottom() {
+    this.listView.current.scrollToBottom();
+  }
+
+  render() {
+    const { clumps = [], channelName, className, onSend, ...rest } = this.props;
+    return (
+      <div className={classNames("discord-view", className)} {...rest}>
+        <MessageView
+          clumps={clumps}
+          style={{ flexGrow: 1 }}
+          ref={this.listView}
+        />
+        <hr className="input-border" />
+        <Input channelName={channelName} onSend={onSend} />
+      </div>
+    );
+  }
 }
 
 export default DiscordView;
