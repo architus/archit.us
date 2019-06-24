@@ -162,7 +162,7 @@ class DiscordMock extends React.Component {
         [emojiResponder.clientId]: emojiResponder,
         [autBotUser.clientId]: autBotUser
       },
-      needsScroll: false,
+      scrollUpdateFlag: false,
       // TODO temp
       messageQueue: [
         {
@@ -225,7 +225,7 @@ class DiscordMock extends React.Component {
     };
     // TODO temp
     this.addNewMessage = this.addNewMessage.bind(this);
-    setInterval(this.addNewMessage, 1000);
+    setInterval(this.addNewMessage, 1500);
   }
 
   // TODO temp
@@ -243,18 +243,19 @@ class DiscordMock extends React.Component {
   }
 
   componentDidUpdate(_prevProps, prevState) {
-    if (!prevState.needsScroll && this.state.needsScroll) {
+    if (prevState.scrollUpdateFlag === !this.state.scrollUpdateFlag) {
       if (!isNil(this.view.current)) {
         this.view.current.scrollToBottom();
+        // TODO this is a poor fix; try to figure out root cause
+        setTimeout(() => this.view.current.scrollToBottom(), 1);
+        // performance/race condition fallback?
+        setTimeout(() => this.view.current.scrollToBottom(), 100);
       }
-      this.setState({
-        needsScroll: false
-      });
     }
   }
 
   addMessage(id, content, sender, reactions) {
-    this.setState(({ clumps, thisUser, users }) => {
+    this.setState(({ clumps, thisUser, users, scrollUpdateFlag }) => {
       const { result, mentions } = transformMessage(content, users);
       const clump = {
         timestamp: new Date(),
@@ -303,7 +304,7 @@ class DiscordMock extends React.Component {
 
       return {
         clumps: newClumps,
-        needsScroll: true
+        scrollUpdateFlag: !scrollUpdateFlag
       };
     });
   }

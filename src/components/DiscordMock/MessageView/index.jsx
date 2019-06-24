@@ -17,8 +17,6 @@ class MessageView extends React.Component {
   scrollToBottom() {
     const { clumps } = this.props;
     this.listView.current.scrollToItem(clumps.length - 1, "bottom");
-    this.listView.current.scrollToItem(clumps.length - 1, "bottom");
-    this.listView.current.scrollToItem(clumps.length - 1, "bottom");
   }
 
   render() {
