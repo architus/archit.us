@@ -4,8 +4,6 @@ import classNames from "classnames";
 
 import "./style.scss";
 
-const whitespaceRegex = /\s/g;
-
 class Input extends React.Component {
   constructor(props) {
     super(props);
@@ -15,11 +13,7 @@ class Input extends React.Component {
 
   handleKeyPress(e) {
     if (e.key === "Enter") {
-      const { onSend } = this.props;
-      const value = this.inputRef.current.value;
-      if (value.toString().replace(whitespaceRegex, "") !== "") {
-        onSend(value);
-      }
+      this.props.onSend();
     }
   }
 

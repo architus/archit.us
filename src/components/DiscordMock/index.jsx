@@ -101,6 +101,7 @@ class DiscordMock extends React.Component {
   }
 
   onSend(message) {
+    if (message.trim() === "") return;
     this.addMessage({ content: message, sender: this.state.thisUser });
     this.setState({ inputValue: "" });
   }
@@ -126,25 +127,30 @@ class DiscordMock extends React.Component {
   }
 
   onMockSend(line) {
-    console.log({ line, state: this.state });
     this.setState({ inputValue: "" });
     this.onSend(line);
   }
 
   onMockFinish() {
-    console.log("finish");
     this.mockTyper.currentSet++;
-    const { messageSet } = this.props;
-    if (this.mockTyper.currentSet < messageSet.length) {
-      setTimeout(() => {
-        this.setState({
-          clumps: []
-        });
-        this.mockTyper.reset({
-          lines: messageSet[this.mockTyper.currentSet]
-        });
-      }, setDelay);
+    if (this.mockTyper.currentSet < this.props.messageSet.length) {
+      this.startNextMessages();
+    } else if (this.props.loop) {
+      this.mockTyper.currentSet = 0;
+      this.startNextMessages();
     }
+  }
+
+  startNextMessages() {
+    const { messageSet } = this.props;
+    setTimeout(() => {
+      this.setState({
+        clumps: []
+      });
+      this.mockTyper.reset({
+        lines: messageSet[this.mockTyper.currentSet]
+      });
+    }, setDelay);
   }
 
   provisionId() {
@@ -200,5 +206,6 @@ export default DiscordMock;
 DiscordMock.propTypes = {
   height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   channelName: PropTypes.string,
-  messageSet: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string))
+  messageSet: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
+  loop: PropTypes.bool
 };

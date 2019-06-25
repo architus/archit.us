@@ -211,11 +211,6 @@ export const addMessage = (messageData, clumps, thisUser, users) => {
   return newClumps;
 };
 
-const initialState = () => ({
-  waitingLine: false,
-  waitingCounter: 0,
-  finished: false
-});
 export class MockTyper {
   constructor(options) {
     const { keypressDelay } = options;
@@ -229,47 +224,63 @@ export class MockTyper {
     this.tickTimer = setInterval(this.tick, this.tickLength);
     this.currentLine = 0;
     this.currentCharacter = 0;
-    this.state = initialState();
+    this.state = {
+      waitingLine: false,
+      waitingCounter: 0,
+      finished: false
+    };
   }
 
   tick() {
-    const { waitingLine, waitingCounter, finished } = this.state;
+    const { waitingLine, finished } = this.state;
     if (finished) return;
     if (waitingLine) {
-      // Waiting at the end of a line
-      const { lineDelay } = this.options;
-      if (waitingCounter > lineDelay) {
-        // Finished with waiting on the line
-        this.state.waitingLine = false;
-        this.state.waitingCounter = 0;
-      } else {
-        // Continue waiting
-        this.state.waitingCounter += this.tickLength;
-      }
+      this.updateWaiting();
     } else {
-      const { lines } = this.options;
-      const { currentLine, currentCharacter } = this;
-      // Typing
-      if (currentCharacter >= lines[currentLine].length) {
-        // At the end of the line
-        this.options.onEnter(lines[currentLine]);
-        if (currentLine === lines.length - 1) {
-          // Last line, finished
-          this.state.finished = true;
-          this.options.onFinish();
-          this.stop();
-        } else {
-          // Go to the next line, but first wait
-          ++this.currentLine;
-          this.currentCharacter = 0;
-          this.state.waitingLine = true;
-        }
-      } else {
-        // Type a single character
-        const typedChar = lines[currentLine].charAt(currentCharacter);
-        this.options.onKeypress(typedChar);
-        ++this.currentCharacter;
-      }
+      this.updateTyping();
+    }
+  }
+
+  updateWaiting() {
+    const { waitingCounter } = this.state;
+    const { lineDelay } = this.options;
+    if (waitingCounter > lineDelay) {
+      // Finished with waiting on the line
+      this.state.waitingLine = false;
+      this.state.waitingCounter = 0;
+    } else {
+      // Continue waiting
+      this.state.waitingCounter += this.tickLength;
+    }
+  }
+
+  updateTyping() {
+    const { lines } = this.options;
+    const { currentLine, currentCharacter } = this;
+    if (currentCharacter >= lines[currentLine].length) {
+      this.handleEndOfLine();
+    } else {
+      // Type a single character
+      const typedChar = lines[currentLine].charAt(currentCharacter);
+      this.options.onKeypress(typedChar);
+      ++this.currentCharacter;
+    }
+  }
+
+  handleEndOfLine() {
+    const { lines } = this.options;
+    const { currentLine } = this;
+    this.options.onEnter(lines[currentLine]);
+    if (currentLine === lines.length - 1) {
+      // Last line, finished
+      this.state.finished = true;
+      this.options.onFinish();
+      this.stop();
+    } else {
+      // Go to the next line, but first wait
+      ++this.currentLine;
+      this.currentCharacter = 0;
+      this.state.waitingLine = true;
     }
   }
 

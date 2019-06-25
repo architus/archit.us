@@ -64,6 +64,7 @@ function Index() {
               channelName="auto-response-demo"
               index={0}
               messageSet={MessageSets.autoResponse}
+              loop
             />
           </Window>
         </Feature>
@@ -89,6 +90,7 @@ function Index() {
               channelName="custom-emoji-demo"
               index={1}
               messageSet={MessageSets.customEmoji}
+              loop
             />
           </Window>
         </Feature>
@@ -114,6 +116,7 @@ function Index() {
               channelName="polls-schedules-demo"
               index={2}
               messageSet={MessageSets.pollsSchedules}
+              loop
             />
           </Window>
         </Feature>
