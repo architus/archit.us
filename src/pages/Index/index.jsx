@@ -6,6 +6,7 @@ import { Jumbotron, Container, Row, Card, Col } from "react-bootstrap";
 import LoginButton from "../../components/LoginButton";
 import DiscordMock from "../../components/DiscordMock";
 import Window from "../../components/Window";
+import WebSocketConnection from "../../components/functional/WebSocketConnection";
 
 import "./style.scss";
 import MessageSets from "./messageSets.json";
@@ -13,6 +14,7 @@ import MessageSets from "./messageSets.json";
 function Index() {
   return (
     <article>
+      <WebSocketConnection />
       <Jumbotron fluid>
         <Container>
           <Row as="section" className="head">

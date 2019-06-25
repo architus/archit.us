@@ -1,10 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import {
   addMissingUnit,
   generateName,
   randomDigitString,
-  isNil
+  isNil,
+  pick
 } from "../../util";
 import {
   colors,
@@ -17,6 +19,7 @@ import {
 } from "./util";
 
 import DiscordView from "./DiscordView";
+import { sendMessage } from "../../store/actions";
 
 const keypressDelay = 120;
 const lineDelay = 600;
@@ -81,7 +84,7 @@ class DiscordMock extends React.Component {
     this.mockTyper.currentSet = currentSet;
   }
 
-  componentDidUpdate(_prevProps, prevState) {
+  componentDidUpdate(prevProps, prevState) {
     if (prevState.scrollUpdateFlag === !this.state.scrollUpdateFlag) {
       if (!isNil(this.view.current)) {
         this.view.current.scrollToBottom();
@@ -90,6 +93,26 @@ class DiscordMock extends React.Component {
     if (prevState.automatedMode && !this.state.automatedMode) {
       this.mockTyper.stop();
     }
+    const { responseQueue } = this.props;
+    if (prevProps.responseQueue.length < responseQueue.length) {
+      const prevLength = prevProps.responseQueue.length;
+      const added = responseQueue.length - prevLength;
+      for (let i = 0; i < added; ++i) {
+        const newResponse = responseQueue[prevLength + i];
+        if (newResponse.guildId === this.state.guildId) {
+          this.handleResponse(newResponse);
+        }
+      }
+    }
+  }
+
+  handleResponse(response) {
+    this.addMessage({
+      content: response.content,
+      reactions: response.reactions,
+      id: response.messageId,
+      sender: autBotUser
+    });
   }
 
   componentWillUnmount() {
@@ -97,9 +120,20 @@ class DiscordMock extends React.Component {
   }
 
   onSend(message) {
-    message = message || this.state.inputValue;
+    const { dispatch } = this.props;
+    const { inputValue, thisUser } = this.state;
+    message = message || inputValue;
     if (message.trim() === "") return;
-    this.addMessage({ content: message, sender: this.state.thisUser });
+    const builtMessage = this.addMessage({
+      content: message,
+      sender: thisUser
+    });
+    const formatted = pick(builtMessage, [
+      "message",
+      { messageId: "message_id" },
+      { guildId: "guild_id" }
+    ]);
+    dispatch(sendMessage("interpret", formatted));
     this.setState({ inputValue: "" });
   }
 
@@ -157,7 +191,7 @@ class DiscordMock extends React.Component {
   }
 
   addMessage({ id = null, content = "", sender = {}, reactions = [] }) {
-    if (isNil(id)) id = this.provisionId();
+    if (isNil(id) && content !== "") id = this.provisionId();
     const messageData = { id, content, sender, reactions };
     this.setState(({ clumps, thisUser, users, scrollUpdateFlag }) => {
       return {
@@ -165,6 +199,11 @@ class DiscordMock extends React.Component {
         scrollUpdateFlag: !scrollUpdateFlag
       };
     });
+    return {
+      messageId: id,
+      guildId: this.state.guildId,
+      message: content
+    };
   }
 
   onReact(clumpIndex, messageId, reaction) {
@@ -200,11 +239,17 @@ class DiscordMock extends React.Component {
   }
 }
 
-export default DiscordMock;
+const mapStateToProps = state => ({
+  responseQueue: state.interpret.responseQueue
+});
+
+export default connect(mapStateToProps)(DiscordMock);
 
 DiscordMock.propTypes = {
   height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   channelName: PropTypes.string,
   messageSet: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
-  loop: PropTypes.bool
+  loop: PropTypes.bool,
+  dispatch: PropTypes.func.isRequired,
+  responseQueue: PropTypes.arrayOf(PropTypes.object).isRequired
 };

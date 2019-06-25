@@ -944,6 +944,13 @@
     humps "^2.0.1"
     prop-types "^15.5.10"
 
+"@giantmachines/redux-websocket@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@giantmachines/redux-websocket/-/redux-websocket-1.1.2.tgz#4016e4250d857d943629aaa9691dfba0dfa4d2f7"
+  integrity sha512-dOAfIiaNHou7mrGkPJ4rAT5HpXGF2QdBOCjh/OTsQ1sGU1EyH6qdX4qFl45ZEMEMUh7FKnmsp4b9HaUdBoNGzg==
+  dependencies:
+    redux "~4"
+
 "@hapi/address@2.x.x":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@hapi/address/-/address-2.0.0.tgz#9f05469c88cb2fd3dcd624776b54ee95c312126a"
@@ -8894,7 +8901,7 @@ redux-saga@^1.0.3:
   dependencies:
     "@redux-saga/core" "^1.0.3"
 
-"redux@>=0.10 <5", redux@^4.0.1:
+"redux@>=0.10 <5", redux@^4.0.1, redux@~4:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/redux/-/redux-4.0.1.tgz#436cae6cc40fbe4727689d7c8fae44808f1bfef5"
   integrity sha512-R7bAtSkk7nY6O/OYMVR9RiBI+XghjF9rlbl5806HJbQph0LJVHZrU5oaO4q70eUKiqMRqm4y07KLTlMZ2BlVmg==

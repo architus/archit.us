@@ -28,7 +28,9 @@ class MessageView extends React.Component {
   render() {
     const { clumps, className, onReact, onUnreact, ...rest } = this.props;
     const makeKey = clump =>
-      `${clump.sender.username}=>${formatAMPM(clump.timestamp)}`;
+      `${clump.sender.username}=>${formatAMPM(
+        clump.timestamp
+      )}.${clump.timestamp.getSeconds()}`;
     return (
       <article
         className={classNames(className, "discord-messages")}

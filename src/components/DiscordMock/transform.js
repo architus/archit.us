@@ -27,6 +27,24 @@ const convertUnicodeEmoji = text =>
     .parse(text)
     .replace(emojiHtmlRegex, (_match, p1) => `alt="${unemojify(p1)}"`);
 
+const codeRegex = /`(.+)`/g;
+const reverseEntities = {
+  "&lsqb;": "[",
+  "&rsqb;": "]",
+  "&excl;": "!",
+  "&amp;": "&",
+  "&lt;": "<",
+  "&gt;": ">"
+};
+const applyExemptions = text =>
+  text.replace(codeRegex, (_match, p1) => {
+    let intermediate = p1;
+    Object.keys(reverseEntities).forEach(entity => {
+      intermediate = intermediate.replace(entity, reverseEntities[entity]);
+    });
+    return `\`${intermediate}\``;
+  });
+
 const underlineRegex = /__(.*?)__/gs;
 const mentionRegex = /(?:[<]|(?:&lt;))[@]([-0-9]+)(?:[>]|(?:&gt;))/g;
 const emojiRegex = /:([a-zA-Z0-9_-]+):/g;
@@ -81,7 +99,8 @@ const applyExtensions = (markdown, users) => {
 
 export const transformMessage = (rawText, users = {}) => {
   const escaped = escapeMarkdown(escapeHtml(rawText));
-  const { transformed, mentions } = applyExtensions(escaped, users);
+  const processedEscaped = applyExemptions(escaped);
+  const { transformed, mentions } = applyExtensions(processedEscaped, users);
   const markdown = marked(transformed);
   return { result: markdown, mentions };
 };

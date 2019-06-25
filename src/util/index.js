@@ -73,7 +73,15 @@ export const HttpVerbs = {
 export const pick = (sourceObject, keys) => {
   const newObject = {};
   keys.forEach(key => {
-    newObject[key] = sourceObject[key];
+    if (typeof key === "string") newObject[key] = sourceObject[key];
+    else if (typeof key === "object") {
+      const keyKeys = Object.keys(key);
+      if (keyKeys.length > 0) {
+        const sourceKey = keyKeys[0];
+        const newKey = key[keyKeys[0]];
+        newObject[newKey] = sourceObject[sourceKey];
+      }
+    }
   });
   return newObject;
 };
