@@ -113,7 +113,7 @@ export function loadSession(data) {
 }
 
 export function websocketConnect() {
-  return connect("ws://api.aut-bot.com:8300");
+  return connect("wss://api.aut-bot.com:8300");
 }
 
 export function sendMessage(module, content) {
