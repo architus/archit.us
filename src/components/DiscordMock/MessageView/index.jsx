@@ -20,7 +20,7 @@ class MessageView extends React.Component {
   }
 
   render() {
-    const { clumps, className, ...rest } = this.props;
+    const { clumps, className, onReact, onUnreact, ...rest } = this.props;
     const itemCount = clumps.length;
 
     // eslint-disable-next-line react/prop-types
@@ -34,6 +34,12 @@ class MessageView extends React.Component {
           forwardedRef={ref}
           first={index === 0}
           last={index === itemCount - 1}
+          onReact={(messageId, reactionObj) =>
+            onReact(index, messageId, reactionObj)
+          }
+          onUnreact={(messageId, reactionObj) =>
+            onUnreact(index, messageId, reactionObj)
+          }
         />
       )
     );
@@ -63,5 +69,7 @@ export default MessageView;
 
 MessageView.propTypes = {
   clumps: PropTypes.arrayOf(PropTypes.object),
+  onReact: PropTypes.func,
+  onUnreact: PropTypes.func,
   className: PropTypes.string
 };

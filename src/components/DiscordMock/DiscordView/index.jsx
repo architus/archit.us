@@ -18,16 +18,35 @@ class DiscordView extends React.Component {
   }
 
   render() {
-    const { clumps = [], channelName, className, onSend, ...rest } = this.props;
+    const {
+      clumps = [],
+      channelName,
+      className,
+      onSend,
+      onReact,
+      onUnreact,
+      onInputFocus,
+      onInputChange,
+      inputValue,
+      ...rest
+    } = this.props;
     return (
       <div className={classNames("discord-view", className)} {...rest}>
         <MessageView
           clumps={clumps}
           style={{ flexGrow: 1 }}
           ref={this.listView}
+          onReact={onReact}
+          onUnreact={onUnreact}
         />
         <hr className="input-border" />
-        <Input channelName={channelName} onSend={onSend} />
+        <Input
+          channelName={channelName}
+          onSend={onSend}
+          onFocus={onInputFocus}
+          onChange={onInputChange}
+          value={inputValue}
+        />
       </div>
     );
   }
@@ -39,5 +58,10 @@ DiscordView.propTypes = {
   clumps: PropTypes.arrayOf(PropTypes.object),
   channelName: PropTypes.string,
   onSend: PropTypes.func,
-  className: PropTypes.string
+  onReact: PropTypes.func,
+  onUnreact: PropTypes.func,
+  className: PropTypes.string,
+  onInputFocus: PropTypes.func,
+  onInputChange: PropTypes.func,
+  inputValue: PropTypes.string
 };

@@ -14,6 +14,8 @@ function Message({
   mentionsUser = false,
   reactions = [],
   edited = false,
+  onReact,
+  onUnreact,
   ...rest
 }) {
   return (
@@ -38,7 +40,11 @@ function Message({
           />
         </Placeholder.Multiline>
       </div>
-      <ReactionList reactions={reactions} />
+      <ReactionList
+        reactions={reactions}
+        onReact={onReact}
+        onUnreact={onUnreact}
+      />
     </div>
   );
 }
@@ -48,6 +54,8 @@ export default Message;
 Message.propTypes = {
   contentHtml: PropTypes.string,
   className: PropTypes.string,
+  onReact: PropTypes.func,
+  onUnreact: PropTypes.func,
   amount: PropTypes.number,
   edited: PropTypes.bool,
   reactions: PropTypes.arrayOf(PropTypes.object),

@@ -4,11 +4,22 @@ import classNames from "classnames";
 
 import Reaction from "../Reaction";
 
-function ReactionList({ reactions = [], className, ...rest }) {
+function ReactionList({
+  reactions = [],
+  className,
+  onReact,
+  onUnreact,
+  ...rest
+}) {
   return (
     <div className={classNames("reaction-list", className)} {...rest}>
       {reactions.map((reaction, index) => (
-        <Reaction key={index} {...reaction} />
+        <Reaction
+          key={index}
+          {...reaction}
+          onReact={() => onReact(reaction)}
+          onUnreact={() => onUnreact(reaction)}
+        />
       ))}
     </div>
   );
@@ -18,5 +29,7 @@ export default ReactionList;
 
 ReactionList.propTypes = {
   reactions: PropTypes.arrayOf(PropTypes.object),
+  onReact: PropTypes.func,
+  onUnreact: PropTypes.func,
   className: PropTypes.string
 };

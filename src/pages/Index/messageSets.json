@@ -1,0 +1,18 @@
+{
+  "autoResponse": [
+    ["hello", "nice brain", "very nice brain"],
+    ["another set", "sample message", "let me in"]
+  ],
+  "customEmoji": [
+    ["ur soooo good", "nicest brain", "last message"],
+    ["gulag jack", "!gulag", "@pugger for pugs"]
+  ],
+  "pollsSchedules": [
+    ["tickl gulag squad", "weirdchamp", "nyxl is sandbagging"],
+    [
+      "feelsweirdman weirdchamp normies omegalul",
+      "ur sooooooooooo good",
+      "get on"
+    ]
+  ]
+}

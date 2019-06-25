@@ -23,6 +23,8 @@ class MessageClump extends PureComponent {
       last = false,
       forwardedRef,
       messages = [],
+      onReact = () => null,
+      onUnreact = () => null,
       ...rest
     } = this.props;
     const {
@@ -69,25 +71,18 @@ class MessageClump extends PureComponent {
               className="timestamp"
             />
           </div>
-          {messages.map((message, index) =>
-            typeof message === "string" ? (
-              <Message
-                key={`${index}-${message.substring(10)}`}
-                contentHtml={message}
-                edited={message.edited}
-                amount={placeholderMessageWidth(index)}
-              />
-            ) : (
-              <Message
-                key={`${index}-${message.content.substring(10)}`}
-                contentHtml={message.content}
-                mentionsUser={message.mentionsUser}
-                reactions={message.reactions}
-                edited={message.edited}
-                amount={placeholderMessageWidth(index)}
-              />
-            )
-          )}
+          {messages.map((message, index) => (
+            <Message
+              key={message.messageId}
+              contentHtml={message.content}
+              mentionsUser={message.mentionsUser}
+              reactions={message.reactions}
+              onReact={reaction => onReact(message.messageId, reaction)}
+              onUnreact={reaction => onUnreact(message.messageId, reaction)}
+              edited={message.edited}
+              amount={placeholderMessageWidth(index)}
+            />
+          ))}
         </div>
       </div>
     );
@@ -108,5 +103,7 @@ MessageClump.propTypes = {
   messages: PropTypes.arrayOf(
     PropTypes.oneOfType([PropTypes.object, PropTypes.string])
   ),
-  forwardedRef: PropTypes.func
+  forwardedRef: PropTypes.func,
+  onReact: PropTypes.func,
+  onUnreact: PropTypes.func
 };

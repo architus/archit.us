@@ -37,7 +37,7 @@
         }
 
         .timestamp:not(.placeholder) {
-            opacity: 0.4;
+            color: rgba($discord-fg, 0.4);
             font-size: 0.8rem !important;
         }
 

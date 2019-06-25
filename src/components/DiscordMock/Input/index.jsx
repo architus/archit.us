@@ -4,6 +4,8 @@ import classNames from "classnames";
 
 import "./style.scss";
 
+const whitespaceRegex = /\s/g;
+
 class Input extends React.Component {
   constructor(props) {
     super(props);
@@ -15,8 +17,9 @@ class Input extends React.Component {
     if (e.key === "Enter") {
       const { onSend } = this.props;
       const value = this.inputRef.current.value;
-      this.inputRef.current.value = "";
-      onSend(value);
+      if (value.toString().replace(whitespaceRegex, "") !== "") {
+        onSend(value);
+      }
     }
   }
 
@@ -41,5 +44,8 @@ export default Input;
 Input.propTypes = {
   className: PropTypes.string,
   channelName: PropTypes.string,
-  onSend: PropTypes.func
+  onSend: PropTypes.func,
+  onFocus: PropTypes.func,
+  onChange: PropTypes.func,
+  value: PropTypes.string
 };

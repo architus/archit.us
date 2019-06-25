@@ -8,6 +8,7 @@ import DiscordMock from "../../components/DiscordMock";
 import Window from "../../components/Window";
 
 import "./style.scss";
+import MessageSets from "./messageSets.json";
 
 function Index() {
   return (
@@ -62,6 +63,7 @@ function Index() {
               height={400}
               channelName="auto-response-demo"
               index={0}
+              messageSet={MessageSets.autoResponse}
             />
           </Window>
         </Feature>
@@ -86,6 +88,7 @@ function Index() {
               height={400}
               channelName="custom-emoji-demo"
               index={1}
+              messageSet={MessageSets.customEmoji}
             />
           </Window>
         </Feature>
@@ -110,6 +113,7 @@ function Index() {
               height={400}
               channelName="polls-schedules-demo"
               index={2}
+              messageSet={MessageSets.pollsSchedules}
             />
           </Window>
         </Feature>
