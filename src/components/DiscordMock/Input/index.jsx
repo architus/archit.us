@@ -8,7 +8,6 @@ class Input extends React.Component {
   constructor(props) {
     super(props);
     this.handleKeyPress = this.handleKeyPress.bind(this);
-    this.inputRef = React.createRef();
   }
 
   handleKeyPress(e) {
@@ -26,7 +25,6 @@ class Input extends React.Component {
           {...rest}
           placeholder={`Message #${channelName}`}
           onKeyDown={this.handleKeyPress}
-          ref={this.inputRef}
         />
       </div>
     );

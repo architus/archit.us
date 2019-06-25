@@ -85,10 +85,6 @@ class DiscordMock extends React.Component {
     if (prevState.scrollUpdateFlag === !this.state.scrollUpdateFlag) {
       if (!isNil(this.view.current)) {
         this.view.current.scrollToBottom();
-        // TODO this is a poor fix; try to figure out root cause
-        setTimeout(() => this.view.current.scrollToBottom(), 1);
-        // performance/race condition fallback?
-        setTimeout(() => this.view.current.scrollToBottom(), 100);
       }
     }
     if (prevState.automatedMode && !this.state.automatedMode) {
@@ -101,6 +97,7 @@ class DiscordMock extends React.Component {
   }
 
   onSend(message) {
+    message = message || this.state.inputValue;
     if (message.trim() === "") return;
     this.addMessage({ content: message, sender: this.state.thisUser });
     this.setState({ inputValue: "" });
@@ -144,12 +141,14 @@ class DiscordMock extends React.Component {
   startNextMessages() {
     const { messageSet } = this.props;
     setTimeout(() => {
-      this.setState({
-        clumps: []
-      });
-      this.mockTyper.reset({
-        lines: messageSet[this.mockTyper.currentSet]
-      });
+      if (this.state.automatedMode) {
+        this.setState({
+          clumps: []
+        });
+        this.mockTyper.reset({
+          lines: messageSet[this.mockTyper.currentSet]
+        });
+      }
     }, setDelay);
   }
 

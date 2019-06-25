@@ -58,7 +58,7 @@ function Index() {
             </p>
           }
         >
-          <Window variant="discord">
+          {/* <Window variant="discord">
             <DiscordMock
               height={400}
               channelName="auto-response-demo"
@@ -66,7 +66,7 @@ function Index() {
               messageSet={MessageSets.autoResponse}
               loop
             />
-          </Window>
+          </Window> */}
         </Feature>
         <Feature
           right
@@ -84,7 +84,7 @@ function Index() {
             </p>
           }
         >
-          <Window variant="discord">
+          {/* <Window variant="discord">
             <DiscordMock
               height={400}
               channelName="custom-emoji-demo"
@@ -92,7 +92,7 @@ function Index() {
               messageSet={MessageSets.customEmoji}
               loop
             />
-          </Window>
+          </Window> */}
         </Feature>
         <Feature
           left

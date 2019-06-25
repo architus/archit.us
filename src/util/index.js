@@ -81,7 +81,7 @@ export const pick = (sourceObject, keys) => {
 const logPrefix = "Aut-bot App";
 export const log = message => console.log(`[${logPrefix}] ${message}`);
 
-const formatAMPM = date => {
+export const formatAMPM = date => {
   var hours = date.getHours();
   var minutes = date.getMinutes();
   var ampm = hours >= 12 ? "PM" : "AM";

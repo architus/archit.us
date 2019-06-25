@@ -161,7 +161,6 @@ export const updateReaction = (
 });
 
 export const addMessage = (messageData, clumps, thisUser, users) => {
-  console.log({ messageData, clumps, thisUser, users });
   const { content, id, reactions, sender } = messageData;
   const { result, mentions } = transformMessage(content, users);
   const clump = {
