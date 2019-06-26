@@ -20,10 +20,17 @@ import {
 
 import DiscordView from "./DiscordView";
 import { sendMessage } from "../../store/actions";
+import { transformOutgoingMessage } from "./transform";
+import { SLICED_LENGTH } from "../../store/reducers/interpret";
 
+// Mock typer options
 const keypressDelay = 120;
 const lineDelay = 600;
 const setDelay = 1200;
+
+// Clump performance optimization threshold (clear old message clumps)
+const CLUMP_SLICING_THRESHOLD = 50;
+const CLUMP_SLICED_LENGTH = 40;
 
 class DiscordMock extends React.Component {
   constructor(props) {
@@ -93,15 +100,30 @@ class DiscordMock extends React.Component {
     if (prevState.automatedMode && !this.state.automatedMode) {
       this.mockTyper.stop();
     }
+    if (this.state.clumps.length > CLUMP_SLICING_THRESHOLD) {
+      this.setState(state => ({
+        clumps: state.clumps.slice(CLUMP_SLICED_LENGTH),
+        scrollUpdateFlag: !state.scrollUpdateFlag
+      }));
+    }
+
+    const prevLength = prevProps.responseQueue.length;
+    if (prevLength < this.props.responseQueue.length) {
+      this.handleUpdatedResponseQueue(prevLength);
+    } else if (prevLength > this.props.responseQueue.length) {
+      // the internal array got sliced; find the new ones and handle
+      const newResponses = this.props.responseQueue.slice(SLICED_LENGTH);
+      newResponses.forEach(this.handleResponse.bind(this));
+    }
+  }
+
+  handleUpdatedResponseQueue(prevLength) {
     const { responseQueue } = this.props;
-    if (prevProps.responseQueue.length < responseQueue.length) {
-      const prevLength = prevProps.responseQueue.length;
-      const added = responseQueue.length - prevLength;
-      for (let i = 0; i < added; ++i) {
-        const newResponse = responseQueue[prevLength + i];
-        if (newResponse.guildId === this.state.guildId) {
-          this.handleResponse(newResponse);
-        }
+    const added = responseQueue.length - prevLength;
+    for (let i = 0; i < added; ++i) {
+      const newResponse = responseQueue[prevLength + i];
+      if (newResponse.guildId === this.state.guildId) {
+        this.handleResponse(newResponse);
       }
     }
   }
@@ -120,21 +142,28 @@ class DiscordMock extends React.Component {
   }
 
   onSend(message) {
-    const { dispatch } = this.props;
-    const { inputValue, thisUser } = this.state;
+    const { inputValue } = this.state;
     message = message || inputValue;
     if (message.trim() === "") return;
+
+    this.sentToInterpret(message);
+    this.setState({ inputValue: "" });
+  }
+
+  sentToInterpret(message, reactions = []) {
+    const { dispatch } = this.props;
+    const { thisUser } = this.state;
     const builtMessage = this.addMessage({
-      content: message,
+      content: transformOutgoingMessage(message),
       sender: thisUser
     });
     const formatted = pick(builtMessage, [
       "message",
+      reactions,
       { messageId: "message_id" },
       { guildId: "guild_id" }
     ]);
     dispatch(sendMessage("interpret", formatted));
-    this.setState({ inputValue: "" });
   }
 
   onInputFocus() {

@@ -114,7 +114,12 @@ export const addReactions = (clumps, reactions) => {
                         reaction => reaction.targetId === message.messageId
                       )
                       .map(reaction =>
-                        pick(reaction, ["emoji", "number", "userHasReacted"])
+                        pick(reaction, [
+                          "emoji",
+                          "rawEmoji",
+                          "number",
+                          "userHasReacted"
+                        ])
                       )
                   )
                 }
@@ -167,6 +172,7 @@ export const addMessage = (messageData, clumps, thisUser, users) => {
         .filter(r => !isNil(r) && r[0] === id)
         .map(r => ({
           emoji: transformReaction(r[1]),
+          rawEmoji: r[1],
           number: 1,
           userHasReacted: false
         }))
@@ -176,6 +182,7 @@ export const addMessage = (messageData, clumps, thisUser, users) => {
         .filter(r => !isNil(r) && r[0] !== id)
         .map(r => ({
           emoji: transformReaction(r[1]),
+          rawEmoji: r[1],
           number: 1,
           userHasReacted: false,
           targetId: r[0]
@@ -185,7 +192,10 @@ export const addMessage = (messageData, clumps, thisUser, users) => {
   let newClumps;
   if (content !== "" || messageReactions.length > 0) {
     // should process this message
-    const { result, mentions } = transformMessage(content, { users });
+    const { result, mentions } = transformMessage(content, {
+      users,
+      clientId: thisUser.clientId
+    });
     const clump = {
       timestamp: new Date(),
       sender,

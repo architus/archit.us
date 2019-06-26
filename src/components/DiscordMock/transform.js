@@ -83,13 +83,16 @@ const fragmentTransformers = {
     escapeHtml,
     escapeMarkdown,
     convertUnderlines,
+    replaceRelativeMentions,
     convertMentions,
     convertDiscordEmoji,
     convertUnicodeEmoji
   ]
 };
 
-const emojiTransformers = [convertUnicodeEmoji];
+const emojiTransformer = [convertUnicodeEmoji];
+
+const outgoingMessageTransformer = [emojiToShortcode];
 
 // Map of extension attribute to extension function. Used to add addition
 // outgoing context to the transformed result
@@ -120,7 +123,13 @@ export function transformMessage(source = "", context = {}) {
 
 // Transforms the incoming reaction using a simplified pipeline
 export function transformReaction(emoji = "", context = {}) {
-  return applyTransformers(emoji, context, emojiTransformers);
+  return applyFragmentTransformer(emoji, context, emojiTransformer);
+}
+
+// Transforms the outgoing raw message for being sent on the network
+// (needed to ensure uniform representation of emoji across client/server)
+export function transformOutgoingMessage(message = "", context = {}) {
+  return applyFragmentTransformer(message, context, outgoingMessageTransformer);
 }
 
 // Applies a transformation pipeline (types described above)
@@ -166,7 +175,9 @@ function correctEmojiAlts(fragment) {
 }
 
 // Gets every unique mentioned ID from the source text as an array
-function allMentionedIds(source) {
+function allMentionedIds(source, context) {
+  // first, replace relative mentions to properly count them
+  source = replaceRelativeMentions(source, context);
   let mentionIds = [];
   const allMentions = allMatches(source, mentionRegex);
   allMentions.forEach(mentionText => {
@@ -180,6 +191,13 @@ const underlineRegex = /__(.*?)__/gs;
 // Applies Discord's custom underline markdown syntax to the given fragment
 function convertUnderlines(fragment) {
   return fragment.replace(underlineRegex, (_match, p1) => `<u>${p1}</u>`);
+}
+
+const relativeMentionRegex = /(?:[<]|(?:&lt;))@%_CLIENT_ID_%(?:[>]|(?:&gt;))/g;
+// Finds every match of the relative mention regex and converts it to a mention
+// that mentions the thisUser
+function replaceRelativeMentions(fragment, context) {
+  return fragment.replace(relativeMentionRegex, `<@${context.clientId}>`);
 }
 
 const mentionRegex = /(?:[<]|(?:&lt;))[@]([-0-9]+)(?:[>]|(?:&gt;))/g;
@@ -222,4 +240,9 @@ function convertDiscordEmoji(fragment) {
 // Converts unicode emoji to image nodes with corrected alt tags
 function convertUnicodeEmoji(fragment) {
   return correctEmojiAlts(twemoji.parse(fragment));
+}
+
+// Converts unicode emoji to their shortcode representations
+function emojiToShortcode(fragment) {
+  return unemojify(fragment);
 }
