@@ -1,4 +1,5 @@
 import { zip, flatten, compact } from "lodash";
+import { left, right } from "./names.json";
 
 export function splitFragments(string: string, regex: RegExp): Array<string> {
   const excludedFragments = string.split(regex);
@@ -23,3 +24,11 @@ export function allMatches(string: string, regex: RegExp): Array<string> {
   } while (currentMatch);
   return matches;
 }
+
+export function generateName(noSpace: boolean = false): string {
+  const li: number = Math.floor(Math.random() * left.length);
+  const ri: number = Math.floor(Math.random() * right.length);
+  const lv: string = left[li];
+  const rv: string = right[ri];
+  return noSpace ? `${lv}_${rv}` : `${lv} ${rv}`;
+};

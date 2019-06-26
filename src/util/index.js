@@ -1,5 +1,3 @@
-import { left, right } from "./names";
-
 // Sourced from A-Frame VR toolkit
 export const getUrlParameter = name => {
   name = name.replace(/[[]/, "\\[").replace(/[\]]/, "\\]");
@@ -101,13 +99,6 @@ export const formatAMPM = date => {
 };
 export const toHumanTime = date => `Today at ${formatAMPM(date)}`;
 
-export const generateName = (noSpace = false) => {
-  const li = Math.floor(Math.random() * left.length);
-  const ri = Math.floor(Math.random() * right.length);
-  const lv = left[li];
-  const rv = right[ri];
-  return noSpace ? `${lv}_${rv}` : `${lv} ${rv}`;
-};
 
 export const randomDigitString = length =>
   (~~(Math.random() * 10 ** length)).toString().padStart(length, "0");
