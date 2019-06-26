@@ -24,17 +24,22 @@ const markdownOverrides = {
   listitem: text => text,
   checkbox: () => ""
 };
-marked.setOptions({
+const markedOptions = {
   renderer: Object.assign(markdownRenderer, markdownOverrides),
   gfm: true, // needed for auto-linking
   tables: false, // disable tables
-  breaks: false,
+  breaks: true,
   sanitize: false // content is sanitized manually in the pipeline
-});
+};
+marked.setOptions(markedOptions);
+const markdownLexer = new marked.Lexer(markedOptions);
+const markdownParser = new marked.Parser(markedOptions);
 
 // Invokes marked Markdown parser and renderer
 function transformMarkdown(source) {
-  return marked(source);
+  const tokens = markdownLexer.lex(source);
+  const html = markdownParser.parse(tokens);
+  return html;
 }
 
 // ? ===================
@@ -80,8 +85,7 @@ const fragmentTransformers = {
     convertUnderlines,
     convertMentions,
     convertDiscordEmoji,
-    convertUnicodeEmoji,
-    transformMarkdown
+    convertUnicodeEmoji
   ]
 };
 
@@ -107,9 +111,10 @@ export function transformMessage(source = "", context = {}) {
     fragmentTransformers
   );
   const joinedResult = transformedAST.map(frag => frag.fragment).join("");
+  const markdownProcessed = transformMarkdown(joinedResult);
   return {
     ...attributes,
-    result: joinedResult
+    result: markdownProcessed
   };
 }
 

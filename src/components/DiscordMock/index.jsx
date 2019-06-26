@@ -8,14 +8,14 @@ import {
   isNil,
   pick
 } from "../../util";
+import MockTyper from "../../util/MockTyper";
 import {
   colors,
   nextDiscriminator,
   makeEmojiResponseUser,
   autBotUser,
   updateReaction,
-  addMessage,
-  MockTyper
+  addMessage
 } from "./util";
 
 import DiscordView from "./DiscordView";

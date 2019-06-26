@@ -7,7 +7,7 @@ import MessageClump from "../MessageClump";
 
 import "./style.scss";
 
-const scrollThreshold = 160;
+const scrollThreshold = 400;
 
 class MessageView extends React.Component {
   constructor(props) {
