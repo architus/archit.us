@@ -130,38 +130,84 @@ function Index() {
           </Window>
         </Feature>
       </Container>
+      <div className="features additional">
+        <Container>
+          <h2>
+            <span>Additional Features</span>
+          </h2>
+          <Row>
+            <MinorFeature
+              header="Message history statistics/analytics"
+              text={
+                <p>
+                  Morbi vitae velit sit amet nisi aliquet mollis. Fusce purus
+                  elit, convallis vel pellentesque ac, maximus at ex. Maecenas
+                  porta ullamcorper eros, id pulvinar ante viverra et.
+                </p>
+              }
+            />
+            <MinorFeature
+              header="Extensive server and internal logs"
+              text={
+                <p>
+                  Aenean mollis cursus rutrum. Proin ornare sem eros, hendrerit
+                  finibus elit venenatis ut. Suspendisse nec mi turpis.
+                </p>
+              }
+            />
+            <MinorFeature
+              header="Music playing & Rhythm integration"
+              text={
+                <p>
+                  Sed in ex id diam condimentum pellentesque. Integer congue
+                  ultricies nisi eget egestas. Maecenas mattis eros eu varius
+                  pretium.
+                </p>
+              }
+            />
+            <MinorFeature
+              header="Per-server role management"
+              text={
+                <p>
+                  Nunc aliquam metus scelerisque ante aliquet tincidunt.
+                  Praesent a blandit ligula. Maecenas faucibus ornare lorem, ut
+                  maximus arcu efficitur eget
+                </p>
+              }
+            />
+          </Row>
+        </Container>
+      </div>
     </article>
   );
 }
 
 export default Index;
 
-const Feature = ({ left, right, children, lead, header, content }) => {
-  return (
-    <Row as="section" className="align-items-center">
-      <Col
-        lg={6}
-        className={classNames("mt-2 mt-lg-0 order-2", {
-          "order-lg-1": left,
-          "order-lg-2": right
-        })}
-      >
-        {children}
-      </Col>
-      <Col
-        lg={6}
-        className={classNames("order-1", {
-          "order-lg-2": left,
-          "order-lg-1": right
-        })}
-      >
-        <h4>{lead}</h4>
-        <h3>{header}</h3>
-        <div className="feature-content">{content}</div>
-      </Col>
-    </Row>
-  );
-};
+const Feature = ({ left, right, children, lead, header, content }) => (
+  <Row as="section" className="align-items-center">
+    <Col
+      lg={6}
+      className={classNames("mt-2 mt-lg-0 order-2", {
+        "order-lg-1": left,
+        "order-lg-2": right
+      })}
+    >
+      {children}
+    </Col>
+    <Col
+      lg={6}
+      className={classNames("order-1", {
+        "order-lg-2": left,
+        "order-lg-1": right
+      })}
+    >
+      <h4>{lead}</h4>
+      <h3>{header}</h3>
+      <div className="feature-content">{content}</div>
+    </Col>
+  </Row>
+);
 
 Feature.propTypes = {
   left: PropTypes.bool,
@@ -181,6 +227,28 @@ Feature.propTypes = {
     PropTypes.string
   ]),
   content: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+    PropTypes.string
+  ])
+};
+
+const MinorFeature = ({ header, text, image }) => (
+  <Col md={6} className="minor-feature">
+    <div className="minor-feature--inner">
+      <h3>{header}</h3>
+      <div>{text}</div>
+    </div>
+  </Col>
+);
+
+MinorFeature.propTypes = {
+  header: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+    PropTypes.string
+  ]),
+  text: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
     PropTypes.string

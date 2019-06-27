@@ -95,6 +95,7 @@
         font-weight: 300;
         font-size: 2.5rem;
         text-align: center;
+        margin-bottom: 0.5rem;
 
         span {
             border-bottom: 2px dashed rgba($-primary, 0.8);
@@ -126,6 +127,39 @@
 
             & > *:last-child {
                 margin-bottom: 0 !important;
+            }
+        }
+    }
+
+    &.additional {
+        background-color: white;
+        border-top: 1px solid rgba($mine-shaft, 0.2);
+
+        h2 {
+            margin-bottom: 2.5rem;
+        }
+
+        .minor-feature {
+            text-align: center;
+            margin: 2rem 0;
+
+            .minor-feature--inner {
+                max-width: 80%;
+                margin: 0 auto;
+
+                @include respond-below(md) {
+                    max-width: none;
+                }
+            }
+
+            h3 {
+                font-size: 20px;
+                font-weight: 400;
+                margin-bottom: 0.5rem;
+            }
+
+            p {
+                color: rgba($tundora, 0.75);
             }
         }
     }
