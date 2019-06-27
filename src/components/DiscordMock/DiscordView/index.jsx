@@ -28,6 +28,7 @@ class DiscordView extends React.Component {
       onInputFocus,
       onInputChange,
       inputValue,
+      displayError = false,
       ...rest
     } = this.props;
     return (
@@ -47,6 +48,19 @@ class DiscordView extends React.Component {
           onChange={onInputChange}
           value={inputValue}
         />
+        <div
+          className={classNames("error-overlay", {
+            "show-error": displayError
+          })}
+        >
+          <div className="error-inner">
+            <span className="error-image" />
+            <h4>Uh oh!</h4>
+            <p>
+              It looks like there’s been an error connecting to the aut-bot API
+            </p>
+          </div>
+        </div>
       </div>
     );
   }
@@ -63,5 +77,6 @@ DiscordView.propTypes = {
   className: PropTypes.string,
   onInputFocus: PropTypes.func,
   onInputChange: PropTypes.func,
-  inputValue: PropTypes.string
+  inputValue: PropTypes.string,
+  displayError: PropTypes.bool
 };

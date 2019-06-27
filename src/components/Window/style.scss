@@ -1,8 +1,6 @@
 @import "../../scss/colors";
 @import "../../scss/theme";
 
-$border-radius: 8px;
-
 %light-chrome {
     .chrome {
         border-bottom: 1px solid rgba($-light, 0.15) !important;
@@ -24,8 +22,9 @@ $border-radius: 8px;
 }
 
 .window {
-    border-radius: $border-radius;
+    border-radius: $window-border-radius;
     padding-bottom: $window-padding-bottom;
+    position: relative;
 
     &.window-discord {
         background-color: $discord-bg;

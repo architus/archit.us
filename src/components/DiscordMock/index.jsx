@@ -28,6 +28,9 @@ const setDelay = 2250;
 const CLUMP_SLICING_THRESHOLD = 50;
 const CLUMP_SLICED_LENGTH = 40;
 
+// Error display options
+const ERROR_DISPLAY_DELAY = 4000;
+
 class DiscordMock extends React.Component {
   // ? ===================
   // ? Initialization
@@ -49,7 +52,8 @@ class DiscordMock extends React.Component {
       clumps: [],
       scrollUpdateFlag: false,
       automatedMode: true,
-      inputValue: ""
+      inputValue: "",
+      displayError: false
     };
   }
 
@@ -101,6 +105,7 @@ class DiscordMock extends React.Component {
     if (!offline) {
       // Only initialize the mock typer once the websocket has been established
       if (isConnected) this.initializeMockTyper();
+      this.startErrorTimeout();
     } else {
       this.initializeMockTyper();
     }
@@ -132,13 +137,21 @@ class DiscordMock extends React.Component {
       this.setClumps(clumps => clumps.slice(CLUMP_SLICED_LENGTH));
     }
 
-    // Upon websocket connection, start the mock typer
-    if (
-      this.props.isConnected &&
-      isNil(this.mockTyper) &&
-      this.state.automatedMode
-    ) {
-      this.initializeMockTyper();
+    if (this.props.isConnected) {
+      if (isNil(this.errorTimeout)) {
+        clearTimeout(this.errorTimeout);
+      }
+      if (this.state.displayError) {
+        this.setState({ displayError: false });
+      }
+      // Upon websocket connection, start the mock typer
+      if (this.state.automatedMode && isNil(this.mockTyper)) {
+        this.initializeMockTyper();
+      }
+    }
+
+    if (prevProps.isConnected && !this.props.isConnected) {
+      this.startErrorTimeout();
     }
 
     // Handle new responses from the interpret module from the response queue
@@ -288,6 +301,13 @@ class DiscordMock extends React.Component {
     }, setDelay);
   }
 
+  startErrorTimeout() {
+    this.errorTimeout = setTimeout(
+      () => this.setState({ displayError: true }),
+      ERROR_DISPLAY_DELAY
+    );
+  }
+
   // Analyzes all of the new messages added to the response queue, and if they
   // match the guild Id of the current Discord mock, handle them
   handleUpdatedResponseQueue(prevLength) {
@@ -367,7 +387,7 @@ class DiscordMock extends React.Component {
 
   render() {
     const { height = 100, channelName = "channel" } = this.props;
-    const { clumps, inputValue } = this.state;
+    const { clumps, inputValue, displayError } = this.state;
 
     return (
       <DiscordView
@@ -381,6 +401,7 @@ class DiscordMock extends React.Component {
         onInputChange={this.onInputChange}
         clumps={clumps}
         ref={this.view}
+        displayError={displayError}
       />
     );
   }
