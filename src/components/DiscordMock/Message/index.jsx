@@ -27,6 +27,7 @@ function Message({
       >
         <Placeholder.Multiline
           text={contentHtml}
+          displayBlank={true}
           amount={amount}
           size="0.9em"
           light

@@ -49,6 +49,10 @@ Placeholder.propTypes = {
   height: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 };
 
+function shouldUsePlaceholder(control, displayBlank) {
+  return displayBlank ? isNil(control) : isEmptyOrNil(control);
+}
+
 // ? ==============
 // ? Sub-components
 // ? ==============
@@ -65,9 +69,10 @@ function PlaceholderText({
   size = "1.2em",
   width = "5em",
   light = false,
+  displayBlank = false,
   ...rest
 }) {
-  return isEmptyOrNil(text) ? (
+  return shouldUsePlaceholder(text, displayBlank) ? (
     <Placeholder
       style={style}
       height={multiplyDimension(addMissingUnit(size), 1.1)}
@@ -92,6 +97,7 @@ function PlaceholderText({
 PlaceholderText.propTypes = {
   text: PropTypes.string,
   style: PropTypes.object,
+  displayBlank: PropTypes.bool,
   size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   light: PropTypes.bool,
@@ -107,9 +113,10 @@ function PlaceholderCustom({
   light,
   width,
   height,
+  displayBlank = false,
   ...rest
 }) {
-  return isEmptyOrNil(value) ? (
+  return shouldUsePlaceholder(value, displayBlank) ? (
     <Placeholder
       circle={circle}
       block={block}
@@ -134,6 +141,7 @@ PlaceholderCustom.propTypes = {
   circle: PropTypes.bool,
   block: PropTypes.bool,
   light: PropTypes.bool,
+  displayBlank: PropTypes.bool,
   width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   height: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 };
@@ -148,9 +156,10 @@ function PlaceholderMultiline({
   light = false,
   amount = 150,
   children,
+  displayBlank = false,
   ...rest
 }) {
-  if (isEmptyOrNil(text)) {
+  if (shouldUsePlaceholder(text, displayBlank)) {
     const lines = Math.floor(amount / lineAmount);
     const remainder = Math.floor(amount % lineAmount);
     let lineElements = [];
@@ -212,6 +221,7 @@ PlaceholderMultiline.propTypes = {
   light: PropTypes.bool,
   inline: PropTypes.bool,
   amount: PropTypes.number,
+  displayBlank: PropTypes.bool,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node

@@ -10,6 +10,7 @@ import WebSocketConnection from "../../components/functional/WebSocketConnection
 
 import "./style.scss";
 import MessageSets from "./messageSets.json";
+import { CustomEmojiExtension } from "../../components/DiscordMock/CustomEmojiExtension";
 
 function Index() {
   return (
@@ -66,6 +67,7 @@ function Index() {
               channelName="auto-response-demo"
               index={0}
               messageSet={MessageSets.autoResponse}
+              allowedCommands={["set", "remove"]}
               loop
             />
           </Window>
@@ -92,6 +94,9 @@ function Index() {
               channelName="custom-emoji-demo"
               index={1}
               messageSet={MessageSets.customEmoji}
+              allowedCommands={["emotes"]}
+              extension={CustomEmojiExtension}
+              offline
               loop
             />
           </Window>
@@ -118,6 +123,7 @@ function Index() {
               channelName="polls-schedules-demo"
               index={2}
               messageSet={MessageSets.pollsSchedules}
+              allowedCommands={["poll", "schedule"]}
               loop
             />
           </Window>

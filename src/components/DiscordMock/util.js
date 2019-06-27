@@ -5,8 +5,13 @@ import {
   pick,
   isNil
 } from "../../util";
+import {
+  transformMessage,
+  transformReaction,
+  transformOutgoingMessage
+} from "./transform";
+import { omit } from "lodash";
 import { generateName } from "../../util/string";
-import { transformMessage, transformReaction } from "./transform";
 
 // ? ==========================
 // ? User creation utilities
@@ -80,6 +85,7 @@ export function makeFakeWebhookUser(baseUser) {
 // ? Message handling utilities
 // ? ==========================
 
+// Controls unique ID provisioning (also only uses even numbers)
 export class IdProvisioner {
   constructor() {
     this.internalCount = 0;
@@ -90,26 +96,131 @@ export class IdProvisioner {
   }
 }
 
-// TODO redo
+// Converts message data to its websocket message format
+export function serializeOutgoingMessage({
+  content = "",
+  messageId,
+  guildId,
+  allowedCommands = [],
+  addedReactions = [],
+  removedReactions = []
+}) {
+  return {
+    content: content === "" ? null : transformOutgoingMessage(content),
+    message_id: messageId,
+    guild_id: guildId,
+    added_reactions: addedReactions,
+    removed_reactions: removedReactions,
+    allowed_commands: allowedCommands
+  };
+}
 
-export const shouldMergeClumps = (previousClump, nextClump) => {
-  const { timestamp: prev } = previousClump;
-  const { timestamp: next } = nextClump;
+// Whether two messsage clumps should be merged together (same sender/AMPM)
+export function shouldMergeClumps(a, b) {
   return (
-    !isNil(prev) &&
-    !isNil(next) &&
-    previousClump.sender.clientId === nextClump.sender.clientId &&
-    prev.getHours() === next.getHours() &&
-    prev.getMinutes() === next.getMinutes()
+    a.sender.clientId === b.sender.clientId &&
+    a.timestamp.getHours() === b.timestamp.getHours() &&
+    a.timestamp.getMinutes() === b.timestamp.getMinutes()
   );
-};
+}
 
-export const mergeClumps = (prev, next) => ({
-  ...prev,
-  messages: [...prev.messages, ...next.messages]
-});
+// Performs a clump merge, keeping the clump metadata of the first clump
+export function mergeClumps(a, b) {
+  return {
+    // Keep clump A's other properties
+    ...a,
+    messages: [...a.messages, ...b.messages]
+  };
+}
 
-export const addReactions = (clumps, reactions) => {
+// ? ==========================
+// ? State mutation functions
+// ? ==========================
+
+// Applies a client-side update to the message clumps list, optionally adding a
+// new message if applicable
+export function withAddedMessage({ clumps, message, thisUser, users }) {
+  let newClumps = clumps;
+  const { content, messageId, addedReactions, edit, sender } = message;
+  const reactions = addedReactions.map(parseReaction);
+
+  // Handle the specific message if parameters are valid
+  if (!isNil(content) && !isNil(messageId)) {
+    newClumps = handleMessage(
+      newClumps,
+      { content, edit, messageId, reactions, sender },
+      { thisUser, users }
+    );
+  }
+
+  // Handle all other reactions
+  const otherReactions = filterReactionsById(
+    reactions,
+    id => id !== messageId,
+    false
+  );
+  if (otherReactions.length > 0) {
+    newClumps = addReactions(newClumps, otherReactions);
+  }
+
+  return newClumps;
+}
+
+// Handles either a message add or edit
+function handleMessage(
+  clumps,
+  { content, edit, messageId, reactions, sender },
+  context
+) {
+  const messageReactions = filterReactionsById(
+    reactions,
+    id => id === messageId
+  );
+  const messageData = {
+    content,
+    messageId,
+    reactions: messageReactions,
+    sender
+  };
+  if (edit) {
+    return editMessage(clumps, messageData, context);
+  } else {
+    return addMessage(clumps, messageData, context);
+  }
+}
+
+// Adds the specific message with the given content, id, reactions, and sender
+function addMessage(
+  clumps,
+  { content, messageId, reactions, sender },
+  context
+) {
+  const message = constructMessage({ content, messageId, reactions }, context);
+  const newClump = createClump({ message, sender });
+  return withAddedClump(clumps, newClump);
+}
+
+// Edits the specific message, setting its content and optionally updating its reactions
+function editMessage(clumps, { content, messageId, reactions }, context) {
+  const clumpIndex = containingClumpIndex(clumps, messageId);
+  return updateMessages({
+    clumps,
+    shouldUpdateClump: (_clump, index) => clumpIndex === index,
+    shouldUpdateMessage: message => message.messageId === messageId,
+    map: message =>
+      constructMessage(
+        {
+          content,
+          messageId,
+          reactions: mergeReactions(message.reactions, reactions)
+        },
+        context
+      )
+  });
+}
+
+// Adds each reaction in the list to its corresponding message
+function addReactions(clumps, reactions) {
   const messageIdToContainingClumpMap = Object.assign(
     {},
     ...reactions.map(reaction => ({
@@ -131,153 +242,200 @@ export const addReactions = (clumps, reactions) => {
     parseInt(index)
   );
 
-  const doesClumpNeedUpdating = index => dirtyClumps.includes(index);
-
-  const doesMessageNeedUpdating = (clumpIndex, id) =>
-    clumpIndicesToMessageIdsMap[clumpIndex].includes(id);
-
-  const applyReactions = (prevReactions, newReactions) => {
-    let baseReactionList = [...(!isNil(prevReactions) ? prevReactions : [])];
-    for (let newReactionIndex in newReactions) {
-      const newReaction = newReactions[newReactionIndex];
-      const prevReaction = baseReactionList.find(
-        reaction => reaction.emoji === newReaction.emoji
-      );
-      if (!isNil(prevReaction)) {
-        // reaction is already included, merge
-        const prevReactionIndex = baseReactionList.indexOf(prevReaction);
-        baseReactionList[prevReactionIndex] = {
-          ...prevReaction,
-          newReaction
-        };
-      } else {
-        baseReactionList.push(newReaction);
-      }
-    }
-    return baseReactionList;
-  };
-
-  const updatedClumps = clumps.map((clump, clumpIndex) =>
-    doesClumpNeedUpdating(clumpIndex)
-      ? {
-          ...clump,
-          messages: clump.messages.map(message =>
-            doesMessageNeedUpdating(clumpIndex, message.messageId)
-              ? {
-                  ...message,
-                  reactions: applyReactions(
-                    message.reactions,
-                    reactions
-                      .filter(
-                        reaction => reaction.targetId === message.messageId
-                      )
-                      .map(reaction =>
-                        pick(reaction, [
-                          "emoji",
-                          "rawEmoji",
-                          "number",
-                          "userHasReacted"
-                        ])
-                      )
-                  )
-                }
-              : message
+  return updateMessages({
+    clumps,
+    shouldUpdateClump: (_clump, index) => dirtyClumps.includes(index),
+    shouldUpdateMessage: (_message, id, _clump, clumpIndex) =>
+      clumpIndicesToMessageIdsMap[clumpIndex].includes(id),
+    map: message => ({
+      ...message,
+      reactions: mergeReactions(
+        message.reactions,
+        reactions
+          .filter(reaction => reaction.targetId === message.messageId)
+          .map(reaction =>
+            pick(reaction, ["emoji", "rawEmoji", "number", "userHasReacted"])
           )
-        }
-      : clump
-  );
+      )
+    })
+  });
+}
 
-  return updatedClumps;
-};
-
-export const withUpdatedReaction = ({
+// Applies a client-side update to the reactions of a specific message
+export function withUpdatedReaction({
   clumps,
   clumpIndex,
   messageId,
   reaction,
-  transformNumber,
-  userHasReacted
-}) =>
-  clumps.map((clump, index) =>
-    index === clumpIndex
+  number = 1,
+  userHasReacted = false
+}) {
+  return updateReactions({
+    clumps,
+    shouldUpdateClump: (_clump, index) => index === clumpIndex,
+    shouldUpdateMessage: message => message.messageId === messageId,
+    shouldUpdateReaction: r => r === reaction,
+    map: r => ({
+      ...r,
+      userHasReacted,
+      number: typeof number === "function" ? number(r.number) : number
+    })
+  });
+}
+
+// Parses a reaction from its network equivalent to the internal representation
+function parseReaction(reaction) {
+  return {
+    emoji: transformReaction(reaction[1]),
+    rawEmoji: reaction[1],
+    number: 1,
+    userHasReacted: false,
+    targetId: reaction[0]
+  };
+}
+
+// Converts a reaction to its network representation
+export function serializeReaction(messageId, reaction) {
+  return [messageId, reaction.rawEmoji];
+}
+
+// Filters a list of reactions by using an id filter predicate function, removing
+// the targetId tag in the process
+function filterReactionsById(reactions, idFilter, removeTag = true) {
+  const filtered = reactions.filter(r => idFilter(r.targetId));
+  return removeTag ? filtered.map(r => omit(r, ["targetId"])) : filtered;
+}
+
+// Initializes a new clump with a single message
+function createClump({ message, sender }) {
+  return {
+    timestamp: new Date(),
+    sender,
+    messages: [message]
+  };
+}
+
+// Adds a clump to the end of the clumps array, merging if neccessary
+function withAddedClump(clumps, newClump) {
+  if (clumps.length > 0) {
+    const lastClump = clumps[clumps.length - 1];
+    if (shouldMergeClumps(lastClump, newClump)) {
+      const otherClumps = clumps.slice(0, -1);
+      return [...otherClumps, mergeClumps(lastClump, newClump)];
+    }
+  }
+  // Default: return with the new clump appended
+  return [...clumps, newClump];
+}
+
+// Finds the index of the clump contanining the message with the given id
+function containingClumpIndex(clumps, messageId) {
+  return clumps.findIndex(clump =>
+    includes(clump.messages, message => message.messageId === messageId)
+  );
+}
+
+// Constructs a message object with the given content, reactions, and id
+function constructMessage(
+  { content, reactions, messageId },
+  { thisUser, users }
+) {
+  // Transform the message to its display form
+  const { result, mentions } = transformMessage(content, {
+    users,
+    clientId: thisUser.clientId
+  });
+  return {
+    content: result,
+    reactions,
+    mentionsUser: mentions.includes(thisUser),
+    messageId
+  };
+}
+
+// Merges the two lists of reactions, merging old ones with ones from the new list
+// if they match the same emoji
+function mergeReactions(prevReactions, newReactions) {
+  let baseReactionList = [...(!isNil(prevReactions) ? prevReactions : [])];
+  for (let newReactionIndex in newReactions) {
+    const newReaction = newReactions[newReactionIndex];
+    const prevReaction = baseReactionList.find(
+      reaction => reaction.emoji === newReaction.emoji
+    );
+    if (!isNil(prevReaction)) {
+      // reaction is already included, merge
+      const prevReactionIndex = baseReactionList.indexOf(prevReaction);
+      baseReactionList[prevReactionIndex] = {
+        ...prevReaction,
+        newReaction
+      };
+    } else {
+      baseReactionList.push(newReaction);
+    }
+  }
+  return baseReactionList;
+}
+
+// ? ==========================
+// ? State mutation utilities
+// ? ==========================
+
+// Performs an immutable deep update of the message clumps state object, allowing
+// for the update of specific messages that satisfy the given predicates
+function updateMessages({
+  clumps,
+  shouldUpdateClump,
+  shouldUpdateMessage,
+  map
+}) {
+  return clumps.map((clump, index) =>
+    shouldUpdateClump(clump, index)
       ? {
           ...clump,
-          messages: clump.messages.map(message =>
-            message.messageId === messageId
-              ? {
-                  ...message,
-                  reactions: message.reactions.map(r =>
-                    r === reaction
-                      ? {
-                          ...r,
-                          userHasReacted,
-                          number: transformNumber(r.number)
-                        }
-                      : r
-                  )
-                }
+          messages: clump.messages.map((message, messageIndex) =>
+            shouldUpdateMessage(message, messageIndex, clump, index)
+              ? map(message, messageIndex, clump, index)
               : message
           )
         }
       : clump
   );
+}
 
-export const withAddedMessage = (messageData, clumps, thisUser, users) => {
-  const { content, id, reactions, sender } = messageData;
-  const messageReactions = !isNil(reactions)
-    ? reactions
-        .filter(r => !isNil(r) && r[0] === id)
-        .map(r => ({
-          emoji: transformReaction(r[1]),
-          rawEmoji: r[1],
-          number: 1,
-          userHasReacted: false
-        }))
-    : [];
-  const otherReactions = !isNil(reactions)
-    ? reactions
-        .filter(r => !isNil(r) && r[0] !== id)
-        .map(r => ({
-          emoji: transformReaction(r[1]),
-          rawEmoji: r[1],
-          number: 1,
-          userHasReacted: false,
-          targetId: r[0]
-        }))
-    : [];
+// Performs an immutable deep update of the message clumps state object, allowing
+// for the update of specific reactions that satisfy the given predicates
+function updateReactions({
+  clumps,
+  shouldUpdateClump,
+  shouldUpdateMessage,
+  shouldUpdateReaction,
+  map
+}) {
+  return updateMessages({
+    clumps,
+    shouldUpdateClump,
+    shouldUpdateMessage,
+    map: (message, messageIndex, clump, index) => ({
+      ...message,
+      reactions: message.reactions.map((r, rIndex) =>
+        shouldUpdateReaction(r, rIndex, message, messageIndex, clump, index)
+          ? map(r, rIndex, message, messageIndex, clump, index)
+          : r
+      )
+    })
+  });
+}
 
-  let newClumps;
-  if (content !== "" || messageReactions.length > 0) {
-    // should process this message
-    const { result, mentions } = transformMessage(content, {
-      users,
-      clientId: thisUser.clientId
-    });
-    const clump = {
-      timestamp: new Date(),
-      sender,
-      messages: [
-        {
-          content: result,
-          reactions: messageReactions,
-          mentionsUser: mentions.includes(thisUser.clientId),
-          messageId: id
-        }
-      ]
-    };
+// ? ==========================
+// ? Extension class definition
+// ? ==========================
 
-    if (clumps.length > 0) {
-      const lastClump = clumps[clumps.length - 1];
-      if (shouldMergeClumps(lastClump, clump)) {
-        const otherClumps = clumps.slice(0, -1);
-        newClumps = [...otherClumps, mergeClumps(lastClump, clump)];
-      }
-    }
-    if (isNil(newClumps)) newClumps = [...clumps, clump];
-  } else newClumps = clumps;
-
-  if (otherReactions.length > 0) {
-    newClumps = addReactions(newClumps, otherReactions);
+export class Extension {
+  constructor(context, commands) {
+    Object.assign(this, context, commands);
   }
-  return newClumps;
-};
+  destruct() {}
+  onSend() {
+    return true;
+  }
+}

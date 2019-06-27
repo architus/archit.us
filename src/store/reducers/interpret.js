@@ -14,9 +14,11 @@ export function reducer(state = initial, action) {
       const payload = JSON.parse(action.payload.message);
       const newResponse = pick(payload, [
         "content",
-        "reactions",
         { message_id: "messageId" },
-        { guild_id: "guildId" }
+        { guild_id: "guildId" },
+        { added_reactions: "addedReactions" },
+        { removed_reactions: "removedReactions" },
+        "edit"
       ]);
       if (payload._module === "interpret") {
         const responseQueue = state.responseQueue;

@@ -1,21 +1,22 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { addMissingUnit, randomDigitString, isNil, pick } from "../../util";
+import { addMissingUnit, randomDigitString, isNil } from "../../util";
 import MockTyper from "../../util/MockTyper";
+import { sendMessage } from "../../store/actions";
+import { SLICED_LENGTH } from "../../store/reducers/interpret";
 import {
-  createMockUser,
-  makeFakeWebhookUser,
   autBotUser,
+  createMockUser,
+  IdProvisioner,
+  serializeOutgoingMessage,
+  serializeReaction,
   withUpdatedReaction,
   withAddedMessage,
-  IdProvisioner
+  Extension
 } from "./util";
 
 import DiscordView from "./DiscordView";
-import { sendMessage } from "../../store/actions";
-import { transformOutgoingMessage } from "./transform";
-import { SLICED_LENGTH } from "../../store/reducers/interpret";
 
 // Mock typer options
 const keypressDelay = 120;
@@ -36,13 +37,9 @@ class DiscordMock extends React.Component {
     // Class level fields (non-stateful)
     this.guildId = randomDigitString(9);
     this.thisUser = createMockUser(this.guildId);
-    this.fakeWebhookUser = makeFakeWebhookUser(this.thisUser);
     this.idProvisioner = new IdProvisioner();
-    this.users = this.buildUserMap(
-      this.thisUser,
-      this.fakeWebhookUser,
-      autBotUser
-    );
+    this.users = this.buildUserMap(this.thisUser, autBotUser);
+    this.initializeExtension(props.extension);
 
     // escape hatch to scroll to bottom imperatively
     this.view = React.createRef();
@@ -76,20 +73,42 @@ class DiscordMock extends React.Component {
     this.mockTyper.currentSet = currentSet;
   }
 
+  initializeExtension(extension) {
+    const context = {
+      guildId: this.guildId,
+      thisUser: this.thisUser,
+      users: this.users,
+      autBotUser
+    };
+    const commands = {
+      sendMessage: this.addMessage.bind(this),
+      deleteMessage: null,
+      provisionId: this.idProvisioner.provision
+    };
+    this.extension = extension
+      ? new extension(context, commands)
+      : new Extension(context, commands);
+  }
+
   // ? ===================
   // ? Lifecycle functions
   // ? ===================
 
   componentDidMount() {
-    // Only initialize the mock typer once the websocket has been established
-    const { isConnected } = this.props;
-    if (isConnected) this.initializeMockTyper();
+    const { offline, isConnected } = this.props;
+    if (!offline) {
+      // Only initialize the mock typer once the websocket has been established
+      if (isConnected) this.initializeMockTyper();
+    } else {
+      this.initializeMockTyper();
+    }
   }
 
   componentWillUnmount() {
     // Stop timers on unmount
-    this.mockTyper.stop();
+    if (this.mockTyper) this.mockTyper.stop();
     if (this.mockTyperResetTimer) clearTimeout(this.mockTyperResetTimer);
+    this.extension.destruct();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -103,7 +122,7 @@ class DiscordMock extends React.Component {
 
     // Stop the mock typer when the automated mode is stopped
     if (prevState.automatedMode && !this.state.automatedMode) {
-      this.mockTyper.stop();
+      if (this.mockTyper) this.mockTyper.stop();
     }
 
     // If neccessary, apply the internal message limit to the message clumps array
@@ -154,7 +173,19 @@ class DiscordMock extends React.Component {
     // Don't let empty messages get sent
     if (message.trim() === "") return;
 
-    this.sentToInterpret(message);
+    const messageId = this.idProvisioner.provision();
+    this.addMessage({
+      content: message,
+      messageId,
+      sender: this.thisUser
+    });
+    if (this.extension.onSend({ message, messageId })) {
+      // Send for interpretation unless the extension cancels
+      this.sentToInterpret({
+        content: message,
+        messageId
+      });
+    }
     // Clear input field
     this.setState({ inputValue: "" });
   }
@@ -171,6 +202,9 @@ class DiscordMock extends React.Component {
         userHasReacted: true
       })
     }));
+    this.sentToInterpret({
+      addedReactions: [serializeReaction(messageId, reaction)]
+    });
   }
 
   // On clicking on an active reaction button (removing a reaction)
@@ -185,6 +219,9 @@ class DiscordMock extends React.Component {
         userHasReacted: false
       })
     }));
+    this.sentToInterpret({
+      removedReactions: [serializeReaction(messageId, reaction)]
+    });
   }
 
   // On user focus of the input box
@@ -263,55 +300,46 @@ class DiscordMock extends React.Component {
 
   // Adds a message sent by aut-bot to the clump/message array
   handleResponse(response) {
-    this.addMessage({
-      content: response.content,
-      reactions: response.reactions,
-      id: response.messageId,
-      sender: autBotUser
-    });
+    this.addMessage({ ...response, sender: autBotUser });
   }
 
   // Adds a message to the clump/message array, returning the internal object
-  addMessage({ id = null, content = "", sender = {}, reactions = [] }) {
-    // If a contentful message, provision id
-    if (isNil(id) && content !== "") id = this.idProvisioner.provision();
-    const messageData = { id, content, sender, reactions };
+  addMessage(messageData) {
+    const withDefaults = Object.assign(
+      {},
+      {
+        messageId: null,
+        content: null,
+        sender: {},
+        edit: false,
+        addedReactions: []
+      },
+      messageData
+    );
     this.setState(({ clumps, scrollUpdateFlag }) => {
       return {
-        clumps: withAddedMessage(
-          messageData,
-          clumps,
-          this.thisUser,
-          this.users
-        ),
+        clumps: withAddedMessage({
+          clumps: clumps,
+          message: withDefaults,
+          thisUser: this.thisUser,
+          users: this.users
+        }),
         // Force a scroll upon message add
         scrollUpdateFlag: !scrollUpdateFlag
       };
     });
-    return {
-      messageId: id,
-      guildId: this.guildId,
-      message: content,
-      reactions
-    };
   }
 
   // Dispatches a websocket send for the given message, sending it to the interpret
   // server for aut-bot to respond to
-  // TODO reconsider reactions schema
-  sentToInterpret(message, reactions = []) {
-    const { dispatch } = this.props;
-    const builtMessage = this.addMessage({
-      content: transformOutgoingMessage(message),
-      sender: this.thisUser
+  sentToInterpret(messageData) {
+    const { dispatch, allowedCommands } = this.props;
+    const message = serializeOutgoingMessage({
+      ...messageData,
+      guildId: this.guildId,
+      allowedCommands
     });
-    const formatted = pick(builtMessage, [
-      "message",
-      reactions,
-      { messageId: "message_id" },
-      { guildId: "guild_id" }
-    ]);
-    dispatch(sendMessage("interpret", formatted));
+    dispatch(sendMessage("interpret", message));
   }
 
   // ? ===================
@@ -351,6 +379,9 @@ DiscordMock.propTypes = {
   channelName: PropTypes.string,
   messageSet: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
   loop: PropTypes.bool,
+  allowedCommands: PropTypes.arrayOf(PropTypes.string),
+  offline: PropTypes.bool,
+  extension: PropTypes.func,
   dispatch: PropTypes.func.isRequired,
   responseQueue: PropTypes.arrayOf(PropTypes.object).isRequired,
   isConnected: PropTypes.bool.isRequired
