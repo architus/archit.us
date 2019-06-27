@@ -1,8 +1,14 @@
 {
   "messageSets": {
     "autoResponse": [
-      ["hello", "nice brain", "very nice brain"],
-      ["another set", "sample message", "let me in"]
+      ["!help", "!set thanks::you're welcome!", "thanks", "!remove thanks"],
+      [
+        "!set hi::hey",
+        "!set hi::hello :wave:",
+        "!remove hi",
+        "!set hi::hello :wave:",
+        "hi"
+      ]
     ],
     "customEmoji": [
       [":HeyGuys: welcome", "wait what", ":Smile: no i made it :smileW:"],
@@ -14,11 +20,14 @@
       ]
     ],
     "pollsSchedules": [
-      ["tickl gulag squad", "weirdchamp", "nyxl is sandbagging"],
       [
-        "feelsweirdman weirdchamp normies omegalul",
-        "ur sooooooooooo good",
-        "get on"
+        "!schedule cool event 12pm",
+        "!poll \"a hot dog is a:\" sandwich, not a sandwich"
+      ],
+      [
+        "!help",
+        "!schedule \"Overwatch scrims\" Wednesday",
+        "Vote in the poll above @everyone"
       ]
     ]
   },

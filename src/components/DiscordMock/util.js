@@ -429,7 +429,7 @@ function updateMessages({
   shouldUpdateMessage,
   map
 }) {
-  updateClumps({
+  return updateClumps({
     clumps,
     shouldUpdateClump,
     map: (clump, index) => ({

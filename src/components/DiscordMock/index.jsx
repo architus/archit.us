@@ -21,8 +21,8 @@ import DiscordView from "./DiscordView";
 
 // Mock typer options
 const keypressDelay = 90;
-const lineDelay = 600;
-const setDelay = 2000;
+const lineDelay = 810;
+const setDelay = 2250;
 
 // Clump performance optimization threshold (clear old message clumps)
 const CLUMP_SLICING_THRESHOLD = 50;
@@ -133,7 +133,11 @@ class DiscordMock extends React.Component {
     }
 
     // Upon websocket connection, start the mock typer
-    if (this.props.isConnected && isNil(this.mockTyper)) {
+    if (
+      this.props.isConnected &&
+      isNil(this.mockTyper) &&
+      this.state.automatedMode
+    ) {
       this.initializeMockTyper();
     }
 
@@ -191,8 +195,8 @@ class DiscordMock extends React.Component {
 
   // On clicking on an inactive reaction button (adding a reaction)
   onReact(clumpIndex, messageId, reaction) {
-    this.setState(({ clumps }) => ({
-      clumps: withUpdatedReaction({
+    this.setClumps(clumps =>
+      withUpdatedReaction({
         clumps,
         clumpIndex,
         messageId,
@@ -200,7 +204,7 @@ class DiscordMock extends React.Component {
         number: n => n + 1,
         userHasReacted: true
       })
-    }));
+    );
     this.sentToInterpret({
       addedReactions: [serializeReaction(messageId, reaction)]
     });
@@ -208,8 +212,8 @@ class DiscordMock extends React.Component {
 
   // On clicking on an active reaction button (removing a reaction)
   onUnreact(clumpIndex, messageId, reaction) {
-    this.setState(({ clumps }) => ({
-      clumps: withUpdatedReaction({
+    this.setClumps(clumps =>
+      withUpdatedReaction({
         clumps,
         clumpIndex,
         messageId,
@@ -217,7 +221,7 @@ class DiscordMock extends React.Component {
         number: n => n - 1,
         userHasReacted: false
       })
-    }));
+    );
     this.sentToInterpret({
       removedReactions: [serializeReaction(messageId, reaction)]
     });

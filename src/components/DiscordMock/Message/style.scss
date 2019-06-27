@@ -30,6 +30,64 @@
         top: -1px;
     }
 
+    pre {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        font-size: 92.5%;
+        overflow: hidden;
+        margin: {
+            top: 0.25rem;
+            bottom: 0.25rem;
+        }
+        padding: {
+            top: 0.5rem;
+            bottom: 0.5rem;
+            right: 0.5rem;
+            left: 1rem;
+        };
+        background-color: $discord-pre-bg;
+        border: solid 3px $discord-pre-border;
+        border-radius: 0.5rem;
+        position: relative;
+        z-index: 1;
+
+        &::after {
+            position: absolute;
+            top: 0;
+            left: -2px;
+            bottom: 0;
+            content: " ";
+            width: 6px;
+            z-index: 10000;
+            border-left: 6px solid $discord;
+            border-radius: 3px 0 0 3px;
+        }
+
+        &:nth-child(5n+1) {
+            &::after {
+                border-left-color: $aqua-forest;
+            }
+        }
+
+        &:nth-child(5n+2) {
+            &::after {
+                border-left-color: $equator;
+            }
+        }
+
+        &:nth-child(5n+3) {
+            &::after {
+                border-left-color: $burnt-sienna;
+            }
+        }
+
+        &:nth-child(5n+4) {
+            &::after {
+                border-left-color: $purple;
+            }
+        }
+    }
+
     code {
         color: rgba($discord-fg, 0.9);
         font-size: 92.5%;

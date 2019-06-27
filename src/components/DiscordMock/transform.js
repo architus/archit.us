@@ -22,7 +22,8 @@ const markdownOverrides = {
   blockquote: quote => quote,
   list: body => body,
   listitem: text => text,
-  checkbox: () => ""
+  checkbox: () => "",
+  codespan: code => `\`${code}\``
 };
 const markedOptions = {
   renderer: Object.assign(markdownRenderer, markdownOverrides),
@@ -46,14 +47,14 @@ function transformMarkdown(source) {
 // ? Pseudo-AST parser
 // ? ===================
 
-const inlineCodeRegex = /(?:`[^`\n\r]+`)+/;
-const inlineCodeRegexGlobal = /(?:`[^`\n\r]+`)+/g;
+const codeRegex = /(?:```[^`]*```|`[^`]*`)+/;
+const codeRegexGlobal = /(?:```[^`]*```|`[^`]*`)/g;
 const blacklistedFragments = ["``"];
 
 // Builds a pseudo AST by splicing the source string and separating code &
 // non-code blocks
 function buildPseudoAST(source) {
-  const fragments = splitFragments(source, inlineCodeRegexGlobal);
+  const fragments = splitFragments(source, codeRegexGlobal);
   const passingFragments = fragments.filter(
     f => !blacklistedFragments.includes(f)
   );
@@ -64,7 +65,7 @@ function buildPseudoAST(source) {
 // Tags each fragment according to whether it is an inline code block or not
 function tagFragments(sourceFragments) {
   return sourceFragments.map(fragment => {
-    const tag = inlineCodeRegex.test(fragment) ? "code" : "text";
+    const tag = codeRegex.test(fragment) ? "code" : "text";
     return {
       fragment,
       tag
@@ -79,12 +80,13 @@ function tagFragments(sourceFragments) {
 // Map of fragment tag to pipeline used. Pipelines can either be a function
 // mapping <(string, context obj) => string> or an array of such functions
 const fragmentTransformers = {
-  code: fragment => `<code>${escapeHtml(fragment.slice(1, -1))}</code>`,
+  code: renderCode,
   text: [
     escapeHtml,
     escapeMarkdown,
     convertUnderlines,
     replaceRelativeMentions,
+    convertGlobalMentions,
     convertMentions,
     convertDiscordEmoji,
     convertUnicodeEmoji
@@ -169,6 +171,18 @@ function transformPseudoAST(ast, context, transformers) {
 // ? Processing steps
 // ? ===================
 
+const blockCodeRegex = /```([^`]*)```/;
+const inlineCodeRegex = /`([^`]*)`/;
+// Renders inline or block code nodes
+function renderCode(fragment) {
+  return fragment
+    .replace(
+      blockCodeRegex,
+      (_match, p1) => `<pre><code>${escapeHtml(p1)}</code></pre>`
+    )
+    .replace(inlineCodeRegex, (_match, p1) => `<code>${escapeHtml(p1)}</code>`);
+}
+
 const imageAltRegex = /alt="(.*?)"/g;
 // Corrects twemoji-generated image tag alt's to allow for copying of shortcodes
 function correctEmojiAlts(fragment) {
@@ -176,19 +190,6 @@ function correctEmojiAlts(fragment) {
     imageAltRegex,
     (_match, p1) => `alt="${unemojify(p1)}"`
   );
-}
-
-// Gets every unique mentioned ID from the source text as an array
-function allMentionedIds(source, context) {
-  // first, replace relative mentions to properly count them
-  source = replaceRelativeMentions(source, context);
-  let mentionIds = [];
-  const allMentions = allMatches(source, mentionRegex);
-  allMentions.forEach(mentionText => {
-    const id = parseInt(mentionText.slice(2, -1));
-    if (!mentionIds.includes(id)) mentionIds.push(id);
-  });
-  return mentionIds;
 }
 
 const underlineRegex = /__(.*?)__/gs;
@@ -202,6 +203,44 @@ const relativeMentionRegex = /(?:[<]|(?:&lt;))@%_CLIENT_ID_%(?:[>]|(?:&gt;))/g;
 // that mentions the thisUser
 function replaceRelativeMentions(fragment, context) {
   return fragment.replace(relativeMentionRegex, `<@${context.clientId}>`);
+}
+
+const globalMentions = ["everyone", "here"];
+// Finds every match of either of the global mentions and replaces it with an
+// actual mention
+function convertGlobalMentions(fragment) {
+  let processed = fragment;
+  for (let i in globalMentions) {
+    const mention = `@${globalMentions[i]}`;
+    processed = processed.replace(
+      mention,
+      `<span class="mention">${mention}</span>`
+    );
+  }
+  return processed;
+}
+
+// Gets every unique mentioned ID from the source text as an array
+function allMentionedIds(source, context) {
+  // first, try to find any global mentions
+  for (let i in globalMentions) {
+    const mention = `@${globalMentions[i]}`;
+    if (source.indexOf(mention) !== -1) {
+      return Object.keys(context.users).map(
+        clientId => context.users[clientId]
+      );
+    }
+  }
+
+  // replace relative mentions to properly count them
+  source = replaceRelativeMentions(source, context);
+  let mentionIds = [];
+  const allMentions = allMatches(source, mentionRegex);
+  allMentions.forEach(mentionText => {
+    const id = parseInt(mentionText.slice(2, -1));
+    if (!mentionIds.includes(id)) mentionIds.push(id);
+  });
+  return mentionIds;
 }
 
 const mentionRegex = /(?:[<]|(?:&lt;))[@]([-0-9]+)(?:[>]|(?:&gt;))/g;
