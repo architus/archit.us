@@ -39,10 +39,12 @@
         justify-content: center;
         opacity: 0;
         border-radius: $window-border-radius;
+        pointer-events: none;
 
         &.show-error {
             transition: opacity linear 1s;
             opacity: 1;
+            pointer-events: all;
         }
 
         .error-inner {
@@ -64,6 +66,8 @@
                 font-size: 2.5rem;
                 text-transform: none;
                 font-weight: 300;
+                opacity: 1;
+                color: rgba($discord-fg, 0.55);
             }
 
             p {
