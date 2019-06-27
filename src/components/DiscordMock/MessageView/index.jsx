@@ -18,7 +18,6 @@ class MessageView extends React.Component {
   componentDidUpdate(_prevProps, _prevState, snapshot) {
     const scrollDistance = getScrollDistance(this.listRef.current);
     const { prevScrollDistance } = snapshot;
-    console.log({ scrollDistance, prevScrollDistance });
     if (scrollDistance !== prevScrollDistance) {
       // Scroll height has changed
       if (prevScrollDistance <= scrollThreshold) {

@@ -3,16 +3,16 @@
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 40 40" style="enable-background:new 0 0 40 40;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:none;stroke:#6496C4;stroke-miterlimit:10;}
-	.st1{fill:none;stroke:#6496C4;stroke-linejoin:round;stroke-miterlimit:10;}
-	.st2{fill:none;stroke:#6496C4;stroke-width:1.0377;stroke-linejoin:round;stroke-miterlimit:10;}
-	.st3{opacity:0.6;fill:none;stroke:#6496C4;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st0{fill:none;stroke:#5886A8;stroke-miterlimit:10;}
+	.st1{fill:none;stroke:#5886A8;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st2{fill:none;stroke:#5886A8;stroke-width:1.0377;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st3{opacity:0.6;fill:none;stroke:#5886A8;stroke-linejoin:round;stroke-miterlimit:10;}
 	.st4{opacity:0.6;}
-	.st5{fill:none;stroke:#6496C4;stroke-linejoin:round;}
-	.st6{fill:none;stroke:#6496C4;stroke-linejoin:round;stroke-dasharray:2.6667,2.6667;}
-	.st7{fill:none;stroke:#6496C4;stroke-linejoin:round;stroke-dasharray:2.8182,2.8182;}
-	.st8{opacity:0.6;fill:#6496C4;}
-	.st9{fill:#6496C4;}
+	.st5{fill:none;stroke:#5886A8;stroke-linejoin:round;}
+	.st6{fill:none;stroke:#5886A8;stroke-linejoin:round;stroke-dasharray:2.6667,2.6667;}
+	.st7{fill:none;stroke:#5886A8;stroke-linejoin:round;stroke-dasharray:2.8182,2.8182;}
+	.st8{opacity:0.6;fill:#5886A8;}
+	.st9{fill:#5886A8;}
 </style>
 <circle class="st0" cx="13" cy="9.5" r="2"/>
 <path class="st0" d="M9,15.5c0,0,8,0,8,0c0-2.2-1.8-4-4-4S9,13.3,9,15.5z"/>

@@ -158,7 +158,8 @@ function Index() {
               }
             />
             <MinorFeature
-              header={<strike>Music playing & Rhythm integration</strike>}
+              header="Voice chat-enabled music playback"
+              icon="/img/music.svg"
               text={
                 <p>
                   Sed in ex id diam condimentum pellentesque. Integer congue
