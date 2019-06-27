@@ -1,13 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { formatAMPM } from "../../../util";
+import { formatAMPM, getScrollDistance, scrollToBottom } from "../../../util";
 
 import MessageClump from "../MessageClump";
 
 import "./style.scss";
 
-const scrollThreshold = 400;
+const scrollThreshold = 100;
 
 class MessageView extends React.Component {
   constructor(props) {
@@ -15,14 +15,22 @@ class MessageView extends React.Component {
     this.listRef = React.createRef();
   }
 
-  scrollToBottom() {
-    const listElement = this.listRef.current;
-    const scrollHeight = listElement.scrollHeight;
-    const height = listElement.clientHeight;
-    const newScrollTop = scrollHeight - height;
-    const difference = Math.abs(listElement.scrollTop - newScrollTop);
-    if (difference > scrollThreshold) return;
-    listElement.scrollTop = Math.max(newScrollTop, 0);
+  componentDidUpdate(_prevProps, _prevState, snapshot) {
+    const scrollDistance = getScrollDistance(this.listRef.current);
+    const { prevScrollDistance } = snapshot;
+    console.log({ scrollDistance, prevScrollDistance });
+    if (scrollDistance !== prevScrollDistance) {
+      // Scroll height has changed
+      if (prevScrollDistance <= scrollThreshold) {
+        scrollToBottom(this.listRef.current);
+      }
+    }
+  }
+
+  getSnapshotBeforeUpdate(_prevProps, _prevState) {
+    return {
+      prevScrollDistance: getScrollDistance(this.listRef.current)
+    };
   }
 
   render() {

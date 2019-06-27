@@ -99,7 +99,6 @@ export const formatAMPM = date => {
 };
 export const toHumanTime = date => `Today at ${formatAMPM(date)}`;
 
-
 export const randomDigitString = length =>
   (~~(Math.random() * 10 ** length)).toString().padStart(length, "0");
 
@@ -145,3 +144,19 @@ export const reverseMapFromMap = (map, f) =>
   }, {});
 
 export const includes = (array, func) => array.findIndex(func) !== -1;
+
+function getScrollRemainder(scrollContainer) {
+  const scrollHeight = scrollContainer.scrollHeight;
+  const height = scrollContainer.clientHeight;
+  return scrollHeight - height;
+}
+
+export function getScrollDistance(scrollContainer) {
+  return Math.abs(
+    scrollContainer.scrollTop - getScrollRemainder(scrollContainer)
+  );
+}
+
+export function scrollToBottom(scrollContainer) {
+  scrollContainer.scrollTop = getScrollRemainder(scrollContainer);
+}

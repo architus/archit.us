@@ -44,13 +44,9 @@ class DiscordMock extends React.Component {
     this.idProvisioner = new IdProvisioner();
     this.users = this.buildUserMap(this.thisUser, autBotUser);
     this.initializeExtension(props.extension);
-
-    // escape hatch to scroll to bottom imperatively
-    this.view = React.createRef();
     this.bindEventHandlers();
     this.state = {
       clumps: [],
-      scrollUpdateFlag: false,
       automatedMode: true,
       inputValue: "",
       displayError: false
@@ -121,14 +117,6 @@ class DiscordMock extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    // Try to scroll to the bottom of the MessageView when the scroll update
-    // flag gets toggled
-    if (prevState.scrollUpdateFlag === !this.state.scrollUpdateFlag) {
-      if (!isNil(this.view.current)) {
-        this.view.current.scrollToBottom();
-      }
-    }
-
     // Stop the mock typer when the automated mode is stopped
     if (prevState.automatedMode && !this.state.automatedMode) {
       if (this.mockTyper) this.mockTyper.stop();
@@ -390,12 +378,11 @@ class DiscordMock extends React.Component {
     dispatch(sendMessage("interpret", message));
   }
 
-  // Sets clumps state and flips the scroll update flag
+  // Sets clumps state
   setClumps(map) {
-    this.setState(({ clumps, scrollUpdateFlag }) => {
+    this.setState(({ clumps }) => {
       return {
-        clumps: map(clumps),
-        scrollUpdateFlag: !scrollUpdateFlag
+        clumps: map(clumps)
       };
     });
   }
