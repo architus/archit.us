@@ -69,7 +69,7 @@ class DiscordMock extends React.Component {
     // Sets up the initial state of the mock typer
     const currentSet = 0;
     this.mockTyper = new MockTyper({
-      lines: this.props.messageSet[currentSet],
+      lines: this.props.messageSet[currentSet].messages,
       keypressDelay,
       lineDelay,
       onKeypress: this.onMockKeypress,
@@ -77,6 +77,8 @@ class DiscordMock extends React.Component {
       onFinish: this.onMockFinish
     });
     this.mockTyper.currentSet = currentSet;
+    // Send all initial messages
+    this.sendSilentMessages(this.props.messageSet[currentSet].setup);
   }
 
   initializeExtension(extension) {
@@ -271,6 +273,7 @@ class DiscordMock extends React.Component {
 
   // Callback for the mock typer finishing the current set
   onMockFinish() {
+    this.mockTyper.prevSet = this.mockTyper.currentSet;
     this.mockTyper.currentSet++;
     if (this.mockTyper.currentSet < this.props.messageSet.length) {
       this.refreshMockTyper();
@@ -290,12 +293,15 @@ class DiscordMock extends React.Component {
       this.mockTyperResetTimer = null;
       // Check in case automated mode was disabled during the timer
       if (this.state.automatedMode) {
+        this.sendSilentMessages(
+          this.props.messageSet[this.mockTyper.prevSet].cleanup
+        );
         this.setState({
           clumps: []
         });
         // Start the next message set & reset the mock typer's internal state
         this.mockTyper.reset({
-          lines: messageSet[this.mockTyper.currentSet]
+          lines: messageSet[this.mockTyper.currentSet].messages
         });
       }
     }, setDelay);
@@ -305,6 +311,19 @@ class DiscordMock extends React.Component {
     this.errorTimeout = setTimeout(
       () => this.setState({ displayError: true }),
       ERROR_DISPLAY_DELAY
+    );
+  }
+
+  // Sends a list of messages to the interpret websocket in "silent" mode, meaning
+  // that the server is not to send any response in return, only process them
+  sendSilentMessages(messageList) {
+    if (isNil(messageList)) return;
+    messageList.forEach(message =>
+      this.sentToInterpret({
+        content: message,
+        messageId: this.idProvisioner.provision(),
+        silent: true
+      })
     );
   }
 
@@ -417,7 +436,13 @@ export default connect(mapStateToProps)(DiscordMock);
 DiscordMock.propTypes = {
   height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   channelName: PropTypes.string,
-  messageSet: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
+  messageSet: PropTypes.arrayOf(
+    PropTypes.shape({
+      messages: PropTypes.arrayOf(PropTypes.string).isRequired,
+      setup: PropTypes.arrayOf(PropTypes.string),
+      cleanup: PropTypes.arrayOf(PropTypes.string)
+    })
+  ),
   loop: PropTypes.bool,
   allowedCommands: PropTypes.arrayOf(PropTypes.string),
   offline: PropTypes.bool,

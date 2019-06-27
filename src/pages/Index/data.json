@@ -1,34 +1,56 @@
 {
   "messageSets": {
     "autoResponse": [
-      ["!help", "!set thanks::you're welcome!", "thanks", "!remove thanks"],
-      [
-        "!set hi::hey",
-        "!set hi::hello :wave:",
-        "!remove hi",
-        "!set hi::hello :wave:",
-        "hi"
-      ]
+      {
+        "messages": [
+          "!help",
+          "!set thanks::you're welcome!",
+          "thanks",
+          "!remove thanks"
+        ]
+      },
+      {
+        "messages": [
+          "!set hi::hey",
+          "!set hi::hello :wave:",
+          "!remove hi",
+          "!set hi::hello :wave:",
+          "hi"
+        ],
+        "cleanup": ["!remove hi"]
+      }
     ],
     "customEmoji": [
-      [":HeyGuys: welcome", "wait what", ":Smile: no i made it :smileW:"],
-      [
-        ":Jebaited: KAPPA OUTDATED",
-        ":Jebaited: POGCHAMP OVERRATED",
-        ":Jebaited: LONG HAVE WE WAITED",
-        ":Jebaited: NOW WE JEBAITED"
-      ]
+      {
+        "messages": [
+          ":HeyGuys: welcome",
+          "wait what",
+          ":Smile: no i made it :smileW:"
+        ]
+      },
+      {
+        "messages": [
+          ":Jebaited: KAPPA OUTDATED",
+          ":Jebaited: POGCHAMP OVERRATED",
+          ":Jebaited: LONG HAVE WE WAITED",
+          ":Jebaited: NOW WE JEBAITED"
+        ]
+      }
     ],
     "pollsSchedules": [
-      [
-        "!schedule cool event 12pm",
-        "!poll \"a hot dog is a:\" sandwich, not a sandwich"
-      ],
-      [
-        "!help",
-        "!schedule \"Overwatch scrims\" Wednesday",
-        "Vote in the poll above @everyone"
-      ]
+      {
+        "messages": [
+          "!schedule cool event 12pm",
+          "!poll \"a hot dog is a:\" sandwich, not a sandwich"
+        ]
+      },
+      {
+        "messages": [
+          "!help",
+          "!schedule \"Overwatch scrims\" Wednesday",
+          "Vote in the poll above @everyone"
+        ]
+      }
     ]
   },
   "customEmotes": {

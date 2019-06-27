@@ -103,7 +103,8 @@ export function serializeOutgoingMessage({
   guildId,
   allowedCommands = [],
   addedReactions = [],
-  removedReactions = []
+  removedReactions = [],
+  silent = false
 }) {
   return {
     content: content === "" ? null : transformOutgoingMessage(content),
@@ -111,7 +112,8 @@ export function serializeOutgoingMessage({
     guild_id: guildId,
     added_reactions: addedReactions,
     removed_reactions: removedReactions,
-    allowed_commands: allowedCommands
+    allowed_commands: allowedCommands,
+    silent
   };
 }
 
