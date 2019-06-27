@@ -57,6 +57,7 @@ class DiscordMock extends React.Component {
     users.forEach(user => {
       userMap[user.clientId] = user;
     });
+    return userMap;
   }
 
   initializeMockTyper() {
