@@ -1,0 +1,32 @@
+{
+  "messageSets": {
+    "autoResponse": [
+      ["hello", "nice brain", "very nice brain"],
+      ["another set", "sample message", "let me in"]
+    ],
+    "customEmoji": [
+      [":HeyGuys: welcome", "wait what", ":Smile: no i made it :smileW:"],
+      [
+        ":Jebaited: KAPPA OUTDATED",
+        ":Jebaited: POGCHAMP OVERRATED",
+        ":Jebaited: LONG HAVE WE WAITED",
+        ":Jebaited: NOW WE JEBAITED"
+      ]
+    ],
+    "pollsSchedules": [
+      ["tickl gulag squad", "weirdchamp", "nyxl is sandbagging"],
+      [
+        "feelsweirdman weirdchamp normies omegalul",
+        "ur sooooooooooo good",
+        "get on"
+      ]
+    ]
+  },
+  "customEmotes": {
+    "PepeLaugh": "https://cdn.frankerfacez.com/emoticon/263833/2",
+    "Jebaited": "https://static-cdn.jtvnw.net/emoticons/v1/114836/2.0",
+    "HeyGuys": "https://static-cdn.jtvnw.net/emoticons/v1/30259/2.0",
+    "Smile": "https://static-cdn.jtvnw.net/jtv_user_pictures/chansub-global-emoticon-ebf60cd72f7aa600-24x18.png",
+    "smileW": "https://cdn.frankerfacez.com/emoticon/179088/2"
+  }
+}

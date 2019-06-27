@@ -1,6 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
+import { curry } from "lodash";
+import { CustomEmojiExtension } from "../../components/DiscordMock/CustomEmojiExtension";
 
 import { Jumbotron, Container, Row, Card, Col } from "react-bootstrap";
 import LoginButton from "../../components/LoginButton";
@@ -9,8 +11,7 @@ import Window from "../../components/Window";
 import WebSocketConnection from "../../components/functional/WebSocketConnection";
 
 import "./style.scss";
-import MessageSets from "./messageSets.json";
-import { CustomEmojiExtension } from "../../components/DiscordMock/CustomEmojiExtension";
+import { messageSets, customEmotes } from "./data.json";
 
 function Index() {
   return (
@@ -66,7 +67,7 @@ function Index() {
               height={400}
               channelName="auto-response-demo"
               index={0}
-              messageSet={MessageSets.autoResponse}
+              messageSet={messageSets.autoResponse}
               allowedCommands={["set", "remove"]}
               loop
             />
@@ -93,9 +94,9 @@ function Index() {
               height={400}
               channelName="custom-emoji-demo"
               index={1}
-              messageSet={MessageSets.customEmoji}
+              messageSet={messageSets.customEmoji}
               allowedCommands={["emotes"]}
-              extension={CustomEmojiExtension}
+              extension={curry(CustomEmojiExtension)(customEmotes)}
               offline
               loop
             />
@@ -122,7 +123,7 @@ function Index() {
               height={400}
               channelName="polls-schedules-demo"
               index={2}
-              messageSet={MessageSets.pollsSchedules}
+              messageSet={messageSets.pollsSchedules}
               allowedCommands={["poll", "schedule"]}
               loop
             />

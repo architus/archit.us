@@ -13,15 +13,16 @@ import {
   serializeReaction,
   withUpdatedReaction,
   withAddedMessage,
-  Extension
+  Extension,
+  withRemovedMessage
 } from "./util";
 
 import DiscordView from "./DiscordView";
 
 // Mock typer options
-const keypressDelay = 120;
+const keypressDelay = 90;
 const lineDelay = 600;
-const setDelay = 1200;
+const setDelay = 2000;
 
 // Clump performance optimization threshold (clear old message clumps)
 const CLUMP_SLICING_THRESHOLD = 50;
@@ -83,8 +84,8 @@ class DiscordMock extends React.Component {
     };
     const commands = {
       sendMessage: this.addMessage.bind(this),
-      deleteMessage: null,
-      provisionId: this.idProvisioner.provision
+      deleteMessage: this.deleteMessage.bind(this),
+      provisionId: this.idProvisioner.provision.bind(this.idProvisioner)
     };
     this.extension = extension
       ? new extension(context, commands)
@@ -128,10 +129,7 @@ class DiscordMock extends React.Component {
 
     // If neccessary, apply the internal message limit to the message clumps array
     if (this.state.clumps.length > CLUMP_SLICING_THRESHOLD) {
-      this.setState(state => ({
-        clumps: state.clumps.slice(CLUMP_SLICED_LENGTH),
-        scrollUpdateFlag: !state.scrollUpdateFlag
-      }));
+      this.setClumps(clumps => clumps.slice(CLUMP_SLICED_LENGTH));
     }
 
     // Upon websocket connection, start the mock typer
@@ -317,18 +315,24 @@ class DiscordMock extends React.Component {
       },
       messageData
     );
-    this.setState(({ clumps, scrollUpdateFlag }) => {
-      return {
-        clumps: withAddedMessage({
-          clumps: clumps,
-          message: withDefaults,
-          thisUser: this.thisUser,
-          users: this.users
-        }),
-        // Force a scroll upon message add
-        scrollUpdateFlag: !scrollUpdateFlag
-      };
-    });
+    this.setClumps(clumps =>
+      withAddedMessage({
+        clumps: clumps,
+        message: withDefaults,
+        thisUser: this.thisUser,
+        users: this.users
+      })
+    );
+  }
+
+  // Removes a message from the clump/message array
+  deleteMessage(messageId) {
+    this.setClumps(clumps =>
+      withRemovedMessage({
+        clumps,
+        messageId
+      })
+    );
   }
 
   // Dispatches a websocket send for the given message, sending it to the interpret
@@ -341,6 +345,16 @@ class DiscordMock extends React.Component {
       allowedCommands
     });
     dispatch(sendMessage("interpret", message));
+  }
+
+  // Sets clumps state and flips the scroll update flag
+  setClumps(map) {
+    this.setState(({ clumps, scrollUpdateFlag }) => {
+      return {
+        clumps: map(clumps),
+        scrollUpdateFlag: !scrollUpdateFlag
+      };
+    });
   }
 
   // ? ===================

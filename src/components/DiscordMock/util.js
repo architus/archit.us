@@ -141,14 +141,21 @@ export function mergeClumps(a, b) {
 // new message if applicable
 export function withAddedMessage({ clumps, message, thisUser, users }) {
   let newClumps = clumps;
-  const { content, messageId, addedReactions, edit, sender } = message;
+  const {
+    content,
+    messageId,
+    addedReactions,
+    edit,
+    sender,
+    customTransformer
+  } = message;
   const reactions = addedReactions.map(parseReaction);
 
   // Handle the specific message if parameters are valid
   if (!isNil(content) && !isNil(messageId)) {
     newClumps = handleMessage(
       newClumps,
-      { content, edit, messageId, reactions, sender },
+      { content, edit, customTransformer, messageId, reactions, sender },
       { thisUser, users }
     );
   }
@@ -166,10 +173,24 @@ export function withAddedMessage({ clumps, message, thisUser, users }) {
   return newClumps;
 }
 
+// Applies a client-side update to the message clumps list, removing a message
+export function withRemovedMessage({ clumps, messageId }) {
+  const clumpIndex = containingClumpIndex(clumps, messageId);
+  const removedClumps = updateClumps({
+    clumps,
+    shouldUpdateClump: (_clump, index) => index === clumpIndex,
+    map: clump => ({
+      ...clump,
+      messages: clump.messages.filter(m => m.messageId !== messageId)
+    })
+  });
+  return removedClumps.filter(clump => clump.messages.length > 0);
+}
+
 // Handles either a message add or edit
 function handleMessage(
   clumps,
-  { content, edit, messageId, reactions, sender },
+  { content, edit, messageId, reactions, sender, customTransformer },
   context
 ) {
   const messageReactions = filterReactionsById(
@@ -180,7 +201,8 @@ function handleMessage(
     content,
     messageId,
     reactions: messageReactions,
-    sender
+    sender,
+    customTransformer
   };
   if (edit) {
     return editMessage(clumps, messageData, context);
@@ -192,16 +214,23 @@ function handleMessage(
 // Adds the specific message with the given content, id, reactions, and sender
 function addMessage(
   clumps,
-  { content, messageId, reactions, sender },
+  { content, customTransformer, messageId, reactions, sender },
   context
 ) {
-  const message = constructMessage({ content, messageId, reactions }, context);
+  const message = constructMessage(
+    { content, customTransformer, messageId, reactions },
+    context
+  );
   const newClump = createClump({ message, sender });
   return withAddedClump(clumps, newClump);
 }
 
 // Edits the specific message, setting its content and optionally updating its reactions
-function editMessage(clumps, { content, messageId, reactions }, context) {
+function editMessage(
+  clumps,
+  { content, customTransformer, messageId, reactions },
+  context
+) {
   const clumpIndex = containingClumpIndex(clumps, messageId);
   return updateMessages({
     clumps,
@@ -212,6 +241,7 @@ function editMessage(clumps, { content, messageId, reactions }, context) {
         {
           content,
           messageId,
+          customTransformer,
           reactions: mergeReactions(message.reactions, reactions)
         },
         context
@@ -337,14 +367,18 @@ function containingClumpIndex(clumps, messageId) {
 
 // Constructs a message object with the given content, reactions, and id
 function constructMessage(
-  { content, reactions, messageId },
+  { content, customTransformer, reactions, messageId },
   { thisUser, users }
 ) {
   // Transform the message to its display form
-  const { result, mentions } = transformMessage(content, {
-    users,
-    clientId: thisUser.clientId
-  });
+  const { result, mentions } = transformMessage(
+    content,
+    {
+      users,
+      clientId: thisUser.clientId
+    },
+    customTransformer
+  );
   return {
     content: result,
     reactions,
@@ -380,6 +414,13 @@ function mergeReactions(prevReactions, newReactions) {
 // ? State mutation utilities
 // ? ==========================
 
+// Performs an immutable deep update of the message clumps state object
+function updateClumps({ clumps, shouldUpdateClump, map }) {
+  return clumps.map((clump, index) =>
+    shouldUpdateClump(clump, index) ? map(clump, index) : clump
+  );
+}
+
 // Performs an immutable deep update of the message clumps state object, allowing
 // for the update of specific messages that satisfy the given predicates
 function updateMessages({
@@ -388,18 +429,18 @@ function updateMessages({
   shouldUpdateMessage,
   map
 }) {
-  return clumps.map((clump, index) =>
-    shouldUpdateClump(clump, index)
-      ? {
-          ...clump,
-          messages: clump.messages.map((message, messageIndex) =>
-            shouldUpdateMessage(message, messageIndex, clump, index)
-              ? map(message, messageIndex, clump, index)
-              : message
-          )
-        }
-      : clump
-  );
+  updateClumps({
+    clumps,
+    shouldUpdateClump,
+    map: (clump, index) => ({
+      ...clump,
+      messages: clump.messages.map((message, messageIndex) =>
+        shouldUpdateMessage(message, messageIndex, clump, index)
+          ? map(message, messageIndex, clump, index)
+          : message
+      )
+    })
+  });
 }
 
 // Performs an immutable deep update of the message clumps state object, allowing

@@ -46,13 +46,14 @@ function transformMarkdown(source) {
 // ? Pseudo-AST parser
 // ? ===================
 
-const inlineCodeRegex = /(?:`[^`\n\r]+`)+/g;
+const inlineCodeRegex = /(?:`[^`\n\r]+`)+/;
+const inlineCodeRegexGlobal = /(?:`[^`\n\r]+`)+/g;
 const blacklistedFragments = ["``"];
 
 // Builds a pseudo AST by splicing the source string and separating code &
 // non-code blocks
 function buildPseudoAST(source) {
-  const fragments = splitFragments(source, inlineCodeRegex);
+  const fragments = splitFragments(source, inlineCodeRegexGlobal);
   const passingFragments = fragments.filter(
     f => !blacklistedFragments.includes(f)
   );
@@ -103,16 +104,19 @@ const attributeExtensions = {
 // Transforms the incoming message, applying the entire pipeline and adding
 // extension attributes as neccessary. Can include an optional context for
 // pipeline processors to use
-export function transformMessage(source = "", context = {}) {
+export function transformMessage(
+  source = "",
+  context = {},
+  customTransformer = fragment => fragment
+) {
   const attributes = mapValues(attributeExtensions, func =>
     func(source, context)
   );
   const pseudoAST = buildPseudoAST(source);
-  const transformedAST = transformPseudoAST(
-    pseudoAST,
-    context,
-    fragmentTransformers
-  );
+  const transformedAST = transformPseudoAST(pseudoAST, context, {
+    ...fragmentTransformers,
+    text: [...fragmentTransformers["text"], customTransformer]
+  });
   const joinedResult = transformedAST.map(frag => frag.fragment).join("");
   const markdownProcessed = transformMarkdown(joinedResult);
   return {
