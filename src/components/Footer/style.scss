@@ -1,18 +1,28 @@
 @import '../../scss/colors';
 
 .footer {
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    background-color: darken($-light, 5%);
+    background-color: lighten($-dark, 5%);
+    color: $-light;
     text-align: center;
     padding: {
         top: 1.5rem;
         bottom: 1.5rem;
     }
+    z-index: 1000;
+    position: relative;
 
     & > *:last-child {
         margin-bottom: 0;
+    }
+
+    .footer--links {
+        a {
+            color: inherit;
+            font-weight: 500;
+
+            &:hover, &:active {
+                text-decoration: underline;
+            }
+        }
     }
 }

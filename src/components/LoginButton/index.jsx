@@ -9,7 +9,7 @@ import { NavLink as RouterLink } from "react-router-dom";
 
 import "./style.scss";
 
-const redirectUrl = "https://api.aut-bot.com/login";
+export const redirectUrl = "https://api.aut-bot.com/login";
 
 function LoginButton({ loggedIn }) {
   return loggedIn ? (

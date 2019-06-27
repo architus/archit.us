@@ -113,6 +113,7 @@ class DiscordMock extends React.Component {
     // Stop timers on unmount
     if (this.mockTyper) this.mockTyper.stop();
     if (this.mockTyperResetTimer) clearTimeout(this.mockTyperResetTimer);
+    if (this.errorTimeout) clearTimeout(this.errorTimeout);
     this.extension.destruct();
   }
 

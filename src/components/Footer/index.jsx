@@ -5,8 +5,8 @@ import "./style.scss";
 function Footer() {
   return (
     <div className="footer">
-      <p>
-        made by johnyburd and lucas smile <em>(and me smile)</em>
+      <p className="footer--links">
+        <a href="https://status.aut-bot.com">Status</a>
       </p>
     </div>
   );

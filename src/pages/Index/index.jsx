@@ -3,12 +3,24 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 import { curry } from "lodash";
 import { CustomEmojiExtension } from "../../components/DiscordMock/CustomEmojiExtension";
+import { connect } from "react-redux";
+import { redirectUrl } from "../../components/LoginButton";
+import { NavLink as RouterLink } from "react-router-dom";
 
-import { Jumbotron, Container, Row, Card, Col } from "react-bootstrap";
+import {
+  Jumbotron,
+  Container,
+  Row,
+  Card,
+  Col,
+  Button,
+  Badge
+} from "react-bootstrap";
 import LoginButton from "../../components/LoginButton";
 import DiscordMock from "../../components/DiscordMock";
 import Window from "../../components/Window";
 import WebSocketConnection from "../../components/functional/WebSocketConnection";
+import Icon from "../../components/Icon";
 
 import "./style.scss";
 import { messageSets, customEmotes } from "./data.json";
@@ -130,11 +142,8 @@ function Index() {
           </Window>
         </Feature>
       </Container>
-      <div className="features additional">
-        <Container>
-          <h2>
-            <span>Additional Features</span>
-          </h2>
+      <div className="additional">
+        <Container as="section">
           <Row>
             <MinorFeature
               header="Message history statistics/analytics"
@@ -148,7 +157,12 @@ function Index() {
               }
             />
             <MinorFeature
-              header="Extensive server and internal logs"
+              header={
+                <span>
+                  Extensive server and internal logs{" "}
+                  <Badge variant="primary">Coming soon</Badge>
+                </span>
+              }
               icon="/img/logs.svg"
               text={
                 <p>
@@ -180,6 +194,21 @@ function Index() {
               }
             />
           </Row>
+        </Container>
+      </div>
+      <div className="bottom-cta-outer">
+        <Container>
+          <Card as="section">
+            <h4>
+              See what <em>aut bot</em> can do for you
+            </h4>
+            <p>
+              Connect with Discord to get a link that adds aut bot to your
+              server.
+            </p>
+            <CallToAction />
+          </Card>
+          <hr className="hr-short" />
         </Container>
       </div>
     </article>
@@ -263,3 +292,22 @@ MinorFeature.propTypes = {
   ]),
   icon: PropTypes.string
 };
+
+const CallToAction = connect(state => ({
+  loggedIn: state.session.connectedToDiscord
+}))(({ loggedIn }) => {
+  const additionalProps = loggedIn
+    ? {
+        as: RouterLink,
+        to: "/home"
+      }
+    : {
+        href: redirectUrl
+      };
+  return (
+    <Button className="cta" variant="primary" size="lg" {...additionalProps}>
+      Get Started
+      <Icon name="chevron-right" />
+    </Button>
+  );
+});

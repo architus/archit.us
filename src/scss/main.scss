@@ -59,3 +59,26 @@ button, [type="button"], [type="reset"], [type="submit"] {
     background-color: $jumbotron-background;
     border-bottom: 1px solid rgba($-dark, 0.2);
 }
+
+.hr-short {
+    width: 160px;
+    border: none;
+    border-top: 2px solid $-primary;
+}
+
+#root > div {
+    display: flex;
+    flex-direction: column;
+
+    & > nav, & > .footer {
+        flex-grow: 0;
+    }
+
+    & > main {
+        flex-grow: 1;
+    }
+}
+
+html, body, #root, #root > div {
+    min-height: 100vh;
+}
