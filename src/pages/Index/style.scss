@@ -131,9 +131,13 @@
         }
     }
 
+    strike {
+        text-decoration-color: rgba($-dark, 0.3);
+    }
+
     &.additional {
         background-color: white;
-        border-top: 1px solid rgba($mine-shaft, 0.2);
+        border-top: 1px solid rgba($-dark, 0.2);
 
         h2 {
             margin-bottom: 2.5rem;
@@ -150,6 +154,16 @@
                 @include respond-below(md) {
                     max-width: none;
                 }
+            }
+
+            .minor-feature--icon {
+                display: block;
+                width: 80px;
+                height: 80px;
+                margin: 0 auto 1rem;
+                background-repeat: no-repeat;
+                background-size: contain;
+                background-position: center;
             }
 
             h3 {

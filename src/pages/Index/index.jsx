@@ -138,6 +138,7 @@ function Index() {
           <Row>
             <MinorFeature
               header="Message history statistics/analytics"
+              icon="/img/statistics.svg"
               text={
                 <p>
                   Morbi vitae velit sit amet nisi aliquet mollis. Fusce purus
@@ -148,6 +149,7 @@ function Index() {
             />
             <MinorFeature
               header="Extensive server and internal logs"
+              icon="/img/logs.svg"
               text={
                 <p>
                   Aenean mollis cursus rutrum. Proin ornare sem eros, hendrerit
@@ -156,7 +158,7 @@ function Index() {
               }
             />
             <MinorFeature
-              header="Music playing & Rhythm integration"
+              header={<strike>Music playing & Rhythm integration</strike>}
               text={
                 <p>
                   Sed in ex id diam condimentum pellentesque. Integer congue
@@ -167,6 +169,7 @@ function Index() {
             />
             <MinorFeature
               header="Per-server role management"
+              icon="/img/user_control.svg"
               text={
                 <p>
                   Nunc aliquam metus scelerisque ante aliquet tincidunt.
@@ -233,9 +236,13 @@ Feature.propTypes = {
   ])
 };
 
-const MinorFeature = ({ header, text, image }) => (
+const MinorFeature = ({ header, text, icon }) => (
   <Col md={6} className="minor-feature">
     <div className="minor-feature--inner">
+      <span
+        className="minor-feature--icon"
+        style={icon ? { backgroundImage: `url("${icon}")` } : {}}
+      ></span>
       <h3>{header}</h3>
       <div>{text}</div>
     </div>
@@ -252,5 +259,6 @@ MinorFeature.propTypes = {
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
     PropTypes.string
-  ])
+  ]),
+  icon: PropTypes.string
 };
