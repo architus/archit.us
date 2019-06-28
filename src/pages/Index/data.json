@@ -41,7 +41,7 @@
       {
         "messages": [
           "!schedule cool event 12pm",
-          "!poll a hot dog is: a sandwich, not a sandwich"
+          "!poll a hot dog is a: sandwich, not a sandwich"
         ]
       },
       {

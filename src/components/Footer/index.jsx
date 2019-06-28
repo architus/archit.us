@@ -11,7 +11,7 @@ import "./style.scss";
 function Footer() {
   return (
     <div className="footer">
-      <div className="footer--inner center-text">
+      <div className="footer--inner">
         <Row>
           <Col md={12} lg={6} className="mb-5 mb-lg-0">
             <FooterPanel header="About" className="about">

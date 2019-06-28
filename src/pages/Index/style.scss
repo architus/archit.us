@@ -105,10 +105,20 @@
         }
     }
 
+    .try {
+        display: block;
+        margin-top: 2rem;
+        font-weight: 500;
+    }
+
     section {
         padding: {
             top: 4rem;
             bottom: 1rem;
+        }
+
+        ul {
+            margin-top: 1rem;
         }
 
         h4 {

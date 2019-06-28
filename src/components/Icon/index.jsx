@@ -4,8 +4,11 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { faDiscord, faGithub } from "@fortawesome/free-brands-svg-icons";
-import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
-library.add(faDiscord, faChevronRight, faGithub);
+import {
+  faChevronRight,
+  faChevronLeft
+} from "@fortawesome/free-solid-svg-icons";
+library.add(faDiscord, faChevronRight, faGithub, faChevronLeft);
 const typeResolutionMap = {
   fab: ["discord", "github"]
 };

@@ -65,13 +65,17 @@ function Index() {
           header="Automatic Responses"
           content={
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed id
-              augue et ligula tincidunt condimentum. Donec quis arcu tempor,
-              cursus est at, posuere tellus. Vestibulum ut urna rhoncus nisl
-              dictum aliquam. Sed fermentum, enim eget congue efficitur, tortor
-              odio eleifend metus, eget maximus magna quam ut felis. Maecenas ex
-              erat, tristique sit amet mauris ac, fermentum pretium arcu.
-              Maecenas consectetur porttitor est.
+              Users can configure aut bot to listen for and respond to message
+              patterns using a extensive syntax. Response pattern fragments
+              include:
+              <ul>
+                <li>random nouns and adjectives</li>
+                <li>a mention of the responded-to user</li>
+                <li>an incrementing count</li>
+                <li>randomly selected phrases</li>
+                <li>the option to add reactions to the original message</li>
+              </ul>
+              <TryCTA left />
             </p>
           }
         >
@@ -88,17 +92,18 @@ function Index() {
         </Feature>
         <Feature
           right
-          lead="Let non-nitro members use custom emoji"
+          lead="Let non-nitro members use unlimited custom emoji"
           header="Custom Emoji"
           content={
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed id
-              augue et ligula tincidunt condimentum. Donec quis arcu tempor,
-              cursus est at, posuere tellus. Vestibulum ut urna rhoncus nisl
-              dictum aliquam. Sed fermentum, enim eget congue efficitur, tortor
-              odio eleifend metus, eget maximus magna quam ut felis. Maecenas ex
-              erat, tristique sit amet mauris ac, fermentum pretium arcu.
-              Maecenas consectetur porttitor est.
+              The custom emoji module allows for effectively unlimited custom
+              emoji to be used on a server, working by replacing a user's
+              message with another that has the hot-loaded emotes included. Both
+              standard and animated emotes are supported, and the syntax is the
+              same as normal Discord emotes (<code>:shortcode:</code>). Use the
+              <code>!emotes</code> command to view a list of all availible
+              emotes.
+              <TryCTA right />
             </p>
           }
         >
@@ -121,13 +126,12 @@ function Index() {
           header="Polls & Schedules"
           content={
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed id
-              augue et ligula tincidunt condimentum. Donec quis arcu tempor,
-              cursus est at, posuere tellus. Vestibulum ut urna rhoncus nisl
-              dictum aliquam. Sed fermentum, enim eget congue efficitur, tortor
-              odio eleifend metus, eget maximus magna quam ut felis. Maecenas ex
-              erat, tristique sit amet mauris ac, fermentum pretium arcu.
-              Maecenas consectetur porttitor est.
+              With the <code>!poll</code> command, users can conduct
+              reaction-based votes that include up to 10 custom options per
+              poll. Similarly, <code>!schedule</code> lets users create
+              scheduled events that other users can react to, giving a
+              convenient way to guage future attendence.
+              <TryCTA left />
             </p>
           }
         >
@@ -151,9 +155,9 @@ function Index() {
               icon="/img/statistics.svg"
               text={
                 <p>
-                  Morbi vitae velit sit amet nisi aliquet mollis. Fusce purus
-                  elit, convallis vel pellentesque ac, maximus at ex. Maecenas
-                  porta ullamcorper eros, id pulvinar ante viverra et.
+                  Let users learn who sends the most messages or misspells the
+                  most words with message history analytics that search the
+                  server's message records.
                 </p>
               }
             />
@@ -167,8 +171,9 @@ function Index() {
               icon="/img/logs.svg"
               text={
                 <p>
-                  Aenean mollis cursus rutrum. Proin ornare sem eros, hendrerit
-                  finibus elit venenatis ut. Suspendisse nec mi turpis.
+                  View, search, and export server audit logs from within the web
+                  dashboard, including information about message sends/deletes,
+                  user joins, and internal aut bot logs.
                 </p>
               }
             />
@@ -177,9 +182,9 @@ function Index() {
               icon="/img/music.svg"
               text={
                 <p>
-                  Sed in ex id diam condimentum pellentesque. Integer congue
-                  ultricies nisi eget egestas. Maecenas mattis eros eu varius
-                  pretium.
+                  Play music from Spotify and Youtube directly in voice chat
+                  using <code>!play</code>, or defer to other music playing bots
+                  if availible.
                 </p>
               }
             />
@@ -188,9 +193,9 @@ function Index() {
               icon="/img/user_control.svg"
               text={
                 <p>
-                  Nunc aliquam metus scelerisque ante aliquet tincidunt.
-                  Praesent a blandit ligula. Maecenas faucibus ornare lorem, ut
-                  maximus arcu efficitur eget
+                  Control which users have permissions to configure aut bot
+                  settings on a per server basis, and let users automatically
+                  assign themselves roles using <code>!role</code>.
                 </p>
               }
             />
@@ -313,3 +318,15 @@ const CallToAction = connect(state => ({
     </Button>
   );
 });
+
+const TryCTA = ({ left }) => (
+  <em className="try">
+    <Icon name={`chevron-${left ? "left" : "right"}`} className="mr-2" />
+    Try it out
+  </em>
+);
+
+TryCTA.propTypes = {
+  left: PropTypes.bool,
+  right: PropTypes.bool
+};
