@@ -1,0 +1,164 @@
+@import "../../../scss/colors";
+
+.message {
+    line-height: 1.35;
+    margin-bottom: 0.25rem;
+
+    .placeholder:last-child {
+        margin-bottom: 0.5rem !important;
+    }
+
+    p {
+        white-space: pre-wrap;
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    a {
+        color: $discord-link !important;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    .emoji {
+        width: 24px;
+        height: auto;
+        margin: 0 0.05em 0 0.1em;
+        position: relative;
+        top: -1px;
+    }
+
+    pre {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        font-size: 92.5%;
+        overflow: hidden;
+        margin: {
+            top: 0.25rem;
+            bottom: 0.25rem;
+        }
+        padding: {
+            top: 0.5rem;
+            bottom: 0.5rem;
+            right: 0.5rem;
+            left: 1rem;
+        };
+        background-color: $discord-pre-bg;
+        border: solid 3px $discord-pre-border;
+        border-radius: 0.5rem;
+        position: relative;
+        z-index: 1;
+
+        &::after {
+            position: absolute;
+            top: 0;
+            left: -2px;
+            bottom: 0;
+            content: " ";
+            width: 6px;
+            z-index: 10000;
+            border-left: 6px solid $discord;
+            border-radius: 3px 0 0 3px;
+        }
+
+        &:nth-child(5n+1) {
+            &::after {
+                border-left-color: $aqua-forest;
+            }
+        }
+
+        &:nth-child(5n+2) {
+            &::after {
+                border-left-color: $equator;
+            }
+        }
+
+        &:nth-child(5n+3) {
+            &::after {
+                border-left-color: $burnt-sienna;
+            }
+        }
+
+        &:nth-child(5n+4) {
+            &::after {
+                border-left-color: $purple;
+            }
+        }
+    }
+
+    code {
+        color: rgba($discord-fg, 0.9);
+        font-size: 92.5%;
+        background-color: $discord-embed-bg;
+        word-break: break-word;
+        display: inline-block;
+        padding: {
+            top: 0.1rem;
+            bottom: 0.1rem;
+            left: 0.2rem;
+            right: 0.2rem;
+        }
+        margin: {
+            top: -0.1rem;
+            bottom: -0.1rem;
+            left: 2px;
+        }
+        border-radius: 4px;
+        border: none;
+
+        &.code-first {
+            margin-left: -0.2rem;
+        }
+    }
+
+    .edited {
+        color: rgba($discord-fg, 0.3);
+        font-size: 0.67rem;
+        margin-left: 0.35rem;
+    }
+
+    .mention {
+        color: $discord;
+        background-color: rgba($discord, 0.15);
+
+        &:hover {
+            color: white;
+            background-color: rgba($discord, 0.75);
+        }
+    }
+
+    &.mentions-user {
+        background-color: rgba($discord-mention, 0.1);
+        position: relative;
+        padding: {
+            top: 0.125rem;
+            bottom: 0.25rem;
+            left: 0.75rem;
+            right: 0.75rem;
+        }
+        margin-left: -6px;
+
+        &::before {
+            position: absolute;
+            top: 0;
+            left: -2px;
+            bottom: 0;
+            content: " ";
+            width: 2px;
+            background: rgba($discord-mention, 0.2);
+            border-left: 4px solid $discord-mention;
+            border-radius: 3px 0 0 3px;
+        }
+
+        .mention {
+            color: $discord !important;
+            background-color: transparent !important;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+}

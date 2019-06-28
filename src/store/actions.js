@@ -1,9 +1,24 @@
 import { HttpVerbs, pick, log } from "../util";
 import { TOKEN_EXCHANGE, IDENTIFY_SESSION } from "./api/labels";
+import { connect, send } from "@giantmachines/redux-websocket";
 
 export const SIGN_OUT = "SIGN_OUT";
 export const API = "API";
 export const LOAD_SESSION = "LOAD_SESSION";
+
+export const SOCKET = {
+  CONNECT: "REDUX_WEBSOCKET::CONNECT",
+  DISCONNECT: "REDUX_WEBSOCKET::DISCONNECT",
+  SEND: "REDUX_WEBSOCKET::SEND",
+  OPEN: "REDUX_WEBSOCKET::OPEN",
+  CLOSED: "REDUX_WEBSOCKET::CLOSED",
+  MESSAGE: "REDUX_WEBSOCKET::MESSAGE",
+  BROKEN: "REDUX_WEBSOCKET::BROKEN",
+  BEGIN_RECONNECT: "REDUX_WEBSOCKET::BEGIN_RECONNECT",
+  RECONNECT_ATTEMPT: "REDUX_WEBSOCKET::RECONNECT_ATTEMPT",
+  RECONNECTED: "REDUX_WEBSOCKET::RECONNECTED",
+  ERROR: "REDUX_WEBSOCKET::ERROR"
+};
 
 // ? ========
 // ? Defaults
@@ -60,7 +75,7 @@ export function exchangeTokens(authCode) {
       code: authCode
     },
     onSuccess: data => loadSession({ ...data, newToken: true }),
-    onFailure: signOut,
+    // onFailure: signOut,
     label: TOKEN_EXCHANGE
   });
 }
@@ -95,4 +110,12 @@ export function loadSession(data) {
       expiresIn: expires_in
     }
   };
+}
+
+export function websocketConnect() {
+  return connect("wss://api.aut-bot.com:8300");
+}
+
+export function sendMessage(module, content) {
+  return send({ _module: module, ...content });
 }

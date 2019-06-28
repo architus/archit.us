@@ -1,5 +1,6 @@
-@import '../../../scss/colors';
-@import '../../../scss/media';
+@import "../../../scss/colors";
+@import "../../../scss/media";
+@import "../../../scss/util";
 
 .session-dropdown {
     #session-dropdown-button {
@@ -20,7 +21,7 @@
         }
 
         &:focus {
-            box-shadow: 0 0 0 0.2rem rgba($-dark, 0.2);
+            @include highlight-shadow($-dark);
         }
     }
 

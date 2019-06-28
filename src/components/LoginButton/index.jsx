@@ -7,7 +7,9 @@ import Icon from "../Icon";
 import { Button } from "react-bootstrap";
 import { NavLink as RouterLink } from "react-router-dom";
 
-const redirectUrl = "https://api.aut-bot.com/login";
+import "./style.scss";
+
+export const redirectUrl = "https://api.aut-bot.com/login";
 
 function LoginButton({ loggedIn }) {
   return loggedIn ? (
@@ -20,9 +22,9 @@ function LoginButton({ loggedIn }) {
       </Button>
     </div>
   ) : (
-    <Button variant="discord" href={redirectUrl}>
-      <Icon name="discord" className="mr-2" />
-      Connect with Discord
+    <Button variant="discord" href={redirectUrl} className="login">
+      <Icon name="discord" />
+      <span>Connect</span> <span> with Discord</span>
     </Button>
   );
 }

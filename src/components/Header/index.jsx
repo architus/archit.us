@@ -9,11 +9,16 @@ import "./style.scss";
 
 function Header(props) {
   return (
-    <Navbar expand="md" bg="primary" variant="dark" collapseOnSelect {...props}>
+    <Navbar
+      expand="md"
+      bg="primary"
+      variant="dark"
+      collapseOnSelect
+      {...props}
+      sticky={"top"}
+    >
       <div className="container">
-        <RouterLink className="nav-link navbar-brand" to="/" exact>
-          aut-bot
-        </RouterLink>
+        <Brand />
         <Navbar.Toggle aria-controls="collapse-links" />
         <Navbar.Collapse id="collapse-links">
           <Links className="mr-auto" />
@@ -25,3 +30,11 @@ function Header(props) {
 }
 
 export default Header;
+
+const Brand = props => (
+  <RouterLink className="nav-link brand" to="/" exact {...props}>
+    aut-bot
+  </RouterLink>
+);
+
+Header.Brand = Brand;
