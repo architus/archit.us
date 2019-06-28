@@ -1,6 +1,6 @@
-@import './colors';
-@import './fonts';
-@import './theme';
+@import "./colors";
+@import "./fonts";
+@import "./theme";
 
 // Bootstrap config options
 $enable-rounded: true !default;
@@ -16,7 +16,7 @@ $container-max-widths: (
     sm: 540px,
     md: 640px,
     lg: 960px,
-    xl: 1140px,
+    xl: 1140px
 ) !default;
 
 // Body
@@ -30,8 +30,8 @@ $link-decoration: none !default;
 $link-hover-decoration: none !default;
 
 // Base Bootstrap
-@import './bootstrap';
-@import 'node_modules/bootstrap/scss/mixins/buttons';
+@import "./bootstrap";
+@import "node_modules/bootstrap/scss/mixins/buttons";
 
 * {
     -webkit-font-smoothing: antialiased;
@@ -42,14 +42,61 @@ hr {
     border-top: 1px solid rgba($-dark, 0.25);
 }
 
-.btn-discord { @include button-variant($discord, lighten($discord, 5%)); }
-
-.card {
-    background-color: white;
-    padding: 2rem;
-    box-shadow: $drop-shadow;
+.btn-discord {
+    @include button-variant($discord, lighten($discord, 5%));
 }
 
-button, [type="button"], [type="reset"], [type="submit"] {
+.card {
+    background-color: rgba(white, 0.75);
+    padding: 2rem;
+    border-radius: $border-radius;
+    border: 1px solid rgba($-dark, 0.25);
+}
+
+button,
+[type="button"],
+[type="reset"],
+[type="submit"] {
     -webkit-appearance: none;
+}
+
+.jumbotron {
+    background-color: $jumbotron-background;
+    border-bottom: 1px solid rgba($-dark, 0.2);
+}
+
+.hr-short {
+    width: 160px;
+    border: none;
+    border-top: 2px solid $-primary;
+}
+
+#root > div {
+    display: flex;
+    flex-direction: column;
+
+    & > nav,
+    & > .footer {
+        flex-grow: 0;
+    }
+
+    & > main {
+        flex-grow: 1;
+    }
+}
+
+html,
+body,
+#root,
+#root > div {
+    min-height: 100vh;
+}
+
+:not(pre) > code {
+    color: $aqua-forest;
+    display: inline-block;
+    background-color: rgba($-light, 0.7);
+    padding: 0.1em 0.35em 0.05em;
+    border-radius: 4px;
+    border: 1px solid darken($-light, 10%);
 }

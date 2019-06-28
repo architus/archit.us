@@ -1,0 +1,56 @@
+@import "../../scss/colors";
+@import "../../scss/theme";
+
+%light-chrome {
+    .chrome {
+        border-bottom: 1px solid rgba($-light, 0.15) !important;
+
+        .button {
+            &.close {
+                background-color: $osx-close;
+            }
+
+            &.minimize {
+                background-color: $osx-minimize;
+            }
+
+            &.fullscreen {
+                background-color: $osx-fullscreen;
+            }
+        }
+    }
+}
+
+.window {
+    border-radius: $window-border-radius;
+    padding-bottom: $window-padding-bottom;
+    position: relative;
+
+    &.window-discord {
+        background-color: $discord-bg;
+        .chrome {
+            border-bottom: none !important;
+            background-color: $discord-chrome-bg;
+        }
+    }
+
+    .chrome {
+        height: 37px;
+        border-bottom: 1px solid rgba($-dark, 0.15);
+        border-top-left-radius: inherit;
+        border-top-right-radius: inherit;
+        padding: {
+            left: 16px;
+            right: 16px;
+        }
+
+        .button {
+            display: inline-block;
+            border-radius: 50%;
+            min-width: 12px;
+            height: 12px;
+            margin: 14px 8px 12px 0;
+            background-color: rgba($-light, 0.4);
+        }
+    }
+}

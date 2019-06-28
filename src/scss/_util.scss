@@ -1,0 +1,6 @@
+@mixin highlight-shadow($color, $opacity: 0) {
+    @if $opacity == 0 {
+        $opacity: 0.2;
+    }
+    box-shadow: 0 0 0 0.2rem rgba($color, $opacity);
+}

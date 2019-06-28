@@ -1,35 +1,26 @@
 @import '../../scss/colors';
 @import '../../scss/theme';
 @import '../../scss/media';
+@import '../../scss/util';
 
 .navbar {
     padding: {
         top: 0.75rem;
         bottom: 0.85rem;
     }
-    box-shadow: $drop-shadow-slight;
+    box-shadow: $drop-shadow;
     border-bottom: 1px solid darken($-primary, 10%);
 
     @include respond-above(sm) {
         height: 68px;
     }
 
-    .navbar-brand {
-        font-weight: 600;
-        border: 2px $-light solid;
-        margin: {
-            right: 1.25rem;
-        }
-        padding: {
-            top: 0;
-            bottom: 3px;
-            left: 10px;
-            right: 10px;
-        }
-    }
-
     .nav-link {
+        transition: all 0.25s;
         color: $-light;
+        outline: none !important;
+        border-radius: $border-radius-sm;
+
         &:hover,
         &:active {
             opacity: 0.8;
@@ -37,5 +28,34 @@
         &.active {
             font-weight: 600;
         }
+        &:focus {
+            @include highlight-shadow($-light, 0.4);
+        }
     }
+}
+
+.brand {
+    font-weight: 600 !important;
+    border: 2px $-light solid !important;
+    margin: {
+        right: 1.25rem !important;
+    }
+    padding: {
+        top: 0 !important;
+        bottom: 3px !important;
+        left: 10px !important;
+        right: 10px !important;
+    }
+    outline: none !important;
+    background-color: transparent !important;
+
+    &:focus {
+        background-color: rgba($-light, 0.15) !important;
+    }
+
+    display: inline-block;
+    font-size: 1.25rem;
+    line-height: inherit;
+    white-space: nowrap;
+    border-radius: 4px;
 }

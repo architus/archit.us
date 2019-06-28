@@ -1,13 +1,16 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { faDiscord } from "@fortawesome/free-brands-svg-icons";
-// import {
-// } from '@fortawesome/free-solid-svg-icons'
-library.add(faDiscord);
+import { faDiscord, faGithub } from "@fortawesome/free-brands-svg-icons";
+import {
+  faChevronRight,
+  faChevronLeft
+} from "@fortawesome/free-solid-svg-icons";
+library.add(faDiscord, faChevronRight, faGithub, faChevronLeft);
 const typeResolutionMap = {
-  fab: ["discord"]
+  fab: ["discord", "github"]
 };
 
 const baseStyle = { display: "inline-block", height: "1em", width: "1em" };
@@ -25,12 +28,18 @@ const resolveIcon = name => {
   return [resolveTypeClass(name), name];
 };
 
-const Icon = ({ className, name }) => {
+const Icon = ({ className, name, style, ...rest }) => {
   return (
-    <span className={className} style={baseStyle}>
+    <span className={className} style={{ ...baseStyle, ...style }}>
       <FontAwesomeIcon icon={resolveIcon(name)} />
     </span>
   );
 };
 
 export default Icon;
+
+Icon.propTypes = {
+  className: PropTypes.string,
+  name: PropTypes.string.isRequired,
+  style: PropTypes.object
+};

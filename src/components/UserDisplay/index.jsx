@@ -18,23 +18,26 @@ function UserDisplay({
   discriminator,
   ...rest
 }) {
-  const effectiveAvatarUrl = !isNil(avatarUrl)
-    ? avatarUrl
-    : constructAvatarUrl(clientId, avatarHash, avatarSize);
   return (
     <div className={classNames("user-display", className)} {...rest}>
-      <Avatar avatarUrl={effectiveAvatarUrl} />
+      <Avatar
+        avatarUrl={avatarUrl}
+        avatarHash={avatarHash}
+        clientId={clientId}
+        discriminator={discriminator}
+      />
       <div>
         <Placeholder.Text
           text={username}
           className="username"
           width={90}
+          size="0.95em"
           light
         />
         <Placeholder.Text
           text={processIfNotEmptyOrNil(discriminator, d => `#${d}`)}
           className="discriminator"
-          size="0.9em"
+          size="0.85em"
           width={40}
           light
         />
@@ -58,27 +61,49 @@ UserDisplay.propTypes = {
 // ? Helper components
 // ? =================
 
-const Avatar = ({ avatarUrl, className, ...rest }) => (
-  <Placeholder.Custom
-    value={avatarUrl}
-    className={classNames("avatar", className)}
-    width={avatarSize}
-    height={avatarSize}
-    light
-  >
-    <div
-      className={classNames("avatar-image", className)}
-      style={{
-        backgroundImage: `url(${avatarUrl})`,
-        width: `${avatarSize}px`,
-        height: `${avatarSize}px`
-      }}
-      {...rest}
-    />
-  </Placeholder.Custom>
-);
+const Avatar = ({
+  avatarUrl,
+  avatarHash,
+  clientId,
+  className,
+  circle = false,
+  size = avatarSize,
+  discriminator = 0,
+  ...rest
+}) => {
+  const effectiveAvatarUrl = !isNil(avatarUrl)
+    ? avatarUrl
+    : constructAvatarUrl(clientId, avatarHash, size, discriminator);
+  return (
+    <Placeholder.Custom
+      value={effectiveAvatarUrl}
+      className={classNames("avatar", className)}
+      width={size}
+      height={size}
+      circle={circle}
+      light
+    >
+      <div
+        className={classNames("avatar-image", className, { circle })}
+        style={{
+          backgroundImage: `url(${effectiveAvatarUrl})`,
+          width: `${size}px`,
+          height: `${size}px`
+        }}
+        {...rest}
+      />
+    </Placeholder.Custom>
+  );
+};
 
 Avatar.propTypes = {
   avatarUrl: PropTypes.string,
-  className: PropTypes.string
+  clientId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  avatarHash: PropTypes.string,
+  className: PropTypes.string,
+  circle: PropTypes.bool,
+  size: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  discriminator: PropTypes.number
 };
+
+UserDisplay.Avatar = Avatar;

@@ -1,16 +1,22 @@
-import { createStore, applyMiddleware } from "redux";
+import { createStore, applyMiddleware, compose } from "redux";
 import { store as reducer, initialState } from "./reducers";
 import { tryLoadSession } from "./reducers/session";
 import createSagaMiddleware from "redux-saga";
+import reduxWebsocket from "@giantmachines/redux-websocket";
 
 import saga from "./saga";
 import ApiMiddleware from "./api";
 
 const SagaMiddleware = createSagaMiddleware();
+const WebsocketMiddleware = reduxWebsocket();
+
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(
   reducer,
   { ...initialState, session: tryLoadSession() },
-  applyMiddleware(ApiMiddleware, SagaMiddleware)
+  composeEnhancers(
+    applyMiddleware(ApiMiddleware, SagaMiddleware, WebsocketMiddleware)
+  )
 );
 export default store;
 
