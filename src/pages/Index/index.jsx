@@ -65,7 +65,7 @@ function Index() {
           header="Automatic Responses"
           content={
             <p>
-              Users can configure aut bot to listen for and respond to message
+              Users can configure aut-bot to listen for and respond to message
               patterns using a extensive syntax. Response pattern fragments
               include:
               <ul>
@@ -173,7 +173,7 @@ function Index() {
                 <p>
                   View, search, and export server audit logs from within the web
                   dashboard, including information about message sends/deletes,
-                  user joins, and internal aut bot logs.
+                  user joins, and internal aut-bot logs.
                 </p>
               }
             />
@@ -193,7 +193,7 @@ function Index() {
               icon="/img/user_control.svg"
               text={
                 <p>
-                  Control which users have permissions to configure aut bot
+                  Control which users have permissions to configure aut-bot
                   settings on a per server basis, and let users automatically
                   assign themselves roles using <code>!role</code>.
                 </p>
@@ -206,10 +206,10 @@ function Index() {
         <Container>
           <Card as="section">
             <h4>
-              See what <em>aut bot</em> can do for you
+              See what <em>aut-bot</em> can do for you
             </h4>
             <p>
-              Connect with Discord to get a link that adds aut bot to your
+              Connect with Discord to get a link that adds aut-bot to your
               server.
             </p>
             <CallToAction />
