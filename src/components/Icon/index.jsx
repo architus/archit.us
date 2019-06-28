@@ -3,11 +3,11 @@ import PropTypes from "prop-types";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { faDiscord } from "@fortawesome/free-brands-svg-icons";
+import { faDiscord, faGithub } from "@fortawesome/free-brands-svg-icons";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
-library.add(faDiscord, faChevronRight);
+library.add(faDiscord, faChevronRight, faGithub);
 const typeResolutionMap = {
-  fab: ["discord"]
+  fab: ["discord", "github"]
 };
 
 const baseStyle = { display: "inline-block", height: "1em", width: "1em" };

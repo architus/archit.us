@@ -41,13 +41,13 @@
       {
         "messages": [
           "!schedule cool event 12pm",
-          "!poll \"a hot dog is a:\" sandwich, not a sandwich"
+          "!poll a hot dog is: a sandwich, not a sandwich"
         ]
       },
       {
         "messages": [
           "!help",
-          "!schedule \"Overwatch scrims\" Wednesday",
+          "!schedule Overwatch scrims Wednesday",
           "Vote in the poll above @everyone"
         ]
       }

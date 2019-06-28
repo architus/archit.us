@@ -141,7 +141,11 @@ class DiscordMock extends React.Component {
       }
     }
 
-    if (prevProps.isConnected && !this.props.isConnected) {
+    if (
+      prevProps.isConnected &&
+      !this.props.isConnected &&
+      !this.props.offline
+    ) {
       this.startErrorTimeout();
     }
 
@@ -393,7 +397,11 @@ class DiscordMock extends React.Component {
   // ? ===================
 
   render() {
-    const { height = 100, channelName = "channel" } = this.props;
+    const {
+      height = 100,
+      channelName = "channel",
+      offline = false
+    } = this.props;
     const { clumps, inputValue, displayError } = this.state;
 
     return (
@@ -408,7 +416,7 @@ class DiscordMock extends React.Component {
         onInputChange={this.onInputChange}
         clumps={clumps}
         ref={this.view}
-        displayError={displayError}
+        displayError={displayError && !offline}
       />
     );
   }

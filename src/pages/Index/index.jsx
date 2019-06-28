@@ -18,6 +18,7 @@ import {
 } from "react-bootstrap";
 import LoginButton from "../../components/LoginButton";
 import DiscordMock from "../../components/DiscordMock";
+import Footer from "../../components/Footer";
 import Window from "../../components/Window";
 import WebSocketConnection from "../../components/functional/WebSocketConnection";
 import Icon from "../../components/Icon";
@@ -211,6 +212,7 @@ function Index() {
           <hr className="hr-short" />
         </Container>
       </div>
+      <Footer />
     </article>
   );
 }
