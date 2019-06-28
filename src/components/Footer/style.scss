@@ -1,4 +1,5 @@
 @import "../../scss/colors";
+@import "../../scss/media";
 
 .footer {
     background-color: lighten($-dark, 3%);
@@ -6,10 +7,26 @@
     padding: 3.5rem 0;
     z-index: 1000;
     position: relative;
+    width: 100%;
+
+    .row {
+        margin: 0 !important;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
 
     .footer--inner {
         max-width: 800px;
+        width: 100%;
         margin: 0 auto;
+    }
+
+    @include respond-below(lg) {
+        text-align: center;
+
+        hr {
+            margin-left: auto !important;
+        }
     }
 
     .card {
@@ -55,7 +72,9 @@
         }
 
         &.about {
-            padding-right: 2rem;
+            @include respond-above(lg) {
+                padding-right: 2rem;
+            }
         }
 
         p {

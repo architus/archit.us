@@ -11,9 +11,9 @@ import "./style.scss";
 function Footer() {
   return (
     <div className="footer">
-      <div className="footer--inner">
+      <div className="footer--inner center-text">
         <Row>
-          <Col md={6}>
+          <Col md={12} lg={6} className="mb-5 mb-lg-0">
             <FooterPanel header="About" className="about">
               <p>
                 Aut bot is a multipurpose Discord bot empowering both admins and
@@ -22,7 +22,7 @@ function Footer() {
               </p>
             </FooterPanel>
           </Col>
-          <Col md={3}>
+          <Col md={6} lg={3}>
             <FooterPanel header="Links">
               <a href="https://status.aut-bot.com">Status</a>
               <a href="https://github.com/aut-bot-com/autbot">
@@ -31,7 +31,7 @@ function Footer() {
               </a>
             </FooterPanel>
           </Col>
-          <Col md={3}>
+          <Col md={6} lg={3}>
             <Card>
               <Header.Brand disabled />
             </Card>
