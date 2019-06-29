@@ -20,5 +20,5 @@ export default {
     require.resolve("react-static-plugin-sass")
   ],
 
-  siteRoot: 'https://aut-bot.com'
+  siteRoot: process.env.DEPLOY_PRIME_URL || "http://localhost:3000"
 };
