@@ -1,7 +1,7 @@
 import { takeEvery } from "redux-saga/effects";
-import { SIGN_OUT, LOAD_SESSION } from "./actions";
-import { LOCAL_STORAGE_KEY } from "./reducers/session";
-import { log, isNil } from "../util";
+import { SIGN_OUT, LOAD_SESSION } from "store/actions";
+import { LOCAL_STORAGE_KEY } from "store/reducers/session";
+import { log, isNil } from "utility";
 
 function signOut(action) {
   window.localStorage.clear();

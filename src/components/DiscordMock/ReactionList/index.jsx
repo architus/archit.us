@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
-import Reaction from "../Reaction";
+import Reaction from "components/DiscordMock/Reaction";
 
 function ReactionList({
   reactions = [],

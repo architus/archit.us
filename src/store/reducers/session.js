@@ -1,10 +1,10 @@
-import { SIGN_OUT, LOAD_SESSION } from "../actions";
+import { SIGN_OUT, LOAD_SESSION } from "store/actions";
 import {
   getUrlParameter,
   clearUrlQueries,
   isEmptyOrNil,
   log
-} from "../../util";
+} from "utility";
 
 export const LOCAL_STORAGE_KEY = "session";
 

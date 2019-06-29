@@ -1,10 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { addMissingUnit, randomDigitString, isNil } from "../../util";
-import MockTyper from "../../util/MockTyper";
-import { sendMessage } from "../../store/actions";
-import { SLICED_LENGTH } from "../../store/reducers/interpret";
+import { addMissingUnit, randomDigitString, isNil } from "utility";
+import MockTyper from "utility/MockTyper";
+import { sendMessage } from "store/actions";
+import { SLICED_LENGTH } from "store/reducers/interpret";
 import {
   autBotUser,
   createMockUser,
@@ -15,9 +15,9 @@ import {
   withAddedMessage,
   Extension,
   withRemovedMessage
-} from "./util";
+} from "components/DiscordMock/util";
 
-import DiscordView from "./DiscordView";
+import DiscordView from "components/DiscordMock/DiscordView";
 
 // Mock typer options
 const keypressDelay = 90;

@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Row, Col, Container, Card } from "react-bootstrap";
-import LoginButton from "../../components/LoginButton";
+import LoginButton from "components/LoginButton";
 
 import "./style.scss";
 

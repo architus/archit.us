@@ -2,8 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
-import MessageView from "../MessageView";
-import Input from "../Input";
+import MessageView from "components/DiscordMock/MessageView";
+import Input from "components/DiscordMock/Input";
 
 import "./style.scss";
 

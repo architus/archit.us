@@ -4,7 +4,8 @@ import { connect } from "react-redux";
 import { mapStateToLoggedIn } from "store/reducers/session";
 
 import Login from "pages/Login";
-import Home from "dynamic/Home";
+import Dashboard from "dynamic/Dashboard";
+import NotFound from "pages/NotFound";
 import { Router } from "components/Router";
 
 const Test = () => <p>uwu</p>;
@@ -18,8 +19,8 @@ function AppContent({ loggedIn }) {
     else
       return (
         <Router>
-          <Home path="/" />
-          <Test path="test" />
+          <Dashboard path="/" />
+          <NotFound default />
         </Router>
       );
   }

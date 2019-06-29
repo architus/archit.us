@@ -1,11 +1,11 @@
 import { createStore, applyMiddleware, compose } from "redux";
-import { store as reducer, initialState } from "./reducers";
-import { tryLoadSession } from "./reducers/session";
+import { store as reducer, initialState } from "store/reducers";
+import { tryLoadSession } from "store/reducers/session";
 import createSagaMiddleware from "redux-saga";
 import reduxWebsocket from "@giantmachines/redux-websocket";
 
-import saga from "./saga";
-import ApiMiddleware from "./api";
+import saga from "store/saga";
+import ApiMiddleware from "store/api";
 
 const SagaMiddleware = createSagaMiddleware();
 const WebsocketMiddleware = reduxWebsocket();

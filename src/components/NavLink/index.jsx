@@ -1,5 +1,5 @@
 import React from "react";
-import { Link as RouterLink } from "../Router";
+import { Link as RouterLink } from "components/Router";
 import classNames from "classnames";
 
 // this link will be active when itself or deeper routes are current

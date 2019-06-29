@@ -1,12 +1,12 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { processIfNotEmptyOrNil, toHumanTime } from "../../../util";
+import { processIfNotEmptyOrNil, toHumanTime } from "utility";
 import { Badge } from "react-bootstrap";
 
-import UserDisplay from "../../UserDisplay";
-import Placeholder from "../../Placeholder";
-import Message from "../Message";
+import UserDisplay from "components/UserDisplay";
+import Placeholder from "components/Placeholder";
+import Message from "components/DiscordMock/Message";
 
 import "./style.scss";
 

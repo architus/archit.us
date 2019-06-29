@@ -1,5 +1,5 @@
-import { Extension, makeFakeWebhookUser } from "./util";
-import { transformMessage } from "./transform";
+import { Extension, makeFakeWebhookUser } from "components/DiscordMock/util";
+import { transformMessage } from "components/DiscordMock/transform";
 
 const deleteDelay = 400;
 export class CustomEmojiExtension extends Extension {

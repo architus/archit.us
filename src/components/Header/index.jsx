@@ -1,9 +1,9 @@
 import React from "react";
 
 import { Navbar } from "react-bootstrap";
-import Links from "./Links";
-import SessionControl from "./SessionControl";
-import { Link as RouterLink } from "../Router";
+import Links from "components/Header/Links";
+import SessionControl from "components/Header/SessionControl";
+import { Link as RouterLink } from "components/Router";
 
 import "./style.scss";
 

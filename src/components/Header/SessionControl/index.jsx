@@ -1,12 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { signOut, identifySession } from "../../../store/actions";
-import { isEmptyOrNil } from "../../../util";
+import { signOut, identifySession } from "store/actions";
+import { isEmptyOrNil } from "utility";
 
-import { Link as RouterLink } from "../../Router";
+import { Link as RouterLink } from "components/Router";
+import UserDisplay from "components/UserDisplay";
 import { Dropdown } from "react-bootstrap";
-import UserDisplay from "../../UserDisplay";
 
 import "./style.scss";
 

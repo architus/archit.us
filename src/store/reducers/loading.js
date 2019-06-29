@@ -1,5 +1,5 @@
-import * as ApiLabels from "../api/labels";
-import { API_START, API_END, API_ERROR } from "../api/actions";
+import * as ApiLabels from "store/api/labels";
+import { API_START, API_END, API_ERROR } from "store/api/actions";
 
 export const initial = Object.assign(
   {},
