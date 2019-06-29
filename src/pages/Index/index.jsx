@@ -25,6 +25,10 @@ import Icon from "components/Icon";
 
 import "./style.scss";
 import { messageSets, customEmotes } from "./data.json";
+import LogsSvg from "./svg/logs.svg";
+import MusicSvg from "./svg/music.svg";
+import StatisticsSvg from "./svg/statistics.svg";
+import UserControlSvg from "./svg/user_control.svg";
 
 function Index() {
   return (
@@ -154,7 +158,7 @@ function Index() {
           <Row>
             <MinorFeature
               header="Message history statistics/analytics"
-              icon="/img/statistics.svg"
+              icon={StatisticsSvg}
               text={
                 <p>
                   Let users learn who sends the most messages or misspells the
@@ -170,7 +174,7 @@ function Index() {
                   <Badge variant="primary">Coming soon</Badge>
                 </span>
               }
-              icon="/img/logs.svg"
+              icon={LogsSvg}
               text={
                 <p>
                   View, search, and export server audit logs from within the web
@@ -181,7 +185,7 @@ function Index() {
             />
             <MinorFeature
               header="Voice chat-enabled music playback"
-              icon="/img/music.svg"
+              icon={MusicSvg}
               text={
                 <p>
                   Play music from Spotify and Youtube directly in voice chat
@@ -192,7 +196,7 @@ function Index() {
             />
             <MinorFeature
               header="Per-server role management"
-              icon="/img/user_control.svg"
+              icon={UserControlSvg}
               text={
                 <p>
                   Control which users have permissions to configure aut-bot
@@ -281,7 +285,7 @@ const MinorFeature = ({ header, text, icon }) => (
       <span
         className="minor-feature--icon"
         style={icon ? { backgroundImage: `url("${icon}")` } : {}}
-      ></span>
+      />
       <h3>{header}</h3>
       <div>{text}</div>
     </div>
@@ -298,8 +302,7 @@ MinorFeature.propTypes = {
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
     PropTypes.string
-  ]),
-  icon: PropTypes.string
+  ])
 };
 
 const CallToAction = connect(state => ({
