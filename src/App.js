@@ -6,14 +6,13 @@ import { Router } from "components/Router";
 import { Root, Routes } from "react-static";
 import { Provider } from "react-redux";
 import Header from "components/Header";
-import RestrictedRoute from "components/RestrictedRoute";
 
-import Home from "dynamic/Home";
+import AppRoot from "dynamic";
 
 import "scss/main.scss";
 
 // Any routes in this array will be treated as non-static routes
-addPrefetchExcludes(["home"]);
+addPrefetchExcludes(["app"]);
 
 function App() {
   return (
@@ -23,7 +22,7 @@ function App() {
         <main>
           <React.Suspense fallback={<em>Loading...</em>}>
             <Router>
-              <RestrictedRoute path="/home" component={Home} />
+              <AppRoot path="/app/*" />
               <Routes path="*" />
             </Router>
           </React.Suspense>

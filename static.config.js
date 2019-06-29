@@ -11,6 +11,10 @@ export default {
     {
       path: "404",
       template: "src/pages/NotFound"
+    },
+    {
+      path: "app",
+      template: "src/dynamic"
     }
   ],
 

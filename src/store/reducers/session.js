@@ -28,7 +28,7 @@ export const tryLoadSession = () => {
 
   // URL param from Discord oauth Redirect URI
   const urlCode = getUrlParameter("code");
-  if (!isEmptyOrNil(urlCode) && window.location.pathname === "/home") {
+  if (!isEmptyOrNil(urlCode) && window.location.pathname === "/app") {
     clearUrlQueries();
     log("Loaded authorization code from discord oauth");
     // State will initiate token exchange when /home is loaded
