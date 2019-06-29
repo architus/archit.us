@@ -93,9 +93,9 @@ body,
 }
 
 :not(pre) > code {
-    color: $aqua-forest;
+    color: darken($aqua-forest, 10%);
     display: inline-block;
-    background-color: rgba($-light, 0.7);
+    background-color:white;
     padding: 0.1em 0.35em 0.05em;
     border-radius: 4px;
     border: 1px solid darken($-light, 10%);
