@@ -6,3 +6,5 @@
 
 [build]
   environment = { REACT_APP_BASE_URL = "https://aut-bot.com" }
+  publish = "project/dist/"
+  command = "yarn build"
