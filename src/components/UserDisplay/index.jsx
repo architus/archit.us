@@ -18,7 +18,6 @@ function UserDisplay({
   discriminator,
   ...rest
 }) {
-  console.log(processIfNotEmptyOrNil);
   return (
     <div className={classNames("user-display", className)} {...rest}>
       <Avatar
