@@ -1,14 +1,14 @@
 import React from "react";
 import { Container } from "react-bootstrap";
-import TokenExchange from "../../components/functional/TokenExchange";
+import TokenExchange from "functional/TokenExchange";
 
-function Home() {
+function Dashboard() {
   return (
     <Container className="py-5">
       <TokenExchange />
-      <h2>Home</h2>
+      <h2>Dashboard</h2>
     </Container>
   );
 }
 
-export default Home;
+export default Dashboard;

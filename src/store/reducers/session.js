@@ -1,10 +1,10 @@
-import { SIGN_OUT, LOAD_SESSION } from "../actions";
+import { SIGN_OUT, LOAD_SESSION } from "store/actions";
 import {
   getUrlParameter,
   clearUrlQueries,
   isEmptyOrNil,
   log
-} from "../../util";
+} from "utility";
 
 export const LOCAL_STORAGE_KEY = "session";
 
@@ -23,9 +23,12 @@ export const mapStateToLoggedIn = state => {
 };
 
 export const tryLoadSession = () => {
+  // Skip when building statically
+  if (typeof window === "undefined") return initial;
+
   // URL param from Discord oauth Redirect URI
   const urlCode = getUrlParameter("code");
-  if (!isEmptyOrNil(urlCode) && window.location.pathname === "/home") {
+  if (!isEmptyOrNil(urlCode) && window.location.pathname === "/app") {
     clearUrlQueries();
     log("Loaded authorization code from discord oauth");
     // State will initiate token exchange when /home is loaded

@@ -1,9 +1,9 @@
 import marked from "marked";
 import twemoji from "twemoji";
-import aliases from "./aliases.json";
+import aliases from "components/DiscordMock/aliases.json";
 import { hasEmoji, get, unemojify } from "node-emoji";
-import { escapeHtml, escapeMarkdown, isNil } from "../../util";
-import { splitFragments, allMatches } from "../../util/string";
+import { escapeHtml, escapeMarkdown, isNil } from "utility";
+import { splitFragments, allMatches } from "utility/string";
 import { mapValues } from "lodash";
 
 // ? ===================
