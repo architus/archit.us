@@ -7,8 +7,8 @@ import "./style.scss";
 
 function Login({ fromRestricted }) {
   return (
-    <div className="login py-5">
-      <Container>
+    <div>
+      <Container className="login py-5">
         <Row>
           <Col md={6}>
             <Card>

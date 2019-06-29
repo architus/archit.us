@@ -2,10 +2,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { curry } from "lodash";
-import { CustomEmojiExtension } from "../../components/DiscordMock/CustomEmojiExtension";
+import { CustomEmojiExtension } from "components/DiscordMock/CustomEmojiExtension";
 import { connect } from "react-redux";
-import { redirectUrl } from "../../components/LoginButton";
-import { NavLink as RouterLink } from "react-router-dom";
+import { redirectUrl } from "components/LoginButton";
+import { Link as RouterLink } from "components/Router";
 
 import {
   Jumbotron,
@@ -16,12 +16,12 @@ import {
   Button,
   Badge
 } from "react-bootstrap";
-import LoginButton from "../../components/LoginButton";
-import DiscordMock from "../../components/DiscordMock";
-import Footer from "../../components/Footer";
-import Window from "../../components/Window";
-import WebSocketConnection from "../../components/functional/WebSocketConnection";
-import Icon from "../../components/Icon";
+import LoginButton from "components/LoginButton";
+import DiscordMock from "components/DiscordMock";
+import Footer from "components/Footer";
+import Window from "components/Window";
+import WebSocketConnection from "functional/WebSocketConnection";
+import Icon from "components/Icon";
 
 import "./style.scss";
 import { messageSets, customEmotes } from "./data.json";
@@ -64,10 +64,12 @@ function Index() {
           lead="Have aut-bot listen for predefined phrases"
           header="Automatic Responses"
           content={
-            <p>
-              Users can configure aut-bot to listen for and respond to message
-              patterns using a extensive syntax. Response pattern fragments
-              include:
+            <div>
+              <p>
+                Users can configure aut-bot to listen for and respond to message
+                patterns using a extensive syntax. Response pattern fragments
+                include:
+              </p>
               <ul>
                 <li>random nouns and adjectives</li>
                 <li>a mention of the responded-to user</li>
@@ -76,7 +78,7 @@ function Index() {
                 <li>the option to add reactions to the original message</li>
               </ul>
               <TryCTA left />
-            </p>
+            </div>
           }
         >
           <Window variant="discord">

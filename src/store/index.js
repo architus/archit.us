@@ -10,7 +10,10 @@ import ApiMiddleware from "./api";
 const SagaMiddleware = createSagaMiddleware();
 const WebsocketMiddleware = reduxWebsocket();
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const composeEnhancers =
+  typeof window !== "undefined"
+    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+    : compose;
 const store = createStore(
   reducer,
   { ...initialState, session: tryLoadSession() },

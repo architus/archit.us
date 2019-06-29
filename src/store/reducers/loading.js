@@ -1,8 +1,9 @@
 import * as ApiLabels from "../api/labels";
 import { API_START, API_END, API_ERROR } from "../api/actions";
 
-export const initial = Object.fromEntries(
-  Object.keys(ApiLabels).map(label => [label, false])
+export const initial = Object.assign(
+  {},
+  ...Object.keys(ApiLabels).map(label => ({ [label]: false }))
 );
 
 export function reducer(state = initial, action) {

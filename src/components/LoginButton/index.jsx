@@ -5,7 +5,7 @@ import { mapStateToLoggedIn } from "../../store/reducers/session";
 
 import Icon from "../Icon";
 import { Button } from "react-bootstrap";
-import { NavLink as RouterLink } from "react-router-dom";
+import { Link as RouterLink } from "../Router";
 
 import "./style.scss";
 

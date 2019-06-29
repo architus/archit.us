@@ -1,11 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
 import { signOut, identifySession } from "../../../store/actions";
 import { isEmptyOrNil } from "../../../util";
 
-import { NavLink as RouterLink } from "react-router-dom";
+import { Link as RouterLink } from "../../Router";
 import { Dropdown } from "react-bootstrap";
 import UserDisplay from "../../UserDisplay";
 
@@ -57,8 +56,6 @@ class SessionControl extends React.Component {
       <RouterLink
         className="nav-link"
         to="/login"
-        exact
-        activeClassName="unused"
       >
         Sign In
       </RouterLink>
@@ -88,10 +85,9 @@ export const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withRouter(SessionControl));
+)(SessionControl);
 
 SessionControl.propTypes = {
-  history: PropTypes.object,
   signOut: PropTypes.func,
   loggedIn: PropTypes.bool.isRequired,
   avatar: PropTypes.string,

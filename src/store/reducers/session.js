@@ -23,6 +23,9 @@ export const mapStateToLoggedIn = state => {
 };
 
 export const tryLoadSession = () => {
+  // Skip when building statically
+  if (typeof window === "undefined") return initial;
+
   // URL param from Discord oauth Redirect URI
   const urlCode = getUrlParameter("code");
   if (!isEmptyOrNil(urlCode) && window.location.pathname === "/home") {

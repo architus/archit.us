@@ -1,6 +1,6 @@
 import React from "react";
 import { Container } from "react-bootstrap";
-import TokenExchange from "../../components/functional/TokenExchange";
+import TokenExchange from "functional/TokenExchange";
 
 function Home() {
   return (
