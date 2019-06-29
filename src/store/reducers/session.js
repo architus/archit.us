@@ -30,7 +30,7 @@ export const tryLoadSession = () => {
   ) {
     clearUrlQueries();
     log("Loaded authorization code from discord oauth");
-    // State will initiate token exchange when /home is loaded
+    // State will initiate token exchange when /app is loaded
     return {
       ...initial,
       connectedToDiscord: true,

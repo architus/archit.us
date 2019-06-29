@@ -311,7 +311,7 @@ const CallToAction = connect(state => ({
   const additionalProps = loggedIn
     ? {
         as: RouterLink,
-        to: "/home"
+        to: "/app"
       }
     : {
         href: redirectUrl

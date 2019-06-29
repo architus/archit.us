@@ -17,7 +17,7 @@ function LoginButton({ loggedIn }) {
       <p className="mb-2">
         <em>You are already logged in</em>
       </p>
-      <Button to="/home" as={RouterLink}>
+      <Button to="/app" as={RouterLink}>
         Get started
       </Button>
     </div>
