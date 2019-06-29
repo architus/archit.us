@@ -4,6 +4,9 @@
   to = "/app.html"
   status = 200
 
+[context.production]
+  environment = { PRODUCTION_URL = "https://aut-bot.com" }
+
 [build]
   environment = { REACT_APP_BASE_URL = "https://aut-bot.com", NODE_ENV = "production" }
   publish = "dist/"

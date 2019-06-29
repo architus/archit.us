@@ -24,7 +24,10 @@ export default {
     require.resolve("react-static-plugin-sass")
   ],
 
-  siteRoot: process.env.DEPLOY_PRIME_URL || "http://localhost:3000",
+  siteRoot:
+    process.env.PRODUCTION_URL ||
+    process.env.DEPLOY_PRIME_URL ||
+    "http://localhost:3000",
 
   webpack: config => {
     const moduleRules = config.module.rules[0].oneOf;
