@@ -1,4 +1,4 @@
-import { SOCKET } from "../actions";
+import { SOCKET } from "store/actions";
 
 export const initial = {
   connected: false,

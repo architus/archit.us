@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { exchangeTokens } from "../../../store/actions";
+import { exchangeTokens } from "store/actions";
 
 class TokenExchangeInitiator extends React.Component {
   componentDidMount() {

@@ -3,8 +3,8 @@ import classNames from "classnames";
 import PropTypes from "prop-types";
 
 import { Row, Col, Card } from "react-bootstrap";
-import Header from "../Header";
-import Icon from "../Icon";
+import Header from "components/Header";
+import Icon from "components/Icon";
 
 import "./style.scss";
 

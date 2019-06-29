@@ -6,7 +6,7 @@ import {
   multiplyDimension,
   isEmptyOrNil,
   isNil
-} from "../../util";
+} from "utility";
 
 import "./style.scss";
 

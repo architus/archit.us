@@ -1,7 +1,7 @@
 import axios from "axios";
-import { API } from "../actions";
-import { HttpVerbs, isNil } from "../../util";
-import { apiError, apiStart, apiEnd } from "./actions";
+import { API } from "store/actions";
+import { HttpVerbs, isNil } from "utility";
+import { apiError, apiStart, apiEnd } from "store/api/actions";
 
 // axios default configs
 axios.defaults.baseURL = process.env.REACT_APP_BASE_URL || "";

@@ -1,5 +1,5 @@
-import { HttpVerbs, pick, log } from "../util";
-import { TOKEN_EXCHANGE, IDENTIFY_SESSION } from "./api/labels";
+import { HttpVerbs, pick, log } from "utility";
+import { TOKEN_EXCHANGE, IDENTIFY_SESSION } from "store/api/labels";
 import { connect, send } from "@giantmachines/redux-websocket";
 
 export const SIGN_OUT = "SIGN_OUT";

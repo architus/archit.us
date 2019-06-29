@@ -1,9 +1,9 @@
 import React from "react";
 
 import { Navbar } from "react-bootstrap";
-import Links from "./Links";
-import SessionControl from "./SessionControl";
-import { NavLink as RouterLink } from "react-router-dom";
+import Links from "components/Header/Links";
+import SessionControl from "components/Header/SessionControl";
+import { Link as RouterLink } from "components/Router";
 
 import "./style.scss";
 
@@ -32,7 +32,7 @@ function Header(props) {
 export default Header;
 
 const Brand = props => (
-  <RouterLink className="nav-link brand" to="/" exact {...props}>
+  <RouterLink className="nav-link brand" to="/" {...props}>
     aut-bot
   </RouterLink>
 );

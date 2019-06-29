@@ -2,11 +2,11 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import classNames from "classnames";
-import { mapStateToLoggedIn } from "../../../store/reducers/session";
+import { mapStateToLoggedIn } from "store/reducers/session";
 
-import NavLink from "../../NavLink";
+import NavLink from "components/NavLink";
 
-const LoggedInLinks = () => <NavLink to="/home">Home</NavLink>;
+const LoggedInLinks = () => <NavLink to="/app">Dashboard</NavLink>;
 
 const LoggedOutLinks = () => null;
 const CommonLinks = () => null;

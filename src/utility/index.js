@@ -1,5 +1,7 @@
 // Sourced from A-Frame VR toolkit
 export const getUrlParameter = name => {
+  if (typeof window === "undefined") return "";
+
   name = name.replace(/[[]/, "\\[").replace(/[\]]/, "\\]");
   var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
   var results = regex.exec(window.location.search);
@@ -52,12 +54,16 @@ export const constructAvatarUrl = (clientId, hash, size, discriminator) => {
   }
 };
 
-export const clearUrlQueries = () =>
+export const clearUrlQueries = () => {
+  if (typeof window === "undefined") return;
   window.history.replaceState(
     {},
     window.document.title,
-    `${window.location.protocol}//${window.location.host}${window.location.pathname}`
+    `${window.location.protocol}//${window.location.host}${
+      window.location.pathname
+    }`
   );
+};
 
 // probably will be enough
 export const HttpVerbs = {
@@ -125,9 +131,17 @@ export const takeOrReplenish = (map, key, nextKey, source) => {
 
 // Fastest html escaping function according to https://jsperf.com/htmlencoderegex/35
 export const escapeHtml = string =>
-  window.document
-    .createElement("div")
-    .appendChild(window.document.createTextNode(string)).parentNode.innerHTML;
+  typeof window !== "undefined"
+    ? window.document
+        .createElement("div")
+        .appendChild(window.document.createTextNode(string)).parentNode
+        .innerHTML
+    : string
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 
 export const escapeMarkdown = string =>
   string

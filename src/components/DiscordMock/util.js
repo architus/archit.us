@@ -4,14 +4,14 @@ import {
   includes,
   pick,
   isNil
-} from "../../util";
+} from "utility";
 import {
   transformMessage,
   transformReaction,
   transformOutgoingMessage
-} from "./transform";
+} from "components/DiscordMock/transform";
 import { omit } from "lodash";
-import { generateName } from "../../util/string";
+import { generateName } from "utility/string";
 
 // ? ==========================
 // ? User creation utilities

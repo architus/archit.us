@@ -1,9 +1,9 @@
 import React from "react";
 import classNames from "classnames";
 import PropTypes from "prop-types";
-import { processIfNotEmptyOrNil, isNil, constructAvatarUrl } from "../../util";
+import { processIfNotEmptyOrNil, isNil, constructAvatarUrl } from "utility";
 
-import Placeholder from "../Placeholder";
+import Placeholder from "components/Placeholder";
 
 import "./style.scss";
 

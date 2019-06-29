@@ -2,8 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
-import ReactionList from "../ReactionList";
-import Placeholder from "../../Placeholder";
+import ReactionList from "components/DiscordMock/ReactionList";
+import Placeholder from "components/Placeholder";
 
 import "./style.scss";
 

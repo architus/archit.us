@@ -1,8 +1,10 @@
-# Reroute all URLs to the React app
+# Reroute all App URLs under the dynamic path pattern to the React app
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
+  from = "/app/*"
+  to = "/app.html"
   status = 200
 
 [build]
-  environment = { REACT_APP_BASE_URL = "https://aut-bot.com" }
+  environment = { REACT_APP_BASE_URL = "https://aut-bot.com", NODE_ENV = "production" }
+  publish = "dist/"
+  command = "yarn build"

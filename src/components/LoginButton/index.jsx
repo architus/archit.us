@@ -1,11 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { mapStateToLoggedIn } from "../../store/reducers/session";
+import { mapStateToLoggedIn } from "store/reducers/session";
 
-import Icon from "../Icon";
+import { Link as RouterLink } from "components/Router";
+import Icon from "components/Icon";
 import { Button } from "react-bootstrap";
-import { NavLink as RouterLink } from "react-router-dom";
 
 import "./style.scss";
 
@@ -17,7 +17,7 @@ function LoginButton({ loggedIn }) {
       <p className="mb-2">
         <em>You are already logged in</em>
       </p>
-      <Button to="/home" as={RouterLink}>
+      <Button to="/app" as={RouterLink}>
         Get started
       </Button>
     </div>

@@ -1,5 +1,5 @@
-import { SOCKET } from "../actions";
-import { pick } from "../../util";
+import { SOCKET } from "store/actions";
+import { pick } from "utility";
 
 export const initial = {
   responseQueue: []

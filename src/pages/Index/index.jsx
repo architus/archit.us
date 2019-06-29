@@ -2,10 +2,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { curry } from "lodash";
-import { CustomEmojiExtension } from "../../components/DiscordMock/CustomEmojiExtension";
+import { CustomEmojiExtension } from "components/DiscordMock/CustomEmojiExtension";
 import { connect } from "react-redux";
-import { redirectUrl } from "../../components/LoginButton";
-import { NavLink as RouterLink } from "react-router-dom";
+import { redirectUrl } from "components/LoginButton";
+import { Link as RouterLink } from "components/Router";
 
 import {
   Jumbotron,
@@ -16,15 +16,19 @@ import {
   Button,
   Badge
 } from "react-bootstrap";
-import LoginButton from "../../components/LoginButton";
-import DiscordMock from "../../components/DiscordMock";
-import Footer from "../../components/Footer";
-import Window from "../../components/Window";
-import WebSocketConnection from "../../components/functional/WebSocketConnection";
-import Icon from "../../components/Icon";
+import LoginButton from "components/LoginButton";
+import DiscordMock from "components/DiscordMock";
+import Footer from "components/Footer";
+import Window from "components/Window";
+import WebSocketConnection from "functional/WebSocketConnection";
+import Icon from "components/Icon";
 
 import "./style.scss";
 import { messageSets, customEmotes } from "./data.json";
+import LogsSvg from "./svg/logs.svg";
+import MusicSvg from "./svg/music.svg";
+import StatisticsSvg from "./svg/statistics.svg";
+import UserControlSvg from "./svg/user_control.svg";
 
 function Index() {
   return (
@@ -64,10 +68,12 @@ function Index() {
           lead="Have aut-bot listen for predefined phrases"
           header="Automatic Responses"
           content={
-            <p>
-              Users can configure aut-bot to listen for and respond to message
-              patterns using a extensive syntax. Response pattern fragments
-              include:
+            <div>
+              <p>
+                Users can configure aut-bot to listen for and respond to message
+                patterns using a extensive syntax. Response pattern fragments
+                include:
+              </p>
               <ul>
                 <li>random nouns and adjectives</li>
                 <li>a mention of the responded-to user</li>
@@ -76,7 +82,7 @@ function Index() {
                 <li>the option to add reactions to the original message</li>
               </ul>
               <TryCTA left />
-            </p>
+            </div>
           }
         >
           <Window variant="discord">
@@ -152,7 +158,7 @@ function Index() {
           <Row>
             <MinorFeature
               header="Message history statistics/analytics"
-              icon="/img/statistics.svg"
+              icon={StatisticsSvg}
               text={
                 <p>
                   Let users learn who sends the most messages or misspells the
@@ -168,7 +174,7 @@ function Index() {
                   <Badge variant="primary">Coming soon</Badge>
                 </span>
               }
-              icon="/img/logs.svg"
+              icon={LogsSvg}
               text={
                 <p>
                   View, search, and export server audit logs from within the web
@@ -179,7 +185,7 @@ function Index() {
             />
             <MinorFeature
               header="Voice chat-enabled music playback"
-              icon="/img/music.svg"
+              icon={MusicSvg}
               text={
                 <p>
                   Play music from Spotify and Youtube directly in voice chat
@@ -190,7 +196,7 @@ function Index() {
             />
             <MinorFeature
               header="Per-server role management"
-              icon="/img/user_control.svg"
+              icon={UserControlSvg}
               text={
                 <p>
                   Control which users have permissions to configure aut-bot
@@ -279,7 +285,7 @@ const MinorFeature = ({ header, text, icon }) => (
       <span
         className="minor-feature--icon"
         style={icon ? { backgroundImage: `url("${icon}")` } : {}}
-      ></span>
+      />
       <h3>{header}</h3>
       <div>{text}</div>
     </div>
@@ -296,8 +302,7 @@ MinorFeature.propTypes = {
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
     PropTypes.string
-  ]),
-  icon: PropTypes.string
+  ])
 };
 
 const CallToAction = connect(state => ({
@@ -306,7 +311,7 @@ const CallToAction = connect(state => ({
   const additionalProps = loggedIn
     ? {
         as: RouterLink,
-        to: "/home"
+        to: "/app"
       }
     : {
         href: redirectUrl

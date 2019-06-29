@@ -1,29 +1,34 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { addPrefetchExcludes } from "react-static";
+import store from "store";
 
-import Home from "./pages/Home";
-import Index from "./pages/Index";
-import Login from "./pages/Login";
-import NotFound from "./pages/NotFound";
+import { Router } from "components/Router";
+import { Root, Routes } from "react-static";
+import { Provider } from "react-redux";
+import Header from "components/Header";
 
-import Header from "./components/Header";
-import RestrictedRoute from "./components/RestrictedRoute";
+import AppRoot from "dynamic";
+
+import "scss/main.scss";
+
+// Any routes in this array will be treated as non-static routes
+addPrefetchExcludes(["app"]);
 
 function App() {
   return (
-    <Router>
-      <div>
+    <Root>
+      <Provider store={store}>
         <Header />
         <main>
-          <Switch>
-            <Route exact path="/" component={Index} />
-            <Route exact path="/login" component={Login} />
-            <RestrictedRoute exact path="/home" component={Home} />
-            <Route component={NotFound} />
-          </Switch>
+          <React.Suspense fallback={<em>Loading...</em>}>
+            <Router>
+              <AppRoot path="/app/*" />
+              <Routes path="*" />
+            </Router>
+          </React.Suspense>
         </main>
-      </div>
-    </Router>
+      </Provider>
+    </Root>
   );
 }
 
