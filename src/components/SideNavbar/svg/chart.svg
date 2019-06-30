@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 26 26" style="enable-background:new 0 0 26 26;" xml:space="preserve">
+<style type="text/css">
+	.st0{opacity:0.7;fill:none;stroke:#F6F8F9;stroke-width:0.75;stroke-miterlimit:10;}
+	.st1{fill:none;stroke:#F6F8F9;stroke-width:0.75;stroke-miterlimit:10;}
+	.st2{fill:#F6F8F9;}
+</style>
+<rect x="2" y="9" class="st0" width="4" height="16"/>
+<rect x="8" y="14" class="st1" width="4" height="11"/>
+<rect x="14" y="11" class="st0" width="4" height="14"/>
+<rect x="20" y="6" class="st1" width="4" height="19"/>
+<polyline class="st0" points="4,4 10,8 16,3 22,2 "/>
+<circle class="st2" cx="4" cy="4" r="1.5"/>
+<circle class="st2" cx="10" cy="8" r="1.5"/>
+<circle class="st2" cx="16" cy="3" r="1.5"/>
+<circle class="st2" cx="22" cy="2" r="1.5"/>
+</svg>
