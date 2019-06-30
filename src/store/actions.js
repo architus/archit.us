@@ -1,10 +1,11 @@
 import { HttpVerbs, pick, log } from "utility";
-import { TOKEN_EXCHANGE, IDENTIFY_SESSION } from "store/api/labels";
+import { TOKEN_EXCHANGE, IDENTIFY_SESSION, GET_GUILDS } from "store/api/labels";
 import { connect, send } from "@giantmachines/redux-websocket";
 
 export const SIGN_OUT = "SIGN_OUT";
 export const API = "API";
 export const LOAD_SESSION = "LOAD_SESSION";
+export const LOAD_GUILDS = "LOAD_GUILDS";
 
 export const SOCKET = {
   CONNECT: "REDUX_WEBSOCKET::CONNECT",
@@ -91,6 +92,15 @@ export function identifySession(accessToken) {
   });
 }
 
+export function getGuildList(accessToken) {
+  log("Getting guild list");
+  return authApiAction(accessToken, {
+    url: "https://api.aut-bot.com/guilds",
+    onSuccess: data => loadGuilds({ ...data, newToken: false }),
+    label: GET_GUILDS
+  });
+}
+
 export function loadSession(data) {
   log("Loading session data from network");
   const { access_token, expires_in, ...rest } = pick(data, [
@@ -108,6 +118,17 @@ export function loadSession(data) {
       ...rest,
       accessToken: access_token,
       expiresIn: expires_in
+    }
+  };
+}
+
+export function loadGuilds(data) {
+  log("Loading guilds");
+  return {
+    type: LOAD_GUILDS,
+    payload: {
+      ...rest,
+      guildList: data
     }
   };
 }
