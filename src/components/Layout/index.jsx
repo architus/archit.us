@@ -39,7 +39,7 @@ export function SEO() {
       <meta name="twitter:card" content="summary" />
       <meta name="description" content={description} />
       {/* Misc. display meta */}
-      <meta name="theme-color" content="#2b5797" />
+      <meta name="theme-color" content="#6496C4" />
       <link rel="mask-icon" color="#6192be" href="/safari-pinned-tab.svg" />
       <meta name="msapplication-TileColor" content="#ffc40d" />
       <meta name="msapplication-config" content="/browserconfig.xml" />
