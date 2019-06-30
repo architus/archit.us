@@ -24,6 +24,7 @@ class Input extends React.Component {
           type="text"
           {...rest}
           placeholder={`Message #${channelName}`}
+          aria-label={`Message ${channelName} discord channel`}
           onKeyDown={this.handleKeyPress}
         />
       </div>

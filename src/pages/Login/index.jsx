@@ -2,12 +2,13 @@ import React from "react";
 
 import { Row, Col, Container, Card } from "react-bootstrap";
 import LoginButton from "components/LoginButton";
+import Layout from "components/Layout";
 
 import "./style.scss";
 
 function Login({ fromRestricted }) {
   return (
-    <div>
+    <Layout title="Login">
       <Container className="login py-5">
         <Row>
           <Col md={6}>
@@ -23,7 +24,7 @@ function Login({ fromRestricted }) {
           </Col>
         </Row>
       </Container>
-    </div>
+    </Layout>
   );
 }
 
