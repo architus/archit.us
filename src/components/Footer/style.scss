@@ -65,10 +65,12 @@
     }
 
     .footer--panel {
-        font-size: 1.1rem;
-
         & > div > *:last-child {
             margin-bottom: 0;
+        }
+
+        a {
+            font-size: 1.1rem;
         }
 
         &.about {

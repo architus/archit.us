@@ -7,6 +7,7 @@ import Login from "pages/Login";
 import Dashboard from "dynamic/Dashboard";
 import NotFound from "pages/NotFound";
 import { Router } from "components/Router";
+import Layout from "components/Layout";
 
 const Test = () => <p>uwu</p>;
 
@@ -34,9 +35,11 @@ const AuthenticatedAppContent = connect(mapStateToLoggedIn)(AppContent);
 
 function AppRoot() {
   return (
-    <React.Suspense fallback={<em>Loading...</em>}>
-      <AuthenticatedAppContent />
-    </React.Suspense>
+    <Layout title="Web Dashboard">
+      <React.Suspense fallback={<em>Loading...</em>}>
+        <AuthenticatedAppContent />
+      </React.Suspense>
+    </Layout>
   );
 }
 

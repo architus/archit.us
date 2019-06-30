@@ -27,21 +27,5 @@ export default {
   siteRoot:
     process.env.PRODUCTION_URL ||
     process.env.DEPLOY_PRIME_URL ||
-    "http://localhost:3000",
-
-  webpack: config => {
-    const moduleRules = config.module.rules[0].oneOf;
-
-    moduleRules.unshift({
-      test: /\.svg$/,
-      use: [
-        {
-          loader: require.resolve("svg-react-loader"),
-          query: {}
-        }
-      ]
-    });
-
-    return config;
-  }
+    "http://localhost:3000"
 };
