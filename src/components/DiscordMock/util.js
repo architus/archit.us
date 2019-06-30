@@ -384,7 +384,7 @@ function constructMessage(
   return {
     content: result,
     reactions,
-    mentionsUser: mentions.includes(thisUser),
+    mentionsUser: mentions.includes(thisUser.clientId),
     messageId
   };
 }
