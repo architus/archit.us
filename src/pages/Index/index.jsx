@@ -5,7 +5,7 @@ import { curry } from "lodash";
 import { CustomEmojiExtension } from "components/DiscordMock/CustomEmojiExtension";
 import { connect } from "react-redux";
 import { redirectUrl } from "components/LoginButton";
-import { Link as RouterLink } from "components/Router";
+import { mapStateToLoggedIn } from "../../store/reducers/session";
 
 import {
   Jumbotron,
@@ -23,6 +23,7 @@ import Window from "components/Window";
 import WebSocketConnection from "functional/WebSocketConnection";
 import Icon from "components/Icon";
 import Layout from "components/Layout";
+import { Link as RouterLink } from "components/Router";
 
 import "./style.scss";
 import { messageSets, customEmotes } from "./data.json";
@@ -309,9 +310,7 @@ MinorFeature.propTypes = {
   ])
 };
 
-const CallToAction = connect(state => ({
-  loggedIn: state.session.connectedToDiscord
-}))(({ loggedIn }) => {
+const CallToAction = connect(mapStateToLoggedIn)(({ loggedIn }) => {
   const additionalProps = loggedIn
     ? {
         as: RouterLink,

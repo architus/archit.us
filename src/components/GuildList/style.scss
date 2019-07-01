@@ -1,0 +1,29 @@
+@import "scss/util";
+
+$margin: 0.75rem;
+
+.guild-list {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    flex-direction: row;
+    padding: {
+        top: 0.75rem;
+        bottom: 0.5rem;
+        left: 0.5rem;
+        right: 0.5rem;
+    }
+
+    & > * {
+        margin-right: $margin;
+    }
+
+    &.vertical {
+        flex-direction: column;
+
+        & > * {
+            margin-right: 0;
+            margin-bottom: $margin;
+        }
+    }
+}

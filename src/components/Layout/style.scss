@@ -1,0 +1,15 @@
+.layout {
+    &.with-header {
+        display: flex;
+        min-height: 100vh;
+        flex-direction: column;
+
+        & > nav {
+            flex-grow: 0;
+        }
+
+        & > *:not(nav) {
+            flex-grow: 1;
+        }
+    }
+}

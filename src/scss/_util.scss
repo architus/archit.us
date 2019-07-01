@@ -4,3 +4,14 @@
     }
     box-shadow: 0 0 0 0.2rem rgba($color, $opacity);
 }
+
+%hide-scrollbar {
+    overflow-y: scroll;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE 10+ */
+    &::-webkit-scrollbar {
+        /* WebKit */
+        width: 0;
+        height: 0;
+    }
+}

@@ -5,8 +5,13 @@ import { exchangeTokens } from "store/actions";
 
 class TokenExchangeInitiator extends React.Component {
   componentDidMount() {
-    const { initiate, loggedIn, connectedToDiscord, authCode } = this.props;
-    if (!loggedIn && connectedToDiscord) initiate(authCode);
+    const {
+      initiate,
+      authenticated,
+      connectedToDiscord,
+      authCode
+    } = this.props;
+    if (!authenticated && connectedToDiscord) initiate(authCode);
   }
 
   render() {
@@ -16,7 +21,7 @@ class TokenExchangeInitiator extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    loggedIn: state.session.loggedIn,
+    authenticated: state.session.authenticated,
     connectedToDiscord: state.session.connectedToDiscord,
     authCode: state.session.discordAuthCode
   };
@@ -32,7 +37,7 @@ const mapDispatchToProps = dispatch => {
 
 TokenExchangeInitiator.propTypes = {
   initiate: PropTypes.func.isRequired,
-  loggedIn: PropTypes.bool.isRequired,
+  authenticated: PropTypes.bool.isRequired,
   connectedToDiscord: PropTypes.bool.isRequired,
   authCode: PropTypes.string.isRequired
 };

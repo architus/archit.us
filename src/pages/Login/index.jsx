@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 import { Row, Col, Container, Card } from "react-bootstrap";
 import LoginButton from "components/LoginButton";
@@ -8,7 +9,7 @@ import "./style.scss";
 
 function Login({ fromRestricted }) {
   return (
-    <Layout title="Login">
+    <Layout title="Login" noHeader={fromRestricted}>
       <Container className="login py-5">
         <Row>
           <Col md={6}>
@@ -29,3 +30,7 @@ function Login({ fromRestricted }) {
 }
 
 export default Login;
+
+Login.propTypes = {
+  fromRestricted: PropTypes.bool
+};

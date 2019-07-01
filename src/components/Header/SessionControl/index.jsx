@@ -17,8 +17,8 @@ class SessionControl extends React.Component {
   }
 
   componentDidMount() {
-    const { identify, loggedIn, id, accessToken } = this.props;
-    if (loggedIn && isEmptyOrNil(id) && !isEmptyOrNil(accessToken))
+    const { identify, authenticated, id, accessToken } = this.props;
+    if (authenticated && isEmptyOrNil(id) && !isEmptyOrNil(accessToken))
       identify(accessToken);
   }
 
@@ -53,10 +53,7 @@ class SessionControl extends React.Component {
         </Dropdown.Menu>
       </Dropdown>
     ) : (
-      <RouterLink
-        className="nav-link"
-        to="/login"
-      >
+      <RouterLink className="nav-link" to="/login">
         Sign In
       </RouterLink>
     );
@@ -66,7 +63,7 @@ class SessionControl extends React.Component {
 export const mapStateToProps = state => {
   return {
     connectedToDiscord: state.session.connectedToDiscord,
-    loggedIn: state.session.loggedIn,
+    authenticated: state.session.authenticated,
     avatar: state.session.avatar,
     username: state.session.username,
     discriminator: state.session.discriminator,
@@ -89,7 +86,7 @@ export default connect(
 
 SessionControl.propTypes = {
   signOut: PropTypes.func,
-  loggedIn: PropTypes.bool.isRequired,
+  authenticated: PropTypes.bool.isRequired,
   avatar: PropTypes.string,
   username: PropTypes.string,
   discriminator: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),

@@ -4,7 +4,7 @@ import { getUrlParameter, clearUrlQueries, isEmptyOrNil, log } from "utility";
 export const LOCAL_STORAGE_KEY = "session";
 
 export const initial = {
-  loggedIn: false,
+  authenticated: false,
   connectedToDiscord: false,
   discordAuthCode: "",
   accessToken: "",
@@ -62,7 +62,7 @@ export const tryLoadSession = () => {
 
     return {
       ...initial,
-      loggedIn: true,
+      authenticated: true,
       connectedToDiscord: true,
       accessToken,
       expiresAt
@@ -89,7 +89,7 @@ export function reducer(state = initial, action) {
       const { username, discriminator, id, avatar } = action.payload;
       return {
         ...state,
-        loggedIn: true,
+        authenticated: true,
         discordAuthCode: "",
         username,
         discriminator,

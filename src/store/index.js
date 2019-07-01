@@ -3,8 +3,7 @@ import { store as reducer, initialState } from "store/reducers";
 import { tryLoadSession } from "store/reducers/session";
 import createSagaMiddleware from "redux-saga";
 import reduxWebsocket from "@giantmachines/redux-websocket";
-import { createLogger } from 'redux-logger'
-
+// import { createLogger } from "redux-logger";
 
 import saga from "store/saga";
 import ApiMiddleware from "store/api";
@@ -12,9 +11,7 @@ import ApiMiddleware from "store/api";
 const SagaMiddleware = createSagaMiddleware();
 const WebsocketMiddleware = reduxWebsocket();
 
-const logger = createLogger({
-  
-});
+// const logger = createLogger({});
 
 const composeEnhancers =
   typeof window !== "undefined"
@@ -24,7 +21,7 @@ const store = createStore(
   reducer,
   { ...initialState, session: tryLoadSession() },
   composeEnhancers(
-    applyMiddleware(ApiMiddleware, SagaMiddleware, WebsocketMiddleware, logger)
+    applyMiddleware(ApiMiddleware, SagaMiddleware, WebsocketMiddleware)
   )
 );
 export default store;

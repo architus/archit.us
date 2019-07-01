@@ -1,7 +1,8 @@
 import { LOAD_GUILDS } from "../actions";
 
 export const initial = {
-  guildList: []
+  guildList: [],
+  hasLoaded: false
 };
 
 export function reducer(state = initial, action) {
@@ -10,6 +11,7 @@ export function reducer(state = initial, action) {
       const { guilds } = action.payload;
       return {
         guildList: guilds,
+        hasLoaded: true,
         ...state
       };
     default:

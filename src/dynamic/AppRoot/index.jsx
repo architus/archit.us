@@ -8,8 +8,9 @@ import Dashboard from "dynamic/Dashboard";
 import NotFound from "pages/NotFound";
 import { Router } from "components/Router";
 import Layout from "components/Layout";
+import GuildList from "components/GuildList";
 
-const Test = () => <p>uwu</p>;
+import "./style.scss";
 
 function AppContent({ loggedIn }) {
   // Don't pre-render anything
@@ -35,10 +36,17 @@ const AuthenticatedAppContent = connect(mapStateToLoggedIn)(AppContent);
 
 function AppRoot() {
   return (
-    <Layout title="Web Dashboard">
-      <React.Suspense fallback={<em>Loading...</em>}>
-        <AuthenticatedAppContent />
-      </React.Suspense>
+    <Layout title="Web Dashboard" className="app-root">
+      <div className="content-container">
+        <div className="guild-sidebar">
+          <GuildList />
+        </div>
+        <div className="app-content">
+          <React.Suspense fallback={<em>Loading...</em>}>
+            <AuthenticatedAppContent />
+          </React.Suspense>
+        </div>
+      </div>
     </Layout>
   );
 }

@@ -5,10 +5,9 @@ import store from "store";
 import { Router } from "components/Router";
 import { Root, Routes } from "react-static";
 import { Provider } from "react-redux";
-import Header from "components/Header";
 import { SEO } from "components/Layout";
 
-import AppRoot from "dynamic";
+import AppRoot from "dynamic/AppRoot";
 
 import "scss/main.scss";
 
@@ -20,7 +19,6 @@ function App() {
     <Root>
       <SEO />
       <Provider store={store}>
-        <Header />
         <main>
           <React.Suspense fallback={<em>Loading...</em>}>
             <Router>

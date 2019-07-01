@@ -14,7 +14,7 @@ export default {
     },
     {
       path: "app",
-      template: "src/dynamic"
+      template: "src/dynamic/AppRoot"
     }
   ],
 

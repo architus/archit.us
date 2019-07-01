@@ -28,7 +28,17 @@ if (typeof document !== "undefined") {
   // Register service worker
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", function() {
-      navigator.serviceWorker.register("/service-worker.js");
+      if (process.env.NODE_ENV === "production") {
+        navigator.serviceWorker.register("/service-worker.js");
+      } else {
+        navigator.serviceWorker
+          .getRegistrations()
+          .then(function(registrations) {
+            for (let registration of registrations) {
+              registration.unregister();
+            }
+          });
+      }
     });
   }
 
