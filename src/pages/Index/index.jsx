@@ -110,7 +110,7 @@ function Index() {
                 Both standard and animated emotes are supported, and the syntax
                 is the same as normal Discord emotes (<code>:shortcode:</code>).
                 Use the
-                <code>!emotes</code> command to view a list of all availible
+                <code>!emotes</code> command to view a list of all available
                 emotes.
                 <TryCTA right />
               </p>
@@ -139,7 +139,7 @@ function Index() {
                 reaction-based votes that include up to 10 custom options per
                 poll. Similarly, <code>!schedule</code> lets users create
                 scheduled events that other users can react to, giving a
-                convenient way to guage future attendence.
+                convenient way to gauge future attendance.
                 <TryCTA left />
               </p>
             }
@@ -193,7 +193,7 @@ function Index() {
                   <p>
                     Play music from Spotify and Youtube directly in voice chat
                     using <code>!play</code>, or defer to other music playing
-                    bots if availible.
+                    bots if available.
                   </p>
                 }
               />
