@@ -32,6 +32,13 @@
             @include highlight-shadow($-light, 0.4);
         }
     }
+
+    .header-children {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-end;
+    }
 }
 
 .brand {

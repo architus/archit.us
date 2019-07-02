@@ -1,5 +1,8 @@
 {
   "siteName": "aut-bot",
   "botName": "aut-bot",
-  "description": "Aut bot is a multipurpose Discord bot empowering both admins and server members with the tools to have a more streamlined and enjoyable experience."
+  "description": "Aut bot is a multipurpose Discord bot empowering both admins and server members with the tools to have a more streamlined and enjoyable experience.",
+  "primaryColor": "#6496c4",
+  "lightColor": "#f6f8f9",
+  "darkColor": "#222020"
 }

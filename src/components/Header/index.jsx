@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 import { Navbar } from "react-bootstrap";
 import Links from "components/Header/Links";
@@ -7,14 +8,14 @@ import { Link as RouterLink } from "components/Router";
 
 import "./style.scss";
 
-function Header(props) {
+function Header({ children, ...rest }) {
   return (
     <Navbar
       expand="md"
       bg="primary"
       variant="dark"
       collapseOnSelect
-      {...props}
+      {...rest}
       sticky={"top"}
     >
       <div className="container">
@@ -22,7 +23,10 @@ function Header(props) {
         <Navbar.Toggle aria-controls="collapse-links" />
         <Navbar.Collapse id="collapse-links">
           <Links className="mr-auto" />
-          <SessionControl />
+          <div className="header-children">
+            {children}
+            <SessionControl />
+          </div>
         </Navbar.Collapse>
       </div>
     </Navbar>
@@ -30,6 +34,13 @@ function Header(props) {
 }
 
 export default Header;
+
+Header.propTypes = {
+  children: PropTypes.oneOfType([
+    PropTypes.node,
+    PropTypes.arrayOf(PropTypes.node)
+  ])
+};
 
 const Brand = props => (
   <RouterLink className="nav-link brand" to="/" {...props}>

@@ -50,12 +50,8 @@ class GuildList extends React.Component {
                   style={squareStyle}
                 />
               )),
-              <Tooltip right text="Add aut-bot to a server...">
-                <AddButton
-                  key="guild-add"
-                  style={squareStyle}
-                  onClick={onClickAdd}
-                />
+              <Tooltip right text="Add aut-bot to a server..." key="guild-add">
+                <AddButton style={squareStyle} onClick={onClickAdd} />
               </Tooltip>
             ]
           : [...Array(PLACEHOLDER_COUNT)].map((_e, i) => (

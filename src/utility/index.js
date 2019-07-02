@@ -172,3 +172,6 @@ export function getScrollDistance(scrollContainer) {
 export function scrollToBottom(scrollContainer) {
   scrollContainer.scrollTop = getScrollRemainder(scrollContainer);
 }
+
+export * from "utility/colors";
+export * from "utility/string";

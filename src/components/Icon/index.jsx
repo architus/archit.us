@@ -8,7 +8,9 @@ import {
   faChevronRight,
   faChevronLeft,
   faPlus,
-  faSignOutAlt
+  faSignOutAlt,
+  faMoon,
+  faSun
 } from "@fortawesome/free-solid-svg-icons";
 library.add(
   faDiscord,
@@ -16,7 +18,9 @@ library.add(
   faGithub,
   faChevronLeft,
   faPlus,
-  faSignOutAlt
+  faSignOutAlt,
+  faMoon,
+  faSun
 );
 const typeResolutionMap = {
   fab: ["discord", "github"]

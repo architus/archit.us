@@ -9,14 +9,21 @@ import { Head } from "react-static";
 
 import "./style.scss";
 
-function Layout({ title, children, className, noHeader = false, ...rest }) {
+function Layout({
+  title,
+  children,
+  className,
+  headerChildren,
+  noHeader = false,
+  ...rest
+}) {
   const builtTitle = isNil(title) ? siteName : `${siteName} | ${title}`;
   return (
     <div
       className={classNames("layout", className, { "with-header": !noHeader })}
       {...rest}
     >
-      {noHeader ? null : <Header />}
+      {noHeader ? null : <Header children={headerChildren} />}
       <Head>
         <title>{builtTitle}</title>
         <meta property="og:title" content={builtTitle} />
@@ -35,7 +42,11 @@ Layout.propTypes = {
     PropTypes.arrayOf(PropTypes.node)
   ]),
   noHeader: PropTypes.bool,
-  className: PropTypes.string
+  className: PropTypes.string,
+  headerChildren: PropTypes.oneOfType([
+    PropTypes.node,
+    PropTypes.arrayOf(PropTypes.node)
+  ])
 };
 
 export function SEO() {

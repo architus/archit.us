@@ -32,6 +32,21 @@
     }
 }
 
+.dark-mode-icon {
+    position: relative;
+    top: 2px;
+    left: 6px;
+
+    &.dark {
+        color: $-light;
+    }
+
+    &.light {
+        color: lighten($-dark, 5%);
+        filter: drop-shadow(0px 1px 8px rgba(white, 1));
+    }
+}
+
 html.html--app {
     overflow-y: hidden;
 }
