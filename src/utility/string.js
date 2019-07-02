@@ -31,6 +31,6 @@ export function generateName(noSpace = false) {
   return noSpace ? `${lv}_${rv}` : `${lv} ${rv}`;
 }
 
-export function acronym(string = "") {
+export function toAcronym(string = "") {
   return string.match(/\b(\w|[-_])/g).join("");
 }

@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { mapStateToLoggedIn } from "store/reducers/session";
+import { log } from "utility";
 
 import Login from "pages/Login";
 import Dashboard from "dynamic/Dashboard";
@@ -11,6 +12,8 @@ import Layout from "components/Layout";
 import GuildList from "components/GuildList";
 
 import "./style.scss";
+
+const APP_HTML_CLASS = "html--app";
 
 function AppContent({ loggedIn }) {
   // Don't pre-render anything
@@ -34,21 +37,34 @@ AppContent.propTypes = {
 
 const AuthenticatedAppContent = connect(mapStateToLoggedIn)(AppContent);
 
-function AppRoot() {
-  return (
-    <Layout title="Web Dashboard" className="app-root">
-      <div className="content-container">
-        <div className="guild-sidebar">
-          <GuildList />
+class AppRoot extends React.Component {
+  componentDidMount() {
+    document.documentElement.classList.add(APP_HTML_CLASS);
+  }
+
+  componentWillUnmount() {
+    document.documentElement.classList.remove(APP_HTML_CLASS);
+  }
+
+  render() {
+    return (
+      <Layout title="Web Dashboard" className="app-root">
+        <div className="content-container">
+          <div className="guild-sidebar">
+            <GuildList
+              onClickGuild={id => log(`Guild ${id} clicked`)}
+              onClickAdd={() => log("Guild add clicked")}
+            />
+          </div>
+          <div className="app-content">
+            <React.Suspense fallback={<em>Loading...</em>}>
+              <AuthenticatedAppContent />
+            </React.Suspense>
+          </div>
         </div>
-        <div className="app-content">
-          <React.Suspense fallback={<em>Loading...</em>}>
-            <AuthenticatedAppContent />
-          </React.Suspense>
-        </div>
-      </div>
-    </Layout>
-  );
+      </Layout>
+    );
+  }
 }
 
 export default AppRoot;

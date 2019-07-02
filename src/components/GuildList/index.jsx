@@ -1,15 +1,18 @@
 import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
-import { getGuildList } from "store/actions";
-import { acronym } from "utility/string";
 import classNames from "classnames";
+import { getGuildList } from "store/actions";
+
 import Placeholder from "components/Placeholder";
+import GuildIcon from "components/GuildIcon";
+import Icon from "components/Icon";
 
 import "./style.scss";
 
 const PLACEHOLDER_COUNT = 3;
 const ICON_WIDTH = 52;
+
 class GuildList extends React.Component {
   componentDidMount() {
     this.tryGetGuilds();
@@ -28,13 +31,29 @@ class GuildList extends React.Component {
   }
 
   render() {
-    const { guildList, hasLoaded } = this.props;
+    const { guildList, hasLoaded, onClickGuild, onClickAdd } = this.props;
+    const squareStyle = { width: `${ICON_WIDTH}px`, height: `${ICON_WIDTH}px` };
     return (
       <div className="guild-list vertical">
         {hasLoaded
-          ? guildList.map(({ icon, id, name }) => (
-              <GuildIcon icon={icon} id={id} name={name} width={ICON_WIDTH} />
-            ))
+          ? [
+              ...guildList.map(({ icon, id, name }) => (
+                <GuildIcon
+                  icon={icon}
+                  id={id}
+                  name={name}
+                  key={id}
+                  width={ICON_WIDTH}
+                  onClick={() => onClickGuild(id)}
+                  style={squareStyle}
+                />
+              )),
+              <AddButton
+                key="guild-add"
+                style={squareStyle}
+                onClick={onClickAdd}
+              />
+            ]
           : [...Array(PLACEHOLDER_COUNT)].map((_e, i) => (
               <Placeholder circle light width={`${ICON_WIDTH}px`} key={i} />
             ))}
@@ -68,30 +87,24 @@ GuildList.propTypes = {
   accessToken: PropTypes.string,
   getGuilds: PropTypes.func,
   hasLoaded: PropTypes.bool,
-  authenticated: PropTypes.bool
+  authenticated: PropTypes.bool,
+  onClickGuild: PropTypes.func,
+  onClickAdd: PropTypes.func
 };
 
-function GuildIcon({ icon, id, name, className, circle, ...rest }) {
-  return icon !== null ? (
-    <img
-      className={classNames("guild-icon", className, { circle })}
-      src={`https://cdn.discordapp.com/icons/${id}/${icon}.png`}
-      alt={name}
+function AddButton({ onClick, className, ...rest }) {
+  return (
+    <button
+      className={classNames("guild-add-button", className)}
+      onClick={onClick}
       {...rest}
-    />
-  ) : (
-    <div className="guild-text-icon">
-      <span>{acronym(name)}</span>
-    </div>
+    >
+      <Icon name="plus" />
+    </button>
   );
 }
 
-GuildIcon.propTypes = {
-  icon: PropTypes.string,
-  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  name: PropTypes.string,
-  className: PropTypes.string,
-  circle: PropTypes.bool
+AddButton.propTypes = {
+  onClick: PropTypes.func,
+  className: PropTypes.string
 };
-
-GuildList.GuildIcon = GuildIcon;

@@ -88,3 +88,7 @@ main > div[role="group"] {
     border-radius: 4px;
     border: 1px solid darken($-light, 10%);
 }
+
+.tooltip {
+    z-index: 100;
+}
