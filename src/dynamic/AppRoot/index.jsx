@@ -15,7 +15,7 @@ import GuildList from "components/GuildList";
 import Switch from "react-switch";
 
 import "./style.scss";
-import { lightColor, darkColor, primaryColor } from "global.json";
+import { lightColor, primaryColor } from "global.json";
 
 const APP_HTML_CLASS = "html--app";
 
@@ -72,26 +72,28 @@ class AppRoot extends React.Component {
 export default AppRoot;
 
 function AppLayout({ children, ...rest }) {
-  const { value, toggle } = useDarkMode(false);
+  const { value, toggle } = useDarkMode(true);
   return (
     <Layout
       title="Web Dashboard"
       className="app-root"
       headerChildren={
-        <Switch
-          onChange={toggle}
-          checked={value}
-          className="mr-3"
-          aria-label="Dark mode switch"
-          uncheckedIcon={<Icon name="sun" className="dark-mode-icon light" />}
-          checkedIcon={<Icon name="moon" className="dark-mode-icon dark" />}
-          activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-          boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-          offHandleColor={lightColor}
-          onHandleColor={lightColor}
-          offColor={colorBlend(0.35, primaryColor)}
-          onColor={colorBlend(-0.6, primaryColor)}
-        />
+        typeof window === "undefined" ? null : (
+          <Switch
+            onChange={toggle}
+            checked={value}
+            className="mr-3"
+            aria-label="Dark mode switch"
+            uncheckedIcon={<Icon name="sun" className="dark-mode-icon light" />}
+            checkedIcon={<Icon name="moon" className="dark-mode-icon dark" />}
+            activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+            boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+            offHandleColor={lightColor}
+            onHandleColor={lightColor}
+            offColor={colorBlend(0.35, primaryColor)}
+            onColor={colorBlend(-0.6, primaryColor)}
+          />
+        )
       }
       {...rest}
     >
