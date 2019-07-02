@@ -19,10 +19,13 @@
             flex-grow: 0;
             flex-shrink: 0;
             height: 100%;
-            border-right: 2px solid lighten($-dark, 15%);
             box-shadow: $drop-shadow;
             @extend %hide-scrollbar;
-            background-color: lighten($-dark, 5%);
+            @include dark-bg($-dark, -5%);
+            @include light-bg($-light, -15%);
+            @include dark-border(transparent, $border: 1px solid, $side: right);
+            @include light-border($-light, -20%, 1px solid, right);
+            @include theme-transitions("background-color, border-right-color");
         }
 
         .app-content {
@@ -30,6 +33,12 @@
             flex-shrink: 1;
         }
     }
+
+    @extend %dark-bg;
+    @extend %light-bg;
+    @extend %dark-fg;
+    @extend %light-fg;
+    @include theme-transitions("background-color, color");
 }
 
 .dark-mode-icon {

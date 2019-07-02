@@ -15,7 +15,35 @@ $margin: 0.5rem;
 
 %icon-base {
     @extend %circle-icon-hover;
+    box-shadow: $drop-shadow;
     cursor: pointer;
+}
+
+%symbol-icon-base-fg {
+    @include dark-fg($-light, -10%);
+    @include light-fg($-dark, 20%);
+}
+
+%symbol-icon-base {
+    @extend %icon-base;
+    @include theme-transitions("background-color, color, border-radius");
+    @include dark-bg($-dark, 12.5%);
+    @include light-bg($-light);
+    @extend %symbol-icon-base-fg;
+
+    span {
+        @extend %symbol-icon-base-fg;
+        @include theme-transitions("color");
+    }
+
+    &:hover {
+        &,
+        span {
+            color: white;
+        }
+        @include dark-bg($-primary);
+        @include light-bg($-primary, -5%);
+    }
 }
 
 .guild-list {
@@ -26,8 +54,8 @@ $margin: 0.5rem;
     padding: {
         top: 0.75rem;
         bottom: 0.5rem;
-        left: 0.5rem;
-        right: 0.5rem;
+        left: 0.75rem;
+        right: 0.75rem;
     }
 
     & > * {
@@ -45,13 +73,7 @@ $margin: 0.5rem;
 
     .guild-add-button {
         @extend %button-blank;
-        @extend %circle-icon-hover;
-        background-color: lighten($-dark, 12.5%);
-        color: $-light;
-
-        &:hover {
-            background-color: $-primary;
-        }
+        @extend %symbol-icon-base;
     }
 
     .guild-icon {
@@ -60,12 +82,8 @@ $margin: 0.5rem;
     }
 
     .guild-text-icon {
-        background-color: lighten($-dark, 12.5%);
         position: relative;
-        @extend %icon-base;
-        &:hover {
-            background-color: darken($-primary, 5%);
-        }
+        @extend %symbol-icon-base;
 
         div {
             position: absolute;
@@ -80,7 +98,6 @@ $margin: 0.5rem;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            color: $-light;
             overflow: hidden;
             user-select: none;
             @extend %circle-icon-hover;
