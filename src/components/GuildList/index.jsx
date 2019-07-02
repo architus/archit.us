@@ -55,7 +55,7 @@ class GuildList extends React.Component {
               </Tooltip>
             ]
           : [...Array(PLACEHOLDER_COUNT)].map((_e, i) => (
-              <Placeholder circle light width={`${ICON_WIDTH}px`} key={i} />
+              <Placeholder.Auto circle width={`${ICON_WIDTH}px`} key={i} />
             ))}
       </div>
     );

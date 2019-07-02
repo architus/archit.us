@@ -1,5 +1,5 @@
-@import 'scss/colors';
-@import 'scss/animation';
+@import "scss/colors";
+@import "scss/animation";
 
 $dark-color: rgba($-dark, 0.1);
 $dark-highlight-color: rgba($-dark, 0.2);
@@ -10,7 +10,12 @@ $light-highlight-color: rgba($-light, 0.3);
 .placeholder {
     display: block;
     animation: shimmer 3s linear infinite;
-    background-image: linear-gradient(to right, $dark-color 4%, $dark-highlight-color 25%, $dark-color 36%);
+    background-image: linear-gradient(
+        to right,
+        $dark-color 4%,
+        $dark-highlight-color 25%,
+        $dark-color 36%
+    );
     background-size: 1000px 100%;
 
     &.inline {
@@ -22,6 +27,25 @@ $light-highlight-color: rgba($-light, 0.3);
     }
 
     &.light {
-        background-image: linear-gradient(to right, $light-color 4%, $light-highlight-color 25%, $light-color 36%);
+        background-image: linear-gradient(
+            to right,
+            $light-color 4%,
+            $light-highlight-color 25%,
+            $light-color 36%
+        );
+    }
+
+    &.placeholder-auto {
+        @include theme-property(
+            background-image,
+            linear-gradient(
+                to right,
+                $light-color 4%,
+                $light-highlight-color 25%,
+                $light-color 36%
+            ),
+            dark
+        );
+        @include theme-transitions("background-image");
     }
 }
