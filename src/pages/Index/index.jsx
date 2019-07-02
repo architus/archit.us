@@ -317,7 +317,7 @@ const CallToAction = connect(mapStateToLoggedIn)(({ loggedIn }) => {
         to: "/app"
       }
     : {
-        href: redirectUrl
+        href: redirectUrl()
       };
   return (
     <Button className="cta" variant="primary" size="lg" {...additionalProps}>

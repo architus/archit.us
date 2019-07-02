@@ -7,6 +7,7 @@ import { isEmptyOrNil } from "utility";
 import { Link as RouterLink } from "components/Router";
 import UserDisplay from "components/UserDisplay";
 import { Dropdown } from "react-bootstrap";
+import Icon from "components/Icon";
 
 import "./style.scss";
 
@@ -49,7 +50,9 @@ class SessionControl extends React.Component {
           />
         </Dropdown.Toggle>
         <Dropdown.Menu alignRight>
-          <Dropdown.Item onClick={this.signOut}>Sign Out</Dropdown.Item>
+          <Dropdown.Item onClick={this.signOut}>
+            <Icon name="sign-out-alt" className="mr-2" /> Sign Out
+          </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
     ) : (

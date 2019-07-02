@@ -9,7 +9,12 @@ import { Button } from "react-bootstrap";
 
 import "./style.scss";
 
-export const redirectUrl = "https://api.aut-bot.com/login";
+export const redirectUrl = () =>
+  process.env.PRODUCTION_URL
+    ? "https://api.aut-bot.com/login"
+    : `https://api.aut-bot.com/login?return=${encodeURIComponent(
+        `${window.location.protocol}//${window.location.host}/app`
+      )}`;
 
 function LoginButton({ loggedIn }) {
   return loggedIn ? (
@@ -22,7 +27,7 @@ function LoginButton({ loggedIn }) {
       </Button>
     </div>
   ) : (
-    <Button variant="discord" href={redirectUrl} className="login">
+    <Button variant="discord" href={redirectUrl()} className="login">
       <Icon name="discord" />
       <span>Connect</span> <span> with Discord</span>
     </Button>

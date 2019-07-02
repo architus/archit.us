@@ -59,9 +59,7 @@ export const clearUrlQueries = () => {
   window.history.replaceState(
     {},
     window.document.title,
-    `${window.location.protocol}//${window.location.host}${
-      window.location.pathname
-    }`
+    `${window.location.protocol}//${window.location.host}${window.location.pathname}`
   );
 };
 

@@ -28,7 +28,7 @@ if (typeof document !== "undefined") {
   // Register service worker
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", function() {
-      if (process.env.NODE_ENV === "production") {
+      if (process.env.PRODUCTION_URL) {
         navigator.serviceWorker.register("/service-worker.js");
       } else {
         navigator.serviceWorker

@@ -7,9 +7,17 @@ import { faDiscord, faGithub } from "@fortawesome/free-brands-svg-icons";
 import {
   faChevronRight,
   faChevronLeft,
-  faPlus
+  faPlus,
+  faSignOutAlt
 } from "@fortawesome/free-solid-svg-icons";
-library.add(faDiscord, faChevronRight, faGithub, faChevronLeft, faPlus);
+library.add(
+  faDiscord,
+  faChevronRight,
+  faGithub,
+  faChevronLeft,
+  faPlus,
+  faSignOutAlt
+);
 const typeResolutionMap = {
   fab: ["discord", "github"]
 };

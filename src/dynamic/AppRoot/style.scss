@@ -17,6 +17,7 @@
 
         .guild-sidebar {
             flex-grow: 0;
+            flex-shrink: 0;
             height: 100%;
             border-right: 2px solid lighten($-dark, 15%);
             box-shadow: $drop-shadow;
@@ -26,6 +27,7 @@
 
         .app-content {
             flex-grow: 1;
+            flex-shrink: 1;
         }
     }
 }

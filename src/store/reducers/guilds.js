@@ -1,3 +1,4 @@
+import { createSelector } from "reselect";
 import { LOAD_GUILDS } from "../actions";
 
 export const initial = {
@@ -8,13 +9,21 @@ export const initial = {
 export function reducer(state = initial, action) {
   switch (action.type) {
     case LOAD_GUILDS:
-      const { guilds } = action.payload;
+      const { guildList } = action.payload;
       return {
-        guildList: guilds,
-        hasLoaded: true,
-        ...state
+        ...state,
+        guildList,
+        hasLoaded: true
       };
+
     default:
       return state;
   }
 }
+
+const getGuildList = state => state.guilds.guildList;
+
+export const getAutbotGuilds = createSelector(
+  [getGuildList],
+  guildList => guildList.filter(guild => guild.has_autbot)
+);

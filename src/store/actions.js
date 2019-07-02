@@ -96,7 +96,7 @@ export function getGuildList(accessToken) {
   log("Getting guild list");
   return authApiAction(accessToken, {
     url: "https://api.aut-bot.com/guilds",
-    onSuccess: data => loadGuilds({ ...data, newToken: false }),
+    onSuccess: data => loadGuilds(data),
     label: GET_GUILDS
   });
 }
@@ -127,7 +127,6 @@ export function loadGuilds(data) {
   return {
     type: LOAD_GUILDS,
     payload: {
-      ...rest,
       guildList: data
     }
   };

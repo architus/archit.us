@@ -3,6 +3,7 @@ import React from "react";
 import { connect } from "react-redux";
 import classNames from "classnames";
 import { getGuildList } from "store/actions";
+import { getAutbotGuilds } from "store/reducers/guilds";
 
 import Placeholder from "components/Placeholder";
 import GuildIcon from "components/GuildIcon";
@@ -64,7 +65,7 @@ class GuildList extends React.Component {
 
 export const mapStateToProps = state => {
   return {
-    guildList: state.guilds.guildList,
+    guildList: getAutbotGuilds(state),
     hasLoaded: state.guilds.hasLoaded,
     accessToken: state.session.accessToken,
     authenticated: state.session.authenticated
