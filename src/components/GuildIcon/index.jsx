@@ -2,23 +2,12 @@ import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
-import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import Tooltip from "components/Tooltip";
 import Acronym from "components/Acronym";
 
 function GuildIcon({ icon, id, name, className, onClick, ...rest }) {
   return (
-    <OverlayTrigger
-      placement="right"
-      popperConfig={{
-        modifiers: {
-          preventOverflow: {
-            enabled: true,
-            boundariesElement: "window"
-          }
-        }
-      }}
-      overlay={<Tooltip>{name}</Tooltip>}
-    >
+    <Tooltip right text={name}>
       {icon !== null ? (
         <img
           className={classNames("guild-icon", className)}
@@ -35,7 +24,7 @@ function GuildIcon({ icon, id, name, className, onClick, ...rest }) {
           </div>
         </div>
       )}
-    </OverlayTrigger>
+    </Tooltip>
   );
 }
 

@@ -7,6 +7,7 @@ import { getAutbotGuilds } from "store/reducers/guilds";
 
 import Placeholder from "components/Placeholder";
 import GuildIcon from "components/GuildIcon";
+import Tooltip from "components/Tooltip";
 import Icon from "components/Icon";
 
 import "./style.scss";
@@ -49,11 +50,13 @@ class GuildList extends React.Component {
                   style={squareStyle}
                 />
               )),
-              <AddButton
-                key="guild-add"
-                style={squareStyle}
-                onClick={onClickAdd}
-              />
+              <Tooltip right text="Add aut-bot to a server...">
+                <AddButton
+                  key="guild-add"
+                  style={squareStyle}
+                  onClick={onClickAdd}
+                />
+              </Tooltip>
             ]
           : [...Array(PLACEHOLDER_COUNT)].map((_e, i) => (
               <Placeholder circle light width={`${ICON_WIDTH}px`} key={i} />

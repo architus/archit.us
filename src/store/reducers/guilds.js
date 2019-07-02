@@ -1,5 +1,5 @@
 import { createSelector } from "reselect";
-import { LOAD_GUILDS } from "../actions";
+import { LOAD_GUILDS, SIGN_OUT } from "../actions";
 
 export const initial = {
   guildList: [],
@@ -15,6 +15,9 @@ export function reducer(state = initial, action) {
         guildList,
         hasLoaded: true
       };
+
+    case SIGN_OUT:
+      return initial;
 
     default:
       return state;
