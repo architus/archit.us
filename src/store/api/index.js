@@ -4,7 +4,6 @@ import { HttpVerbs, isNil } from "utility";
 import { apiError, apiStart, apiEnd } from "store/api/actions";
 
 // axios default configs
-axios.defaults.baseURL = process.env.REACT_APP_BASE_URL || "";
 axios.defaults.headers.common["Content-Type"] = "application/json";
 
 const dispatchNonNil = (dispatch, action) => {
