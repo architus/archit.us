@@ -82,6 +82,7 @@ $margin: 0.5rem;
             justify-content: center;
             color: $-light;
             overflow: hidden;
+            user-select: none;
             @extend %circle-icon-hover;
         }
     }

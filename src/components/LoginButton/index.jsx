@@ -9,14 +9,25 @@ import { Button } from "react-bootstrap";
 
 import "./style.scss";
 
-export const redirectUrl = () =>
-  process.env.PRODUCTION_URL
-    ? "https://api.aut-bot.com/login"
-    : `https://api.aut-bot.com/login?return=${encodeURIComponent(
-        `${window.location.protocol}//${window.location.host}/app`
-      )}`;
+const baseOauthUrl = "https://api.aut-bot.com/login";
+export function useOauthUrl() {
+  if (process.env.PRODUCTION_URL) {
+    return baseOauthUrl;
+  } else {
+    const [oauthUrl, setOauthUrl] = React.useState(baseOauthUrl);
+    React.useEffect(() => {
+      setOauthUrl(
+        `https://api.aut-bot.com/login?return=${encodeURIComponent(
+          `${window.location.protocol}//${window.location.host}/app`
+        )}`
+      );
+    });
+    return oauthUrl;
+  }
+}
 
 function LoginButton({ loggedIn }) {
+  const oauthUrl = useOauthUrl();
   return loggedIn ? (
     <div>
       <p className="mb-2">
@@ -27,7 +38,7 @@ function LoginButton({ loggedIn }) {
       </Button>
     </div>
   ) : (
-    <Button variant="discord" href={redirectUrl()} className="login">
+    <Button variant="discord" href={oauthUrl} className="login">
       <Icon name="discord" />
       <span>Connect</span> <span> with Discord</span>
     </Button>

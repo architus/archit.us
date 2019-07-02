@@ -4,7 +4,7 @@ import classNames from "classnames";
 import { curry } from "lodash";
 import { CustomEmojiExtension } from "components/DiscordMock/CustomEmojiExtension";
 import { connect } from "react-redux";
-import { redirectUrl } from "components/LoginButton";
+import { useOauthUrl } from "components/LoginButton";
 import { mapStateToLoggedIn } from "../../store/reducers/session";
 
 import {
@@ -311,13 +311,14 @@ MinorFeature.propTypes = {
 };
 
 const CallToAction = connect(mapStateToLoggedIn)(({ loggedIn }) => {
+  const oauthUrl = useOauthUrl();
   const additionalProps = loggedIn
     ? {
         as: RouterLink,
         to: "/app"
       }
     : {
-        href: redirectUrl()
+        href: oauthUrl
       };
   return (
     <Button className="cta" variant="primary" size="lg" {...additionalProps}>
