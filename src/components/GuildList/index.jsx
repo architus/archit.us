@@ -63,7 +63,7 @@ class GuildList extends React.Component {
   }
 }
 
-export const mapStateToProps = state => {
+const mapStateToProps = state => {
   return {
     guildList: getAutbotGuilds(state),
     hasLoaded: state.guilds.hasLoaded,
@@ -72,7 +72,7 @@ export const mapStateToProps = state => {
   };
 };
 
-export const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = dispatch => {
   return {
     getGuilds: accessToken => dispatch(getGuildList(accessToken))
   };

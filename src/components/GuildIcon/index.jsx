@@ -5,13 +5,23 @@ import classNames from "classnames";
 import Tooltip from "components/Tooltip";
 import Acronym from "components/Acronym";
 
-function GuildIcon({ icon, id, name, className, onClick, ...rest }) {
+export const iconSource = (id, icon) => `https://cdn.discordapp.com/icons/${id}/${icon}.png`
+function GuildIcon({ icon, id, name, className, onClick, noTooltip, ...rest }) {
+  // eslint-disable-next-line react/prop-types
+  const Outer = ({ children }) =>
+    noTooltip ? (
+      <>{children}</>
+    ) : (
+      <Tooltip right text={name}>
+        {children}
+      </Tooltip>
+    );
   return (
-    <Tooltip right text={name}>
+    <Outer>
       {icon !== null ? (
         <img
           className={classNames("guild-icon", className)}
-          src={`https://cdn.discordapp.com/icons/${id}/${icon}.png`}
+          src={iconSource(id, icon)}
           alt={name}
           draggable="false"
           onClick={onClick}
@@ -24,7 +34,7 @@ function GuildIcon({ icon, id, name, className, onClick, ...rest }) {
           </div>
         </div>
       )}
-    </Tooltip>
+    </Outer>
   );
 }
 
@@ -35,5 +45,6 @@ GuildIcon.propTypes = {
   id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   name: PropTypes.string,
   className: PropTypes.string,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  noTooltip: PropTypes.bool
 };

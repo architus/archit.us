@@ -12,13 +12,14 @@
         @extend %light-fg;
         @extend %dark-fg;
 
+        & > div {
+            padding: 2rem;
+        }
+
         .modal-header {
+            border: none !important;
             border-top-right-radius: $modal-border-radius;
             border-top-left-radius: $modal-border-radius;
-
-            @include dark {
-                border-bottom-color: rgba($-light, 0.1);
-            }
 
             .h4 {
                 font-weight: 400 !important;
@@ -28,13 +29,14 @@
             }
         }
 
+        .guild-card-list {
+
+        }
+
         .modal-footer {
+            border: none !important;
             border-bottom-right-radius: $modal-border-radius;
             border-bottom-left-radius: $modal-border-radius;
-
-            @include dark {
-                border-top-color: rgba($-light, 0.1);
-            }
         }
 
         .close {

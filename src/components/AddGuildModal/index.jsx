@@ -1,11 +1,14 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { getDiscordAdminGuilds } from "store/reducers/guilds";
+import { connect } from "react-redux";
 
-import { Modal, Button } from "react-bootstrap";
+import GuildCard from "components/GuildCard";
+import { Modal, Button, Container, Row, Col } from "react-bootstrap";
 
 import "./style.scss";
 
-function AddGuildModal({ onHide, ...rest }) {
+function AddGuildModal({ onHide, guilds, dispatch, ...rest }) {
   return (
     <Modal
       size="lg"
@@ -22,8 +25,13 @@ function AddGuildModal({ onHide, ...rest }) {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {/* TODO add cards here */}
-        Work in Progress
+        <div className="guild-card-list">
+          {guilds.map(({ id, name, icon }) => (
+            <Col md={6} lg={4} key={id}>
+              <GuildCard id={id} name={name} icon={icon} />
+            </Col>
+          ))}
+        </div>
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={onHide}>Close</Button>
@@ -32,8 +40,14 @@ function AddGuildModal({ onHide, ...rest }) {
   );
 }
 
-export default AddGuildModal;
+const mapStateToProps = state => ({
+  guilds: getDiscordAdminGuilds(state)
+});
+
+export default connect(mapStateToProps)(AddGuildModal);
 
 AddGuildModal.propTypes = {
-  onHide: PropTypes.func
+  onHide: PropTypes.func,
+  guilds: PropTypes.array,
+  dispatch: PropTypes.func
 };

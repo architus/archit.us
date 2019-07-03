@@ -30,3 +30,9 @@ export const getAutbotGuilds = createSelector(
   [getGuildList],
   guildList => guildList.filter(guild => guild.has_autbot)
 );
+
+const MANAGE_SERVERS = 32; // 0x20
+export const getDiscordAdminGuilds = createSelector(
+  [getGuildList],
+  guildList => guildList.filter(guild => guild.permissions & MANAGE_SERVERS)
+);
