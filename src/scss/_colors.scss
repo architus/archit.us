@@ -14,7 +14,7 @@ $black: #000 !default;
 // Theme colors
 $porcelain: #f6f8f9 !default;
 $linh-blue: #6496c4 !default;
-$nevada: #626b73 !default;
+$olivine: #cba15b !default;
 $tundora: #453e3e !default;
 $mine-shaft: #222020 !default;
 $neptune: #73a3ba !default;
@@ -37,7 +37,7 @@ $cyan: #00bcd4 !default;
 // Custom color scheme
 $theme-colors: (
     primary: $linh-blue,
-    secondary: $nevada,
+    secondary: $olivine,
     tertiary: $tundora,
     success: $aqua-forest,
     info: $neptune,
@@ -78,3 +78,149 @@ $discord-pre-border: #2b2c31;
 $osx-close: #ff5f56;
 $osx-minimize: #ffbd2e;
 $osx-fullscreen: #27c93f;
+
+@function color-adjust($color, $adjust: 0%) {
+    @if $adjust == 0% {
+        @return $color;
+    } @else {
+        @return scale-color($color, $lightness: $adjust);
+    }
+}
+
+@function blend($color1, $color2, $mu: 0.5) {
+    $c1R: red($color1);
+    $c1G: green($color1);
+    $c1B: blue($color1);
+    $c1A: alpha($color1);
+
+    $c2R: red($color2);
+    $c2G: green($color2);
+    $c2B: blue($color2);
+    $c2A: alpha($color2);
+
+    $muMinus: (1 - $mu);
+    $r: ($c1R * $muMinus) + ($c2R * $mu);
+    $g: ($c1G * $muMinus) + ($c2G * $mu);
+    $b: ($c1B * $muMinus) + ($c2B * $mu);
+    $a: ($c1A * $muMinus) + ($c2A * $mu);
+
+    @return rgba($r, $g, $b, $a);
+}
+
+// ? =======================
+// ? Dark/light theme mixins
+// ? =======================
+
+@mixin theme-transitions($properties) {
+    transition-duration: 0.25s;
+    transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
+    transition-property: unquote($properties);
+}
+
+@mixin theme-property($property, $value, $theme) {
+    .#{$theme}-mode & {
+        #{$property}: $value;
+    }
+}
+
+@mixin light($property: null, $value: null) {
+    @if $property == null {
+        .light-mode & {
+            @content;
+        }
+    } @else {
+        .light-mode & {
+            #{$property}: $value;
+        }
+    }
+}
+
+@mixin dark($property: null, $value: null) {
+    @if $property == null {
+        .dark-mode & {
+            @content;
+        }
+    } @else {
+        .dark-mode & {
+            #{$property}: $value;
+        }
+    }
+}
+
+@mixin theme-bg($theme, $color, $adjust: 0%) {
+    @include theme-property(
+        background-color,
+        color-adjust($color, $adjust),
+        $theme
+    );
+}
+
+@mixin theme-fg($theme, $color, $adjust: 0%) {
+    @include theme-property(color, color-adjust($color, $adjust), $theme);
+}
+
+@mixin theme-border(
+    $theme,
+    $color,
+    $adjust: 0%,
+    $border: 1px solid,
+    $side: null
+) {
+    @if $side == null {
+        @include theme-property(
+            border,
+            $border color-adjust($color, $adjust),
+            $theme
+        );
+    } @else {
+        @include theme-property(
+            border-#{$side},
+            $border color-adjust($color, $adjust),
+            $theme
+        );
+    }
+}
+
+@mixin dark-bg($color, $adjust: 0%) {
+    @include theme-bg(dark, $color, $adjust);
+}
+
+@mixin light-bg($color, $adjust: 0%) {
+    @include theme-bg(light, $color, $adjust);
+}
+
+@mixin dark-fg($color, $adjust: 0%) {
+    @include theme-fg(dark, $color, $adjust);
+}
+
+@mixin light-fg($color, $adjust: 0%) {
+    @include theme-fg(light, $color, $adjust);
+}
+
+@mixin dark-border($color, $adjust: 0%, $border: 1px solid, $side: null) {
+    @include theme-border(dark, $color, $adjust, $border, $side);
+}
+
+@mixin light-border($color, $adjust: 0%, $border: 1px solid, $side: null) {
+    @include theme-border(light, $color, $adjust, $border, $side);
+}
+
+// ? ======================================
+// ? Dark/light theme placeholder selectors
+// ? ======================================
+
+%dark-fg {
+    @include theme-fg(dark, $-light);
+}
+
+%light-fg {
+    @include theme-fg(light, $-dark);
+}
+
+%dark-bg {
+    @include theme-bg(dark, $-dark, 7.5%);
+}
+
+%light-bg {
+    @include theme-bg(light, $-light);
+}

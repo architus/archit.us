@@ -1,0 +1,47 @@
+@import "scss/colors";
+
+.add-guild-modal {
+    .modal-content {
+        $modal-border-radius: 0.6rem;
+
+        border-radius: $modal-border-radius;
+        box-shadow: none;
+
+        @extend %light-bg;
+        @extend %dark-bg;
+        @extend %light-fg;
+        @extend %dark-fg;
+
+        .modal-header {
+            border-top-right-radius: $modal-border-radius;
+            border-top-left-radius: $modal-border-radius;
+
+            @include dark {
+                border-bottom-color: rgba($-light, 0.1);
+            }
+
+            .h4 {
+                font-weight: 400 !important;
+                strong {
+                    font-weight: 500 !important;
+                }
+            }
+        }
+
+        .modal-footer {
+            border-bottom-right-radius: $modal-border-radius;
+            border-bottom-left-radius: $modal-border-radius;
+
+            @include dark {
+                border-top-color: rgba($-light, 0.1);
+            }
+        }
+
+        .close {
+            @include dark {
+                color: white;
+                text-shadow: 0 1px 0 black;
+            }
+        }
+    }
+}

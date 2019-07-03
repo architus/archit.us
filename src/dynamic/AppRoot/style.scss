@@ -1,0 +1,111 @@
+@import "scss/util";
+@import "scss/colors";
+@import "scss/theme";
+
+.dark-mode-icon {
+    position: relative;
+    top: 2px;
+    left: 6px;
+
+    &.dark {
+        color: $-light;
+    }
+
+    &.light {
+        color: lighten($-dark, 5%);
+        filter: drop-shadow(0px 1px 8px rgba(white, 1));
+    }
+}
+
+html.html--app {
+    overflow-y: hidden;
+}
+
+.app-root {
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+
+    .content-container {
+        display: flex;
+        flex-direction: row;
+        align-content: stretch;
+        align-items: stretch;
+        height: auto;
+        position: relative;
+
+        .guild-sidebar {
+            z-index: 20;
+            position: relative;
+            flex-grow: 0;
+            flex-shrink: 0;
+            height: 100%;
+            @extend %hide-scrollbar;
+            @include dark-bg($-dark, -8%);
+            @include light-bg($-light, -15%);
+            @include dark-border($-dark, $border: 1px solid, $side: right);
+            @include light-border($-light, -20%, 1px solid, right);
+            @include theme-transitions("background-color, border-right-color");
+        }
+
+        .side-navbar {
+            flex-grow: 0;
+            flex-shrink: 0;
+            height: 100%;
+            width: 92px;
+        }
+
+        .app-content {
+            flex-grow: 1;
+            flex-shrink: 1;
+            height: auto;
+
+            & > div[role="group"] {
+                height: 100%;
+                position: relative;
+            }
+        }
+    }
+
+    // ? ==================
+    // ? Dark/light theming
+    // ? ==================
+
+    @extend %dark-bg;
+    @extend %light-bg;
+    @extend %dark-fg;
+    @extend %light-fg;
+    @include theme-transitions("background-color, color");
+
+    .dropdown-menu {
+        @extend %dark-fg;
+        @include dark-bg($-dark, 12.5%);
+        @include theme-transitions("color, background-color");
+
+        .dropdown-item {
+            @extend %dark-fg;
+            @include theme-transitions("color");
+
+            &:hover,
+            &:focus {
+                @extend %dark-fg;
+                @include dark-bg($-dark, 7.5%);
+            }
+
+            &.active,
+            &:active {
+                @include dark-bg(
+                    blend($-primary, adjust-color($-dark, 12.5%), 0.5)
+                );
+            }
+        }
+    }
+
+    .card {
+        @include light-bg($-light, 50%);
+        @include dark-bg($-dark, 3.5%);
+        @include light-border(rgba($-dark, 0.2), $border: 1px solid);
+        @include dark-border(rgba($-light, 0.2), $border: 1px solid);
+        @include theme-transitions("background-color, border");
+    }
+}

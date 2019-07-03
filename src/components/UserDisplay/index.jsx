@@ -103,7 +103,7 @@ Avatar.propTypes = {
   className: PropTypes.string,
   circle: PropTypes.bool,
   size: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  discriminator: PropTypes.number
+  discriminator: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 };
 
 UserDisplay.Avatar = Avatar;

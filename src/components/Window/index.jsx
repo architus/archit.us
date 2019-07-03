@@ -21,9 +21,9 @@ function Window({
     >
       {!noChrome ? (
         <figcaption className="chrome">
-          <span className="button close" />
-          <span className="button minimize" />
-          <span className="button fullscreen" />
+          <span className="chrome--button chrome--close" />
+          <span className="chrome--button chrome--minimize" />
+          <span className="chrome--button chrome--fullscreen" />
         </figcaption>
       ) : null}
       {children}

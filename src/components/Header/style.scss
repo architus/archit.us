@@ -1,7 +1,7 @@
-@import 'scss/colors';
-@import 'scss/theme';
-@import 'scss/media';
-@import 'scss/util';
+@import "scss/colors";
+@import "scss/theme";
+@import "scss/media";
+@import "scss/util";
 
 .navbar {
     padding: {
@@ -10,6 +10,13 @@
     }
     box-shadow: $drop-shadow;
     border-bottom: 1px solid darken($-primary, 10%);
+    background-image: linear-gradient($-primary, $-primary);
+    @include theme-property(
+        background-image,
+        linear-gradient($-primary, color-adjust($-primary, -2.5%)),
+        dark
+    );
+    @include theme-transitions("background-image");
 
     @include respond-above(sm) {
         height: 68px;
@@ -31,6 +38,13 @@
         &:focus {
             @include highlight-shadow($-light, 0.4);
         }
+    }
+
+    .header-children {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-end;
     }
 }
 

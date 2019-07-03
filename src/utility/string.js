@@ -4,9 +4,7 @@ import { left, right } from "./names.json";
 export function splitFragments(string, regex) {
   const excludedFragments = string.split(regex);
   const matchedFragments = allMatches(string, regex);
-  const sequence = flatten(
-    zip(excludedFragments, matchedFragments)
-  );
+  const sequence = flatten(zip(excludedFragments, matchedFragments));
   return compact(sequence);
 }
 
@@ -31,4 +29,8 @@ export function generateName(noSpace = false) {
   const lv = left[li];
   const rv = right[ri];
   return noSpace ? `${lv}_${rv}` : `${lv} ${rv}`;
-};
+}
+
+export function toAcronym(string = "") {
+  return string.match(/\b(\w|[-_])/g).join("");
+}

@@ -4,8 +4,8 @@ import classNames from "classnames";
 import { curry } from "lodash";
 import { CustomEmojiExtension } from "components/DiscordMock/CustomEmojiExtension";
 import { connect } from "react-redux";
-import { redirectUrl } from "components/LoginButton";
-import { Link as RouterLink } from "components/Router";
+import { useOauthUrl } from "components/LoginButton";
+import { mapStateToLoggedIn } from "../../store/reducers/session";
 
 import {
   Jumbotron,
@@ -23,6 +23,7 @@ import Window from "components/Window";
 import WebSocketConnection from "functional/WebSocketConnection";
 import Icon from "components/Icon";
 import Layout from "components/Layout";
+import { Link as RouterLink } from "components/Router";
 
 import "./style.scss";
 import { messageSets, customEmotes } from "./data.json";
@@ -110,7 +111,7 @@ function Index() {
                 Both standard and animated emotes are supported, and the syntax
                 is the same as normal Discord emotes (<code>:shortcode:</code>).
                 Use the
-                <code>!emotes</code> command to view a list of all availible
+                <code>!emotes</code> command to view a list of all available
                 emotes.
                 <TryCTA right />
               </p>
@@ -139,7 +140,7 @@ function Index() {
                 reaction-based votes that include up to 10 custom options per
                 poll. Similarly, <code>!schedule</code> lets users create
                 scheduled events that other users can react to, giving a
-                convenient way to guage future attendence.
+                convenient way to gauge future attendance.
                 <TryCTA left />
               </p>
             }
@@ -193,7 +194,7 @@ function Index() {
                   <p>
                     Play music from Spotify and Youtube directly in voice chat
                     using <code>!play</code>, or defer to other music playing
-                    bots if availible.
+                    bots if available.
                   </p>
                 }
               />
@@ -309,16 +310,15 @@ MinorFeature.propTypes = {
   ])
 };
 
-const CallToAction = connect(state => ({
-  loggedIn: state.session.connectedToDiscord
-}))(({ loggedIn }) => {
+const CallToAction = connect(mapStateToLoggedIn)(({ loggedIn }) => {
+  const oauthUrl = useOauthUrl();
   const additionalProps = loggedIn
     ? {
         as: RouterLink,
         to: "/app"
       }
     : {
-        href: redirectUrl
+        href: oauthUrl
       };
   return (
     <Button className="cta" variant="primary" size="lg" {...additionalProps}>

@@ -2,26 +2,51 @@ import React from "react";
 import PropTypes from "prop-types";
 import { isNil } from "utility";
 import { siteName, description } from "global.json";
+import classNames from "classnames";
 
+import Header from "components/Header";
 import { Head } from "react-static";
 
-function Layout({ title, children }) {
+import "./style.scss";
+
+function Layout({
+  title,
+  children,
+  className,
+  headerChildren,
+  noHeader = false,
+  ...rest
+}) {
   const builtTitle = isNil(title) ? siteName : `${siteName} | ${title}`;
   return (
-    <>
+    <div
+      className={classNames("layout", className, { "with-header": !noHeader })}
+      {...rest}
+    >
+      {noHeader ? null : <Header children={headerChildren} />}
       <Head>
         <title>{builtTitle}</title>
         <meta property="og:title" content={builtTitle} />
       </Head>
       {children}
-    </>
+    </div>
   );
 }
 
 export default Layout;
 
 Layout.propTypes = {
-  title: PropTypes.string
+  title: PropTypes.string,
+  children: PropTypes.oneOfType([
+    PropTypes.node,
+    PropTypes.arrayOf(PropTypes.node)
+  ]),
+  noHeader: PropTypes.bool,
+  className: PropTypes.string,
+  headerChildren: PropTypes.oneOfType([
+    PropTypes.node,
+    PropTypes.arrayOf(PropTypes.node)
+  ])
 };
 
 export function SEO() {

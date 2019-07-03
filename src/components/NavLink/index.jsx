@@ -3,7 +3,7 @@ import { Link as RouterLink } from "components/Router";
 import classNames from "classnames";
 
 // this link will be active when itself or deeper routes are current
-const isPartiallyActive = ({ baseClassName, activeClassName }) => ({
+export const isPartiallyActive = ({ baseClassName, activeClassName }) => ({
   isPartiallyCurrent
 }) => {
   return isPartiallyCurrent
