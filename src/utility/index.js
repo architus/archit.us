@@ -174,8 +174,11 @@ export function scrollToBottom(scrollContainer) {
 }
 
 export function splitPath(path) {
-  const trimmedPath = path.charAt("0") === "/" ? path.substr(1) : path;
-  return trimmedPath.split("/");
+  const trimmedPath = path.charAt(0) === "/" ? path.substr(1) : path;
+  return (trimmedPath.slice(-1) === "/"
+    ? trimmedPath.slice(0, -1)
+    : trimmedPath
+  ).split("/");
 }
 
 export function isInPath({ path, fragment, position = null }) {
