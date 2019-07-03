@@ -14,7 +14,7 @@ import TokenExchange from "functional/TokenExchange";
 import { APP_PATH_ROOT } from "./config.json";
 import { DEFAULT_TAB, tabs } from "./tabs";
 
-function AppContent({ loggedIn }) {
+function AppContent({ loggedIn, openAddGuild }) {
   // Don't pre-render anything
   if (typeof window === "undefined") return null;
   else {
@@ -25,14 +25,18 @@ function AppContent({ loggedIn }) {
         <>
           <TokenExchange />
           <Router>
-            <Begin path="/" />
+            <Begin path="/" openAddGuild={openAddGuild} />
             <Redirect
               from=":guildId"
               to={`${APP_PATH_ROOT}/:guildId/${DEFAULT_TAB}`}
               noThrow
             />
             {tabs.map(({ path, component: Component }) => (
-              <Component path={`:guildId/${path}`} key={path} />
+              <Component
+                path={`:guildId/${path}`}
+                key={path}
+                openAddGuild={openAddGuild}
+              />
             ))}
             <NotFound default fromApp={true} />
           </Router>
@@ -44,5 +48,6 @@ function AppContent({ loggedIn }) {
 export default connect(mapStateToLoggedIn)(AppContent);
 
 AppContent.propTypes = {
-  loggedIn: PropTypes.bool.isRequired
+  loggedIn: PropTypes.bool.isRequired,
+  openAddGuild: PropTypes.func
 };

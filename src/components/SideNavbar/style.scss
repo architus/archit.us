@@ -16,8 +16,8 @@
     padding: 0.75rem 0;
 
     &--icon-outer {
-        padding-top: 1rem;
-        padding-bottom: 1.2rem;
+        padding-top: 2rem;
+        padding-bottom: 2.2rem;
         transition-duration: 0.25s;
         transition-timing-function: $ease;
         transition-property: padding-top, padding-bottom, opacity,
@@ -40,9 +40,9 @@
         }
 
         &:not(.active) {
-            padding-top: 0.55rem;
-            padding-bottom: 0.05rem;
-            opacity: 0.5;
+            padding-top: 0.5rem;
+            padding-bottom: 0;
+            opacity: 0.35;
 
             p {
                 opacity: 0;

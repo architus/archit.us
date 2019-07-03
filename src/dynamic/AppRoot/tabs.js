@@ -1,12 +1,12 @@
 import Settings from "dynamic/Settings";
 import Begin from "dynamic/Begin";
 
-import chartSvg from "./chart.inline.svg";
-import cogsSvg from "./cogs.inline.svg";
-import emojiSvg from "./emoji.inline.svg";
-import musicSvg from "./music.inline.svg";
-import responsesSvg from "./responses.inline.svg";
-import scrollSvg from "./scroll.inline.svg";
+import chartSvg from "assets/chart.inline.svg";
+import cogsSvg from "assets/cogs.inline.svg";
+import emojiSvg from "assets/emoji.inline.svg";
+import musicSvg from "assets/music.inline.svg";
+import responsesSvg from "assets/responses.inline.svg";
+import scrollSvg from "assets/scroll.inline.svg";
 
 const tabs = [
   {

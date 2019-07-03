@@ -8,6 +8,7 @@ import GuildList from "components/GuildList";
 import SideNavbar from "components/SideNavbar";
 import AppContent from "./content";
 import AppLayout from "./layout";
+import AddGuildModal from "components/AddGuildModal";
 
 import "./style.scss";
 import { tabs, DEFAULT_TAB } from "./tabs";
@@ -18,6 +19,17 @@ class AppRoot extends React.Component {
     super(props);
     this.handleTabClick = this.handleTabClick.bind(this);
     this.handleGuildClick = this.handleGuildClick.bind(this);
+    this.state = { addGuildModalShow: false };
+    this.showAddGuildModal = this.showAddGuildModal.bind(this);
+    this.hideAddGuildModal = this.hideAddGuildModal.bind(this);
+  }
+
+  showAddGuildModal() {
+    this.setState({ addGuildModalShow: true });
+  }
+
+  hideAddGuildModal() {
+    this.setState({ addGuildModalShow: false });
   }
 
   componentDidMount() {
@@ -35,7 +47,7 @@ class AppRoot extends React.Component {
     } else {
       const { guildList } = this.props;
       if (guildList.length === 0) {
-        // TODO open the add server dialog
+        this.showAddGuildModal();
       } else {
         navigate(`${APP_PATH_ROOT}/${guildList[0].id}/${path}`);
       }
@@ -52,18 +64,24 @@ class AppRoot extends React.Component {
   }
 
   render() {
+    const { addGuildModalShow } = this.state;
+
     return (
       <AppLayout>
         <div className="guild-sidebar">
           <GuildList
             onClickGuild={this.handleGuildClick}
-            onClickAdd={() => log("Guild add clicked")}
+            onClickAdd={this.showAddGuildModal}
           />
         </div>
         <SideNavbar onClickTab={this.handleTabClick} tabs={tabs} />
         <div className="app-content">
+          <AddGuildModal
+            show={addGuildModalShow}
+            onHide={this.hideAddGuildModal}
+          />
           <React.Suspense fallback={<em>Loading...</em>}>
-            <AppContent />
+            <AppContent openAddGuild={this.showAddGuildModal} />
           </React.Suspense>
         </div>
       </AppLayout>

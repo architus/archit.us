@@ -1,3 +1,12 @@
+@import "scss/colors";
+@import "scss/theme";
+@import "scss/util";
+
+%center {
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .begin {
     display: flex;
     flex-direction: column;
@@ -8,9 +17,110 @@
     position: relative;
     padding: 1rem;
 
+    &--hero-img {
+        max-width: 640px;
+        height: auto;
+        @extend %center;
+        margin-bottom: 2rem;
+
+        svg {
+            .str {
+                stroke: #000000;
+                stroke-width: 0.25;
+                stroke-miterlimit: 10;
+            }
+            .cloud {
+                opacity: 0.2;
+                @include light {
+                    opacity: 0.1;
+                }
+                @include theme-transitions("opacity");
+            }
+            .fg {
+                fill: #afafaf;
+                @include dark {
+                    fill: color-adjust($-dark, 30%);
+                }
+                @include theme-transitions("fill");
+            }
+            .strong-fg {
+                fill: #4b4b4b;
+                @include dark {
+                    fill: color-adjust($-dark, 50%);
+                }
+                @include theme-transitions("fill");
+            }
+            .strongest {
+                fill: #999999;
+                @include dark {
+                    fill: color-adjust($-dark, -5%);
+                }
+                @include theme-transitions("fill");
+            }
+            .stronger {
+                fill: #c4c4c4;
+                @include dark {
+                    fill: color-adjust($-dark, 5%);
+                }
+                @include theme-transitions("fill");
+            }
+            .strong {
+                fill: #efefef;
+                @include dark {
+                    fill: color-adjust($-dark, 15%);
+                }
+                @include theme-transitions("fill");
+            }
+            .bg {
+                fill: #ffffff;
+                @include dark {
+                    fill: color-adjust($-dark, 25%);
+                }
+                @include theme-transitions("fill");
+            }
+        }
+    }
+
     & > div {
-        max-width: 600px;
-        margin-top: 200px;
+        margin-top: 3.5rem;
         text-align: center;
+        width: 100%;
+
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 300;
+        }
+
+        p {
+            @extend %center;
+            margin-bottom: 2.25rem;
+            max-width: 600px;
+
+            @include dark-fg(rgba($-light, 0.6));
+            @include light-fg(rgba($-dark, 0.6));
+            @include theme-transitions("color");
+        }
+
+        button {
+            background-color: $-primary;
+            transition: 0.25s $ease background-color;
+            outline: none;
+            border: none;
+            border-radius: 1000px;
+            color: white;
+            padding: 1rem 1.5rem;
+            position: relative;
+            white-space: normal;
+            @extend %center;
+
+            &:hover {
+                background-color: color-adjust($-primary, 10%);
+                transform: translateY(1px);
+            }
+
+            &:focus {
+                @include highlight-shadow($-primary);
+            }
+        }
     }
 }

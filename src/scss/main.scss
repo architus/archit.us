@@ -92,3 +92,7 @@ main > div[role="group"] {
 .tooltip {
     z-index: 100;
 }
+
+.modal-backdrop.show {
+    opacity: 0.65 !important;
+}
