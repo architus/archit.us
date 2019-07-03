@@ -1,47 +1,25 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { mapStateToLoggedIn } from "store/reducers/session";
-import { log, colorBlend } from "utility";
-import useDarkMode from "use-dark-mode";
+import { log, splitPath } from "utility";
+import { navigate } from "@reach/router";
 
-import Login from "pages/Login";
-import Dashboard from "dynamic/Dashboard";
-import NotFound from "pages/NotFound";
-import { Router } from "components/Router";
-import Icon from "components/Icon";
-import Layout from "components/Layout";
 import GuildList from "components/GuildList";
-import Switch from "react-switch";
+import SideNavbar from "components/SideNavbar";
+import AppContent from "./content";
+import AppLayout from "./layout";
 
 import "./style.scss";
-import { lightColor, primaryColor } from "global.json";
-
-const APP_HTML_CLASS = "html--app";
-
-function AppContent({ loggedIn }) {
-  // Don't pre-render anything
-  if (typeof window === "undefined") return null;
-  else {
-    // Ensure the user is logged in
-    if (!loggedIn) return <Login fromRestricted={true} />;
-    else
-      return (
-        <Router>
-          <Dashboard path="/" />
-          <NotFound default />
-        </Router>
-      );
-  }
-}
-
-AppContent.propTypes = {
-  loggedIn: PropTypes.bool.isRequired
-};
-
-const AuthenticatedAppContent = connect(mapStateToLoggedIn)(AppContent);
+import { tabs, DEFAULT_TAB } from "./tabs";
+import { APP_HTML_CLASS, APP_PATH_ROOT } from "./config.json";
 
 class AppRoot extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleTabClick = this.handleTabClick.bind(this);
+    this.handleGuildClick = this.handleGuildClick.bind(this);
+  }
+
   componentDidMount() {
     document.documentElement.classList.add(APP_HTML_CLASS);
   }
@@ -50,18 +28,42 @@ class AppRoot extends React.Component {
     document.documentElement.classList.remove(APP_HTML_CLASS);
   }
 
+  handleTabClick(path) {
+    const fragments = splitPath(window.location.pathname);
+    if (fragments.length >= 2) {
+      navigate(`${APP_PATH_ROOT}/${fragments[1]}/${path}`);
+    } else {
+      const { guildList } = this.props;
+      if (guildList.length === 0) {
+        // TODO open the add server dialog
+      } else {
+        navigate(`${APP_PATH_ROOT}/${guildList[0].id}/${path}`);
+      }
+    }
+  }
+
+  handleGuildClick(id) {
+    const fragments = splitPath(window.location.pathname);
+    if (fragments.length >= 3) {
+      navigate(`${APP_PATH_ROOT}/${id}/${fragments[2]}`);
+    } else {
+      navigate(`${APP_PATH_ROOT}/${id}/${DEFAULT_TAB}`);
+    }
+  }
+
   render() {
     return (
       <AppLayout>
         <div className="guild-sidebar">
           <GuildList
-            onClickGuild={id => log(`Guild ${id} clicked`)}
+            onClickGuild={this.handleGuildClick}
             onClickAdd={() => log("Guild add clicked")}
           />
         </div>
+        <SideNavbar onClickTab={this.handleTabClick} tabs={tabs} />
         <div className="app-content">
           <React.Suspense fallback={<em>Loading...</em>}>
-            <AuthenticatedAppContent />
+            <AppContent />
           </React.Suspense>
         </div>
       </AppLayout>
@@ -69,42 +71,12 @@ class AppRoot extends React.Component {
   }
 }
 
-export default AppRoot;
+const mapStateToProps = state => ({
+  guildList: state.guilds.guildList
+});
 
-function AppLayout({ children, ...rest }) {
-  const { value, toggle } = useDarkMode(true);
-  return (
-    <Layout
-      title="Web Dashboard"
-      className="app-root"
-      headerChildren={
-        typeof window === "undefined" ? null : (
-          <Switch
-            onChange={toggle}
-            checked={value}
-            className="mr-3"
-            aria-label="Dark mode switch"
-            uncheckedIcon={<Icon name="sun" className="dark-mode-icon light" />}
-            checkedIcon={<Icon name="moon" className="dark-mode-icon dark" />}
-            activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-            boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-            offHandleColor={lightColor}
-            onHandleColor={lightColor}
-            offColor={colorBlend(0.35, primaryColor)}
-            onColor={colorBlend(-0.6, primaryColor)}
-          />
-        )
-      }
-      {...rest}
-    >
-      <div className="content-container">{children}</div>
-    </Layout>
-  );
-}
+export default connect(mapStateToProps)(AppRoot);
 
-AppLayout.propTypes = {
-  children: PropTypes.oneOfType([
-    PropTypes.node,
-    PropTypes.arrayOf(PropTypes.node)
-  ])
+AppRoot.propTypes = {
+  guildList: PropTypes.array.isRequired
 };

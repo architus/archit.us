@@ -16,21 +16,35 @@
         position: relative;
 
         .guild-sidebar {
+            z-index: 20;
+            position: relative;
             flex-grow: 0;
             flex-shrink: 0;
             height: 100%;
-            box-shadow: $drop-shadow;
             @extend %hide-scrollbar;
-            @include dark-bg($-dark, -5%);
+            @include dark-bg($-dark, -8%);
             @include light-bg($-light, -15%);
             @include dark-border($-dark, $border: 1px solid, $side: right);
             @include light-border($-light, -20%, 1px solid, right);
             @include theme-transitions("background-color, border-right-color");
         }
 
+        .side-navbar {
+            flex-grow: 0;
+            flex-shrink: 0;
+            height: 100%;
+            width: 92px;
+        }
+
         .app-content {
             flex-grow: 1;
             flex-shrink: 1;
+            height: auto;
+
+            & > div[role="group"] {
+                height: 100%;
+                position: relative;
+            }
         }
     }
 

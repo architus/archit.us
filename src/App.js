@@ -12,7 +12,7 @@ import AppRoot from "dynamic/AppRoot";
 import "scss/main.scss";
 
 // Any routes in this array will be treated as non-static routes
-addPrefetchExcludes(["app"]);
+addPrefetchExcludes([/\/?app(?:\/.*)?/]);
 
 function App() {
   return (

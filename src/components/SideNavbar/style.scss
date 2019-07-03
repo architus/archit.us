@@ -1,0 +1,106 @@
+@import "scss/colors";
+@import "scss/util";
+@import "scss/theme";
+
+.side-navbar {
+    @include dark-bg($-dark, 2.5%);
+    @include light-bg($-light, -5%);
+    @include dark-border($-dark, 4%, 1px solid, right);
+    @include light-border($-light, -10%, 1px solid, right);
+    @include theme-transitions("background-color, border-right-color");
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: start;
+    padding: 0.75rem 0;
+
+    &--icon-outer {
+        padding-top: 1rem;
+        padding-bottom: 1.2rem;
+        transition-duration: 0.25s;
+        transition-timing-function: $ease;
+        transition-property: padding-top, padding-bottom, opacity,
+            background-color;
+        @include light-bg(rgba($-dark, 0));
+        @include dark-bg(rgba(black, 0));
+
+        p {
+            line-height: 1.2;
+            margin-bottom: 0;
+            text-align: center;
+            font-size: 0.9rem;
+            opacity: 1;
+            overflow: hidden;
+            height: auto;
+
+            @include theme-transitions("color, opacity, height");
+            @extend %dark-fg;
+            @extend %light-fg;
+        }
+
+        &:not(.active) {
+            padding-top: 0.55rem;
+            padding-bottom: 0.05rem;
+            opacity: 0.5;
+
+            p {
+                opacity: 0;
+                height: 0;
+            }
+        }
+
+        &:hover,
+        &:focus {
+            &:not(.active) {
+                opacity: 0.9;
+            }
+        }
+
+        &:hover {
+            @include light-bg(rgba($-dark, 0.075));
+            @include dark-bg(rgba(black, 0.125));
+        }
+
+        @extend %button-blank;
+    }
+
+    &--icon {
+        $size: 48px;
+        width: $size;
+        height: $size;
+        margin: {
+            bottom: 0.75rem;
+            left: auto;
+            right: auto;
+        }
+    }
+
+    svg {
+        .str {
+            stroke-width: 0.75;
+            stroke-miterlimit: 10;
+            fill: none;
+            @include theme-transitions("stroke");
+            @include light(stroke, $-dark);
+            @include dark(stroke, $-light);
+        }
+        .fil {
+            @include theme-transitions("fill");
+            @include light(fill, $-dark);
+            @include dark(fill, $-light);
+        }
+        .op4 {
+            opacity: 0.4;
+        }
+        .op6 {
+            opacity: 0.6;
+        }
+        .op7 {
+            opacity: 0.7;
+        }
+        .str_rou {
+            stroke-linecap: round;
+        }
+    }
+}

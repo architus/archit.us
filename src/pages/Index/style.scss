@@ -275,7 +275,8 @@
     hr {
         margin-top: 4rem;
         @extend %shift-lg;
-        border-top-color: $-secondary;
+        border-top-color: $-tertiary;
+        box-shadow: $drop-shadow;
         border-top-style: dashed;
         @include respond-above(lg) {
             margin-bottom: -2rem;

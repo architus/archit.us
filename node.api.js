@@ -1,7 +1,8 @@
 const { GenerateSW } = require("workbox-webpack-plugin");
 
-export default pluginOptions => ({
-  webpack: config => {
+export default () => ({
+  webpack: (config, { defaultLoaders }) => {
+    // Service Worker
     config.plugins.push(
       new GenerateSW({
         runtimeCaching: [
@@ -22,6 +23,12 @@ export default pluginOptions => ({
         ]
       })
     );
+
+    // Inline SVG loader
+    config.module.rules[0].oneOf.unshift({
+      test: /\.inline\.svg$/,
+      loader: "svg-inline-loader"
+    });
 
     return config;
   }

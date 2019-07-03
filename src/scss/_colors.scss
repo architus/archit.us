@@ -14,7 +14,7 @@ $black: #000 !default;
 // Theme colors
 $porcelain: #f6f8f9 !default;
 $linh-blue: #6496c4 !default;
-$olivine: #CBA15B !default;
+$olivine: #cba15b !default;
 $tundora: #453e3e !default;
 $mine-shaft: #222020 !default;
 $neptune: #73a3ba !default;
@@ -103,6 +103,30 @@ $osx-fullscreen: #27c93f;
     }
 }
 
+@mixin light($property: null, $value: null) {
+    @if $property == null {
+        .light-mode & {
+            @content;
+        }
+    } @else {
+        .light-mode & {
+            #{$property}: $value;
+        }
+    }
+}
+
+@mixin dark($property: null, $value: null) {
+    @if $property == null {
+        .dark-mode & {
+            @content;
+        }
+    } @else {
+        .dark-mode & {
+            #{$property}: $value;
+        }
+    }
+}
+
 @mixin theme-bg($theme, $color, $adjust: 0%) {
     @include theme-property(
         background-color,
@@ -174,7 +198,7 @@ $osx-fullscreen: #27c93f;
 }
 
 %dark-bg {
-    @include theme-bg(dark, $-dark, 5%);
+    @include theme-bg(dark, $-dark, 7.5%);
 }
 
 %light-bg {

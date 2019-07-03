@@ -173,5 +173,32 @@ export function scrollToBottom(scrollContainer) {
   scrollContainer.scrollTop = getScrollRemainder(scrollContainer);
 }
 
+export function splitPath(path) {
+  const trimmedPath = path.charAt("0") === "/" ? path.substr(1) : path;
+  return trimmedPath.split("/");
+}
+
+export function isInPath({ path, fragment, position = null }) {
+  // Null test
+  if (isNil(path) || isNil(fragment)) return false;
+  if (isNil(position)) {
+    // Simple contains test
+    return path.indexOf(fragment) !== -1;
+  } else {
+    // Position-based test
+    const pathComponents = splitPath(path);
+    if (pathComponents.length <= position) return false;
+    else {
+      if (typeof fragment === "string") {
+        // Fragment equality test
+        return pathComponents[position] === fragment;
+      } else {
+        // Regex test
+        return fragment.test(pathComponents[position]);
+      }
+    }
+  }
+}
+
 export * from "utility/colors";
 export * from "utility/string";

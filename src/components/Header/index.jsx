@@ -12,7 +12,6 @@ function Header({ children, ...rest }) {
   return (
     <Navbar
       expand="md"
-      bg="primary"
       variant="dark"
       collapseOnSelect
       {...rest}

@@ -48,6 +48,7 @@ class GuildList extends React.Component {
                   width={ICON_WIDTH}
                   onClick={() => onClickGuild(id)}
                   style={squareStyle}
+                  tabIndex="0"
                 />
               )),
               <Tooltip right text="Add aut-bot to a server..." key="guild-add">
