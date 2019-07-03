@@ -13,6 +13,7 @@ function AddGuildModal({ onHide, ...rest }) {
       centered
       onHide={onHide}
       className="add-guild-modal"
+      restoreFocus={false}
       {...rest}
     >
       <Modal.Header closeButton>

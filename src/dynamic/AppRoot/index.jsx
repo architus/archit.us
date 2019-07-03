@@ -45,7 +45,8 @@ class AppRoot extends React.Component {
     if (fragments.length >= 2) {
       navigate(`${APP_PATH_ROOT}/${fragments[1]}/${path}`);
     } else {
-      const { guildList } = this.props;
+      const { guildList, guildsLoaded } = this.props;
+      if (!guildsLoaded) return;
       if (guildList.length === 0) {
         this.showAddGuildModal();
       } else {
@@ -90,11 +91,13 @@ class AppRoot extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  guildList: state.guilds.guildList
+  guildList: state.guilds.guildList,
+  guildsLoaded: state.guilds.hasLoaded
 });
 
 export default connect(mapStateToProps)(AppRoot);
 
 AppRoot.propTypes = {
-  guildList: PropTypes.array.isRequired
+  guildList: PropTypes.array.isRequired,
+  guildsLoaded: PropTypes.bool.isRequired
 };
