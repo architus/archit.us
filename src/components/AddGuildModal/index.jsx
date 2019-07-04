@@ -2,31 +2,20 @@ import React from "react";
 import PropTypes from "prop-types";
 import { getDiscordAdminGuildsWithoutAutbot } from "store/reducers/guilds";
 import { connect } from "react-redux";
+import { useReturnQuery, API_BASE, processIfNotEmptyOrNil } from "utility";
 
 import GuildCard from "components/GuildCard";
 import { Modal, Button } from "react-bootstrap";
 
 import "./style.scss";
 
-const baseInviteUrl = guildId => `https://api.aut-bot.com/invite/${guildId}`;
-export function useInviteUrl() {
-  if (process.env.PRODUCTION_URL) {
-    return baseInviteUrl;
-  } else {
-    const [inviteUrl, setInviteUrl] = React.useState(baseInviteUrl);
-    React.useEffect(() => {
-      setInviteUrl(() => guildId =>
-        `https://api.aut-bot.com/invite/${guildId}?return=${encodeURIComponent(
-          `${window.location.protocol}//${window.location.host}/app`
-        )}`
-      );
-    });
-    return inviteUrl;
-  }
-}
-
 function AddGuildModal({ onHide, guilds, dispatch, ...rest }) {
-  const inviteUrl = useInviteUrl();
+  const returnQuery = useReturnQuery();
+  const inviteUrl = guildId =>
+    `${API_BASE}/invite/${guildId}${processIfNotEmptyOrNil(
+      returnQuery,
+      q => `?${q}`
+    )}`;
   return (
     <Modal
       size="lg"

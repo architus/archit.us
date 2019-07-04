@@ -203,5 +203,10 @@ export function isInPath({ path, fragment, position = null }) {
   }
 }
 
+export const API_BASE = process.env.PRODUCTION_URL
+  ? "https://api.aut-bot.com"
+  : "https://api.aut-bot.com";
+
 export * from "utility/colors";
 export * from "utility/string";
+export * from "utility/hooks";

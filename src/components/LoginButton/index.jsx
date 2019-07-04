@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { mapStateToLoggedIn } from "store/reducers/session";
+import { useReturnQuery, API_BASE, processIfNotEmptyOrNil } from "utility";
 
 import { Link as RouterLink } from "components/Router";
 import Icon from "components/Icon";
@@ -9,21 +10,12 @@ import { Button } from "react-bootstrap";
 
 import "./style.scss";
 
-const baseOauthUrl = "https://api.aut-bot.com/login";
 export function useOauthUrl() {
-  if (process.env.PRODUCTION_URL) {
-    return baseOauthUrl;
-  } else {
-    const [oauthUrl, setOauthUrl] = React.useState(baseOauthUrl);
-    React.useEffect(() => {
-      setOauthUrl(
-        `https://api.aut-bot.com/login?return=${encodeURIComponent(
-          `${window.location.protocol}//${window.location.host}/app`
-        )}`
-      );
-    });
-    return oauthUrl;
-  }
+  const returnQuery = useReturnQuery();
+  return `${API_BASE}/login${processIfNotEmptyOrNil(
+    returnQuery,
+    q => `?${q}`
+  )}`;
 }
 
 function LoginButton({ loggedIn }) {
