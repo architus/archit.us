@@ -1,13 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { iconSource } from "components/GuildIcon";
 
+import Icon from "components/Icon";
 import GuildIcon from "components/GuildIcon";
 
 import "./style.scss";
 
-function GuildCard({ icon, id, name, className, onClick, ...rest }) {
+function GuildCard({ icon, id, name, className, href, ...rest }) {
   return (
     <div className={classNames("guild-card", className)}>
       <div className="guild-card--icon">
@@ -16,6 +16,9 @@ function GuildCard({ icon, id, name, className, onClick, ...rest }) {
       <div className="guild-card--label">
         <h4>{name}</h4>
       </div>
+      <a href={href} className="stretched-link guild-card--button">
+        <Icon name="chevron-right" />
+      </a>
     </div>
   );
 }
@@ -27,5 +30,5 @@ GuildCard.propTypes = {
   id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   name: PropTypes.string,
   className: PropTypes.string,
-  onClick: PropTypes.func
+  href: PropTypes.string
 };

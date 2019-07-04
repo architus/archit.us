@@ -1,4 +1,5 @@
 @import "scss/colors";
+@import "scss/theme";
 
 .add-guild-modal {
     .modal-content {
@@ -11,29 +12,48 @@
         @extend %dark-bg;
         @extend %light-fg;
         @extend %dark-fg;
-
-        & > div {
-            padding: 2rem;
-        }
+        @include theme-transitions("color, background-color");
 
         .modal-header {
+            padding-left: 2rem;
+            padding-right: 2rem;
+            padding-top: 1.5rem;
+            padding-bottom: 1.5rem;
             border: none !important;
             border-top-right-radius: $modal-border-radius;
             border-top-left-radius: $modal-border-radius;
 
-            .h4 {
+            h4 {
                 font-weight: 400 !important;
+                line-height: 1.1;
+                border-bottom: 1rem;
                 strong {
                     font-weight: 500 !important;
                 }
             }
+
+            p {
+                font-size: 1rem;
+                font-weight: 400;
+                @extend %light-fade-fg;
+                @extend %dark-fade-fg;
+                @include theme-transitions("color");
+                margin-bottom: 0;
+            }
         }
 
-        .guild-card-list {
-
+        .modal-body {
+            @include light-bg($-light, -5%);
+            @include dark-bg($-dark, 2.5%);
+            @include theme-transitions("background-color");
+            box-shadow: inset 0 7px 16px -7px rgba(0, 0, 0, 0.15),
+                inset 0 -7px 16px -7px rgba(0, 0, 0, 0.15);
+            max-height: 800px;
+            @extend %custom-scrollbar;
         }
 
         .modal-footer {
+            padding: 1.4rem;
             border: none !important;
             border-bottom-right-radius: $modal-border-radius;
             border-bottom-left-radius: $modal-border-radius;

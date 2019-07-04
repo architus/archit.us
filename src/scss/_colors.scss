@@ -224,3 +224,11 @@ $osx-fullscreen: #27c93f;
 %light-bg {
     @include theme-bg(light, $-light);
 }
+
+%dark-fade-fg {
+    @include theme-fg(dark, rgba($-light, 0.7));
+}
+
+%light-fade-fg {
+    @include theme-fg(light, rgba($-dark, 0.7));
+}
