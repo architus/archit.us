@@ -6,7 +6,8 @@
     "stage": "react-static build --staging",
     "build": "react-static build",
     "analyze": "react-static build --analyze",
-    "serve": "serve dist -p 3000"
+    "serve": "serve dist -p 3000",
+    "lint": "eslint ./src/**/*.js ./src/**/*.jsx"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.19",

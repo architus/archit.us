@@ -307,7 +307,8 @@ MinorFeature.propTypes = {
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
     PropTypes.string
-  ])
+  ]),
+  icon: PropTypes.string
 };
 
 const CallToAction = connect(mapStateToLoggedIn)(({ loggedIn }) => {
