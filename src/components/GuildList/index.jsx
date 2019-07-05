@@ -4,11 +4,13 @@ import { connect } from "react-redux";
 import classNames from "classnames";
 import { getGuildList } from "store/actions";
 import { getAutbotGuilds } from "store/reducers/guilds";
+import { splitPath } from "utility";
 
 import Placeholder from "components/Placeholder";
 import GuildIcon from "components/GuildIcon";
 import Tooltip from "components/Tooltip";
 import Icon from "components/Icon";
+import { Location } from "@reach/router";
 
 import "./style.scss";
 
@@ -35,35 +37,53 @@ class GuildList extends React.Component {
   render() {
     const { guildList, hasLoaded, onClickGuild, onClickAdd } = this.props;
     const squareStyle = { width: `${ICON_WIDTH}px`, height: `${ICON_WIDTH}px` };
+    const autbotAdminGuilds = guildList.filter(guild => guild.autbot_admin);
+    const otherGuilds = guildList.filter(guild => !guild.autbot_admin);
     return (
       <div className="guild-list vertical">
-        {hasLoaded
-          ? [
-              ...guildList.map(({ icon, id, name }) => (
-                <GuildIcon
-                  icon={icon}
-                  id={id}
-                  name={name}
-                  key={id}
-                  width={ICON_WIDTH}
-                  onClick={() => onClickGuild(id)}
-                  style={squareStyle}
-                  tabIndex="0"
-                />
-              )),
-              <Tooltip right text="Add aut-bot to a server..." key="guild-add">
-                <AddButton style={squareStyle} onClick={onClickAdd} />
-              </Tooltip>
-            ]
-          : [...Array(PLACEHOLDER_COUNT)].map((_e, i) => (
-              <Placeholder.Auto circle width={`${ICON_WIDTH}px`} key={i} />
-            ))}
+        {hasLoaded ? (
+          <Location>
+            {({ location }) => {
+              const fragments = splitPath(location.pathname);
+              const activeGuildId = fragments.length >= 2 ? fragments[1] : null;
+              return (
+                <>
+                  {autbotAdminGuilds.length > 0 ? (
+                    <Section
+                      guilds={autbotAdminGuilds}
+                      onClickGuild={onClickGuild}
+                      iconStyle={squareStyle}
+                      activeGuildId={activeGuildId}
+                      elevated
+                      className="guild-list--section__elevated"
+                    />
+                  ) : null}
+                  {otherGuilds.length > 0 ? (
+                    <Section
+                      guilds={otherGuilds}
+                      onClickGuild={onClickGuild}
+                      iconStyle={squareStyle}
+                      activeGuildId={activeGuildId}
+                    />
+                  ) : null}
+                  <Tooltip right text="Add aut-bot to a server...">
+                    <AddButton style={squareStyle} onClick={onClickAdd} />
+                  </Tooltip>
+                </>
+              );
+            }}
+          </Location>
+        ) : (
+          [...Array(PLACEHOLDER_COUNT)].map((_e, i) => (
+            <Placeholder.Auto circle width={`${ICON_WIDTH}px`} key={i} />
+          ))
+        )}
       </div>
     );
   }
 }
 
-export const mapStateToProps = state => {
+const mapStateToProps = state => {
   return {
     guildList: getAutbotGuilds(state),
     hasLoaded: state.guilds.hasLoaded,
@@ -72,7 +92,7 @@ export const mapStateToProps = state => {
   };
 };
 
-export const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = dispatch => {
   return {
     getGuilds: accessToken => dispatch(getGuildList(accessToken))
   };
@@ -93,6 +113,10 @@ GuildList.propTypes = {
   onClickAdd: PropTypes.func
 };
 
+// ? =================
+// ? Helper components
+// ? =================
+
 function AddButton({ onClick, className, ...rest }) {
   return (
     <button
@@ -108,4 +132,42 @@ function AddButton({ onClick, className, ...rest }) {
 AddButton.propTypes = {
   onClick: PropTypes.func,
   className: PropTypes.string
+};
+
+function Section({
+  guilds,
+  onClickGuild,
+  style,
+  iconStyle,
+  elevated = false,
+  activeGuildId = null
+}) {
+  return (
+    <div className="guild-list--section">
+      {guilds.map(({ icon, id, name }) => (
+        <GuildIcon
+          icon={icon}
+          id={id}
+          name={name}
+          key={id}
+          width={ICON_WIDTH}
+          onClick={() => onClickGuild(id)}
+          style={iconStyle}
+          tabIndex="0"
+          elevated={elevated}
+          className={id === activeGuildId ? "guild-icon__active" : null}
+        />
+      ))}
+      <hr />
+    </div>
+  );
+}
+
+Section.propTypes = {
+  guilds: PropTypes.array,
+  onClickGuild: PropTypes.func,
+  style: PropTypes.object,
+  iconStyle: PropTypes.object,
+  elevated: PropTypes.bool,
+  activeGuildId: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 };

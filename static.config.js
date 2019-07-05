@@ -35,7 +35,7 @@ export default Object.assign(
           <meta charSet="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
         </Head>
-        <Body>{children}</Body>
+        <Body className="dark-mode">{children}</Body>
         <script
           // Dark mode anti-flash script
           dangerouslySetInnerHTML={{

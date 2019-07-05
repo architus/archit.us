@@ -4,27 +4,46 @@ import classNames from "classnames";
 
 import Tooltip from "components/Tooltip";
 import Acronym from "components/Acronym";
+import Icon from "components/Icon";
 
-function GuildIcon({ icon, id, name, className, onClick, ...rest }) {
+export const iconSource = (id, icon) =>
+  `https://cdn.discordapp.com/icons/${id}/${icon}.png`;
+function GuildIcon({
+  icon,
+  id,
+  name,
+  className,
+  onClick,
+  noTooltip = false,
+  elevated = false,
+  ...rest
+}) {
+  const hasIcon = icon !== null;
   return (
-    <Tooltip right text={name}>
-      {icon !== null ? (
-        <img
-          className={classNames("guild-icon", className)}
-          src={`https://cdn.discordapp.com/icons/${id}/${icon}.png`}
-          alt={name}
-          draggable="false"
-          onClick={onClick}
-          {...rest}
-        />
-      ) : (
-        <div className="guild-text-icon" onClick={onClick} {...rest}>
+    <Outer noTooltip={noTooltip} tooltip={name}>
+      <div
+        className={classNames(
+          hasIcon ? "guild-icon" : "guild-text-icon",
+          className
+        )}
+        onClick={onClick}
+        {...rest}
+      >
+        {hasIcon ? (
+          <img src={iconSource(id, icon)} alt={name} draggable="false" />
+        ) : (
           <div>
             <Acronym name={name} />
           </div>
-        </div>
-      )}
-    </Tooltip>
+        )}
+        {elevated ? (
+          <span className="guild-icon__elevated">
+            <Icon className="bg-icon" name="shield" />
+            <Icon className="fg-icon" name="shield-alt" />
+          </span>
+        ) : null}
+      </div>
+    </Outer>
   );
 }
 
@@ -35,5 +54,30 @@ GuildIcon.propTypes = {
   id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   name: PropTypes.string,
   className: PropTypes.string,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  noTooltip: PropTypes.bool,
+  elevated: PropTypes.bool
+};
+
+// ? =================
+// ? Helper components
+// ? =================
+
+function Outer({ children, noTooltip, tooltip }) {
+  if (noTooltip) return <>{children}</>;
+  else
+    return (
+      <Tooltip right text={tooltip}>
+        {children}
+      </Tooltip>
+    );
+}
+
+Outer.propTypes = {
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ]),
+  noTooltip: PropTypes.bool,
+  tooltip: PropTypes.string
 };
