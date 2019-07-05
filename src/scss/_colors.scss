@@ -181,19 +181,27 @@ $osx-fullscreen: #27c93f;
     }
 }
 
-@mixin dark-bg($color, $adjust: 0%) {
+@mixin dark-bg($color: color-adjust($-dark, 7.5%), $adjust: 0%) {
     @include theme-bg(dark, $color, $adjust);
 }
 
-@mixin light-bg($color, $adjust: 0%) {
+@mixin light-bg($color: $-light, $adjust: 0%) {
     @include theme-bg(light, $color, $adjust);
 }
 
-@mixin dark-fg($color, $adjust: 0%) {
+@mixin dark-fg($color: $-light, $adjust: 0%) {
     @include theme-fg(dark, $color, $adjust);
 }
 
-@mixin light-fg($color, $adjust: 0%) {
+@mixin light-fg($color: $-dark, $adjust: 0%) {
+    @include theme-fg(light, $color, $adjust);
+}
+
+@mixin dark-fade-fg($color: rgba($-light, 0.7), $adjust: 0%) {
+    @include theme-fg(dark, $color, $adjust);
+}
+
+@mixin light-fade-fg($color: rgba($-dark, 0.7), $adjust: 0%) {
     @include theme-fg(light, $color, $adjust);
 }
 
@@ -203,32 +211,4 @@ $osx-fullscreen: #27c93f;
 
 @mixin light-border($color, $adjust: 0%, $border: 1px solid, $side: null) {
     @include theme-border(light, $color, $adjust, $border, $side);
-}
-
-// ? ======================================
-// ? Dark/light theme placeholder selectors
-// ? ======================================
-
-%dark-fg {
-    @include theme-fg(dark, $-light);
-}
-
-%light-fg {
-    @include theme-fg(light, $-dark);
-}
-
-%dark-bg {
-    @include theme-bg(dark, $-dark, 7.5%);
-}
-
-%light-bg {
-    @include theme-bg(light, $-light);
-}
-
-%dark-fade-fg {
-    @include theme-fg(dark, rgba($-light, 0.7));
-}
-
-%light-fade-fg {
-    @include theme-fg(light, rgba($-dark, 0.7));
 }

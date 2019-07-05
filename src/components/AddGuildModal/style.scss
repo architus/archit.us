@@ -8,10 +8,10 @@
         border-radius: $modal-border-radius;
         box-shadow: none;
 
-        @extend %light-bg;
-        @extend %dark-bg;
-        @extend %light-fg;
-        @extend %dark-fg;
+        @include light-bg;
+        @include dark-bg;
+        @include light-fg;
+        @include dark-fg;
         @include theme-transitions("color, background-color");
 
         .modal-header {
@@ -35,8 +35,8 @@
             p {
                 font-size: 1rem;
                 font-weight: 400;
-                @extend %light-fade-fg;
-                @extend %dark-fade-fg;
+                @include light-fade-fg;
+                @include dark-fade-fg;
                 @include theme-transitions("color");
                 margin-bottom: 0;
             }

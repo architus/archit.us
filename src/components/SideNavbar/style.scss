@@ -35,8 +35,8 @@
             height: auto;
 
             @include theme-transitions("color, opacity, height");
-            @extend %dark-fg;
-            @extend %light-fg;
+            @include dark-fg;
+            @include light-fg;
         }
 
         &:not(.active) {

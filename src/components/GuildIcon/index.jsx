@@ -22,7 +22,10 @@ function GuildIcon({
   return (
     <Outer noTooltip={noTooltip} tooltip={name}>
       <div
-        className={classNames(hasIcon ? "guild-icon" : "guild-text-icon")}
+        className={classNames(
+          hasIcon ? "guild-icon" : "guild-text-icon",
+          className
+        )}
         onClick={onClick}
         {...rest}
       >

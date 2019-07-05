@@ -74,24 +74,24 @@ $guild-sidebar-light-bg: color-adjust($-light, -15%);
     // ? Dark/light theming
     // ? ==================
 
-    @extend %dark-bg;
-    @extend %light-bg;
-    @extend %dark-fg;
-    @extend %light-fg;
+    @include dark-bg;
+    @include light-bg;
+    @include dark-fg;
+    @include light-fg;
     @include theme-transitions("background-color, color");
 
     .dropdown-menu {
-        @extend %dark-fg;
+        @include dark-fg;
         @include dark-bg($-dark, 12.5%);
         @include theme-transitions("color, background-color");
 
         .dropdown-item {
-            @extend %dark-fg;
+            @include dark-fg;
             @include theme-transitions("color");
 
             &:hover,
             &:focus {
-                @extend %dark-fg;
+                @include dark-fg;
                 @include dark-bg($-dark, 7.5%);
             }
 

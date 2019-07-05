@@ -86,8 +86,8 @@
         span {
             opacity: 0;
             transform: translateX(-8px);
-            @extend %light-fg;
-            @extend %dark-fg;
+            @include light-fg;
+            @include dark-fg;
             @include theme-transitions("opacity, transform, color");
 
             @include respond-below(sm) {
