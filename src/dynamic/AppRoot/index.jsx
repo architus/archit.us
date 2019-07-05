@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { log, splitPath } from "utility";
+import { splitPath } from "utility";
 import { navigate } from "@reach/router";
 
 import GuildList from "components/GuildList";

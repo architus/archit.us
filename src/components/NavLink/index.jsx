@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Link as RouterLink } from "components/Router";
 import classNames from "classnames";
 
@@ -29,3 +30,11 @@ const NavLink = ({ to, children, ...rest }) => {
 };
 
 export default NavLink;
+
+NavLink.propTypes = {
+  to: PropTypes.string,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ])
+};

@@ -1,1 +1,1 @@
-export { Link, Router } from '@reach/router'
+export { Link, Router } from "@reach/router";
