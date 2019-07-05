@@ -1,5 +1,6 @@
 @import "scss/colors";
 @import "scss/theme";
+@import "scss/media";
 
 .add-guild-modal {
     .modal-content {
@@ -38,7 +39,15 @@
                 @include light-fade-fg;
                 @include dark-fade-fg;
                 @include theme-transitions("color");
-                margin-bottom: 0;
+
+                @include respond-below(md) {
+                    font-size: 0.9rem;
+                    line-height: 1.2;
+                }
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
             }
         }
 

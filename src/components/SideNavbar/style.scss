@@ -22,7 +22,7 @@
         transition-timing-function: $ease;
         transition-property: padding-top, padding-bottom, opacity,
             background-color;
-        @include light-bg(rgba($-dark, 0.05));
+        @include light-bg(rgba(color-adjust($-primary, -60%), 0.05));
         @include dark-bg(rgba(black, 0.08));
 
         p {
@@ -43,7 +43,7 @@
             padding-top: 0.6rem;
             padding-bottom: 0;
             opacity: 0.35;
-            @include light-bg(rgba($-dark, 0));
+            @include light-bg(rgba(color-adjust($-primary, -60%), 0));
             @include dark-bg(rgba(black, 0));
 
             p {
@@ -60,7 +60,7 @@
         }
 
         &:hover {
-            @include light-bg(rgba($-dark, 0.075));
+            @include light-bg(rgba(color-adjust($-primary, -60%), 0.075));
             @include dark-bg(rgba(black, 0.175));
         }
 

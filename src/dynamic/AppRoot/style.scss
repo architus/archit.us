@@ -1,6 +1,8 @@
 @import "scss/util";
 @import "scss/colors";
 @import "scss/theme";
+@import "scss/media";
+@import "./vars";
 
 .dark-mode-icon {
     position: relative;
@@ -21,52 +23,138 @@ html.html--app {
     overflow-y: hidden;
 }
 
-$guild-sidebar-dark-bg: color-adjust($-dark, -8%);
-$guild-sidebar-light-bg: color-adjust($-light, -15%);
-
 .app-root {
     height: 100vh;
     overflow: hidden;
     position: relative;
 
-    .content-container {
+    %base-horizontal-container {
         display: flex;
         flex-direction: row;
         align-content: stretch;
         align-items: stretch;
         height: auto;
         position: relative;
+    }
 
-        .guild-sidebar {
-            z-index: 20;
-            position: relative;
-            flex-grow: 0;
-            flex-shrink: 0;
-            height: 100%;
-            @extend %hide-scrollbar;
-            @include dark-bg($guild-sidebar-dark-bg);
-            @include light-bg($guild-sidebar-light-bg);
-            @include dark-border($-dark, $border: 1px solid, $side: right);
-            @include light-border($-light, -20%, 1px solid, right);
-            @include theme-transitions("background-color, border-right-color");
+    .content-container {
+        @extend %base-horizontal-container;
+        $collapse-breakpoint: sm;
+
+        pointer-events: none;
+
+        & > * {
+            pointer-events: initial;
         }
 
-        .side-navbar {
-            flex-grow: 0;
-            flex-shrink: 0;
+        .app--overlay-button {
+            @extend %button-blank;
+            padding: 0 !important;
+        }
+
+        @include respond-below($collapse-breakpoint) {
+            &.show {
+                .app--overlay-button {
+                    position: absolute;
+                    height: 100%;
+                    width: 100%;
+                    content: " ";
+                    z-index: 1000;
+                    top: 0;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+                    @include dark-bg(rgba(black, 0.8));
+                    @include light-bg(rgba(black, 0.5));
+                    @include theme-transitions("background-color");
+                    cursor: default;
+                }
+
+                .app-nav {
+                    transform: translateX(0);
+                }
+
+                .app--expand-button {
+                    transform: translateX(180px) rotate(180deg);
+                    @include light {
+                        background-color: rgba($-light, 0.25) !important;
+                    }
+                }
+            }
+        }
+
+        .app--expand-button {
+            @extend %button-blank;
+
+            display: none;
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            z-index: 1030;
+            transform: translateX(0) rotate(0);
+
+            border-radius: 200px;
+            width: 40px;
+            height: 40px;
+            border: none;
+            @include dark-fg;
+            @include light-fg;
+            @include dark-bg(rgba($-light, 0.15));
+            @include light-bg(rgba($-dark, 0.15));
+            @include theme-transitions(
+                "transform, color, background-color, box-shadow"
+            );
+
+            @include respond-below($collapse-breakpoint) {
+                display: block;
+            }
+        }
+
+        .app-nav {
+            @extend %base-horizontal-container;
+            @include theme-transitions("transform");
             height: 100%;
-            width: 92px;
+
+            @include respond-below($collapse-breakpoint) {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                z-index: 1030;
+                transform: translateX(-100%);
+            }
+
+            .guild-sidebar {
+                z-index: 20;
+                position: relative;
+                flex-grow: 0;
+                flex-shrink: 0;
+                height: 100%;
+                @extend %hide-scrollbar;
+                @include dark-bg($guild-sidebar-dark-bg);
+                @include light-bg($guild-sidebar-light-bg);
+                @include dark-border($-dark, $border: 1px solid, $side: right);
+                @include light-border($-light, -20%, 1px solid, right);
+                @include theme-transitions(
+                    "background-color, border-right-color"
+                );
+            }
+
+            .side-navbar {
+                flex-grow: 0;
+                flex-shrink: 0;
+                height: 100%;
+                width: 92px;
+                overflow-y: auto;
+                @extend %hide-scrollbar;
+            }
         }
 
         .app-content {
             flex-grow: 1;
             flex-shrink: 1;
             height: auto;
-
-            & > div[role="group"] {
-                height: 100%;
-                position: relative;
-            }
+            overflow-y: auto;
+            @extend %custom-scrollbar;
         }
     }
 

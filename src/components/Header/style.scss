@@ -45,6 +45,10 @@
         flex-direction: row;
         align-items: center;
         justify-content: flex-end;
+
+        @include respond-below(sm) {
+            flex-direction: row-reverse;
+        }
     }
 }
 

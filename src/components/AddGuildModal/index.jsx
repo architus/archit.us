@@ -32,7 +32,9 @@ function AddGuildModal({ onHide, guilds, dispatch, ...rest }) {
           <h4>
             Add <strong>aut-bot</strong> to a server
           </h4>
-          <p>Select a server to be redirected to Discord.</p>
+          <p className="d-none d-md-block">
+            Select a server to be redirected to Discord.
+          </p>
           <p>
             <em>
               Not seeing a server? Make sure you have the "Manage guild"

@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { colorBlend } from "utility";
 import useDarkMode from "use-dark-mode";
+import classNames from "classnames";
 
 import Switch from "react-switch";
 import Icon from "components/Icon";
@@ -10,7 +11,7 @@ import Layout from "components/Layout";
 import "./style.scss";
 import { lightColor, primaryColor } from "global.json";
 
-function AppLayout({ children, ...rest }) {
+function AppLayout({ children, className, ...rest }) {
   const { value, toggle } = useDarkMode(true);
   return (
     <Layout
@@ -21,7 +22,7 @@ function AppLayout({ children, ...rest }) {
           <Switch
             onChange={toggle}
             checked={value}
-            className="mr-3"
+            className="ml-3 ml-md-0 mr-md-3"
             aria-label="Dark mode switch"
             uncheckedIcon={<Icon name="sun" className="dark-mode-icon light" />}
             checkedIcon={<Icon name="moon" className="dark-mode-icon dark" />}
@@ -34,9 +35,10 @@ function AppLayout({ children, ...rest }) {
           />
         )
       }
-      {...rest}
     >
-      <div className="content-container">{children}</div>
+      <div className={classNames(className, "content-container")} {...rest}>
+        {children}
+      </div>
     </Layout>
   );
 }
@@ -47,5 +49,6 @@ AppLayout.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.node,
     PropTypes.arrayOf(PropTypes.node)
-  ])
+  ]),
+  className: PropTypes.string
 };
