@@ -35,29 +35,37 @@ class GuildList extends React.Component {
   render() {
     const { guildList, hasLoaded, onClickGuild, onClickAdd } = this.props;
     const squareStyle = { width: `${ICON_WIDTH}px`, height: `${ICON_WIDTH}px` };
+    const autbotAdminGuilds = guildList.filter(guild => guild.autbot_admin);
+    const otherGuilds = guildList.filter(guild => !guild.autbot_admin);
     return (
       <div className="guild-list vertical">
-        {hasLoaded
-          ? [
-              ...guildList.map(({ icon, id, name }) => (
-                <GuildIcon
-                  icon={icon}
-                  id={id}
-                  name={name}
-                  key={id}
-                  width={ICON_WIDTH}
-                  onClick={() => onClickGuild(id)}
-                  style={squareStyle}
-                  tabIndex="0"
-                />
-              )),
-              <Tooltip right text="Add aut-bot to a server..." key="guild-add">
-                <AddButton style={squareStyle} onClick={onClickAdd} />
-              </Tooltip>
-            ]
-          : [...Array(PLACEHOLDER_COUNT)].map((_e, i) => (
-              <Placeholder.Auto circle width={`${ICON_WIDTH}px`} key={i} />
-            ))}
+        {hasLoaded ? (
+          <>
+            {autbotAdminGuilds.length > 0 ? (
+              <Section
+                guilds={autbotAdminGuilds}
+                onClickGuild={onClickGuild}
+                iconStyle={squareStyle}
+                elevated
+                className="guild-list--section__elevated"
+              />
+            ) : null}
+            {otherGuilds.length > 0 ? (
+              <Section
+                guilds={otherGuilds}
+                onClickGuild={onClickGuild}
+                iconStyle={squareStyle}
+              />
+            ) : null}
+            <Tooltip right text="Add aut-bot to a server...">
+              <AddButton style={squareStyle} onClick={onClickAdd} />
+            </Tooltip>
+          </>
+        ) : (
+          [...Array(PLACEHOLDER_COUNT)].map((_e, i) => (
+            <Placeholder.Auto circle width={`${ICON_WIDTH}px`} key={i} />
+          ))
+        )}
       </div>
     );
   }
@@ -93,6 +101,10 @@ GuildList.propTypes = {
   onClickAdd: PropTypes.func
 };
 
+// ? =================
+// ? Helper components
+// ? =================
+
 function AddButton({ onClick, className, ...rest }) {
   return (
     <button
@@ -108,4 +120,33 @@ function AddButton({ onClick, className, ...rest }) {
 AddButton.propTypes = {
   onClick: PropTypes.func,
   className: PropTypes.string
+};
+
+function Section({ guilds, onClickGuild, style, iconStyle, elevated = false }) {
+  return (
+    <div className="guild-list--section">
+      {guilds.map(({ icon, id, name }) => (
+        <GuildIcon
+          icon={icon}
+          id={id}
+          name={name}
+          key={id}
+          width={ICON_WIDTH}
+          onClick={() => onClickGuild(id)}
+          style={iconStyle}
+          tabIndex="0"
+          elevated={elevated}
+        />
+      ))}
+      <hr />
+    </div>
+  );
+}
+
+Section.propTypes = {
+  guilds: PropTypes.array,
+  onClickGuild: PropTypes.func,
+  style: PropTypes.object,
+  iconStyle: PropTypes.object,
+  elevated: PropTypes.bool
 };

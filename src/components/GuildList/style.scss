@@ -5,23 +5,51 @@
 
 $margin: 0.75rem;
 
-.guild-list {
+%guild-list--base {
     display: flex;
     align-items: center;
     justify-content: flex-start;
     flex-direction: row;
-    padding: 1rem;
 
     & > * {
         margin-right: $margin;
     }
 
-    &.vertical {
+    &.vertical,
+    .vertical > & {
         flex-direction: column;
 
         & > * {
             margin-right: 0;
             margin-bottom: $margin;
+        }
+    }
+}
+
+.guild-list {
+    @extend %guild-list--base;
+    padding: 1rem;
+
+    &--section {
+        @extend %guild-list--base;
+
+        hr {
+            width: 100%;
+            @include light-border(
+                rgba($-dark, 0.2),
+                $border: 2px solid,
+                $side: top
+            );
+            @include dark-border(
+                rgba($-light, 0.15),
+                $border: 2px solid,
+                $side: top
+            );
+            @include theme-transitions("border-top-color");
+            margin: {
+                top: 0.25rem !important;
+                bottom: 0.25rem !important;
+            }
         }
     }
 

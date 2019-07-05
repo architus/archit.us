@@ -1,10 +1,59 @@
 @import "scss/colors";
 @import "scss/theme";
+@import "dynamic/AppRoot/style";
 
 %icon-base {
     @extend %circle-icon-hover;
     box-shadow: $drop-shadow;
     cursor: pointer;
+    position: relative;
+    &:focus {
+        outline: none;
+    }
+    &:active {
+        opacity: 0.8;
+    }
+
+    .guild-icon__elevated {
+        position: absolute;
+        bottom: -4px;
+        right: -6px;
+        width: 32px;
+        height: 32px;
+        pointer-events: none;
+
+        %icon {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: auto;
+            margin-bottom: auto;
+            width: 1em !important;
+            height: 1em !important;
+            @include theme-transitions("color");
+        }
+
+        .bg-icon {
+            @extend %icon;
+            z-index: 1;
+            font-size: 1.6rem !important;
+            @include dark-fg($guild-sidebar-dark-bg);
+            @include light-fg($guild-sidebar-light-bg);
+            top: -5px;
+        }
+
+        .fg-icon {
+            @extend %icon;
+            z-index: 2;
+            font-size: 1.1rem !important;
+            @include dark-fg($-primary);
+            @include light-fg(color-adjust($-dark, 10%));
+        }
+    }
 }
 
 %symbol-icon-base-fg {
@@ -14,7 +63,9 @@
 
 %symbol-icon-base {
     @extend %icon-base;
-    @include theme-transitions("background-color, color, border-radius");
+    @include theme-transitions(
+        "background-color, color, border-radius, opacity"
+    );
     @include dark-bg($-dark, 7.5%);
     @include light-bg($-light);
     @extend %symbol-icon-base-fg;
@@ -41,9 +92,9 @@
 
 %circle-icon-hover {
     border-radius: 50%;
-    overflow: hidden;
     transition: all 0.25s $ease;
-    &:hover {
+    &:hover,
+    &:focus {
         border-radius: 25%;
     }
 }
@@ -51,6 +102,12 @@
 .guild-icon {
     @extend %icon-base;
     user-select: none;
+
+    img {
+        @extend %circle-icon-hover;
+        height: 100%;
+        width: 100%;
+    }
 }
 
 .guild-text-icon {

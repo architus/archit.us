@@ -19,7 +19,8 @@
         margin-bottom: 0;
     }
 
-    &:hover {
+    &:hover,
+    &:focus-within {
         @include dark-bg($-dark);
         @include light-bg($-light, -10%);
         @include theme-transitions("background-color");
@@ -96,7 +97,8 @@
             }
         }
 
-        &:hover {
+        &:hover,
+        &:focus {
             span {
                 opacity: 1;
                 transform: translateX(0);

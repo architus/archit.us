@@ -22,8 +22,8 @@
         transition-timing-function: $ease;
         transition-property: padding-top, padding-bottom, opacity,
             background-color;
-        @include light-bg(rgba($-dark, 0));
-        @include dark-bg(rgba(black, 0));
+        @include light-bg(rgba($-dark, 0.05));
+        @include dark-bg(rgba(black, 0.08));
 
         p {
             line-height: 1.2;
@@ -40,9 +40,11 @@
         }
 
         &:not(.active) {
-            padding-top: 0.5rem;
+            padding-top: 0.6rem;
             padding-bottom: 0;
             opacity: 0.35;
+            @include light-bg(rgba($-dark, 0));
+            @include dark-bg(rgba(black, 0));
 
             p {
                 opacity: 0;
@@ -59,7 +61,7 @@
 
         &:hover {
             @include light-bg(rgba($-dark, 0.075));
-            @include dark-bg(rgba(black, 0.125));
+            @include dark-bg(rgba(black, 0.175));
         }
 
         @extend %button-blank;
