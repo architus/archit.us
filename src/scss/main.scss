@@ -71,32 +71,28 @@ button,
     border-top: 2px solid $-primary;
 }
 
-#root > div {
-    display: flex;
-    flex-direction: column;
-
-    & > nav,
-    & > .footer {
-        flex-grow: 0;
-    }
-
-    & > main {
-        flex-grow: 1;
-    }
-}
-
 html,
 body,
 #root,
-#root > div {
+#root > div[role="group"],
+main,
+main > div[role="group"] {
     min-height: 100vh;
 }
 
 :not(pre) > code {
     color: darken($aqua-forest, 10%);
     display: inline-block;
-    background-color:white;
+    background-color: white;
     padding: 0.1em 0.35em 0.05em;
     border-radius: 4px;
     border: 1px solid darken($-light, 10%);
+}
+
+.tooltip {
+    z-index: 1090;
+}
+
+.modal-backdrop.show {
+    opacity: 0.65 !important;
 }

@@ -1,2 +1,3 @@
 export const TOKEN_EXCHANGE = "TOKEN_EXCHANGE";
 export const IDENTIFY_SESSION = "IDENTIFY_SESSION";
+export const GET_GUILDS = "GET_GUILDS";

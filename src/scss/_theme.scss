@@ -1,4 +1,4 @@
-@import "./colors.scss";
+@import "scss/colors";
 
 $drop-shadow: 0 4px 12px 0 rgba(black, 0.15);
 $drop-shadow-slight: 0 2px 8px 0 rgba(black, 0.3);
@@ -8,3 +8,45 @@ $jumbotron-background: darken($-light, 5%);
 $window-padding: 1.25rem;
 $window-padding-bottom: 0.5rem;
 $window-border-radius: 8px;
+$ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+
+@mixin scrollbar($color, $width) {
+    scrollbar-face-color: #646464;
+    scrollbar-base-color: #646464;
+    scrollbar-3dlight-color: #646464;
+    scrollbar-highlight-color: #646464;
+    scrollbar-track-color: #000;
+    scrollbar-arrow-color: #000;
+    scrollbar-shadow-color: #646464;
+    scrollbar-dark-shadow-color: #646464;
+
+    &::-webkit-scrollbar {
+        width: $width;
+        height: $width;
+    }
+    &::-webkit-scrollbar-track {
+        background-color: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: rgba($color, 0.25);
+        border-radius: 1000px;
+
+        &:hover {
+            background-color: rgba($color, 0.4);
+        }
+
+        &:active {
+            background-color: rgba($color, 0.6);
+        }
+    }
+}
+
+$scrollbar-width: 12px;
+%custom-scrollbar {
+    @include dark {
+        @include scrollbar(blend($-light, black, 0.5), $scrollbar-width);
+    }
+    @include light {
+        @include scrollbar($-dark, $scrollbar-width);
+    }
+}

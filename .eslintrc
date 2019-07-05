@@ -23,7 +23,8 @@
     "prettier/prettier": [
       "error",
       {
-        "semi": true
+        "semi": true,
+        "endOfLine": "auto"
       }
     ],
     "react/prop-types": [1]

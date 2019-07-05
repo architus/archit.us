@@ -5,22 +5,20 @@ import store from "store";
 import { Router } from "components/Router";
 import { Root, Routes } from "react-static";
 import { Provider } from "react-redux";
-import Header from "components/Header";
 import { SEO } from "components/Layout";
 
-import AppRoot from "dynamic";
+import AppRoot from "dynamic/AppRoot";
 
 import "scss/main.scss";
 
 // Any routes in this array will be treated as non-static routes
-addPrefetchExcludes(["app"]);
+addPrefetchExcludes([/\/?app(?:\/.*)?/]);
 
 function App() {
   return (
     <Root>
       <SEO />
       <Provider store={store}>
-        <Header />
         <main>
           <React.Suspense fallback={<em>Loading...</em>}>
             <Router>

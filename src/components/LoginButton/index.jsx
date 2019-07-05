@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { mapStateToLoggedIn } from "store/reducers/session";
+import { useReturnQuery, API_BASE, processIfNotEmptyOrNil } from "utility";
 
 import { Link as RouterLink } from "components/Router";
 import Icon from "components/Icon";
@@ -9,9 +10,16 @@ import { Button } from "react-bootstrap";
 
 import "./style.scss";
 
-export const redirectUrl = "https://api.aut-bot.com/login";
+export function useOauthUrl() {
+  const returnQuery = useReturnQuery();
+  return `${API_BASE}/login${processIfNotEmptyOrNil(
+    returnQuery,
+    q => `?${q}`
+  )}`;
+}
 
 function LoginButton({ loggedIn }) {
+  const oauthUrl = useOauthUrl();
   return loggedIn ? (
     <div>
       <p className="mb-2">
@@ -22,7 +30,7 @@ function LoginButton({ loggedIn }) {
       </Button>
     </div>
   ) : (
-    <Button variant="discord" href={redirectUrl} className="login">
+    <Button variant="discord" href={oauthUrl} className="login">
       <Icon name="discord" />
       <span>Connect</span> <span> with Discord</span>
     </Button>

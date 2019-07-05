@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 26 26" style="enable-background:new 0 0 26 26;" xml:space="preserve">
+<rect x="8" y="4" class="str" width="16" height="11"/>
+<polygon class="fil" points="9.9,19 12.1,15 14.4,15 	"/>
+<line class="str" x1="3" y1="4" x2="6" y2="4"/>
+<line class="str" x1="2" y1="5.5" x2="6" y2="5.5"/>
+<line class="str" x1="1" y1="7" x2="6" y2="7"/>
+<circle class="fil" cx="12" cy="9.5" r="1"/>
+<circle class="fil" cx="16" cy="9.5" r="1"/>
+<circle class="fil" cx="20" cy="9.5" r="1"/>
+<polyline class="op7 str" points="18,15 18,20 2,20 2,9 8,9 	"/>
+<polygon class="op7 fil" points="11.5,19.9 14.1,19.9 16.4,24 		"/>
+<line class="op7 str" x1="20" y1="17" x2="25" y2="17"/>
+<line class="op7 str" x1="20" y1="18.5" x2="24" y2="18.5"/>
+<line class="op7 str" x1="20" y1="20" x2="23" y2="20"/>
+<path class="op7 fil" d="M6,13.5c-0.6,0-1,0.4-1,1c0,0.6,0.4,1,1,1V13.5z"/>
+</svg>

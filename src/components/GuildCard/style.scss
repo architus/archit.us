@@ -1,0 +1,108 @@
+@import "scss/colors";
+@import "scss/theme";
+@import "scss/util";
+@import "scss/media";
+@import "components/GuildIcon/style";
+
+.guild-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    padding: 0.7rem 1rem;
+    position: relative;
+
+    border-radius: 12px;
+
+    h4 {
+        margin-bottom: 0;
+    }
+
+    &:hover,
+    &:focus-within {
+        @include dark-bg($-dark);
+        @include light-bg($-light, -10%);
+        @include theme-transitions("background-color");
+
+        img {
+            border-radius: 25%;
+        }
+
+        .guild-text-icon {
+            border-radius: 25%;
+            @extend %text-icon-hover;
+        }
+    }
+
+    &--icon {
+        flex-grow: 0;
+        flex-shrink: 0;
+        $size: 56px;
+        height: $size;
+        width: $size;
+
+        .guild-text-icon {
+            height: $size;
+            width: $size;
+            @include dark-bg($-dark, 15%);
+            @include light-bg(white);
+            @include theme-transitions(
+                "background-color, border-radius, color"
+            );
+
+            & > div {
+                height: $size;
+                width: $size;
+            }
+        }
+
+        img {
+            height: 100%;
+
+            @include dark-fg($-light, -10%);
+            @include light-fg($-dark, 20%);
+            @include dark-bg($-dark, 15%);
+            @include light-bg(white);
+            @include theme-transitions(
+                "background-color, color, border-radius"
+            );
+        }
+    }
+
+    &--label {
+        padding: 1rem 1rem 1rem 1.5rem;
+        flex-grow: 1;
+        flex-shrink: 1;
+
+        h4 {
+            font-size: 1.1rem;
+            font-weight: 400;
+        }
+    }
+
+    &--button {
+        @extend %button-blank;
+        span {
+            opacity: 0;
+            transform: translateX(-8px);
+            @include light-fg;
+            @include dark-fg;
+            @include theme-transitions("opacity, transform, color");
+
+            @include respond-below(sm) {
+                padding-left: 0;
+                padding-right: 0;
+                display: none !important;
+            }
+        }
+
+        &:hover,
+        &:focus {
+            span {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+    }
+}

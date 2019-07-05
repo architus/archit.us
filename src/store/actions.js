@@ -1,10 +1,11 @@
-import { HttpVerbs, pick, log } from "utility";
-import { TOKEN_EXCHANGE, IDENTIFY_SESSION } from "store/api/labels";
+import { HttpVerbs, pick, log, API_BASE } from "utility";
+import { TOKEN_EXCHANGE, IDENTIFY_SESSION, GET_GUILDS } from "store/api/labels";
 import { connect, send } from "@giantmachines/redux-websocket";
 
 export const SIGN_OUT = "SIGN_OUT";
 export const API = "API";
 export const LOAD_SESSION = "LOAD_SESSION";
+export const LOAD_GUILDS = "LOAD_GUILDS";
 
 export const SOCKET = {
   CONNECT: "REDUX_WEBSOCKET::CONNECT",
@@ -69,7 +70,7 @@ export function signOut(history) {
 export function exchangeTokens(authCode) {
   log("Initiating token exchange");
   return apiAction({
-    url: `https://api.aut-bot.com/token_exchange`,
+    url: `${API_BASE}/token_exchange`,
     method: HttpVerbs.POST,
     data: {
       code: authCode
@@ -83,11 +84,20 @@ export function exchangeTokens(authCode) {
 export function identifySession(accessToken) {
   log("Identifying session");
   return authApiAction(accessToken, {
-    url: "https://api.aut-bot.com/identify",
+    url: `${API_BASE}/identify`,
     onSuccess: data => loadSession({ ...data, newToken: false }),
     // TODO re-enable
     // onFailure: signOut,
     label: IDENTIFY_SESSION
+  });
+}
+
+export function getGuildList(accessToken) {
+  log("Getting guild list");
+  return authApiAction(accessToken, {
+    url: `${API_BASE}/guilds`,
+    onSuccess: data => loadGuilds(data),
+    label: GET_GUILDS
   });
 }
 
@@ -108,6 +118,16 @@ export function loadSession(data) {
       ...rest,
       accessToken: access_token,
       expiresIn: expires_in
+    }
+  };
+}
+
+export function loadGuilds(data) {
+  log("Loading guilds");
+  return {
+    type: LOAD_GUILDS,
+    payload: {
+      guildList: data
     }
   };
 }

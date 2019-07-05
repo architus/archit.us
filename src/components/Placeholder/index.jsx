@@ -228,7 +228,37 @@ PlaceholderMultiline.propTypes = {
   ])
 };
 
+PlaceholderMultiline.propTypes = {
+  text: PropTypes.string,
+  style: PropTypes.object,
+  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  light: PropTypes.bool,
+  inline: PropTypes.bool,
+  amount: PropTypes.number,
+  displayBlank: PropTypes.bool,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ])
+};
+
+// Placeholder that automatically switches colors according to the theme
+function PlaceholderAuto({ className, ...rest }) {
+  return (
+    <Placeholder
+      className={classNames("placeholder-auto", className)}
+      {...rest}
+    />
+  );
+}
+
+PlaceholderAuto.propTypes = {
+  className: PropTypes.string
+};
+
 // Link sub-components
 Placeholder.Text = PlaceholderText;
 Placeholder.Custom = PlaceholderCustom;
 Placeholder.Multiline = PlaceholderMultiline;
+Placeholder.Auto = PlaceholderAuto;
