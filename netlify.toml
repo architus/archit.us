@@ -4,6 +4,25 @@
   to = "/app.html"
   status = 200
 
+# Redirect domain aliases to primary domain
+[[redirects]]
+  from = "https://aut-bot.com/*"
+  to = "https://archit.us/:splat"
+  status = 301
+  force = true
+[[redirects]]
+  from = "https://www.aut-bot.com/*"
+  to = "https://archit.us/:splat"
+  status = 301
+  force = true
+
+# Redirect default Netlify subdomain to primary domain
+[[redirects]]
+  from = "https://architus.netlify.com/*"
+  to = "https://archit.us/:splat"
+  status = 301
+  force = true
+
 [context.production]
   environment = { PRODUCTION_URL = "https://aut-bot.com" }
 
