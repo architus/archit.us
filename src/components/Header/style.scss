@@ -50,11 +50,15 @@
             flex-direction: row-reverse;
         }
     }
+
+    .container-fluid {
+        .navbar-collapse {
+            flex-grow: 0 !important;
+        }
+    }
 }
 
 .brand {
-    font-weight: 600 !important;
-    border: 2px $-light solid !important;
     margin: {
         right: 1.25rem !important;
     }
@@ -68,12 +72,15 @@
     background-color: transparent !important;
 
     &:focus {
-        background-color: rgba($-light, 0.15) !important;
+        background-color: rgba($-light, 0.05) !important;
     }
 
     display: inline-block;
-    font-size: 1.25rem;
-    line-height: inherit;
-    white-space: nowrap;
     border-radius: 4px;
+
+    svg {
+        width: auto;
+        height: 40px;
+        fill: currentColor;
+    }
 }

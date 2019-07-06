@@ -30,7 +30,7 @@ function AddGuildModal({ onHide, guilds, dispatch, ...rest }) {
       <Modal.Header closeButton>
         <Modal.Title id="add-guild-header">
           <h4>
-            Add <strong>aut-bot</strong> to a server
+            Add <strong>architus</strong> to a server
           </h4>
           <p className="d-none d-md-block">
             Select a server to be redirected to Discord.

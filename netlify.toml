@@ -24,7 +24,7 @@
   force = true
 
 [context.production]
-  environment = { PRODUCTION_URL = "https://aut-bot.com" }
+  environment = { PRODUCTION_URL = "https://archit.us" }
 
 [build]
   environment = { NODE_ENV = "production" }

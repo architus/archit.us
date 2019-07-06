@@ -1,68 +1,49 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# [![architus](https://i.imgur.com/vcZzSQC.png)](https://archit.us)
 
-## Available Scripts
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Farchitus%2Farchit.us.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Farchitus%2Farchit.us?ref=badge_shield) [![Build Status](https://travis-ci.org/architus/archit.us.svg?branch=master)](https://travis-ci.org/architus/archit.us) [![Website Uptime](https://img.shields.io/uptimerobot/ratio/7/m782992402-55108abd64186f416df0be18.svg?label=website%20uptime)](https://status.archit.us/) [![API Uptime](https://img.shields.io/uptimerobot/ratio/7/m782992399-3443671051db8aeaecfe7434.svg?label=API%20uptime)](https://status.archit.us/) [![Netlify Status](https://api.netlify.com/api/v1/badges/bbdc33fe-8cac-4466-beaa-97ea193d92f9/deploy-status)](https://app.netlify.com/sites/architus/deploys)
 
-In the project directory, you can run:
+> Archit.us provides a web dashboard server administrators and members can use to modify settings, view statistics and logs, and manage custom emoji and auto-responses
+<br/>
 
-### `npm start`
+![Web dashboard](https://i.imgur.com/QDsegsp.png)
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Getting Started
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+To use archit.us to manage the Architus bot on installed servers or add it to new ones, [connect with Discord](https://api.archit.us/login) to be redirected to the web dashboard, where you can view settings and add the bot to your servers.
 
-### `npm test`
+## Setup
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+To set up the archit.us web application, you'll need to have [Node.js](https://nodejs.org/en/download/) installed. Once installed, run the following commands to download dependencies:
 
-### `npm run build`
+```console
+npm install -g yarn
+yarn install
+```
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Development Server
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+Because the web application is built with [react-static](https://github.com/nozzle/react-static) at its core, there are two options to preview the app while developing: a **hot reload-enabled development server** *(recommended)* and a **statically-generated site preview**.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+#### Hot-reload-enabled
 
-### `npm run eject`
+```console
+yarn start
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+#### Statically-generated preview
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```console
+yarn build
+yarn serve
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Code Style
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Archit.us uses [eslint](https://eslint.org/) and [prettier](https://prettier.io/) to enforce JavaScript code style across the repository. To run the linter locally, run:
 
-## Learn More
+```console
+yarn run lint
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Farchitus%2Farchit.us.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Farchitus%2Farchit.us?ref=badge_large)

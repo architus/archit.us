@@ -17,6 +17,8 @@ function AppLayout({ children, className, ...rest }) {
     <Layout
       title="Web Dashboard"
       className="app-root"
+      noContainer
+      noLinks
       headerChildren={
         typeof window === "undefined" ? null : (
           <Switch

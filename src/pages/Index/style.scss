@@ -40,9 +40,13 @@
     position: relative;
     background-color: rgba($jumbotron-background, 0.6);
 
-    h1 {
-        font-weight: 300;
-        font-size: 3rem;
+    .text-brand {
+        svg {
+            height: 2rem;
+            margin-bottom: 1.7rem;
+            width: auto;
+            fill: currentColor;
+        }
     }
 
     @include respond-above(xs) {
