@@ -49,7 +49,7 @@ export const autBotUser = {
   clientId: 448546825532866560,
   avatarHash: "b2979364dd5230ac3dc7ea98cb35a02c",
   discriminator: 7145,
-  username: "aut-bot",
+  username: "architus",
   nameColor: "#d34c4f",
   bot: true
 };

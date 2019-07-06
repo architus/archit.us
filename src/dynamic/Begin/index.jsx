@@ -13,9 +13,9 @@ function Begin({ openAddGuild }) {
           dangerouslySetInnerHTML={{ __html: HeroImage }}
         />
         <h2>Web Dashboard</h2>
-        <p>Select a server on the left or add aut-bot to a server to begin</p>
+        <p>Select a server on the left or add architus to a server to begin</p>
         <button onClick={openAddGuild}>
-          Add <strong> aut-bot </strong> to a server
+          Add <strong> architus </strong> to a server
         </button>
       </div>
     </div>

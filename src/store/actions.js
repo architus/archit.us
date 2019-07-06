@@ -1,4 +1,4 @@
-import { HttpVerbs, pick, log, API_BASE } from "utility";
+import { HttpVerbs, pick, log, API_BASE, WS_API_BASE } from "utility";
 import { TOKEN_EXCHANGE, IDENTIFY_SESSION, GET_GUILDS } from "store/api/labels";
 import { connect, send } from "@giantmachines/redux-websocket";
 
@@ -133,7 +133,7 @@ export function loadGuilds(data) {
 }
 
 export function websocketConnect() {
-  return connect("wss://api.aut-bot.com:8300");
+  return connect(`${WS_API_BASE}`);
 }
 
 export function sendMessage(module, content) {

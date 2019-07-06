@@ -14,6 +14,7 @@ function Layout({
   children,
   className,
   headerChildren,
+  style,
   noHeader = false,
   ...rest
 }) {
@@ -21,9 +22,9 @@ function Layout({
   return (
     <div
       className={classNames("layout", className, { "with-header": !noHeader })}
-      {...rest}
+      style={style}
     >
-      {noHeader ? null : <Header children={headerChildren} />}
+      {noHeader ? null : <Header children={headerChildren} {...rest} />}
       <Head>
         <title>{builtTitle}</title>
         <meta property="og:title" content={builtTitle} />
@@ -46,7 +47,8 @@ Layout.propTypes = {
   headerChildren: PropTypes.oneOfType([
     PropTypes.node,
     PropTypes.arrayOf(PropTypes.node)
-  ])
+  ]),
+  style: PropTypes.object
 };
 
 export function SEO() {

@@ -31,6 +31,7 @@ import LogsSvg from "./svg/logs.svg";
 import MusicSvg from "./svg/music.svg";
 import StatisticsSvg from "./svg/statistics.svg";
 import UserControlSvg from "./svg/user_control.svg";
+import LogoTextSvg from "assets/logo-text.inline.svg";
 
 function Index() {
   return (
@@ -41,13 +42,16 @@ function Index() {
           <Container>
             <Row as="section" className="head">
               <Col sm={6} lg={8}>
-                <h1>aut-bot</h1>
+                <div
+                  className="text-brand"
+                  dangerouslySetInnerHTML={{ __html: LogoTextSvg }}
+                />
                 <p>
                   General purpose Discord bot supporting{" "}
                   <em>advanced role management</em>,{" "}
                   <em>custom emotes for non-nitro users</em>,{" "}
                   <em>configurable response commands</em>, and more. Use the web
-                  dashboard to add aut-bot to your servers, manage server
+                  dashboard to add architus to your servers, manage server
                   settings such as <em>emotes and responses</em>, and view
                   extensive <em>audit logs</em>.
                 </p>
@@ -55,7 +59,7 @@ function Index() {
               <Col sm={6} lg={4}>
                 <Card as="aside">
                   <h2>Getting Started</h2>
-                  <p className="mb-4">Sign in to add aut-bot to a server</p>
+                  <p className="mb-4">Sign in to add architus to a server</p>
                   <LoginButton />
                 </Card>
               </Col>
@@ -68,12 +72,12 @@ function Index() {
           </h2>
           <Feature
             left
-            lead="Have aut-bot listen for predefined phrases"
+            lead="Have architus listen for predefined phrases"
             header="Automatic Responses"
             content={
               <div>
                 <p>
-                  Users can configure aut-bot to listen for and respond to
+                  Users can configure architus to listen for and respond to
                   message patterns using a extensive syntax. Response pattern
                   fragments include:
                 </p>
@@ -183,7 +187,7 @@ function Index() {
                   <p>
                     View, search, and export server audit logs from within the
                     web dashboard, including information about message
-                    sends/deletes, user joins, and internal aut-bot logs.
+                    sends/deletes, user joins, and internal architus logs.
                   </p>
                 }
               />
@@ -203,7 +207,7 @@ function Index() {
                 icon={UserControlSvg}
                 text={
                   <p>
-                    Control which users have permissions to configure aut-bot
+                    Control which users have permissions to configure architus
                     settings on a per server basis, and let users automatically
                     assign themselves roles using <code>!role</code>.
                   </p>
@@ -216,10 +220,10 @@ function Index() {
           <Container>
             <Card as="section">
               <h4>
-                See what <em>aut-bot</em> can do for you
+                See what <em>architus</em> can do for you
               </h4>
               <p>
-                Connect with Discord to get a link that adds aut-bot to your
+                Connect with Discord to get a link that adds architus to your
                 server.
               </p>
               <CallToAction />

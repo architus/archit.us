@@ -333,7 +333,7 @@ class DiscordMock extends React.Component {
     }
   }
 
-  // Adds a message sent by aut-bot to the clump/message array
+  // Adds a message sent by architus to the clump/message array
   handleResponse(response) {
     this.addMessage({ ...response, sender: autBotUser });
   }
@@ -372,7 +372,7 @@ class DiscordMock extends React.Component {
   }
 
   // Dispatches a websocket send for the given message, sending it to the interpret
-  // server for aut-bot to respond to
+  // server for architus to respond to
   sentToInterpret(messageData) {
     const { dispatch, allowedCommands } = this.props;
     const message = serializeOutgoingMessage({
