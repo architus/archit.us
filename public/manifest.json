@@ -1,8 +1,8 @@
 {
-  "name":"aut-bot",
-  "short_name":"aut-bot",
+  "name":"architus",
+  "short_name":"architus",
   "description":"General purpose Discord bot supporting advanced role management, custom emotes for non-nitro users, configurable response commands, and more.",
-  "homepage_url":"https://aut-bot.com",
+  "homepage_url":"https://archit.us",
   "start_url":"/",
   "background_color":"#496D8F",
   "theme_color":"#6496C4",

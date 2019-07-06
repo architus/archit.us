@@ -88,7 +88,7 @@ export const pick = (sourceObject, keys) => {
   return newObject;
 };
 
-const logPrefix = "Aut-bot App";
+const logPrefix = "Architus App";
 export const log = message => console.log(`[${logPrefix}] ${message}`);
 
 export const formatAMPM = date => {
@@ -204,8 +204,12 @@ export function isInPath({ path, fragment, position = null }) {
 }
 
 export const API_BASE = process.env.PRODUCTION_URL
-  ? "https://api.aut-bot.com"
-  : "https://api.aut-bot.com";
+  ? "https://api.archit.us"
+  : "https://api.archit.us";
+
+export const WS_API_BASE = process.env.PRODUCTION_URL
+  ? "wss://api.archit.us:8300"
+  : "wss://api.archit.us:8300";
 
 export * from "utility/colors";
 export * from "utility/string";
