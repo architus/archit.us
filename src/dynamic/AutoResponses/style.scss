@@ -1,0 +1,42 @@
+@import "scss/colors";
+@import "scss/theme";
+
+.auto-responses {
+    height: 100%;
+    flex-direction: column;
+    display: flex;
+
+    h2 {
+        font-size: 1.9rem;
+        font-weight: 300;
+    }
+
+    p {
+        @include dark-fade-fg;
+        @include light-fade-fg;
+        @include theme-transitions("color");
+    }
+
+    .table-outer {
+        height: 0;
+        flex-grow: 1;
+    }
+
+    .ReactTable {
+        height: 100%;
+
+        .rt-table {
+            .rt-thead {
+                box-shadow: none;
+            }
+
+            .rt-th {
+                padding: 0.5rem;
+            }
+
+            .rt-tbody {
+                @extend %custom-scrollbar;
+            }
+        }
+    }
+}

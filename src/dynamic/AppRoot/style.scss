@@ -156,6 +156,17 @@ html.html--app {
             height: auto;
             overflow-y: auto;
             @extend %custom-scrollbar;
+
+            &.no-scroll {
+                height: 100%;
+                overflow-y: hidden;
+                position: relative;
+
+                div[role="group"] {
+                    height: 100%;
+                    position: relative;
+                }
+            }
         }
     }
 

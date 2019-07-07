@@ -1,11 +1,17 @@
 import { HttpVerbs, pick, log, API_BASE, WS_API_BASE } from "utility";
-import { TOKEN_EXCHANGE, IDENTIFY_SESSION, GET_GUILDS } from "store/api/labels";
+import {
+  TOKEN_EXCHANGE,
+  IDENTIFY_SESSION,
+  GET_GUILDS,
+  GET_RESPONSES
+} from "store/api/labels";
 import { connect, send } from "@giantmachines/redux-websocket";
 
 export const SIGN_OUT = "SIGN_OUT";
 export const API = "API";
 export const LOAD_SESSION = "LOAD_SESSION";
 export const LOAD_GUILDS = "LOAD_GUILDS";
+export const LOAD_RESPONSES = "LOAD_RESPONSES";
 
 export const SOCKET = {
   CONNECT: "REDUX_WEBSOCKET::CONNECT",
@@ -101,6 +107,15 @@ export function getGuildList(accessToken) {
   });
 }
 
+export function getResponses(accessToken, guildId) {
+  log("Getting auto responses");
+  return authApiAction(accessToken, {
+    url: `${API_BASE}/responses/${guildId}`,
+    onSuccess: data => loadResponseData(data, guildId),
+    label: GET_RESPONSES
+  });
+}
+
 export function loadSession(data) {
   log("Loading session data from network");
   const { access_token, expires_in, ...rest } = pick(data, [
@@ -128,6 +143,17 @@ export function loadGuilds(data) {
     type: LOAD_GUILDS,
     payload: {
       guildList: data
+    }
+  };
+}
+
+export function loadResponseData(data, guildId) {
+  log("Loading auto responses");
+  return {
+    type: LOAD_RESPONSES,
+    payload: {
+      ...data,
+      guildId
     }
   };
 }

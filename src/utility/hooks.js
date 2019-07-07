@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { log } from "./misc";
 
 export function useReturnQuery() {
   if (process.env.PRODUCTION_URL) {
@@ -13,7 +15,19 @@ export function useReturnQuery() {
           )}`
         );
       }
-    });
+    }, []);
     return returnQuery;
+  }
+}
+
+export function useAuthDispatch(action) {
+  const isAuthenticated = useSelector(state => state.session.authenticated);
+  const authToken = useSelector(state => state.session.authToken);
+  const dispatch = useDispatch();
+  if (!isAuthenticated) {
+    return () =>
+      log("Authenticated dispatch attempted without valid auth session");
+  } else {
+    return (...args) => dispatch(action(authToken, ...args));
   }
 }

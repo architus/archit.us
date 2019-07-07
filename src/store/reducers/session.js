@@ -102,3 +102,13 @@ export function reducer(state = initial, action) {
       return state;
   }
 }
+
+export function sessionAware(initialState, reducer) {
+  return (state = initialState, action) => {
+    if (action.type === SIGN_OUT) {
+      return initialState;
+    } else {
+      return reducer(state, action);
+    }
+  };
+}

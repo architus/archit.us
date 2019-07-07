@@ -1,8 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
+import classNames from "classnames";
 import { connect } from "react-redux";
 import { splitPath, isNil } from "utility";
-import { navigate } from "@reach/router";
+import { navigate, Location } from "@reach/router";
+import { getAutbotGuilds } from "store/reducers/guilds";
 
 import Swipe from "react-easy-swipe";
 import GuildList from "components/GuildList";
@@ -70,7 +72,10 @@ class AppRoot extends React.Component {
         this.showAddGuildModal();
         return;
       } else {
-        navigateTo = `${APP_PATH_ROOT}/${guildList[0].id}/${path}`;
+        let defaultGuild = guildList[0];
+        const adminGuilds = guildList.filter(g => g.autbot_admin);
+        if (adminGuilds.length > 0) defaultGuild = adminGuilds[0];
+        navigateTo = `${APP_PATH_ROOT}/${defaultGuild.id}/${path}`;
       }
     }
     if (!isNil(navigateTo)) {
@@ -114,15 +119,29 @@ class AppRoot extends React.Component {
             <Icon class="color" name="chevron-right" />
           </button>
           <button className="app--overlay-button" onClick={this.closeAppNav} />
-          <div className="app-content">
-            <AddGuildModal
-              show={addGuildModalShow}
-              onHide={this.hideAddGuildModal}
-            />
-            <React.Suspense fallback={<em>Loading...</em>}>
-              <AppContent openAddGuild={this.showAddGuildModal} />
-            </React.Suspense>
-          </div>
+          <Location>
+            {({ location }) => {
+              const fragments = splitPath(location.pathname);
+              const currentTab = fragments.length >= 3 ? fragments[2] : "";
+              const filtered = tabs.filter(t => t.path === currentTab);
+              return (
+                <div
+                  className={classNames(
+                    "app-content",
+                    filtered.length > 0 ? filtered[0].contentClass : ""
+                  )}
+                >
+                  <AddGuildModal
+                    show={addGuildModalShow}
+                    onHide={this.hideAddGuildModal}
+                  />
+                  <React.Suspense fallback={<em>Loading...</em>}>
+                    <AppContent openAddGuild={this.showAddGuildModal} />
+                  </React.Suspense>
+                </div>
+              );
+            }}
+          </Location>
         </AppLayout>
       </Swipe>
     );
@@ -130,7 +149,7 @@ class AppRoot extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  guildList: state.guilds.guildList,
+  guildList: getAutbotGuilds(state),
   guildsLoaded: state.guilds.hasLoaded
 });
 
