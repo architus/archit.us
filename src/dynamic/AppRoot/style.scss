@@ -40,6 +40,7 @@ html.html--app {
     .content-container {
         @extend %base-horizontal-container;
         $collapse-breakpoint: sm;
+        overflow: auto;
 
         pointer-events: none;
 
