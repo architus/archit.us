@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { splitPath, isNil } from "utility";
 import { navigate } from "@reach/router";
 
+import Swipe from "react-easy-swipe";
 import GuildList from "components/GuildList";
 import SideNavbar from "components/SideNavbar";
 import AppContent from "./content";
@@ -25,6 +26,7 @@ class AppRoot extends React.Component {
     this.showAddGuildModal = this.showAddGuildModal.bind(this);
     this.hideAddGuildModal = this.hideAddGuildModal.bind(this);
     this.handleExpandClick = this.handleExpandClick.bind(this);
+    this.showAppNav = this.showAppNav.bind(this);
     this.closeAppNav = this.closeAppNav.bind(this);
   }
 
@@ -46,6 +48,10 @@ class AppRoot extends React.Component {
 
   handleExpandClick() {
     this.setState(state => ({ showAppNav: !state.showAppNav }));
+  }
+
+  showAppNav() {
+    this.setState({ showAppNav: true });
   }
 
   closeAppNav() {
@@ -86,30 +92,39 @@ class AppRoot extends React.Component {
     const { addGuildModalShow, showAppNav } = this.state;
 
     return (
-      <AppLayout className={showAppNav ? "show" : ""}>
-        <div className="app-nav">
-          <div className="guild-sidebar">
-            <GuildList
-              onClickGuild={this.handleGuildClick}
-              onClickAdd={this.showAddGuildModal}
-            />
+      <Swipe
+        onSwipeLeft={this.closeAppNav}
+        onSwipeRight={this.showAppNav}
+        tolerance={50}
+      >
+        <AppLayout className={showAppNav ? "show" : ""}>
+          <div className="app-nav">
+            <div className="guild-sidebar">
+              <GuildList
+                onClickGuild={this.handleGuildClick}
+                onClickAdd={this.showAddGuildModal}
+              />
+            </div>
+            <SideNavbar onClickTab={this.handleTabClick} tabs={tabs} />
           </div>
-          <SideNavbar onClickTab={this.handleTabClick} tabs={tabs} />
-        </div>
-        <button className="app--expand-button" onClick={this.handleExpandClick}>
-          <Icon class="color" name="chevron-right" />
-        </button>
-        <button className="app--overlay-button" onClick={this.closeAppNav} />
-        <div className="app-content">
-          <AddGuildModal
-            show={addGuildModalShow}
-            onHide={this.hideAddGuildModal}
-          />
-          <React.Suspense fallback={<em>Loading...</em>}>
-            <AppContent openAddGuild={this.showAddGuildModal} />
-          </React.Suspense>
-        </div>
-      </AppLayout>
+          <button
+            className="app--expand-button"
+            onClick={this.handleExpandClick}
+          >
+            <Icon class="color" name="chevron-right" />
+          </button>
+          <button className="app--overlay-button" onClick={this.closeAppNav} />
+          <div className="app-content">
+            <AddGuildModal
+              show={addGuildModalShow}
+              onHide={this.hideAddGuildModal}
+            />
+            <React.Suspense fallback={<em>Loading...</em>}>
+              <AppContent openAddGuild={this.showAddGuildModal} />
+            </React.Suspense>
+          </div>
+        </AppLayout>
+      </Swipe>
     );
   }
 }

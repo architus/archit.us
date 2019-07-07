@@ -9,14 +9,20 @@ import { Link as RouterLink } from "components/Router";
 import LogoSvg from "assets/logo.inline.svg";
 import "./style.scss";
 
-function Header({ children, noContainer = false, noLinks = false, ...rest }) {
+function Header({
+  children,
+  noContainer = false,
+  noLinks = false,
+  sticky = true,
+  ...rest
+}) {
   return (
     <Navbar
       expand="md"
       variant="dark"
       collapseOnSelect
       {...rest}
-      sticky={"top"}
+      sticky={sticky ? "top" : null}
     >
       <div className={noContainer ? "container-fluid" : "container"}>
         <Brand />
@@ -41,7 +47,8 @@ Header.propTypes = {
     PropTypes.arrayOf(PropTypes.node)
   ]),
   noContainer: PropTypes.bool,
-  noLinks: PropTypes.bool
+  noLinks: PropTypes.bool,
+  sticky: PropTypes.bool
 };
 
 const Brand = props => (

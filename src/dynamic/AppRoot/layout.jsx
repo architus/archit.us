@@ -19,6 +19,7 @@ function AppLayout({ children, className, ...rest }) {
       className="app-root"
       noContainer
       noLinks
+      sticky={false}
       headerChildren={
         typeof window === "undefined" ? null : (
           <Switch
