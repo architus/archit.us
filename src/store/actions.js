@@ -3,7 +3,8 @@ import {
   TOKEN_EXCHANGE,
   IDENTIFY_SESSION,
   GET_GUILDS,
-  GET_RESPONSES
+  GET_RESPONSES,
+  GET_LOGS
 } from "store/api/labels";
 import { connect, send } from "@giantmachines/redux-websocket";
 
@@ -12,6 +13,7 @@ export const API = "API";
 export const LOAD_SESSION = "LOAD_SESSION";
 export const LOAD_GUILDS = "LOAD_GUILDS";
 export const LOAD_RESPONSES = "LOAD_RESPONSES";
+export const LOAD_LOGS = "LOAD_LOGS";
 
 export const SOCKET = {
   CONNECT: "REDUX_WEBSOCKET::CONNECT",
@@ -116,6 +118,15 @@ export function getResponses(accessToken, guildId) {
   });
 }
 
+export function getLogs(accessToken, guildId) {
+  log("Getting logs");
+  return authApiAction(accessToken, {
+    url: `${API_BASE}/logs/${guildId}`,
+    onSuccess: data => loadLogData(data, guildId),
+    label: GET_LOGS
+  });
+}
+
 export function loadSession(data) {
   log("Loading session data from network");
   const { access_token, expires_in, ...rest } = pick(data, [
@@ -151,6 +162,17 @@ export function loadResponseData(data, guildId) {
   log("Loading auto responses");
   return {
     type: LOAD_RESPONSES,
+    payload: {
+      ...data,
+      guildId
+    }
+  };
+}
+
+export function loadLogData(data, guildId) {
+  log("Loading logs");
+  return {
+    type: LOAD_LOGS,
     payload: {
       ...data,
       guildId

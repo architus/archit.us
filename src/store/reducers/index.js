@@ -5,8 +5,9 @@ import * as socket from "./socket";
 import * as interpret from "./interpret";
 import * as guilds from "./guilds";
 import * as responses from "./responses";
+import * as logs from "./logs";
 
-const reducers = { session, loading, socket, interpret, guilds, responses };
+const reducers = { session, loading, socket, interpret, guilds, responses, logs };
 
 export const initialState = Object.assign(
   {},
