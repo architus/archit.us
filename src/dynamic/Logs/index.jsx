@@ -71,13 +71,15 @@ function Logs({ guildId }) {
               Header: "Timestamp",
               id: "timestamp",
               accessor: d => (new Date(d.timestamp)).toLocaleString("en-US", options),
+              sortMethod: (a, b) => {
+                return (new Date(a.timestamp)) - (new Date(b.timestamp));
+              },
               maxWidth: 200
             }
           ]}
           defaultSorted={[
             {
-              id: "Timestamp",
-              desc: true
+              id: "timestamp",
             }
           ]}
           defaultPageSize={20}
