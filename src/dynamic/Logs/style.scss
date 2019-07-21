@@ -1,10 +1,11 @@
 @import "scss/colors";
 @import "scss/theme";
 
-.auto-responses {
+.logs {
     height: 100%;
     flex-direction: column;
     display: flex;
+    white-space: unset;
 
     h2 {
         font-size: 1.9rem;
@@ -15,11 +16,6 @@
         @include dark-fade-fg;
         @include light-fade-fg;
         @include theme-transitions("color");
-    }
-
-    .table-outer {
-        height: 0;
-        flex-grow: 1;
     }
 
     .ReactTable {

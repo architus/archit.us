@@ -26,9 +26,11 @@ function Logs({ guildId }) {
   useEffect(() => {
     if (authenticated) fetchLogs(guildId);
   }, [authenticated, guildId]);
+  var options = { year: 'numeric', month: 'short', day: 'numeric', hour: "numeric", minute: "numeric" };
+
 
   return (
-    <Container className="py-5">
+    <Container className="py-5 logs">
       <h2>Logs</h2>
       <p>
       View edits and deletes in the server
@@ -39,13 +41,26 @@ function Logs({ guildId }) {
           columns={[
             {
               Header: "Type",
-              accessor: "type",
-              maxWidth: 100
+              id: 'type',
+              accessor: d => (d.type == 'msg_del' ? "Delete" : "Edit"),
+              maxWidth: 60
             },
             {
               Header: "Content",
-              accessor: "content",
-              style: { 'white-space': 'unset' }
+              columns: [
+                {
+                  Header: "Before",
+                  id: 'before',
+                  accessor: d => d.type == 'msg_edit' ? JSON.parse(d.content).before : JSON.parse(d.content).content,
+                  style: { 'whiteSpace': 'unset' }
+                },
+                {
+                  Header: "After",
+                  id: 'after',
+                  accessor: d => JSON.parse(d.content).after,
+                  style: { 'whiteSpace': 'unset' }
+                }
+              ]
             },
             {
               Header: "User",
@@ -54,11 +69,19 @@ function Logs({ guildId }) {
             },
             {
               Header: "Timestamp",
-              accessor: "timestamp",
-              maxWidth: 250
-            },
+              id: "timestamp",
+              accessor: d => (new Date(d.timestamp)).toLocaleString("en-US", options),
+              maxWidth: 200
+            }
           ]}
-          defaultPageSize={100}
+          defaultSorted={[
+            {
+              id: "Timestamp",
+              desc: true
+            }
+          ]}
+          defaultPageSize={20}
+          className="-striped -highlight"
         />
       </div>
     </Container>
