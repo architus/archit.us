@@ -42,27 +42,33 @@ function AutoResponses({ guildId }) {
           columns={[
             {
               Header: "Trigger",
-              accessor: "trigger"
+              accessor: "trigger",
+              style: { 'whiteSpace': 'unset' }
             },
             {
               Header: "Response",
-              accessor: "response"
+              accessor: "response",
+              style: { 'whiteSpace': 'unset' }
             },
             {
               Header: "Count",
-              accessor: "count"
+              accessor: "count",
+              maxWidth: 100
             },
             {
               Header: "Author",
               id: "author",
               accessor: d => {
                 const author = authors[d.author_id.toString()];
-                if (!isNil(author)) return author.name;
+                if (!isNil(author)) return author.name + "#" + author.discriminator;
+                else if (d.author_id == 0) return "Unknown";
                 else return d.author_id;
-              }
+              },
+              maxWidth: 200
             }
           ]}
           defaultPageSize={100}
+          className="-striped -highlight"
         />
       </div>
     </Container>

@@ -22,17 +22,17 @@
         height: 100%;
 
         .rt-table {
-            .rt-thead {
-                box-shadow: none;
-            }
+            //.rt-thead {
+                //box-shadow: none;
+            //}
 
             .rt-th {
                 padding: 0.5rem;
             }
 
-            .rt-tbody {
-                @extend %custom-scrollbar;
-            }
+            //.rt-tbody {
+                //@extend %custom-scrollbar;
+            //}
         }
     }
 }

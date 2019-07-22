@@ -38,6 +38,7 @@ function Logs({ guildId }) {
       <div className="table-outer">
         <ReactTable
           data={logs}
+          noDataText="No logs found :("
           columns={[
             {
               Header: "Type",
