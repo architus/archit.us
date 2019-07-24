@@ -45,7 +45,6 @@ $margin: 0.75rem;
                 $border: 2px solid,
                 $side: top
             );
-            @include theme-transitions("border-top-color");
             margin: {
                 top: 0.25rem !important;
                 bottom: 0.25rem !important;
@@ -85,7 +84,7 @@ $margin: 0.75rem;
             @include light {
                 box-shadow: $drop-shadow;
             }
-            @include theme-transitions("border-right-color, height, transform, opacity");
+            @include transitions("height, transform, opacity");
         }
         &.guild-icon__active {
             &::after {

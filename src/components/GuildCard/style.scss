@@ -23,7 +23,6 @@
     &:focus-within {
         @include dark-bg($-dark);
         @include light-bg($-light, -10%);
-        @include theme-transitions("background-color");
 
         img {
             border-radius: 25%;
@@ -47,9 +46,7 @@
             width: $size;
             @include dark-bg($-dark, 15%);
             @include light-bg(white);
-            @include theme-transitions(
-                "background-color, border-radius, color"
-            );
+            @include transitions("border-radius, color");
 
             & > div {
                 height: $size;
@@ -64,9 +61,7 @@
             @include light-fg($-dark, 20%);
             @include dark-bg($-dark, 15%);
             @include light-bg(white);
-            @include theme-transitions(
-                "background-color, color, border-radius"
-            );
+            @include transitions("border-radius");
         }
     }
 
@@ -88,7 +83,7 @@
             transform: translateX(-8px);
             @include light-fg;
             @include dark-fg;
-            @include theme-transitions("opacity, transform, color");
+            @include transitions("opacity, transform");
 
             @include respond-below(sm) {
                 padding-left: 0;

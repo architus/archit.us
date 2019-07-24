@@ -13,7 +13,6 @@
         @include dark-bg;
         @include light-fg;
         @include dark-fg;
-        @include theme-transitions("color, background-color");
 
         .modal-header {
             padding-left: 2rem;
@@ -38,7 +37,6 @@
                 font-weight: 400;
                 @include light-fade-fg;
                 @include dark-fade-fg;
-                @include theme-transitions("color");
 
                 @include respond-below(md) {
                     font-size: 0.9rem;
@@ -54,7 +52,6 @@
         .modal-body {
             @include light-bg($-light, -5%);
             @include dark-bg($-dark, 2.5%);
-            @include theme-transitions("background-color");
             box-shadow: inset 0 7px 16px -7px rgba(0, 0, 0, 0.15),
                 inset 0 -7px 16px -7px rgba(0, 0, 0, 0.15);
             max-height: 800px;

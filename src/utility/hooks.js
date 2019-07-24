@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { log } from "./misc";
+import { log } from "./string";
 
 export function useReturnQuery() {
   if (process.env.PRODUCTION_URL) {

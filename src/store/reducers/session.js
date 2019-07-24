@@ -54,7 +54,7 @@ export const tryLoadSession = () => {
       const now = new Date();
       if (expiresAt - now < 0) {
         log("Session has expired; clearing");
-        window.localStorage.set(LOCAL_STORAGE_KEY, null);
+        window.localStorage.setItem(LOCAL_STORAGE_KEY, null);
         return initial;
       }
     }

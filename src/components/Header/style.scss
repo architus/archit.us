@@ -16,7 +16,6 @@
         linear-gradient($-primary, color-adjust($-primary, -2.5%)),
         dark
     );
-    @include theme-transitions("background-image");
 
     @include respond-above(sm) {
         height: 68px;

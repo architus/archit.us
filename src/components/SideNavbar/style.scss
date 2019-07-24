@@ -7,7 +7,6 @@
     @include light-bg($-light, -5%);
     @include dark-border($-dark, 4%, 1px solid, right);
     @include light-border($-light, -10%, 1px solid, right);
-    @include theme-transitions("background-color, border-right-color");
 
     display: flex;
     flex-direction: column;
@@ -34,7 +33,7 @@
             overflow: hidden;
             height: auto;
 
-            @include theme-transitions("color, opacity, height");
+            @include transitions("opacity, height");
             @include dark-fg;
             @include light-fg;
         }
@@ -83,12 +82,10 @@
             stroke-width: 0.75;
             stroke-miterlimit: 10;
             fill: none;
-            @include theme-transitions("stroke");
             @include light(stroke, $-dark);
             @include dark(stroke, $-light);
         }
         .fil {
-            @include theme-transitions("fill");
             @include light(fill, $-dark);
             @include dark(fill, $-light);
         }

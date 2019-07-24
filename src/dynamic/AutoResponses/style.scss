@@ -14,7 +14,6 @@
     p {
         @include dark-fade-fg;
         @include light-fade-fg;
-        @include theme-transitions("color");
     }
 
     .table-outer {
@@ -22,21 +21,36 @@
         flex-grow: 1;
     }
 
-    .ReactTable {
+    // React grid meme to make full height
+    .react-grid-Main {
         height: 100%;
 
-        .rt-table {
-            .rt-thead {
-                box-shadow: none;
-            }
-
-            .rt-th {
-                padding: 0.5rem;
-            }
-
-            .rt-tbody {
-                @extend %custom-scrollbar;
-            }
+        .drag-handle {
+            display: none !important;
         }
+
+        .rdg-selected {
+            border: none !important;
+        }
+    }
+
+    .react-grid-Container {
+        height: 100%;
+    }
+
+    .react-grid-Grid {
+        min-height: 100% !important;
+    }
+
+    .react-grid-Canvas {
+        height: 100% !important;
+    }
+
+    .react-grid-HeaderCell {
+        @include dark-bg;
+    }
+
+    .react-grid-Cell {
+        @include dark-bg;
     }
 }

@@ -111,12 +111,6 @@ $osx-fullscreen: #27c93f;
 // ? Dark/light theme mixins
 // ? =======================
 
-@mixin theme-transitions($properties) {
-    transition-duration: 0.25s;
-    transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
-    transition-property: unquote($properties);
-}
-
 @mixin theme-property($property, $value, $theme) {
     .#{$theme}-mode & {
         #{$property}: $value;

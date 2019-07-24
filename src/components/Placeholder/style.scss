@@ -46,6 +46,5 @@ $light-highlight-color: rgba($-light, 0.3);
             ),
             dark
         );
-        @include theme-transitions("background-image");
     }
 }

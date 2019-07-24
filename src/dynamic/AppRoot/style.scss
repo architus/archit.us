@@ -67,7 +67,6 @@ html.html--app {
                     right: 0;
                     @include dark-bg(rgba(black, 0.8));
                     @include light-bg(rgba(black, 0.5));
-                    @include theme-transitions("background-color");
                     cursor: default;
                 }
 
@@ -102,8 +101,8 @@ html.html--app {
             @include light-fg;
             @include dark-bg(rgba($-light, 0.15));
             @include light-bg(rgba($-dark, 0.15));
-            @include theme-transitions(
-                "transform, color, background-color, box-shadow"
+            @include transitions(
+                "transform, box-shadow"
             );
 
             @include respond-below($collapse-breakpoint) {
@@ -113,7 +112,7 @@ html.html--app {
 
         .app-nav {
             @extend %base-horizontal-container;
-            @include theme-transitions("transform");
+            @include transitions("transform");
             height: 100%;
 
             @include respond-below($collapse-breakpoint) {
@@ -135,9 +134,6 @@ html.html--app {
                 @include light-bg($guild-sidebar-light-bg);
                 @include dark-border($-dark, $border: 1px solid, $side: right);
                 @include light-border($-light, -20%, 1px solid, right);
-                @include theme-transitions(
-                    "background-color, border-right-color"
-                );
             }
 
             .side-navbar {
@@ -178,16 +174,13 @@ html.html--app {
     @include light-bg;
     @include dark-fg;
     @include light-fg;
-    @include theme-transitions("background-color, color");
 
     .dropdown-menu {
         @include dark-fg;
         @include dark-bg($-dark, 12.5%);
-        @include theme-transitions("color, background-color");
 
         .dropdown-item {
             @include dark-fg;
-            @include theme-transitions("color");
 
             &:hover,
             &:focus {
@@ -209,6 +202,5 @@ html.html--app {
         @include dark-bg($-dark, 3.5%);
         @include light-border(rgba($-dark, 0.2), $border: 1px solid);
         @include dark-border(rgba($-light, 0.2), $border: 1px solid);
-        @include theme-transitions("background-color, border");
     }
 }
