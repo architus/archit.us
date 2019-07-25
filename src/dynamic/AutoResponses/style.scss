@@ -1,5 +1,4 @@
 @import "scss/colors";
-@import "scss/theme";
 
 .auto-responses {
     height: 100%;
@@ -14,43 +13,5 @@
     p {
         @include dark-fade-fg;
         @include light-fade-fg;
-    }
-
-    .table-outer {
-        height: 0;
-        flex-grow: 1;
-    }
-
-    // React grid meme to make full height
-    .react-grid-Main {
-        height: 100%;
-
-        .drag-handle {
-            display: none !important;
-        }
-
-        .rdg-selected {
-            border: none !important;
-        }
-    }
-
-    .react-grid-Container {
-        height: 100%;
-    }
-
-    .react-grid-Grid {
-        min-height: 100% !important;
-    }
-
-    .react-grid-Canvas {
-        height: 100% !important;
-    }
-
-    .react-grid-HeaderCell {
-        @include dark-bg;
-    }
-
-    .react-grid-Cell {
-        @include dark-bg;
     }
 }

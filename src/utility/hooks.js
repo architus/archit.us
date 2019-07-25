@@ -31,3 +31,7 @@ export function useAuthDispatch(action) {
     return (...args) => dispatch(action(authToken, ...args));
   }
 }
+
+export function useClientSide(render) {
+  return typeof window === "undefined" ? null : render();
+}

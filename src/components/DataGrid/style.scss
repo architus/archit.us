@@ -1,0 +1,249 @@
+@import "scss/colors";
+@import "scss/theme";
+@import "scss/util";
+@import "scss/media";
+
+%base-bg {
+    @include light-bg;
+    @include dark-bg;
+}
+
+.table-outer {
+    height: 0;
+    flex-grow: 1;
+
+    @include respond-below(lg) {
+        padding-top: 2.5rem;
+    }
+
+    // React grid meme to make full height
+    .react-grid-Main {
+        height: 100%;
+        @extend %base-bg;
+        outline: none;
+
+        .drag-handle {
+            display: none !important;
+        }
+
+        .rdg-selected {
+            border: none !important;
+        }
+    }
+
+    .react-grid-Container {
+        height: 100%;
+        position: relative;
+    }
+
+    .react-grid-Toolbar {
+        position: absolute;
+        top: -40px;
+        right: 0;
+        z-index: 2;
+        background-color: transparent;
+        border: none;
+        padding: 0;
+        height: auto;
+
+        button {
+            background-color: $-primary;
+            border-color: $-primary;
+            color: $-light !important;
+
+            &:hover,
+            &:active {
+                background-color: color-adjust($-primary, -10%);
+            }
+        }
+    }
+
+    .react-grid-Grid {
+        min-height: 100% !important;
+        @extend %base-bg;
+        border: none;
+        overflow: unset !important;
+    }
+
+    .react-grid-Canvas {
+        height: 100% !important;
+        @extend %custom-scrollbar;
+        width: auto !important;
+        height: 982px;
+        right: 2px;
+        z-index: 2;
+        background-color: transparent;
+        position: relative;
+        overflow-x: hidden;
+    }
+
+    .react-grid-Viewport {
+        @extend %base-bg;
+        overflow: unset !important;
+
+        &::after {
+            position: absolute;
+            z-index: 0;
+            content: " ";
+            z-index: 1;
+            top: -2px;
+            bottom: -2px;
+            right: 0;
+            margin-top: auto;
+            margin-bottom: auto;
+            border-radius: 1000px;
+            width: 16px;
+            @include light(background-color, rgba(black, 0.05));
+            @include dark(background-color, rgba(white, 0.05));
+        }
+    }
+
+    .react-grid-Header {
+        @extend %base-bg;
+        box-shadow: none;
+    }
+
+    .react-grid-HeaderRow {
+        @include light-bg($adjust: -4%);
+        @include dark-bg($adjust: -4%);
+        margin-top: -1px;
+
+        &:first-child {
+            @include light-border(rgba($-dark, 0.1), $side: top);
+            @include dark-border(rgba($-light, 0.1), $side: top);
+        }
+    }
+
+    .react-grid-HeaderCell {
+        font-weight: 500;
+        padding: 0;
+        @include dark(border-color, rgba($-light, 0.4));
+        background-color: transparent;
+
+        & > div {
+            height: 100%;
+
+            .form-group {
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                padding: {
+                    right: 10px;
+                    left: 10px;
+                    top: 8px;
+                    bottom: 8px;
+                }
+
+                input {
+                    width: 100%;
+                    border: none;
+                    outline: none;
+                    padding: {
+                        top: 6px;
+                        bottom: 6px;
+                        right: 6px;
+                        left: 10px;
+                    }
+                    border-radius: 8px;
+                    transition: all 0.25s ease;
+
+                    &::placeholder {
+                        @include light-fg(rgba($-dark, 0.4));
+                        @include dark-fg(rgba($-light, 0.4));
+                    }
+
+                    &:focus {
+                        @include highlight-shadow($-primary);
+                    }
+                }
+            }
+        }
+
+        &:first-child {
+            & > div {
+                .form-group {
+                    padding-left: 0;
+                }
+                padding-left: 12px;
+            }
+        }
+
+        &:last-child {
+            & > div {
+                .form-group {
+                    padding-right: 12px;
+                }
+            }
+        }
+
+        .react-grid-HeaderCell-sortable {
+            padding: {
+                top: 10px;
+                bottom: 6px;
+                left: 10px;
+                right: 8px;
+            }
+            position: relative;
+
+            &::after {
+                $height: 2px;
+                position: absolute;
+                z-index: 0;
+                content: " ";
+                z-index: 1;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: $height;
+                background-color: $-primary;
+                transform: translateY(-#{$height + 1px});
+                @include transitions(transform);
+            }
+
+            &:hover {
+                @include light(background-color, rgba(black, 0.04));
+                @include dark(background-color, rgba(white, 0.04));
+
+                &::after {
+                    transform: translateY(0);
+                }
+            }
+        }
+
+        .pull-right {
+            margin-left: 4px;
+            margin-right: 10px;
+            opacity: 0.5;
+
+            &:empty {
+                margin-right: 0;
+            }
+        }
+
+        &:last-child {
+            border-right: none;
+        }
+    }
+
+    .react-grid-Cell {
+        background-color: transparent !important;
+        @include dark(border-color, rgba($-light, 0.15));
+
+        &:last-child {
+            border-right: none;
+        }
+    }
+
+    .react-grid-Row {
+        &:hover {
+            @include light(background-color, rgba($-primary, 0.1));
+            @include dark(background-color, rgba($-primary, 0.1));
+        }
+    }
+
+    .row-even {
+        @include light(background-color, rgba(black, 0.02));
+        @include dark(background-color, rgba(white, 0.02));
+    }
+}
