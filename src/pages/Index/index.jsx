@@ -55,11 +55,12 @@ function Index() {
                   settings such as <em>emotes and responses</em>, and view
                   extensive <em>audit logs</em>.
                 </p>
+
+                <p className="test-text">Architus is currently serving <span>19 guilds</span> and <span>1538 users</span>.</p>
               </Col>
               <Col sm={6} lg={4}>
                 <Card as="aside">
                   <h2>Getting Started</h2>
-                  <p className="mb-4">Sign in to add architus to a server</p>
                   <LoginButton />
                 </Card>
               </Col>
@@ -78,7 +79,7 @@ function Index() {
               <div>
                 <p>
                   Users can configure architus to listen for and respond to
-                  message patterns using a extensive syntax. Response pattern
+                  message patterns using an extensive syntax. Response pattern
                   fragments include:
                 </p>
                 <ul>

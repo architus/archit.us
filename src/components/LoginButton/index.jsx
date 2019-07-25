@@ -22,18 +22,22 @@ function LoginButton({ loggedIn }) {
   const oauthUrl = useOauthUrl();
   return loggedIn ? (
     <div>
-      <p className="mb-2">
-        <em>You are already logged in</em>
+      <p className="mb-3">
+        You are already logged in
       </p>
       <Button to="/app" as={RouterLink}>
         Get started
       </Button>
     </div>
   ) : (
-    <Button variant="discord" href={oauthUrl} className="login">
-      <Icon name="discord" />
-      <span>Connect</span> <span> with Discord</span>
-    </Button>
+    <div>
+      <p>Sign in to add architus to a server.</p>
+      <Button variant="discord" href={oauthUrl} className="login">
+        <Icon name="discord" />
+        <span>Connect</span> <span> with Discord</span>
+      </Button>
+    </div>
+
   );
 }
 
