@@ -36,6 +36,20 @@
     }
 }
 
+.test-text {
+    padding-top: 10px;
+    span {
+        color: $-primary;
+        
+        background: #f6f8f9;
+        padding: 0em .25em .15em .25em;
+        border-radius: .1em;
+        border: 1px solid #1b273333;
+        font-size: 90%;
+
+    }
+}
+
 .head {
     position: relative;
     background-color: rgba($jumbotron-background, 0.6);
@@ -94,7 +108,7 @@
 
 .features {
     padding: {
-        top: 4rem;
+        top: 2rem;
         bottom: 4rem;
     }
 
@@ -279,11 +293,11 @@
     hr {
         margin-top: 4rem;
         @extend %shift-lg;
-        border-top-color: $-tertiary;
+        border-top-color: $-primary;
         box-shadow: $drop-shadow;
         border-top-style: dashed;
         @include respond-above(lg) {
-            margin-bottom: -2rem;
+            margin-bottom: -3rem;
         }
     }
 }
