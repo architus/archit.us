@@ -1,14 +1,19 @@
 import React, { useRef, useState, useMemo } from "react";
 import PropTypes from "prop-types";
-import { isNil, useClientSide, colorBlend } from "utility";
+import { isNil, useClientSide, colorBlend, ifClient } from "utility";
 
 import Icon from "components/Icon";
-import ReactDataGrid from "react-data-grid";
-import { Data } from "react-data-grid-addons";
 import Switch from "react-switch";
 
 import "./style.scss";
 import { lightColor, primaryColor } from "global.json";
+
+let ReactDataGrid = () => null;
+let Data = { Selectors: null };
+ifClient(() => {
+  ReactDataGrid = require("react-data-grid");
+  Data = require("react-data-grid-addons").Data;
+});
 
 const handleFilterChange = filter => filters => {
   const newFilters = { ...filters };

@@ -24,3 +24,7 @@ export const reverseMapFromMap = (map, f) =>
     acc[map[k]] = (acc[map[k]] || []).concat((f || id)(k));
     return acc;
   }, {});
+
+export function ifClient(func) {
+  if (typeof window !== "undefined") func();
+}
