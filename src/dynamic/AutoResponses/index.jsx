@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import PropTypes from "prop-types";
 import { shallowEqual, useSelector } from "react-redux";
 import { getResponses } from "store/actions";
-import { useAuthDispatch } from "utility";
+import { useAuthDispatch, isDefined, isNil, isEmptyOrNil } from "utility";
 
 import DataGrid from "components/DataGrid";
+import UserDisplay from "components/UserDisplay";
 import { Container } from "react-bootstrap";
 
 import "./style.scss";
@@ -28,6 +29,49 @@ function AutoResponses({ guildId }) {
     if (authenticated) fetchResponses(guildId);
   }, [authenticated, guildId]);
 
+  // Row updating
+  const onRowUpdate = ({ idx, key, updatedCell }) => {
+    console.log(`Updating`);
+    console.log({ idx, key, updatedCell });
+  };
+
+  // Row deletion
+  const onRowDelete = row => {
+    console.log(`Deleting`);
+    console.log(row);
+  };
+
+  // Transform author data
+  const authorData = ({ author_id }) => {
+    if (
+      author_id <= 0 ||
+      !authors.hasOwnProperty(author_id) ||
+      isNil(authors[author_id])
+    )
+      return {
+        author: "Unknown",
+        avatar: null,
+        name: "Unknown",
+        discriminator: null
+      };
+    else {
+      const { name, avatar, discriminator } = authors[author_id];
+      return {
+        author: `${name}#${discriminator}|${author_id}`,
+        avatar,
+        name,
+        discriminator
+      };
+    }
+  };
+  const transformRow = row => {
+    return isDefined(row) ? { ...row, ...authorData(row) } : row;
+  };
+  const transformedData = useMemo(() => commands.map(transformRow), [
+    commands,
+    authors
+  ]);
+
   return (
     <Container className="py-5 auto-responses">
       <h2>Automatic Responses</h2>
@@ -36,17 +80,26 @@ function AutoResponses({ guildId }) {
         current server.
       </p>
       <DataGrid
-        data={commands}
+        data={transformedData}
         columns={[
           { key: "trigger", name: "Trigger", editable: true, width: 240 },
           { key: "response", name: "Response", editable: true },
-          { key: "author_id", name: "Author", width: 200 }
+          {
+            key: "author",
+            name: "Author",
+            width: 200,
+            formatter: AuthorCellFormatter
+          }
         ]}
         baseColumnMeta={{
           sortable: true,
-          filterable: true
+          filterable: true,
+          resizable: true
         }}
-        onGridRowsUpdated={(...args) => console.log(args)}
+        onRowUpdate={onRowUpdate}
+        onRowDelete={onRowDelete}
+        isLoading={!hasLoaded}
+        emptyLabel="No responses to display"
       />
     </Container>
   );
@@ -56,4 +109,32 @@ export default AutoResponses;
 
 AutoResponses.propTypes = {
   guildId: PropTypes.string
+};
+
+// ? ==============
+// ? Sub components
+// ? ==============
+
+function AuthorCellFormatter({
+  row: { name, discriminator, avatar, author_id }
+}) {
+  return (
+    <div className="author-display">
+      <UserDisplay.Avatar
+        avatarHash={avatar}
+        discriminator={discriminator}
+        clientId={author_id}
+        circle
+        size={28}
+      />
+      <span className="name">{name}</span>
+      {isEmptyOrNil(discriminator) ? null : (
+        <span className="discriminator">{`#${discriminator}`}</span>
+      )}
+    </div>
+  );
+}
+
+AuthorCellFormatter.propTypes = {
+  row: PropTypes.object
 };

@@ -116,7 +116,7 @@ class AppRoot extends React.Component {
             className="app--expand-button"
             onClick={this.handleExpandClick}
           >
-            <Icon class="color" name="chevron-right" />
+            <Icon className="color" name="chevron-right" />
           </button>
           <button className="app--overlay-button" onClick={this.closeAppNav} />
           <Location>

@@ -1,41 +1,16 @@
 @import "scss/theme";
 @import "scss/util";
 
-%scrollbar {
-    &::-webkit-scrollbar {
-        width: 17px;
-        height: 17px;
-    }
-    &::-webkit-scrollbar-thumb {
-        background: $discord-scroll-thumb;
-        border-radius: 100rem;
-        border: 4px solid $discord-bg;
-        margin: 4px;
-
-        &:hover {
-            background: darken($discord-scroll-thumb, 8%);
-        }
-    }
-    &::-webkit-scrollbar-track {
-        background: linear-gradient(
-            to right,
-            $discord-bg 0%,
-            $discord-bg 23%,
-            $discord-scroll-track 24%,
-            $discord-scroll-track 76%,
-            $discord-bg 77%,
-            $discord-bg 100%
-        );
-    }
-}
-
 .discord-messages {
     overflow-y: auto;
     overflow-x: hidden;
     color: inherit;
     margin-right: 12px;
-
-    @extend %scrollbar;
+    @include discord-scrollbar(
+        $discord-bg,
+        $discord-scroll-thumb,
+        $discord-scroll-track
+    );
 
     .inner {
         padding: {

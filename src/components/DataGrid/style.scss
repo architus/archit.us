@@ -3,6 +3,22 @@
 @import "scss/util";
 @import "scss/media";
 
+$border-color-light: rgba($-dark, 0.15);
+$border-color-dark: rgba($-light, 0.15);
+%header-cell-fill {
+    @include light-bg($adjust: -6%);
+    @include dark-bg($-dark, 3%);
+}
+%input-bg {
+    @include light-bg(white);
+    @include dark-bg($-dark, 8%);
+}
+%cell-base {
+    background-color: transparent !important;
+    @include light(border-color, $border-color-light);
+    @include dark(border-color, $border-color-dark);
+}
+
 %base-bg {
     @include light-bg;
     @include dark-bg;
@@ -11,6 +27,8 @@
 .table-outer {
     height: 0;
     flex-grow: 1;
+    @include light-fg;
+    @include dark-fade-fg;
 
     @include respond-below(lg) {
         padding-top: 2.5rem;
@@ -28,6 +46,10 @@
 
         .rdg-selected {
             border: none !important;
+        }
+
+        .react-grid-cell-copied {
+            background-color: transparent !important;
         }
     }
 
@@ -67,10 +89,9 @@
 
     .react-grid-Canvas {
         height: 100% !important;
-        @extend %custom-scrollbar;
+        @extend %custom-scrollbar-alt;
         width: auto !important;
         height: 982px;
-        right: 2px;
         z-index: 2;
         background-color: transparent;
         position: relative;
@@ -80,45 +101,31 @@
     .react-grid-Viewport {
         @extend %base-bg;
         overflow: unset !important;
-
-        &::after {
-            position: absolute;
-            z-index: 0;
-            content: " ";
-            z-index: 1;
-            top: -2px;
-            bottom: -2px;
-            right: 0;
-            margin-top: auto;
-            margin-bottom: auto;
-            border-radius: 1000px;
-            width: 16px;
-            @include light(background-color, rgba(black, 0.05));
-            @include dark(background-color, rgba(white, 0.05));
-        }
     }
 
     .react-grid-Header {
         @extend %base-bg;
         box-shadow: none;
+        @include light {
+            border: top;
+        }
     }
 
     .react-grid-HeaderRow {
-        @include light-bg($adjust: -4%);
-        @include dark-bg($adjust: -4%);
+        @extend %header-cell-fill;
         margin-top: -1px;
+        min-height: 0 !important;
 
         &:first-child {
-            @include light-border(rgba($-dark, 0.1), $side: top);
-            @include dark-border(rgba($-light, 0.1), $side: top);
+            @include light-border($border-color-light, $side: top);
+            @include dark-border($border-color-dark, $side: top);
         }
     }
 
     .react-grid-HeaderCell {
         font-weight: 500;
         padding: 0;
-        @include dark(border-color, rgba($-light, 0.4));
-        background-color: transparent;
+        @extend %cell-base;
 
         & > div {
             height: 100%;
@@ -146,7 +153,10 @@
                         left: 10px;
                     }
                     border-radius: 8px;
-                    transition: all 0.25s ease;
+                    transition: box-shadow 0.25s ease;
+                    @extend %input-bg;
+                    @include light-fg;
+                    @include dark-fg;
 
                     &::placeholder {
                         @include light-fg(rgba($-dark, 0.4));
@@ -167,6 +177,8 @@
                 }
                 padding-left: 12px;
             }
+            @include light-border($border-color-light, $side: left);
+            @include dark-border($border-color-dark, $side: left);
         }
 
         &:last-child {
@@ -175,6 +187,8 @@
                     padding-right: 12px;
                 }
             }
+            @include light-border($border-color-light, $side: right);
+            @include dark-border($border-color-dark, $side: right);
         }
 
         .react-grid-HeaderCell-sortable {
@@ -214,7 +228,7 @@
         .pull-right {
             margin-left: 4px;
             margin-right: 10px;
-            opacity: 0.5;
+            opacity: 0.35;
 
             &:empty {
                 margin-right: 0;
@@ -227,11 +241,47 @@
     }
 
     .react-grid-Cell {
-        background-color: transparent !important;
-        @include dark(border-color, rgba($-light, 0.15));
+        @extend %cell-base;
 
         &:last-child {
             border-right: none;
+        }
+
+        .rdg-cell-action {
+            display: none;
+
+            .rdg-cell-action-button {
+                margin-left: 0.35rem;
+                margin-right: 0.15rem;
+                cursor: pointer;
+                color: $-primary;
+
+                &:hover {
+                    color: color-adjust($-primary, -12.5%);
+                }
+            }
+        }
+
+        .author-display {
+            display: flex;
+            flex-direction: row;
+            overflow: hidden;
+            align-items: center;
+
+            .avatar {
+                margin-right: 0.5rem;
+            }
+
+            .name {
+                font-weight: 500;
+                opacity: 0.9;
+            }
+
+            .discriminator {
+                margin-left: 0.1rem;
+                font-size: 0.85em;
+                opacity: 0.6;
+            }
         }
     }
 
@@ -239,11 +289,36 @@
         &:hover {
             @include light(background-color, rgba($-primary, 0.1));
             @include dark(background-color, rgba($-primary, 0.1));
+
+            .rdg-cell-action {
+                display: block;
+            }
         }
     }
 
     .row-even {
         @include light(background-color, rgba(black, 0.02));
         @include dark(background-color, rgba(white, 0.02));
+    }
+
+    .react-grid-Empty {
+        .empty-placeholder {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+
+            .spinner-border {
+                width: 2.5rem;
+                height: 2.5rem;
+            }
+
+            .empty-label {
+                padding: 1rem;
+                @include light-bg(white);
+                @include dark-bg($-dark, 2.5%);
+            }
+        }
     }
 }

@@ -1,10 +1,4 @@
-import {
-  takeOrReplenish,
-  reverseMapFromMap,
-  includes,
-  pick,
-  isNil
-} from "utility";
+import { takeOrReplenish, invertMap, includes, pick, isNil } from "utility";
 import {
   transformMessage,
   transformReaction,
@@ -47,7 +41,7 @@ const discriminatorProvisioner = new DiscriminatorProvisioner(discriminatorMax);
 
 export const autBotUser = {
   clientId: 448546825532866560,
-  avatarHash: "b2979364dd5230ac3dc7ea98cb35a02c",
+  avatarHash: "99de1e495875fb5c27ba9ac7303b45b7",
   discriminator: 7145,
   username: "architus",
   nameColor: "#d34c4f",
@@ -265,7 +259,7 @@ function addReactions(clumps, reactions) {
     }))
   );
 
-  const clumpIndicesToMessageIdsMap = reverseMapFromMap(
+  const clumpIndicesToMessageIdsMap = invertMap(
     messageIdToContainingClumpMap,
     x => parseInt(x)
   );

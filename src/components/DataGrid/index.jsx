@@ -7,6 +7,7 @@ import Switch from "react-switch";
 
 import "./style.scss";
 import { lightColor, primaryColor } from "global.json";
+import { Spinner } from "react-bootstrap";
 
 let ReactDataGrid = () => null;
 let Data = { Selectors: null };
@@ -30,7 +31,16 @@ function getRows(rows, filters) {
   return selectors.getRows({ rows, filters });
 }
 
-function DataGrid({ data, columns, baseColumnMeta, onGridRowsUpdated }) {
+function DataGrid({
+  data,
+  columns,
+  baseColumnMeta,
+  onRowUpdate,
+  onRowDelete,
+  isLoading,
+  emptyLabel,
+  transformRow
+}) {
   const columnMeta = columns.map(c => ({ ...c, ...baseColumnMeta }));
 
   // Escape hatch to access library methods imperatively
@@ -61,11 +71,11 @@ function DataGrid({ data, columns, baseColumnMeta, onGridRowsUpdated }) {
   };
   const sortRows = (rows, sortColumn, sortDirection) => {
     const comparer = (a, b) => {
-      if (sortDirection === "ASC") {
-        return a[sortColumn] > b[sortColumn] ? 1 : -1;
-      } else if (sortDirection === "DESC") {
-        return a[sortColumn] < b[sortColumn] ? 1 : -1;
-      }
+      return (
+        (a[sortColumn].toLowerCase().trim() > b[sortColumn].toLowerCase().trim()
+          ? 1
+          : -1) * (sortDirection === "ASC" ? 1 : -1)
+      );
     };
     return sortDirection === "NONE" ? rows : [...rows].sort(comparer);
   };
@@ -75,18 +85,65 @@ function DataGrid({ data, columns, baseColumnMeta, onGridRowsUpdated }) {
     [sortMeta, data]
   );
 
+  // Row deletion
+  function getCellActions(column, row) {
+    return column.idx === columns.length - 1
+      ? [
+          {
+            icon: <Icon name="times-circle" size="lg" noAutoWidth />,
+            callback: () => {
+              onRowDelete(row);
+            }
+          }
+        ]
+      : null;
+  }
+
   // Filtering
   const [filters, setFilters] = useState({});
   const filteredRows = getRows(rows, filters);
+
+  // Empty display
+  function EmptyDisplay() {
+    return (
+      <div className="empty-placeholder">
+        {isLoading ? (
+          <Spinner animation="border" variant="primary" role="status">
+            <span className="sr-only">Loading...</span>
+          </Spinner>
+        ) : (
+          <span className="empty-label shadow-sm">{emptyLabel}</span>
+        )}
+      </div>
+    );
+  }
+
+  // Row updating
+  const handleRowUpdate = ({
+    action,
+    fromRowData,
+    updated,
+    cellKey,
+    toRow
+  }) => {
+    if (action !== "CELL_UPDATE") return;
+    if (fromRowData[cellKey] === updated[cellKey]) return;
+    onRowUpdate({
+      idx: toRow,
+      key: cellKey,
+      previousRow: fromRowData,
+      updatedCell: updated[cellKey]
+    });
+  };
 
   return useClientSide(() => (
     <div className="table-outer">
       <ReactDataGrid
         ref={dataGrid}
         columns={columnMeta}
-        rowGetter={i => filteredRows[i]}
+        rowGetter={i => transformRow(filteredRows[i])}
         rowsCount={filteredRows.length}
-        onGridRowsUpdated={onGridRowsUpdated}
+        onGridRowsUpdated={handleRowUpdate}
         onCellSelected={onCellSelected}
         onRowClick={onRowClick}
         enableCellSelect={true}
@@ -98,6 +155,9 @@ function DataGrid({ data, columns, baseColumnMeta, onGridRowsUpdated }) {
         rowHeight={45}
         headerFiltersHeight={55}
         rowRenderer={RowRenderer}
+        getCellActions={getCellActions}
+        enableRowSelect={null}
+        emptyRowsView={EmptyDisplay}
       />
     </div>
   ));
@@ -106,10 +166,24 @@ function DataGrid({ data, columns, baseColumnMeta, onGridRowsUpdated }) {
 export default DataGrid;
 
 DataGrid.propTypes = {
-  onGridRowsUpdated: PropTypes.func,
+  onRowUpdate: PropTypes.func,
+  onRowDelete: PropTypes.func,
   data: PropTypes.array.isRequired,
+  transformRow: PropTypes.func,
   columns: PropTypes.arrayOf(PropTypes.object),
-  baseColumnMeta: PropTypes.object
+  baseColumnMeta: PropTypes.object,
+  isLoading: PropTypes.bool,
+  emptyLabel: PropTypes.string
+};
+
+DataGrid.defaultProps = {
+  onRowUpdate: () => null,
+  onRowDelete: () => null,
+  transformRow: r => r,
+  columns: [],
+  baseColumnMeta: {},
+  isLoading: false,
+  emptyLabel: "No items to display"
 };
 
 // ? ==============
@@ -156,6 +230,12 @@ ToolbarComponent.propTypes = {
 };
 
 const RowRenderer = ({ renderBaseRow, ...props }) => {
-  const className = props.idx % 2 ? "row-even" : "row-odd";
+  const { idx } = props;
+  const className = idx % 2 ? "row-even" : "row-odd";
   return <div className={className}>{renderBaseRow(props)}</div>;
+};
+
+RowRenderer.propTypes = {
+  renderBaseRow: PropTypes.func,
+  idx: PropTypes.number
 };

@@ -50,3 +50,53 @@ $scrollbar-width: 12px;
         @include scrollbar($-dark, $scrollbar-width);
     }
 }
+
+@mixin discord-scrollbar($bg, $thumb, $track) {
+    &::-webkit-scrollbar {
+        width: 17px;
+        height: 17px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: $thumb;
+        border-radius: 100rem;
+        border: 4px solid $bg;
+        margin: 4px;
+
+        &:hover {
+            background: darken($thumb, 7.5%);
+        }
+
+        &:active {
+            background: darken($thumb, 15%);
+        }
+    }
+    &::-webkit-scrollbar-track {
+        background: linear-gradient(
+            to right,
+            $bg 0%,
+            $bg 23%,
+            $track 24%,
+            $track 76%,
+            $bg 77%,
+            $bg 100%
+        );
+        border-radius: 100rem;
+    }
+}
+
+%custom-scrollbar-alt {
+    @include dark {
+        @include discord-scrollbar(
+            color-adjust($-dark, 7.5%),
+            blend($-light, black, 0.65),
+            color-adjust($-dark, 5.5%)
+        );
+    }
+    @include light {
+        @include discord-scrollbar(
+            $-light,
+            blend($-dark, white, 0.65),
+            color-adjust($-light, -2%)
+        );
+    }
+}
