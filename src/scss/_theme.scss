@@ -51,7 +51,7 @@ $scrollbar-width: 12px;
     }
 }
 
-@mixin discord-scrollbar($bg, $thumb, $track) {
+@mixin discord-scrollbar($bg, $thumb, $track, $invert: false) {
     &::-webkit-scrollbar {
         width: 17px;
         height: 17px;
@@ -63,11 +63,19 @@ $scrollbar-width: 12px;
         margin: 4px;
 
         &:hover {
-            background: darken($thumb, 7.5%);
+            @if $invert {
+                background: lighten($thumb, 7.5%);
+            } @else {
+                background: darken($thumb, 7.5%);
+            }
         }
 
         &:active {
-            background: darken($thumb, 15%);
+            @if $invert {
+                background: lighten($thumb, 15%);
+            } @else {
+                background: darken($thumb, 15%);
+            }
         }
     }
     &::-webkit-scrollbar-track {
@@ -89,7 +97,8 @@ $scrollbar-width: 12px;
         @include discord-scrollbar(
             color-adjust($-dark, 7.5%),
             blend($-light, black, 0.65),
-            color-adjust($-dark, 5.5%)
+            color-adjust($-dark, 5.5%),
+            true
         );
     }
     @include light {

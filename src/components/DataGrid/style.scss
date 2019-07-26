@@ -2,6 +2,7 @@
 @import "scss/theme";
 @import "scss/util";
 @import "scss/media";
+@import "scss/fonts";
 
 $border-color-light: rgba($-dark, 0.15);
 $border-color-dark: rgba($-light, 0.15);
@@ -90,12 +91,10 @@ $border-color-dark: rgba($-light, 0.15);
     .react-grid-Canvas {
         height: 100% !important;
         @extend %custom-scrollbar-alt;
-        width: auto !important;
         height: 982px;
         z-index: 2;
         background-color: transparent;
         position: relative;
-        overflow-x: hidden;
     }
 
     .react-grid-Viewport {
@@ -282,6 +281,12 @@ $border-color-dark: rgba($-light, 0.15);
                 font-size: 0.85em;
                 opacity: 0.6;
             }
+        }
+
+        .trigger,
+        .response {
+            font-family: $font-family-monospace;
+            font-size: 0.9em;
         }
     }
 

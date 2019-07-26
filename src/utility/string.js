@@ -89,6 +89,12 @@ export const warn = message =>
     `${styles.warn}`
   );
 
+export function replaceAll(string, replace, replaceWith) {
+  const regex = escapeRegExp(replace);
+  const regexObj = new RegExp(regex, "g");
+  return string.replace(regexObj, replaceWith);
+}
+
 // ? ==============
 // ? Path functions
 // ? ==============
@@ -158,4 +164,8 @@ export function allMatches(string, regex) {
     if (currentMatch) matches.push(currentMatch[0]);
   } while (currentMatch);
   return matches;
+}
+
+export function escapeRegExp(text) {
+  return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 }

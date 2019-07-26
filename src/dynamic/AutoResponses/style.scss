@@ -14,4 +14,78 @@
         @include dark-fade-fg;
         @include light-fade-fg;
     }
+
+    .response {
+        %base {
+            font-weight: bold;
+        }
+
+        @mixin highlight-span($light-color, $dark-color) {
+            @include dark-fg($light-color);
+            @include light-fg($dark-color);
+            @include dark-bg(rgba($light-color, 0.075));
+            @include light-bg(rgba($dark-color, 0.075));
+            @include dark-border(rgba($light-color, 0.3));
+            @include light-border(rgba($dark-color, 0.3));
+            padding: 0.1em 0.35em 0.2em;
+            border-radius: 4px;
+        }
+
+        .token-capture {
+            @extend %base;
+            @include dark-fg(#98c379);
+            @include light-fg(#53a053);
+            &.source {
+                @include highlight-span(#98c379, #53a053);
+                margin: 0 0.15rem 0 0.15rem;
+            }
+        }
+
+        .token-mention {
+            @extend %base;
+            @include dark-fg(#56b6c2);
+            @include light-fg(#1485ba);
+        }
+
+        .token-meta {
+            @extend %base;
+            @include dark-fg(#d19a66);
+            @include light-fg(#976715);
+        }
+
+        .token-reaction {
+            @extend %base;
+            @include highlight-span(#d19a66, #976715);
+        }
+
+        .token-link {
+            @extend %base;
+            @include dark-fg(#61afef);
+            @include light-fg(#447bef);
+        }
+
+        .token-string {
+            @extend %base;
+            @include dark-fg(#e06c75);
+            @include light-fg(#e2574e);
+        }
+
+        .token-list {
+            @extend %base;
+            @include highlight-span(#c678dd, #a42ea2);
+        }
+    }
+
+    .emoji {
+        width: 24px;
+        height: auto;
+        margin: 0 0.05em 0 0.1em;
+        position: relative;
+        top: -1px;
+    }
+
+    .mention {
+        color: $discord;
+        background-color: rgba($discord, 0.15);
+    }
 }

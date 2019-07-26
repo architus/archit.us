@@ -2,7 +2,19 @@ import React, { useEffect, useMemo } from "react";
 import PropTypes from "prop-types";
 import { shallowEqual, useSelector } from "react-redux";
 import { getResponses } from "store/actions";
-import { useAuthDispatch, isDefined, isNil, isEmptyOrNil } from "utility";
+import {
+  useAuthDispatch,
+  isDefined,
+  isNil,
+  isEmptyOrNil,
+  escapeHtml,
+  replaceAll
+} from "utility";
+import {
+  convertUnicodeEmoji,
+  convertDiscordEmoji,
+  convertMentions
+} from "components/DiscordMock/transform";
 
 import DataGrid from "components/DataGrid";
 import UserDisplay from "components/UserDisplay";
@@ -71,6 +83,45 @@ function AutoResponses({ guildId }) {
     commands,
     authors
   ]);
+  let authorsMap = {};
+  for (var id in authors) {
+    if (isDefined(authors[id])) {
+      authorsMap[id] = { username: authors[id].name };
+    }
+  }
+  console.log({ authorsMap });
+
+  // eslint-disable-next-line react/prop-types
+  const TriggerCellFormatter = ({ value }) => {
+    console.log({ authorsMap });
+    const mocked = mockEmoji(escapeHtml(value));
+    const emoji = convertEmoji(mocked);
+    const mockedMentions = mockMentions(emoji);
+    const mentions = convertMentions(mockedMentions, { users: authorsMap });
+    const tokenized = highlightTokens(mentions, triggerTokens);
+    return (
+      <div
+        className="response"
+        dangerouslySetInnerHTML={{ __html: tokenized }}
+      />
+    );
+  };
+
+  // eslint-disable-next-line react/prop-types
+  const ResponseCellFormatter = ({ value }) => {
+    console.log({ authorsMap });
+    const list = replaceToken(escapeHtml(value), listRegex, "token-list");
+    const mentions = convertMentions(list, { users: authorsMap });
+    const tokenized = highlightTokens(mentions, responseTokens);
+    const emoji = convertEmoji(tokenized);
+    const reaction = replaceToken(emoji, reactionRegex, "token-reaction");
+    return (
+      <div
+        className="response"
+        dangerouslySetInnerHTML={{ __html: reaction }}
+      />
+    );
+  };
 
   return (
     <Container className="py-5 auto-responses">
@@ -82,8 +133,19 @@ function AutoResponses({ guildId }) {
       <DataGrid
         data={transformedData}
         columns={[
-          { key: "trigger", name: "Trigger", editable: true, width: 240 },
-          { key: "response", name: "Response", editable: true },
+          {
+            key: "trigger",
+            name: "Trigger",
+            editable: true,
+            width: 240,
+            formatter: TriggerCellFormatter
+          },
+          {
+            key: "response",
+            name: "Response",
+            editable: true,
+            formatter: ResponseCellFormatter
+          },
           {
             key: "author",
             name: "Author",
@@ -114,6 +176,86 @@ AutoResponses.propTypes = {
 // ? ==============
 // ? Sub components
 // ? ==============
+
+function mockEmoji(string) {
+  return string.replace(
+    /([0-9A-Za-z_~()-]{2,}?)([0-9]{18})/g,
+    (_m, g1, g2) => `<:${g1}:${g2}>`
+  );
+}
+
+function mockMentions(string) {
+  return string.replace(
+    /(?:^|[^:/0-9])([0-9]{17,18})/g,
+    (_m, g1) => `<@${g1}>`
+  );
+}
+
+const triggerTokens = [{ token: "*", className: "token-capture source" }];
+
+const responseTokens = [
+  { token: "[capture]", className: "token-capture" },
+  { token: "[@author]", className: "token-mention" },
+  { token: "[count]", className: "token-meta" },
+  {
+    token: /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b((?:[-a-zA-Z0-9()@:%_+.~#?&//=;]|(?:&amp;))*)/g,
+    className: "token-link"
+  },
+  {
+    token: ["[author]", "[noun]", "[adj]", "[adv]", "[member]", "[owl]"],
+    className: "token-string"
+  }
+];
+
+function highlightTokens(string, tokens) {
+  let processed = string;
+  tokens.forEach(({ token, className }) => {
+    if (!Array.isArray(token)) {
+      processed = replaceToken(processed, token, className);
+    } else {
+      token.forEach(t => {
+        processed = replaceToken(processed, t, className);
+      });
+    }
+  });
+  return processed;
+}
+
+function replaceToken(string, token, className) {
+  if (typeof token === "string") {
+    return replaceAll(
+      string,
+      token,
+      `<span class="${className}">${token}</span>`
+    );
+  } else {
+    return string.replace(
+      token,
+      match => `<span class="${className}">${match}</span>`
+    );
+  }
+}
+
+const emojiRegex = /(?:<|(?:&lt;))(a?):([a-zA-Z0-9-_~]{2,}):([0-9]+)(?:>|(?:&gt;))/g;
+function convertRawDiscordEmoji(string) {
+  return string.replace(emojiRegex, (_match, g1, g2, g3) => {
+    if (isEmptyOrNil(g1)) {
+      return `<img class="emoji" draggable="false" alt="${g2}" src="https://cdn.discordapp.com/emojis/${g3}.png" />`;
+    } else {
+      // animated
+      return `<img class="emoji" draggable="false" alt="${g2}" src="https://cdn.discordapp.com/emojis/${g3}.gif" />`;
+    }
+  });
+}
+
+function convertEmoji(string) {
+  return convertDiscordEmoji(
+    convertUnicodeEmoji(convertRawDiscordEmoji(string))
+  );
+}
+
+const listRegex = /\[(?:(?:[^[\]]*)|(?:\[[^[\]]+\]))(?:,(?:[^[\]]*)|(?:\[[^[\]]+\]))+\]/g;
+const reactionRegex = /\[(?:(?:<img.*?\/>)|(?::[a-zA-Z0-9-_~]+:))\]/g;
 
 function AuthorCellFormatter({
   row: { name, discriminator, avatar, author_id }
