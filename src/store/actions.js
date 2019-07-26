@@ -108,7 +108,7 @@ export function getGuildList(accessToken) {
 }
 
 export function getResponses(accessToken, guildId) {
-  log("Getting auto responses");
+  log(`Getting auto responses for ${guildId}`);
   return authApiAction(accessToken, {
     url: `${API_BASE}/responses/${guildId}`,
     onSuccess: data => loadResponseData(data, guildId),
@@ -148,7 +148,7 @@ export function loadGuilds(data) {
 }
 
 export function loadResponseData(data, guildId) {
-  log("Loading auto responses");
+  log(`Loading auto responses for ${guildId}`);
   return {
     type: LOAD_RESPONSES,
     payload: {

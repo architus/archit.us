@@ -139,7 +139,7 @@ export function transformOutgoingMessage(message = "", context = {}) {
 }
 
 // Applies a transformation pipeline (types described above)
-function applyFragmentTransformer(fragment, context, transformer) {
+export function applyFragmentTransformer(fragment, context, transformer) {
   if (typeof transformer === "function") {
     return transformer(fragment, context);
   } else {
@@ -148,7 +148,7 @@ function applyFragmentTransformer(fragment, context, transformer) {
 }
 
 // Applies a multi-part transformation pipeline
-function applyTransformers(fragment, context, transformers) {
+export function applyTransformers(fragment, context, transformers) {
   let currentFragmentValue = fragment;
   transformers.forEach(t => {
     currentFragmentValue = t(currentFragmentValue, context);
