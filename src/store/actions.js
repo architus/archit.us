@@ -3,6 +3,7 @@ import {
   TOKEN_EXCHANGE,
   IDENTIFY_SESSION,
   GET_GUILDS,
+  GET_GUILD_COUNT,
   GET_RESPONSES
 } from "store/api/labels";
 import { connect, send } from "@giantmachines/redux-websocket";
@@ -12,6 +13,7 @@ export const API = "API";
 export const LOAD_SESSION = "LOAD_SESSION";
 export const LOAD_GUILDS = "LOAD_GUILDS";
 export const LOAD_RESPONSES = "LOAD_RESPONSES";
+export const LOAD_GUILD_COUNT = "LOAD_GUILD_COUNT";
 
 export const SOCKET = {
   CONNECT: "REDUX_WEBSOCKET::CONNECT",
@@ -107,6 +109,15 @@ export function getGuildList(accessToken) {
   });
 }
 
+export function getGuildCount() {
+  log("Getting guild count");
+  return apiAction({
+    url: `${API_BASE}/guild_count`,
+    onSuccess: data => loadGuildCount(data),
+    label: GET_GUILD_COUNT
+  });
+}
+
 export function getResponses(accessToken, guildId) {
   log("Getting auto responses");
   return authApiAction(accessToken, {
@@ -143,6 +154,16 @@ export function loadGuilds(data) {
     type: LOAD_GUILDS,
     payload: {
       guildList: data
+    }
+  };
+}
+
+export function loadGuildCount(data) {
+  log("Loading guild count");
+  return {
+    type: LOAD_GUILD_COUNT,
+    payload: {
+      guildCount: data
     }
   };
 }

@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { curry } from "lodash";
 import { CustomEmojiExtension } from "components/DiscordMock/CustomEmojiExtension";
-import { connect } from "react-redux";
+import { connect, useSelector, shallowEqual, useDispatch } from "react-redux";
 import { useOauthUrl } from "components/LoginButton";
 import { mapStateToLoggedIn } from "../../store/reducers/session";
 
@@ -36,6 +36,19 @@ import UserControlSvg from "./svg/user_control.svg";
 import LogoTextSvg from "assets/logo-text.inline.svg";
 
 function Index() {
+  const { guild_count, user_count } = useSelector(state => {
+    return {
+      guild_count: state.guild_count.guild_count,
+      user_count: state.guild_count.user_count,
+    };
+  }, shallowEqual);
+
+  const dispatch = useDispatch();
+  const fetchGuildCount = () => dispatch(getGuildCount());
+  useEffect(() => {
+    fetchGuildCount();
+  }, []);
+
   return (
     <Layout title="Home">
       <article>
@@ -58,7 +71,7 @@ function Index() {
                   extensive <em>audit logs</em>.
                 </p>
 
-                <p className="guild-counter">architus is currently serving <span>19 guilds</span> and <span>1538 users</span>.</p>
+                <p className="guild-counter">architus is currently serving <span>{guild_count} servers</span> and <span>{user_count} users</span></p>
               </Col>
               <Col sm={6} lg={4}>
                 <Card as="aside">
