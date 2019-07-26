@@ -7,6 +7,8 @@ import { connect } from "react-redux";
 import { useOauthUrl } from "components/LoginButton";
 import { mapStateToLoggedIn } from "../../store/reducers/session";
 
+import { getGuildCount } from "store/actions";
+
 import {
   Jumbotron,
   Container,
@@ -56,7 +58,7 @@ function Index() {
                   extensive <em>audit logs</em>.
                 </p>
 
-                <p className="test-text">Architus is currently serving <span>19 guilds</span> and <span>1538 users</span>.</p>
+                <p className="guild-counter">architus is currently serving <span>19 guilds</span> and <span>1538 users</span>.</p>
               </Col>
               <Col sm={6} lg={4}>
                 <Card as="aside">
