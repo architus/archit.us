@@ -22,14 +22,14 @@ const emojiRegex = /(?:<|(?:&lt;))(a?):([a-zA-Z0-9-_~]{2,}):([0-9]+)(?:>|(?:&gt;
 const emojiStringRegex = /([A-Za-z_~()-][0-9A-Za-z_~()-]{2,}?)([0-9]{7,20})/g;
 const mentionStringRegex = /(?:^|[^:/0-9])([0-9]{7,20})/g;
 
-function highlightTokens(string, tokens) {
+function highlightTokens(string, tokens, firstOccurrence = false) {
   let processed = string;
   tokens.forEach(({ token, className }) => {
     if (!Array.isArray(token)) {
-      processed = replaceToken(processed, token, className);
+      processed = replaceToken(processed, token, className, firstOccurrence);
     } else {
       token.forEach(t => {
-        processed = replaceToken(processed, t, className);
+        processed = replaceToken(processed, t, className, firstOccurrence);
       });
     }
   });
@@ -40,11 +40,17 @@ function makeTokenSpan(content, className) {
   return `<span class="${className}">${content}</span>`;
 }
 
-function replaceToken(string, token, className) {
+function replaceToken(string, token, className, firstOccurrence = false) {
   if (typeof token === "string") {
-    return replaceAll(string, token, makeTokenSpan(token, className));
+    return firstOccurrence
+      ? string.replace(token, makeTokenSpan(token, className))
+      : replaceAll(string, token, makeTokenSpan(token, className));
   } else {
-    return string.replace(token, match => makeTokenSpan(match, className));
+    return firstOccurrence
+      ? string.replace(new RegExp(token), match =>
+          makeTokenSpan(match, className)
+        )
+      : string.replace(token, match => makeTokenSpan(match, className));
   }
 }
 
@@ -80,7 +86,7 @@ const triggerPipeline = [
   convertDiscordEmoji,
   mockMentions,
   convertMentions,
-  s => highlightTokens(s, triggerTokens)
+  s => highlightTokens(s, triggerTokens, true)
 ];
 
 export function createTriggerCellFormatter(contextRef) {

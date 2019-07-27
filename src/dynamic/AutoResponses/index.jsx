@@ -1,9 +1,10 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useContext } from "react";
 import { useMedia } from "react-use";
 import PropTypes from "prop-types";
 import { shallowEqual, useSelector } from "react-redux";
 import { getResponses } from "store/actions";
 import { useAuthDispatch, isDefined, isNil } from "utility";
+import { AppScrollContext } from "dynamic/AppRoot";
 
 import DataGrid from "components/DataGrid";
 import { Container } from "react-bootstrap";
@@ -154,6 +155,11 @@ function AutoResponses({ guildId }) {
     }
   }
 
+  const scrollEvent = useContext(AppScrollContext);
+  const handleScroll = () => {
+    scrollEvent();
+  };
+
   return (
     <Container className="auto-responses" fluid>
       <h2>Automatic Responses</h2>
@@ -171,6 +177,7 @@ function AutoResponses({ guildId }) {
         onRowDelete={onRowDelete}
         isLoading={!hasLoaded}
         emptyLabel="No responses to display"
+        onScroll={handleScroll}
       />
     </Container>
   );

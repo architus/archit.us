@@ -6,7 +6,7 @@ import { splitPath, isNil } from "utility";
 import { navigate, Location } from "@reach/router";
 import { getAutbotGuilds } from "store/reducers/guilds";
 
-import Swipe from "react-easy-swipe";
+import SwipeHandler from "components/SwipeHandler";
 import GuildList from "components/GuildList";
 import SideNavbar from "components/SideNavbar";
 import AppContent from "./content";
@@ -22,14 +22,21 @@ class AppRoot extends React.Component {
   constructor(props) {
     super(props);
     this.state = { addGuildModalShow: false, showAppNav: true };
+    this.swipeRef = React.createRef();
 
     this.handleTabClick = this.handleTabClick.bind(this);
     this.handleGuildClick = this.handleGuildClick.bind(this);
+    this.handleAppScroll = this.handleAppScroll.bind(this);
+    this.handleSwipeLeft = this.handleSwipeLeft.bind(this);
+    this.handleSwipeRight = this.handleSwipeRight.bind(this);
+    this.handlePostSwipeEnd = this.handlePostSwipeEnd.bind(this);
     this.showAddGuildModal = this.showAddGuildModal.bind(this);
     this.hideAddGuildModal = this.hideAddGuildModal.bind(this);
     this.handleExpandClick = this.handleExpandClick.bind(this);
     this.showAppNav = this.showAppNav.bind(this);
     this.closeAppNav = this.closeAppNav.bind(this);
+
+    this.wasCurrentSwipeScrolling = false;
   }
 
   showAddGuildModal() {
@@ -93,14 +100,37 @@ class AppRoot extends React.Component {
     }
   }
 
+  handleAppScroll() {
+    console.log("hello");
+    if (this.swipeRef.current.moving) {
+      console.log("was moving");
+      this.wasCurrentSwipeScrolling = true;
+    }
+  }
+
+  handleSwipeLeft() {
+    this.closeAppNav();
+  }
+
+  handlePostSwipeEnd() {
+    console.log("reset");
+    this.wasCurrentSwipeScrolling = false;
+  }
+
+  handleSwipeRight() {
+    if (!this.wasCurrentSwipeScrolling) this.showAppNav();
+  }
+
   render() {
     const { addGuildModalShow, showAppNav } = this.state;
 
     return (
-      <Swipe
-        onSwipeLeft={this.closeAppNav}
-        onSwipeRight={this.showAppNav}
+      <SwipeHandler
+        onSwipeLeft={this.handleSwipeLeft}
+        onSwipeRight={this.handleSwipeRight}
+        onPostSwipeEnd={this.handlePostSwipeEnd}
         tolerance={50}
+        ref={this.swipeRef}
       >
         <AppLayout className={showAppNav ? "show" : ""}>
           <div className="app-nav">
@@ -135,15 +165,17 @@ class AppRoot extends React.Component {
                     show={addGuildModalShow}
                     onHide={this.hideAddGuildModal}
                   />
-                  <React.Suspense fallback={<em>Loading...</em>}>
-                    <AppContent openAddGuild={this.showAddGuildModal} />
-                  </React.Suspense>
+                  <AppScrollContext.Provider value={this.handleAppScroll}>
+                    <React.Suspense fallback={<em>Loading...</em>}>
+                      <AppContent openAddGuild={this.showAddGuildModal} />
+                    </React.Suspense>
+                  </AppScrollContext.Provider>
                 </div>
               );
             }}
           </Location>
         </AppLayout>
-      </Swipe>
+      </SwipeHandler>
     );
   }
 }
@@ -159,3 +191,9 @@ AppRoot.propTypes = {
   guildList: PropTypes.array.isRequired,
   guildsLoaded: PropTypes.bool.isRequired
 };
+
+// ? ============
+// ? Context
+// ? ============
+
+export const AppScrollContext = React.createContext(() => null);

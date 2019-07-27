@@ -27,7 +27,6 @@
     "react-data-grid": "^6.1.0",
     "react-data-grid-addons": "^6.1.0",
     "react-dom": "^16.8.2",
-    "react-easy-swipe": "^0.0.18",
     "react-redux": "^7.1.0",
     "react-static": "^7.0.0",
     "react-static-plugin-reach-router": "^7.0.0",
