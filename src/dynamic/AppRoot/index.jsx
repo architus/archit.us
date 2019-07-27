@@ -101,9 +101,7 @@ class AppRoot extends React.Component {
   }
 
   handleAppScroll() {
-    console.log("hello");
     if (this.swipeRef.current.moving) {
-      console.log("was moving");
       this.wasCurrentSwipeScrolling = true;
     }
   }
