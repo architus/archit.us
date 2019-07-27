@@ -151,6 +151,12 @@ class AppRoot extends React.Component {
               const fragments = splitPath(location.pathname);
               const currentTab = fragments.length >= 3 ? fragments[2] : "";
               const filtered = tabs.filter(t => t.path === currentTab);
+              console.log({
+                path: location.pathname,
+                fragments,
+                currentTab,
+                filtered
+              });
               return (
                 <div
                   className={classNames(
