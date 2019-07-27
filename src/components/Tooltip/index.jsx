@@ -8,10 +8,9 @@ function Tooltip({
   children,
   modifiers,
   popperConfig,
-  left = false,
-  right = false,
-  top = false,
-  bottom = false
+  left,
+  top,
+  bottom
 }) {
   return (
     <OverlayTrigger
@@ -44,7 +43,15 @@ Tooltip.propTypes = {
   popperConfig: PropTypes.object,
   modifiers: PropTypes.object,
   left: PropTypes.bool,
-  right: PropTypes.bool,
   top: PropTypes.bool,
   bottom: PropTypes.bool
+};
+
+Tooltip.defaultProps = {
+  children: [],
+  popperConfig: {},
+  modifiers: {},
+  left: false,
+  top: false,
+  bottom: false
 };

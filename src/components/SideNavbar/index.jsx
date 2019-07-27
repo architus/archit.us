@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import classNames from "classnames";
 import { isInPath, useLocation, useInitialRender } from "utility";
 
 import "./style.scss";
@@ -34,7 +35,18 @@ function SideNavbar({ tabs, onClickTab }) {
 
 SideNavbar.propTypes = {
   onClickTab: PropTypes.func,
-  tabs: PropTypes.array
+  tabs: PropTypes.arrayOf(
+    PropTypes.shape({
+      path: PropTypes.string,
+      name: PropTypes.string,
+      icon: PropTypes.string
+    })
+  )
+};
+
+SideNavbar.defaultProps = {
+  onClickTab() {},
+  tabs: []
 };
 
 export default SideNavbar;
@@ -42,7 +54,7 @@ export default SideNavbar;
 function NavbarIcon({ name, path, icon, onClickTab, isActive }) {
   return (
     <button
-      className={`side-navbar--icon-outer${isActive ? " active" : ""}`}
+      className={classNames("side-navbar--icon-outer", { active: isActive })}
       onClick={() => onClickTab(path)}
     >
       <div

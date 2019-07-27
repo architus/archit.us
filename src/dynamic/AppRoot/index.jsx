@@ -1,9 +1,14 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React, { useRef, useState, useCallback } from "react";
 import classNames from "classnames";
-import { connect } from "react-redux";
-import { splitPath, isNil } from "utility";
-import { navigate, Location } from "@reach/router";
+import { useSelector, shallowEqual } from "react-redux";
+import {
+  splitPath,
+  isNil,
+  useEffectOnce,
+  useLocation,
+  useInitialRender
+} from "utility";
+import { navigate } from "@reach/router";
 import { getAutbotGuilds } from "store/reducers/guilds";
 
 import SwipeHandler from "components/SwipeHandler";
@@ -18,174 +23,137 @@ import "./style.scss";
 import { tabs, DEFAULT_TAB } from "./tabs";
 import { APP_HTML_CLASS, APP_PATH_ROOT } from "./config.json";
 
-class AppRoot extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { addGuildModalShow: false, showAppNav: true };
-    this.swipeRef = React.createRef();
+function AppRoot() {
+  // Connect to store
+  const { guildList, guildsLoaded } = useSelector(state => {
+    return {
+      guildList: getAutbotGuilds(state),
+      guildsLoaded: state.guilds.hasLoaded
+    };
+  }, shallowEqual);
 
-    this.handleTabClick = this.handleTabClick.bind(this);
-    this.handleGuildClick = this.handleGuildClick.bind(this);
-    this.handleAppScroll = this.handleAppScroll.bind(this);
-    this.handleSwipeLeft = this.handleSwipeLeft.bind(this);
-    this.handleSwipeRight = this.handleSwipeRight.bind(this);
-    this.handlePostSwipeEnd = this.handlePostSwipeEnd.bind(this);
-    this.showAddGuildModal = this.showAddGuildModal.bind(this);
-    this.hideAddGuildModal = this.hideAddGuildModal.bind(this);
-    this.handleExpandClick = this.handleExpandClick.bind(this);
-    this.showAppNav = this.showAppNav.bind(this);
-    this.closeAppNav = this.closeAppNav.bind(this);
+  // Nav drawer logic
+  const [showAppNav, setShowAppNav] = useState(true);
+  const expandClick = useCallback(() => setShowAppNav(!showAppNav), [
+    showAppNav
+  ]);
+  const closeAppNav = useCallback(() => setShowAppNav(false));
 
-    this.wasCurrentSwipeScrolling = false;
-  }
-
-  showAddGuildModal() {
-    this.setState({ addGuildModalShow: true });
-  }
-
-  hideAddGuildModal() {
-    this.setState({ addGuildModalShow: false });
-  }
-
-  componentDidMount() {
-    document.documentElement.classList.add(APP_HTML_CLASS);
-  }
-
-  componentWillUnmount() {
-    document.documentElement.classList.remove(APP_HTML_CLASS);
-  }
-
-  handleExpandClick() {
-    this.setState(state => ({ showAppNav: !state.showAppNav }));
-  }
-
-  showAppNav() {
-    this.setState({ showAppNav: true });
-  }
-
-  closeAppNav() {
-    this.setState({ showAppNav: false });
-  }
-
-  handleTabClick(path) {
-    const fragments = splitPath(window.location.pathname);
-    let navigateTo = null;
-    if (fragments.length >= 2) {
-      navigateTo = `${APP_PATH_ROOT}/${fragments[1]}/${path}`;
-    } else {
-      const { guildList, guildsLoaded } = this.props;
-      if (!guildsLoaded) return;
-      if (guildList.length === 0) {
-        this.showAddGuildModal();
-        return;
-      } else {
-        let defaultGuild = guildList[0];
-        const adminGuilds = guildList.filter(g => g.autbot_admin);
-        if (adminGuilds.length > 0) defaultGuild = adminGuilds[0];
-        navigateTo = `${APP_PATH_ROOT}/${defaultGuild.id}/${path}`;
-      }
+  // Swiping/scroll logic
+  const wasSwipeScroll = useRef(false);
+  const swipeHandler = useRef(null);
+  const swipeLeft = useCallback(() => {
+    setShowAppNav(false);
+  });
+  const swipeRight = useCallback(() => {
+    if (!wasSwipeScroll.current) setShowAppNav(true);
+  }, [wasSwipeScroll]);
+  const postSwipeEnd = useCallback(() => {
+    wasSwipeScroll.current = false;
+  }, [wasSwipeScroll]);
+  const handleAppScroll = useCallback(() => {
+    if (swipeHandler.current.moving) {
+      wasSwipeScroll.current = true;
     }
-    if (!isNil(navigateTo)) {
-      navigate(navigateTo);
-      if (this.state.showAppNav) this.closeAppNav();
-    }
-  }
+  }, [swipeHandler, wasSwipeScroll]);
 
-  handleGuildClick(id) {
+  // Guild list handling
+  const guildClick = useCallback(id => {
     const fragments = splitPath(window.location.pathname);
     if (fragments.length >= 3) {
       navigate(`${APP_PATH_ROOT}/${id}/${fragments[2]}`);
     } else {
       navigate(`${APP_PATH_ROOT}/${id}/${DEFAULT_TAB}`);
     }
-  }
+  });
 
-  handleAppScroll() {
-    if (this.swipeRef.current.moving) {
-      this.wasCurrentSwipeScrolling = true;
-    }
-  }
+  // Side navbar tabs
+  const handleTabClick = useCallback(
+    path => {
+      const fragments = splitPath(window.location.pathname);
+      let navigateTo = null;
+      if (fragments.length >= 2) {
+        navigateTo = `${APP_PATH_ROOT}/${fragments[1]}/${path}`;
+      } else {
+        if (!guildsLoaded) return;
+        if (guildList.length === 0) {
+          showModal();
+          return;
+        } else {
+          let defaultGuild = guildList[0];
+          const adminGuilds = guildList.filter(g => g.autbot_admin);
+          if (adminGuilds.length > 0) defaultGuild = adminGuilds[0];
+          navigateTo = `${APP_PATH_ROOT}/${defaultGuild.id}/${path}`;
+        }
+      }
+      if (!isNil(navigateTo)) {
+        navigate(navigateTo);
+        if (showAppNav) closeAppNav();
+      }
+    },
+    [guildsLoaded, guildList]
+  );
 
-  handleSwipeLeft() {
-    this.closeAppNav();
-  }
+  // Guild add modal
+  const [showAddGuildModal, setShowAddGuildModal] = useState(false);
+  const showModal = useCallback(() => {
+    setShowAddGuildModal(true);
+  });
+  const hideModal = useCallback(() => {
+    setShowAddGuildModal(false);
+  });
 
-  handlePostSwipeEnd() {
-    this.wasCurrentSwipeScrolling = false;
-  }
+  // Root class adding/removing
+  useEffectOnce(() => {
+    document.documentElement.classList.add(APP_HTML_CLASS);
+    return () => {
+      document.documentElement.classList.remove(APP_HTML_CLASS);
+    };
+  });
 
-  handleSwipeRight() {
-    if (!this.wasCurrentSwipeScrolling) this.showAppNav();
-  }
+  // App content class selection logic
+  const { location } = useLocation();
+  const fragments = splitPath(location.pathname);
+  const currentTab = fragments.length >= 3 ? fragments[2] : "";
+  const filtered = tabs.filter(t => t.path === currentTab);
+  // Ensure the hydration matches the initial render
+  const isInitial = useInitialRender();
+  const contentClass =
+    isInitial || filtered.length === 0 ? "" : filtered[0].contentClass;
 
-  render() {
-    const { addGuildModalShow, showAppNav } = this.state;
-
-    return (
-      <SwipeHandler
-        onSwipeLeft={this.handleSwipeLeft}
-        onSwipeRight={this.handleSwipeRight}
-        onPostSwipeEnd={this.handlePostSwipeEnd}
-        tolerance={50}
-        ref={this.swipeRef}
-      >
-        <AppLayout className={showAppNav ? "show" : ""}>
-          <div className="app-nav">
-            <div className="guild-sidebar">
-              <GuildList
-                onClickGuild={this.handleGuildClick}
-                onClickAdd={this.showAddGuildModal}
-              />
-            </div>
-            <SideNavbar onClickTab={this.handleTabClick} tabs={tabs} />
+  return (
+    <SwipeHandler
+      onSwipeLeft={swipeLeft}
+      onSwipeRight={swipeRight}
+      onPostSwipeEnd={postSwipeEnd}
+      tolerance={50}
+      ref={swipeHandler}
+    >
+      <AppLayout className={classNames({ show: showAppNav })}>
+        <div className="app-nav">
+          <div className="guild-sidebar">
+            <GuildList onClickGuild={guildClick} onClickAdd={showModal} />
           </div>
-          <button
-            className="app--expand-button"
-            onClick={this.handleExpandClick}
-          >
-            <Icon className="color" name="chevron-right" />
-          </button>
-          <button className="app--overlay-button" onClick={this.closeAppNav} />
-          <Location>
-            {({ location }) => {
-              const fragments = splitPath(location.pathname);
-              const currentTab = fragments.length >= 3 ? fragments[2] : "";
-              const filtered = tabs.filter(t => t.path === currentTab);
-              const contentClass =
-                filtered.length > 0 ? filtered[0].contentClass : "";
-              const className = classNames("app-content", contentClass);
-              return (
-                <div className={className}>
-                  <AddGuildModal
-                    show={addGuildModalShow}
-                    onHide={this.hideAddGuildModal}
-                  />
-                  <AppScrollContext.Provider value={this.handleAppScroll}>
-                    <React.Suspense fallback={<em>Loading...</em>}>
-                      <AppContent openAddGuild={this.showAddGuildModal} />
-                    </React.Suspense>
-                  </AppScrollContext.Provider>
-                </div>
-              );
-            }}
-          </Location>
-        </AppLayout>
-      </SwipeHandler>
-    );
-  }
+          <SideNavbar onClickTab={handleTabClick} tabs={tabs} />
+        </div>
+        <button className="app--expand-button" onClick={expandClick}>
+          <Icon className="color" name="chevron-right" />
+        </button>
+        <button className="app--overlay-button" onClick={closeAppNav} />
+        <div className={classNames("app-content", contentClass)}>
+          <AddGuildModal show={showAddGuildModal} onHide={hideModal} />
+          <AppScrollContext.Provider value={handleAppScroll}>
+            <React.Suspense fallback={<em>Loading...</em>}>
+              <AppContent openAddGuild={showModal} />
+            </React.Suspense>
+          </AppScrollContext.Provider>
+        </div>
+      </AppLayout>
+    </SwipeHandler>
+  );
 }
 
-const mapStateToProps = state => ({
-  guildList: getAutbotGuilds(state),
-  guildsLoaded: state.guilds.hasLoaded
-});
-
-export default connect(mapStateToProps)(AppRoot);
-
-AppRoot.propTypes = {
-  guildList: PropTypes.array.isRequired,
-  guildsLoaded: PropTypes.bool.isRequired
-};
+export default AppRoot;
 
 // ? ============
 // ? Context

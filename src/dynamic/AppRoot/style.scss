@@ -147,13 +147,19 @@ html.html--app {
         .app-content {
             flex-grow: 1;
             flex-shrink: 1;
-            height: 100%;
-            overflow-y: hidden;
-            position: relative;
+            height: auto;
+            overflow-y: auto;
+            @extend %custom-scrollbar;
 
-            div[role="group"] {
+            &.no-scroll {
                 height: 100%;
+                overflow-y: hidden;
                 position: relative;
+
+                div[role="group"] {
+                    height: 100%;
+                    position: relative;
+                }
             }
         }
     }

@@ -34,6 +34,7 @@ export function useAuthDispatch(action) {
   }
 }
 
+// more of a HOC than a hook
 export function useClientSide(render) {
   return typeof window === "undefined" ? null : render();
 }
