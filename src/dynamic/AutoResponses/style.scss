@@ -141,4 +141,10 @@
             text-align: right;
         }
     }
+
+    @media (max-height: 450px) {
+        .hide-mobile-landscape {
+            display: none;
+        }
+    }
 }

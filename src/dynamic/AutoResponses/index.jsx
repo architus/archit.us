@@ -162,11 +162,13 @@ function AutoResponses({ guildId }) {
 
   return (
     <Container className="auto-responses" fluid>
-      <h2>Automatic Responses</h2>
-      <p>
-        Manage the triggers and automatic responses for all entries on the
-        current server.
-      </p>
+      <div className="hide-mobile-landscape">
+        <h2>Automatic Responses</h2>
+        <p>
+          Manage the triggers and automatic responses for all entries on the
+          current server.
+        </p>
+      </div>
       <DataGrid
         data={transformedData}
         columns={columns}
