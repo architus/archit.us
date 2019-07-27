@@ -151,19 +151,19 @@ class AppRoot extends React.Component {
               const fragments = splitPath(location.pathname);
               const currentTab = fragments.length >= 3 ? fragments[2] : "";
               const filtered = tabs.filter(t => t.path === currentTab);
+              const contentClass =
+                filtered.length > 0 ? filtered[0].contentClass : "";
+              const className = classNames("app-content", contentClass);
               console.log({
                 path: location.pathname,
                 fragments,
                 currentTab,
-                filtered
+                filtered,
+                contentClass,
+                className
               });
               return (
-                <div
-                  className={classNames(
-                    "app-content",
-                    filtered.length > 0 ? filtered[0].contentClass : ""
-                  )}
-                >
+                <div className={className}>
                   <AddGuildModal
                     show={addGuildModalShow}
                     onHide={this.hideAddGuildModal}
