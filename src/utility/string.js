@@ -120,6 +120,7 @@ export function splitPath(path) {
 }
 
 export function isInPath({ path, fragment, position = null }) {
+  console.log(JSON.stringify({ path, fragment, position }));
   // Null test
   if (isNil(path) || isNil(fragment)) return false;
   if (isNil(position)) {
@@ -128,13 +129,28 @@ export function isInPath({ path, fragment, position = null }) {
   } else {
     // Position-based test
     const pathComponents = splitPath(path);
+    console.log(JSON.stringify({ pathComponents }));
     if (pathComponents.length <= position) return false;
     else {
       if (typeof fragment === "string") {
+        console.log(
+          JSON.stringify({
+            target: pathComponents[position],
+            compare: fragment,
+            mode: "string"
+          })
+        );
         // Fragment equality test
         return pathComponents[position] === fragment;
       } else {
         // Regex test
+        console.log(
+          JSON.stringify({
+            target: pathComponents[position],
+            compare: fragment,
+            mode: "regex"
+          })
+        );
         return fragment.test(pathComponents[position]);
       }
     }

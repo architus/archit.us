@@ -29,6 +29,7 @@ function NavbarIcon({ name, path, icon, onClickTab }) {
     fragment: path,
     position: 2
   });
+  console.log(JSON.stringify({ location: location.pathname, isActive, path }));
   return (
     <button
       className={classNames("side-navbar--icon-outer", {

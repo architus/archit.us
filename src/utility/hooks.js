@@ -74,6 +74,10 @@ export function useMediaBreakpoints(breakpoints) {
   return state;
 }
 
+// Sourced from reach/router/issues/203
+// Repository is licensed under MIT
+// https://github.com/reach/router/issues/203
+
 export function useLocation() {
   const initialState = {
     location: globalHistory.location,
