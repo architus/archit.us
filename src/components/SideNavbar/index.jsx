@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import classNames from "classnames";
 import { isInPath, useLocation } from "utility";
 
 import "./style.scss";
@@ -32,9 +31,7 @@ function NavbarIcon({ name, path, icon, onClickTab }) {
   console.log(JSON.stringify({ location: location.pathname, isActive, path }));
   return (
     <button
-      className={classNames("side-navbar--icon-outer", {
-        active: isActive
-      })}
+      className={`side-navbar--icon-outer${isActive ? " active" : ""}`}
       onClick={() => onClickTab(path)}
     >
       <div
