@@ -67,6 +67,15 @@ function AppRoot() {
     }
   });
 
+  // Guild add modal
+  const [showAddGuildModal, setShowAddGuildModal] = useState(false);
+  const showModal = useCallback(() => {
+    setShowAddGuildModal(true);
+  });
+  const hideModal = useCallback(() => {
+    setShowAddGuildModal(false);
+  });
+
   // Side navbar tabs
   const handleTabClick = useCallback(
     path => {
@@ -91,17 +100,8 @@ function AppRoot() {
         if (showAppNav) closeAppNav();
       }
     },
-    [guildsLoaded, guildList]
+    [guildsLoaded, guildList, closeAppNav, showModal]
   );
-
-  // Guild add modal
-  const [showAddGuildModal, setShowAddGuildModal] = useState(false);
-  const showModal = useCallback(() => {
-    setShowAddGuildModal(true);
-  });
-  const hideModal = useCallback(() => {
-    setShowAddGuildModal(false);
-  });
 
   // Root class adding/removing
   useEffectOnce(() => {
