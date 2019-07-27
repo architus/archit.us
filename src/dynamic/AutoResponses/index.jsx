@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef } from "react";
+import { useMedia } from "react-use";
 import PropTypes from "prop-types";
 import { shallowEqual, useSelector } from "react-redux";
 import { getResponses } from "store/actions";
@@ -9,6 +10,7 @@ import { Container } from "react-bootstrap";
 import {
   createResponseCellFormatter,
   createTriggerCellFormatter,
+  createCountCellFormatter,
   AuthorCellFormatter
 } from "./formatters";
 
@@ -76,6 +78,19 @@ function AutoResponses({ guildId }) {
     authors
   ]);
 
+  // Max count
+  const maxCountRef = useRef(0);
+  maxCountRef.current = useMemo(() => {
+    if (commands.length === 0) return 0;
+    else {
+      let maxCount = 0;
+      for (let i = 0; i < commands.length; ++i) {
+        if (commands[i].count > maxCount) maxCount = commands[i].count;
+      }
+      return maxCount;
+    }
+  }, [commands]);
+
   // Mentions context
   const contextRef = useRef({ users: {} });
   contextRef.current = useMemo(() => {
@@ -88,8 +103,59 @@ function AutoResponses({ guildId }) {
     return Object.freeze({ users: map });
   }, [authors]);
 
+  // Column definitions
+  let columns = [
+    {
+      key: "trigger",
+      name: "Trigger",
+      editable: true,
+      formatter: createTriggerCellFormatter(contextRef)
+    },
+    {
+      key: "response",
+      name: "Response",
+      editable: true,
+      formatter: createResponseCellFormatter(contextRef)
+    },
+    {
+      key: "count",
+      name: "Count",
+      sortDescendingFirst: true,
+      formatter: createCountCellFormatter(maxCountRef)
+    },
+    {
+      key: "author",
+      name: "Author",
+      formatter: AuthorCellFormatter
+    }
+  ];
+  const baseColumnMeta = {
+    sortable: true,
+    filterable: true,
+    resizable: true
+  };
+  let columnWidths = {
+    base: [150, 300, 90, 200],
+    "768": [200, null, 90, 200],
+    "992": [270, null, 200, 240]
+  };
+
+  // Remove count column on mobile
+  const isMobile = useMedia("(max-width: 767.9px)");
+  if (isMobile) {
+    const countColumnIndex = 2;
+    const removeCountColumn = arr =>
+      arr.filter((_c, i) => i !== countColumnIndex);
+    columns = removeCountColumn(columns);
+    for (var breakpoint in columnWidths) {
+      if (columnWidths.hasOwnProperty(breakpoint)) {
+        columnWidths[breakpoint] = removeCountColumn(columnWidths[breakpoint]);
+      }
+    }
+  }
+
   return (
-    <Container className="py-5 auto-responses">
+    <Container className="auto-responses" fluid>
       <h2>Automatic Responses</h2>
       <p>
         Manage the triggers and automatic responses for all entries on the
@@ -97,32 +163,10 @@ function AutoResponses({ guildId }) {
       </p>
       <DataGrid
         data={transformedData}
-        columns={[
-          {
-            key: "trigger",
-            name: "Trigger",
-            editable: true,
-            width: 240,
-            formatter: createTriggerCellFormatter(contextRef)
-          },
-          {
-            key: "response",
-            name: "Response",
-            editable: true,
-            formatter: createResponseCellFormatter(contextRef)
-          },
-          {
-            key: "author",
-            name: "Author",
-            width: 200,
-            formatter: AuthorCellFormatter
-          }
-        ]}
-        baseColumnMeta={{
-          sortable: true,
-          filterable: true,
-          resizable: true
-        }}
+        columns={columns}
+        columnWidths={columnWidths}
+        sortColumn="count"
+        baseColumnMeta={baseColumnMeta}
         onRowUpdate={onRowUpdate}
         onRowDelete={onRowDelete}
         isLoading={!hasLoaded}

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { log } from "./string";
+import { log, addMissingUnit } from "./string";
+import { isClient } from "./document";
 
 export function useReturnQuery() {
   if (process.env.PRODUCTION_URL) {
@@ -34,4 +35,40 @@ export function useAuthDispatch(action) {
 
 export function useClientSide(render) {
   return typeof window === "undefined" ? null : render();
+}
+
+export function useMediaBreakpoints(breakpoints) {
+  const queries = breakpoints.map(b => `(min-width: ${addMissingUnit(b)})`);
+  const getBreakpoint = matches => {
+    // Find first media query that fails
+    const result = matches.findIndex(m => !m);
+    // If none fail, then return last breakpoint; else return the last passing
+    return result === -1 ? breakpoints.length - 1 : result - 1;
+  };
+  const [state, setState] = useState(
+    isClient
+      ? () => getBreakpoint(queries.map(q => window.matchMedia(q).matches))
+      : -1
+  );
+
+  useEffect(() => {
+    let mounted = true;
+    const mediaQueries = queries.map(q => window.matchMedia(q));
+    const onChange = () => {
+      if (!mounted) {
+        return;
+      }
+      setState(getBreakpoint(mediaQueries.map(m => m.matches)));
+    };
+
+    mediaQueries.forEach(mql => mql.addListener(onChange));
+    setState(getBreakpoint(mediaQueries.map(m => m.matches)));
+
+    return () => {
+      mounted = false;
+      mediaQueries.forEach(mql => mql.removeListener(onChange));
+    };
+  }, [breakpoints]);
+
+  return state;
 }

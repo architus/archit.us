@@ -248,8 +248,7 @@ const mentionRegex = /(?:[<]|(?:&lt;))@!?([-0-9]+)(?:[>]|(?:&gt;))/g;
 export function convertMentions(fragment, context) {
   const { users } = context;
   if (isNil(users)) return fragment;
-  return fragment.replace(mentionRegex, (_match, p1) => {
-    const id = parseInt(p1);
+  return fragment.replace(mentionRegex, (_match, id) => {
     const content = isNil(users[id]) ? id : users[id].username;
     return `<span class="mention">@${content}</span>`;
   });

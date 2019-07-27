@@ -34,6 +34,7 @@
     "react-static-plugin-sass": "^7.1.0",
     "react-static-plugin-sitemap": "^7.0.0",
     "react-switch": "^5.0.0",
+    "react-use": "^10.3.0",
     "redux": "^4.0.1",
     "redux-logger": "^3.0.6",
     "redux-saga": "^1.0.4",

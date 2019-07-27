@@ -29,7 +29,3 @@ export function invertMap(map, f) {
     return acc;
   }, {});
 }
-
-export function ifClient(func) {
-  if (typeof window !== "undefined") func();
-}

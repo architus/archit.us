@@ -1,6 +1,13 @@
 import React, { useRef, useState, useMemo } from "react";
 import PropTypes from "prop-types";
-import { isNil, useClientSide, colorBlend, ifClient } from "utility";
+import {
+  isNil,
+  isDefined,
+  useClientSide,
+  colorBlend,
+  ifClient,
+  useMediaBreakpoints
+} from "utility";
 
 import Icon from "components/Icon";
 import Switch from "react-switch";
@@ -39,10 +46,10 @@ function DataGrid({
   onRowDelete,
   isLoading,
   emptyLabel,
-  transformRow
+  transformRow,
+  columnWidths,
+  ...rest
 }) {
-  const columnMeta = columns.map(c => ({ ...c, ...baseColumnMeta }));
-
   // Escape hatch to access library methods imperatively
   const dataGrid = useRef(null);
 
@@ -69,14 +76,18 @@ function DataGrid({
   const onGridSort = (sortColumn, sortDirection) => {
     setSortMeta({ sortColumn, sortDirection });
   };
+  const compareStrings = (a, b) =>
+    a.toLowerCase().trim() > b.toLowerCase().trim() ? 1 : -1;
   const sortRows = (rows, sortColumn, sortDirection) => {
-    const comparer = (a, b) => {
-      return (
-        (a[sortColumn].toLowerCase().trim() > b[sortColumn].toLowerCase().trim()
-          ? 1
-          : -1) * (sortDirection === "ASC" ? 1 : -1)
-      );
-    };
+    const innerComp =
+      isDefined(rows) &&
+      rows.length >= 1 &&
+      typeof rows[0][sortColumn] === "string"
+        ? compareStrings
+        : (a, b) => (a > b ? 1 : -1);
+    const comparer = (a, b) =>
+      innerComp(a[sortColumn], b[sortColumn]) *
+      (sortDirection === "ASC" ? 1 : -1);
     return sortDirection === "NONE" ? rows : [...rows].sort(comparer);
   };
   // Sorted view array
@@ -136,6 +147,27 @@ function DataGrid({
     });
   };
 
+  // Responsive column widths
+  function getBreakpoints(columnWidthMap) {
+    let breakpointArray = Object.keys(columnWidthMap)
+      .filter(k => k !== "base")
+      .map(k => parseInt(k));
+    breakpointArray.sort();
+    return breakpointArray.map(b => b.toString());
+  }
+  const breakpointArray = getBreakpoints(columnWidths);
+  const activeBreakpoint = useMediaBreakpoints(breakpointArray);
+  const currentColumnWidths =
+    activeBreakpoint === -1
+      ? columnWidths.base
+      : columnWidths[breakpointArray[activeBreakpoint]];
+  const columnMeta = columns.map((c, i) => {
+    const withBase = { ...c, ...baseColumnMeta };
+    return isDefined(currentColumnWidths[i])
+      ? { ...withBase, width: currentColumnWidths[i] }
+      : withBase;
+  });
+
   return useClientSide(() => (
     <div className="table-outer">
       <ReactDataGrid
@@ -158,6 +190,7 @@ function DataGrid({
         getCellActions={getCellActions}
         enableRowSelect={null}
         emptyRowsView={EmptyDisplay}
+        {...rest}
       />
     </div>
   ));
@@ -171,6 +204,7 @@ DataGrid.propTypes = {
   data: PropTypes.array.isRequired,
   transformRow: PropTypes.func,
   columns: PropTypes.arrayOf(PropTypes.object),
+  columnWidths: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.number)),
   baseColumnMeta: PropTypes.object,
   isLoading: PropTypes.bool,
   emptyLabel: PropTypes.string

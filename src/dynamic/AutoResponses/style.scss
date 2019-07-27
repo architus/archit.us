@@ -1,9 +1,24 @@
 @import "scss/colors";
+@import "scss/media";
 
 .auto-responses {
     height: 100%;
     flex-direction: column;
     display: flex;
+
+    padding: {
+        left: 2.5rem !important;
+        right: 2.5rem !important;
+        top: 2.5rem;
+        bottom: 2.5rem;
+    }
+
+    @include respond-below(lg) {
+        padding: {
+            left: 1.5rem !important;
+            right: 1.5rem !important;
+        }
+    }
 
     h2 {
         font-size: 1.9rem;
@@ -87,5 +102,43 @@
     .mention {
         color: $discord;
         background-color: rgba($discord, 0.15);
+    }
+
+    .count {
+        text-align: right;
+
+        &.withSparkline {
+            text-align: left;
+            display: flex;
+            justify-content: flex-end;
+
+            .value {
+                flex-grow: 0;
+                display: inline-block;
+            }
+
+            .sparkline {
+                margin-left: 0.5rem;
+                flex-grow: 1;
+                position: relative;
+
+                span {
+                    left: 0;
+                    top: 0;
+                    bottom: 0;
+                    position: absolute;
+                    @include light-bg($-primary);
+                    @include dark-bg(rgba($-primary, 0.6), -5%);
+                }
+
+                @include respond-below(md) {
+                    display: none;
+                }
+            }
+        }
+
+        .value {
+            text-align: right;
+        }
     }
 }
