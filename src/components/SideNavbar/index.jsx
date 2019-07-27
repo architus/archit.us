@@ -1,20 +1,15 @@
 import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { isInPath } from "utility";
-
-import { Location } from "@reach/router";
+import { isInPath, useLocation } from "utility";
 
 import "./style.scss";
 
 function SideNavbar({ tabs, onClickTab }) {
   return (
     <div className="side-navbar">
-      {tabs.map(({ name, path, icon }) => (
-        <Location
-          key={path}
-          children={NavbarIcon(name, path, icon, onClickTab)}
-        />
+      {tabs.map(data => (
+        <NavbarIcon key={data.path} onClickTab={onClickTab} {...data} />
       ))}
     </div>
   );
@@ -27,17 +22,17 @@ SideNavbar.propTypes = {
 
 export default SideNavbar;
 
-function NavbarIcon(name, path, icon, onClickTab) {
-  // eslint-disable-next-line react/prop-types
-  return ({ location }) => (
+function NavbarIcon({ name, path, icon, onClickTab }) {
+  const { location } = useLocation();
+  const isActive = isInPath({
+    path: location.pathname,
+    fragment: path,
+    position: 2
+  });
+  return (
     <button
       className={classNames("side-navbar--icon-outer", {
-        active: isInPath({
-          // eslint-disable-next-line react/prop-types
-          path: location.pathname,
-          fragment: path,
-          position: 2
-        })
+        active: isActive
       })}
       onClick={() => onClickTab(path)}
     >
@@ -49,3 +44,10 @@ function NavbarIcon(name, path, icon, onClickTab) {
     </button>
   );
 }
+
+NavbarIcon.propTypes = {
+  name: PropTypes.string.isRequired,
+  path: PropTypes.string.isRequired,
+  icon: PropTypes.string.isRequired,
+  onClickTab: PropTypes.func.isRequired
+};

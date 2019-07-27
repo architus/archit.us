@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { globalHistory } from "@reach/router";
 import { log, addMissingUnit } from "./string";
 import { isClient } from "./document";
 
@@ -69,6 +70,27 @@ export function useMediaBreakpoints(breakpoints) {
       mediaQueries.forEach(mql => mql.removeListener(onChange));
     };
   }, [breakpoints]);
+
+  return state;
+}
+
+export function useLocation() {
+  const initialState = {
+    location: globalHistory.location,
+    navigate: globalHistory.navigate
+  };
+
+  const [state, setState] = useState(initialState);
+  useEffect(() => {
+    const removeListener = globalHistory.listen(params => {
+      const { location } = params;
+      const newState = Object.assign({}, initialState, { location });
+      setState(newState);
+    });
+    return () => {
+      removeListener();
+    };
+  }, []);
 
   return state;
 }
