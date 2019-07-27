@@ -111,7 +111,6 @@ class AppRoot extends React.Component {
   }
 
   handlePostSwipeEnd() {
-    console.log("reset");
     this.wasCurrentSwipeScrolling = false;
   }
 
