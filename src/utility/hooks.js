@@ -9,7 +9,7 @@ export function useReturnQuery() {
     return "";
   } else {
     const [returnQuery, setReturnQuery] = useState("");
-    useEffect(() => {
+    useEffectOnce(() => {
       if (returnQuery === "") {
         setReturnQuery(
           `return=${encodeURIComponent(
@@ -17,7 +17,7 @@ export function useReturnQuery() {
           )}`
         );
       }
-    }, []);
+    });
     return returnQuery;
   }
 }
@@ -85,7 +85,7 @@ export function useLocation() {
   };
 
   const [state, setState] = useState(initialState);
-  useEffect(() => {
+  useEffectOnce(() => {
     const removeListener = globalHistory.listen(params => {
       const { location } = params;
       const newState = Object.assign({}, initialState, { location });
@@ -94,7 +94,17 @@ export function useLocation() {
     return () => {
       removeListener();
     };
-  }, []);
+  });
 
   return state;
+}
+
+export function useEffectOnce(effectFunc) {
+  useEffect(effectFunc, []);
+}
+
+export function useInitialRender() {
+  const [isInitial, setIsInitial] = useState(true);
+  useEffectOnce(() => setIsInitial(false));
+  return isInitial;
 }
