@@ -5,10 +5,23 @@ import { isInPath, useLocation } from "utility";
 import "./style.scss";
 
 function SideNavbar({ tabs, onClickTab }) {
+  const { location } = useLocation();
+  const activeTab = tabs.findIndex(({ path }) =>
+    isInPath({
+      path: location.pathname,
+      fragment: path,
+      position: 2
+    })
+  );
   return (
     <div className="side-navbar">
-      {tabs.map(data => (
-        <NavbarIcon key={data.path} onClickTab={onClickTab} {...data} />
+      {tabs.map((data, i) => (
+        <NavbarIcon
+          key={data.path}
+          onClickTab={onClickTab}
+          {...data}
+          isActive={i === activeTab}
+        />
       ))}
     </div>
   );
@@ -21,14 +34,7 @@ SideNavbar.propTypes = {
 
 export default SideNavbar;
 
-function NavbarIcon({ name, path, icon, onClickTab }) {
-  const { location } = useLocation();
-  const isActive = isInPath({
-    path: location.pathname,
-    fragment: path,
-    position: 2
-  });
-  console.log(JSON.stringify({ location: location.pathname, isActive, path }));
+function NavbarIcon({ name, path, icon, onClickTab, isActive }) {
   return (
     <button
       className={`side-navbar--icon-outer${isActive ? " active" : ""}`}
@@ -47,5 +53,10 @@ NavbarIcon.propTypes = {
   name: PropTypes.string.isRequired,
   path: PropTypes.string.isRequired,
   icon: PropTypes.string.isRequired,
-  onClickTab: PropTypes.func.isRequired
+  onClickTab: PropTypes.func.isRequired,
+  isActive: PropTypes.bool
+};
+
+NavbarIcon.defaultProps = {
+  isActive: false
 };
