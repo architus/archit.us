@@ -101,9 +101,7 @@ html.html--app {
             @include light-fg;
             @include dark-bg(rgba($-light, 0.15));
             @include light-bg(rgba($-dark, 0.15));
-            @include transitions(
-                "transform, box-shadow"
-            );
+            @include transitions("transform, box-shadow");
 
             @include respond-below($collapse-breakpoint) {
                 display: block;
@@ -149,19 +147,13 @@ html.html--app {
         .app-content {
             flex-grow: 1;
             flex-shrink: 1;
-            height: auto;
-            overflow-y: auto;
-            @extend %custom-scrollbar;
+            height: 100%;
+            overflow-y: hidden;
+            position: relative;
 
-            &.no-scroll {
+            div[role="group"] {
                 height: 100%;
-                overflow-y: hidden;
                 position: relative;
-
-                div[role="group"] {
-                    height: 100%;
-                    position: relative;
-                }
             }
         }
     }

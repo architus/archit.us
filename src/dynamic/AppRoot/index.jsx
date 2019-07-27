@@ -154,14 +154,6 @@ class AppRoot extends React.Component {
               const contentClass =
                 filtered.length > 0 ? filtered[0].contentClass : "";
               const className = classNames("app-content", contentClass);
-              console.log({
-                path: location.pathname,
-                fragments,
-                currentTab,
-                filtered,
-                contentClass,
-                className
-              });
               return (
                 <div className={className}>
                   <AddGuildModal
