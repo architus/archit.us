@@ -1,6 +1,7 @@
 @import "./colors";
 @import "./fonts";
 @import "./theme";
+@import "./media";
 
 // Bootstrap config options
 $enable-rounded: true !default;
@@ -122,10 +123,51 @@ main > div[role="group"] {
     opacity: 0.65 !important;
 }
 
+.modal {
+    .modal-content {
+        $modal-border-radius: 0.6rem;
+
+        border-radius: $modal-border-radius;
+        box-shadow: none;
+
+        @include light-bg;
+        @include dark-bg;
+        @include light-fg;
+        @include dark-fg;
+
+        .modal-header {
+            padding-left: 2rem;
+            padding-right: 2rem;
+            padding-top: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-top-right-radius: $modal-border-radius;
+            border-top-left-radius: $modal-border-radius;
+        }
+
+        .modal-footer {
+            padding: 1.4rem;
+            border-bottom-right-radius: $modal-border-radius;
+            border-bottom-left-radius: $modal-border-radius;
+        }
+
+        .close {
+            @include dark {
+                color: white;
+                text-shadow: 0 1px 0 black;
+            }
+        }
+    }
+}
+
 .badge {
     font-weight: 400;
     padding: 0.35em 0.6em 0.4em;
     border-radius: 4px;
     margin-left: 0.4em;
     margin-top: 0.2em;
+}
+
+.form-control.is-valid,
+.form-control.is-invalid {
+    background-position: center right calc(0.5em + 0.1875rem);
 }

@@ -154,6 +154,7 @@ input.form-control.editor-main {
         @extend %header-cell-fill;
         margin-top: -1px;
         min-height: 0 !important;
+        overflow-y: hidden;
 
         &:first-child {
             @include light-border($border-color-light, $side: top);
@@ -377,5 +378,18 @@ input.form-control.editor-main {
                 @include dark-bg($-dark, 2.5%);
             }
         }
+    }
+}
+
+.add-row-modal {
+    .modal-header {
+        .h4 {
+            margin-bottom: 0;
+        }
+    }
+
+    .modal-body {
+        padding-left: 2rem;
+        padding-right: 2rem;
     }
 }

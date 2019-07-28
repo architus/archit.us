@@ -4,25 +4,7 @@
 
 .add-guild-modal {
     .modal-content {
-        $modal-border-radius: 0.6rem;
-
-        border-radius: $modal-border-radius;
-        box-shadow: none;
-
-        @include light-bg;
-        @include dark-bg;
-        @include light-fg;
-        @include dark-fg;
-
         .modal-header {
-            padding-left: 2rem;
-            padding-right: 2rem;
-            padding-top: 1.5rem;
-            padding-bottom: 1.5rem;
-            border: none !important;
-            border-top-right-radius: $modal-border-radius;
-            border-top-left-radius: $modal-border-radius;
-
             h4 {
                 font-weight: 400 !important;
                 line-height: 1.1;
@@ -49,6 +31,11 @@
             }
         }
 
+        .modal-header,
+        .modal-footer {
+            border: none !important;
+        }
+
         .modal-body {
             @include light-bg($-light, -5%);
             @include dark-bg($-dark, 2.5%);
@@ -56,20 +43,6 @@
                 inset 0 -7px 16px -7px rgba(0, 0, 0, 0.15);
             max-height: 800px;
             @extend %custom-scrollbar;
-        }
-
-        .modal-footer {
-            padding: 1.4rem;
-            border: none !important;
-            border-bottom-right-radius: $modal-border-radius;
-            border-bottom-left-radius: $modal-border-radius;
-        }
-
-        .close {
-            @include dark {
-                color: white;
-                text-shadow: 0 1px 0 black;
-            }
         }
     }
 }

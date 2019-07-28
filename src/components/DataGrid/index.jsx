@@ -11,15 +11,16 @@ import {
 
 import Icon from "components/Icon";
 import HelpTooltip from "components/HelpTooltip";
+import { Spinner } from "react-bootstrap";
 
 import "./style.scss";
-import { Spinner } from "react-bootstrap";
+import AddRowModal from "./AddRowModal";
 
 // Re-export all additional components
 export { default as NumericFilter } from "./NumericFilter";
 
 // Load library only on the client
-let ReactDataGrid = () => null;
+let ReactDataGrid = {};
 let Data = { Selectors: null };
 ifClient(() => {
   ReactDataGrid = require("react-data-grid");
@@ -51,6 +52,8 @@ function DataGrid({
   emptyLabel,
   transformRow,
   columnWidths,
+  addRowButton,
+  dialogTitle,
   ...rest
 }) {
   // Escape hatch to access library methods imperatively
@@ -63,7 +66,7 @@ function DataGrid({
       dataGrid.current.openCellEditor(rowIdx, idx);
       setLastEditedPos({ rowIdx, idx });
     },
-    [dataGrid, setLastEditedPos]
+    [dataGrid]
   );
   // Fix after-edit click
   const onRowClick = useCallback(
@@ -82,12 +85,9 @@ function DataGrid({
     sortColumn: 0,
     sortDirection: "NONE"
   });
-  const onGridSort = useCallback(
-    (sortColumn, sortDirection) => {
-      setSortMeta({ sortColumn, sortDirection });
-    },
-    [setSortMeta]
-  );
+  const onGridSort = useCallback((sortColumn, sortDirection) => {
+    setSortMeta({ sortColumn, sortDirection });
+  });
   const compareStrings = (a, b) =>
     a.toLowerCase().trim() > b.toLowerCase().trim() ? 1 : -1;
   const sortRows = (rows, sortColumn, sortDirection) => {
@@ -200,31 +200,54 @@ function DataGrid({
       : withBase;
   });
 
+  // Add row dialog callback
+  const [showAddRowDialog, setShowAddRowDialog] = useState(false);
+  const hideAddRowDialog = useCallback(() => setShowAddRowDialog(false));
+  const onAddRow = useCallback(() => {
+    setShowAddRowDialog(true);
+  });
+  const onAdd = useCallback((...args) => {
+    console.log("Adding row");
+    console.log(args);
+    setShowAddRowDialog(false);
+  });
+
   return useClientSide(() => (
-    <div className="table-outer">
-      <ReactDataGrid
-        ref={dataGrid}
+    <>
+      <div className="table-outer">
+        <ReactDataGrid
+          ref={dataGrid}
+          columns={columnMeta}
+          rowGetter={i => transformRow(filteredRows[i])}
+          rowsCount={filteredRows.length}
+          onGridRowsUpdated={handleRowUpdate}
+          onCellSelected={onCellSelected}
+          onRowClick={onRowClick}
+          enableCellSelect={true}
+          enableCellAutoFocus={false}
+          onGridSort={onGridSort}
+          toolbar={
+            <ToolbarComponent onAddRow={onAddRow} addRowButton={addRowButton} />
+          }
+          onAddFilter={filter => setFilters(handleFilterChange(filter))}
+          onClearFilters={() => setFilters({})}
+          rowHeight={45}
+          headerFiltersHeight={55}
+          rowRenderer={RowRenderer}
+          getCellActions={getCellActions}
+          enableRowSelect={null}
+          emptyRowsView={EmptyDisplay}
+          {...rest}
+        />
+      </div>
+      <AddRowModal
+        show={showAddRowDialog}
+        onHide={hideAddRowDialog}
+        onAdd={onAdd}
+        title={dialogTitle}
         columns={columnMeta}
-        rowGetter={i => transformRow(filteredRows[i])}
-        rowsCount={filteredRows.length}
-        onGridRowsUpdated={handleRowUpdate}
-        onCellSelected={onCellSelected}
-        onRowClick={onRowClick}
-        enableCellSelect={true}
-        enableCellAutoFocus={false}
-        onGridSort={onGridSort}
-        toolbar={<ToolbarComponent />}
-        onAddFilter={filter => setFilters(handleFilterChange(filter))}
-        onClearFilters={() => setFilters({})}
-        rowHeight={45}
-        headerFiltersHeight={55}
-        rowRenderer={RowRenderer}
-        getCellActions={getCellActions}
-        enableRowSelect={null}
-        emptyRowsView={EmptyDisplay}
-        {...rest}
       />
-    </div>
+    </>
   ));
 }
 
@@ -239,7 +262,9 @@ DataGrid.propTypes = {
   columnWidths: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.number)),
   baseColumnMeta: PropTypes.object,
   isLoading: PropTypes.bool,
-  emptyLabel: PropTypes.string
+  emptyLabel: PropTypes.string,
+  addRowButton: PropTypes.bool,
+  dialogTitle: PropTypes.string
 };
 
 DataGrid.defaultProps = {
@@ -249,24 +274,31 @@ DataGrid.defaultProps = {
   columns: [],
   baseColumnMeta: {},
   isLoading: false,
-  emptyLabel: "No items to display"
+  emptyLabel: "No items to display",
+  addRowButton: true
 };
 
 // ? ==============
 // ? Sub components
 // ? ==============
 
-function ToolbarComponent({ onToggleFilter }) {
+function ToolbarComponent({ addRowButton, onAddRow, onToggleFilter }) {
   const [show, setShow] = useState(false);
   return (
     <div className="react-grid-Toolbar">
       <div className="tools">
+        {addRowButton ? (
+          <button className={classNames("btn-primary mr-3")} onClick={onAddRow}>
+            <Icon className="mr-2" name="plus" />
+            Add Row
+          </button>
+        ) : null}
         <button
           className={classNames("btn-primary mr-3", { active: show })}
-          onClick={() => {
+          onClick={useCallback(() => {
             setShow(!show);
             onToggleFilter();
-          }}
+          }, [show, onToggleFilter])}
         >{`${show ? "Hide" : "Show"} Filters`}</button>
       </div>
     </div>
@@ -274,7 +306,9 @@ function ToolbarComponent({ onToggleFilter }) {
 }
 
 ToolbarComponent.propTypes = {
-  onToggleFilter: PropTypes.func
+  onToggleFilter: PropTypes.func,
+  addRowButton: PropTypes.bool,
+  onAddRow: PropTypes.func
 };
 
 const RowRenderer = ({ renderBaseRow, ...props }) => {

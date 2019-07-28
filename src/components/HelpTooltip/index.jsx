@@ -26,10 +26,10 @@ function HelpTooltip({ content, top, right, left, className, style, ...rest }) {
 export default HelpTooltip;
 
 HelpTooltip.propTypes = {
-  content: PropTypes.oneOfType(
+  content: PropTypes.oneOfType([
     PropTypes.node,
-    PropTypes.arrayOf[PropTypes.node]
-  ).isRequired,
+    PropTypes.arrayOf(PropTypes.node)
+  ]).isRequired,
   top: PropTypes.bool,
   right: PropTypes.bool,
   left: PropTypes.bool,

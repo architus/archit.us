@@ -111,6 +111,8 @@ function AutoResponses({ guildId }) {
   }, [authors]);
 
   // Column definitions
+  const listRegex = /\blist\b/g;
+  const authorRegex = /\bauthor\b/g;
   let columns = [
     {
       key: "trigger",
@@ -124,7 +126,25 @@ function AutoResponses({ guildId }) {
           Include <strong>*</strong> as a wildcard, and use a corresponding{" "}
           <strong>[capture]</strong> in the response to use the matched string.
         </span>
-      )
+      ),
+      hasAddField: true,
+      required: true,
+      info: (
+        <span>
+          Include <strong>*</strong> as a wildcard, and use a corresponding{" "}
+          <strong>[capture]</strong> in the response to use the matched string.
+        </span>
+      ),
+      validator: value => {
+        if (value.trim().length < 2) {
+          return {
+            result: false,
+            message: "Trigger must be 2 characters or longer"
+          };
+        } else {
+          return true;
+        }
+      }
     },
     {
       key: "response",
@@ -139,7 +159,33 @@ function AutoResponses({ guildId }) {
           [noun], [adj], [adv], [member], [owl], [:reaction:], [count],
           [capture], [author], [@author], [comma,separated,choices]
         </span>
-      )
+      ),
+      hasAddField: true,
+      required: true,
+      info: (
+        <span>
+          <strong>Allowed Syntax:</strong> [noun], [adj], [adv], [member],
+          [owl], [:reaction:], [count], [capture], [author], [@author],
+          [comma,separated,choices]
+        </span>
+      ),
+      validator: value => {
+        if (value.trim() === "list") {
+          return {
+            result: false,
+            message: "Response cannot be a special command like list"
+          };
+        }
+
+        if (value.trim() === "author") {
+          return {
+            result: false,
+            message: "Response cannot be a special command like author"
+          };
+        }
+
+        return true;
+      }
     },
     {
       key: "count",
@@ -204,6 +250,7 @@ function AutoResponses({ guildId }) {
         isLoading={!hasLoaded}
         emptyLabel="No responses to display"
         onScroll={handleScroll}
+        dialogTitle="Add new auto response"
       />
     </Container>
   );
