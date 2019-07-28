@@ -12,7 +12,7 @@ $border-color-dark: rgba($-light, 0.15);
 }
 %input-bg {
     @include light-bg(white);
-    @include dark-bg($-dark, 8%);
+    @include dark-bg($-dark, 12%);
 }
 %cell-base {
     background-color: transparent !important;
@@ -25,14 +25,43 @@ $border-color-dark: rgba($-light, 0.15);
     @include dark-bg;
 }
 
+%input-box {
+    border: none;
+    outline: none;
+    padding: {
+        top: 6px;
+        bottom: 6px;
+        right: 6px;
+        left: 10px;
+    }
+    border-radius: 8px;
+    transition: box-shadow 0.25s ease;
+    @extend %input-bg;
+    @include light-fg;
+    @include dark-fg;
+
+    &::placeholder {
+        @include light-fg(rgba($-dark, 0.4));
+        @include dark-fg(rgba($-light, 0.4));
+    }
+
+    &:focus {
+        @include highlight-shadow($-primary);
+    }
+}
+
+input.form-control.editor-main {
+    @extend %input-box;
+}
+
 .table-outer {
     height: 0;
     flex-grow: 1;
     @include light-fg;
     @include dark-fade-fg;
 
-    @include respond-below(lg) {
-        padding-top: 2.5rem;
+    @include respond-below(md) {
+        padding-top: 3rem;
     }
 
     // React grid meme to make full height
@@ -70,14 +99,23 @@ $border-color-dark: rgba($-light, 0.15);
         height: auto;
 
         button {
-            background-color: $-primary;
-            border-color: $-primary;
-            color: $-light !important;
-
-            &:hover,
-            &:active {
-                background-color: color-adjust($-primary, -10%);
-            }
+            display: inline-block;
+            font-weight: normal;
+            color: $-light;
+            text-align: center;
+            vertical-align: middle;
+            user-select: none;
+            border: 1px solid transparent;
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            border-radius: 8px;
+            transition: color 0.15s ease-in-out,
+                background-color 0.15s ease-in-out,
+                border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            position: relative;
+            top: -8px;
+            outline: none;
         }
     }
 
@@ -86,6 +124,8 @@ $border-color-dark: rgba($-light, 0.15);
         @extend %base-bg;
         border: none;
         overflow: unset !important;
+        @include light-border($border-color-light, $side: bottom);
+        @include dark-border($border-color-dark, $side: bottom);
     }
 
     .react-grid-Canvas {
@@ -165,6 +205,18 @@ $border-color-dark: rgba($-light, 0.15);
                     &:focus {
                         @include highlight-shadow($-primary);
                     }
+                }
+            }
+
+            .input-sm {
+                height: 100%;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: flex-end;
+
+                .badge {
+                    margin-right: 1rem;
                 }
             }
         }

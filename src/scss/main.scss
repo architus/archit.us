@@ -107,6 +107,15 @@ main > div[role="group"] {
 
 .tooltip {
     z-index: 1090;
+
+    .tooltip-inner {
+        padding: 0.5rem 0.75rem;
+        max-width: 240px;
+
+        h6 {
+            margin-bottom: 0.5rem;
+        }
+    }
 }
 
 .modal-backdrop.show {

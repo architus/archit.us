@@ -1,21 +1,24 @@
-import React, { useRef, useState, useMemo } from "react";
+import React, { useRef, useState, useMemo, useCallback } from "react";
 import PropTypes from "prop-types";
+import classNames from "classnames";
 import {
   isNil,
   isDefined,
   useClientSide,
-  colorBlend,
   ifClient,
   useMediaBreakpoints
 } from "utility";
 
 import Icon from "components/Icon";
-import Switch from "react-switch";
+import HelpTooltip from "components/HelpTooltip";
 
 import "./style.scss";
-import { lightColor, primaryColor } from "global.json";
 import { Spinner } from "react-bootstrap";
 
+// Re-export all additional components
+export { default as NumericFilter } from "./NumericFilter";
+
+// Load library only on the client
 let ReactDataGrid = () => null;
 let Data = { Selectors: null };
 ifClient(() => {
@@ -55,27 +58,36 @@ function DataGrid({
 
   // Open the editor upon cell selection
   const [lastEditedPos, setLastEditedPos] = useState({ rowIdx: -1, idx: -1 });
-  const onCellSelected = ({ rowIdx, idx }) => {
-    dataGrid.current.openCellEditor(rowIdx, idx);
-    setLastEditedPos({ rowIdx, idx });
-  };
+  const onCellSelected = useCallback(
+    ({ rowIdx, idx }) => {
+      dataGrid.current.openCellEditor(rowIdx, idx);
+      setLastEditedPos({ rowIdx, idx });
+    },
+    [dataGrid, setLastEditedPos]
+  );
   // Fix after-edit click
-  const onRowClick = (newRowIdx, _rowData, column) => {
-    if (isNil(column)) return;
-    const { idx, rowIdx } = lastEditedPos;
-    if (newRowIdx === rowIdx && column.idx === idx) {
-      dataGrid.current.openCellEditor(newRowIdx, column.idx);
-    }
-  };
+  const onRowClick = useCallback(
+    (newRowIdx, _rowData, column) => {
+      if (isNil(column)) return;
+      const { idx, rowIdx } = lastEditedPos;
+      if (newRowIdx === rowIdx && column.idx === idx) {
+        dataGrid.current.openCellEditor(newRowIdx, column.idx);
+      }
+    },
+    [lastEditedPos, dataGrid]
+  );
 
   // Row sorting
   const [sortMeta, setSortMeta] = useState({
     sortColumn: 0,
     sortDirection: "NONE"
   });
-  const onGridSort = (sortColumn, sortDirection) => {
-    setSortMeta({ sortColumn, sortDirection });
-  };
+  const onGridSort = useCallback(
+    (sortColumn, sortDirection) => {
+      setSortMeta({ sortColumn, sortDirection });
+    },
+    [setSortMeta]
+  );
   const compareStrings = (a, b) =>
     a.toLowerCase().trim() > b.toLowerCase().trim() ? 1 : -1;
   const sortRows = (rows, sortColumn, sortDirection) => {
@@ -97,26 +109,28 @@ function DataGrid({
   );
 
   // Row deletion
-  function getCellActions(column, row) {
-    return column.idx === columns.length - 1
-      ? [
-          {
-            icon: <Icon name="times-circle" size="lg" noAutoWidth />,
-            callback: () => {
-              onRowDelete(row);
+  const getCellActions = useCallback(
+    (column, row) =>
+      column.idx === columns.length - 1
+        ? [
+            {
+              icon: <Icon name="times-circle" size="lg" noAutoWidth />,
+              callback: () => {
+                onRowDelete(row);
+              }
             }
-          }
-        ]
-      : null;
-  }
+          ]
+        : null,
+    [onRowDelete]
+  );
 
   // Filtering
   const [filters, setFilters] = useState({});
   const filteredRows = getRows(rows, filters);
 
   // Empty display
-  function EmptyDisplay() {
-    return (
+  const EmptyDisplay = useCallback(
+    () => (
       <div className="empty-placeholder">
         {isLoading ? (
           <Spinner animation="border" variant="primary" role="status">
@@ -126,26 +140,24 @@ function DataGrid({
           <span className="empty-label shadow-sm">{emptyLabel}</span>
         )}
       </div>
-    );
-  }
+    ),
+    [isLoading, emptyLabel]
+  );
 
   // Row updating
-  const handleRowUpdate = ({
-    action,
-    fromRowData,
-    updated,
-    cellKey,
-    toRow
-  }) => {
-    if (action !== "CELL_UPDATE") return;
-    if (fromRowData[cellKey] === updated[cellKey]) return;
-    onRowUpdate({
-      idx: toRow,
-      key: cellKey,
-      previousRow: fromRowData,
-      updatedCell: updated[cellKey]
-    });
-  };
+  const handleRowUpdate = useCallback(
+    ({ action, fromRowData, updated, cellKey, toRow }) => {
+      if (action !== "CELL_UPDATE") return;
+      if (fromRowData[cellKey] === updated[cellKey]) return;
+      onRowUpdate({
+        idx: toRow,
+        key: cellKey,
+        previousRow: fromRowData,
+        updatedCell: updated[cellKey]
+      });
+    },
+    [onRowUpdate]
+  );
 
   // Responsive column widths
   function getBreakpoints(columnWidthMap) {
@@ -161,8 +173,28 @@ function DataGrid({
     activeBreakpoint === -1
       ? columnWidths.base
       : columnWidths[breakpointArray[activeBreakpoint]];
+
+  // Process column meta to add base info, column widths, and help text
   const columnMeta = columns.map((c, i) => {
     const withBase = { ...c, ...baseColumnMeta };
+    if ("tooltip" in withBase) {
+      const tooltip = withBase.tooltip;
+      if ("headerRenderer" in withBase) {
+        withBase.headerRenderer = (
+          <div className="help-column-wrapper">
+            {withBase.headerRenderer}
+            <HelpTooltip content={tooltip} />
+          </div>
+        );
+      } else {
+        withBase.headerRenderer = (
+          <div className="help-column-wrapper">
+            <span>{withBase.name}</span>
+            <HelpTooltip content={tooltip} />
+          </div>
+        );
+      }
+    }
     return isDefined(currentColumnWidths[i])
       ? { ...withBase, width: currentColumnWidths[i] }
       : withBase;
@@ -211,8 +243,8 @@ DataGrid.propTypes = {
 };
 
 DataGrid.defaultProps = {
-  onRowUpdate: () => null,
-  onRowDelete: () => null,
+  onRowUpdate() {},
+  onRowDelete() {},
   transformRow: r => r,
   columns: [],
   baseColumnMeta: {},
@@ -229,31 +261,13 @@ function ToolbarComponent({ onToggleFilter }) {
   return (
     <div className="react-grid-Toolbar">
       <div className="tools">
-        <Switch
-          onChange={() => {
+        <button
+          className={classNames("btn-primary mr-3", { active: show })}
+          onClick={() => {
             setShow(!show);
             onToggleFilter();
           }}
-          checked={show}
-          className="mr-3"
-          aria-label="Toggle filter"
-          uncheckedIcon={
-            <Icon name="filter" className="dark-mode-icon light" />
-          }
-          checkedIcon={
-            <Icon
-              name="clear-filter"
-              className="dark-mode-icon dark"
-              style={{ left: "8px" }}
-            />
-          }
-          activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-          boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-          offHandleColor={lightColor}
-          onHandleColor={lightColor}
-          offColor={colorBlend(0.35, primaryColor)}
-          onColor={primaryColor}
-        />
+        >{`${show ? "Hide" : "Show"} Filters`}</button>
       </div>
     </div>
   );

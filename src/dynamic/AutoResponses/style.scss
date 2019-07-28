@@ -147,4 +147,22 @@
             display: none;
         }
     }
+
+    .help-column-wrapper {
+        display: inline;
+
+        .help-tooltip {
+            position: absolute;
+            right: 4px;
+            top: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+
+            & > span {
+                width: auto !important;
+                height: auto !important;
+            }
+        }
+    }
 }

@@ -7,6 +7,7 @@ export {
   faSun,
   faShieldAlt,
   faFilter,
-  faTimesCircle
+  faTimesCircle,
+  faQuestionCircle
 } from "@fortawesome/free-solid-svg-icons";
 export { faDiscord, faGithub } from "@fortawesome/free-brands-svg-icons";

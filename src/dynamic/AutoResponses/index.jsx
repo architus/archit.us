@@ -1,4 +1,10 @@
-import React, { useEffect, useMemo, useRef, useContext } from "react";
+import React, {
+  useEffect,
+  useMemo,
+  useRef,
+  useContext,
+  useCallback
+} from "react";
 import { useMedia } from "react-use";
 import PropTypes from "prop-types";
 import { shallowEqual, useSelector } from "react-redux";
@@ -6,7 +12,7 @@ import { getResponses } from "store/actions";
 import { useAuthDispatch, isDefined, isNil } from "utility";
 import { AppScrollContext } from "dynamic/AppRoot";
 
-import DataGrid from "components/DataGrid";
+import DataGrid, { NumericFilter } from "components/DataGrid";
 import { Container } from "react-bootstrap";
 import {
   createResponseCellFormatter,
@@ -37,16 +43,16 @@ function AutoResponses({ guildId }) {
   }, [authenticated, guildId]);
 
   // Row updating
-  const onRowUpdate = ({ idx, key, updatedCell }) => {
+  const onRowUpdate = useCallback(({ idx, key, updatedCell }) => {
     console.log(`Updating`);
     console.log({ idx, key, updatedCell });
-  };
+  });
 
   // Row deletion
-  const onRowDelete = row => {
+  const onRowDelete = useCallback(row => {
     console.log(`Deleting`);
     console.log(row);
-  };
+  });
 
   // Transform author data
   const authorData = ({ author_id }) => {
@@ -110,19 +116,39 @@ function AutoResponses({ guildId }) {
       key: "trigger",
       name: "Trigger",
       editable: true,
-      formatter: createTriggerCellFormatter(contextRef)
+      formatter: useMemo(() => createTriggerCellFormatter(contextRef), [
+        contextRef
+      ]),
+      tooltip: (
+        <span>
+          Include <strong>*</strong> as a wildcard, and use a corresponding{" "}
+          <strong>[capture]</strong> in the response to use the matched string.
+        </span>
+      )
     },
     {
       key: "response",
       name: "Response",
       editable: true,
-      formatter: createResponseCellFormatter(contextRef)
+      formatter: useMemo(() => createResponseCellFormatter(contextRef), [
+        contextRef
+      ]),
+      tooltip: (
+        <span>
+          <h6>Syntax</h6>
+          [noun], [adj], [adv], [member], [owl], [:reaction:], [count],
+          [capture], [author], [@author], [comma,separated,choices]
+        </span>
+      )
     },
     {
       key: "count",
       name: "Count",
       sortDescendingFirst: true,
-      formatter: createCountCellFormatter(maxCountRef)
+      formatter: useMemo(() => createCountCellFormatter(maxCountRef), [
+        contextRef
+      ]),
+      filterRenderer: NumericFilter
     },
     {
       key: "author",
@@ -156,9 +182,7 @@ function AutoResponses({ guildId }) {
   }
 
   const scrollEvent = useContext(AppScrollContext);
-  const handleScroll = () => {
-    scrollEvent();
-  };
+  const handleScroll = scrollEvent;
 
   return (
     <Container className="auto-responses" fluid>
