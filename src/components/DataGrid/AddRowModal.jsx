@@ -6,13 +6,13 @@ import React, {
   useRef
 } from "react";
 import PropTypes from "prop-types";
-import { isDefined, identity, isNil } from "utility";
+import { isDefined, identity, isNil, binarySearch } from "utility";
 
 import { Modal, Button, Form } from "react-bootstrap";
 
 import "./style.scss";
 
-function AddRowModal({ show, columns, onHide, onAdd, title, ...rest }) {
+function AddRowModal({ data, show, columns, onHide, onAdd, title, ...rest }) {
   // Filter columns based on whether they should have a field
   const relevantColumns = useMemo(
     () => columns.filter(col => col.hasAddField),
@@ -46,6 +46,29 @@ function AddRowModal({ show, columns, onHide, onAdd, title, ...rest }) {
     [values, relevantColumnsMap]
   );
 
+  // Memoize sorted unique columns to enable binary search
+  const sortedUniqueColumns = useMemo(() => {
+    // Skip updates if not rendering
+    if (!show) return [];
+    else {
+      let uniqueColumns = columns.filter(c => c.unique).map(c => c.key);
+      if (uniqueColumns.length === 0) return [];
+      let sorted = Object.create(null);
+      for (const col of uniqueColumns) {
+        sorted[col] = [];
+      }
+      for (const row of data) {
+        for (const col of uniqueColumns) {
+          sorted[col].push(row[col]);
+        }
+      }
+      for (const col of uniqueColumns) {
+        sorted[col].sort();
+      }
+      return sorted;
+    }
+  }, [columns, data, show]);
+
   // Auto-focus first input field
   const firstInput = useRef(null);
   useEffect(() => {
@@ -57,7 +80,7 @@ function AddRowModal({ show, columns, onHide, onAdd, title, ...rest }) {
     let validationStatus = {};
     let allPass = true;
     for (const i in relevantColumns) {
-      const { key, required, name, validator } = relevantColumns[i];
+      const { key, required, name, validator, unique } = relevantColumns[i];
       const value = values[key];
       if (required) {
         // Validate based on empty or not
@@ -65,6 +88,18 @@ function AddRowModal({ show, columns, onHide, onAdd, title, ...rest }) {
           validationStatus[key] = {
             result: false,
             message: `${name} is a required field`
+          };
+          allPass = false;
+          continue;
+        }
+      }
+
+      if (unique) {
+        let index = binarySearch(sortedUniqueColumns[key], value);
+        if (index !== -1) {
+          validationStatus[key] = {
+            result: false,
+            message: `${name} must be unique`
           };
           allPass = false;
           continue;
@@ -87,7 +122,7 @@ function AddRowModal({ show, columns, onHide, onAdd, title, ...rest }) {
       }
     }
     return [validationStatus, allPass];
-  }, [relevantColumns, values]);
+  }, [relevantColumns, values, data]);
   const tryAdd = useCallback(() => {
     if (isValid) {
       setValues(initialState(relevantColumns));
@@ -186,13 +221,15 @@ AddRowModal.propTypes = {
   onHide: PropTypes.func.isRequired,
   onAdd: PropTypes.func.isRequired,
   title: PropTypes.string,
-  show: PropTypes.bool
+  show: PropTypes.bool,
+  data: PropTypes.arrayOf(PropTypes.object)
 };
 
 AddRowModal.defaultProps = {
   columns: [],
   title: null,
-  show: false
+  show: false,
+  data: []
 };
 
 // ? ==============

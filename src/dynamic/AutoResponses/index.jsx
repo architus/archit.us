@@ -157,6 +157,7 @@ function AutoResponses({ guildId }) {
       formatter: useMemo(() => createTriggerCellFormatter(contextRef), [
         contextRef
       ]),
+      unique: true,
       tooltip: (
         <span>
           Include <strong>*</strong> as a wildcard, and use a corresponding{" "}

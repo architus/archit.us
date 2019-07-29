@@ -22,3 +22,20 @@ export const takeOrReplenish = (map, key, nextKey, source) => {
     return takeOrReplenish(map, key, nextKey, source);
   } else return result;
 };
+
+export function binarySearch(
+  sortedArr,
+  element,
+  { start = null, end = null, comparator = (a, b) => a < b } = {}
+) {
+  if (isNil(sortedArr) || !Array.isArray(sortedArr)) return -1;
+  if (isNil(start)) start = 0;
+  if (isNil(end)) end = sortedArr.length - 1;
+  while (start <= end) {
+    let midpoint = Math.floor((start + end) / 2);
+    if (sortedArr[midpoint] === element) return midpoint;
+    else if (comparator(sortedArr[midpoint], element)) start = midpoint + 1;
+    else end = midpoint - 1;
+  }
+  return -1;
+}

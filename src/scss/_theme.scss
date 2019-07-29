@@ -91,6 +91,10 @@ $scrollbar-width: 12px;
         );
         border-radius: 100rem;
     }
+    &::-webkit-scrollbar-corner {
+        background-color: transparent;
+        display: none;
+    }
 }
 
 %custom-scrollbar-alt {

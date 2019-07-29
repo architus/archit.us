@@ -250,6 +250,7 @@ function DataGrid({
         onAdd={onAdd}
         title={dialogTitle}
         columns={columnMeta}
+        data={filteredRows}
       />
     </>
   ));

@@ -32,7 +32,7 @@ input.form-control.editor-main {
     @include light-fg;
     @include dark-fade-fg;
 
-    @include respond-below(md) {
+    @include respond-below(lg) {
         padding-top: 3rem;
     }
 
