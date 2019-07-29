@@ -90,7 +90,7 @@ function AppRoot() {
           return;
         } else {
           let defaultGuild = guildList[0];
-          const adminGuilds = guildList.filter(g => g.autbot_admin);
+          const adminGuilds = guildList.filter(g => g.architus_admin);
           if (adminGuilds.length > 0) defaultGuild = adminGuilds[0];
           navigateTo = `${APP_PATH_ROOT}/${defaultGuild.id}/${path}`;
         }

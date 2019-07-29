@@ -42,7 +42,7 @@ function AutoResponses({ guildId }) {
       authenticated: state.session.authenticated,
       hasLoaded,
       isArchitusAdmin: hasGuildListLoaded
-        ? state.guilds.guildList.find(guild => guild.id === id).autbot_admin
+        ? state.guilds.guildList.find(guild => guild.id === id).architus_admin
         : false,
       user_id: state.session.id
     };
@@ -54,27 +54,41 @@ function AutoResponses({ guildId }) {
     if (authenticated) fetchResponses(guildId);
   }, [authenticated, guildId]);
 
-  // Elevation status: use default function
-  const canDeleteRow = isArchitusAdmin
+  // Elevation status
+  const userRef = useRef(user_id);
+  userRef.current = user_id;
+  const compareRowAuthor = useCallback(
+    ({ author_id }) => author_id === userRef.current
+  );
+  const canChangeRow = isArchitusAdmin
     ? useCallback(() => true)
-    : useCallback(({ author_id }) => author_id === user_id, [user_id]);
+    : compareRowAuthor;
+  const canEditRow = isArchitusAdmin ? true : compareRowAuthor;
 
   // Row adding
   const onRowAdd = useCallback(row => {
-    console.log(`Adding`);
-    console.log(row);
+    if (isDefined(row) && canChangeRow(row)) {
+      console.log(`Adding`);
+      console.log(row);
+    }
   });
 
   // Row updating
   const onRowUpdate = useCallback(({ idx, key, updatedCell }) => {
-    console.log(`Updating`);
-    console.log({ idx, key, updatedCell });
+    if (idx > commands.length) return;
+    const row = commands[idx];
+    if (isDefined(row) && canChangeRow(row)) {
+      console.log(`Updating`);
+      console.log({ idx, key, updatedCell });
+    }
   });
 
   // Row deletion
   const onRowDelete = useCallback(row => {
-    console.log(`Deleting`);
-    console.log(row);
+    if (isDefined(row) && canChangeRow(row)) {
+      console.log(`Deleting`);
+      console.log(row);
+    }
   });
 
   // Transform author data
@@ -139,7 +153,7 @@ function AutoResponses({ guildId }) {
     {
       key: "trigger",
       name: "Trigger",
-      editable: true,
+      editable: canEditRow,
       formatter: useMemo(() => createTriggerCellFormatter(contextRef), [
         contextRef
       ]),
@@ -172,7 +186,7 @@ function AutoResponses({ guildId }) {
     {
       key: "response",
       name: "Response",
-      editable: true,
+      editable: canEditRow,
       formatter: useMemo(() => createResponseCellFormatter(contextRef), [
         contextRef
       ]),
@@ -271,7 +285,7 @@ function AutoResponses({ guildId }) {
         onRowAdd={onRowAdd}
         onRowUpdate={onRowUpdate}
         onRowDelete={onRowDelete}
-        canDeleteRow={canDeleteRow}
+        canDeleteRow={canChangeRow}
         isLoading={!hasLoaded}
         emptyLabel="No responses to display"
         onScroll={handleScroll}

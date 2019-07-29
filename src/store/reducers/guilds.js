@@ -26,7 +26,7 @@ const getGuildList = state => state.guilds.guildList;
 
 export const getArchitusGuilds = createSelector(
   [getGuildList],
-  guildList => guildList.filter(guild => guild.has_autbot)
+  guildList => guildList.filter(guild => guild.has_architus)
 );
 
 const MANAGE_SERVERS = 32; // 0x20
@@ -34,6 +34,6 @@ export const getDiscordAdminGuildsWithoutArchitus = createSelector(
   [getGuildList],
   guildList =>
     guildList.filter(
-      guild => guild.permissions & MANAGE_SERVERS && !guild.has_autbot
+      guild => guild.permissions & MANAGE_SERVERS && !guild.has_architus
     )
 );
