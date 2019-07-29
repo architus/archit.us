@@ -45,7 +45,7 @@ export class CustomEmojiExtension extends Extension {
       // Display custom emotes in list command
       const message = {
         content: this.formatListString(),
-        sender: this.autBotUser,
+        sender: this.architusUser,
         messageId: this.provisionId()
       };
       this.sendMessage(message);

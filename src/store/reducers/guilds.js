@@ -24,13 +24,13 @@ export const reducer = sessionAware(initial, (state, action) => {
 
 const getGuildList = state => state.guilds.guildList;
 
-export const getAutbotGuilds = createSelector(
+export const getArchitusGuilds = createSelector(
   [getGuildList],
   guildList => guildList.filter(guild => guild.has_autbot)
 );
 
 const MANAGE_SERVERS = 32; // 0x20
-export const getDiscordAdminGuildsWithoutAutbot = createSelector(
+export const getDiscordAdminGuildsWithoutArchitus = createSelector(
   [getGuildList],
   guildList =>
     guildList.filter(

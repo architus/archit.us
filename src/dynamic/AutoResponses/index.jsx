@@ -25,14 +25,26 @@ import "./style.scss";
 
 function AutoResponses({ guildId }) {
   // Connect to store
-  const { commands, authors, authenticated, hasLoaded } = useSelector(state => {
+  const {
+    commands,
+    authors,
+    authenticated,
+    hasLoaded,
+    isArchitusAdmin,
+    user_id
+  } = useSelector(state => {
     const id = guildId.toString();
     const hasLoaded = state.responses.commands.hasOwnProperty(id);
+    const hasGuildListLoaded = state.guilds.hasLoaded;
     return {
       commands: hasLoaded ? state.responses.commands[id] : [],
       authors: hasLoaded ? state.responses.authors[id] : [],
       authenticated: state.session.authenticated,
-      hasLoaded
+      hasLoaded,
+      isArchitusAdmin: hasGuildListLoaded
+        ? state.guilds.guildList.find(guild => guild.id === id).autbot_admin
+        : false,
+      user_id: state.session.id
     };
   }, shallowEqual);
 
@@ -41,6 +53,11 @@ function AutoResponses({ guildId }) {
   useEffect(() => {
     if (authenticated) fetchResponses(guildId);
   }, [authenticated, guildId]);
+
+  // Elevation status: use default function
+  const canDeleteRow = isArchitusAdmin
+    ? useCallback(() => true)
+    : useCallback(({ author_id }) => author_id === user_id, [user_id]);
 
   // Row adding
   const onRowAdd = useCallback(row => {
@@ -254,6 +271,7 @@ function AutoResponses({ guildId }) {
         onRowAdd={onRowAdd}
         onRowUpdate={onRowUpdate}
         onRowDelete={onRowDelete}
+        canDeleteRow={canDeleteRow}
         isLoading={!hasLoaded}
         emptyLabel="No responses to display"
         onScroll={handleScroll}

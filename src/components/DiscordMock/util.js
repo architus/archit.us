@@ -39,7 +39,7 @@ class DiscriminatorProvisioner {
 const discriminatorMax = 5;
 const discriminatorProvisioner = new DiscriminatorProvisioner(discriminatorMax);
 
-export const autBotUser = {
+export const architusUser = {
   clientId: 448546825532866560,
   avatarHash: "99de1e495875fb5c27ba9ac7303b45b7",
   discriminator: 7145,

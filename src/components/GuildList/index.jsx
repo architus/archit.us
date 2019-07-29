@@ -3,7 +3,7 @@ import React from "react";
 import { connect } from "react-redux";
 import classNames from "classnames";
 import { getGuildList } from "store/actions";
-import { getAutbotGuilds } from "store/reducers/guilds";
+import { getArchitusGuilds } from "store/reducers/guilds";
 import { splitPath } from "utility";
 
 import Placeholder from "components/Placeholder";
@@ -37,7 +37,7 @@ class GuildList extends React.Component {
   render() {
     const { guildList, hasLoaded, onClickGuild, onClickAdd } = this.props;
     const squareStyle = { width: `${ICON_WIDTH}px`, height: `${ICON_WIDTH}px` };
-    const autbotAdminGuilds = guildList.filter(guild => guild.autbot_admin);
+    const architusAdminGuilds = guildList.filter(guild => guild.autbot_admin);
     const otherGuilds = guildList.filter(guild => !guild.autbot_admin);
     return (
       <div className="guild-list vertical">
@@ -48,9 +48,9 @@ class GuildList extends React.Component {
               const activeGuildId = fragments.length >= 2 ? fragments[1] : null;
               return (
                 <>
-                  {autbotAdminGuilds.length > 0 ? (
+                  {architusAdminGuilds.length > 0 ? (
                     <Section
-                      guilds={autbotAdminGuilds}
+                      guilds={architusAdminGuilds}
                       onClickGuild={onClickGuild}
                       iconStyle={squareStyle}
                       activeGuildId={activeGuildId}
@@ -85,7 +85,7 @@ class GuildList extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    guildList: getAutbotGuilds(state),
+    guildList: getArchitusGuilds(state),
     hasLoaded: state.guilds.hasLoaded,
     accessToken: state.session.accessToken,
     authenticated: state.session.authenticated

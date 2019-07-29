@@ -9,7 +9,7 @@ import {
   useInitialRender
 } from "utility";
 import { navigate } from "@reach/router";
-import { getAutbotGuilds } from "store/reducers/guilds";
+import { getArchitusGuilds } from "store/reducers/guilds";
 
 import SwipeHandler from "components/SwipeHandler";
 import GuildList from "components/GuildList";
@@ -27,7 +27,7 @@ function AppRoot() {
   // Connect to store
   const { guildList, guildsLoaded } = useSelector(state => {
     return {
-      guildList: getAutbotGuilds(state),
+      guildList: getArchitusGuilds(state),
       guildsLoaded: state.guilds.hasLoaded
     };
   }, shallowEqual);

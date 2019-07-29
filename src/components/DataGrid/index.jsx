@@ -55,6 +55,7 @@ function DataGrid({
   columnWidths,
   addRowButton,
   dialogTitle,
+  canDeleteRow,
   ...rest
 }) {
   // Escape hatch to access library methods imperatively
@@ -112,7 +113,7 @@ function DataGrid({
   // Row deletion
   const getCellActions = useCallback(
     (column, row) =>
-      column.idx === columns.length - 1
+      column.idx === columns.length - 1 && canDeleteRow(row)
         ? [
             {
               icon: <Icon name="times-circle" size="lg" noAutoWidth />,
@@ -268,13 +269,15 @@ DataGrid.propTypes = {
   isLoading: PropTypes.bool,
   emptyLabel: PropTypes.string,
   addRowButton: PropTypes.bool,
-  dialogTitle: PropTypes.string
+  dialogTitle: PropTypes.string,
+  canDeleteRow: PropTypes.func
 };
 
 DataGrid.defaultProps = {
   onRowAdd() {},
   onRowUpdate() {},
   onRowDelete() {},
+  canDeleteRow: r => true,
   transformRow: r => r,
   columns: [],
   baseColumnMeta: {},
