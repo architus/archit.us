@@ -122,7 +122,7 @@ function AddRowModal({ data, show, columns, onHide, onAdd, title, ...rest }) {
       }
     }
     return [validationStatus, allPass];
-  }, [relevantColumns, values, data]);
+  }, [relevantColumns, values, sortedUniqueColumns]);
   const tryAdd = useCallback(() => {
     if (isValid) {
       setValues(initialState(relevantColumns));
