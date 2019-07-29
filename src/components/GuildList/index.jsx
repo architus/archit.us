@@ -37,8 +37,8 @@ class GuildList extends React.Component {
   render() {
     const { guildList, hasLoaded, onClickGuild, onClickAdd } = this.props;
     const squareStyle = { width: `${ICON_WIDTH}px`, height: `${ICON_WIDTH}px` };
-    const autbotAdminGuilds = guildList.filter(guild => guild.autbot_admin);
-    const otherGuilds = guildList.filter(guild => !guild.autbot_admin);
+    const autbotAdminGuilds = guildList.filter(guild => guild.architus_admin);
+    const otherGuilds = guildList.filter(guild => !guild.architus_admin);
     return (
       <div className="guild-list vertical">
         {hasLoaded ? (
