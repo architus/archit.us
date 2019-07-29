@@ -10,10 +10,7 @@ $border-color-dark: rgba($-light, 0.15);
     @include light-bg($adjust: -6%);
     @include dark-bg($-dark, 3%);
 }
-%input-bg {
-    @include light-bg(white);
-    @include dark-bg($-dark, 12%);
-}
+
 %cell-base {
     background-color: transparent !important;
     @include light(border-color, $border-color-light);
@@ -25,33 +22,8 @@ $border-color-dark: rgba($-light, 0.15);
     @include dark-bg;
 }
 
-%input-box {
-    border: none;
-    outline: none;
-    padding: {
-        top: 6px;
-        bottom: 6px;
-        right: 6px;
-        left: 10px;
-    }
-    border-radius: 8px;
-    transition: box-shadow 0.25s ease;
-    @extend %input-bg;
-    @include light-fg;
-    @include dark-fg;
-
-    &::placeholder {
-        @include light-fg(rgba($-dark, 0.4));
-        @include dark-fg(rgba($-light, 0.4));
-    }
-
-    &:focus {
-        @include highlight-shadow($-primary);
-    }
-}
-
 input.form-control.editor-main {
-    @extend %input-box;
+    border: none;
 }
 
 .table-outer {
@@ -183,29 +155,7 @@ input.form-control.editor-main {
                 }
 
                 input {
-                    width: 100%;
                     border: none;
-                    outline: none;
-                    padding: {
-                        top: 6px;
-                        bottom: 6px;
-                        right: 6px;
-                        left: 10px;
-                    }
-                    border-radius: 8px;
-                    transition: box-shadow 0.25s ease;
-                    @extend %input-bg;
-                    @include light-fg;
-                    @include dark-fg;
-
-                    &::placeholder {
-                        @include light-fg(rgba($-dark, 0.4));
-                        @include dark-fg(rgba($-light, 0.4));
-                    }
-
-                    &:focus {
-                        @include highlight-shadow($-primary);
-                    }
                 }
             }
 

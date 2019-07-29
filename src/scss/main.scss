@@ -126,6 +126,7 @@ main > div[role="group"] {
 .modal {
     .modal-content {
         $modal-border-radius: 0.6rem;
+        $border-color-dark: rgba($-light, 0.2);
 
         border-radius: $modal-border-radius;
         box-shadow: none;
@@ -142,12 +143,14 @@ main > div[role="group"] {
             padding-bottom: 1.5rem;
             border-top-right-radius: $modal-border-radius;
             border-top-left-radius: $modal-border-radius;
+            @include dark-border($border-color-dark, $side: bottom);
         }
 
         .modal-footer {
             padding: 1.4rem;
             border-bottom-right-radius: $modal-border-radius;
             border-bottom-left-radius: $modal-border-radius;
+            @include dark-border($border-color-dark, $side: top);
         }
 
         .close {
@@ -156,6 +159,12 @@ main > div[role="group"] {
                 text-shadow: 0 1px 0 black;
             }
         }
+    }
+}
+
+.text-muted {
+    @include dark {
+        color: rgba($-light, 0.6) !important;
     }
 }
 
@@ -170,4 +179,18 @@ main > div[role="group"] {
 .form-control.is-valid,
 .form-control.is-invalid {
     background-position: calc(100% - 8px) calc(0.375em + 0.1875rem);
+}
+
+input[type="text"] {
+    @include dark {
+        border-color: rgba($-light, 0.2);
+    }
+    @extend %input-box;
+
+    &.form-control.is-invalid {
+        border-color: $-danger;
+    }
+    &.form-control.is-valid {
+        border-color: $-success;
+    }
 }

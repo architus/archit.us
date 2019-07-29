@@ -1,4 +1,5 @@
 @import "scss/colors";
+@import "scss/util";
 
 $drop-shadow: 0 4px 12px 0 rgba(black, 0.15);
 $drop-shadow-slight: 0 2px 8px 0 rgba(black, 0.3);
@@ -107,5 +108,30 @@ $scrollbar-width: 12px;
             blend($-dark, white, 0.65),
             color-adjust($-light, -2%)
         );
+    }
+}
+
+%input-box {
+    outline: none;
+    padding: {
+        top: 6px;
+        bottom: 6px;
+        right: 6px;
+        left: 10px;
+    }
+    border-radius: 8px;
+    transition: box-shadow 0.25s ease;
+    @include light-bg(white);
+    @include dark-bg($-dark, 12%);
+    @include light-fg;
+    @include dark-fg;
+
+    &::placeholder {
+        @include light-fg(rgba($-dark, 0.4));
+        @include dark-fg(rgba($-light, 0.4));
+    }
+
+    &:focus {
+        @include highlight-shadow($-primary);
     }
 }
