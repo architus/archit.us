@@ -22,10 +22,11 @@ export function pick(sourceObject, keys) {
 }
 
 // from https://codereview.stackexchange.com/questions/61632/object-key-value-map-reversal
-const id = x => x;
 export function invertMap(map, f) {
   return Object.keys(map).reduce(function(acc, k) {
-    acc[map[k]] = (acc[map[k]] || []).concat((f || id)(k));
+    acc[map[k]] = (acc[map[k]] || []).concat((f || identity)(k));
     return acc;
   }, {});
 }
+
+export const identity = o => o;

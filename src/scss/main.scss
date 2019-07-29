@@ -169,5 +169,5 @@ main > div[role="group"] {
 
 .form-control.is-valid,
 .form-control.is-invalid {
-    background-position: center right calc(0.5em + 0.1875rem);
+    background-position: calc(100% - 8px) calc(0.375em + 0.1875rem);
 }

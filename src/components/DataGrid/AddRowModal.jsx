@@ -1,6 +1,12 @@
-import React, { useCallback, useEffect, useState, useMemo } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useState,
+  useMemo,
+  useRef
+} from "react";
 import PropTypes from "prop-types";
-import { isDefined } from "utility";
+import { isDefined, identity, isNil } from "utility";
 
 import { Modal, Button, Form } from "react-bootstrap";
 
@@ -12,6 +18,14 @@ function AddRowModal({ show, columns, onHide, onAdd, title, ...rest }) {
     () => columns.filter(col => col.hasAddField),
     [columns]
   );
+  const relevantColumnsMap = useMemo(
+    () =>
+      Object.assign(
+        {},
+        ...relevantColumns.map(({ key, ...rest }) => ({ [key]: rest }))
+      ),
+    [relevantColumns]
+  );
 
   // Controlled input values
   const initialState = useCallback(columns =>
@@ -19,12 +33,24 @@ function AddRowModal({ show, columns, onHide, onAdd, title, ...rest }) {
   );
   const [values, setValues] = useState(() => initialState(relevantColumns));
   useEffect(() => setValues(initialState(relevantColumns)), [relevantColumns]);
-  const onChange = useCallback((key, event) =>
-    setValues({
-      ...values,
-      [key]: isDefined(event.target) ? event.target.value : ""
-    })
+  const onChange = useCallback(
+    (key, event) => {
+      let processFunc = relevantColumnsMap[key].processValue;
+      if (isNil(processFunc)) processFunc = identity;
+      const newValue = isDefined(event.target) ? event.target.value : "";
+      setValues({
+        ...values,
+        [key]: processFunc(newValue)
+      });
+    },
+    [values, relevantColumnsMap]
   );
+
+  // Auto-focus first input field
+  const firstInput = useRef(null);
+  useEffect(() => {
+    if (show && isDefined(firstInput.current)) firstInput.current.focus();
+  }, [show]);
 
   // Input validation
   const [validationStatus, isValid] = useMemo(() => {
@@ -116,7 +142,7 @@ function AddRowModal({ show, columns, onHide, onAdd, title, ...rest }) {
       </Modal.Header>
       <Modal.Body>
         <Form noValidate>
-          {relevantColumns.map(col => (
+          {relevantColumns.map((col, i) => (
             <Form.Group controlId={`addRowForm-${col.key}`} key={col.key}>
               <Form.Label>{col.name}</Form.Label>
               <FormInput
@@ -127,6 +153,7 @@ function AddRowModal({ show, columns, onHide, onAdd, title, ...rest }) {
                 value={values[col.key]}
                 isValid={showValidation && validationStatus[col.key].result}
                 isInvalid={showValidation && !validationStatus[col.key].result}
+                ref={i === 0 ? firstInput : undefined}
               />
               <Form.Control.Feedback type="invalid">
                 {validationStatus[col.key].message}
@@ -172,14 +199,13 @@ AddRowModal.defaultProps = {
 // ? Sub-components
 // ? ==============
 
-function FormInput({ onChange, inputKey, ...rest }) {
-  return (
-    <Form.Control
-      onChange={useCallback(e => onChange(inputKey, e), [onChange, inputKey])}
-      {...rest}
-    />
-  );
-}
+const FormInput = React.forwardRef(({ onChange, inputKey, ...rest }, ref) => (
+  <Form.Control
+    onChange={useCallback(e => onChange(inputKey, e), [onChange, inputKey])}
+    ref={ref}
+    {...rest}
+  />
+));
 
 FormInput.propTypes = {
   onChange: PropTypes.func.isRequired,

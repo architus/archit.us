@@ -42,6 +42,12 @@ function AutoResponses({ guildId }) {
     if (authenticated) fetchResponses(guildId);
   }, [authenticated, guildId]);
 
+  // Row adding
+  const onRowAdd = useCallback(row => {
+    console.log(`Adding`);
+    console.log(row);
+  });
+
   // Row updating
   const onRowUpdate = useCallback(({ idx, key, updatedCell }) => {
     console.log(`Updating`);
@@ -111,8 +117,7 @@ function AutoResponses({ guildId }) {
   }, [authors]);
 
   // Column definitions
-  const listRegex = /\blist\b/g;
-  const authorRegex = /\bauthor\b/g;
+  const alphanumericRegex = useMemo(() => /[_\W]+/g);
   let columns = [
     {
       key: "trigger",
@@ -144,7 +149,8 @@ function AutoResponses({ guildId }) {
         } else {
           return true;
         }
-      }
+      },
+      processValue: value => value.replace(alphanumericRegex, "")
     },
     {
       key: "response",
@@ -245,6 +251,7 @@ function AutoResponses({ guildId }) {
         columnWidths={columnWidths}
         sortColumn="count"
         baseColumnMeta={baseColumnMeta}
+        onRowAdd={onRowAdd}
         onRowUpdate={onRowUpdate}
         onRowDelete={onRowDelete}
         isLoading={!hasLoaded}

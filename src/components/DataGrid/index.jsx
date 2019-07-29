@@ -46,6 +46,7 @@ function DataGrid({
   data,
   columns,
   baseColumnMeta,
+  onRowAdd,
   onRowUpdate,
   onRowDelete,
   isLoading,
@@ -206,11 +207,13 @@ function DataGrid({
   const onAddRow = useCallback(() => {
     setShowAddRowDialog(true);
   });
-  const onAdd = useCallback((...args) => {
-    console.log("Adding row");
-    console.log(args);
-    setShowAddRowDialog(false);
-  });
+  const onAdd = useCallback(
+    (...args) => {
+      setShowAddRowDialog(false);
+      onRowAdd(...args);
+    },
+    [onRowAdd]
+  );
 
   return useClientSide(() => (
     <>
@@ -254,6 +257,7 @@ function DataGrid({
 export default DataGrid;
 
 DataGrid.propTypes = {
+  onRowAdd: PropTypes.func,
   onRowUpdate: PropTypes.func,
   onRowDelete: PropTypes.func,
   data: PropTypes.array.isRequired,
@@ -268,6 +272,7 @@ DataGrid.propTypes = {
 };
 
 DataGrid.defaultProps = {
+  onRowAdd() {},
   onRowUpdate() {},
   onRowDelete() {},
   transformRow: r => r,
