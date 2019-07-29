@@ -7,8 +7,16 @@ import React, {
 } from "react";
 import { useMedia } from "react-use";
 import PropTypes from "prop-types";
-import { shallowEqual, useSelector } from "react-redux";
-import { getResponses } from "store/actions";
+import { shallowEqual, useSelector, useDispatch } from "react-redux";
+import {
+  getResponses,
+  addResponse,
+  editResponse,
+  deleteResponse,
+  localAddResponse,
+  localEditResponse,
+  localDeleteResponse
+} from "store/actions";
 import { useAuthDispatch, isDefined, isNil } from "utility";
 import { AppScrollContext } from "dynamic/AppRoot";
 
@@ -25,13 +33,17 @@ import "./style.scss";
 
 function AutoResponses({ guildId }) {
   // Connect to store
+  const dispatch = useDispatch();
+  const addRow = useAuthDispatch(addResponse);
+  const editRow = useAuthDispatch(editResponse);
+  const deleteRow = useAuthDispatch(deleteResponse);
   const {
     commands,
     authors,
     authenticated,
     hasLoaded,
     isArchitusAdmin,
-    user_id
+    session
   } = useSelector(state => {
     const id = guildId.toString();
     const hasLoaded = state.responses.commands.hasOwnProperty(id);
@@ -44,9 +56,15 @@ function AutoResponses({ guildId }) {
       isArchitusAdmin: hasGuildListLoaded
         ? state.guilds.guildList.find(guild => guild.id === id).architus_admin
         : false,
-      user_id: state.session.id
+      session: {
+        id: state.session.id,
+        username: state.session.username,
+        discriminator: state.session.discriminator,
+        avatar: state.session.avatar
+      }
     };
   }, shallowEqual);
+  const user_id = session.id;
 
   // API fetch upon guildId/authentication updates
   const fetchResponses = useAuthDispatch(getResponses);
@@ -60,34 +78,32 @@ function AutoResponses({ guildId }) {
   const compareRowAuthor = useCallback(
     ({ author_id }) => author_id === userRef.current
   );
-  const canChangeRow = isArchitusAdmin
-    ? useCallback(() => true)
-    : compareRowAuthor;
+  const trueCallback = useCallback(() => true);
+  const canChangeRow = isArchitusAdmin ? trueCallback : compareRowAuthor;
   const canEditRow = isArchitusAdmin ? true : compareRowAuthor;
 
   // Row adding
   const onRowAdd = useCallback(row => {
-    if (isDefined(row) && canChangeRow(row)) {
-      console.log(`Adding`);
-      console.log(row);
+    if (isDefined(row)) {
+      addRow(guildId, row);
+      dispatch(localAddResponse(guildId, row, session));
     }
   });
 
   // Row updating
-  const onRowUpdate = useCallback(({ idx, key, updatedCell }) => {
-    if (idx > commands.length) return;
-    const row = commands[idx];
+  const onRowUpdate = useCallback(({ previousRow: row, key, updatedCell }) => {
+    console.log({ row, canChange: canChangeRow(row) });
     if (isDefined(row) && canChangeRow(row)) {
-      console.log(`Updating`);
-      console.log({ idx, key, updatedCell });
+      editRow(guildId, row.trigger, { ...row, [key]: updatedCell });
+      dispatch(localEditResponse(guildId, row, key, updatedCell));
     }
   });
 
   // Row deletion
   const onRowDelete = useCallback(row => {
     if (isDefined(row) && canChangeRow(row)) {
-      console.log(`Deleting`);
-      console.log(row);
+      deleteRow(guildId, row);
+      dispatch(localDeleteResponse(guildId, row));
     }
   });
 
@@ -125,7 +141,7 @@ function AutoResponses({ guildId }) {
   // Max count
   const maxCountRef = useRef(0);
   maxCountRef.current = useMemo(() => {
-    if (commands.length === 0) return 0;
+    if (isNil(commands) || commands.length === 0) return 0;
     else {
       let maxCount = 0;
       for (let i = 0; i < commands.length; ++i) {

@@ -3,7 +3,10 @@ import {
   TOKEN_EXCHANGE,
   IDENTIFY_SESSION,
   GET_GUILDS,
-  GET_RESPONSES
+  GET_RESPONSES,
+  ADD_RESPONSE,
+  EDIT_RESPONSE,
+  DELETE_RESPONSE
 } from "store/api/labels";
 import { connect, send } from "@giantmachines/redux-websocket";
 
@@ -12,6 +15,9 @@ export const API = "API";
 export const LOAD_SESSION = "LOAD_SESSION";
 export const LOAD_GUILDS = "LOAD_GUILDS";
 export const LOAD_RESPONSES = "LOAD_RESPONSES";
+export const LOCAL_ADD_RESPONSE = "LOCAL_ADD_RESPONSE";
+export const LOCAL_EDIT_RESPONSE = "LOCAL_EDIT_RESPONSE";
+export const LOCAL_DELETE_RESPONSE = "LOCAL_DELETE_RESPONSE";
 
 export const SOCKET = {
   CONNECT: "REDUX_WEBSOCKET::CONNECT",
@@ -61,9 +67,9 @@ function authApiAction(accessToken, { headers, ...rest }) {
   });
 }
 
-// ? =======
+// ? ===================
 // ? Actions
-// ? =======
+// ? ===================
 
 export function signOut(history) {
   log("Signed out");
@@ -72,6 +78,46 @@ export function signOut(history) {
     payload: history
   };
 }
+
+export function localAddResponse(guildId, { trigger, response }, session) {
+  return {
+    type: LOCAL_ADD_RESPONSE,
+    payload: {
+      guildId,
+      response: {
+        trigger,
+        response
+      },
+      session
+    }
+  };
+}
+
+export function localEditResponse(guildId, response, key, newValue) {
+  return {
+    type: LOCAL_EDIT_RESPONSE,
+    payload: {
+      guildId,
+      response,
+      key,
+      newValue
+    }
+  };
+}
+
+export function localDeleteResponse(guildId, response) {
+  return {
+    type: LOCAL_DELETE_RESPONSE,
+    payload: {
+      guildId,
+      response
+    }
+  };
+}
+
+// ? ===================
+// ? API Actions
+// ? ===================
 
 export function exchangeTokens(authCode) {
   log("Initiating token exchange");
@@ -92,8 +138,7 @@ export function identifySession(accessToken) {
   return authApiAction(accessToken, {
     url: `${API_BASE}/identify`,
     onSuccess: data => loadSession({ ...data, newToken: false }),
-    // TODO re-enable
-    // onFailure: signOut,
+    onFailure: signOut,
     label: IDENTIFY_SESSION
   });
 }
@@ -115,6 +160,54 @@ export function getResponses(accessToken, guildId) {
     label: GET_RESPONSES
   });
 }
+
+export function addResponse(accessToken, guildId, { trigger, response }) {
+  log(`Adding new auto-response ${guildId}/${trigger}=>${response}`);
+  return authApiAction(accessToken, {
+    url: `${API_BASE}/responses/${guildId}`,
+    label: ADD_RESPONSE,
+    method: HttpVerbs.POST,
+    data: {
+      trigger,
+      response
+    }
+  });
+}
+
+export function editResponse(
+  accessToken,
+  guildId,
+  oldTrigger,
+  { trigger, response }
+) {
+  log(`Editing auto-response ${guildId}/${trigger}=>${response}`);
+  return authApiAction(accessToken, {
+    url: `${API_BASE}/responses/${guildId}`,
+    label: EDIT_RESPONSE,
+    method: HttpVerbs.PATCH,
+    data: {
+      oldTrigger,
+      trigger,
+      response
+    }
+  });
+}
+
+export function deleteResponse(accessToken, guildId, { trigger }) {
+  log(`Deleting auto-response ${guildId}/${trigger}`);
+  return authApiAction(accessToken, {
+    url: `${API_BASE}/responses/${guildId}`,
+    label: DELETE_RESPONSE,
+    method: HttpVerbs.DELETE,
+    data: {
+      trigger
+    }
+  });
+}
+
+// ? ===================
+// ? API Success Actions
+// ? ===================
 
 export function loadSession(data) {
   log("Loading session data from network");
@@ -157,6 +250,10 @@ export function loadResponseData(data, guildId) {
     }
   };
 }
+
+// ? ===================
+// ? WebSocket Actions
+// ? ===================
 
 export function websocketConnect() {
   return connect(`${WS_API_BASE}`);

@@ -181,21 +181,13 @@ function DataGrid({
     const withBase = { ...c, ...baseColumnMeta };
     if ("tooltip" in withBase) {
       const tooltip = withBase.tooltip;
-      if ("headerRenderer" in withBase) {
-        withBase.headerRenderer = (
-          <div className="help-column-wrapper">
-            {withBase.headerRenderer}
-            <HelpTooltip content={tooltip} />
-          </div>
-        );
-      } else {
-        withBase.headerRenderer = (
-          <div className="help-column-wrapper">
-            <span>{withBase.name}</span>
-            <HelpTooltip content={tooltip} />
-          </div>
-        );
-      }
+      withBase.headerRenderer = (
+        <HelpColumnWrapper
+          renderer={withBase.headerRenderer}
+          name={withBase.name}
+          tooltip={tooltip}
+        />
+      );
     }
     return isDefined(currentColumnWidths[i])
       ? { ...withBase, width: currentColumnWidths[i] }
@@ -320,13 +312,39 @@ ToolbarComponent.propTypes = {
   onAddRow: PropTypes.func
 };
 
-const RowRenderer = ({ renderBaseRow, ...props }) => {
+function RowRenderer({ renderBaseRow, ...props }) {
   const { idx } = props;
   const className = idx % 2 ? "row-even" : "row-odd";
   return <div className={className}>{renderBaseRow(props)}</div>;
-};
+}
 
 RowRenderer.propTypes = {
   renderBaseRow: PropTypes.func,
   idx: PropTypes.number
+};
+
+function HelpColumnWrapper({ name, renderer, tooltip }) {
+  return (
+    <div className="help-column-wrapper">
+      <span>{isDefined(renderer) ? renderer : name}</span>
+      <HelpTooltip content={tooltip} />
+    </div>
+  );
+}
+
+HelpColumnWrapper.propTypes = {
+  name: PropTypes.string.isRequired,
+  tooltip: PropTypes.oneOfType([
+    PropTypes.node,
+    PropTypes.arrayOf(PropTypes.node)
+  ]),
+  renderer: PropTypes.oneOfType([
+    PropTypes.node,
+    PropTypes.arrayOf(PropTypes.node)
+  ])
+};
+
+HelpColumnWrapper.defaultProps = {
+  tooltip: undefined,
+  renderer: null
 };

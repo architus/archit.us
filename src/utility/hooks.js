@@ -24,7 +24,7 @@ export function useReturnQuery() {
 
 export function useAuthDispatch(action) {
   const isAuthenticated = useSelector(state => state.session.authenticated);
-  const authToken = useSelector(state => state.session.authToken);
+  const authToken = useSelector(state => state.session.accessToken);
   const dispatch = useDispatch();
   if (!isAuthenticated) {
     return () =>
