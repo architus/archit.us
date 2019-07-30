@@ -125,10 +125,16 @@ $scrollbar-width: 12px;
     }
     border-radius: 8px;
     transition: box-shadow 0.25s ease;
-    @include light-bg(white);
-    @include dark-bg($-dark, 12%);
-    @include light-fg;
-    @include dark-fg;
+
+    @include dark {
+        background-color: $-dark !important;
+        color: $-light !important;
+    }
+
+    @include light {
+        background-color: white !important;
+        color: $-dark !important;
+    }
 
     &::placeholder {
         @include light-fg(rgba($-dark, 0.4));
