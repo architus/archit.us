@@ -34,7 +34,7 @@ export class CustomEmojiExtension extends Extension {
     const emoteList = Object.keys(this.emoji)
       .map(e => `:${e}:`)
       .join("\n");
-    return `${"```"}Availible emotes\n=====================\n${emoteList}${"```"}`;
+    return `${"```"}Available emotes\n=====================\n${emoteList}${"```"}`;
   }
 
   onSend({ message, messageId }) {

@@ -329,6 +329,12 @@ input.form-control.editor-main {
             }
         }
     }
+
+    input[type="text"] {
+        @include dark {
+            background-color: color-adjust($-dark, 10%) !important;
+        }
+    }
 }
 
 .add-row-modal {

@@ -1,4 +1,4 @@
-import { zip, flatten } from "lodash";
+import { zip, flatten, compact } from "lodash";
 import { isNil } from "./object";
 import { left, right } from "./names.json";
 
@@ -148,7 +148,8 @@ export function isInPath({ path, fragment, position = null }) {
 export function splitFragments(string, regex) {
   const excludedFragments = string.split(regex);
   const matchedFragments = allMatches(string, regex);
-  return flatten(zip(excludedFragments, matchedFragments));
+  const sequence = flatten(zip(excludedFragments, matchedFragments));
+  return compact(sequence);
 }
 
 export function remakeRegex(source) {

@@ -127,7 +127,7 @@ $scrollbar-width: 12px;
     transition: box-shadow 0.25s ease;
 
     @include dark {
-        background-color: $-dark !important;
+        background-color: color-adjust($-dark, 15%) !important;
         color: $-light !important;
     }
 
