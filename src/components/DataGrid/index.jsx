@@ -11,6 +11,7 @@ import {
 
 import Icon from "components/Icon";
 import HelpTooltip from "components/HelpTooltip";
+import Switch from "components/Switch";
 import { Spinner } from "react-bootstrap";
 
 import "./style.scss";
@@ -56,6 +57,7 @@ function DataGrid({
   addRowButton,
   dialogTitle,
   canDeleteRow,
+  toolbarComponents,
   ...rest
 }) {
   // Escape hatch to access library methods imperatively
@@ -163,18 +165,19 @@ function DataGrid({
 
   // Responsive column widths
   function getBreakpoints(columnWidthMap) {
-    let breakpointArray = Object.keys(columnWidthMap)
-      .filter(k => k !== "base")
-      .map(k => parseInt(k));
-    breakpointArray.sort();
-    return breakpointArray.map(b => b.toString());
+    return Object.keys(columnWidthMap).filter(k => k !== "base");
   }
   const breakpointArray = getBreakpoints(columnWidths);
   const activeBreakpoint = useMediaBreakpoints(breakpointArray);
-  const currentColumnWidths =
-    activeBreakpoint === -1
-      ? columnWidths.base
-      : columnWidths[breakpointArray[activeBreakpoint]];
+  const currentColumnWidths = isNil(activeBreakpoint)
+    ? columnWidths.base
+    : columnWidths[activeBreakpoint];
+  console.log({
+    breakpointArray,
+    activeBreakpoint,
+    currentColumnWidths,
+    columnWidths
+  });
 
   // Process column meta to add base info, column widths, and help text
   const columnMeta = columns.map((c, i) => {
@@ -223,7 +226,11 @@ function DataGrid({
           enableCellAutoFocus={false}
           onGridSort={onGridSort}
           toolbar={
-            <ToolbarComponent onAddRow={onAddRow} addRowButton={addRowButton} />
+            <ToolbarComponent
+              onAddRow={onAddRow}
+              addRowButton={addRowButton}
+              slot={toolbarComponents}
+            />
           }
           onAddFilter={filter => setFilters(handleFilterChange(filter))}
           onClearFilters={() => setFilters({})}
@@ -263,7 +270,11 @@ DataGrid.propTypes = {
   emptyLabel: PropTypes.string,
   addRowButton: PropTypes.bool,
   dialogTitle: PropTypes.string,
-  canDeleteRow: PropTypes.func
+  canDeleteRow: PropTypes.func,
+  toolbarComponents: PropTypes.oneOfType([
+    PropTypes.node,
+    PropTypes.arrayOf(PropTypes.node)
+  ])
 };
 
 DataGrid.defaultProps = {
@@ -283,33 +294,44 @@ DataGrid.defaultProps = {
 // ? Sub components
 // ? ==============
 
-function ToolbarComponent({ addRowButton, onAddRow, onToggleFilter }) {
+function ToolbarComponent({ addRowButton, onAddRow, onToggleFilter, slot }) {
+  // Filter show state
   const [show, setShow] = useState(false);
+  const onChange = useCallback(() => {
+    setShow(!show);
+    onToggleFilter();
+  }, [show, onToggleFilter]);
   return (
-    <div className="react-grid-Toolbar">
-      <div className="tools">
-        {addRowButton ? (
-          <button className={classNames("btn-primary mr-3")} onClick={onAddRow}>
-            <Icon className="mr-2" name="plus" />
-            Add Row
-          </button>
-        ) : null}
-        <button
-          className={classNames("btn-primary mr-3", { active: show })}
-          onClick={useCallback(() => {
-            setShow(!show);
-            onToggleFilter();
-          }, [show, onToggleFilter])}
-        >{`${show ? "Hide" : "Show"} Filters`}</button>
+    <>
+      <div className="react-grid-Toolbar">
+        <div className="tools">
+          <span className="controls">
+            {slot}
+            <span>
+              <Switch onChange={onChange} checked={show} />
+              <span className="label">Show Filters</span>
+            </span>
+          </span>
+          {addRowButton ? (
+            <button
+              className={classNames("btn-primary mr-3")}
+              onClick={onAddRow}
+            >
+              <Icon className="mr-2" name="plus" />
+              Add Row
+            </button>
+          ) : null}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
 ToolbarComponent.propTypes = {
   onToggleFilter: PropTypes.func,
   addRowButton: PropTypes.bool,
-  onAddRow: PropTypes.func
+  onAddRow: PropTypes.func,
+  slot: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)])
 };
 
 function RowRenderer({ renderBaseRow, ...props }) {

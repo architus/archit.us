@@ -130,8 +130,6 @@ html.html--app {
                 @extend %hide-scrollbar;
                 @include dark-bg($guild-sidebar-dark-bg);
                 @include light-bg($guild-sidebar-light-bg);
-                @include dark-border($-dark, $border: 1px solid, $side: right);
-                @include light-border($-light, -20%, 1px solid, right);
             }
 
             .side-navbar {

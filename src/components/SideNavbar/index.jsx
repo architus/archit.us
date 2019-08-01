@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 import { isInPath, useLocation, useInitialRender } from "utility";
 
+import Tooltip from "components/Tooltip";
+
 import "./style.scss";
 
 function SideNavbar({ tabs, onClickTab }) {
@@ -33,6 +35,8 @@ function SideNavbar({ tabs, onClickTab }) {
   );
 }
 
+export default SideNavbar;
+
 SideNavbar.propTypes = {
   onClickTab: PropTypes.func,
   tabs: PropTypes.arrayOf(
@@ -49,20 +53,26 @@ SideNavbar.defaultProps = {
   tabs: []
 };
 
-export default SideNavbar;
+// ? ==============
+// ? Sub-components
+// ? ==============
 
 function NavbarIcon({ name, path, icon, onClickTab, isActive }) {
   return (
-    <button
-      className={classNames("side-navbar--icon-outer", { active: isActive })}
-      onClick={() => onClickTab(path)}
-    >
-      <div
-        className="side-navbar--icon"
-        dangerouslySetInnerHTML={{ __html: icon }}
-      />
-      <p>{name}</p>
-    </button>
+    <Outer name={name} isActive={isActive}>
+      <button
+        className={classNames("side-navbar--button", { active: isActive })}
+        onClick={() => onClickTab(path)}
+      >
+        <span className="side-navbar--top-corner" />
+        <div
+          className="side-navbar--icon"
+          dangerouslySetInnerHTML={{ __html: icon }}
+        />
+        <p>{name}</p>
+        <span className="side-navbar--bottom-corner" />
+      </button>
+    </Outer>
   );
 }
 
@@ -76,4 +86,23 @@ NavbarIcon.propTypes = {
 
 NavbarIcon.defaultProps = {
   isActive: false
+};
+
+function Outer({ children, isActive, name }) {
+  return (
+    <Tooltip
+      children={children}
+      text={name}
+      bsPrefix={isActive ? "hide-tooltip" : undefined}
+    />
+  );
+}
+
+Outer.propTypes = {
+  children: PropTypes.oneOfType([
+    PropTypes.node,
+    PropTypes.arrayOf(PropTypes.node)
+  ]),
+  isActive: PropTypes.bool,
+  name: PropTypes.string
 };

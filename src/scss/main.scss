@@ -106,19 +106,6 @@ main > div[role="group"] {
     border: 1px solid darken($-light, 10%);
 }
 
-.tooltip {
-    z-index: 1090;
-
-    .tooltip-inner {
-        padding: 0.5rem 0.75rem;
-        max-width: 240px;
-
-        h6 {
-            margin-bottom: 0.5rem;
-        }
-    }
-}
-
 .modal-backdrop.show {
     opacity: 0.65 !important;
 }

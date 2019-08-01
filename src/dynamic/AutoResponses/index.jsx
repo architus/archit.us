@@ -3,7 +3,8 @@ import React, {
   useMemo,
   useRef,
   useContext,
-  useCallback
+  useCallback,
+  useState
 } from "react";
 import { useMedia } from "react-use";
 import PropTypes from "prop-types";
@@ -21,6 +22,7 @@ import { useAuthDispatch, isDefined, isNil } from "utility";
 import { AppScrollContext } from "dynamic/AppRoot";
 
 import DataGrid, { NumericFilter } from "components/DataGrid";
+import Switch from "components/Switch";
 import { Container } from "react-bootstrap";
 import {
   createResponseCellFormatter,
@@ -137,6 +139,20 @@ function AutoResponses({ guildId }) {
     commands,
     authors
   ]);
+
+  // Self-authored filter
+  const [filterSelfAuthored, setFilterSelfAuthored] = useState(false);
+  const onToggleSelfAuthored = useCallback(
+    () => setFilterSelfAuthored(!filterSelfAuthored),
+    [filterSelfAuthored]
+  );
+  const filteredData = useMemo(
+    () =>
+      filterSelfAuthored
+        ? transformedData.filter(compareRowAuthor)
+        : transformedData,
+    [transformedData, filterSelfAuthored]
+  );
 
   // Max count
   const maxCountRef = useRef(0);
@@ -263,8 +279,9 @@ function AutoResponses({ guildId }) {
   };
   let columnWidths = {
     base: [150, 300, 90, 200],
-    "768": [200, null, 90, 200],
-    "992": [270, null, 200, 240]
+    "768": [200, 300, 100, 200],
+    "992": [200, null, 90, 200],
+    "1200": [270, null, 200, 240]
   };
 
   // Remove count column on mobile
@@ -288,13 +305,14 @@ function AutoResponses({ guildId }) {
     <Container className="auto-responses" fluid>
       <div className="hide-mobile-landscape">
         <h2>Automatic Responses</h2>
-        <p>
-          Manage the triggers and automatic responses for all entries on the
+        <p className="hide-mobile">
+          Manage the triggers and automatic responses for{" "}
+          {isArchitusAdmin ? "all entries" : "self-authored entries"} on the
           current server.
         </p>
       </div>
       <DataGrid
-        data={transformedData}
+        data={filteredData}
         columns={columns}
         columnWidths={columnWidths}
         sortColumn="count"
@@ -307,6 +325,17 @@ function AutoResponses({ guildId }) {
         emptyLabel="No responses to display"
         onScroll={handleScroll}
         dialogTitle="Add new auto response"
+        toolbarComponents={
+          <>
+            <span>
+              <Switch
+                onChange={onToggleSelfAuthored}
+                checked={filterSelfAuthored}
+              />
+              <span className="label">Show self-authored</span>
+            </span>
+          </>
+        }
       />
     </Container>
   );

@@ -7,8 +7,8 @@
 $border-color-light: rgba($-dark, 0.15);
 $border-color-dark: rgba($-light, 0.15);
 %header-cell-fill {
-    @include light-bg($adjust: -6%);
-    @include dark-bg($-dark, 3%);
+    @include light-bg($adjust: -7%);
+    @include dark-bg($-dark, 2%);
 }
 
 %cell-base {
@@ -32,13 +32,9 @@ input.form-control.editor-main {
     @include light-fg;
     @include dark-fade-fg;
 
-    @include respond-below(lg) {
-        padding-top: 3rem;
-    }
-
     // React grid meme to make full height
     .react-grid-Main {
-        height: 100%;
+        flex-grow: 1;
         @extend %base-bg;
         outline: none;
 
@@ -58,17 +54,64 @@ input.form-control.editor-main {
     .react-grid-Container {
         height: 100%;
         position: relative;
+        display: flex;
+        flex-direction: column;
     }
 
     .react-grid-Toolbar {
-        position: absolute;
-        top: -40px;
-        right: 0;
+        flex-grow: 0;
         z-index: 2;
         background-color: transparent;
         border: none;
-        padding: 0;
+        padding: {
+            top: 0.5rem;
+            bottom: 0.5rem;
+            left: 0;
+            right: 0;
+        }
         height: auto;
+
+        @include respond-below(sm) {
+            .tools {
+                float: none;
+                line-height: 1.5;
+            }
+        }
+
+        @include respond-below(xs) {
+            .tools {
+                display: flex;
+                flex-direction: column;
+
+                .controls {
+                    margin-bottom: 1rem;
+                }
+            }
+        }
+
+        @include respond-above(sm) {
+            position: absolute;
+            top: -50px;
+            right: 0;
+        }
+
+        .tools {
+            .controls {
+                margin-right: 0.5rem;
+                position: relative;
+                top: -5px;
+            }
+
+            .react-switch {
+                vertical-align: -8px;
+                margin-right: 0.6rem;
+                margin-left: 0.55rem;
+            }
+
+            .label {
+                margin-right: 1.1rem;
+            }
+        }
 
         button {
             display: inline-block;
@@ -96,8 +139,6 @@ input.form-control.editor-main {
         @extend %base-bg;
         border: none;
         overflow: unset !important;
-        @include light-border($border-color-light, $side: bottom);
-        @include dark-border($border-color-dark, $side: bottom);
     }
 
     .react-grid-Canvas {
@@ -106,12 +147,26 @@ input.form-control.editor-main {
         height: 982px;
         z-index: 2;
         background-color: transparent;
-        position: relative;
     }
 
     .react-grid-Viewport {
         @extend %base-bg;
         overflow: unset !important;
+        position: relative;
+
+        &:after {
+            position: absolute;
+            z-index: 3;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 16px;
+            content: " ";
+            box-shadow: inset 0 14px 6px -7px rgba(black, 0.03),
+                inset 0 -14px 6px -7px rgba(black, 0.05);
+            overflow: hidden;
+            pointer-events: none;
+        }
     }
 
     .react-grid-Header {
@@ -129,8 +184,13 @@ input.form-control.editor-main {
         overflow-y: hidden;
 
         &:first-child {
-            @include light-border($border-color-light, $side: top);
-            @include dark-border($border-color-dark, $side: top);
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+
+        &:last-child {
+            @include light-border($border-color-light, $side: bottom);
+            @include dark-border($border-color-dark, $side: bottom);
         }
     }
 
@@ -138,6 +198,8 @@ input.form-control.editor-main {
         font-weight: 500;
         padding: 0;
         @extend %cell-base;
+        border-right: none;
+        border-bottom: none;
 
         & > div {
             height: 100%;
@@ -150,8 +212,8 @@ input.form-control.editor-main {
                 padding: {
                     right: 10px;
                     left: 10px;
-                    top: 8px;
-                    bottom: 8px;
+                    top: 4px;
+                    bottom: 14px;
                 }
 
                 input {
@@ -179,8 +241,6 @@ input.form-control.editor-main {
                 }
                 padding-left: 12px;
             }
-            @include light-border($border-color-light, $side: left);
-            @include dark-border($border-color-dark, $side: left);
         }
 
         &:last-child {
@@ -189,8 +249,6 @@ input.form-control.editor-main {
                     padding-right: 12px;
                 }
             }
-            @include light-border($border-color-light, $side: right);
-            @include dark-border($border-color-dark, $side: right);
         }
 
         .react-grid-HeaderCell-sortable {
@@ -244,9 +302,11 @@ input.form-control.editor-main {
 
     .react-grid-Cell {
         @extend %cell-base;
+        border-right: none;
+        border-bottom: none;
 
-        &:last-child {
-            border-right: none;
+        &:first-child {
+            padding-left: 12px;
         }
 
         .rdg-cell-action {
@@ -302,11 +362,13 @@ input.form-control.editor-main {
                 display: block;
             }
         }
+        border-radius: 8px;
     }
 
     .row-even {
-        @include light(background-color, rgba(black, 0.02));
-        @include dark(background-color, rgba(white, 0.02));
+        @include light(background-color, rgba(black, 0.03));
+        @include dark(background-color, rgba(black, 0.1));
+        border-radius: 8px;
     }
 
     .react-grid-Empty {
@@ -323,9 +385,10 @@ input.form-control.editor-main {
             }
 
             .empty-label {
-                padding: 1rem;
+                padding: 1rem 1.35rem;
                 @include light-bg(white);
                 @include dark-bg($-dark, 2.5%);
+                border-radius: 80rem;
             }
         }
     }

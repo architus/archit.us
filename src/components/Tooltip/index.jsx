@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 
 import { OverlayTrigger, Tooltip as BootstrapTooltip } from "react-bootstrap";
 
+import "./style.scss";
+
 function Tooltip({
   text,
   children,
@@ -10,7 +12,8 @@ function Tooltip({
   popperConfig,
   left,
   top,
-  bottom
+  bottom,
+  ...rest
 }) {
   return (
     <OverlayTrigger
@@ -25,7 +28,7 @@ function Tooltip({
         },
         ...popperConfig
       }}
-      overlay={<BootstrapTooltip>{text}</BootstrapTooltip>}
+      overlay={<BootstrapTooltip {...rest}>{text}</BootstrapTooltip>}
     >
       {children}
     </OverlayTrigger>

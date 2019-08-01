@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { globalHistory } from "@reach/router";
 import { log, addMissingUnit } from "./string";
@@ -40,12 +40,25 @@ export function useClientSide(render) {
 }
 
 export function useMediaBreakpoints(breakpoints) {
-  const queries = breakpoints.map(b => `(min-width: ${addMissingUnit(b)})`);
+  const collator = useMemo(
+    () =>
+      new Intl.Collator(undefined, {
+        numeric: true,
+        sensitivity: "base"
+      })
+  );
+  const sortedBreakpoints = useMemo(
+    () => [...breakpoints].sort(collator.compare),
+    [breakpoints, collator]
+  );
+  const queries = sortedBreakpoints.map(
+    b => `(min-width: ${addMissingUnit(b)})`
+  );
   const getBreakpoint = matches => {
     // Find first media query that fails
     const result = matches.findIndex(m => !m);
     // If none fail, then return last breakpoint; else return the last passing
-    return result === -1 ? breakpoints.length - 1 : result - 1;
+    return result === -1 ? sortedBreakpoints.length - 1 : result - 1;
   };
   const [state, setState] = useState(
     isClient
@@ -70,9 +83,9 @@ export function useMediaBreakpoints(breakpoints) {
       mounted = false;
       mediaQueries.forEach(mql => mql.removeListener(onChange));
     };
-  }, [breakpoints]);
+  }, [sortedBreakpoints]);
 
-  return state;
+  return state === -1 ? null : sortedBreakpoints[state];
 }
 
 // Sourced from reach/router/issues/203
