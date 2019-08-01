@@ -158,6 +158,19 @@ function AddRowModal({ data, show, columns, onHide, onAdd, title, ...rest }) {
     }
   }, [show, handleKeyPressed]);
 
+  // Validate upon lost focus
+  const [finishedInputs, setFinishedInputs] = useState(() =>
+    Object.assign({}, ...relevantColumns.map(col => ({ [col.key]: false })))
+  );
+  const onBlur = useCallback(
+    key => setFinishedInputs({ ...finishedInputs, [key]: true }),
+    [finishedInputs]
+  );
+  const validated = useCallback(
+    col => showValidation || finishedInputs[col.key],
+    [showValidation, finishedInputs]
+  );
+
   return (
     <Modal
       size="lg"
@@ -185,9 +198,10 @@ function AddRowModal({ data, show, columns, onHide, onAdd, title, ...rest }) {
                 inputKey={col.key}
                 placeholder={`Enter ${col.name.toLowerCase()}`}
                 onChange={onChange}
+                onBlur={onBlur}
                 value={values[col.key]}
-                isValid={showValidation && validationStatus[col.key].result}
-                isInvalid={showValidation && !validationStatus[col.key].result}
+                isValid={validated(col) && validationStatus[col.key].result}
+                isInvalid={validated(col) && !validationStatus[col.key].result}
                 ref={i === 0 ? firstInput : undefined}
               />
               <Form.Control.Feedback type="invalid">
@@ -236,15 +250,23 @@ AddRowModal.defaultProps = {
 // ? Sub-components
 // ? ==============
 
-const FormInput = React.forwardRef(({ onChange, inputKey, ...rest }, ref) => (
-  <Form.Control
-    onChange={useCallback(e => onChange(inputKey, e), [onChange, inputKey])}
-    ref={ref}
-    {...rest}
-  />
-));
+const FormInput = React.forwardRef(
+  ({ onChange, onBlur, inputKey, ...rest }, ref) => (
+    <Form.Control
+      onChange={useCallback(e => onChange(inputKey, e), [onChange, inputKey])}
+      onBlur={useCallback(() => onBlur(inputKey), [onBlur, inputKey])}
+      ref={ref}
+      {...rest}
+    />
+  )
+);
 
 FormInput.propTypes = {
   onChange: PropTypes.func.isRequired,
-  inputKey: PropTypes.string
+  inputKey: PropTypes.string.isRequired,
+  onBlur: PropTypes.func
+};
+
+FormInput.defaultProps = {
+  onBlur() {}
 };
