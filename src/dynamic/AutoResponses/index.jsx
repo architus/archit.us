@@ -94,7 +94,6 @@ function AutoResponses({ guildId }) {
 
   // Row updating
   const onRowUpdate = useCallback(({ previousRow: row, key, updatedCell }) => {
-    console.log({ row, canChange: canChangeRow(row) });
     if (isDefined(row) && canChangeRow(row)) {
       editRow(guildId, row.trigger, { ...row, [key]: updatedCell });
       dispatch(localEditResponse(guildId, row, key, updatedCell));

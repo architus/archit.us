@@ -172,12 +172,6 @@ function DataGrid({
   const currentColumnWidths = isNil(activeBreakpoint)
     ? columnWidths.base
     : columnWidths[activeBreakpoint];
-  console.log({
-    breakpointArray,
-    activeBreakpoint,
-    currentColumnWidths,
-    columnWidths
-  });
 
   // Process column meta to add base info, column widths, and help text
   const columnMeta = columns.map((c, i) => {
