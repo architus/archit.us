@@ -1,4 +1,4 @@
-import { reverseMapFromMap } from "utility";
+import { invertMap } from "utility";
 import { library } from "@fortawesome/fontawesome-svg-core";
 
 import * as FontAwesomeIcons from "./fontawesome";
@@ -12,7 +12,7 @@ const nameToTypeMap = Object.assign(
   {},
   ...allIcons.map(i => ({ [i.iconName]: i.prefix }))
 );
-const typeResolutionMap = reverseMapFromMap(nameToTypeMap);
+const typeResolutionMap = invertMap(nameToTypeMap);
 library.add(...allIcons);
 
 function resolveTypeClass(name) {

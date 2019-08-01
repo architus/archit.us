@@ -1,6 +1,7 @@
 @import "./colors";
 @import "./fonts";
 @import "./theme";
+@import "./media";
 
 // Bootstrap config options
 $enable-rounded: true !default;
@@ -32,6 +33,22 @@ $link-hover-decoration: none !default;
 // Base Bootstrap
 @import "./bootstrap";
 @import "node_modules/bootstrap/scss/mixins/buttons";
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+    letter-spacing: $headings-letter-spacing;
+    margin-bottom: $headings-margin-bottom;
+}
 
 * {
     -webkit-font-smoothing: antialiased;
@@ -89,10 +106,82 @@ main > div[role="group"] {
     border: 1px solid darken($-light, 10%);
 }
 
-.tooltip {
-    z-index: 1090;
-}
-
 .modal-backdrop.show {
     opacity: 0.65 !important;
+}
+
+.modal {
+    .modal-content {
+        $modal-border-radius: 0.6rem;
+        $border-color-dark: rgba($-light, 0.2);
+
+        border-radius: $modal-border-radius;
+        box-shadow: none;
+
+        @include light-bg;
+        @include dark-bg;
+        @include light-fg;
+        @include dark-fg;
+
+        .modal-header {
+            padding-left: 2rem;
+            padding-right: 2rem;
+            padding-top: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-top-right-radius: $modal-border-radius;
+            border-top-left-radius: $modal-border-radius;
+            @include dark-border($border-color-dark, $side: bottom);
+        }
+
+        .modal-body {
+            @extend %custom-scrollbar;
+        }
+
+        .modal-footer {
+            padding: 1.4rem;
+            border-bottom-right-radius: $modal-border-radius;
+            border-bottom-left-radius: $modal-border-radius;
+            @include dark-border($border-color-dark, $side: top);
+        }
+
+        .close {
+            @include dark {
+                color: white;
+                text-shadow: 0 1px 0 black;
+            }
+        }
+    }
+}
+
+.text-muted {
+    @include dark {
+        color: rgba($-light, 0.6) !important;
+    }
+}
+
+.badge {
+    font-weight: 400;
+    padding: 0.35em 0.6em 0.4em;
+    border-radius: 4px;
+    margin-left: 0.4em;
+    margin-top: 0.2em;
+}
+
+.form-control.is-valid,
+.form-control.is-invalid {
+    background-position: calc(100% - 8px) calc(0.375em + 0.1875rem);
+}
+
+input[type="text"] {
+    @include dark {
+        border-color: rgba($-light, 0.2);
+    }
+    @extend %input-box;
+
+    &.form-control.is-invalid {
+        border-color: $-danger;
+    }
+    &.form-control.is-valid {
+        border-color: $-success;
+    }
 }

@@ -8,7 +8,11 @@ export const initial = {
   connectedToDiscord: false,
   discordAuthCode: "",
   accessToken: "",
-  expiresAt: null
+  expiresAt: null,
+  username: null,
+  discriminator: null,
+  id: null,
+  avatar: null
 };
 
 export const mapStateToLoggedIn = state => {
@@ -54,7 +58,7 @@ export const tryLoadSession = () => {
       const now = new Date();
       if (expiresAt - now < 0) {
         log("Session has expired; clearing");
-        window.localStorage.set(LOCAL_STORAGE_KEY, null);
+        window.localStorage.setItem(LOCAL_STORAGE_KEY, null);
         return initial;
       }
     }
@@ -101,4 +105,14 @@ export function reducer(state = initial, action) {
     default:
       return state;
   }
+}
+
+export function sessionAware(initialState, reducer) {
+  return (state = initialState, action) => {
+    if (action.type === SIGN_OUT) {
+      return initialState;
+    } else {
+      return reducer(state, action);
+    }
+  };
 }

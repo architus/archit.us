@@ -1,4 +1,4 @@
-import { log } from "utility";
+import { warn } from "utility";
 
 export const API_START = "API_START";
 export const API_END = "API_END";
@@ -15,7 +15,7 @@ export const apiEnd = label => ({
 });
 
 export const apiError = error => {
-  log(error);
+  warn(error);
   return {
     type: API_ERROR,
     error

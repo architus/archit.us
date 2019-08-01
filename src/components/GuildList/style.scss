@@ -36,16 +36,15 @@ $margin: 0.75rem;
         hr {
             width: 100%;
             @include light-border(
-                rgba($-dark, 0.2),
+                rgba($-dark, 0.15),
                 $border: 2px solid,
                 $side: top
             );
             @include dark-border(
-                rgba($-light, 0.15),
+                rgba($-light, 0.10),
                 $border: 2px solid,
                 $side: top
             );
-            @include theme-transitions("border-top-color");
             margin: {
                 top: 0.25rem !important;
                 bottom: 0.25rem !important;
@@ -85,7 +84,7 @@ $margin: 0.75rem;
             @include light {
                 box-shadow: $drop-shadow;
             }
-            @include theme-transitions("border-right-color, height, transform, opacity");
+            @include transitions("height, transform, opacity");
         }
         &.guild-icon__active {
             &::after {

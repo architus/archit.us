@@ -1,5 +1,6 @@
 @import "scss/colors";
 @import "scss/theme";
+@import "scss/util";
 @import "dynamic/AppRoot/vars";
 
 %icon-base {
@@ -34,7 +35,6 @@
             margin-bottom: auto;
             width: 1em !important;
             height: 1em !important;
-            @include theme-transitions("color");
         }
 
         .bg-icon {
@@ -63,7 +63,7 @@
 
 %symbol-icon-base {
     @extend %icon-base;
-    @include theme-transitions(
+    @include transitions(
         "background-color, color, border-radius, opacity"
     );
     @include dark-bg($-dark, 7.5%);
@@ -72,7 +72,7 @@
 
     span {
         @extend %symbol-icon-base-fg;
-        @include theme-transitions("color");
+        @include transitions("color");
     }
 
     &:hover {

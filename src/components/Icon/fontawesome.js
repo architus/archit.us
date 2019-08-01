@@ -5,6 +5,9 @@ export {
   faSignOutAlt,
   faMoon,
   faSun,
-  faShieldAlt
+  faShieldAlt,
+  faFilter,
+  faTimesCircle,
+  faQuestionCircle
 } from "@fortawesome/free-solid-svg-icons";
 export { faDiscord, faGithub } from "@fortawesome/free-brands-svg-icons";

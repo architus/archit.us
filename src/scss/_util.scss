@@ -2,6 +2,12 @@
     box-shadow: 0 0 0 0.2rem rgba($color, $opacity);
 }
 
+@mixin transitions($properties) {
+    transition-duration: 0.25s;
+    transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
+    transition-property: unquote($properties);
+}
+
 %hide-scrollbar {
     overflow-y: auto;
     scrollbar-width: none; /* Firefox */

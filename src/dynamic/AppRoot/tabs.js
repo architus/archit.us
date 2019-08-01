@@ -1,4 +1,9 @@
 import Settings from "dynamic/Settings";
+import AutoResponses from "dynamic/AutoResponses";
+import EmojiManager from "dynamic/EmojiManager";
+import Logs from "dynamic/Logs";
+import MusicQueue from "dynamic/MusicQueue";
+import Statistics from "dynamic/Statistics";
 import Begin from "dynamic/Begin";
 
 import chartSvg from "assets/chart.inline.svg";
@@ -13,7 +18,7 @@ const tabs = [
     icon: chartSvg,
     name: "Statistics",
     path: "stats",
-    component: Begin
+    component: Statistics
   },
   {
     icon: cogsSvg,
@@ -25,25 +30,26 @@ const tabs = [
     icon: emojiSvg,
     name: "Emoji Manager",
     path: "emoji",
-    component: Begin
+    component: EmojiManager
   },
   {
     icon: musicSvg,
     name: "Music Queue",
     path: "queue",
-    component: Begin
+    component: MusicQueue
   },
   {
     icon: responsesSvg,
     name: "Auto Responses",
     path: "responses",
-    component: Begin
+    component: AutoResponses,
+    contentClass: "no-scroll"
   },
   {
     icon: scrollSvg,
     name: "Logs",
     path: "logs",
-    component: Begin
+    component: Logs
   }
 ];
 

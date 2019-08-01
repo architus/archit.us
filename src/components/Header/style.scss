@@ -9,14 +9,12 @@
         bottom: 0.85rem;
     }
     box-shadow: $drop-shadow;
-    border-bottom: 1px solid darken($-primary, 10%);
     background-image: linear-gradient($-primary, $-primary);
     @include theme-property(
         background-image,
         linear-gradient($-primary, color-adjust($-primary, -2.5%)),
         dark
     );
-    @include theme-transitions("background-image");
 
     @include respond-above(sm) {
         height: 68px;

@@ -4,19 +4,18 @@ import * as loading from "./loading";
 import * as socket from "./socket";
 import * as interpret from "./interpret";
 import * as guilds from "./guilds";
+import * as responses from "./responses";
 
-export const initialState = {
-  session: session.initial,
-  loading: loading.initial,
-  socket: socket.initial,
-  interpret: interpret.initial,
-  guilds: guilds.initial
-};
+const reducers = { session, loading, socket, interpret, guilds, responses };
 
-export const store = combineReducers({
-  session: session.reducer,
-  loading: loading.reducer,
-  socket: socket.reducer,
-  interpret: interpret.reducer,
-  guilds: guilds.reducer
-});
+export const initialState = Object.assign(
+  {},
+  ...Object.keys(reducers).map(r => ({ [r]: reducers[r].initial }))
+);
+
+export const store = combineReducers(
+  Object.assign(
+    {},
+    ...Object.keys(reducers).map(r => ({ [r]: reducers[r].reducer }))
+  )
+);

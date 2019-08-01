@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { getDiscordAdminGuildsWithoutAutbot } from "store/reducers/guilds";
+import { getDiscordAdminGuildsWithoutArchitus } from "store/reducers/guilds";
 import { connect } from "react-redux";
 import { useReturnQuery, API_BASE, processIfNotEmptyOrNil } from "utility";
 
@@ -66,7 +66,7 @@ function AddGuildModal({ onHide, guilds, dispatch, ...rest }) {
 }
 
 const mapStateToProps = state => ({
-  guilds: getDiscordAdminGuildsWithoutAutbot(state)
+  guilds: getDiscordAdminGuildsWithoutArchitus(state)
 });
 
 export default connect(mapStateToProps)(AddGuildModal);

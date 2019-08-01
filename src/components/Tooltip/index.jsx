@@ -3,15 +3,17 @@ import PropTypes from "prop-types";
 
 import { OverlayTrigger, Tooltip as BootstrapTooltip } from "react-bootstrap";
 
+import "./style.scss";
+
 function Tooltip({
   text,
   children,
   modifiers,
   popperConfig,
-  left = false,
-  right = false,
-  top = false,
-  bottom = false
+  left,
+  top,
+  bottom,
+  ...rest
 }) {
   return (
     <OverlayTrigger
@@ -26,7 +28,7 @@ function Tooltip({
         },
         ...popperConfig
       }}
-      overlay={<BootstrapTooltip>{text}</BootstrapTooltip>}
+      overlay={<BootstrapTooltip {...rest}>{text}</BootstrapTooltip>}
     >
       {children}
     </OverlayTrigger>
@@ -36,7 +38,8 @@ function Tooltip({
 export default Tooltip;
 
 Tooltip.propTypes = {
-  text: PropTypes.string.isRequired,
+  text: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)])
+    .isRequired,
   children: PropTypes.oneOfType([
     PropTypes.node,
     PropTypes.arrayOf(PropTypes.node)
@@ -44,7 +47,15 @@ Tooltip.propTypes = {
   popperConfig: PropTypes.object,
   modifiers: PropTypes.object,
   left: PropTypes.bool,
-  right: PropTypes.bool,
   top: PropTypes.bool,
   bottom: PropTypes.bool
+};
+
+Tooltip.defaultProps = {
+  children: [],
+  popperConfig: {},
+  modifiers: {},
+  left: false,
+  top: false,
+  bottom: false
 };

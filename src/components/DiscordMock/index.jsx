@@ -6,7 +6,7 @@ import MockTyper from "utility/MockTyper";
 import { sendMessage } from "store/actions";
 import { SLICED_LENGTH } from "store/reducers/interpret";
 import {
-  autBotUser,
+  architusUser,
   createMockUser,
   IdProvisioner,
   serializeOutgoingMessage,
@@ -42,7 +42,7 @@ class DiscordMock extends React.Component {
     this.guildId = randomDigitString(9);
     this.thisUser = createMockUser(this.guildId);
     this.idProvisioner = new IdProvisioner();
-    this.users = this.buildUserMap(this.thisUser, autBotUser);
+    this.users = this.buildUserMap(this.thisUser, architusUser);
     this.initializeExtension(props.extension);
     this.bindEventHandlers();
     this.state = {
@@ -82,7 +82,7 @@ class DiscordMock extends React.Component {
       guildId: this.guildId,
       thisUser: this.thisUser,
       users: this.users,
-      autBotUser
+      architusUser
     };
     const commands = {
       sendMessage: this.addMessage.bind(this),
@@ -335,7 +335,7 @@ class DiscordMock extends React.Component {
 
   // Adds a message sent by architus to the clump/message array
   handleResponse(response) {
-    this.addMessage({ ...response, sender: autBotUser });
+    this.addMessage({ ...response, sender: architusUser });
   }
 
   // Adds a message to the clump/message array, returning the internal object

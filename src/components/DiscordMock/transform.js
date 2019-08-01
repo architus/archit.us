@@ -139,7 +139,7 @@ export function transformOutgoingMessage(message = "", context = {}) {
 }
 
 // Applies a transformation pipeline (types described above)
-function applyFragmentTransformer(fragment, context, transformer) {
+export function applyFragmentTransformer(fragment, context, transformer) {
   if (typeof transformer === "function") {
     return transformer(fragment, context);
   } else {
@@ -148,7 +148,7 @@ function applyFragmentTransformer(fragment, context, transformer) {
 }
 
 // Applies a multi-part transformation pipeline
-function applyTransformers(fragment, context, transformers) {
+export function applyTransformers(fragment, context, transformers) {
   let currentFragmentValue = fragment;
   transformers.forEach(t => {
     currentFragmentValue = t(currentFragmentValue, context);
@@ -243,22 +243,21 @@ function allMentionedIds(source, context) {
   return mentionIds;
 }
 
-const mentionRegex = /(?:[<]|(?:&lt;))[@]([-0-9]+)(?:[>]|(?:&gt;))/g;
+const mentionRegex = /(?:[<]|(?:&lt;))@!?([-0-9]+)(?:[>]|(?:&gt;))/g;
 // Applies Discord's user mention syntax to the given fragment
-function convertMentions(fragment, context) {
+export function convertMentions(fragment, context) {
   const { users } = context;
   if (isNil(users)) return fragment;
-  return fragment.replace(mentionRegex, (_match, p1) => {
-    const id = parseInt(p1);
+  return fragment.replace(mentionRegex, (_match, id) => {
     const content = isNil(users[id]) ? id : users[id].username;
     return `<span class="mention">@${content}</span>`;
   });
 }
 
-const discordEmojiRegex = /:([a-zA-Z0-9_-]+):/g;
+const discordEmojiRegex = /:([a-zA-Z0-9~_()-]+):/g;
 // Converts Discord emojis (shortcode format) to twemoji images, optionally
 // using Discord's custom set of shortcode aliases if neccessary
-function convertDiscordEmoji(fragment) {
+export function convertDiscordEmoji(fragment) {
   return fragment.replace(discordEmojiRegex, (_match, p1) => {
     let shortcode = p1;
     let hasShortcode = hasEmoji(shortcode);
@@ -281,7 +280,7 @@ function convertDiscordEmoji(fragment) {
 }
 
 // Converts unicode emoji to image nodes with corrected alt tags
-function convertUnicodeEmoji(fragment) {
+export function convertUnicodeEmoji(fragment) {
   return correctEmojiAlts(twemoji.parse(fragment));
 }
 

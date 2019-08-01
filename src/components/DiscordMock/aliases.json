@@ -144,5 +144,11 @@
   "crayon": "lower_left_crayon",
   "pen_fountain": "lower_left_fountain_pen",
   "anger_right": "right_anger_bubble",
-  "speech_left": "left_speech_bubble"
+  "speech_left": "left_speech_bubble",
+  "face_with_tears_of_joy": "joy",
+  "B_button_(blood_type)": "b",
+  "confounded_face": "confounded",
+  "grinning_face_with_big_eyes": "grinning",
+  "person_shrugging": "shrug",
+  "thumbs_up": "thumbsup"
 }
