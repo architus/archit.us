@@ -1,21 +1,30 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { addMissingUnit } from "utility";
 
 import { OverlayTrigger, Tooltip as BootstrapTooltip } from "react-bootstrap";
+
+import "./style.scss";
 
 function Tooltip({
   text,
   children,
   modifiers,
   popperConfig,
-  left = false,
-  right = false,
-  top = false,
-  bottom = false
+  left,
+  top,
+  bottom,
+  hide,
+  padding,
+  toggle,
+  delay,
+  ...rest
 }) {
   return (
     <OverlayTrigger
+      trigger={toggle ? "click" : undefined}
       placement={top ? "top" : bottom ? "bottom" : left ? "left" : "right"}
+      children={children}
       popperConfig={{
         modifiers: {
           preventOverflow: {
@@ -26,17 +35,24 @@ function Tooltip({
         },
         ...popperConfig
       }}
-      overlay={<BootstrapTooltip>{text}</BootstrapTooltip>}
-    >
-      {children}
-    </OverlayTrigger>
+      delay={delay}
+      overlay={
+        <BootstrapTooltip
+          bsPrefix={hide ? "hide-tooltip" : undefined}
+          {...rest}
+        >
+          <div style={{ padding: addMissingUnit(padding) }}>{text}</div>
+        </BootstrapTooltip>
+      }
+    />
   );
 }
 
 export default Tooltip;
 
 Tooltip.propTypes = {
-  text: PropTypes.string.isRequired,
+  text: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)])
+    .isRequired,
   children: PropTypes.oneOfType([
     PropTypes.node,
     PropTypes.arrayOf(PropTypes.node)
@@ -44,7 +60,24 @@ Tooltip.propTypes = {
   popperConfig: PropTypes.object,
   modifiers: PropTypes.object,
   left: PropTypes.bool,
-  right: PropTypes.bool,
   top: PropTypes.bool,
-  bottom: PropTypes.bool
+  bottom: PropTypes.bool,
+  padding: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  hide: PropTypes.bool,
+  toggle: PropTypes.bool,
+  delay: PropTypes.number
 };
+
+Tooltip.defaultProps = {
+  children: [],
+  popperConfig: {},
+  modifiers: {},
+  left: false,
+  top: false,
+  bottom: false,
+  hide: false,
+  padding: "0.5rem",
+  toggle: false
+};
+
+Tooltip.displayName = "Tooltip";

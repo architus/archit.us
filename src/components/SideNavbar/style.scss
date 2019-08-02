@@ -2,11 +2,12 @@
 @import "scss/util";
 @import "scss/theme";
 
+$border-radius: 8px;
+
 .side-navbar {
+    $this: &;
     @include dark-bg($-dark, 2.5%);
     @include light-bg($-light, -5%);
-    @include dark-border($-dark, 4%, 1px solid, right);
-    @include light-border($-light, -10%, 1px solid, right);
 
     display: flex;
     flex-direction: column;
@@ -14,15 +15,21 @@
     justify-content: flex-start;
     padding: 0.75rem 0;
 
-    &--icon-outer {
-        padding-top: 2rem;
-        padding-bottom: 2.2rem;
+    &--button {
         transition-duration: 0.25s;
         transition-timing-function: $ease;
         transition-property: padding-top, padding-bottom, opacity,
-            background-color;
+            border-top-left-radius, border-bottom-left-radius, margin-top,
+            margin-bottom;
         @include light-bg(rgba(color-adjust($-primary, -60%), 0.05));
         @include dark-bg(rgba(black, 0.08));
+        position: relative;
+
+        padding-top: 0.6rem;
+        padding-bottom: 0;
+        opacity: 0.35;
+        margin-top: 0;
+        margin-bottom: 0;
 
         p {
             line-height: 1.2;
@@ -39,15 +46,76 @@
         }
 
         &:not(.active) {
-            padding-top: 0.6rem;
-            padding-bottom: 0;
-            opacity: 0.35;
-            @include light-bg(rgba(color-adjust($-primary, -60%), 0));
-            @include dark-bg(rgba(black, 0));
-
             p {
                 opacity: 0;
                 height: 0;
+            }
+        }
+
+        &.active {
+            @include light-bg;
+            @include dark-bg;
+            border-top-left-radius: 12px;
+            border-bottom-left-radius: 12px;
+            margin-top: $border-radius;
+            margin-bottom: $border-radius;
+            opacity: 1;
+            padding-top: 2rem;
+            padding-bottom: 2.2rem;
+            z-index: 1;
+
+            &:hover {
+                @include light-bg($adjust: 60%);
+                @include dark-bg($adjust: -10%);
+
+                #{$this}--top-corner,
+                #{$this}--bottom-corner {
+                    &:before {
+                        @include light-fg($-light, 60%);
+                        @include dark-fg($-dark, 5%);
+                    }
+                }
+            }
+
+            #{$this}--top-corner,
+            #{$this}--bottom-corner {
+                &:before {
+                    @include light-fg($-light);
+                    @include dark-fg($-dark, 7.5%);
+                }
+            }
+        }
+
+        #{$this}--top-corner {
+            top: -#{2 * $border-radius};
+            &:before {
+                border-bottom-right-radius: #{2 * $border-radius};
+            }
+        }
+
+        #{$this}--bottom-corner {
+            bottom: -#{2 * $border-radius};
+            &:before {
+                border-top-right-radius: #{2 * $border-radius};
+            }
+        }
+
+        #{$this}--top-corner,
+        #{$this}--bottom-corner {
+            position: absolute;
+            width: #{2 * $border-radius};
+            height: #{2 * $border-radius};
+            content: " ";
+            right: 0;
+            overflow: hidden;
+
+            &:before {
+                color: transparent;
+                position: absolute;
+                box-shadow: 0 0 0 300px;
+                content: "";
+                padding: $border-radius;
+                margin-left: -$border-radius;
             }
         }
 

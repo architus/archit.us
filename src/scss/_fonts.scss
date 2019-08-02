@@ -34,22 +34,6 @@ $headings-letter-spacing: 0.025rem !default;
 $headings-margin-bottom: 1.5rem !default;
 $headings-color: inherit !default;
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-.h1,
-.h2,
-.h3,
-.h4,
-.h5,
-.h6 {
-    letter-spacing: $headings-letter-spacing;
-    margin-bottom: $headings-margin-bottom;
-}
-
 $display1-size: 8rem !default;
 $display2-size: 7rem !default;
 $display3-size: 5.5rem !default;

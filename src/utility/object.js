@@ -1,7 +1,11 @@
-export const isNil = value => value == null;
-export const isDefined = value => !isNil(value);
+export function isNil(value) {
+  return value == null;
+}
+export function isDefined(value) {
+  return !isNil(value);
+}
 
-export const pick = (sourceObject, keys) => {
+export function pick(sourceObject, keys) {
   const newObject = {};
   keys.forEach(key => {
     if (typeof key === "string") newObject[key] = sourceObject[key];
@@ -15,16 +19,14 @@ export const pick = (sourceObject, keys) => {
     }
   });
   return newObject;
-};
+}
 
 // from https://codereview.stackexchange.com/questions/61632/object-key-value-map-reversal
-const id = x => x;
-export const reverseMapFromMap = (map, f) =>
-  Object.keys(map).reduce(function(acc, k) {
-    acc[map[k]] = (acc[map[k]] || []).concat((f || id)(k));
+export function invertMap(map, f) {
+  return Object.keys(map).reduce(function(acc, k) {
+    acc[map[k]] = (acc[map[k]] || []).concat((f || identity)(k));
     return acc;
   }, {});
-
-export function ifClient(func) {
-  if (typeof window !== "undefined") func();
 }
+
+export const identity = o => o;

@@ -1,0 +1,29 @@
+@import "scss/colors";
+
+.tooltip {
+    z-index: 1090;
+
+    @include light {
+        .arrow {
+            opacity: 0.6;
+        }
+    }
+
+    .tooltip-inner {
+        padding: 0.1rem 0.35rem;
+        max-width: 240px;
+        background-color: black;
+
+        @include light {
+            background-color: rgba(black, 0.6);
+        }
+
+        h6 {
+            margin-bottom: 0.5rem;
+        }
+    }
+}
+
+.hide-tooltip {
+    opacity: 0;
+}

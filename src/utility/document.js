@@ -15,10 +15,21 @@ export function scrollToBottom(scrollContainer) {
 }
 
 export const clearUrlQueries = () => {
-  if (typeof window === "undefined") return;
+  if (isServer) return;
   window.history.replaceState(
     {},
     window.document.title,
     `${window.location.protocol}//${window.location.host}${window.location.pathname}`
   );
 };
+
+export const isClient = typeof window !== "undefined";
+export const isServer = !isClient;
+
+export function ifClient(func) {
+  if (isClient) func();
+}
+
+export function ifServer(func) {
+  if (isServer) func();
+}

@@ -2,23 +2,39 @@
 @import "scss/theme";
 @import "scss/util";
 @import "scss/media";
+@import "scss/fonts";
+
+$border-color-light: rgba($-dark, 0.15);
+$border-color-dark: rgba($-light, 0.15);
+%header-cell-fill {
+    @include light-bg($adjust: -7%);
+    @include dark-bg($-dark, 2%);
+}
+
+%cell-base {
+    background-color: transparent !important;
+    @include light(border-color, $border-color-light);
+    @include dark(border-color, $border-color-dark);
+}
 
 %base-bg {
     @include light-bg;
     @include dark-bg;
 }
 
+input.form-control.editor-main {
+    border: none;
+}
+
 .table-outer {
     height: 0;
     flex-grow: 1;
-
-    @include respond-below(lg) {
-        padding-top: 2.5rem;
-    }
+    @include light-fg;
+    @include dark-fade-fg;
 
     // React grid meme to make full height
     .react-grid-Main {
-        height: 100%;
+        flex-grow: 1;
         @extend %base-bg;
         outline: none;
 
@@ -29,32 +45,82 @@
         .rdg-selected {
             border: none !important;
         }
+
+        .react-grid-cell-copied {
+            background-color: transparent !important;
+        }
     }
 
     .react-grid-Container {
         height: 100%;
         position: relative;
+        display: flex;
+        flex-direction: column;
     }
 
     .react-grid-Toolbar {
-        position: absolute;
-        top: -40px;
-        right: 0;
+        flex-grow: 0;
         z-index: 2;
         background-color: transparent;
         border: none;
-        padding: 0;
+        padding: {
+            top: 0.5rem;
+            bottom: 0.5rem;
+            left: 0;
+            right: 0;
+        }
         height: auto;
 
-        button {
-            background-color: $-primary;
-            border-color: $-primary;
-            color: $-light !important;
-
-            &:hover,
-            &:active {
-                background-color: color-adjust($-primary, -10%);
+        @include respond-below(sm) {
+            .tools {
+                float: none;
+                line-height: 1.5;
             }
+        }
+
+        @include respond-below(xs) {
+            .tools {
+                display: flex;
+                flex-direction: column;
+
+                .controls {
+                    margin-bottom: 1rem;
+                }
+            }
+        }
+
+        @include respond-above(sm) {
+            position: absolute;
+            top: -50px;
+            right: 0;
+        }
+
+        .tools {
+            .controls {
+                margin-right: 0.5rem;
+                position: relative;
+                top: -5px;
+            }
+        }
+
+        button {
+            display: inline-block;
+            font-weight: normal;
+            color: $-light;
+            text-align: center;
+            vertical-align: middle;
+            user-select: none;
+            border: 1px solid transparent;
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            border-radius: 8px;
+            transition: color 0.15s ease-in-out,
+                background-color 0.15s ease-in-out,
+                border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            position: relative;
+            top: -8px;
+            outline: none;
         }
     }
 
@@ -67,58 +133,63 @@
 
     .react-grid-Canvas {
         height: 100% !important;
-        @extend %custom-scrollbar;
-        width: auto !important;
+        @extend %custom-scrollbar-alt;
         height: 982px;
-        right: 2px;
         z-index: 2;
         background-color: transparent;
-        position: relative;
-        overflow-x: hidden;
     }
 
     .react-grid-Viewport {
         @extend %base-bg;
         overflow: unset !important;
+        position: relative;
 
-        &::after {
+        &:after {
             position: absolute;
-            z-index: 0;
+            z-index: 3;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 16px;
             content: " ";
-            z-index: 1;
-            top: -2px;
-            bottom: -2px;
-            right: 0;
-            margin-top: auto;
-            margin-bottom: auto;
-            border-radius: 1000px;
-            width: 16px;
-            @include light(background-color, rgba(black, 0.05));
-            @include dark(background-color, rgba(white, 0.05));
+            box-shadow: inset 0 14px 6px -7px rgba(black, 0.03),
+                inset 0 -14px 6px -7px rgba(black, 0.05);
+            overflow: hidden;
+            pointer-events: none;
         }
     }
 
     .react-grid-Header {
         @extend %base-bg;
         box-shadow: none;
+        @include light {
+            border: top;
+        }
     }
 
     .react-grid-HeaderRow {
-        @include light-bg($adjust: -4%);
-        @include dark-bg($adjust: -4%);
+        @extend %header-cell-fill;
         margin-top: -1px;
+        min-height: 0 !important;
+        overflow-y: hidden;
 
         &:first-child {
-            @include light-border(rgba($-dark, 0.1), $side: top);
-            @include dark-border(rgba($-light, 0.1), $side: top);
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+
+        &:last-child {
+            @include light-border($border-color-light, $side: bottom);
+            @include dark-border($border-color-dark, $side: bottom);
         }
     }
 
     .react-grid-HeaderCell {
         font-weight: 500;
         padding: 0;
-        @include dark(border-color, rgba($-light, 0.4));
-        background-color: transparent;
+        @extend %cell-base;
+        border-right: none;
+        border-bottom: none;
 
         & > div {
             height: 100%;
@@ -131,31 +202,24 @@
                 padding: {
                     right: 10px;
                     left: 10px;
-                    top: 8px;
-                    bottom: 8px;
+                    top: 4px;
+                    bottom: 14px;
                 }
 
                 input {
-                    width: 100%;
                     border: none;
-                    outline: none;
-                    padding: {
-                        top: 6px;
-                        bottom: 6px;
-                        right: 6px;
-                        left: 10px;
-                    }
-                    border-radius: 8px;
-                    transition: all 0.25s ease;
+                }
+            }
 
-                    &::placeholder {
-                        @include light-fg(rgba($-dark, 0.4));
-                        @include dark-fg(rgba($-light, 0.4));
-                    }
+            .input-sm {
+                height: 100%;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: flex-end;
 
-                    &:focus {
-                        @include highlight-shadow($-primary);
-                    }
+                .badge {
+                    margin-right: 1rem;
                 }
             }
         }
@@ -214,7 +278,7 @@
         .pull-right {
             margin-left: 4px;
             margin-right: 10px;
-            opacity: 0.5;
+            opacity: 0.35;
 
             &:empty {
                 margin-right: 0;
@@ -227,11 +291,55 @@
     }
 
     .react-grid-Cell {
-        background-color: transparent !important;
-        @include dark(border-color, rgba($-light, 0.15));
+        @extend %cell-base;
+        border-right: none;
+        border-bottom: none;
 
-        &:last-child {
-            border-right: none;
+        &:first-child {
+            padding-left: 12px;
+        }
+
+        .rdg-cell-action {
+            display: none;
+
+            .rdg-cell-action-button {
+                margin-left: 0.35rem;
+                margin-right: 0.15rem;
+                cursor: pointer;
+                color: $-primary;
+
+                &:hover {
+                    color: color-adjust($-primary, -12.5%);
+                }
+            }
+        }
+
+        .author-display {
+            display: flex;
+            flex-direction: row;
+            overflow: hidden;
+            align-items: center;
+
+            .avatar {
+                margin-right: 0.5rem;
+            }
+
+            .name {
+                font-weight: 500;
+                opacity: 0.9;
+            }
+
+            .discriminator {
+                margin-left: 0.1rem;
+                font-size: 0.85em;
+                opacity: 0.6;
+            }
+        }
+
+        .trigger,
+        .response {
+            font-family: $font-family-monospace;
+            font-size: 0.9em;
         }
     }
 
@@ -239,11 +347,59 @@
         &:hover {
             @include light(background-color, rgba($-primary, 0.1));
             @include dark(background-color, rgba($-primary, 0.1));
+
+            .rdg-cell-action {
+                display: block;
+            }
         }
+        border-radius: 8px;
     }
 
     .row-even {
-        @include light(background-color, rgba(black, 0.02));
-        @include dark(background-color, rgba(white, 0.02));
+        @include light(background-color, rgba(black, 0.03));
+        @include dark(background-color, rgba(black, 0.1));
+        border-radius: 8px;
+    }
+
+    .react-grid-Empty {
+        .empty-placeholder {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+
+            .spinner-border {
+                width: 2.5rem;
+                height: 2.5rem;
+            }
+
+            .empty-label {
+                padding: 1rem 1.35rem;
+                @include light-bg(white);
+                @include dark-bg($-dark, 2.5%);
+                border-radius: 80rem;
+            }
+        }
+    }
+
+    input[type="text"] {
+        @include dark {
+            background-color: color-adjust($-dark, 10%) !important;
+        }
+    }
+}
+
+.add-row-modal {
+    .modal-header {
+        .h4 {
+            margin-bottom: 0;
+            line-height: 1.15;
+        }
+    }
+
+    .modal-body {
+        padding-left: 2rem;
+        padding-right: 2rem;
     }
 }

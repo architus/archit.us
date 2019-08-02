@@ -1,4 +1,5 @@
 @import "scss/colors";
+@import "scss/util";
 
 $drop-shadow: 0 4px 12px 0 rgba(black, 0.15);
 $drop-shadow-slight: 0 2px 8px 0 rgba(black, 0.3);
@@ -48,5 +49,99 @@ $scrollbar-width: 12px;
     }
     @include light {
         @include scrollbar($-dark, $scrollbar-width);
+    }
+}
+
+@mixin discord-scrollbar($bg, $thumb, $track, $invert: false) {
+    &::-webkit-scrollbar {
+        width: 17px;
+        height: 17px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: $thumb;
+        border-radius: 100rem;
+        border: 4px solid $bg;
+        margin: 4px;
+
+        &:hover {
+            @if $invert {
+                background: lighten($thumb, 7.5%);
+            } @else {
+                background: darken($thumb, 7.5%);
+            }
+        }
+
+        &:active {
+            @if $invert {
+                background: lighten($thumb, 15%);
+            } @else {
+                background: darken($thumb, 15%);
+            }
+        }
+    }
+    &::-webkit-scrollbar-track {
+        background: linear-gradient(
+            to right,
+            $bg 0%,
+            $bg 23%,
+            $track 24%,
+            $track 76%,
+            $bg 77%,
+            $bg 100%
+        );
+        border-radius: 100rem;
+    }
+    &::-webkit-scrollbar-corner {
+        background-color: transparent;
+        display: none;
+    }
+}
+
+%custom-scrollbar-alt {
+    @include dark {
+        @include discord-scrollbar(
+            color-adjust($-dark, 7.5%),
+            blend($-light, black, 0.65),
+            color-adjust($-dark, 5.5%),
+            true
+        );
+    }
+    @include light {
+        @include discord-scrollbar(
+            $-light,
+            blend($-dark, white, 0.65),
+            color-adjust($-light, -2%)
+        );
+    }
+}
+
+%input-box {
+    outline: none;
+    padding: {
+        top: 6px;
+        bottom: 6px;
+        right: 6px;
+        left: 10px;
+    }
+    border-radius: 8px;
+    transition: box-shadow 0.25s ease;
+
+    @include dark {
+        background-color: color-adjust($-dark, 15%) !important;
+        color: $-light !important;
+    }
+
+    @include light {
+        background-color: white !important;
+        color: $-dark !important;
+    }
+
+    &::placeholder {
+        @include light-fg(rgba($-dark, 0.4));
+        @include dark-fg(rgba($-light, 0.4));
+    }
+
+    &:focus {
+        @include highlight-shadow($-primary);
     }
 }

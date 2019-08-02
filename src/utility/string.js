@@ -1,4 +1,4 @@
-import { zip, flatten } from "lodash";
+import { zip, flatten, compact } from "lodash";
 import { isNil } from "./object";
 import { left, right } from "./names.json";
 
@@ -89,6 +89,12 @@ export const warn = message =>
     `${styles.warn}`
   );
 
+export function replaceAll(string, replace, replaceWith) {
+  const regex = escapeRegExp(replace);
+  const regexObj = new RegExp(regex, "g");
+  return string.replace(regexObj, replaceWith);
+}
+
 // ? ==============
 // ? Path functions
 // ? ==============
@@ -142,7 +148,8 @@ export function isInPath({ path, fragment, position = null }) {
 export function splitFragments(string, regex) {
   const excludedFragments = string.split(regex);
   const matchedFragments = allMatches(string, regex);
-  return flatten(zip(excludedFragments, matchedFragments));
+  const sequence = flatten(zip(excludedFragments, matchedFragments));
+  return compact(sequence);
 }
 
 export function remakeRegex(source) {
@@ -158,4 +165,8 @@ export function allMatches(string, regex) {
     if (currentMatch) matches.push(currentMatch[0]);
   } while (currentMatch);
   return matches;
+}
+
+export function escapeRegExp(text) {
+  return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 }

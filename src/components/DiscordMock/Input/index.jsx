@@ -20,13 +20,15 @@ class Input extends React.Component {
     const { className, channelName, onSend, ...rest } = this.props;
     return (
       <div className={classNames(className, "discord-input")}>
-        <input
-          type="text"
-          {...rest}
-          placeholder={`Message #${channelName}`}
-          aria-label={`Message ${channelName} discord channel`}
-          onKeyDown={this.handleKeyPress}
-        />
+        <div className="discord-input--inner">
+          <input
+            type="text"
+            {...rest}
+            placeholder={`Message #${channelName}`}
+            aria-label={`Message ${channelName} discord channel`}
+            onKeyDown={this.handleKeyPress}
+          />
+        </div>
       </div>
     );
   }

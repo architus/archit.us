@@ -8,7 +8,11 @@ export const initial = {
   connectedToDiscord: false,
   discordAuthCode: "",
   accessToken: "",
-  expiresAt: null
+  expiresAt: null,
+  username: null,
+  discriminator: null,
+  id: null,
+  avatar: null
 };
 
 export const mapStateToLoggedIn = state => {
