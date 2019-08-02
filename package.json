@@ -8,7 +8,8 @@
     "analyze": "react-static build --analyze",
     "serve": "serve dist -p 3000",
     "lint": "eslint ./src/**/*.js ./src/**/*.jsx",
-    "storybook": "export NODE_PATH=src/ && start-storybook -p 9009 -s public"
+    "storybook": "export NODE_PATH=src/ && start-storybook -p 9009 -s public",
+    "build-storybook": "export NODE_PATH=src/ && build-storybook -c .storybook -s public"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.19",
