@@ -74,8 +74,8 @@ function Index() {
 
                 <p className="guild-counter">
                   architus is currently serving{" "}
-                  <span>{guild_count} servers</span> and{" "}
-                  <span>{user_count} users</span>
+                  <code>{guild_count} servers</code> and{" "}
+                  <code>{user_count} users</code>
                 </p>
               </Col>
               <Col sm={6} lg={4}>

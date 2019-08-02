@@ -98,12 +98,13 @@ main > div[role="group"] {
 }
 
 :not(pre) > code {
-    color: darken($-tertiary, 10%);
+    color: $-primary;
     display: inline-block;
-    background-color: white;
-    padding: 0.1em 0.35em 0.05em;
+    background-color: #f6f8f9;
     border-radius: 4px;
-    border: 1px solid darken($-light, 10%);
+    border: 1px solid #1b273333;
+    padding: 0.1em 0.35em 0.05em;
+    font-size: 87.5%;
 }
 
 .modal-backdrop.show {
