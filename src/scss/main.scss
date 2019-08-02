@@ -98,7 +98,7 @@ main > div[role="group"] {
 }
 
 :not(pre) > code {
-    color: darken($aqua-forest, 10%);
+    color: darken($-tertiary, 10%);
     display: inline-block;
     background-color: white;
     padding: 0.1em 0.35em 0.05em;

@@ -1,27 +1,19 @@
 @import "scss/media";
 @import "scss/colors";
 
-.login {
-    color: $-light !important;
+.login-button {
     line-height: 1.2 !important;
     padding: {
         top: 0.6rem !important;
         bottom: 0.6rem !important;
     }
 
-    & > span:first-child {
-        margin-right: 0.6rem;
-        font-size: 1.15em;
-        display: inline;
-    }
+    a {
+        color: $-light !important;
 
-    & > span:not(:first-child) {
-        vertical-align: top;
-
-        &:last-child {
-            @include respond-between(xs, sm) {
-                display: none;
-            }
+        span:first-child {
+            margin-right: 0.6rem;
+            font-size: 1.15em;
         }
     }
 }

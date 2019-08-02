@@ -20,7 +20,7 @@ function Login({ fromRestricted }) {
                   <h2>Authentication required to view this page</h2>
                 ) : null}
               </div>
-              <LoginButton />
+              <LoginButton showLabel={false} />
             </Card>
           </Col>
         </Row>

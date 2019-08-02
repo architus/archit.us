@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { curry } from "lodash";
 import { CustomEmojiExtension } from "components/DiscordMock/CustomEmojiExtension";
-import { connect } from "react-redux";
+import { connect, useSelector, shallowEqual, useDispatch } from "react-redux";
 import { useOauthUrl } from "components/LoginButton";
 import { mapStateToLoggedIn } from "../../store/reducers/session";
+import { useEffectOnce } from "utility";
+
+import { getGuildCount } from "store/actions";
 
 import {
   Jumbotron,
@@ -34,6 +37,19 @@ import UserControlSvg from "./svg/user_control.svg";
 import LogoTextSvg from "assets/logo-text.inline.svg";
 
 function Index() {
+  const { guild_count, user_count } = useSelector(state => {
+    return {
+      guild_count: state.guild_count.guild_count,
+      user_count: state.guild_count.user_count
+    };
+  }, shallowEqual);
+
+  const dispatch = useDispatch();
+  const fetchGuildCount = useCallback(() => dispatch(getGuildCount()), [
+    dispatch
+  ]);
+  useEffectOnce(fetchGuildCount);
+
   return (
     <Layout title="Home">
       <article>
@@ -55,11 +71,16 @@ function Index() {
                   settings such as <em>emotes and responses</em>, and view
                   extensive <em>audit logs</em>.
                 </p>
+
+                <p className="guild-counter">
+                  architus is currently serving{" "}
+                  <span>{guild_count} servers</span> and{" "}
+                  <span>{user_count} users</span>
+                </p>
               </Col>
               <Col sm={6} lg={4}>
                 <Card as="aside">
                   <h2>Getting Started</h2>
-                  <p className="mb-4">Sign in to add architus to a server</p>
                   <LoginButton />
                 </Card>
               </Col>
@@ -78,7 +99,7 @@ function Index() {
               <div>
                 <p>
                   Users can configure architus to listen for and respond to
-                  message patterns using a extensive syntax. Response pattern
+                  message patterns using an extensive syntax. Response pattern
                   fragments include:
                 </p>
                 <ul>

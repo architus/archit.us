@@ -9,6 +9,11 @@ export default {
 };
 
 export const Display = () => (
-  <LoginButton.Inner loggedIn={boolean("Logged In", false)} />
+  <LoginButton
+    loggedIn={boolean("Logged In", false)}
+    showLabel={boolean("Show Label", true)}
+  />
 );
-export const ConnectedToStore = () => <LoginButton />;
+export const ConnectedToStore = () => (
+  <LoginButton showLabel={boolean("Show Label", true)} />
+);
