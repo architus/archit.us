@@ -22,9 +22,7 @@ function LoginButton({ loggedIn }) {
   const oauthUrl = useOauthUrl();
   return loggedIn ? (
     <div>
-      <p className="mb-3">
-        You are already logged in
-      </p>
+      <p className="mb-3">You are already logged in</p>
       <Button to="/app" as={RouterLink}>
         Get started
       </Button>
@@ -37,7 +35,6 @@ function LoginButton({ loggedIn }) {
         <span>Connect</span> <span> with Discord</span>
       </Button>
     </div>
-
   );
 }
 

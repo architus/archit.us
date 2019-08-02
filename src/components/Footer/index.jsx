@@ -24,7 +24,7 @@ function Footer() {
           </Col>
           <Col md={6} lg={3}>
             <FooterPanel header="Links">
-            <a href="https://github.com/architus">
+              <a href="https://github.com/architus">
                 <Icon name="github" className="icon" />
                 Github
               </a>

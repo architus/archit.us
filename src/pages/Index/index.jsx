@@ -39,7 +39,7 @@ function Index() {
   const { guild_count, user_count } = useSelector(state => {
     return {
       guild_count: state.guild_count.guild_count,
-      user_count: state.guild_count.user_count,
+      user_count: state.guild_count.user_count
     };
   }, shallowEqual);
 
@@ -71,8 +71,11 @@ function Index() {
                   extensive <em>audit logs</em>.
                 </p>
 
-                <p className="guild-counter">architus is currently serving <span>{guild_count} servers</span> and <span>{user_count} users</span></p>
-
+                <p className="guild-counter">
+                  architus is currently serving{" "}
+                  <span>{guild_count} servers</span> and{" "}
+                  <span>{user_count} users</span>
+                </p>
               </Col>
               <Col sm={6} lg={4}>
                 <Card as="aside">
