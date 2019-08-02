@@ -1,6 +1,8 @@
 @import "scss/media";
+@import "scss/colors";
 
 .login {
+    color: $-light !important;
     line-height: 1.2 !important;
     padding: {
         top: 0.6rem !important;

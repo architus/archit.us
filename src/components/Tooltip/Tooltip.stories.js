@@ -6,40 +6,54 @@ import Icon from "components/Icon";
 import { Button } from "react-bootstrap";
 
 export default {
-  title: "Tooltip"
+  title: "Tooltip",
+  parameters: { component: Tooltip }
 };
-
-const baseProps = () => ({
-  bottom: boolean("Bottom", false),
-  top: boolean("Top", false),
-  left: boolean("Left", false),
-  padding: `${number("Padding", 0.5, {
-    range: true,
-    min: 0,
-    max: 4,
-    step: 0.05
-  })}rem`,
-  style: object("Style", {}),
-  hide: boolean("Hide", false),
-  toggle: boolean("Toggle", false),
-  delay: number("Delay", 0, {
-    range: true,
-    min: 0,
-    max: 2000,
-    step: 50
-  })
-});
 
 export const Basic = () => (
   <Tooltip
-    {...baseProps()}
+    right={boolean("Right", false)}
+    top={boolean("Top", false)}
+    left={boolean("Left", false)}
+    padding={`${number("Padding", 0.5, {
+      range: true,
+      min: 0,
+      max: 4,
+      step: 0.05
+    })}rem`}
+    style={object("Style", {})}
+    hide={boolean("Hide", false)}
+    toggle={boolean("Toggle", false)}
+    delay={number("Delay", 0, {
+      range: true,
+      min: 0,
+      max: 2000,
+      step: 50
+    })}
     text={text("Text", "Example tooltip")}
     children={<Button variant="primary">Basic</Button>}
   />
 );
 export const AdvancedContent = () => (
   <Tooltip
-    {...baseProps()}
+    right={boolean("Right", false)}
+    top={boolean("Top", false)}
+    left={boolean("Left", false)}
+    padding={`${number("Padding", 0.5, {
+      range: true,
+      min: 0,
+      max: 4,
+      step: 0.05
+    })}rem`}
+    style={object("Style", {})}
+    hide={boolean("Hide", false)}
+    toggle={boolean("Toggle", false)}
+    delay={number("Delay", 0, {
+      range: true,
+      min: 0,
+      max: 2000,
+      step: 50
+    })}
     text={
       <span>
         <h6>

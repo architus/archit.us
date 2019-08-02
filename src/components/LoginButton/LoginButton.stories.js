@@ -4,7 +4,8 @@ import { boolean } from "@storybook/addon-knobs";
 import LoginButton from "./index";
 
 export default {
-  title: "LoginButton"
+  title: "LoginButton",
+  parameters: { component: LoginButton }
 };
 
 export const Display = () => (
