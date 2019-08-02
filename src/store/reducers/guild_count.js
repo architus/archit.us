@@ -1,4 +1,3 @@
-import { sessionAware } from "./session";
 import { LOAD_GUILD_COUNT } from "../actions";
 
 export const initial = {
@@ -6,16 +5,17 @@ export const initial = {
   user_count: 0
 };
 
-export const reducer = sessionAware(initial, (state, action) => {
+export function reducer(state = initial, action) {
   switch (action.type) {
     case LOAD_GUILD_COUNT:
       const { guild_count, user_count } = action.payload.guildCount;
       return {
         ...state,
         guild_count: guild_count.toLocaleString(),
-        user_count: user_count.toLocaleString(),
+        user_count: user_count.toLocaleString()
       };
+
     default:
       return state;
   }
-});
+}

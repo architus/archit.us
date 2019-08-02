@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { curry } from "lodash";
@@ -6,6 +6,7 @@ import { CustomEmojiExtension } from "components/DiscordMock/CustomEmojiExtensio
 import { connect, useSelector, shallowEqual, useDispatch } from "react-redux";
 import { useOauthUrl } from "components/LoginButton";
 import { mapStateToLoggedIn } from "../../store/reducers/session";
+import { useEffectOnce } from "utility";
 
 import { getGuildCount } from "store/actions";
 
@@ -44,10 +45,10 @@ function Index() {
   }, shallowEqual);
 
   const dispatch = useDispatch();
-  const fetchGuildCount = () => dispatch(getGuildCount());
-  useEffect(() => {
-    fetchGuildCount();
-  }, []);
+  const fetchGuildCount = useCallback(() => dispatch(getGuildCount()), [
+    dispatch
+  ]);
+  useEffectOnce(fetchGuildCount);
 
   return (
     <Layout title="Home">

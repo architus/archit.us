@@ -15,6 +15,7 @@ try {
     "test",
     null,
     Object.defineProperty({}, "capture", {
+      // eslint-disable-next-line getter-return
       get: function get() {
         setHasSupportToCaptureOption(true);
       }
