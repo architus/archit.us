@@ -1,0 +1,8 @@
+@import "scss/colors";
+
+#root {
+    @include dark-bg;
+    @include light-bg;
+    @include dark-fg;
+    @include light-fg;
+}

@@ -185,3 +185,7 @@ input[type="text"] {
         border-color: $-success;
     }
 }
+
+.button-blank {
+    @extend %button-blank;
+}

@@ -325,15 +325,11 @@ function AutoResponses({ guildId }) {
         onScroll={handleScroll}
         dialogTitle="Add new auto response"
         toolbarComponents={
-          <>
-            <span>
-              <Switch
-                onChange={onToggleSelfAuthored}
-                checked={filterSelfAuthored}
-              />
-              <span className="label">Show self-authored</span>
-            </span>
-          </>
+          <Switch
+            onChange={onToggleSelfAuthored}
+            checked={filterSelfAuthored}
+            label="Show self-authored"
+          />
         }
       />
     </Container>

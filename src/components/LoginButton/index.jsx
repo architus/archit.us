@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { mapStateToLoggedIn } from "store/reducers/session";
+import { useSelector } from "react-redux";
 import { useReturnQuery, API_BASE, processIfNotEmptyOrNil } from "utility";
 
 import { Link as RouterLink } from "components/Router";
@@ -37,8 +36,18 @@ function LoginButton({ loggedIn }) {
   );
 }
 
-export default connect(mapStateToLoggedIn)(LoginButton);
-
 LoginButton.propTypes = {
   loggedIn: PropTypes.bool
 };
+
+LoginButton.displayName = "LoginButton";
+
+function ConnectedLoginButton() {
+  const loggedIn = useSelector(state => state.session.connectedToDiscord);
+  return <LoginButton loggedIn={loggedIn} />;
+}
+
+export default ConnectedLoginButton;
+
+ConnectedLoginButton.Inner = LoginButton;
+ConnectedLoginButton.displayName = "ConnectedLoginButton";

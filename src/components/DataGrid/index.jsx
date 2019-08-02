@@ -301,10 +301,7 @@ function ToolbarComponent({ addRowButton, onAddRow, onToggleFilter, slot }) {
         <div className="tools">
           <span className="controls">
             {slot}
-            <span>
-              <Switch onChange={onChange} checked={show} />
-              <span className="label">Show Filters</span>
-            </span>
+            <Switch onChange={onChange} checked={show} label="Show Filters" />
           </span>
           {addRowButton ? (
             <button

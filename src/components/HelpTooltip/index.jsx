@@ -44,3 +44,5 @@ HelpTooltip.defaultProps = {
   className: "",
   style: {}
 };
+
+HelpTooltip.displayName = "HelpTooltip";

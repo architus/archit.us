@@ -27,3 +27,6 @@ stats.json
 /artifacts
 /tmp
 /dist
+
+# Storybook
+/storybook-static

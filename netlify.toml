@@ -28,5 +28,3 @@
 
 [build]
   environment = { NODE_ENV = "production" }
-  publish = "dist/"
-  command = "yarn build"
