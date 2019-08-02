@@ -89,13 +89,7 @@ NavbarIcon.defaultProps = {
 };
 
 function Outer({ children, isActive, name }) {
-  return (
-    <Tooltip
-      children={children}
-      text={name}
-      bsPrefix={isActive ? "hide-tooltip" : undefined}
-    />
-  );
+  return <Tooltip children={children} text={name} hide={isActive} />;
 }
 
 Outer.propTypes = {

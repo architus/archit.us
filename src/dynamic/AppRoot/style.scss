@@ -4,11 +4,7 @@
 @import "scss/media";
 @import "./vars";
 
-.dark-mode-icon {
-    position: relative;
-    top: 2px;
-    left: 6px;
-
+.switch-icon {
     &.dark {
         color: $-light;
     }

@@ -4,7 +4,7 @@ import { colorBlend } from "utility";
 import useDarkMode from "use-dark-mode";
 import classNames from "classnames";
 
-import Switch from "react-switch";
+import Switch from "components/Switch";
 import Icon from "components/Icon";
 import Layout from "components/Layout";
 
@@ -27,10 +27,8 @@ function AppLayout({ children, className, ...rest }) {
             checked={value}
             className="ml-3 ml-md-0 mr-md-3"
             aria-label="Dark mode switch"
-            uncheckedIcon={<Icon name="sun" className="dark-mode-icon light" />}
-            checkedIcon={<Icon name="moon" className="dark-mode-icon dark" />}
-            activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-            boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+            uncheckedIcon={<Icon name="sun" className="switch-icon light" />}
+            checkedIcon={<Icon name="moon" className="switch-icon dark" />}
             offHandleColor={lightColor}
             onHandleColor={lightColor}
             offColor={colorBlend(0.35, primaryColor)}

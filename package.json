@@ -7,7 +7,8 @@
     "build": "react-static build",
     "analyze": "react-static build --analyze",
     "serve": "serve dist -p 3000",
-    "lint": "eslint ./src/**/*.js ./src/**/*.jsx"
+    "lint": "eslint ./src/**/*.js ./src/**/*.jsx",
+    "storybook": "export NODE_PATH=src/ && start-storybook -p 9009 -s public"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.19",
@@ -56,7 +57,12 @@
     ]
   },
   "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@storybook/addon-actions": "^5.1.10",
+    "@storybook/addon-docs": "^5.2.0-beta.20",
+    "@storybook/react": "^5.2.0-beta.20",
     "babel-eslint": "9.x",
+    "babel-loader": "^8.0.6",
     "eslint": "5.x",
     "eslint-config-prettier": "^6.0.0",
     "eslint-config-react-app": "^3.0.8",
@@ -67,6 +73,8 @@
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-react": "7.x",
     "prettier": "^1.18.2",
-    "serve": "10.1.2"
+    "serve": "10.1.2",
+    "storybook-addon-jsx": "^7.1.5",
+    "storybook-dark-mode": "^0.1.4"
   }
 }

@@ -1,14 +1,16 @@
-@import "../../scss/colors";
+@import "scss/colors";
 
 .tooltip {
     z-index: 1090;
 
-    .arrow {
-        opacity: 0.6;
+    @include light {
+        .arrow {
+            opacity: 0.6;
+        }
     }
 
     .tooltip-inner {
-        padding: 0.5rem 0.75rem;
+        padding: 0.1rem 0.35rem;
         max-width: 240px;
         background-color: black;
 
