@@ -58,6 +58,61 @@ $-danger: map-get($theme-colors, danger);
 $-light: map-get($theme-colors, light);
 $-dark: map-get($theme-colors, dark);
 
+// App color ramps
+$dark-000: color-adjust($-dark, -37%);
+$dark-100: color-adjust($-dark, -11%);
+$dark-200: color-adjust($-dark, 1.5%);
+$dark-300: color-adjust($-dark, 6%);
+$dark-400: color-adjust($-dark, 9%);
+$dark-500: color-adjust($-dark, 13%);
+
+$dark-050: blend($dark-000, $dark-100);
+$dark-150: blend($dark-100, $dark-200);
+$dark-250: blend($dark-200, $dark-300);
+$dark-350: blend($dark-300, $dark-400);
+$dark-450: blend($dark-400, $dark-500);
+
+$dark-shades: (
+    dark-000: $dark-000,
+    dark-050: $dark-050,
+    dark-100: $dark-100,
+    dark-150: $dark-150,
+    dark-200: $dark-200,
+    dark-250: $dark-250,
+    dark-300: $dark-300,
+    dark-350: $dark-350,
+    dark-400: $dark-400,
+    dark-450: $dark-450,
+    dark-500: $dark-500
+);
+
+$light-000: color-adjust($-light, -35%);
+$light-100: color-adjust($-light, -25%);
+$light-200: color-adjust($-light, -15%);
+$light-300: color-adjust($-light, -5%);
+$light-400: color-adjust($-light);
+$light-500: white;
+
+$light-050: blend($light-000, $light-100);
+$light-150: blend($light-100, $light-200);
+$light-250: blend($light-200, $light-300);
+$light-350: blend($light-300, $light-400);
+$light-450: blend($light-400, $light-500);
+
+$light-shades: (
+    light-000: $light-000,
+    light-050: $light-050,
+    light-100: $light-100,
+    light-150: $light-150,
+    light-200: $light-200,
+    light-250: $light-250,
+    light-300: $light-300,
+    light-350: $light-350,
+    light-400: $light-400,
+    light-450: $light-450,
+    light-500: $light-500
+);
+
 // Additional colors
 $discord: #7289da;
 $discord-bg: #36393f;
@@ -175,11 +230,11 @@ $osx-fullscreen: #27c93f;
     }
 }
 
-@mixin dark-bg($color: color-adjust($-dark, 7.5%), $adjust: 0%) {
+@mixin dark-bg($color: $dark-300, $adjust: 0%) {
     @include theme-bg(dark, $color, $adjust);
 }
 
-@mixin light-bg($color: $-light, $adjust: 0%) {
+@mixin light-bg($color: $light-400, $adjust: 0%) {
     @include theme-bg(light, $color, $adjust);
 }
 

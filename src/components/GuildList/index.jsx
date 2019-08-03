@@ -66,7 +66,7 @@ class GuildList extends React.Component {
                       activeGuildId={activeGuildId}
                     />
                   ) : null}
-                  <Tooltip right text="Add architus to a server...">
+                  <Tooltip text="Add architus to a server...">
                     <AddButton style={squareStyle} onClick={onClickAdd} />
                   </Tooltip>
                 </>

@@ -3,27 +3,30 @@
 @import "scss/util";
 @import "scss/media";
 @import "scss/fonts";
+@import "scss/app";
 
 $border-color-light: rgba($-dark, 0.15);
 $border-color-dark: rgba($-light, 0.15);
 %header-cell-fill {
-    @include light-bg($adjust: -7%);
-    @include dark-bg($-dark, 2%);
+    @include light-bg($data-grid-header-light-bg);
+    @include dark-bg($data-grid-header-dark-bg);
+}
+
+%base-bg {
+    background-color: transparent !important;
 }
 
 %cell-base {
-    background-color: transparent !important;
+    @extend %base-bg;
     @include light(border-color, $border-color-light);
     @include dark(border-color, $border-color-dark);
 }
 
-%base-bg {
-    @include light-bg;
-    @include dark-bg;
-}
-
 input.form-control.editor-main {
     border: none;
+    @include dark {
+        background-color: $dark-200 !important;
+    }
 }
 
 .table-outer {
@@ -266,8 +269,8 @@ input.form-control.editor-main {
             }
 
             &:hover {
-                @include light(background-color, rgba(black, 0.04));
-                @include dark(background-color, rgba(white, 0.04));
+                @include dark-bg($data-grid-header-hover-dark-bg);
+                @include light-bg($data-grid-header-hover-light-bg);
 
                 &::after {
                     transform: translateY(0);
@@ -345,8 +348,8 @@ input.form-control.editor-main {
 
     .react-grid-Row {
         &:hover {
-            @include light(background-color, rgba($-primary, 0.1));
-            @include dark(background-color, rgba($-primary, 0.1));
+            @include light(background-color, rgba($-primary, 0.15));
+            @include dark(background-color, rgba($-primary, 0.15));
 
             .rdg-cell-action {
                 display: block;
@@ -376,8 +379,8 @@ input.form-control.editor-main {
 
             .empty-label {
                 padding: 1rem 1.35rem;
-                @include light-bg(white);
-                @include dark-bg($-dark, 2.5%);
+                @include dark-bg($data-grid-placeholder-dark-bg);
+                @include light-bg($data-grid-placeholder-light-bg);
                 border-radius: 80rem;
             }
         }
@@ -385,6 +388,9 @@ input.form-control.editor-main {
 
     input[type="text"] {
         @include dark {
+            &:focus {
+                @include highlight-shadow($-primary, 0.4);
+            }
             background-color: color-adjust($-dark, 10%) !important;
         }
     }

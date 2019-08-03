@@ -1,7 +1,24 @@
 @import "scss/colors";
+@import "scss/app";
 
 .tooltip {
     z-index: 1090;
+
+    &[x-placement^="top"] .arrow::before {
+        border-top-color: $dark-000 !important;
+    }
+
+    &[x-placement^="bottom"] .arrow::before {
+        border-bottom-color: $dark-000 !important;
+    }
+
+    &[x-placement^="left"] .arrow::before {
+        border-left-color: $dark-000 !important;
+    }
+
+    &[x-placement^="right"] .arrow::before {
+        border-right-color: $dark-000 !important;
+    }
 
     @include light {
         .arrow {
@@ -12,10 +29,10 @@
     .tooltip-inner {
         padding: 0.1rem 0.35rem;
         max-width: 240px;
-        background-color: black;
+        background-color: $dark-000;
 
         @include light {
-            background-color: rgba(black, 0.6);
+            background-color: rgba($dark-000, 0.6);
         }
 
         h6 {

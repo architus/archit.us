@@ -6,7 +6,7 @@ import Icon from "components/Icon";
 import { Button } from "react-bootstrap";
 
 export default {
-  title: "Tooltip",
+  title: "Components|Tooltip",
   parameters: { component: Tooltip }
 };
 

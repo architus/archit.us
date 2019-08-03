@@ -13,7 +13,7 @@ function Login({ fromRestricted }) {
       <Container className="login py-5">
         <Row>
           <Col md={6}>
-            <Card>
+            <Card className="border-card">
               <div className="header mb-4">
                 <h1>Login</h1>
                 {fromRestricted ? (

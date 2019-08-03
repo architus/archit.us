@@ -32,7 +32,7 @@ function Footer() {
             </FooterPanel>
           </Col>
           <Col md={6} lg={3}>
-            <Card>
+            <Card className="border-card">
               <Header.Brand disabled />
             </Card>
           </Col>
