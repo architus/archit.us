@@ -1,8 +1,12 @@
 @import "scss/colors";
 
-#root {
+.content-root {
     @include dark-bg;
     @include light-bg;
     @include dark-fg;
     @include light-fg;
+}
+
+#root .content-root {
+    min-height: 100vh;
 }
