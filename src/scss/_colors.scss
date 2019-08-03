@@ -1,3 +1,5 @@
+@import "./colorfunctions";
+
 // B/W color ramp
 $white: #fff !default;
 $gray-100: #f8f9fa !default;
@@ -90,7 +92,7 @@ $light-000: color-adjust($-light, -35%);
 $light-100: color-adjust($-light, -25%);
 $light-200: color-adjust($-light, -15%);
 $light-300: color-adjust($-light, -5%);
-$light-400: color-adjust($-light);
+$light-400: color-adjust($-light, 0%);
 $light-500: white;
 
 $light-050: blend($light-000, $light-100);
@@ -134,101 +136,9 @@ $osx-close: #ff5f56;
 $osx-minimize: #ffbd2e;
 $osx-fullscreen: #27c93f;
 
-@function color-adjust($color, $adjust: 0%) {
-    @if $adjust == 0% {
-        @return $color;
-    } @else {
-        @return scale-color($color, $lightness: $adjust);
-    }
-}
-
-@function blend($color1, $color2, $mu: 0.5) {
-    $c1R: red($color1);
-    $c1G: green($color1);
-    $c1B: blue($color1);
-    $c1A: alpha($color1);
-
-    $c2R: red($color2);
-    $c2G: green($color2);
-    $c2B: blue($color2);
-    $c2A: alpha($color2);
-
-    $muMinus: (1 - $mu);
-    $r: ($c1R * $muMinus) + ($c2R * $mu);
-    $g: ($c1G * $muMinus) + ($c2G * $mu);
-    $b: ($c1B * $muMinus) + ($c2B * $mu);
-    $a: ($c1A * $muMinus) + ($c2A * $mu);
-
-    @return rgba($r, $g, $b, $a);
-}
-
 // ? =======================
 // ? Dark/light theme mixins
 // ? =======================
-
-@mixin theme-property($property, $value, $theme) {
-    .#{$theme}-mode & {
-        #{$property}: $value;
-    }
-}
-
-@mixin light($property: null, $value: null) {
-    @if $property == null {
-        .light-mode & {
-            @content;
-        }
-    } @else {
-        .light-mode & {
-            #{$property}: $value;
-        }
-    }
-}
-
-@mixin dark($property: null, $value: null) {
-    @if $property == null {
-        .dark-mode & {
-            @content;
-        }
-    } @else {
-        .dark-mode & {
-            #{$property}: $value;
-        }
-    }
-}
-
-@mixin theme-bg($theme, $color, $adjust: 0%) {
-    @include theme-property(
-        background-color,
-        color-adjust($color, $adjust),
-        $theme
-    );
-}
-
-@mixin theme-fg($theme, $color, $adjust: 0%) {
-    @include theme-property(color, color-adjust($color, $adjust), $theme);
-}
-
-@mixin theme-border(
-    $theme,
-    $color,
-    $adjust: 0%,
-    $border: 1px solid,
-    $side: null
-) {
-    @if $side == null {
-        @include theme-property(
-            border,
-            $border color-adjust($color, $adjust),
-            $theme
-        );
-    } @else {
-        @include theme-property(
-            border-#{$side},
-            $border color-adjust($color, $adjust),
-            $theme
-        );
-    }
-}
 
 @mixin dark-bg($color: $dark-300, $adjust: 0%) {
     @include theme-bg(dark, $color, $adjust);
