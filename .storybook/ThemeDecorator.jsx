@@ -3,7 +3,6 @@ import useDarkMode from "use-dark-mode";
 import addons from "@storybook/addons";
 
 import "./theme.scss";
-import { lightColor, darkBg } from "global.json";
 
 // get channel to listen to event emitter
 const channel = addons.getChannel();
@@ -24,7 +23,7 @@ function ThemeDecorator(storyFn) {
   }, [channel, setDark]);
 
   return (
-    <div style={{ backgroundColor: value ? darkBg : lightColor, minHeight: "100vh" }}>
+    <div className="content-root">
       <div children={storyFn()} />
     </div>
   );

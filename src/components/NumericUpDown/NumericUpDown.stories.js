@@ -28,7 +28,7 @@ export const Controlled = () => {
   const onDown = useCallback(() => {
     setValue(isEmptyOrNil(value) ? 0 : (parseFloat(value) - 1).toString());
   }, [value]);
-  const numericRegex = new RegExp(text("Input filter", "[^0-9.]*"), "g");
+  const numericRegex = new RegExp(text("Input filter", "[^0-9.-]*"), "g");
   const onChange = useCallback(event => {
     const newValue = isDefined(event.target) ? event.target.value : "";
     setValue(newValue.replace(numericRegex, ""));
@@ -44,7 +44,9 @@ export const Controlled = () => {
         value={value}
         placeholder={text("Placeholder", "controlled")}
       />
-      <p className="mt-2">Enter numbers and decimal points</p>
+      <p className="mt-2">
+        Input restricted to numbers, decimal points, and hyphens
+      </p>
       <h6 className="mt-2">Current value is: {value}</h6>
     </div>
   );
