@@ -8,9 +8,9 @@ import ThemeDecorator from "./ThemeDecorator";
 import StoreDecorator from "./StoreDecorator";
 
 import { primaryColor, secondaryColor } from "global.json";
-import lightLogo from "../src/assets/light_logo.png";
-import darkLogo from "../src/assets/dark_logo.png";
-import "../src/scss/main.scss";
+import lightLogo from "assets/light_logo.png";
+import darkLogo from "assets/dark_logo.png";
+import "scss/main.scss";
 
 const themeBase = {
   colorPrimary: secondaryColor,

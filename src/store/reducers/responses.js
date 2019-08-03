@@ -5,7 +5,7 @@ import {
   LOCAL_ADD_RESPONSE,
   LOCAL_EDIT_RESPONSE,
   LOCAL_DELETE_RESPONSE
-} from "../actions";
+} from "store/actions";
 
 export const initial = {
   commands: {},
