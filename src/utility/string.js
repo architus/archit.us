@@ -76,18 +76,8 @@ const styles = {
   log: "color: navy",
   warn: "color: red"
 };
-export const log = message =>
-  console.log(
-    `%c[${logPrefix}] %c${message}`,
-    `${baseStyle};${styles.log}`,
-    `${styles.log}`
-  );
-export const warn = message =>
-  console.log(
-    `%c[${logPrefix}] %c${message}`,
-    `${baseStyle};${styles.warn}`,
-    `${styles.warn}`
-  );
+export const log = window.console.log.bind(`[${logPrefix}] %s`);
+export const warn = window.console.warn.bind(`[${logPrefix}] %s`);
 
 export function replaceAll(string, replace, replaceWith) {
   const regex = escapeRegExp(replace);

@@ -1,7 +1,7 @@
 @import "scss/colors";
 @import "scss/theme";
 @import "scss/util";
-@import "dynamic/AppRoot/vars";
+@import "scss/app";
 
 %icon-base {
     @extend %circle-icon-hover;

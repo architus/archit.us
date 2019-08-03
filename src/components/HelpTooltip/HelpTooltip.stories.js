@@ -5,7 +5,7 @@ import HelpTooltip from "./index";
 import Icon from "components/Icon";
 
 export default {
-  title: "HelpTooltip",
+  title: "Components|HelpTooltip",
   parameters: { component: HelpTooltip }
 };
 

@@ -76,7 +76,7 @@ Tooltip.defaultProps = {
   top: false,
   bottom: false,
   hide: false,
-  padding: "0.5rem",
+  padding: "0.35rem",
   toggle: false
 };
 

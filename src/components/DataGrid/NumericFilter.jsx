@@ -148,7 +148,11 @@ class NumericFilter extends React.Component {
           />
         </div>
         <div className="input-sm">
-          <HelpTooltip content={tooltipText} className="mr-2" />
+          <HelpTooltip
+            content={tooltipText}
+            className="mr-2"
+            style={{ top: "-5px" }}
+          />
         </div>
       </div>
     );

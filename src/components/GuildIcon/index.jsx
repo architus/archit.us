@@ -65,12 +65,7 @@ GuildIcon.propTypes = {
 
 function Outer({ children, noTooltip, tooltip }) {
   if (noTooltip) return <>{children}</>;
-  else
-    return (
-      <Tooltip right text={tooltip}>
-        {children}
-      </Tooltip>
-    );
+  else return <Tooltip text={tooltip}>{children}</Tooltip>;
 }
 
 Outer.propTypes = {
