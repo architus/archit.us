@@ -1,0 +1,32 @@
+@import "scss/colors";
+
+.card_ {
+    @include light-bg($light-500);
+    @include dark-bg($dark-400);
+
+    &--header {
+        @include light-bg($light-350);
+        @include dark-bg($dark-500);
+        padding: 1rem 1.25rem;
+
+        h4 {
+            margin-bottom: 0;
+            font-size: 1rem;
+            text-transform: uppercase;
+            @include light-fg(rgba($-dark, 0.5));
+            @include dark-fg(rgba($-light, 0.5));
+        }
+    }
+
+    &--body {
+        padding: 1rem 1.25rem;
+    }
+
+    @include dark {
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+
+    @include light {
+        box-shadow: 0 0.1rem 0.6rem rgba(0, 0, 0, 0.14) !important;
+    }
+}

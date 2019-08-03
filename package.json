@@ -8,8 +8,8 @@
     "analyze": "react-static build --analyze",
     "serve": "serve dist -p 3000",
     "lint": "eslint ./src/**/*.js ./src/**/*.jsx",
-    "storybook": "export NODE_PATH=src/ && start-storybook -p 9009 -s public",
-    "build-storybook": "build-storybook -c .storybook -s public"
+    "storybook": "export NODE_PATH=src/:.storybook/ && start-storybook -p 9009 -s public",
+    "build-storybook": "export NODE_PATH=src/:.storybook/ && build-storybook -c .storybook -s public"
   },
   "dependencies": {
     "@babel/core": "^7.5.5",
