@@ -30,3 +30,6 @@ stats.json
 
 # Storybook
 /storybook-static
+
+# Vscode
+/.vscode
