@@ -44,7 +44,7 @@ export const tryLoadSession = () => {
 
   // Load session from local storage
   const storageSession = window.localStorage.getItem(LOCAL_STORAGE_KEY);
-  if (!isEmptyOrNil(storageSession)) {
+  if (!isEmptyOrNil(storageSession) && storageSession != "null") {
     const { expiresAt: expiresAtString, accessToken } = JSON.parse(
       storageSession
     );
