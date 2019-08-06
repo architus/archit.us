@@ -1,5 +1,6 @@
 import { zip, flatten, compact } from "lodash";
 import { isNil } from "./object";
+import { isClient } from "./document";
 import { left, right } from "./names.json";
 
 export function generateName(noSpace = false) {
@@ -71,13 +72,12 @@ export const randomDigitString = length =>
   (~~(Math.random() * 10 ** length)).toString().padStart(length, "0");
 
 const logPrefix = "Architus App";
-const baseStyle = "font-weight: bold";
-const styles = {
-  log: "color: navy",
-  warn: "color: red"
-};
-export const log = window.console.log.bind(`[${logPrefix}] %s`);
-export const warn = window.console.warn.bind(`[${logPrefix}] %s`);
+export const log = isClient
+  ? window.console.log.bind(`[${logPrefix}] %s`)
+  : () => null;
+export const warn = isClient
+  ? window.console.warn.bind(`[${logPrefix}] %s`)
+  : () => null;
 
 export function replaceAll(string, replace, replaceWith) {
   const regex = escapeRegExp(replace);
