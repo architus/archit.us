@@ -10,10 +10,6 @@ export default Object.assign(
         template: "src/pages/Index"
       },
       {
-        path: "docs",
-        template: "src/pages/Docs"
-      },
-      {
         path: "login",
         template: "src/pages/Login"
       },
