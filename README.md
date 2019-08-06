@@ -47,7 +47,7 @@ yarn run lint
 
 ## ❓ Getting Help
 
-If you have an issue about the bot, the web dashboard, or have any other questions, feel free to [create a new issue](https://github.com/architus/architus/issues/new) or [join our Discord server](https://discord.gg/FpyhED)
+If you have an issue about the bot, the web dashboard, or have any other questions, feel free to [create a new issue](https://github.com/architus/archit.us/issues/new) or [join our Discord server](https://discord.gg/FpyhED)
 
 ## 📜 License
 
