@@ -4,7 +4,6 @@ import EmojiManager from "dynamic/EmojiManager";
 import Logs from "dynamic/Logs";
 import MusicQueue from "dynamic/MusicQueue";
 import Statistics from "dynamic/Statistics";
-import Begin from "dynamic/Begin";
 
 import chartSvg from "assets/chart.inline.svg";
 import cogsSvg from "assets/cogs.inline.svg";

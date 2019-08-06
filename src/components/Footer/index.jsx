@@ -28,7 +28,8 @@ function Footer() {
                 <Icon name="github" className="icon" />
                 Github
               </a>
-              <a href="https://status.archit.us">Status</a>
+              <a href="https://status.archit.us/">Status</a>
+              <a href="https://docs.archit.us/">Docs</a>
             </FooterPanel>
           </Col>
           <Col md={6} lg={3}>

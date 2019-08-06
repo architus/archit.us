@@ -3,9 +3,11 @@ import NumericUpDown from "./index";
 import { boolean, text } from "@storybook/addon-knobs";
 import { action } from "@storybook/addon-actions";
 import { isDefined, isEmptyOrNil } from "utility";
+import MaxWidthDecorator from "MaxWidthDecorator";
 
 export default {
   title: "Components/NumericUpDown",
+  decorators: [MaxWidthDecorator],
   parameters: { component: NumericUpDown }
 };
 
@@ -34,7 +36,7 @@ export const Controlled = () => {
     setValue(newValue.replace(numericRegex, ""));
   });
   return (
-    <div style={{ maxWidth: "480px" }}>
+    <>
       <NumericUpDown
         isValid={boolean("Is Valid", false)}
         isInvalid={boolean("Is Invalid", false)}
@@ -48,6 +50,6 @@ export const Controlled = () => {
         Input restricted to numbers, decimal points, and hyphens
       </p>
       <h6 className="mt-2">Current value is: {value}</h6>
-    </div>
+    </>
   );
 };
