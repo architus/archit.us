@@ -3,6 +3,7 @@ import { store as reducer, initialState } from "store/reducers";
 import { tryLoadSession } from "store/reducers/session";
 import createSagaMiddleware from "redux-saga";
 import reduxWebsocket from "@giantmachines/redux-websocket";
+import { batchDispatchMiddleware } from "redux-batched-actions";
 
 import saga from "store/saga";
 import ApiMiddleware from "store/api";
@@ -18,7 +19,12 @@ const store = createStore(
   reducer,
   { ...initialState, session: tryLoadSession() },
   composeEnhancers(
-    applyMiddleware(ApiMiddleware, SagaMiddleware, WebsocketMiddleware)
+    applyMiddleware(
+      ApiMiddleware,
+      SagaMiddleware,
+      WebsocketMiddleware,
+      batchDispatchMiddleware
+    )
   )
 );
 export default store;

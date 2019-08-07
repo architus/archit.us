@@ -6,6 +6,7 @@ import { Router } from "components/Router";
 import { Root, Routes } from "react-static";
 import { Provider } from "react-redux";
 import { SEO } from "components/Layout";
+import NotificationPane from "components/NotificationPane";
 
 import AppRoot from "dynamic/AppRoot";
 
@@ -19,6 +20,7 @@ function App() {
     <Root>
       <SEO />
       <Provider store={store}>
+        <NotificationPane />
         <main>
           <React.Suspense fallback={<em>Loading...</em>}>
             <Router>

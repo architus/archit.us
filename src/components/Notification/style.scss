@@ -1,0 +1,35 @@
+@import "scss/colors";
+
+.notification {
+    .notification-content {
+        margin-bottom: 0;
+    }
+
+    &.notification-alert {
+    }
+
+    &.notification-toast {
+        display: block;
+        background-color: rgba($dark-000, 0.65);
+        padding: 0.5rem 0.75rem;
+        color: $-light;
+        border-radius: 4px;
+
+        margin-bottom: 0.6rem;
+        &:last-child {
+            margin-bottom: 0;
+        }
+
+        .close {
+            display: none;
+        }
+    }
+}
+
+.app-content {
+    @include dark {
+        .notification-toast {
+            background-color: $dark-000;
+        }
+    }
+}

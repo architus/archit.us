@@ -10,6 +10,7 @@ import {
   DELETE_RESPONSE
 } from "store/api/labels";
 import { connect, send } from "@giantmachines/redux-websocket";
+import { batchActions } from "redux-batched-actions";
 
 export const SIGN_OUT = "SIGN_OUT";
 export const API = "API";
@@ -20,6 +21,8 @@ export const LOAD_GUILD_COUNT = "LOAD_GUILD_COUNT";
 export const LOCAL_ADD_RESPONSE = "LOCAL_ADD_RESPONSE";
 export const LOCAL_EDIT_RESPONSE = "LOCAL_EDIT_RESPONSE";
 export const LOCAL_DELETE_RESPONSE = "LOCAL_DELETE_RESPONSE";
+export const SHOW_NOTIFICATION = "SHOW_NOTIFICATION";
+export const HIDE_NOTIFICATION = "HIDE_NOTIFICATION";
 
 export const SOCKET = {
   CONNECT: "REDUX_WEBSOCKET::CONNECT",
@@ -44,7 +47,7 @@ function apiAction({
   method = HttpVerbs.GET,
   data = null,
   onSuccess = () => null,
-  onFailure = () => null,
+  onFailure = error => showAlert(error.toString()),
   label = "",
   ...rest
 }) {
@@ -73,11 +76,10 @@ function authApiAction(accessToken, { headers, ...rest }) {
 // ? Actions
 // ? ===================
 
-export function signOut(history) {
+export function signOut() {
   log("Signed out");
   return {
-    type: SIGN_OUT,
-    payload: history
+    type: SIGN_OUT
   };
 }
 
@@ -117,6 +119,53 @@ export function localDeleteResponse(guildId, response) {
   };
 }
 
+// ? ====================
+// ? Notification Actions
+// ? ====================
+
+let globalIdCounter = 0;
+export function showNotification(
+  type = "toast",
+  message = "",
+  variant = "info",
+  duration = 2000
+) {
+  const id = globalIdCounter++;
+  return [
+    {
+      type: SHOW_NOTIFICATION,
+      payload: {
+        type,
+        message,
+        variant,
+        duration,
+        id
+      }
+    },
+    id
+  ];
+}
+
+export function hideNotification(type = "toast", id) {
+  return {
+    type: HIDE_NOTIFICATION,
+    payload: {
+      type,
+      id
+    }
+  };
+}
+
+export function showToast(message = "", variant = "info", duration = 2000) {
+  const [action] = showNotification("toast", message, variant, duration);
+  return action;
+}
+
+export function showAlert(message = "", variant = "error", duration = 2000) {
+  const [action] = showNotification("alert", message, variant, duration);
+  return action;
+}
+
 // ? ===================
 // ? API Actions
 // ? ===================
@@ -130,7 +179,7 @@ export function exchangeTokens(authCode) {
       code: authCode
     },
     onSuccess: data => loadSession({ ...data, newToken: true }),
-    // onFailure: signOut,
+    onFailure: batchActions,
     label: TOKEN_EXCHANGE
   });
 }
@@ -140,7 +189,7 @@ export function identifySession(accessToken) {
   return authApiAction(accessToken, {
     url: `${API_BASE}/identify`,
     onSuccess: data => loadSession({ ...data, newToken: false }),
-    onFailure: signOut,
+    onFailure: error => batchActions([signOut(), showAlert(error.toString())]),
     label: IDENTIFY_SESSION
   });
 }
@@ -150,6 +199,7 @@ export function getGuildList(accessToken) {
   return authApiAction(accessToken, {
     url: `${API_BASE}/guilds`,
     onSuccess: data => loadGuilds(data),
+    onFailure: error => batchActions([signOut(), showAlert(error.toString())]),
     label: GET_GUILDS
   });
 }

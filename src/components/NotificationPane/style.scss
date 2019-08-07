@@ -1,0 +1,58 @@
+@import "scss/media";
+
+$header-offset: 72px;
+$screen-padding: 12px;
+
+.notification-pane {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 90;
+    pointer-events: none;
+
+    .notification {
+        pointer-events: all;
+    }
+
+    &--toast {
+        position: absolute;
+        height: 400px;
+        max-width: 300px;
+        padding: $screen-padding;
+
+        @include respond-above(sm) {
+            right: 0;
+            top: $header-offset;
+        }
+
+        @include respond-below(sm) {
+            right: 0;
+            bottom: 0;
+            left: 0;
+            max-width: none;
+        }
+    }
+
+    &--alert {
+        position: absolute;
+        top: $header-offset;
+        height: 400px;
+        max-width: 600px;
+        padding: $screen-padding;
+
+        @include respond-above(md) {
+            left: 50%;
+            margin-left: -50px;
+        }
+
+        @include respond-below(md) {
+            max-width: 400px;
+        }
+
+        @include respond-below(sm) {
+            max-width: none;
+        }
+    }
+}

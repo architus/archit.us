@@ -30,3 +30,5 @@ export function invertMap(map, f) {
 }
 
 export const identity = o => o;
+
+export const sleep = m => new Promise(r => setTimeout(r, m));
