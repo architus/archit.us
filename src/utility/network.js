@@ -36,5 +36,5 @@ export const API_BASE = process.env.PRODUCTION_URL
   : "https://api.archit.us";
 
 export const WS_API_BASE = process.env.PRODUCTION_URL
-  ? "wss://api.archit.us/socket"
-  : "wss://api.archit.us/socket";
+  ? "wss://ws.archit.us"
+  : "wss://ws.archit.us";
