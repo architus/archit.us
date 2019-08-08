@@ -1,25 +1,30 @@
 import React from "react";
 import PropTypes from "prop-types";
-import classNames from "classnames";
 
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import Notification from "components/Notification";
+import { Container } from "react-bootstrap";
 
 import "./style.scss";
 
 function NotificationList({
   className,
-  containerClass,
   items,
   onDismiss,
-  type
+  type,
+  transitionLength,
+  container
 }) {
   return (
     <div className={className}>
-      <div className={classNames({ container: type === "alert" })}>
-        <TransitionGroup className={containerClass}>
+      <ConditionalContainer useContainer={container}>
+        <TransitionGroup className="notification-list--transition-group">
           {items.map(({ id, message, variant }) => (
-            <CSSTransition key={id} timeout={400} classNames="notification">
+            <CSSTransition
+              key={id}
+              timeout={transitionLength}
+              classNames="notification"
+            >
               <Notification
                 id={id}
                 type={type}
@@ -30,7 +35,7 @@ function NotificationList({
             </CSSTransition>
           ))}
         </TransitionGroup>
-      </div>
+      </ConditionalContainer>
     </div>
   );
 }
@@ -48,7 +53,9 @@ NotificationList.propTypes = {
     })
   ),
   onDismiss: PropTypes.func,
-  type: PropTypes.string
+  type: PropTypes.oneOf(["alert", "toast"]),
+  transitionLength: PropTypes.number,
+  container: PropTypes.bool
 };
 
 NotificationList.defaultProps = {
@@ -56,5 +63,23 @@ NotificationList.defaultProps = {
   containerClass: "",
   items: [],
   onDismiss() {},
-  type: "toast"
+  type: "toast",
+  transitionLength: 250,
+  container: false
+};
+
+// ? =================
+// ? Helper components
+// ? =================
+
+function ConditionalContainer({ useContainer, children }) {
+  return useContainer ? <Container children={children} /> : children;
+}
+
+ConditionalContainer.propTypes = {
+  useContainer: PropTypes.bool,
+  children: PropTypes.oneOfType([
+    PropTypes.node,
+    PropTypes.arrayOf(PropTypes.node)
+  ]).isRequired
 };

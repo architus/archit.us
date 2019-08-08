@@ -3,18 +3,19 @@ import classNames from "classnames";
 import PropTypes from "prop-types";
 
 import "./style.scss";
+import { CloseButton } from "react-bootstrap";
 
 function Notification({ type, message, id, variant, onDismiss }) {
-  const specificDismissHandler = useCallback(() => onDismiss(id), [id]);
+  const isToast = type === "toast";
+  const className = classNames("notification", `notification-${type}`, variant);
+
+  // Memoize targeted dismiss callback
+  const dismissHandler = useCallback(() => onDismiss(id), [id]);
+  const outerOnClick = isToast ? dismissHandler : undefined;
+
   return (
-    <div
-      onClick={type === "toast" ? specificDismissHandler : undefined}
-      className={classNames("notification", `notification-${type}`, variant)}
-    >
-      <button type="button" className="close" onClick={specificDismissHandler}>
-        <span aria-hidden="true">×</span>
-        <span className="sr-only">Close notification</span>
-      </button>
+    <div onClick={outerOnClick} className={className}>
+      <CloseButton onClick={dismissHandler} label="Close notification" />
       <p className="notification-content">{message}</p>
     </div>
   );
@@ -23,7 +24,7 @@ function Notification({ type, message, id, variant, onDismiss }) {
 export default Notification;
 
 Notification.propTypes = {
-  type: PropTypes.string,
+  type: PropTypes.oneOf(["alert", "toast"]),
   message: PropTypes.string,
   id: PropTypes.number.isRequired,
   variant: PropTypes.string,

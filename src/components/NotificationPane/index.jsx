@@ -13,10 +13,11 @@ import "./style.scss";
 // - Notification
 // - NotificationList
 
-const NotificationList = lazy(() => import("components/NotificationList"));
-
 function useHideNotification(dispatch, type) {
-  return useCallback(id => dispatch(hideNotification(type, id)));
+  return useCallback(id => dispatch(hideNotification(type, id)), [
+    dispatch,
+    type
+  ]);
 }
 
 function hasItems(array) {
@@ -59,31 +60,40 @@ export default NotificationPane;
 // ? Helper components
 // ? =================
 
-function LazyLoadingWrapper({ toast, alert, onDismissToast, onDismissAlert }) {
-  const [hasRenderedOnce, setHasRenderedOnce] = useState(false);
-  if ((hasItems(toast) || hasItems(alert)) && !hasRenderedOnce)
-    setHasRenderedOnce(true);
-  return useClientSide(() =>
-    hasItems(toast) || hasItems(alert) || hasRenderedOnce ? (
+// Split bundle
+const NotificationList = lazy(() => import("components/NotificationList"));
+
+// Can't render lazy elements in SSR
+const LazyLoadingWrapper = useClientSide(
+  ({ toast, alert, onDismissToast, onDismissAlert }) => {
+    // Whether the are any active notifications
+    const hasAnyItems = hasItems(toast) || hasItems(alert);
+
+    // Wait until the lazy loaded components have been loaded once
+    // (defer rendering until a notification appears, but don't unmount afterwards
+    //  to allow CSS transitions to remain)
+    const [hasRenderedOnce, setHasRenderedOnce] = useState(hasAnyItems);
+    if (hasAnyItems && !hasRenderedOnce) setHasRenderedOnce(true);
+
+    return hasAnyItems || hasRenderedOnce ? (
       <>
         <NotificationList
           className="notification-pane--toast"
-          containerClass="notification-pane--toast-container"
           items={toast}
           type="toast"
           onDismiss={onDismissToast}
         />
         <NotificationList
           className="notification-pane--alert"
-          containerClass="notification-pane--alert-container"
           items={alert}
           type="alert"
           onDismiss={onDismissAlert}
+          container
         />
       </>
-    ) : null
-  );
-}
+    ) : null;
+  }
+);
 
 LazyLoadingWrapper.propTypes = {
   alert: PropTypes.arrayOf(PropTypes.object),

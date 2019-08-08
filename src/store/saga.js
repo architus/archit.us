@@ -8,8 +8,7 @@ import { SHOW_NOTIFICATION, hideNotification, showToast } from "./actions";
 function* signOut() {
   window.localStorage.clear();
   navigate("/");
-  const action = showToast("Signed out");
-  yield put(action);
+  yield put(showToast("Signed out"));
 }
 
 function loadNewSession(action) {
