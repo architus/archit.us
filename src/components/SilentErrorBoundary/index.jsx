@@ -25,7 +25,7 @@ export default ErrorBoundary;
 
 ErrorBoundary.propTypes = {
   children: PropTypes.oneOfType([
-    PropTypes.node,
-    PropTypes.arrayOf(PropTypes.node)
-  ])
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ]).isRequired
 };

@@ -3,28 +3,58 @@
 $header-offset: 72px;
 $screen-padding: 12px;
 
+%pane-outer {
+    & > div {
+        height: 100%;
+    }
+}
+
 .notification-pane {
     position: fixed;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 90;
+    z-index: 1000;
     pointer-events: none;
 
     .notification {
         pointer-events: all;
     }
 
+    &--toast-container {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+
+        @include respond-above(sm) {
+            align-items: flex-end;
+            justify-content: flex-start;
+        }
+
+        @include respond-below(sm) {
+            align-items: stretch;
+            justify-content: flex-end;
+        }
+    }
+
     &--toast {
+        @extend %pane-outer;
+
         position: absolute;
         height: 400px;
         max-width: 300px;
         padding: $screen-padding;
 
+        @include respond-below(md) {
+            max-width: 400px;
+        }
+
         @include respond-above(sm) {
             right: 0;
             top: $header-offset;
+            align-items: flex-end;
+            justify-content: flex-start;
         }
 
         @include respond-below(sm) {
@@ -32,27 +62,34 @@ $screen-padding: 12px;
             bottom: 0;
             left: 0;
             max-width: none;
+            align-items: stretch;
+            justify-content: flex-end;
         }
     }
 
+    &--alert-container {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
     &--alert {
+        @extend %pane-outer;
+
         position: absolute;
-        top: $header-offset;
         height: 400px;
-        max-width: 600px;
-        padding: $screen-padding;
+        padding: $screen-padding 0;
+        margin: 0 auto;
+        left: 0;
+        right: 0;
+        max-width: 800px;
 
-        @include respond-above(md) {
-            left: 50%;
-            margin-left: -50px;
-        }
-
-        @include respond-below(md) {
-            max-width: 400px;
+        @include respond-above(sm) {
+            top: 68px;
         }
 
         @include respond-below(sm) {
-            max-width: none;
+            top: 64px;
         }
     }
 }

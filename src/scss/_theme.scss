@@ -2,6 +2,10 @@
 @import "scss/util";
 @import "scss/app";
 
+$drop-shadow-0: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+$drop-shadow-1: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+$drop-shadow-2: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+
 $drop-shadow: 0 4px 12px 0 rgba(black, 0.15);
 $drop-shadow-slight: 0 2px 8px 0 rgba(black, 0.3);
 $border-radius: 8px;
@@ -114,4 +118,9 @@ $scrollbar-width: 12px;
             color-adjust($app-content-light-bg, -4%)
         );
     }
+}
+
+%close-dark {
+    color: white;
+    text-shadow: 0 1px 0 black;
 }

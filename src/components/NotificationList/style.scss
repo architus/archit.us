@@ -1,0 +1,35 @@
+.notification-enter {
+    opacity: 0;
+    max-height: 0;
+    margin-bottom: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.notification-enter-active {
+    opacity: 1;
+    max-height: 120px;
+    margin-bottom: 0.6rem;
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+}
+
+.notification-exit {
+    opacity: 1;
+    transform: none;
+    pointer-events: none;
+    max-height: 120px;
+    margin-bottom: 0.6rem;
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+}
+
+.notification-exit-active {
+    opacity: 0;
+    transform: translateX(-64px);
+    pointer-events: none;
+    max-height: 0;
+    margin-bottom: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}

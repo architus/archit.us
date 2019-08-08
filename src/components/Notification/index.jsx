@@ -8,6 +8,7 @@ function Notification({ type, message, id, variant, onDismiss }) {
   const specificDismissHandler = useCallback(() => onDismiss(id), [id]);
   return (
     <div
+      onClick={type === "toast" ? specificDismissHandler : undefined}
       className={classNames("notification", `notification-${type}`, variant)}
     >
       <button type="button" className="close" onClick={specificDismissHandler}>

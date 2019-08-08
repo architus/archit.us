@@ -1,6 +1,8 @@
-import React, { useCallback, Suspense, lazy } from "react";
+import React, { useCallback, Suspense, lazy, useState } from "react";
+import PropTypes from "prop-types";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { hideNotification } from "store/actions";
+import { isDefined } from "utility";
 
 import SilentErrorBoundary from "components/SilentErrorBoundary";
 
@@ -15,6 +17,10 @@ const NotificationList = lazy(() => import("components/NotificationList"));
 
 function useHideNotification(dispatch, type) {
   return useCallback(id => dispatch(hideNotification(type, id)));
+}
+
+function hasItems(array) {
+  return isDefined(array) && array.length !== 0;
 }
 
 function NotificationPane() {
@@ -35,17 +41,11 @@ function NotificationPane() {
     <div className="notification-pane">
       <SilentErrorBoundary>
         <Suspense fallback={<div />}>
-          <NotificationList
-            className="notification-pane--toast"
-            items={toast}
-            type="toast"
-            onDismiss={onDismissToast}
-          />
-          <NotificationList
-            className="notification-pane--alert"
-            items={alert}
-            type="alert"
-            onDismiss={onDismissAlert}
+          <LazyLoadingWrapper
+            toast={toast}
+            alert={alert}
+            onDismissToast={onDismissToast}
+            onDismissAlert={onDismissAlert}
           />
         </Suspense>
       </SilentErrorBoundary>
@@ -54,3 +54,38 @@ function NotificationPane() {
 }
 
 export default NotificationPane;
+
+// ? =================
+// ? Helper components
+// ? =================
+
+function LazyLoadingWrapper({ toast, alert, onDismissToast, onDismissAlert }) {
+  const [hasRenderedOnce, setHasRenderedOnce] = useState(false);
+  if ((hasItems(toast) || hasItems(alert)) && !hasRenderedOnce)
+    setHasRenderedOnce(true);
+  return hasItems(toast) || hasItems(alert) || hasRenderedOnce ? (
+    <>
+      <NotificationList
+        className="notification-pane--toast"
+        containerClass="notification-pane--toast-container"
+        items={toast}
+        type="toast"
+        onDismiss={onDismissToast}
+      />
+      <NotificationList
+        className="notification-pane--alert"
+        containerClass="notification-pane--alert-container"
+        items={alert}
+        type="alert"
+        onDismiss={onDismissAlert}
+      />
+    </>
+  ) : null;
+}
+
+LazyLoadingWrapper.propTypes = {
+  alert: PropTypes.arrayOf(PropTypes.object),
+  toast: PropTypes.arrayOf(PropTypes.object),
+  onDismissAlert: PropTypes.func,
+  onDismissToast: PropTypes.func
+};
