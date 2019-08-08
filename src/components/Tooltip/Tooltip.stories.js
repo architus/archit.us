@@ -34,6 +34,14 @@ export const Basic = () => (
     children={<Button variant="primary">Basic</Button>}
   />
 );
+Basic.story = {
+  parameters: {
+    notes:
+      "`Tooltip` exists primarily as a wrapper for the tooltip/overlay component from " +
+      "[react-bootstrap](https://react-bootstrap.github.io/components/overlays/#tooltip-props)"
+  }
+};
+
 export const AdvancedContent = () => (
   <Tooltip
     right={boolean("Right", false)}

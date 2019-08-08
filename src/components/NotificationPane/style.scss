@@ -18,12 +18,6 @@ $layout-breakpoint: sm;
         pointer-events: all;
     }
 
-    .notification-list--transition-group {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-    }
-
     &--toast {
         position: absolute;
 

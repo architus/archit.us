@@ -22,7 +22,6 @@ export default Icon;
 
 Icon.defaultProps = {
   className: "",
-  name: "chevron-right",
   style: {},
   noAutoWidth: false
 };
@@ -31,5 +30,8 @@ Icon.propTypes = {
   className: PropTypes.string,
   name: PropTypes.string.isRequired,
   style: PropTypes.object,
-  noAutoWidth: PropTypes.bool
+  noAutoWidth: PropTypes.bool,
+  size: PropTypes.string
 };
+
+Icon.displayName = "Icon";

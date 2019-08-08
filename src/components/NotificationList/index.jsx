@@ -44,7 +44,6 @@ export default NotificationList;
 
 NotificationList.propTypes = {
   className: PropTypes.string,
-  containerClass: PropTypes.string,
   items: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number,
@@ -60,13 +59,14 @@ NotificationList.propTypes = {
 
 NotificationList.defaultProps = {
   className: "",
-  containerClass: "",
   items: [],
   onDismiss() {},
   type: "toast",
   transitionLength: 250,
   container: false
 };
+
+NotificationList.displayName = "NotificationList";
 
 // ? =================
 // ? Helper components
@@ -83,3 +83,5 @@ ConditionalContainer.propTypes = {
     PropTypes.arrayOf(PropTypes.node)
   ]).isRequired
 };
+
+ConditionalContainer.displayName = "ConditionalContainer";

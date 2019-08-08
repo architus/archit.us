@@ -2,8 +2,9 @@ import React, { useCallback } from "react";
 import classNames from "classnames";
 import PropTypes from "prop-types";
 
-import "./style.scss";
 import { CloseButton } from "react-bootstrap";
+
+import "./style.scss";
 
 function Notification({ type, message, id, variant, onDismiss }) {
   const isToast = type === "toast";
@@ -16,7 +17,7 @@ function Notification({ type, message, id, variant, onDismiss }) {
   return (
     <div onClick={outerOnClick} className={className}>
       <CloseButton onClick={dismissHandler} label="Close notification" />
-      <p className="notification-content">{message}</p>
+      <div className="notification-content">{message}</div>
     </div>
   );
 }
@@ -24,11 +25,14 @@ function Notification({ type, message, id, variant, onDismiss }) {
 export default Notification;
 
 Notification.propTypes = {
-  type: PropTypes.oneOf(["alert", "toast"]),
-  message: PropTypes.string,
   id: PropTypes.number.isRequired,
-  variant: PropTypes.string,
-  onDismiss: PropTypes.func
+  onDismiss: PropTypes.func,
+  type: PropTypes.oneOf(["alert", "toast"]),
+  variant: PropTypes.oneOf(["success", "info", "warning", "danger"]),
+  message: PropTypes.oneOfType([
+    PropTypes.node,
+    PropTypes.arrayOf(PropTypes.node)
+  ])
 };
 
 Notification.defaultProps = {
@@ -37,3 +41,5 @@ Notification.defaultProps = {
   variant: "info",
   onDismiss() {}
 };
+
+Notification.displayName = "Notification";

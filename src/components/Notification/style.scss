@@ -5,6 +5,12 @@
 @mixin notification-variant($color, $icon) {
     background-color: $color;
     background-image: $icon;
+
+    &.notification-toast {
+        &:hover {
+            background-color: lighten($color, 5%);
+        }
+    }
 }
 
 .notification {
@@ -32,11 +38,6 @@
         margin-bottom: 0;
     }
 
-    &:hover {
-        transform: translateY(-1px);
-        box-shadow: $drop-shadow-1;
-    }
-
     .notification-content {
         margin-bottom: 0;
         overflow-wrap: break-word;
@@ -49,7 +50,7 @@
         @extend %close-dark;
 
         position: absolute;
-        right: 12px;
+        right: 10px;
     }
 
     &.notification-alert {
@@ -74,7 +75,7 @@
 
         .close {
             top: 50%;
-            transform: translateY(calc(-50% - 4px));
+            transform: translateY(calc(-50% - 2px));
             pointer-events: none;
         }
 
@@ -84,6 +85,11 @@
             .close {
                 display: none;
             }
+        }
+
+        &:hover {
+            transform: translateY(-1px);
+            box-shadow: $drop-shadow-1;
         }
     }
 

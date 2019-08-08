@@ -32,6 +32,16 @@ export const Basic = () => (
     content={text("Content", "Example help tooltip")}
   />
 );
+Basic.story = {
+  parameters: {
+    notes:
+      "`HelpTooltip` provides a way to give explanatory content to users hidden behind " +
+      "an interactive tooltip.\n\n> **Note:** The component supports many of the same props as " +
+      "`Tooltip`, with one exception beind that `HelpTooltip` is bottom-placed by default, " +
+      "whereas `Tooltip` is right-placed by default."
+  }
+};
+
 export const AdvancedContent = () => (
   <HelpTooltip
     right={boolean("Right", false)}

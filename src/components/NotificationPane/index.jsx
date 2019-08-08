@@ -4,7 +4,7 @@ import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { hideNotification } from "store/actions";
 import { isDefined, useClientSide } from "utility";
 
-import SilentErrorBoundary from "components/SilentErrorBoundary";
+import ErrorBoundary from "components/ErrorBoundary";
 
 import "./style.scss";
 
@@ -40,7 +40,7 @@ function NotificationPane() {
 
   return (
     <div className="notification-pane">
-      <SilentErrorBoundary>
+      <ErrorBoundary>
         <Suspense fallback={<div />}>
           <LazyLoadingWrapper
             toast={toast}
@@ -49,12 +49,14 @@ function NotificationPane() {
             onDismissAlert={onDismissAlert}
           />
         </Suspense>
-      </SilentErrorBoundary>
+      </ErrorBoundary>
     </div>
   );
 }
 
 export default NotificationPane;
+
+NotificationPane.displayName = "NotificationPane";
 
 // ? =================
 // ? Helper components
@@ -101,3 +103,5 @@ LazyLoadingWrapper.propTypes = {
   onDismissAlert: PropTypes.func,
   onDismissToast: PropTypes.func
 };
+
+LazyLoadingWrapper.displayName = "LazyLoadingWrapper";
