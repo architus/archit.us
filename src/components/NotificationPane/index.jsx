@@ -2,7 +2,7 @@ import React, { useCallback, Suspense, lazy, useState } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { hideNotification } from "store/actions";
-import { isDefined } from "utility";
+import { isDefined, useClientSide } from "utility";
 
 import SilentErrorBoundary from "components/SilentErrorBoundary";
 
@@ -63,24 +63,26 @@ function LazyLoadingWrapper({ toast, alert, onDismissToast, onDismissAlert }) {
   const [hasRenderedOnce, setHasRenderedOnce] = useState(false);
   if ((hasItems(toast) || hasItems(alert)) && !hasRenderedOnce)
     setHasRenderedOnce(true);
-  return hasItems(toast) || hasItems(alert) || hasRenderedOnce ? (
-    <>
-      <NotificationList
-        className="notification-pane--toast"
-        containerClass="notification-pane--toast-container"
-        items={toast}
-        type="toast"
-        onDismiss={onDismissToast}
-      />
-      <NotificationList
-        className="notification-pane--alert"
-        containerClass="notification-pane--alert-container"
-        items={alert}
-        type="alert"
-        onDismiss={onDismissAlert}
-      />
-    </>
-  ) : null;
+  return useClientSide(() =>
+    hasItems(toast) || hasItems(alert) || hasRenderedOnce ? (
+      <>
+        <NotificationList
+          className="notification-pane--toast"
+          containerClass="notification-pane--toast-container"
+          items={toast}
+          type="toast"
+          onDismiss={onDismissToast}
+        />
+        <NotificationList
+          className="notification-pane--alert"
+          containerClass="notification-pane--alert-container"
+          items={alert}
+          type="alert"
+          onDismiss={onDismissAlert}
+        />
+      </>
+    ) : null
+  );
 }
 
 LazyLoadingWrapper.propTypes = {
