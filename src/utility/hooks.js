@@ -34,9 +34,12 @@ export function useAuthDispatch(action) {
   }
 }
 
-// more of a HOC than a hook
 export function useClientSide(render) {
   return typeof window === "undefined" ? null : render();
+}
+
+export function clientSide(component) {
+  return typeof window === "undefined" ? () => null : component;
 }
 
 export function useMediaBreakpoints(breakpoints) {

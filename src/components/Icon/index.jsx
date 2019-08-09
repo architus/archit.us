@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { resolveIcon } from "./loader";
+import { resolveIcon, allIconNames } from "./loader";
 
 const baseStyle = { display: "inline-block", height: "1em", width: "1em" };
 
@@ -28,7 +28,7 @@ Icon.defaultProps = {
 
 Icon.propTypes = {
   className: PropTypes.string,
-  name: PropTypes.string.isRequired,
+  name: PropTypes.oneOf(allIconNames).isRequired,
   style: PropTypes.object,
   noAutoWidth: PropTypes.bool,
   size: PropTypes.string

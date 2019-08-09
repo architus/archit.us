@@ -29,6 +29,25 @@ input.form-control.editor-main {
     }
 }
 
+.data-grid {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+
+    .loading {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 400px;
+
+        .spinner-border {
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+    }
+}
+
 .table-outer {
     height: 0;
     flex-grow: 1;
@@ -393,19 +412,5 @@ input.form-control.editor-main {
             }
             background-color: color-adjust($-dark, 10%) !important;
         }
-    }
-}
-
-.add-row-modal {
-    .modal-header {
-        .h4 {
-            margin-bottom: 0;
-            line-height: 1.15;
-        }
-    }
-
-    .modal-body {
-        padding-left: 2rem;
-        padding-right: 2rem;
     }
 }

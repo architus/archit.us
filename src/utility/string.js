@@ -1,4 +1,6 @@
-import { zip, flatten, compact } from "lodash";
+import zip from "lodash/zip";
+import flatten from "lodash/flatten";
+import compact from "lodash/compact";
 import { isNil } from "./object";
 import { isClient } from "./document";
 import { left, right } from "./names.json";

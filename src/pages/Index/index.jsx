@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { curry } from "lodash";
+import curry from "lodash/curry";
 import { CustomEmojiExtension } from "components/DiscordMock/CustomEmojiExtension";
 import { connect, useSelector, shallowEqual, useDispatch } from "react-redux";
 import { useOauthUrl } from "components/LoginButton";
