@@ -49,6 +49,19 @@ yarn run lint
 
 If you have an issue about the bot, the web dashboard, or have any other questions, feel free to [create a new issue](https://github.com/architus/archit.us/issues/new) or [join our Discord server](https://discord.gg/FpyhED)
 
+## 🛠 Tooling
+
+This project uses a variety of useful tooling to help preview, manage, and deploy the application. Among those are:
+
+- [Netlify](https://www.netlify.com/) - Used to automatically deploy & generate previews for PRs. Deploy information is available at [the Deploy page](https://app.netlify.com/sites/architus/deploys)
+  - Production (`master`) is deployed at [archit.us](https://archit.us/)
+  - Develop (`develop`) is deployed at [develop.archit.us](https://develop.archit.us/)
+- [Storybook](https://storybook.js.org/) - Used to document & preview individual components. Hosted at [storybook.archit.us](https://storybook.archit.us/), which automatically [deploys from the `develop` branch](https://app.netlify.com/sites/storybook-architus/deploys)
+- [ESLint](https://eslint.org/) / [Prettier](https://prettier.io/) - Used to enforce consistent code style across the project & catch errors
+- [TravisCI](https://travis-ci.org/) - Used to automatically run the linter on ever PR
+- [FOSSA](https://fossa.com/) - Used to scan dependencies and perform license compliance
+- [UptimeRobot](uptimerobot.com) - Used to track uptime and notify upon outage for [the websites and the API](https://status.archit.us/)
+
 ## 📜 License
 
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Farchitus%2Farchit.us.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Farchitus%2Farchit.us?ref=badge_large)
