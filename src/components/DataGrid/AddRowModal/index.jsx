@@ -75,6 +75,13 @@ function AddRowModal({ data, show, columns, onHide, onAdd, title, ...rest }) {
     if (show && isDefined(firstInput.current)) firstInput.current.focus();
   }, [show]);
 
+  // Reset state upon close
+  const resetState = useCallback(() => {
+    setValues(initialState(relevantColumns));
+    setShowValidation(false);
+    setFinishedInputs(initialFocusState());
+  });
+
   // Input validation
   const [validationStatus, isValid] = useMemo(() => {
     let validationStatus = {};
@@ -125,16 +132,14 @@ function AddRowModal({ data, show, columns, onHide, onAdd, title, ...rest }) {
   }, [relevantColumns, values, sortedUniqueColumns]);
   const tryAdd = useCallback(() => {
     if (isValid) {
-      setValues(initialState(relevantColumns));
-      setShowValidation(false);
+      resetState();
       onAdd(values);
     } else {
       setShowValidation(true);
     }
   }, [isValid, values]);
   const close = useCallback(() => {
-    setValues(initialState(relevantColumns));
-    setShowValidation(false);
+    resetState();
     onHide();
   });
   const [showValidation, setShowValidation] = useState(false);
@@ -159,12 +164,15 @@ function AddRowModal({ data, show, columns, onHide, onAdd, title, ...rest }) {
   }, [show, handleKeyPressed]);
 
   // Validate upon lost focus
-  const [finishedInputs, setFinishedInputs] = useState(() =>
-    Object.assign({}, ...relevantColumns.map(col => ({ [col.key]: false })))
-  );
+  const initialFocusState = () =>
+    Object.assign({}, ...relevantColumns.map(col => ({ [col.key]: false })));
+  const [finishedInputs, setFinishedInputs] = useState(initialFocusState);
   const onBlur = useCallback(
-    key => setFinishedInputs({ ...finishedInputs, [key]: true }),
-    [finishedInputs]
+    key => {
+      if (values[key] !== "")
+        setFinishedInputs({ ...finishedInputs, [key]: true });
+    },
+    [values, finishedInputs]
   );
   const validated = useCallback(
     col => showValidation || finishedInputs[col.key],

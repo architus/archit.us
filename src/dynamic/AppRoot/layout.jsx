@@ -33,6 +33,8 @@ function AppLayout({ children, className, ...rest }) {
             onHandleColor={lightColor}
             offColor={colorBlend(0.35, primaryColor)}
             onColor={colorBlend(-0.6, primaryColor)}
+            height={28}
+            width={56}
           />
         )
       }

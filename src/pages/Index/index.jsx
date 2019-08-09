@@ -1,11 +1,11 @@
 import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { curry } from "lodash";
+import curry from "lodash/curry";
 import { CustomEmojiExtension } from "components/DiscordMock/CustomEmojiExtension";
 import { connect, useSelector, shallowEqual, useDispatch } from "react-redux";
 import { useOauthUrl } from "components/LoginButton";
-import { mapStateToLoggedIn } from "../../store/reducers/session";
+import { mapStateToLoggedIn } from "store/reducers/session";
 import { useEffectOnce } from "utility";
 
 import { getGuildCount } from "store/actions";
@@ -79,7 +79,7 @@ function Index() {
                 </p>
               </Col>
               <Col sm={6} lg={4}>
-                <Card as="aside">
+                <Card as="aside" className="border-card">
                   <h2>Getting Started</h2>
                   <LoginButton />
                 </Card>
@@ -239,7 +239,7 @@ function Index() {
         </div>
         <div className="bottom-cta-outer">
           <Container>
-            <Card as="section">
+            <Card as="section" className="border-card">
               <h4>
                 See what <em>architus</em> can do for you
               </h4>

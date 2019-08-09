@@ -4,7 +4,7 @@ import {
   transformReaction,
   transformOutgoingMessage
 } from "components/DiscordMock/transform";
-import { omit } from "lodash";
+import omit from "lodash/omit";
 import { generateName } from "utility/string";
 
 // ? ==========================

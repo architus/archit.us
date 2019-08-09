@@ -63,7 +63,7 @@ hr {
     @include button-variant($discord, lighten($discord, 5%));
 }
 
-.card {
+.border-card {
     background-color: rgba(white, 0.75);
     padding: 2rem;
     border-radius: $border-radius;
@@ -147,8 +147,7 @@ main > div[role="group"] {
 
         .close {
             @include dark {
-                color: white;
-                text-shadow: 0 1px 0 black;
+                @extend %close-dark;
             }
         }
     }
@@ -174,10 +173,36 @@ main > div[role="group"] {
 }
 
 input[type="text"] {
-    @include dark {
-        border-color: rgba($-light, 0.2);
+    outline: none;
+    padding: {
+        top: 6px;
+        bottom: 6px;
+        right: 6px;
+        left: 10px;
     }
-    @extend %input-box;
+    border-radius: 8px;
+    transition: box-shadow 0.25s ease;
+    box-shadow: none;
+
+    @include dark {
+        background-color: rgba($dark-000, 0.425) !important;
+        color: $-light !important;
+        border-color: transparent;
+    }
+
+    @include light {
+        background-color: white !important;
+        color: $-dark !important;
+    }
+
+    &::placeholder {
+        @include light-fg(rgba($-dark, 0.4));
+        @include dark-fg(rgba($-light, 0.4));
+    }
+
+    &:focus {
+        @include highlight-shadow($-primary);
+    }
 
     &.form-control.is-invalid {
         border-color: $-danger;
@@ -190,3 +215,24 @@ input[type="text"] {
 .button-blank {
     @extend %button-blank;
 }
+
+.theme-fg {
+    @include light-fg;
+    @include dark-fg;
+}
+
+.theme-bg {
+    @include light-bg;
+    @include dark-bg;
+}
+
+@mixin generate-color-classes($map, $prefix, $property) {
+    @each $name, $color in $map {
+        .#{$prefix}-#{$name} {
+            #{$property}: $color;
+        }
+    }
+}
+
+@include generate-color-classes(($dark-shades), bg, background-color);
+@include generate-color-classes(($light-shades), bg, background-color);

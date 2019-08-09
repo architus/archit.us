@@ -1,5 +1,5 @@
 import { createSelector } from "reselect";
-import { LOAD_GUILDS } from "../actions";
+import { LOAD_GUILDS } from "store/actions";
 import { sessionAware } from "./session";
 
 export const initial = {

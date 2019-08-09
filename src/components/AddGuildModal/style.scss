@@ -38,7 +38,7 @@
 
         .modal-body {
             @include light-bg($-light, -5%);
-            @include dark-bg($-dark, 2.5%);
+            @include dark-bg($dark-200);
             box-shadow: inset 0 7px 16px -7px rgba(0, 0, 0, 0.15),
                 inset 0 -7px 16px -7px rgba(0, 0, 0, 0.15);
             max-height: 800px;

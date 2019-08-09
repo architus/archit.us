@@ -29,3 +29,5 @@ function resolveTypeClass(name) {
 export function resolveIcon(name) {
   return [resolveTypeClass(name), name];
 }
+
+export const allIconNames = allIcons.map(icon => icon.iconName);

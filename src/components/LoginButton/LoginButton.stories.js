@@ -4,16 +4,22 @@ import { boolean } from "@storybook/addon-knobs";
 import LoginButton from "./index";
 
 export default {
-  title: "LoginButton",
-  parameters: { component: LoginButton }
+  title: "Components|LoginButton",
+  parameters: {
+    component: LoginButton
+  }
 };
 
-export const Display = () => (
-  <LoginButton
-    loggedIn={boolean("Logged In", false)}
-    showLabel={boolean("Show Label", true)}
-  />
+export const WithLabel = () => (
+  <LoginButton loggedIn={boolean("Logged In", false)} showLabel />
 );
-export const ConnectedToStore = () => (
-  <LoginButton showLabel={boolean("Show Label", true)} />
+WithLabel.story = {
+  parameters: {
+    notes:
+      "`LoginButton` provides an interface for users to either:\n\n1. log in to the architus app or\n2. enter the primary app dashboard"
+  }
+};
+
+export const WithoutLabel = () => (
+  <LoginButton loggedIn={boolean("Logged In", false)} showLabel={false} />
 );

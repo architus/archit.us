@@ -4,7 +4,7 @@ import aliases from "components/DiscordMock/aliases.json";
 import { hasEmoji, get, unemojify } from "node-emoji";
 import { escapeHtml, escapeMarkdown, isNil } from "utility";
 import { splitFragments, allMatches } from "utility/string";
-import { mapValues } from "lodash";
+import mapValues from "lodash/mapValues";
 
 // ? ===================
 // ? Markdown rendering

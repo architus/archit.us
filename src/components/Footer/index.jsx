@@ -13,7 +13,7 @@ function Footer() {
     <div className="footer">
       <div className="footer--inner">
         <Row>
-          <Col md={12} lg={6} className="mb-4 mb-lg-0">
+          <Col sm={12} lg={6} className="mb-4 mb-lg-0">
             <FooterPanel header="About" className="about">
               <p>
                 Architus is a multipurpose Discord bot empowering both admins
@@ -22,17 +22,19 @@ function Footer() {
               </p>
             </FooterPanel>
           </Col>
-          <Col md={6} lg={3}>
+          <Col sm={6} lg={2} xl={3}>
             <FooterPanel header="Links">
               <a href="https://github.com/architus">
                 <Icon name="github" className="icon" />
                 Github
               </a>
-              <a href="https://status.archit.us">Status</a>
+              <a href="https://status.archit.us/">Status</a>
+              <a href="https://docs.archit.us/">Docs</a>
+              <a href="https://discord.gg/svrRrSe">Discord Server</a>
             </FooterPanel>
           </Col>
-          <Col md={6} lg={3}>
-            <Card>
+          <Col sm={6} lg={4} xl={3}>
+            <Card className="border-card">
               <Header.Brand disabled />
             </Card>
           </Col>

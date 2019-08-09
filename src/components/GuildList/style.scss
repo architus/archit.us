@@ -1,6 +1,7 @@
 @import "scss/util";
 @import "scss/colors";
 @import "scss/theme";
+@import "scss/app";
 @import "components/GuildIcon/style";
 
 $margin: 0.75rem;
@@ -36,12 +37,12 @@ $margin: 0.75rem;
         hr {
             width: 100%;
             @include light-border(
-                rgba($-dark, 0.15),
+                $guild-list-hr-light-fg,
                 $border: 2px solid,
                 $side: top
             );
             @include dark-border(
-                rgba($-light, 0.10),
+                $guild-list-hr-dark-fg,
                 $border: 2px solid,
                 $side: top
             );

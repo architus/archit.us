@@ -329,6 +329,7 @@ function AutoResponses({ guildId }) {
             onChange={onToggleSelfAuthored}
             checked={filterSelfAuthored}
             label="Show self-authored"
+            className="mr-sm-4"
           />
         }
       />

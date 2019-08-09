@@ -26,6 +26,7 @@ function LoginButton({ loggedIn, showLabel }) {
   const oauthUrl = useOauthUrl();
   const storeLoggedIn = useSelector(state => state.session.connectedToDiscord);
   const loggedInProp = isDefined(loggedIn) ? loggedIn : storeLoggedIn;
+
   return (
     <div className="login-button">
       {loggedInProp ? (
@@ -56,7 +57,6 @@ LoginButton.propTypes = {
 };
 
 LoginButton.defaultProps = {
-  loggedIn: null,
   showLabel: true
 };
 

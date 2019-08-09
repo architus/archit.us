@@ -1,0 +1,45 @@
+.notification-list--transition-group {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+// Notification transition classes
+
+%notification-hidden {
+    opacity: 0 !important;
+    max-height: 0 !important;
+    margin-bottom: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+%notification-visible {
+    opacity: 1 !important;
+    max-height: 120px !important;
+    margin-bottom: 0.6rem !important;
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+}
+
+.notification-enter {
+    @extend %notification-hidden;
+}
+
+.notification.notification-enter-active {
+    @extend %notification-visible;
+}
+
+.notification-exit {
+    @extend %notification-visible;
+
+    transform: none;
+    pointer-events: none;
+}
+
+.notification.notification-exit-active {
+    @extend %notification-hidden;
+
+    transform: translateX(-64px);
+    pointer-events: none;
+}

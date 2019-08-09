@@ -1,10 +1,11 @@
 import axios from "axios";
 import { API } from "store/actions";
-import { HttpVerbs, isNil } from "utility";
+import { HttpVerbs, isNil, isDefined } from "utility";
 import { apiError, apiStart, apiEnd } from "store/api/actions";
 
 // axios default configs
-axios.defaults.headers.common["Content-Type"] = "application/json";
+if (isDefined(axios) && isDefined(axios.defaults))
+  axios.defaults.headers.common["Content-Type"] = "application/json";
 
 const dispatchNonNil = (dispatch, action) => {
   if (!isNil(action)) dispatch(action);

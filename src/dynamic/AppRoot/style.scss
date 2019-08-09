@@ -2,7 +2,7 @@
 @import "scss/colors";
 @import "scss/theme";
 @import "scss/media";
-@import "./vars";
+@import "scss/app";
 
 .switch-icon {
     &.dark {
@@ -23,6 +23,7 @@ html.html--app {
     height: 100vh;
     overflow: hidden;
     position: relative;
+    @extend %app-content;
 
     %base-horizontal-container {
         display: flex;
@@ -161,11 +162,6 @@ html.html--app {
     // ? ==================
     // ? Dark/light theming
     // ? ==================
-
-    @include dark-bg;
-    @include light-bg;
-    @include dark-fg;
-    @include light-fg;
 
     .dropdown-menu {
         @include dark-fg;

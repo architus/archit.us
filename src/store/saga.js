@@ -1,13 +1,14 @@
-import { takeEvery } from "redux-saga/effects";
+import { takeEvery, put } from "redux-saga/effects";
 import { SIGN_OUT, LOAD_SESSION } from "store/actions";
 import { LOCAL_STORAGE_KEY } from "store/reducers/session";
-import { log, isNil } from "utility";
+import { log, isNil, sleep } from "utility";
+import { navigate } from "@reach/router";
+import { SHOW_NOTIFICATION, hideNotification, showToast } from "./actions";
 
-function signOut(action) {
+function* signOut() {
   window.localStorage.clear();
-  if (action.payload && action.payload.push) action.payload.push("/");
-  // TODO enable better error handling/display here
-  // else window.location.href = "/";
+  navigate("/");
+  yield put(showToast("Signed out"));
 }
 
 function loadNewSession(action) {
@@ -31,7 +32,16 @@ function loadNewSession(action) {
   }
 }
 
+function* autoHideNotification(action) {
+  const { type, duration, id } = action.payload;
+  if (duration > 0) {
+    yield sleep(duration);
+    yield put(hideNotification(type, id));
+  }
+}
+
 export default function* saga() {
   yield takeEvery(SIGN_OUT, signOut);
   yield takeEvery(LOAD_SESSION, loadNewSession);
+  yield takeEvery(SHOW_NOTIFICATION, autoHideNotification);
 }

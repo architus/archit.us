@@ -1,13 +1,11 @@
 @import "scss/colors";
 @import "scss/util";
 @import "scss/theme";
-
-$border-radius: 8px;
+@import "scss/app";
 
 .side-navbar {
     $this: &;
-    @include dark-bg($-dark, 2.5%);
-    @include light-bg($-light, -5%);
+    @extend %side-navbar;
 
     display: flex;
     flex-direction: column;
@@ -16,14 +14,13 @@ $border-radius: 8px;
     padding: 0.75rem 0;
 
     &--button {
-        transition-duration: 0.25s;
-        transition-timing-function: $ease;
-        transition-property: padding-top, padding-bottom, opacity,
-            border-top-left-radius, border-bottom-left-radius, margin-top,
-            margin-bottom;
-        @include light-bg(rgba(color-adjust($-primary, -60%), 0.05));
-        @include dark-bg(rgba(black, 0.08));
+        @include transitions(
+            "padding-top, padding-bottom, opacity,
+        border-top-left-radius, border-bottom-left-radius, margin-top,
+        margin-bottom"
+        );
         position: relative;
+        background-color: transparent;
 
         padding-top: 0.6rem;
         padding-bottom: 0;
@@ -53,26 +50,29 @@ $border-radius: 8px;
         }
 
         &.active {
-            @include light-bg;
-            @include dark-bg;
+            @extend %app-content;
             border-top-left-radius: 12px;
             border-bottom-left-radius: 12px;
-            margin-top: $border-radius;
-            margin-bottom: $border-radius;
+            margin-top: $side-navbar-tab-border-radius;
+            margin-bottom: $side-navbar-tab-border-radius;
             opacity: 1;
             padding-top: 2rem;
             padding-bottom: 2.2rem;
             z-index: 1;
 
             &:hover {
-                @include light-bg($adjust: 60%);
-                @include dark-bg($adjust: -10%);
+                @include light-bg($side-navbar-tab-active-hover-light-bg);
+                @include dark-bg($side-navbar-tab-active-hover-dark-bg);
 
                 #{$this}--top-corner,
                 #{$this}--bottom-corner {
                     &:before {
-                        @include light-fg($-light, 60%);
-                        @include dark-fg($-dark, 5%);
+                        @include light-fg(
+                            $side-navbar-tab-active-hover-light-bg
+                        );
+                        @include dark-fg(
+                            $side-navbar-tab-active-hover-dark-bg
+                        );
                     }
                 }
             }
@@ -80,31 +80,31 @@ $border-radius: 8px;
             #{$this}--top-corner,
             #{$this}--bottom-corner {
                 &:before {
-                    @include light-fg($-light);
-                    @include dark-fg($-dark, 7.5%);
+                    @include light-fg($app-content-light-bg);
+                    @include dark-fg($app-content-dark-bg);
                 }
             }
         }
 
         #{$this}--top-corner {
-            top: -#{2 * $border-radius};
+            top: -#{2 * $side-navbar-tab-border-radius};
             &:before {
-                border-bottom-right-radius: #{2 * $border-radius};
+                border-bottom-right-radius: #{2 * $side-navbar-tab-border-radius};
             }
         }
 
         #{$this}--bottom-corner {
-            bottom: -#{2 * $border-radius};
+            bottom: -#{2 * $side-navbar-tab-border-radius};
             &:before {
-                border-top-right-radius: #{2 * $border-radius};
+                border-top-right-radius: #{2 * $side-navbar-tab-border-radius};
             }
         }
 
         #{$this}--top-corner,
         #{$this}--bottom-corner {
             position: absolute;
-            width: #{2 * $border-radius};
-            height: #{2 * $border-radius};
+            width: #{2 * $side-navbar-tab-border-radius};
+            height: #{2 * $side-navbar-tab-border-radius};
             content: " ";
             right: 0;
             overflow: hidden;
@@ -127,8 +127,8 @@ $border-radius: 8px;
         }
 
         &:hover {
-            @include light-bg(rgba(color-adjust($-primary, -60%), 0.075));
-            @include dark-bg(rgba(black, 0.175));
+            @include light-bg($side-navbar-tab-hover-light-bg);
+            @include dark-bg($side-navbar-tab-hover-dark-bg);
         }
 
         @extend %button-blank;
@@ -150,12 +150,12 @@ $border-radius: 8px;
             stroke-width: 0.75;
             stroke-miterlimit: 10;
             fill: none;
-            @include light(stroke, $-dark);
-            @include dark(stroke, $-light);
+            @include light(stroke, $side-navbar-tab-svg-light-fg);
+            @include dark(stroke, $side-navbar-tab-svg-dark-fg);
         }
         .fil {
-            @include light(fill, $-dark);
-            @include dark(fill, $-light);
+            @include light(fill, $side-navbar-tab-svg-light-fg);
+            @include dark(fill, $side-navbar-tab-svg-dark-fg);
         }
         .op4 {
             opacity: 0.4;

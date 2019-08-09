@@ -1,4 +1,4 @@
-import { LOAD_GUILD_COUNT } from "../actions";
+import { LOAD_GUILD_COUNT } from "store/actions";
 
 export const initial = {
   guild_count: 0,

@@ -8,8 +8,10 @@
     "analyze": "react-static build --analyze",
     "serve": "serve dist -p 3000",
     "lint": "eslint ./src/**/*.js ./src/**/*.jsx",
-    "storybook": "export NODE_PATH=src/ && start-storybook -p 9009 -s public",
-    "build-storybook": "build-storybook -c .storybook -s public"
+    "storybook": "export NODE_PATH=src/:.storybook/ && start-storybook -p 9009 -s public",
+    "build-storybook": "export NODE_PATH=src/:.storybook/ && build-storybook -c .storybook -s public",
+    "webpack-build": "react-static build --webpack-stats",
+    "webpack-analyze": "webpack-bundle-analyzer dist/stats.json"
   },
   "dependencies": {
     "@babel/core": "^7.5.5",
@@ -26,7 +28,7 @@
     "babel-loader": "^8.0.6",
     "bootstrap": "^4.3.1",
     "lodash": "^4.17.11",
-    "marked": "^0.6.2",
+    "marked": "^0.7.0",
     "node-emoji": "^1.10.0",
     "prop-types": "^15.7.2",
     "react": "^16.8.2",
@@ -40,8 +42,10 @@
     "react-static-plugin-sass": "^7.1.0",
     "react-static-plugin-sitemap": "^7.0.0",
     "react-switch": "^5.0.0",
+    "react-transition-group": "^4.2.2",
     "react-use": "^10.3.0",
     "redux": "^4.0.1",
+    "redux-batched-actions": "^0.4.1",
     "redux-logger": "^3.0.6",
     "redux-saga": "^1.0.4",
     "reselect": "^4.0.0",
@@ -76,6 +80,7 @@
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-react": "7.x",
     "prettier": "^1.18.2",
-    "serve": "10.1.2"
+    "serve": "10.1.2",
+    "webpack-bundle-analyzer": "^3.4.1"
   }
 }

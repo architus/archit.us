@@ -1,5 +1,19 @@
-@mixin highlight-shadow($color, $opacity: 0.2) {
-    box-shadow: 0 0 0 0.2rem rgba($color, $opacity);
+@mixin highlight-shadow($color, $opacity: 0.2, $important: false) {
+    @if $important {
+        box-shadow: 0 0 0 0.2rem rgba($color, $opacity) !important;
+    } @else {
+        box-shadow: 0 0 0 0.2rem rgba($color, $opacity);
+    }
+}
+
+@mixin highlight-active-shadow($color, $opacity: 0.2, $important: false) {
+    @if $important {
+        box-shadow: 0 0 0 0.2rem rgba($color, $opacity),
+            inset 0 3px 5px rgba(0, 0, 0, 0.125) !important;
+    } @else {
+        box-shadow: 0 0 0 0.2rem rgba($color, $opacity),
+            inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    }
 }
 
 @mixin transitions($properties) {
