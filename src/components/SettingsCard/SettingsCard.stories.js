@@ -4,6 +4,7 @@ import { action } from "@storybook/addon-actions";
 import SettingsCard from "./index";
 
 import { cards } from "components/SettingsCategory/story/example.json";
+import { text, number } from "@storybook/addon-knobs";
 
 export default {
   title: "Components|SettingsCard",
@@ -13,7 +14,12 @@ export default {
 };
 
 export const Basic = () => (
-  <SettingsCard onCommit={action("on-commit")} {...cards[0]} />
+  <SettingsCard
+    onCommit={action("on-commit")}
+    title={text("title", "Card title")}
+    settings={cards[0].settings}
+    width={number("width", 5, { min: 1, max: 10, range: true, step: 1 })}
+  />
 );
 Basic.story = {
   parameters: {
@@ -27,3 +33,7 @@ Basic.story = {
       "`width` prop is set to."
   }
 };
+
+export const Example = () => (
+  <SettingsCard onCommit={action("on-commit")} {...cards[0]} />
+);

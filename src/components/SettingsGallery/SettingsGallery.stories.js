@@ -1,6 +1,6 @@
 import React from "react";
 import { action } from "@storybook/addon-actions";
-import { boolean } from "@storybook/addon-knobs";
+import { boolean, number } from "@storybook/addon-knobs";
 
 import SettingsGallery from "./index";
 
@@ -16,7 +16,17 @@ export default {
 export const Basic = () => (
   <SettingsGallery
     onCommit={action("on-commit")}
-    categories={[{ cards }, { title: "Second Category", cards }]}
+    categories={[
+      { cards },
+      ...[
+        ...Array(
+          number("categories", 3, { min: 0, max: 10, range: true, step: 1 }) - 1
+        )
+      ].map((_o, i) => ({
+        title: `Category ${i + 1}`,
+        cards
+      }))
+    ]}
     noCollapse={boolean("noCollapse", false)}
   />
 );

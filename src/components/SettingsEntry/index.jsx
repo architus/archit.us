@@ -1,10 +1,61 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import PropTypes from "prop-types";
+import classNames from "classnames";
+import { isDefined } from "utility";
+import inputControls from "./inputs";
+
+import HelpTooltip from "components/HelpTooltip";
 
 import "./style.scss";
 
-function SettingsEntry({ onCommit }) {
-  return null;
+function SettingsEntry({
+  label,
+  input_type,
+  value,
+  help_tooltip,
+  properties,
+  validation_steps,
+  onCommit,
+  settingKey,
+  standalone
+}) {
+  // Resolve input control from map
+  const InputControl = inputControls[input_type];
+
+  // Controlled component
+  const [buffer, setBuffer] = useState(value);
+  const onChange = useCallback(value => setBuffer(value));
+
+  // Validation
+  const isInvalid = false;
+
+  // Committing
+  const onTryCommit = useCallback(() => null);
+
+  // Standalone mode
+  const Row = standalone ? "div" : "tr";
+  const Cell = standalone ? "div" : "td";
+
+  return (
+    <Row className={classNames("settings-entry", { standalone })}>
+      <Cell className="settings-entry--label">
+        {label}
+        {isDefined(help_tooltip) ? (
+          <HelpTooltip content={help_tooltip} right />
+        ) : null}
+      </Cell>
+      <Cell className="settings-entry--input">
+        <InputControl
+          value={buffer}
+          onChange={onChange}
+          isInvalid={isInvalid}
+          onTryCommit={() => console.log("trying")}
+          name={label}
+          {...properties}
+        />
+      </Cell>
+    </Row>
+  );
 }
 
 export default SettingsEntry;
@@ -39,9 +90,10 @@ export const propShape = {
 SettingsEntry.propTypes = {
   ...propShape,
   onCommit: PropTypes.func,
-  settingKey: PropTypes.string.isRequired
+  settingKey: PropTypes.string.isRequired,
+  standalone: PropTypes.bool
 };
 
-SettingsEntry.defaultProps = { width: 5, onCommit() {} };
+SettingsEntry.defaultProps = { width: 5, onCommit() {}, standalone: true };
 
 SettingsEntry.displayName = "SettingsEntry";

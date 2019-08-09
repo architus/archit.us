@@ -12,15 +12,19 @@ function SettingsCard({ title, width, settings, onCommit }) {
   return (
     <div className={`settings-card width-${width}`}>
       <Card header={title}>
-        {settings.map(({ key, ...rest }, entryIndex) => (
-          <EntryWrapper
-            {...rest}
-            key={entryIndex}
-            onCommit={onCommit}
-            entryIndex={entryIndex}
-            settingKey={key}
-          />
-        ))}
+        <table className="settings-card--table">
+          <tbody>
+            {settings.map(({ key, ...rest }, entryIndex) => (
+              <EntryWrapper
+                {...rest}
+                key={entryIndex}
+                onCommit={onCommit}
+                entryIndex={entryIndex}
+                settingKey={key}
+              />
+            ))}
+          </tbody>
+        </table>
       </Card>
     </div>
   );
@@ -50,7 +54,9 @@ function EntryWrapper({ entryIndex, onCommit, ...rest }) {
     (...args) => onCommit(entryIndex, args),
     [entryIndex]
   );
-  return <SettingsEntry onCommit={specificOnCommit} {...rest} />;
+  return (
+    <SettingsEntry onCommit={specificOnCommit} {...rest} standalone={false} />
+  );
 }
 
 EntryWrapper.propTypes = {

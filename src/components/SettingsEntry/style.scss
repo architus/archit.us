@@ -1,0 +1,47 @@
+.settings-entry {
+    $this: &;
+
+    min-height: 40px;
+
+    &.standalone {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+
+        #{$this}--label {
+            flex-grow: 0;
+            flex-basis: 1;
+        }
+
+        #{$this}--input {
+            flex-grow: 1;
+            flex-basis: 0;
+        }
+    }
+
+    &--label {
+        white-space: nowrap;
+        width: 1px;
+
+        .help-tooltip {
+            margin-left: 0.75rem;
+        }
+    }
+
+    &--input {
+        text-align: right;
+    }
+
+    &:not(:last-child) {
+        #{$this}--label {
+            padding-bottom: 0.5rem;
+        }
+
+        #{$this}--input {
+            padding-bottom: 0.5rem;
+        }
+    }
+
+    &--input {
+    }
+}

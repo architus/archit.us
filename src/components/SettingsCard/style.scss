@@ -26,4 +26,8 @@
             @include card-width($i);
         }
     }
+
+    &--table {
+        width: 100%;
+    }
 }
