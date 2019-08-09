@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import curry from "lodash/curry";
@@ -7,6 +7,7 @@ import { connect, useSelector, shallowEqual, useDispatch } from "react-redux";
 import { useOauthUrl } from "components/LoginButton";
 import { mapStateToLoggedIn } from "store/reducers/session";
 import { useEffectOnce } from "utility";
+import { useRouteData } from "react-static";
 
 import { getGuildCount } from "store/actions";
 
@@ -36,19 +37,25 @@ import StatisticsSvg from "./svg/statistics.svg";
 import UserControlSvg from "./svg/user_control.svg";
 import LogoTextSvg from "assets/logo-text.inline.svg";
 
+function serializeStatistics(cached, live) {
+  return Math.max(cached, live).toLocaleString();
+}
+
 function Index() {
-  const { guild_count, user_count } = useSelector(state => {
+  const { guild_count, user_count } = useRouteData();
+  const { store_guild_count, store_user_count } = useSelector(state => {
     return {
-      guild_count: state.guild_count.guild_count,
-      user_count: state.guild_count.user_count
+      store_guild_count: state.guild_count.guild_count,
+      store_user_count: state.guild_count.user_count
     };
   }, shallowEqual);
 
   const dispatch = useDispatch();
-  const fetchGuildCount = useCallback(() => dispatch(getGuildCount()), [
-    dispatch
-  ]);
-  useEffectOnce(fetchGuildCount);
+  useEffectOnce(() => dispatch(getGuildCount()));
+
+  // Take the maximum of the hot-loaded and statically cached numbers
+  const derivedGuildCount = serializeStatistics(guild_count, store_guild_count);
+  const derivedUserCount = serializeStatistics(user_count, store_user_count);
 
   return (
     <Layout title="Home">
@@ -74,8 +81,8 @@ function Index() {
 
                 <p className="guild-counter">
                   architus is currently serving{" "}
-                  <code>{guild_count} servers</code> and{" "}
-                  <code>{user_count} users</code>
+                  <code>{derivedGuildCount} servers</code> and{" "}
+                  <code>{derivedUserCount} users</code>
                 </p>
               </Col>
               <Col sm={6} lg={4}>
@@ -260,6 +267,12 @@ function Index() {
 
 export default Index;
 
+Index.displayName = "IndexPage";
+
+// ? ==============
+// ? Sub-components
+// ? ==============
+
 const Feature = ({ left, right, children, lead, header, content }) => (
   <Row as="section" className="align-items-center">
     <Col
@@ -309,6 +322,8 @@ Feature.propTypes = {
   ])
 };
 
+Feature.displayName = "Feature";
+
 const MinorFeature = ({ header, text, icon }) => (
   <Col md={6} className="minor-feature">
     <div className="minor-feature--inner">
@@ -336,6 +351,8 @@ MinorFeature.propTypes = {
   icon: PropTypes.string
 };
 
+MinorFeature.displayName = "MinorFeature";
+
 const CallToAction = connect(mapStateToLoggedIn)(({ loggedIn }) => {
   const oauthUrl = useOauthUrl();
   const additionalProps = loggedIn
@@ -354,6 +371,8 @@ const CallToAction = connect(mapStateToLoggedIn)(({ loggedIn }) => {
   );
 });
 
+CallToAction.displayName = "CallToAction";
+
 const TryCTA = ({ left }) => (
   <em className="try">
     <Icon name={`chevron-${left ? "left" : "right"}`} className="mr-2" />
@@ -365,3 +384,5 @@ TryCTA.propTypes = {
   left: PropTypes.bool,
   right: PropTypes.bool
 };
+
+TryCTA.displayName = "TryCTA";

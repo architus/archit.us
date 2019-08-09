@@ -1,27 +1,38 @@
 /* eslint-disable react/prop-types */
 import React from "react";
+import axios from "axios";
 
 export default Object.assign(
   {},
   {
-    getRoutes: async () => [
-      {
-        path: "/",
-        template: "src/pages/Index"
-      },
-      {
-        path: "login",
-        template: "src/pages/Login"
-      },
-      {
-        path: "404",
-        template: "src/pages/NotFound"
-      },
-      {
-        path: "app",
-        template: "src/dynamic/AppRoot"
-      }
-    ],
+    getRoutes: async () => {
+      const {
+        data: { guild_count, user_count }
+      } = await axios.get("https://api.archit.us/guild_count");
+
+      return [
+        {
+          path: "/",
+          template: "src/pages/Index",
+          getData: async () => ({
+            guild_count,
+            user_count
+          })
+        },
+        {
+          path: "login",
+          template: "src/pages/Login"
+        },
+        {
+          path: "404",
+          template: "src/pages/NotFound"
+        },
+        {
+          path: "app",
+          template: "src/dynamic/AppRoot"
+        }
+      ];
+    },
 
     plugins: [
       require.resolve("react-static-plugin-reach-router"),

@@ -11,8 +11,8 @@ export function reducer(state = initial, action) {
       const { guild_count, user_count } = action.payload.guildCount;
       return {
         ...state,
-        guild_count: guild_count.toLocaleString(),
-        user_count: user_count.toLocaleString()
+        guild_count: guild_count,
+        user_count: user_count
       };
 
     default:
