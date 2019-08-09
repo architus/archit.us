@@ -5,14 +5,15 @@
     @include dark-bg($dark-400);
 
     &--header {
-        @include light-bg($light-350);
         @include dark-bg($dark-500);
+        @include light-border(rgba($dark-300, 0.1), $side: bottom);
         padding: 1rem 1.25rem;
 
         h4 {
-            margin-bottom: 0;
+            margin-bottom: 0 !important;
             font-size: 1rem;
             text-transform: uppercase;
+            font-weight: 500 !important;
             @include light-fg(rgba($-dark, 0.5));
             @include dark-fg(rgba($-light, 0.5));
         }

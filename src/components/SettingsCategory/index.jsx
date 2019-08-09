@@ -1,15 +1,38 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import PropTypes from "prop-types";
+import classNames from "classnames";
 import { isDefined } from "utility";
 
-import SettingsCard, { propShape } from "components/SettingsCard";
+import SettingsCard, {
+  propShape as cardPropShape
+} from "components/SettingsCard";
+import Icon from "components/Icon";
 
 import "./style.scss";
 
-function SettingsCategory({ title, cards, onCommit }) {
+function SettingsCategory({ title, cards, noCollapse, onCommit }) {
+  const hasTitle = isDefined(title);
+
+  // Open/close behavior (enabled on small screens)
+  const [open, setOpen] = useState(!hasTitle);
+  const onExpandClick = useCallback(() => setOpen(open => !open));
+
   return (
-    <div className="settings-category">
-      {isDefined(title) ? <h3>{title}</h3> : null}
+    <div
+      className={classNames("settings-category", {
+        expandable: hasTitle && !(isDefined(noCollapse) && noCollapse),
+        open
+      })}
+    >
+      {hasTitle ? (
+        <h3 className="settings-category--title" onClick={onExpandClick}>
+          <Icon
+            name="chevron-right"
+            className="settings-category--title-expander"
+          />
+          {title}
+        </h3>
+      ) : null}
       <div className="settings-category--container">
         {cards.map((card, cardIndex) => (
           <CardWrapper
@@ -25,14 +48,18 @@ function SettingsCategory({ title, cards, onCommit }) {
 }
 
 export default SettingsCategory;
-
-SettingsCategory.propTypes = {
-  cards: PropTypes.arrayOf(PropTypes.shape(propShape)).isRequired,
-  title: PropTypes.string,
-  onCommit: PropTypes.func
+export const propShape = {
+  cards: PropTypes.arrayOf(PropTypes.shape(cardPropShape)).isRequired,
+  title: PropTypes.string
 };
 
-SettingsCategory.defaultProps = { onCommit() {} };
+SettingsCategory.propTypes = {
+  ...propShape,
+  onCommit: PropTypes.func,
+  noCollapse: PropTypes.bool
+};
+
+SettingsCategory.defaultProps = { onCommit() {}, noCollapse: false };
 
 SettingsCategory.displayName = "SettingsCategory";
 

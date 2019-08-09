@@ -21,7 +21,7 @@
     position: relative;
     min-height: 1px;
 
-    @for $i from 1 through 20 {
+    @for $i from 1 through 10 {
         &.width-#{$i} {
             @include card-width($i);
         }
