@@ -1,5 +1,4 @@
 const { GenerateSW } = require("workbox-webpack-plugin");
-const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 
 export default () => ({
   webpack: config => {
@@ -28,6 +27,7 @@ export default () => ({
     // Bundle analyzer
     const args = process.argv.slice(3);
     if (args.includes("--webpack-stats")) {
+      const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
       console.log("Building webpack statistics file > stats.json");
       config.plugins.push(
         new BundleAnalyzerPlugin({
