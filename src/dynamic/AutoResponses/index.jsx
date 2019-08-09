@@ -23,7 +23,6 @@ import { AppScrollContext } from "dynamic/AppRoot";
 
 import DataGrid, { NumericFilter } from "components/DataGrid";
 import Switch from "components/Switch";
-import { Container } from "react-bootstrap";
 import {
   createResponseCellFormatter,
   createTriggerCellFormatter,
@@ -301,7 +300,7 @@ function AutoResponses({ guildId }) {
   const handleScroll = scrollEvent;
 
   return (
-    <Container className="auto-responses" fluid>
+    <div className="auto-responses">
       <div className="hide-mobile-landscape">
         <h2>Automatic Responses</h2>
         <p className="hide-mobile">
@@ -333,7 +332,7 @@ function AutoResponses({ guildId }) {
           />
         }
       />
-    </Container>
+    </div>
   );
 }
 

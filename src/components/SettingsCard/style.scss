@@ -1,0 +1,29 @@
+@import "scss/media";
+
+@mixin card-width($width: 5) {
+    @include respond-above(md) {
+        flex-grow: $width;
+        flex-basis: min(100% * ($width / 10), 100%);
+    }
+
+    @include respond-above(lg) {
+        $size: min(100% * ($width / 20), 100%);
+        flex-basis: $size;
+        max-width: $size;
+    }
+
+    @include respond-below(md) {
+        width: 100%;
+    }
+}
+
+.settings-card {
+    position: relative;
+    min-height: 1px;
+
+    @for $i from 1 through 20 {
+        &.width-#{$i} {
+            @include card-width($i);
+        }
+    }
+}

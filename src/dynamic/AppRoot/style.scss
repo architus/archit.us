@@ -146,6 +146,17 @@ html.html--app {
             overflow-y: auto;
             @extend %custom-scrollbar;
 
+            h2 {
+                font-size: 1.9rem;
+                font-weight: 300;
+                margin-bottom: 1.35rem;
+            }
+
+            p {
+                @include dark-fade-fg;
+                @include light-fade-fg;
+            }
+
             &.no-scroll {
                 height: 100%;
                 overflow-y: hidden;

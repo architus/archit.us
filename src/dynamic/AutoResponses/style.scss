@@ -36,17 +36,6 @@
         }
     }
 
-    h2 {
-        font-size: 1.9rem;
-        font-weight: 300;
-        margin-bottom: 1.35rem;
-    }
-
-    p {
-        @include dark-fade-fg;
-        @include light-fade-fg;
-    }
-
     .table-outer {
         @media (max-width: 1449.99px) and (min-width: 768px) {
             padding-top: 3.25rem;

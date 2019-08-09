@@ -1,0 +1,30 @@
+@import "scss/colors";
+
+$card-spacing: 8px;
+
+.settings-category {
+    h3 {
+        color: rgba($-dark, 0.8);
+        font-weight: 400;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    .settings-category--container {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        align-content: flex-start;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        position: relative;
+        margin-left: -$card-spacing;
+        margin-right: -$card-spacing;
+
+        .settings-card {
+            padding-right: $card-spacing;
+            padding-left: $card-spacing;
+            margin-bottom: 2 * $card-spacing;
+        }
+    }
+}
