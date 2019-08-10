@@ -12,11 +12,13 @@ const NumericUpDown = forwardRef(
     ref
   ) => {
     return (
-      <InputGroup>
+      <InputGroup className="numeric-up-down">
         <FormControl
           placeholder={placeholder}
           value={value}
           onChange={onChange}
+          isValid={isValid}
+          isInvalid={isInvalid}
           type="text"
           ref={ref}
           {...rest}

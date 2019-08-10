@@ -1,4 +1,5 @@
 const { GenerateSW } = require("workbox-webpack-plugin");
+const transform = require("./src/webpack.transform");
 
 export default () => ({
   webpack: config => {
@@ -37,12 +38,7 @@ export default () => ({
       );
     }
 
-    // Inline SVG loader
-    config.module.rules[0].oneOf.unshift({
-      test: /\.inline\.svg$/,
-      loader: "svg-inline-loader"
-    });
-
-    return config;
+    // Run common webpack transformer
+    return transform(config);
   }
 });

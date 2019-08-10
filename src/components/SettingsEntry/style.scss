@@ -22,6 +22,7 @@
     &--label {
         white-space: nowrap;
         width: 1px;
+        padding-right: 1rem;
 
         .help-tooltip {
             margin-left: 0.75rem;
@@ -32,16 +33,9 @@
         text-align: right;
     }
 
-    &:not(:last-child) {
-        #{$this}--label {
-            padding-bottom: 0.5rem;
-        }
-
-        #{$this}--input {
-            padding-bottom: 0.5rem;
-        }
-    }
-
-    &--input {
+    &--input,
+    &--label {
+        height: 48px;
+        padding-bottom: 0.5rem;
     }
 }

@@ -4,144 +4,122 @@ import { isEmptyOrNil, isDefined } from "utility";
 
 import { Form } from "react-bootstrap";
 import NumericUpDown from "components/NumericUpDown";
+import SyntaxHighlightedInput from "components/SyntaxHighlightedInput";
 import Switch from "components/Switch";
 
-function clamp(value, min, max) {
+const clamp = (value, min, max) => {
   let newValue = value;
   if (isDefined(min)) newValue = Math.max(newValue, min);
   if (isDefined(max)) newValue = Math.min(newValue, max);
   return newValue;
-}
+};
 
-function isLooselyNumeric(value, float = false) {
-  return !isNaN(float ? parseFloat(value) : parseInt(value));
-}
+const isLooselyNumeric = (value, float = false) =>
+  !isNaN(parseNumber(value, float));
+
+const canTransform = (value, float = false) =>
+  isEmptyOrNil(value) || !isLooselyNumeric(value, float);
+
+const parseNumber = (value, float = false) =>
+  float ? parseFloat(value) : parseInt(value);
+
+const transform = (value, step, float = false) =>
+  canTransform(value, float) ? 0 : parseNumber(value, float) + step;
+
+const handleInputKeyPress = onEnter => e => {
+  const code = e.keyCode || e.which;
+  // Enter keycode
+  if (code === 13) {
+    onEnter();
+    e.target.blur();
+  }
+};
 
 const inputControls = {
   // Basic string input
-  string({ value, onChange, isInvalid, onTryCommit, name }) {
-    const handleChange = useCallback(e => onChange(e.target.value), [onChange]);
+  string: ({ value, onChange, isInvalid, onTryCommit, name }) => (
+    <Form.Control
+      type="text"
+      value={value}
+      isInvalid={isInvalid}
+      placeholder={name}
+      onBlur={onTryCommit}
+      onChange={useCallback(e => onChange(e.target.value), [onChange])}
+      onKeyDown={useCallback(handleInputKeyPress(onTryCommit))}
+    />
+  ),
 
-    // Commit handling
-    const handleKeyPressed = useCallback(e => {
-      var code = e.keyCode || e.which;
-      // Enter keycode
-      if (code === 13) {
-        onTryCommit();
-      }
-    });
+  switch: ({ value, onChange, onTryCommit }) => (
+    <Switch
+      checked={value}
+      onChange={useCallback(
+        checked => {
+          onChange(checked);
+          onTryCommit();
+        },
+        [onChange, onTryCommit]
+      )}
+    />
+  ),
 
-    return (
-      <Form.Control
-        type="text"
-        value={value}
-        onChange={handleChange}
-        isInvalid={isInvalid}
-        placeholder={name}
-        onBlur={onTryCommit}
-        onKeyDown={handleKeyPressed}
-      />
-    );
-  },
+  string_highlighted: ({
+    value,
+    onChange,
+    isInvalid,
+    onTryCommit,
+    // string_highlighted-specific configuration properties
+    tokens = []
+  }) => (
+    <SyntaxHighlightedInput
+      tokens={tokens}
+      value={value}
+      onChange={onChange}
+      onBlur={onTryCommit}
+      onKeyDown={useCallback(handleInputKeyPress(onTryCommit))}
+      isInvalid={isInvalid}
+    />
+  ),
 
-  numeric({
+  numeric: ({
     value,
     onChange,
     isInvalid,
     onTryCommit,
     name,
+    // numeric-specific configuration properties
     integer = false,
     min,
     max,
     step = 1
-  }) {
-    const handleChange = useCallback(e => onChange(e.target.value), [onChange]);
-    const transform = (step, value, onChange) =>
-      integer
-        ? () => {
-            onChange(
-              clamp(
-                isEmptyOrNil(value) || !isLooselyNumeric(value)
-                  ? 0
-                  : parseInt(value) + step,
-                min,
-                max
-              ).toString()
-            );
-            onTryCommit();
-          }
-        : () => {
-            onChange(
-              clamp(
-                isEmptyOrNil(value) || !isLooselyNumeric(value, true)
-                  ? 0
-                  : parseFloat(value) + step,
-                min,
-                max
-              ).toString()
-            );
-            onTryCommit();
-          };
-    const handleDown = useCallback(transform(-step, value, onChange), [
-      value,
-      step,
-      onChange,
-      integer
-    ]);
-    const handleUp = useCallback(transform(step, value, onChange), [
-      value,
-      step,
-      onChange,
-      integer
-    ]);
-
-    // Commit handling
-    const handleKeyPressed = useCallback(e => {
-      var code = e.keyCode || e.which;
-      // Enter keycode
-      if (code === 13) {
-        onTryCommit();
-      }
-    });
+  }) => {
+    const transformDeps = [value, step, onChange, integer];
+    const transformValue = (step, value, onChange) => () => {
+      onChange(clamp(transform(value, step, !integer), min, max).toString());
+      onTryCommit();
+    };
 
     return (
       <NumericUpDown
         value={value.toString()}
-        onChange={handleChange}
         isInvalid={isInvalid}
         placeholder={name}
         onBlur={onTryCommit}
-        onKeyDown={handleKeyPressed}
-        onUp={handleUp}
-        onDown={handleDown}
-      />
-    );
-  },
-
-  switch: function({ value, onChange, onTryCommit }) {
-    return (
-      <Switch
-        checked={value}
-        onChange={useCallback(
-          checked => {
-            onChange(checked);
-            onTryCommit();
-          },
-          [onChange, onTryCommit]
+        onChange={useCallback(e => onChange(e.target.value), [onChange])}
+        onKeyDown={useCallback(handleInputKeyPress(onTryCommit))}
+        onUp={useCallback(transformValue(step, value, onChange), transformDeps)}
+        onDown={useCallback(
+          transformValue(-step, value, onChange),
+          transformDeps
         )}
       />
     );
   },
 
-  "string_auto-complete": function() {
+  string_auto_complete: function() {
     return null;
   },
 
-  string_highlighted: function() {
-    return null;
-  },
-
-  "string-array_auto-complete": function() {
+  string_array_auto_complete: function() {
     return null;
   }
 };

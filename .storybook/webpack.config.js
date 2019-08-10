@@ -1,3 +1,4 @@
+const transform = require("../src/webpack.transform");
 const path = require("path");
 
 module.exports = async ({ config }) => {
@@ -10,21 +11,12 @@ module.exports = async ({ config }) => {
       {
         loader: "sass-loader",
         options: {
-          includePaths: [
-            path.resolve("./node_modules"),
-            path.resolve("./src")
-          ]
+          includePaths: [path.resolve("./node_modules"), path.resolve("./src")]
         }
       }
     ]
   });
 
-  // Inline SVG loader
-  config.module.rules.unshift({
-    test: /\.inline\.svg$/,
-    loader: "svg-inline-loader"
-  });
-
-  // Return the altered config
-  return config;
+  // Run common webpack transformer
+  return transform(config);
 };

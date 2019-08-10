@@ -1,7 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { isEmptyOrNil, replaceAll, escapeHtml } from "utility";
+import {
+  isEmptyOrNil,
+  replaceToken,
+  highlightTokens,
+  escapeHtml
+} from "utility";
 import {
   applyTransformers,
   convertMentions,
@@ -21,38 +26,6 @@ const reactionRegex = /\[(?:(?:<img.*?\/>)|(?::[a-zA-Z0-9-_~]{2,}:))\]/g;
 const emojiRegex = /(?:<|(?:&lt;))(a?):([a-zA-Z0-9-_~]{2,}):([0-9]+)(?:>|(?:&gt;))/g;
 const emojiStringRegex = /([A-Za-z_~()-][0-9A-Za-z_~()-]{2,}?)([0-9]{7,20})/g;
 const mentionStringRegex = /(?:^|[^:/0-9])([0-9]{7,20})/g;
-
-function highlightTokens(string, tokens, firstOccurrence = false) {
-  let processed = string;
-  tokens.forEach(({ token, className }) => {
-    if (!Array.isArray(token)) {
-      processed = replaceToken(processed, token, className, firstOccurrence);
-    } else {
-      token.forEach(t => {
-        processed = replaceToken(processed, t, className, firstOccurrence);
-      });
-    }
-  });
-  return processed;
-}
-
-function makeTokenSpan(content, className) {
-  return `<span class="${className}">${content}</span>`;
-}
-
-function replaceToken(string, token, className, firstOccurrence = false) {
-  if (typeof token === "string") {
-    return firstOccurrence
-      ? string.replace(token, makeTokenSpan(token, className))
-      : replaceAll(string, token, makeTokenSpan(token, className));
-  } else {
-    return firstOccurrence
-      ? string.replace(new RegExp(token), match =>
-          makeTokenSpan(match, className)
-        )
-      : string.replace(token, match => makeTokenSpan(match, className));
-  }
-}
 
 function makeEmojiImage(filename, alt) {
   return `<img class="emoji" draggable="false" alt="${alt}" src="https://cdn.discordapp.com/emojis/${filename}" />`;

@@ -60,7 +60,7 @@
           "key": "gulag_emoji",
           "label": "Emoji",
           "help_tooltip": "The emoji used for gulagging. Use either a :shortcode: or an emoji ID",
-          "input_type": "string_auto-complete",
+          "input_type": "string_auto_complete",
           "default": "",
           "value": "",
           "properties": {
@@ -92,7 +92,7 @@
           "key": "gulag_role",
           "label": "Role",
           "help_tooltip": "The role added to gulagged users",
-          "input_type": "string_auto-complete",
+          "input_type": "string_auto_complete",
           "default": "",
           "value": "@kulak",
           "properties": {
@@ -192,7 +192,7 @@
         {
           "key": "bot_commands_channels",
           "label": "Bot Commands Channels",
-          "input_type": "string-array_auto-complete",
+          "input_type": "string_array_auto_complete",
           "default": [],
           "value": [],
           "properties": {
@@ -227,7 +227,7 @@
         {
           "key": "default_role",
           "label": "Default Role",
-          "input_type": "string_auto-complete",
+          "input_type": "string_auto_complete",
           "default": "",
           "value": "",
           "properties": {
@@ -270,7 +270,7 @@
         {
           "key": "joinable_roles",
           "label": "Joinable Roles",
-          "input_type": "string-array_auto-complete",
+          "input_type": "string_array_auto_complete",
           "default": [],
           "value": [],
           "properties": {
@@ -351,7 +351,7 @@
         {
           "key": "architus_admins",
           "label": "Architus Admins",
-          "input_type": "string-array_auto-complete",
+          "input_type": "string_array_auto_complete",
           "default": [],
           "value": [],
           "properties": {

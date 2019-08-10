@@ -1,6 +1,46 @@
 @import "scss/colors";
 @import "scss/util";
 
+@mixin status-state($color) {
+    .btn-input-control {
+        border: 1px solid $color;
+
+        &:first-child {
+            border-right: none;
+        }
+
+        &:last-child {
+            border-left: none;
+        }
+
+        @include light {
+            background-color: rgba($color, 0.075);
+        }
+
+        @include dark {
+            background-color: rgba($color, 0.125);
+        }
+
+        &:focus {
+            @include highlight-shadow($color);
+
+            &:active {
+                @include highlight-active-shadow($color, $important: true);
+            }
+        }
+    }
+}
+
+.numeric-up-down {
+    .is-invalid + .input-group-append {
+        @include status-state($-danger);
+    }
+
+    .is-valid + .input-group-append {
+        @include status-state($-success);
+    }
+}
+
 .btn-input-control {
     @include light {
         background-color: rgba($dark-000, 0.075);

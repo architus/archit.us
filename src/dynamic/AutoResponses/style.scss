@@ -43,10 +43,6 @@
     }
 
     .response {
-        %base {
-            font-weight: bold;
-        }
-
         @mixin highlight-span($light-color, $dark-color) {
             @include dark-fg($light-color);
             @include light-fg($dark-color);
@@ -59,47 +55,37 @@
         }
 
         .token-capture {
-            @extend %base;
-            @include dark-fg(#98c379);
-            @include light-fg(#53a053);
+            @extend %token-0;
             &.source {
-                @include highlight-span(#98c379, #53a053);
+                @include highlight-span($token-0-dark, $token-0-light);
                 margin: 0 0.15rem 0 0.15rem;
             }
         }
 
         .token-mention {
-            @extend %base;
-            @include dark-fg(#56b6c2);
-            @include light-fg(#1485ba);
+            @extend %token-1;
         }
 
         .token-meta {
-            @extend %base;
-            @include dark-fg(#d19a66);
-            @include light-fg(#976715);
+            @extend %token-2;
         }
 
         .token-reaction {
-            @extend %base;
-            @include highlight-span(#d19a66, #976715);
+            @extend %token-base;
+            @include highlight-span($token-2-dark, $token-2-light);
         }
 
         .token-link {
-            @extend %base;
-            @include dark-fg(#61afef);
-            @include light-fg(#447bef);
+            @extend %token-3;
         }
 
         .token-string {
-            @extend %base;
-            @include dark-fg(#e06c75);
-            @include light-fg(#e2574e);
+            @extend %token-4;
         }
 
         .token-list {
-            @extend %base;
-            @include highlight-span(#c678dd, #a42ea2);
+            @extend %token-base;
+            @include highlight-span($token-5-dark, $token-5-light);
         }
     }
 

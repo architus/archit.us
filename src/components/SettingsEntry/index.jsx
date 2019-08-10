@@ -64,10 +64,10 @@ export const propShape = {
   input_type: PropTypes.oneOf([
     "string",
     "numeric",
-    "string_auto-complete",
+    "string_auto_complete",
     "string_highlighted",
     "switch",
-    "string-array_auto-complete"
+    "string_array_auto_complete"
   ]).isRequired,
   default: PropTypes.any.isRequired,
   value: PropTypes.any.isRequired,

@@ -173,43 +173,7 @@ main > div[role="group"] {
 }
 
 input[type="text"] {
-    outline: none;
-    padding: {
-        top: 6px;
-        bottom: 6px;
-        right: 6px;
-        left: 10px;
-    }
-    border-radius: 8px;
-    transition: box-shadow 0.25s ease;
-    box-shadow: none;
-
-    @include dark {
-        background-color: rgba($dark-000, 0.425) !important;
-        color: $-light !important;
-        border-color: transparent;
-    }
-
-    @include light {
-        background-color: white !important;
-        color: $-dark !important;
-    }
-
-    &::placeholder {
-        @include light-fg(rgba($-dark, 0.4));
-        @include dark-fg(rgba($-light, 0.4));
-    }
-
-    &:focus {
-        @include highlight-shadow($-primary);
-    }
-
-    &.form-control.is-invalid {
-        border-color: $-danger;
-    }
-    &.form-control.is-valid {
-        border-color: $-success;
-    }
+    @extend %input-base;
 }
 
 .button-blank {

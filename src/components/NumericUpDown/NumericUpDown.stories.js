@@ -11,16 +11,46 @@ export default {
   parameters: { component: NumericUpDown }
 };
 
-export const Basic = () => (
-  <NumericUpDown
-    isValid={boolean("Is Valid", false)}
-    isInvalid={boolean("Is Invalid", false)}
-    onChange={action("input-change")}
-    onUp={action("up-click")}
-    onDown={action("down-click")}
-    placeholder={text("Placeholder", "basic")}
-  />
-);
+export const Basic = () => {
+  const [value, setValue] = useState("0");
+  return (
+    <NumericUpDown
+      value={value}
+      onChange={useCallback(e => setValue(e.target.value))}
+      onUp={action("up-click")}
+      onDown={action("down-click")}
+      placeholder={text("Placeholder", "basic")}
+    />
+  );
+};
+
+export const IsValid = () => {
+  const [value, setValue] = useState("0");
+  return (
+    <NumericUpDown
+      value={value}
+      onChange={useCallback(e => setValue(e.target.value))}
+      onUp={action("up-click")}
+      onDown={action("down-click")}
+      placeholder={text("Placeholder", "basic")}
+      isValid
+    />
+  );
+};
+
+export const IsInvalid = () => {
+  const [value, setValue] = useState("0");
+  return (
+    <NumericUpDown
+      value={value}
+      onChange={useCallback(e => setValue(e.target.value))}
+      onUp={action("up-click")}
+      onDown={action("down-click")}
+      placeholder={text("Placeholder", "basic")}
+      isInvalid
+    />
+  );
+};
 
 export const Controlled = () => {
   const [value, setValue] = useState("0");
