@@ -8,13 +8,13 @@ function Window({
   children,
   variant,
   className,
-  noPadding = false,
-  noChrome = false,
+  noPadding,
+  noChrome,
   ...rest
 }) {
   return (
     <figure
-      className={classNames("window", `window-${variant}`, className, {
+      className={classNames("window", `window--${variant}`, className, {
         "pb-0": noPadding
       })}
       {...rest}
@@ -38,8 +38,17 @@ Window.propTypes = {
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
   ]),
-  variant: PropTypes.string,
+  variant: PropTypes.oneOf(["discord", "light"]),
   className: PropTypes.string,
   noPadding: PropTypes.bool,
   noChrome: PropTypes.bool
 };
+
+Window.defaultProps = {
+  noPadding: false,
+  noChrome: false,
+  variant: "light",
+  className: ""
+};
+
+Window.displayName = "Window";

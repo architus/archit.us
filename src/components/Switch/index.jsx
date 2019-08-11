@@ -8,7 +8,7 @@ import ReactSwitch from "react-switch";
 import { lightColor, primaryColor } from "global.json";
 import "./style.scss";
 
-function Switch({ label, className, ...rest }) {
+function Switch({ label, className, onChange, checked, ...rest }) {
   return (
     <span className={classNames("switch", className)}>
       <ReactSwitch
@@ -23,6 +23,8 @@ function Switch({ label, className, ...rest }) {
         aria-label={label}
         height={24}
         width={48}
+        onChange={onChange}
+        checked={checked}
         {...rest}
       />
       {isDefined(label) ? <span className="label" children={label} /> : null}
@@ -34,9 +36,16 @@ export default Switch;
 
 Switch.propTypes = {
   label: PropTypes.string,
-  className: PropTypes.string
+  className: PropTypes.string,
+  onChange: PropTypes.func,
+  checked: PropTypes.bool
 };
 
 Switch.defaultProps = {
-  label: null
+  label: null,
+  onChange() {},
+  className: "",
+  checked: false
 };
+
+Switch.displayName = "Switch";

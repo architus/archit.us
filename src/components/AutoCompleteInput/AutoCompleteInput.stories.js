@@ -8,7 +8,7 @@ import MaxWidthDecorator from "MaxWidthDecorator";
 import { data } from "./story/sample.json";
 
 export default {
-  title: "Components/AutoCompleteInput",
+  title: "Inputs|AutoCompleteInput",
   decorators: [MaxWidthDecorator],
   parameters: { component: AutoCompleteInput }
 };

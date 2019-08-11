@@ -6,7 +6,7 @@ import { isDefined, isEmptyOrNil } from "utility";
 import MaxWidthDecorator from "MaxWidthDecorator";
 
 export default {
-  title: "Components/NumericUpDown",
+  title: "Inputs|NumericUpDown",
   decorators: [MaxWidthDecorator],
   parameters: { component: NumericUpDown }
 };

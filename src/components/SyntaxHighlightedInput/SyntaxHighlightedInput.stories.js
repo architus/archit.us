@@ -8,7 +8,7 @@ import pythonExample from "./story/python.txt";
 import { content, tokens } from "./story/custom.json";
 
 export default {
-  title: "Components|SyntaxHighlightedInput",
+  title: "Inputs|SyntaxHighlightedInput",
   parameters: {
     component: SyntaxHighlightedInput
   }
