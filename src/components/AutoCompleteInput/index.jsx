@@ -29,7 +29,7 @@ function naiveSearch(value, items, { fields, minLength, maxItems }) {
           break;
         }
       }
-      if (matched.length >= maxItems) break;
+      if (matched.length >= maxItems && maxItems > 0) break;
     }
     return matched;
   }
@@ -76,7 +76,9 @@ function AutoCompleteInput({
         });
       } else {
         const result = fuse.search(trimmed);
-        return result.slice(0, Math.min(maxItems, result.length));
+        return maxItems > 0
+          ? result.slice(0, Math.min(maxItems, result.length))
+          : result;
       }
     },
     [items, fields, triggerLength, fuse]
