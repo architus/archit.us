@@ -2,7 +2,7 @@
   "cards": [
     {
       "title": "Gulag",
-      "width": 5,
+      "width": 7,
       "settings": [
         {
           "key": "gulag_command",
@@ -222,7 +222,7 @@
     },
     {
       "title": "Roles",
-      "width": 6,
+      "width": 5,
       "settings": [
         {
           "key": "default_role",
@@ -308,7 +308,7 @@
     },
     {
       "title": "Modules",
-      "width": 4,
+      "width": 3,
       "settings": [
         {
           "key": "module_auto_responses",

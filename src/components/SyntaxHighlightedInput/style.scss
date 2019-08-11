@@ -72,12 +72,12 @@
     .token.doctype,
     .token.cdata {
         @include light-fg(rgba($-dark, 0.5));
-        @include dark-fg(rgba($-dark, 0.5));
+        @include dark-fg(rgba($-light, 0.35));
     }
 
     .token.punctuation {
-        @include light-fg(rgba($-dark, 0.8));
-        @include dark-fg(rgba($-dark, 0.8));
+        @include light-fg(rgba($-dark, 0.7));
+        @include dark-fg(rgba($-light, 0.7));
     }
 
     .token.selector,

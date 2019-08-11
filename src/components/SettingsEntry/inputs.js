@@ -1,10 +1,11 @@
 /* eslint-disable react/prop-types */
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { isEmptyOrNil, isDefined } from "utility";
 
 import { Form } from "react-bootstrap";
 import NumericUpDown from "components/NumericUpDown";
 import SyntaxHighlightedInput from "components/SyntaxHighlightedInput";
+import AutoCompleteInput from "components/AutoCompleteInput";
 import Switch from "components/Switch";
 
 const clamp = (value, min, max) => {
@@ -37,7 +38,15 @@ const handleInputKeyPress = onEnter => e => {
 
 const inputControls = {
   // Basic string input
-  string: ({ value, onChange, isInvalid, onTryCommit, name }) => (
+  string: ({
+    value,
+    onChange,
+    isInvalid,
+    onTryCommit,
+    name
+    // // general configuration properties
+    // append
+  }) => (
     <Form.Control
       type="text"
       value={value}
@@ -67,8 +76,11 @@ const inputControls = {
     onChange,
     isInvalid,
     onTryCommit,
+    // // general configuration properties
+    // append,
     // string_highlighted-specific configuration properties
-    tokens = []
+    tokens = [],
+    language
   }) => (
     <SyntaxHighlightedInput
       tokens={tokens}
@@ -77,6 +89,7 @@ const inputControls = {
       onBlur={onTryCommit}
       onKeyDown={useCallback(handleInputKeyPress(onTryCommit))}
       isInvalid={isInvalid}
+      prismLanguage={language}
     />
   ),
 
@@ -86,6 +99,8 @@ const inputControls = {
     isInvalid,
     onTryCommit,
     name,
+    // // general configuration properties
+    // append,
     // numeric-specific configuration properties
     integer = false,
     min,
@@ -115,8 +130,27 @@ const inputControls = {
     );
   },
 
-  string_auto_complete: function() {
-    return null;
+  string_auto_complete: ({
+    value,
+    onChange,
+    isInvalid,
+    onTryCommit,
+    name,
+    // // general configuration properties
+    // append,
+    // string_auto_complete-specific configuration properties
+    "auto-complete-type": type
+  }) => {
+    return (
+      <AutoCompleteInput
+        renderSuggestion={s => <div>{s}</div>}
+        getSuggestionValue={s => s}
+        placeholder={name}
+        value={value}
+        onChange={onChange}
+        isInvalid={isInvalid}
+      />
+    );
   },
 
   string_array_auto_complete: function() {

@@ -18,5 +18,5 @@ module.exports = async ({ config }) => {
   });
 
   // Run common webpack transformer
-  return transform(config);
+  return transform(config, true);
 };

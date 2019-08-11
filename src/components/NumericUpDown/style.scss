@@ -50,6 +50,7 @@
 
         &:hover {
             background-color: rgba($dark-000, 0.125);
+            color: rgba($-dark, 0.7);
         }
 
         &:active {
@@ -75,6 +76,7 @@
 
         &:hover {
             background-color: rgba($light-400, 0.1);
+            color: rgba($-light, 0.7);
         }
 
         &:active {

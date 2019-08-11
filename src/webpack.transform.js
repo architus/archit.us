@@ -1,6 +1,6 @@
-module.exports = config => {
+module.exports = (config, storybook = false) => {
   // Inline SVG loader
-  config.module.rules[0].oneOf.unshift({
+  (storybook ? config.module.rules : config.module.rules[0].oneOf).unshift({
     test: /\.inline\.svg$/,
     loader: "svg-inline-loader"
   });
