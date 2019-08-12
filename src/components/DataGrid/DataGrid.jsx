@@ -15,9 +15,9 @@ import Switch from "components/Switch";
 import { Spinner } from "react-bootstrap";
 import ReactDataGrid from "react-data-grid";
 import { Data } from "react-data-grid-addons";
+import AddRowModal from "components/AddRowModal";
 
 import "./style.scss";
-import AddRowModal from "./AddRowModal";
 
 function DataGrid({
   data,
