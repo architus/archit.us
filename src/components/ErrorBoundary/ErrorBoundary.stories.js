@@ -1,5 +1,6 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import { action } from "@storybook/addon-actions";
+import { useCallbackOnce } from "utility";
 
 import ErrorBoundary from "./index";
 import { Button } from "react-bootstrap";
@@ -14,8 +15,8 @@ export default {
 export const SilentHandling = () => {
   const [causeError, setCauseError] = useState(false);
   const [key, setKey] = useState(0);
-  const onClick = useCallback(() => setCauseError(true));
-  const onClickReset = useCallback(() => {
+  const onClick = useCallbackOnce(() => setCauseError(true));
+  const onClickReset = useCallbackOnce(() => {
     setCauseError(false);
     setKey(key => key + 1);
   });
@@ -47,8 +48,8 @@ SilentHandling.story = {
 export const Fallback = () => {
   const [causeError, setCauseError] = useState(false);
   const [key, setKey] = useState(0);
-  const onClick = useCallback(() => setCauseError(true));
-  const onClickReset = useCallback(() => {
+  const onClick = useCallbackOnce(() => setCauseError(true));
+  const onClickReset = useCallbackOnce(() => {
     setCauseError(false);
     setKey(key => key + 1);
   });

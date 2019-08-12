@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { select, boolean, number } from "@storybook/addon-knobs";
 import { action } from "@storybook/addon-actions";
+import { useCallbackOnce } from "utility";
 
 import NotificationList from "./index";
 import { Form, Col, Button } from "react-bootstrap";
@@ -31,10 +32,12 @@ export const Interactive = () => {
   const dismissAction = action("notification-dismiss");
 
   const [newMessage, setNewMessage] = useState("");
-  const onChangeNewMessage = useCallback(e => setNewMessage(e.target.value));
+  const onChangeNewMessage = useCallbackOnce(e =>
+    setNewMessage(e.target.value)
+  );
 
   const [variant, setVariant] = useState("info");
-  const onChangeVariant = useCallback(e => setVariant(e.target.value));
+  const onChangeVariant = useCallbackOnce(e => setVariant(e.target.value));
 
   const [items, setItems] = useState([]);
   const onNewNotification = useCallback(
@@ -44,9 +47,9 @@ export const Interactive = () => {
         addAction(`id: ${id}; message: ${newMessage}`);
         return [...items, { id, message: newMessage, variant }];
       }),
-    [newMessage, variant]
+    [newMessage, variant, addAction]
   );
-  const onDismiss = useCallback(id => {
+  const onDismiss = useCallbackOnce(id => {
     const { message } = items.find(item => item.id === id);
     dismissAction(`id: ${id}; message: ${message}`);
     setItems(items => items.filter(item => item.id !== id));

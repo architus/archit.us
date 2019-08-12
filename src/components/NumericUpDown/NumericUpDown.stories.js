@@ -1,8 +1,9 @@
 import React, { useState, useCallback } from "react";
-import NumericUpDown from "./index";
 import { boolean, text } from "@storybook/addon-knobs";
 import { action } from "@storybook/addon-actions";
-import { isDefined, isEmptyOrNil } from "utility";
+import { isDefined, isEmptyOrNil, useCallbackOnce } from "utility";
+
+import NumericUpDown from "./index";
 import MaxWidthDecorator from "MaxWidthDecorator";
 
 export default {
@@ -16,7 +17,7 @@ export const Basic = () => {
   return (
     <NumericUpDown
       value={value}
-      onChange={useCallback(e => setValue(e.target.value))}
+      onChange={useCallbackOnce(e => setValue(e.target.value))}
       onUp={action("up-click")}
       onDown={action("down-click")}
       placeholder={text("Placeholder", "basic")}
@@ -29,7 +30,7 @@ export const IsValid = () => {
   return (
     <NumericUpDown
       value={value}
-      onChange={useCallback(e => setValue(e.target.value))}
+      onChange={useCallbackOnce(e => setValue(e.target.value))}
       onUp={action("up-click")}
       onDown={action("down-click")}
       placeholder={text("Placeholder", "basic")}
@@ -43,7 +44,7 @@ export const IsInvalid = () => {
   return (
     <NumericUpDown
       value={value}
-      onChange={useCallback(e => setValue(e.target.value))}
+      onChange={useCallbackOnce(e => setValue(e.target.value))}
       onUp={action("up-click")}
       onDown={action("down-click")}
       placeholder={text("Placeholder", "basic")}
@@ -61,7 +62,7 @@ export const Controlled = () => {
     setValue(isEmptyOrNil(value) ? 0 : (parseFloat(value) - 1).toString());
   }, [value]);
   const numericRegex = new RegExp(text("Input filter", "[^0-9.-]*"), "g");
-  const onChange = useCallback(event => {
+  const onChange = useCallbackOnce(event => {
     const newValue = isDefined(event.target) ? event.target.value : "";
     setValue(newValue.replace(numericRegex, ""));
   });

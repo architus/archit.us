@@ -1,6 +1,7 @@
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { text } from "@storybook/addon-knobs";
+import { useCallbackOnce } from "utility";
 
 import AutoCompleteInput from "./index";
 import MaxWidthDecorator from "MaxWidthDecorator";
@@ -41,7 +42,7 @@ export const Basic = () => {
         { name: "title", weight: 0.7 },
         { name: "author.lastName", weight: 0.3 }
       ]}
-      getSuggestionValue={useCallback(item => item.title)}
+      getSuggestionValue={useCallbackOnce(item => item.title)}
       renderSuggestion={SuggestionEntry}
     />
   );
@@ -59,7 +60,7 @@ export const IsValid = () => {
         { name: "title", weight: 0.7 },
         { name: "author.lastName", weight: 0.3 }
       ]}
-      getSuggestionValue={useCallback(item => item.title)}
+      getSuggestionValue={useCallbackOnce(item => item.title)}
       renderSuggestion={SuggestionEntry}
       isValid
     />
@@ -78,7 +79,7 @@ export const IsInvalid = () => {
         { name: "title", weight: 0.7 },
         { name: "author.lastName", weight: 0.3 }
       ]}
-      getSuggestionValue={useCallback(item => item.title)}
+      getSuggestionValue={useCallbackOnce(item => item.title)}
       renderSuggestion={SuggestionEntry}
       isInvalid
     />

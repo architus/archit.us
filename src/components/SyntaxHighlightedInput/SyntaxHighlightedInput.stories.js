@@ -1,6 +1,7 @@
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import Prism from "prismjs";
 import "prismjs/components/prism-python.js";
+import { useCallbackOnce } from "utility";
 
 import SyntaxHighlightedInput from "./index";
 
@@ -60,7 +61,7 @@ export const PrismJS = () => {
     <SyntaxHighlightedInput
       value={value}
       onChange={setValue}
-      highlightFunc={useCallback(code =>
+      highlightFunc={useCallbackOnce(code =>
         Prism.highlight(code, Prism.languages.python)
       )}
     />
