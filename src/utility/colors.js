@@ -22,10 +22,10 @@ function pSBCr(d, i) {
       if(n<3||n>4)return null;
       x.r=i(r[3]=="a"?r.slice(5):r.slice(4)),x.g=i(g),x.b=i(b),x.a=a?parseFloat(a):-1
   }else{
-      if(n==8||n==6||n<4)return null;
+      if(n===8||n===6||n<4)return null;
       if(n<6)d="#"+d[1]+d[1]+d[2]+d[2]+d[3]+d[3]+(n>4?d[4]+d[4]:"");
       d=i(d.slice(1),16);
-      if(n==9||n==5)x.r=d>>24&255,x.g=d>>16&255,x.b=d>>8&255,x.a=m((d&255)/0.255)/1000;
+      if(n===9||n===5)x.r=d>>24&255,x.g=d>>16&255,x.b=d>>8&255,x.a=m((d&255)/0.255)/1000;
       else x.r=d>>16,x.g=d>>8&255,x.b=d&255,x.a=-1
   }return x
 }

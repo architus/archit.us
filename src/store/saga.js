@@ -16,7 +16,7 @@ function loadNewSession(action) {
     const { accessToken, expiresIn } = action.payload;
     if (!isNil(expiresIn)) {
       let expiresAt = new Date();
-      expiresAt.setSeconds(expiresAt.getSeconds() + parseInt(expiresIn));
+      expiresAt.setSeconds(expiresAt.getSeconds() + parseInt(expiresIn, 10));
       window.localStorage.setItem(
         LOCAL_STORAGE_KEY,
         JSON.stringify({ accessToken, expiresAt })

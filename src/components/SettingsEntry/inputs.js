@@ -166,7 +166,7 @@ const canTransform = (value, float = false) =>
   isEmptyOrNil(value) || !isLooselyNumeric(value, float);
 
 const parseNumber = (value, float = false) =>
-  float ? parseFloat(value) : parseInt(value);
+  float ? parseFloat(value) : parseInt(value, 10);
 
 const transform = (value, step, float = false) =>
   canTransform(value, float) ? 0 : parseNumber(value, float) + step;

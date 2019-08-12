@@ -52,7 +52,7 @@ export const architusUser = {
 export const colors = ["#7e95e5", "#a0adbc", "#43B581", "#FAA61A", "#ef5b5b"];
 // Generates a mock user with a random client Id, discriminator, and username
 export function createMockUser(guildId) {
-  const mockClientId = parseInt(guildId) % 100;
+  const mockClientId = parseInt(guildId, 10) % 100;
   const mockDiscriminator = discriminatorProvisioner.provision(mockClientId);
   const mockNameColor = colors[mockDiscriminator];
   const mockUsername = generateName();
@@ -261,11 +261,11 @@ function addReactions(clumps, reactions) {
 
   const clumpIndicesToMessageIdsMap = invertMap(
     messageIdToContainingClumpMap,
-    x => parseInt(x)
+    x => parseInt(x, 10)
   );
 
   const dirtyClumps = Object.keys(clumpIndicesToMessageIdsMap).map(index =>
-    parseInt(index)
+    parseInt(index, 10)
   );
 
   return updateMessages({

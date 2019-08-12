@@ -237,7 +237,7 @@ function allMentionedIds(source, context) {
   let mentionIds = [];
   const allMentions = allMatches(source, mentionRegex);
   allMentions.forEach(mentionText => {
-    const id = parseInt(mentionText.slice(2, -1));
+    const id = parseInt(mentionText.slice(2, -1), 10);
     if (!mentionIds.includes(id)) mentionIds.push(id);
   });
   return mentionIds;

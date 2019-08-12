@@ -1,5 +1,5 @@
-/* eslint-disable react/prop-types */
 import React from "react";
+import PropTypes from "prop-types";
 
 export default { title: "Docs|Design" };
 
@@ -23,6 +23,13 @@ function Color({ weight, className, primary, style }) {
   );
 }
 
+Color.propTypes = {
+  weight: PropTypes.number,
+  className: PropTypes.string,
+  primary: PropTypes.bool,
+  style: PropTypes.object
+};
+
 function ColorsDisplay({ name, weights, primary, primaryStyle }) {
   return (
     <div className="d-flex">
@@ -38,6 +45,13 @@ function ColorsDisplay({ name, weights, primary, primaryStyle }) {
     </div>
   );
 }
+
+ColorsDisplay.propTypes = {
+  name: PropTypes.string,
+  weights: PropTypes.arrayOf(PropTypes.number),
+  primary: PropTypes.bool,
+  primaryStyle: PropTypes.object
+};
 
 export const Colors = () => (
   <div style={{ padding: "1.5rem" }}>

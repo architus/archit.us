@@ -16,10 +16,11 @@ export function scrollToBottom(scrollContainer) {
 
 export const clearUrlQueries = () => {
   if (isServer) return;
+  const { protocol, host, pathname } = window.location;
   window.history.replaceState(
     {},
     window.document.title,
-    `${window.location.protocol}//${window.location.host}${window.location.pathname}`
+    `${protocol}//${host}${pathname}`
   );
 };
 

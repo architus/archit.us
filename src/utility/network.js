@@ -3,7 +3,7 @@ import { isDefined } from "./object";
 
 const avatarSizes = [16, 32, 40, 64, 128, 256, 512, 1024];
 const nextLargerSize = size => {
-  const number = parseInt(size);
+  const number = parseInt(size, 10);
   for (let avatarSize of avatarSizes) {
     if (avatarSize > number) return avatarSize;
   }
