@@ -21,6 +21,12 @@ export default {
 // ? Input components
 // ? ===================
 
+const baseProps = (value, onChange, isInvalid) => ({
+  value,
+  onChange,
+  isInvalid
+});
+
 // Basic string input
 function StringInput({
   value,
@@ -33,13 +39,15 @@ function StringInput({
 }) {
   return (
     <Form.Control
-      type="text"
-      value={value}
-      isInvalid={isInvalid}
+      {...baseProps(
+        value,
+        useCallback(e => onChange(e.target.value), [onChange]),
+        isInvalid
+      )}
       placeholder={name}
       onBlur={onTryCommit}
-      onChange={useCallback(e => onChange(e.target.value), [onChange])}
       onKeyDown={useCallback(handleInputKeyPress(onTryCommit))}
+      type="text"
     />
   );
 }
@@ -73,12 +81,10 @@ function StringHighlightedInput({
 }) {
   return (
     <SyntaxHighlightedInput
-      tokens={tokens}
-      value={value}
-      onChange={onChange}
+      {...baseProps(value, onChange, isInvalid)}
       onBlur={onTryCommit}
       onKeyDown={useCallback(handleInputKeyPress(onTryCommit))}
-      isInvalid={isInvalid}
+      tokens={tokens}
       prismLanguage={language}
     />
   );
@@ -107,11 +113,6 @@ function NumericInput({
   return (
     <NumericUpDown
       value={value.toString()}
-      isInvalid={isInvalid}
-      placeholder={name}
-      onBlur={onTryCommit}
-      onChange={useCallback(e => onChange(e.target.value), [onChange])}
-      onKeyDown={useCallback(handleInputKeyPress(onTryCommit))}
       onUp={useCallback(transformValue(step, value, onChange), transformDeps)}
       onDown={useCallback(
         transformValue(-step, value, onChange),
@@ -134,12 +135,10 @@ function StringAutoCompleteInput({
 }) {
   return (
     <AutoCompleteInput
+      {...baseProps(value, onChange, isInvalid)}
+      placeholder={name}
       renderSuggestion={s => <div>{s}</div>}
       getSuggestionValue={s => s}
-      placeholder={name}
-      value={value}
-      onChange={onChange}
-      isInvalid={isInvalid}
     />
   );
 }
