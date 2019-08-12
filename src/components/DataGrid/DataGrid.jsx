@@ -1,7 +1,13 @@
 import React, { useRef, useState, useMemo, useCallback } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { isNil, isDefined, useClientSide, useMediaBreakpoints } from "utility";
+import {
+  isNil,
+  isDefined,
+  useClientSide,
+  useMediaBreakpoints,
+  useCallbackOnce
+} from "utility";
 
 import Icon from "components/Icon";
 import HelpTooltip from "components/HelpTooltip";
@@ -12,21 +18,6 @@ import { Data } from "react-data-grid-addons";
 
 import "./style.scss";
 import AddRowModal from "./AddRowModal";
-
-const handleFilterChange = filter => filters => {
-  const newFilters = { ...filters };
-  if (filter.filterTerm) {
-    newFilters[filter.column.key] = filter;
-  } else {
-    delete newFilters[filter.column.key];
-  }
-  return newFilters;
-};
-
-const selectors = Data.Selectors;
-function getRows(rows, filters) {
-  return selectors.getRows({ rows, filters });
-}
 
 function DataGrid({
   data,
@@ -74,23 +65,9 @@ function DataGrid({
     sortColumn: 0,
     sortDirection: "NONE"
   });
-  const onGridSort = useCallback((sortColumn, sortDirection) => {
+  const onGridSort = useCallbackOnce((sortColumn, sortDirection) => {
     setSortMeta({ sortColumn, sortDirection });
   });
-  const compareStrings = (a, b) =>
-    a.toLowerCase().trim() > b.toLowerCase().trim() ? 1 : -1;
-  const sortRows = (rows, sortColumn, sortDirection) => {
-    const innerComp =
-      isDefined(rows) &&
-      rows.length >= 1 &&
-      typeof rows[0][sortColumn] === "string"
-        ? compareStrings
-        : (a, b) => (a > b ? 1 : -1);
-    const comparer = (a, b) =>
-      innerComp(a[sortColumn], b[sortColumn]) *
-      (sortDirection === "ASC" ? 1 : -1);
-    return sortDirection === "NONE" ? rows : [...rows].sort(comparer);
-  };
   // Sorted view array
   const rows = useMemo(
     () => sortRows(data, sortMeta.sortColumn, sortMeta.sortDirection),
@@ -110,7 +87,7 @@ function DataGrid({
             }
           ]
         : null,
-    [onRowDelete]
+    [onRowDelete, canDeleteRow, columns.length]
   );
 
   // Filtering
@@ -178,8 +155,8 @@ function DataGrid({
 
   // Add row dialog callback
   const [showAddRowDialog, setShowAddRowDialog] = useState(false);
-  const hideAddRowDialog = useCallback(() => setShowAddRowDialog(false));
-  const onAddRow = useCallback(() => {
+  const hideAddRowDialog = useCallbackOnce(() => setShowAddRowDialog(false));
+  const onAddRow = useCallbackOnce(() => {
     setShowAddRowDialog(true);
   });
   const onAdd = useCallback(
@@ -190,48 +167,61 @@ function DataGrid({
     [onRowAdd]
   );
 
-  return useClientSide(() => (
-    <>
-      <div className="table-outer">
-        <ReactDataGrid
-          ref={dataGrid}
+  // Direct callbacks
+  const rowGetter = useCallback(i => transformRow(filteredRows[i]), [
+    transformRow,
+    filteredRows
+  ]);
+  const onAddFilter = useCallbackOnce(filter =>
+    setFilters(handleFilterChange(filter))
+  );
+  const onClearFilters = useCallbackOnce(() => setFilters({}));
+
+  return useClientSide(
+    () => (
+      <>
+        <div className="table-outer">
+          <ReactDataGrid
+            ref={dataGrid}
+            columns={columnMeta}
+            rowGetter={rowGetter}
+            rowsCount={filteredRows.length}
+            onGridRowsUpdated={handleRowUpdate}
+            onCellSelected={onCellSelected}
+            onRowClick={onRowClick}
+            enableCellSelect={true}
+            enableCellAutoFocus={false}
+            onGridSort={onGridSort}
+            onAddFilter={onAddFilter}
+            onClearFilters={onClearFilters}
+            rowHeight={45}
+            headerFiltersHeight={55}
+            rowRenderer={RowRenderer}
+            getCellActions={getCellActions}
+            enableRowSelect={null}
+            emptyRowsView={EmptyDisplay}
+            toolbar={
+              <ToolbarComponent
+                onAddRow={onAddRow}
+                addRowButton={addRowButton}
+                slot={toolbarComponents}
+              />
+            }
+            {...rest}
+          />
+        </div>
+        <AddRowModal
+          show={showAddRowDialog}
+          onHide={hideAddRowDialog}
+          onAdd={onAdd}
+          title={dialogTitle}
           columns={columnMeta}
-          rowGetter={i => transformRow(filteredRows[i])}
-          rowsCount={filteredRows.length}
-          onGridRowsUpdated={handleRowUpdate}
-          onCellSelected={onCellSelected}
-          onRowClick={onRowClick}
-          enableCellSelect={true}
-          enableCellAutoFocus={false}
-          onGridSort={onGridSort}
-          toolbar={
-            <ToolbarComponent
-              onAddRow={onAddRow}
-              addRowButton={addRowButton}
-              slot={toolbarComponents}
-            />
-          }
-          onAddFilter={filter => setFilters(handleFilterChange(filter))}
-          onClearFilters={() => setFilters({})}
-          rowHeight={45}
-          headerFiltersHeight={55}
-          rowRenderer={RowRenderer}
-          getCellActions={getCellActions}
-          enableRowSelect={null}
-          emptyRowsView={EmptyDisplay}
-          {...rest}
+          data={filteredRows}
         />
-      </div>
-      <AddRowModal
-        show={showAddRowDialog}
-        onHide={hideAddRowDialog}
-        onAdd={onAdd}
-        title={dialogTitle}
-        columns={columnMeta}
-        data={filteredRows}
-      />
-    </>
-  ));
+      </>
+    ),
+    null
+  );
 }
 
 export default DataGrid;
@@ -268,6 +258,8 @@ DataGrid.defaultProps = {
   emptyLabel: "No items to display",
   addRowButton: true
 };
+
+DataGrid.displayName = "DataGrid";
 
 // ? ==============
 // ? Sub components
@@ -315,6 +307,8 @@ ToolbarComponent.propTypes = {
   slot: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)])
 };
 
+ToolbarComponent.displayName = "ToolbarComponent";
+
 function RowRenderer({ renderBaseRow, ...props }) {
   const { idx } = props;
   const className = idx % 2 ? "row-even" : "row-odd";
@@ -322,9 +316,11 @@ function RowRenderer({ renderBaseRow, ...props }) {
 }
 
 RowRenderer.propTypes = {
-  renderBaseRow: PropTypes.func,
-  idx: PropTypes.number
+  renderBaseRow: PropTypes.func.isRequired,
+  idx: PropTypes.number.isRequired
 };
+
+RowRenderer.displayName = "RowRenderer";
 
 function HelpColumnWrapper({ name, renderer, tooltip }) {
   return (
@@ -351,3 +347,42 @@ HelpColumnWrapper.defaultProps = {
   tooltip: undefined,
   renderer: null
 };
+
+HelpColumnWrapper.displayName = "HelpColumnWrapper";
+
+// ? =================
+// ? Utility functions
+// ? =================
+
+function handleFilterChange(newFilter) {
+  return state => {
+    const newState = { ...state };
+    if (newFilter.filterTerm) {
+      newState[newFilter.column.key] = newFilter;
+    } else {
+      delete newState[newFilter.column.key];
+    }
+    return newState;
+  };
+}
+
+function getRows(rows, filters) {
+  return Data.Selectors.getRows({ rows, filters });
+}
+
+function compareStrings(a, b) {
+  return a.toLowerCase().trim() > b.toLowerCase().trim() ? 1 : -1;
+}
+
+function sortRows(rows, sortColumn, sortDirection) {
+  const innerComp =
+    isDefined(rows) &&
+    rows.length >= 1 &&
+    typeof rows[0][sortColumn] === "string"
+      ? compareStrings
+      : (a, b) => (a > b ? 1 : -1);
+  const comparer = (a, b) =>
+    innerComp(a[sortColumn], b[sortColumn]) *
+    (sortDirection === "ASC" ? 1 : -1);
+  return sortDirection === "NONE" ? rows : [...rows].sort(comparer);
+}

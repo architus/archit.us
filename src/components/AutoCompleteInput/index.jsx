@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import Fuse from "fuse.js";
 import classNames from "classnames";
 import get from "lodash/get";
+import { useCallbackOnce } from "utility";
 
 import AutoSuggest from "react-autosuggest";
 
@@ -81,14 +82,14 @@ function AutoCompleteInput({
           : result;
       }
     },
-    [items, fields, triggerLength, fuse]
+    [items, fields, triggerLength, fuse, maxItems]
   );
 
   // Autosuggest callbacks
-  const onSuggestionsFetchRequested = useCallback(({ value }) =>
+  const onSuggestionsFetchRequested = useCallbackOnce(({ value }) =>
     setSuggestions(calculateSuggestions(value))
   );
-  const onSuggestionsClearRequested = useCallback(() => setSuggestions([]));
+  const onSuggestionsClearRequested = useCallbackOnce(() => setSuggestions([]));
 
   // Input change callback
   const onInputChange = useCallback(

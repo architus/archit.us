@@ -52,7 +52,7 @@ SettingsCard.displayName = "SettingsCard";
 function EntryWrapper({ entryIndex, onCommit, ...rest }) {
   const specificOnCommit = useCallback(
     (...args) => onCommit(entryIndex, args),
-    [entryIndex]
+    [entryIndex, onCommit]
   );
   return (
     <SettingsEntry onCommit={specificOnCommit} {...rest} standalone={false} />

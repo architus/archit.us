@@ -38,7 +38,7 @@ SettingsGallery.displayName = "SettingsGallery";
 function CategoryWrapper({ categoryIndex, onCommit, ...rest }) {
   const specificOnCommit = useCallback(
     (...args) => onCommit(categoryIndex, args),
-    [categoryIndex]
+    [categoryIndex, onCommit]
   );
   return <SettingsCategory onCommit={specificOnCommit} {...rest} />;
 }

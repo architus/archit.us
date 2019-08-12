@@ -11,7 +11,7 @@ function Notification({ type, message, id, variant, onDismiss }) {
   const className = classNames("notification", `notification-${type}`, variant);
 
   // Memoize targeted dismiss callback
-  const dismissHandler = useCallback(() => onDismiss(id), [id]);
+  const dismissHandler = useCallback(() => onDismiss(id), [id, onDismiss]);
   const outerOnClick = isToast ? dismissHandler : undefined;
 
   return (

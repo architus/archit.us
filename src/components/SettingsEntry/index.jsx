@@ -1,7 +1,7 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { isDefined } from "utility";
+import { isDefined, useCallbackOnce } from "utility";
 import inputControls from "./inputs";
 
 import HelpTooltip from "components/HelpTooltip";
@@ -24,13 +24,14 @@ function SettingsEntry({
 
   // Controlled component
   const [buffer, setBuffer] = useState(value);
-  const onChange = useCallback(value => setBuffer(value));
+  const onChange = useCallbackOnce(value => setBuffer(value));
 
   // Validation
   const isInvalid = false;
 
   // Committing
-  const onTryCommit = useCallback(() => null);
+  // eslint-disable-next-line no-unused-vars
+  const onTryCommit = useCallbackOnce(() => null);
 
   // Standalone mode
   const Row = standalone ? "div" : "tr";

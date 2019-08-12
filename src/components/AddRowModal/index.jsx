@@ -6,7 +6,13 @@ import React, {
   useRef
 } from "react";
 import PropTypes from "prop-types";
-import { isDefined, identity, isNil, binarySearch } from "utility";
+import {
+  isDefined,
+  identity,
+  isNil,
+  binarySearch,
+  createObject
+} from "utility";
 
 import { Modal, Button, Form } from "react-bootstrap";
 
@@ -28,11 +34,12 @@ function AddRowModal({ data, show, columns, onHide, onAdd, title, ...rest }) {
   );
 
   // Controlled input values
-  const initialState = useCallback(columns =>
-    Object.assign({}, ...columns.map(col => ({ [col.key]: "" })))
+  const [values, setValues] = useState(() =>
+    calculateInitialState(relevantColumns)
   );
-  const [values, setValues] = useState(() => initialState(relevantColumns));
-  useEffect(() => setValues(initialState(relevantColumns)), [relevantColumns]);
+  useEffect(() => setValues(calculateInitialState(relevantColumns)), [
+    relevantColumns
+  ]);
   const onChange = useCallback(
     (key, event) => {
       let processFunc = relevantColumnsMap[key].processValue;
@@ -53,7 +60,7 @@ function AddRowModal({ data, show, columns, onHide, onAdd, title, ...rest }) {
     else {
       let uniqueColumns = columns.filter(c => c.unique).map(c => c.key);
       if (uniqueColumns.length === 0) return [];
-      let sorted = Object.create(null);
+      let sorted = createObject();
       for (const col of uniqueColumns) {
         sorted[col] = [];
       }
@@ -75,14 +82,8 @@ function AddRowModal({ data, show, columns, onHide, onAdd, title, ...rest }) {
     if (show && isDefined(firstInput.current)) firstInput.current.focus();
   }, [show]);
 
-  // Reset state upon close
-  const resetState = useCallback(() => {
-    setValues(initialState(relevantColumns));
-    setShowValidation(false);
-    setFinishedInputs(initialFocusState());
-  });
-
-  // Input validation
+  // Input validation calculation & status
+  const [showValidation, setShowValidation] = useState(false);
   const [validationStatus, isValid] = useMemo(() => {
     let validationStatus = {};
     let allPass = true;
@@ -130,6 +131,15 @@ function AddRowModal({ data, show, columns, onHide, onAdd, title, ...rest }) {
     }
     return [validationStatus, allPass];
   }, [relevantColumns, values, sortedUniqueColumns]);
+
+  // Reset state to initial
+  const resetState = useCallback(() => {
+    setValues(calculateInitialState(relevantColumns));
+    setShowValidation(false);
+    setFinishedInputs(calculateInitialFocusState(relevantColumns));
+  }, [relevantColumns]);
+
+  // On submit
   const tryAdd = useCallback(() => {
     if (isValid) {
       resetState();
@@ -137,14 +147,15 @@ function AddRowModal({ data, show, columns, onHide, onAdd, title, ...rest }) {
     } else {
       setShowValidation(true);
     }
-  }, [isValid, values]);
+  }, [isValid, values, onAdd, resetState]);
+
+  // On close
   const close = useCallback(() => {
     resetState();
     onHide();
-  });
-  const [showValidation, setShowValidation] = useState(false);
+  }, [resetState, onHide]);
 
-  // Enter press handle
+  // Enter press handler
   const handleKeyPressed = useCallback(
     e => {
       var code = e.keyCode || e.which;
@@ -153,7 +164,7 @@ function AddRowModal({ data, show, columns, onHide, onAdd, title, ...rest }) {
         tryAdd();
       }
     },
-    [values]
+    [tryAdd]
   );
   useEffect(() => {
     if (show) {
@@ -164,9 +175,9 @@ function AddRowModal({ data, show, columns, onHide, onAdd, title, ...rest }) {
   }, [show, handleKeyPressed]);
 
   // Validate upon lost focus
-  const initialFocusState = () =>
-    Object.assign({}, ...relevantColumns.map(col => ({ [col.key]: false })));
-  const [finishedInputs, setFinishedInputs] = useState(initialFocusState);
+  const [finishedInputs, setFinishedInputs] = useState(
+    calculateInitialFocusState(relevantColumns)
+  );
   const onBlur = useCallback(
     key => {
       if (values[key] !== "")
@@ -174,6 +185,8 @@ function AddRowModal({ data, show, columns, onHide, onAdd, title, ...rest }) {
     },
     [values, finishedInputs]
   );
+
+  // Whether a column should appear with a validation outline
   const validated = useCallback(
     col => showValidation || finishedInputs[col.key],
     [showValidation, finishedInputs]
@@ -254,6 +267,8 @@ AddRowModal.defaultProps = {
   data: []
 };
 
+AddRowModal.displayName = "AddRowModal";
+
 // ? ==============
 // ? Sub-components
 // ? ==============
@@ -278,3 +293,23 @@ FormInput.propTypes = {
 FormInput.defaultProps = {
   onBlur() {}
 };
+
+// ? =================
+// ? Utility functions
+// ? =================
+
+function calculateInitialState(columns) {
+  const state = createObject();
+  for (let i = 0; i < columns.length; ++i) {
+    state[columns[i].key] = "";
+  }
+  return state;
+}
+
+function calculateInitialFocusState(columns) {
+  const state = createObject();
+  for (let i = 0; i < columns.length; ++i) {
+    state[columns[i].key] = false;
+  }
+  return state;
+}

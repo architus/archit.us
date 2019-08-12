@@ -18,7 +18,13 @@ import {
   localEditResponse,
   localDeleteResponse
 } from "store/actions";
-import { useAuthDispatch, isDefined, isNil } from "utility";
+import {
+  useAuthDispatch,
+  isDefined,
+  isNil,
+  useCallbackOnce,
+  alphanumericRegex
+} from "utility";
 import { AppScrollContext } from "dynamic/AppRoot";
 
 import DataGrid, { NumericFilter } from "components/DataGrid";
@@ -71,69 +77,53 @@ function AutoResponses({ guildId }) {
   const fetchResponses = useAuthDispatch(getResponses);
   useEffect(() => {
     if (authenticated) fetchResponses(guildId);
-  }, [authenticated, guildId]);
+  }, [authenticated, guildId, fetchResponses]);
 
   // Elevation status
   const userRef = useRef(user_id);
   userRef.current = user_id;
-  const compareRowAuthor = useCallback(
+  const compareRowAuthor = useCallbackOnce(
     ({ author_id }) => author_id === userRef.current
   );
-  const trueCallback = useCallback(() => true);
+  const trueCallback = useCallbackOnce(() => true);
   const canChangeRow = isArchitusAdmin ? trueCallback : compareRowAuthor;
   const canEditRow = isArchitusAdmin ? true : compareRowAuthor;
 
   // Row adding
-  const onRowAdd = useCallback(row => {
-    if (isDefined(row)) {
-      addRow(guildId, row);
-      dispatch(localAddResponse(guildId, row, session));
-    }
-  });
+  const onRowAdd = useCallback(
+    row => {
+      if (isDefined(row)) {
+        addRow(guildId, row);
+        dispatch(localAddResponse(guildId, row, session));
+      }
+    },
+    [addRow, dispatch, guildId, session]
+  );
 
   // Row updating
-  const onRowUpdate = useCallback(({ previousRow: row, key, updatedCell }) => {
-    if (isDefined(row) && canChangeRow(row)) {
-      editRow(guildId, row.trigger, { ...row, [key]: updatedCell });
-      dispatch(localEditResponse(guildId, row, key, updatedCell));
-    }
-  });
+  const onRowUpdate = useCallback(
+    ({ previousRow: row, key, updatedCell }) => {
+      if (isDefined(row) && canChangeRow(row)) {
+        editRow(guildId, row.trigger, { ...row, [key]: updatedCell });
+        dispatch(localEditResponse(guildId, row, key, updatedCell));
+      }
+    },
+    [canChangeRow, dispatch, guildId, editRow]
+  );
 
   // Row deletion
-  const onRowDelete = useCallback(row => {
-    if (isDefined(row) && canChangeRow(row)) {
-      deleteRow(guildId, row);
-      dispatch(localDeleteResponse(guildId, row));
-    }
-  });
+  const onRowDelete = useCallback(
+    row => {
+      if (isDefined(row) && canChangeRow(row)) {
+        deleteRow(guildId, row);
+        dispatch(localDeleteResponse(guildId, row));
+      }
+    },
+    [canChangeRow, deleteRow, dispatch, guildId]
+  );
 
   // Transform author data
-  const authorData = ({ author_id }) => {
-    if (
-      author_id <= 0 ||
-      !authors.hasOwnProperty(author_id) ||
-      isNil(authors[author_id])
-    )
-      return {
-        author: "Unknown",
-        avatar: null,
-        name: "Unknown",
-        discriminator: null
-      };
-    else {
-      const { name, avatar, discriminator } = authors[author_id];
-      return {
-        author: `${name}#${discriminator}|${author_id}`,
-        avatar,
-        name,
-        discriminator
-      };
-    }
-  };
-  const transformRow = row => {
-    return isDefined(row) ? { ...row, ...authorData(row) } : row;
-  };
-  const transformedData = useMemo(() => commands.map(transformRow), [
+  const transformedData = useMemo(() => commands.map(transformRow(authors)), [
     commands,
     authors
   ]);
@@ -149,7 +139,7 @@ function AutoResponses({ guildId }) {
       filterSelfAuthored
         ? transformedData.filter(compareRowAuthor)
         : transformedData,
-    [transformedData, filterSelfAuthored]
+    [transformedData, filterSelfAuthored, compareRowAuthor]
   );
 
   // Max count
@@ -178,7 +168,6 @@ function AutoResponses({ guildId }) {
   }, [authors]);
 
   // Column definitions
-  const alphanumericRegex = useMemo(() => /[_\W]+/g);
   let columns = [
     {
       key: "trigger",
@@ -260,7 +249,7 @@ function AutoResponses({ guildId }) {
       name: "Count",
       sortDescendingFirst: true,
       formatter: useMemo(() => createCountCellFormatter(maxCountRef), [
-        contextRef
+        maxCountRef
       ]),
       filterRenderer: NumericFilter
     },
@@ -341,3 +330,37 @@ export default AutoResponses;
 AutoResponses.propTypes = {
   guildId: PropTypes.string
 };
+
+AutoResponses.displayName = "AutoResponses";
+
+// ? =====================
+// ? Utility functions
+// ? =====================
+
+function authorData({ author_id }, authors) {
+  if (
+    author_id <= 0 ||
+    !authors.hasOwnProperty(author_id) ||
+    isNil(authors[author_id])
+  )
+    return {
+      author: "Unknown",
+      avatar: null,
+      name: "Unknown",
+      discriminator: null
+    };
+  else {
+    const { name, avatar, discriminator } = authors[author_id];
+    return {
+      author: `${name}#${discriminator}|${author_id}`,
+      avatar,
+      name,
+      discriminator
+    };
+  }
+}
+
+function transformRow(authors) {
+  return row =>
+    isDefined(row) ? { ...row, ...authorData(row, authors) } : row;
+}

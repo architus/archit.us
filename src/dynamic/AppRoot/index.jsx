@@ -6,7 +6,8 @@ import {
   isNil,
   useEffectOnce,
   useLocation,
-  useInitialRender
+  useInitialRender,
+  useCallbackOnce
 } from "utility";
 import { navigate } from "@reach/router";
 import { getArchitusGuilds } from "store/reducers/guilds";
@@ -37,12 +38,12 @@ function AppRoot() {
   const expandClick = useCallback(() => setShowAppNav(!showAppNav), [
     showAppNav
   ]);
-  const closeAppNav = useCallback(() => setShowAppNav(false));
+  const closeAppNav = useCallbackOnce(() => setShowAppNav(false));
 
   // Swiping/scroll logic
   const wasSwipeScroll = useRef(false);
   const swipeHandler = useRef(null);
-  const swipeLeft = useCallback(() => {
+  const swipeLeft = useCallbackOnce(() => {
     setShowAppNav(false);
   });
   const swipeRight = useCallback(() => {
@@ -58,7 +59,7 @@ function AppRoot() {
   }, [swipeHandler, wasSwipeScroll]);
 
   // Guild list handling
-  const guildClick = useCallback(id => {
+  const guildClick = useCallbackOnce(id => {
     const fragments = splitPath(window.location.pathname);
     if (fragments.length >= 3) {
       navigate(`${APP_PATH_ROOT}/${id}/${fragments[2]}`);
@@ -69,10 +70,10 @@ function AppRoot() {
 
   // Guild add modal
   const [showAddGuildModal, setShowAddGuildModal] = useState(false);
-  const showModal = useCallback(() => {
+  const showModal = useCallbackOnce(() => {
     setShowAddGuildModal(true);
   });
-  const hideModal = useCallback(() => {
+  const hideModal = useCallbackOnce(() => {
     setShowAddGuildModal(false);
   });
 
@@ -100,7 +101,7 @@ function AppRoot() {
         if (showAppNav) closeAppNav();
       }
     },
-    [guildsLoaded, guildList, closeAppNav, showModal]
+    [guildsLoaded, guildList, closeAppNav, showModal, showAppNav]
   );
 
   // Root class adding/removing

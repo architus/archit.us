@@ -87,6 +87,11 @@ export function replaceAll(string, replace, replaceWith) {
   return string.replace(regexObj, replaceWith);
 }
 
+export const collator = new Intl.Collator(undefined, {
+  numeric: true,
+  sensitivity: "base"
+});
+
 // ? ==============
 // ? Path functions
 // ? ==============
@@ -162,3 +167,9 @@ export function allMatches(string, regex) {
 export function escapeRegExp(text) {
   return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 }
+
+// ? ======================
+// ? Regex constants
+// ? ======================
+
+export const alphanumericRegex = /[_\W]+/g;

@@ -1,27 +1,38 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { globalHistory } from "@reach/router";
-import { log, addMissingUnit } from "./string";
+import { log, addMissingUnit, collator } from "./string";
 import { isClient } from "./document";
 
-export function useReturnQuery() {
-  if (process.env.PRODUCTION_URL) {
-    return "";
-  } else {
-    const [returnQuery, setReturnQuery] = useState("");
-    useEffectOnce(() => {
-      if (returnQuery === "") {
-        setReturnQuery(
-          `return=${encodeURIComponent(
-            `${window.location.protocol}//${window.location.host}/app`
-          )}`
-        );
-      }
-    });
-    return returnQuery;
-  }
+// ? =============
+// ? HOC
+// ? =============
+
+// HOC that disables SSR (returns null)
+export function clientSide(component) {
+  return typeof window === "undefined" ? () => null : component;
 }
 
+// ? =============
+// ? Hooks
+// ? =============
+
+// Gets return query from the window location if not in production
+export function useReturnQuery() {
+  const [returnQuery, setReturnQuery] = useState("");
+  useEffectOnce(() => {
+    if (!process.env.PRODUCTION_URL && returnQuery === "") {
+      setReturnQuery(
+        `return=${encodeURIComponent(
+          `${window.location.protocol}//${window.location.host}/app`
+        )}`
+      );
+    }
+  });
+  return returnQuery;
+}
+
+// Curries the react-redux useDispatch hook to include authentication
 export function useAuthDispatch(action) {
   const isAuthenticated = useSelector(state => state.session.authenticated);
   const authToken = useSelector(state => state.session.accessToken);
@@ -34,35 +45,34 @@ export function useAuthDispatch(action) {
   }
 }
 
-export function useClientSide(render) {
-  return typeof window === "undefined" ? null : render();
+// Calculates a value only on the client, else falls back to a default value
+export function useClientSide(calculate, defaultValue) {
+  return typeof window === "undefined" ? defaultValue : calculate();
 }
 
-export function clientSide(component) {
-  return typeof window === "undefined" ? () => null : component;
-}
-
+// Return index of the current min-width breakpoint from the given breakpoints
+// array, or -1 if none are active
 export function useMediaBreakpoints(breakpoints) {
-  const collator = useMemo(
-    () =>
-      new Intl.Collator(undefined, {
-        numeric: true,
-        sensitivity: "base"
-      })
-  );
   const sortedBreakpoints = useMemo(
     () => [...breakpoints].sort(collator.compare),
-    [breakpoints, collator]
+    [breakpoints]
   );
-  const queries = sortedBreakpoints.map(
-    b => `(min-width: ${addMissingUnit(b)})`
+
+  const queries = useMemo(
+    () => sortedBreakpoints.map(b => `(min-width: ${addMissingUnit(b)})`),
+    [sortedBreakpoints]
   );
-  const getBreakpoint = matches => {
-    // Find first media query that fails
-    const result = matches.findIndex(m => !m);
-    // If none fail, then return last breakpoint; else return the last passing
-    return result === -1 ? sortedBreakpoints.length - 1 : result - 1;
-  };
+
+  const getBreakpoint = useCallback(
+    matches => {
+      // Find first media query that fails
+      const result = matches.findIndex(m => !m);
+      // If none fail, then return last breakpoint; else return the last passing
+      return result === -1 ? sortedBreakpoints.length - 1 : result - 1;
+    },
+    [sortedBreakpoints]
+  );
+
   const [state, setState] = useState(
     isClient
       ? () => getBreakpoint(queries.map(q => window.matchMedia(q).matches))
@@ -86,7 +96,7 @@ export function useMediaBreakpoints(breakpoints) {
       mounted = false;
       mediaQueries.forEach(mql => mql.removeListener(onChange));
     };
-  }, [sortedBreakpoints]);
+  }, [getBreakpoint, queries]);
 
   return state === -1 ? null : sortedBreakpoints[state];
 }
@@ -95,6 +105,7 @@ export function useMediaBreakpoints(breakpoints) {
 // Repository is licensed under MIT
 // https://github.com/reach/router/issues/203
 
+// Gets current location from global history as a hook
 export function useLocation() {
   const initialState = {
     location: globalHistory.location,
@@ -116,10 +127,23 @@ export function useLocation() {
   return state;
 }
 
+// Runs an effect hook once, simulating componentDidMount/componentWillUnmount
 export function useEffectOnce(effectFunc) {
   useEffect(effectFunc, []);
 }
 
+// Runs a callback hook once (never recalculates)
+export function useCallbackOnce(callback) {
+  return useCallback(callback, []);
+}
+
+// Runs a memo hook once (never recalculates)
+export function useMemoOnce(calculate) {
+  return useMemo(calculate, []);
+}
+
+// Returns true only if the current render
+// (useful for ensuring SSR/client hydration symmetry)
 export function useInitialRender() {
   const [isInitial, setIsInitial] = useState(true);
   useEffectOnce(() => setIsInitial(false));

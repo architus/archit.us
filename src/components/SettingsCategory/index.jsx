@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { isDefined } from "utility";
+import { isDefined, useCallbackOnce } from "utility";
 
 import SettingsCard, {
   propShape as cardPropShape
@@ -15,7 +15,7 @@ function SettingsCategory({ title, cards, noCollapse, onCommit }) {
 
   // Open/close behavior (enabled on small screens)
   const [open, setOpen] = useState(!hasTitle);
-  const onExpandClick = useCallback(() => setOpen(open => !open));
+  const onExpandClick = useCallbackOnce(() => setOpen(open => !open));
 
   return (
     <div
@@ -69,7 +69,8 @@ SettingsCategory.displayName = "SettingsCategory";
 
 function CardWrapper({ cardIndex, onCommit, ...rest }) {
   const specificOnCommit = useCallback((...args) => onCommit(cardIndex, args), [
-    cardIndex
+    cardIndex,
+    onCommit
   ]);
   return <SettingsCard onCommit={specificOnCommit} {...rest} />;
 }
