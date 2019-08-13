@@ -1,4 +1,11 @@
-import { HttpVerbs, pick, log, API_BASE, WS_API_BASE } from "utility";
+import {
+  HttpVerbs,
+  pick,
+  log,
+  API_BASE,
+  WS_API_BASE,
+  isDefined
+} from "utility";
 import {
   TOKEN_EXCHANGE,
   IDENTIFY_SESSION,
@@ -128,7 +135,7 @@ export function showNotification(
   type = "toast",
   message = "",
   variant = "info",
-  duration = 2000
+  duration = 3000
 ) {
   const id = globalIdCounter++;
   return [
@@ -156,12 +163,12 @@ export function hideNotification(type = "toast", id) {
   };
 }
 
-export function showToast(message = "", variant = "info", duration = 2000) {
+export function showToast(message = "", variant = "info", duration = 3000) {
   const [action] = showNotification("toast", message, variant, duration);
   return action;
 }
 
-export function showAlert(message = "", variant = "danger", duration = 2000) {
+export function showAlert(message = "", variant = "danger", duration = 4000) {
   const [action] = showNotification("alert", message, variant, duration);
   return action;
 }
@@ -225,14 +232,13 @@ export function getResponses(accessToken, guildId) {
 export function addResponse(accessToken, guildId, { trigger, response }) {
   log(`Adding new auto-response ${guildId}/${trigger}=>${response}`);
   return authApiAction(accessToken, {
-    // url: `${API_BASE}/responses/${guildId}`,
-    url: `${API_BASE}/ratelimitme`,
+    url: `${API_BASE}/responses/${guildId}`,
     label: ADD_RESPONSE,
-    method: HttpVerbs.GET, // POST
-    // data: {
-    //   trigger,
-    //   response
-    // }
+    method: HttpVerbs.POST,
+    data: {
+      trigger,
+      response
+    }
   });
 }
 
@@ -294,12 +300,17 @@ export function loadSession(data) {
 
 export function loadGuilds(data) {
   log("Loading guilds");
-  return {
-    type: LOAD_GUILDS,
-    payload: {
-      guildList: data
-    }
-  };
+  if (isDefined(data) && Array.isArray(data))
+    return {
+      type: LOAD_GUILDS,
+      payload: {
+        guildList: data
+      }
+    };
+  else
+    return showAlert(
+      `Error loading guild list: server responded with ${JSON.stringify(data)}`
+    );
 }
 
 export function loadGuildCount(data) {

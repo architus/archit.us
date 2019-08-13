@@ -14,7 +14,7 @@ import { Location } from "@reach/router";
 
 import "./style.scss";
 
-const PLACEHOLDER_COUNT = 3;
+const PLACEHOLDER_COUNT = 5;
 const ICON_WIDTH = 52;
 
 class GuildList extends React.Component {

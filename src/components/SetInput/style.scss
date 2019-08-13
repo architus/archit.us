@@ -60,13 +60,13 @@
             }
         }
 
-        input.form-control {
-            &:not(.is-valid):not(.is-invalid) {
-                border: none !important;
-            }
-
+        input {
             border-radius: 0;
             border-bottom-left-radius: 8px;
+
+            &.form-control:not(.is-valid):not(.is-invalid) {
+                border: none !important;
+            }
         }
 
         button {
