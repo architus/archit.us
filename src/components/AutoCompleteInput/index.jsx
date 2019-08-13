@@ -1,9 +1,8 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useMemo, useRef } from "react";
 import PropTypes from "prop-types";
 import Fuse from "fuse.js";
 import classNames from "classnames";
 import get from "lodash/get";
-import { useCallbackOnce } from "utility";
 
 import AutoSuggest from "react-autosuggest";
 
@@ -47,7 +46,9 @@ function AutoCompleteInput({
   fields,
   isInvalid,
   isValid,
-  maxItems
+  maxItems,
+  onSubmit,
+  ...rest
 }) {
   // Fuzzy search library object
   const fuse = useMemo(
@@ -66,36 +67,21 @@ function AutoCompleteInput({
 
   // Collection of suggestions
   const [suggestions, setSuggestions] = useState([]);
-  const calculateSuggestions = useCallback(
-    search => {
-      const trimmed = search.trim();
-      if (trimmed.length > MAX_FUZZY_SEARCH_LENGTH) {
-        return naiveSearch(trimmed, items, {
-          fields,
-          minLength: triggerLength,
-          maxItems
-        });
-      } else {
-        const result = fuse.search(trimmed);
-        return maxItems > 0
-          ? result.slice(0, Math.min(maxItems, result.length))
-          : result;
-      }
-    },
-    [items, fields, triggerLength, fuse, maxItems]
-  );
-
-  // Autosuggest callbacks
-  const onSuggestionsFetchRequested = useCallbackOnce(({ value }) =>
-    setSuggestions(calculateSuggestions(value))
-  );
-  const onSuggestionsClearRequested = useCallbackOnce(() => setSuggestions([]));
-
-  // Input change callback
-  const onInputChange = useCallback(
-    (_event, { newValue }) => onChange(newValue),
-    [onChange]
-  );
+  const calculateSuggestions = search => {
+    const trimmed = search.trim();
+    if (trimmed.length > MAX_FUZZY_SEARCH_LENGTH) {
+      return naiveSearch(trimmed, items, {
+        fields,
+        minLength: triggerLength,
+        maxItems
+      });
+    } else {
+      const result = fuse.search(trimmed);
+      return maxItems > 0
+        ? result.slice(0, Math.min(maxItems, result.length))
+        : result;
+    }
+  };
 
   // Calculate validation status className
   const validationClass = classNames({
@@ -103,20 +89,43 @@ function AutoCompleteInput({
     "is-invalid": isInvalid
   });
 
+  const onKeyDown = e => {
+    const code = e.keyCode || e.which;
+    // Enter keycode
+    if (code === 13) {
+      if (
+        suggestions.length === 0 ||
+        // When pressing enter with no selection, the behavior is to clear the
+        // suggestions; however, the suggestion clearing event isn't actually fired
+        // or fired in time
+        autoSuggestRef.current.getHighlightedSuggestion() == null
+      )
+        onSubmit();
+    }
+  };
+
+  // Attain ref to component instance
+  const autoSuggestRef = useRef(null);
+
   return (
     <div className={classNames("auto-complete-input", validationClass)}>
       <AutoSuggest
+        ref={autoSuggestRef}
         suggestions={suggestions}
         renderSuggestion={renderSuggestion}
         inputProps={{
           value,
           placeholder,
-          onChange: onInputChange,
-          className: validationClass
+          onChange: (_event, { newValue }) => onChange(newValue),
+          className: validationClass,
+          onKeyDown,
+          ...rest
         }}
-        onSuggestionsFetchRequested={onSuggestionsFetchRequested}
-        onSuggestionsClearRequested={onSuggestionsClearRequested}
         getSuggestionValue={getSuggestionValue}
+        onSuggestionsClearRequested={() => setSuggestions([])}
+        onSuggestionsFetchRequested={({ value }) =>
+          setSuggestions(calculateSuggestions(value))
+        }
       />
     </div>
   );
@@ -140,7 +149,8 @@ AutoCompleteInput.propTypes = {
   isValid: PropTypes.bool,
   isInvalid: PropTypes.bool,
   triggerLength: PropTypes.number,
-  maxItems: PropTypes.number
+  maxItems: PropTypes.number,
+  onSubmit: PropTypes.func
 };
 
 AutoCompleteInput.defaultProps = {
@@ -152,7 +162,8 @@ AutoCompleteInput.defaultProps = {
   isValid: false,
   isInvalid: false,
   triggerLength: 1,
-  maxItems: 5
+  maxItems: 5,
+  onSubmit() {}
 };
 
 AutoCompleteInput.displayName = "AutoCompleteInput";

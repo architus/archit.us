@@ -161,7 +161,7 @@ export function showToast(message = "", variant = "info", duration = 2000) {
   return action;
 }
 
-export function showAlert(message = "", variant = "error", duration = 2000) {
+export function showAlert(message = "", variant = "danger", duration = 2000) {
   const [action] = showNotification("alert", message, variant, duration);
   return action;
 }
@@ -225,13 +225,14 @@ export function getResponses(accessToken, guildId) {
 export function addResponse(accessToken, guildId, { trigger, response }) {
   log(`Adding new auto-response ${guildId}/${trigger}=>${response}`);
   return authApiAction(accessToken, {
-    url: `${API_BASE}/responses/${guildId}`,
+    // url: `${API_BASE}/responses/${guildId}`,
+    url: `${API_BASE}/ratelimitme`,
     label: ADD_RESPONSE,
-    method: HttpVerbs.POST,
-    data: {
-      trigger,
-      response
-    }
+    method: HttpVerbs.GET, // POST
+    // data: {
+    //   trigger,
+    //   response
+    // }
   });
 }
 

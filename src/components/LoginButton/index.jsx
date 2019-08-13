@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 import {
   useReturnQuery,
-  API_BASE,
+  API_LOGIN_BASE,
   processIfNotEmptyOrNil,
   isDefined
 } from "utility";
@@ -16,7 +16,7 @@ import "./style.scss";
 
 export function useOauthUrl() {
   const returnQuery = useReturnQuery();
-  return `${API_BASE}/login${processIfNotEmptyOrNil(
+  return `${API_LOGIN_BASE}/login${processIfNotEmptyOrNil(
     returnQuery,
     q => `?${q}`
   )}`;

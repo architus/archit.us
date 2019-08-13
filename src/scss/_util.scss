@@ -1,17 +1,21 @@
+@function highlight-shadow-value($color, $opacity: 0.2) {
+    @return unquote("0 0 0 0.2rem #{rgba($color, $opacity)}");
+}
+
 @mixin highlight-shadow($color, $opacity: 0.2, $important: false) {
     @if $important {
-        box-shadow: 0 0 0 0.2rem rgba($color, $opacity) !important;
+        box-shadow: highlight-shadow-value($color, $opacity) !important;
     } @else {
-        box-shadow: 0 0 0 0.2rem rgba($color, $opacity);
+        box-shadow: highlight-shadow-value($color, $opacity);
     }
 }
 
 @mixin highlight-active-shadow($color, $opacity: 0.2, $important: false) {
     @if $important {
-        box-shadow: 0 0 0 0.2rem rgba($color, $opacity),
+        box-shadow: highlight-shadow-value($color, $opacity),
             inset 0 3px 5px rgba(0, 0, 0, 0.125) !important;
     } @else {
-        box-shadow: 0 0 0 0.2rem rgba($color, $opacity),
+        box-shadow: highlight-shadow-value($color, $opacity),
             inset 0 3px 5px rgba(0, 0, 0, 0.125);
     }
 }

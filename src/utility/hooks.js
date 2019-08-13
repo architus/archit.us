@@ -37,12 +37,14 @@ export function useAuthDispatch(action) {
   const isAuthenticated = useSelector(state => state.session.authenticated);
   const authToken = useSelector(state => state.session.accessToken);
   const dispatch = useDispatch();
-  if (!isAuthenticated) {
-    return () =>
-      log("Authenticated dispatch attempted without valid auth session");
-  } else {
-    return (...args) => dispatch(action(authToken, ...args));
-  }
+  return useCallback(
+    (...args) => {
+      if (!isAuthenticated)
+        log("Authenticated dispatch attempted without valid auth session");
+      else dispatch(action(authToken, ...args));
+    },
+    [dispatch, isAuthenticated, authToken, action]
+  );
 }
 
 // Calculates a value only on the client, else falls back to a default value
