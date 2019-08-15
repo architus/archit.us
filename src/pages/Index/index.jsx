@@ -374,9 +374,10 @@ const CallToAction = connect(mapStateToLoggedIn)(({ loggedIn }) => {
 CallToAction.displayName = "CallToAction";
 
 const TryCTA = ({ left }) => (
-  <em className="try">
-    <Icon name={`chevron-${left ? "left" : "right"}`} className="mr-2" />
+  <em className={classNames("try", { "text-right": !left })}>
+    {left && <Icon name="chevron-left" className="mr-2" />}
     Try it out
+    {!left && <Icon name="chevron-right" className="ml-2" />}
   </em>
 );
 
