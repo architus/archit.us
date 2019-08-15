@@ -6,7 +6,7 @@ import reduxWebsocket from "@giantmachines/redux-websocket";
 import { batchDispatchMiddleware } from "redux-batched-actions";
 
 import saga from "store/saga";
-import ApiMiddleware from "store/api";
+import ApiMiddleware from "store/api/middleware";
 
 const SagaMiddleware = createSagaMiddleware();
 const WebsocketMiddleware = reduxWebsocket();
