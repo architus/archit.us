@@ -35,8 +35,6 @@ export const API_BASE = process.env.PRODUCTION_URL
   ? "https://api.archit.us"
   : "https://api.archit.us:8000";
 
-export const API_LOGIN_BASE = "https://api.archit.us:8000";
-
 export const WS_API_BASE = process.env.PRODUCTION_URL
   ? "wss://ws.archit.us"
   : "wss://ws.archit.us";
