@@ -18,13 +18,7 @@ import {
   localEditResponse,
   localDeleteResponse
 } from "store/actions";
-import {
-  useAuthDispatch,
-  isDefined,
-  isNil,
-  useCallbackOnce,
-  alphanumericRegex
-} from "utility";
+import { useAuthDispatch, isDefined, isNil, useCallbackOnce } from "utility";
 import { AppScrollContext } from "dynamic/AppRoot";
 
 import DataGrid, { NumericFilter } from "components/DataGrid";
@@ -201,7 +195,7 @@ function AutoResponses({ guildId }) {
           return true;
         }
       },
-      processValue: value => value.replace(alphanumericRegex, "")
+      processValue: value => value.replace(/[_*\W]+/g, "")
     },
     {
       key: "response",
