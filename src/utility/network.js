@@ -37,4 +37,4 @@ export const API_BASE = process.env.PRODUCTION_URL
 
 export const WS_API_BASE = process.env.PRODUCTION_URL
   ? "wss://ws.archit.us"
-  : "wss://ws.archit.us";
+  : "wss://ws.archit.us:8000";
