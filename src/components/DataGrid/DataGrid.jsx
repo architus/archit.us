@@ -10,9 +10,10 @@ import {
 } from "utility";
 
 import Icon from "components/Icon";
+import Tooltip from "components/Tooltip";
 import HelpTooltip from "components/HelpTooltip";
 import Switch from "components/Switch";
-import { Spinner } from "react-bootstrap";
+import Placeholder from "components/Placeholder";
 import ReactDataGrid from "react-data-grid";
 import { Data } from "react-data-grid-addons";
 import AddRowModal from "components/AddRowModal";
@@ -27,6 +28,7 @@ function DataGrid({
   onRowUpdate,
   onRowDelete,
   isLoading,
+  loadingRowCount,
   emptyLabel,
   transformRow,
   columnWidths,
@@ -34,6 +36,7 @@ function DataGrid({
   dialogTitle,
   canDeleteRow,
   toolbarComponents,
+  viewModeButton,
   ...rest
 }) {
   // Escape hatch to access library methods imperatively
@@ -98,16 +101,10 @@ function DataGrid({
   const EmptyDisplay = useCallback(
     () => (
       <div className="empty-placeholder">
-        {isLoading ? (
-          <Spinner animation="border" variant="primary" role="status">
-            <span className="sr-only">Loading...</span>
-          </Spinner>
-        ) : (
-          <span className="empty-label shadow-sm">{emptyLabel}</span>
-        )}
+        <span className="empty-label shadow-sm">{emptyLabel}</span>
       </div>
     ),
-    [isLoading, emptyLabel]
+    [emptyLabel]
   );
 
   // Row updating
@@ -168,14 +165,50 @@ function DataGrid({
   );
 
   // Direct callbacks
-  const rowGetter = useCallback(i => transformRow(filteredRows[i]), [
-    transformRow,
-    filteredRows
-  ]);
+  const rowGetter = useCallback(
+    i =>
+      isLoading
+        ? generateFakeRow(columns, i * (columns.length + 1))
+        : transformRow(filteredRows[i]),
+    [transformRow, filteredRows, isLoading, columns]
+  );
   const onAddFilter = useCallbackOnce(filter =>
     setFilters(handleFilterChange(filter))
   );
   const onClearFilters = useCallbackOnce(() => setFilters({}));
+
+  // Column formatters
+  // Use Ref to bypass incorrect formatter generation usage
+  const isLoadingRef = useRef(isLoading);
+  isLoadingRef.current = isLoading;
+  const derivedColumns = useMemo(
+    () =>
+      columnMeta.map(c => ({
+        ...c,
+        formatter: props => {
+          return (isLoadingRef.current
+            ? isDefined(c.placeholderFormatter)
+              ? c.placeholderFormatter
+              : PlaceholderFormatter
+            : c.formatter)(props);
+        },
+        editable: !isLoading && c.editable
+      })),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isLoading, columnMeta]
+  );
+
+  // View mode (compact/comfy/sparse)
+  const [viewMode, setViewMode] = useState(1);
+  const updateViewMode = i => {
+    setViewMode(i);
+    setTimeout(() => {
+      dataGrid.current.base.viewport.metricsUpdated();
+      dataGrid.current.base.viewport.onScroll(
+        dataGrid.current.base.viewport.canvas._scroll
+      );
+    });
+  };
 
   return useClientSide(
     () => (
@@ -183,9 +216,9 @@ function DataGrid({
         <div className="table-outer">
           <ReactDataGrid
             ref={dataGrid}
-            columns={columnMeta}
+            columns={derivedColumns}
             rowGetter={rowGetter}
-            rowsCount={filteredRows.length}
+            rowsCount={isLoading ? loadingRowCount : filteredRows.length}
             onGridRowsUpdated={handleRowUpdate}
             onCellSelected={onCellSelected}
             onRowClick={onRowClick}
@@ -194,8 +227,9 @@ function DataGrid({
             onGridSort={onGridSort}
             onAddFilter={onAddFilter}
             onClearFilters={onClearFilters}
-            rowHeight={45}
+            rowHeight={[60, 45, 35][viewMode]}
             headerFiltersHeight={55}
+            headerRowHeight={45}
             rowRenderer={RowRenderer}
             getCellActions={getCellActions}
             enableRowSelect={null}
@@ -205,6 +239,9 @@ function DataGrid({
                 onAddRow={onAddRow}
                 addRowButton={addRowButton}
                 slot={toolbarComponents}
+                viewModeButton={viewModeButton}
+                setViewMode={updateViewMode}
+                viewMode={viewMode}
               />
             }
             {...rest}
@@ -240,6 +277,8 @@ DataGrid.propTypes = {
   addRowButton: PropTypes.bool,
   dialogTitle: PropTypes.string,
   canDeleteRow: PropTypes.func,
+  loadingRowCount: PropTypes.number,
+  viewModeButton: PropTypes.bool,
   toolbarComponents: PropTypes.oneOfType([
     PropTypes.node,
     PropTypes.arrayOf(PropTypes.node)
@@ -250,13 +289,15 @@ DataGrid.defaultProps = {
   onRowAdd() {},
   onRowUpdate() {},
   onRowDelete() {},
-  canDeleteRow: r => true,
+  canDeleteRow: () => true,
   transformRow: r => r,
   columns: [],
   baseColumnMeta: {},
   isLoading: false,
   emptyLabel: "No items to display",
-  addRowButton: true
+  addRowButton: true,
+  loadingRowCount: 5,
+  viewModeButton: true
 };
 
 DataGrid.displayName = "DataGrid";
@@ -265,7 +306,30 @@ DataGrid.displayName = "DataGrid";
 // ? Sub components
 // ? ==============
 
-function ToolbarComponent({ addRowButton, onAddRow, onToggleFilter, slot }) {
+const viewModes = [
+  {
+    icon: "sparse",
+    name: "Sparse"
+  },
+  {
+    icon: "comfy",
+    name: "Comfy"
+  },
+  {
+    icon: "compact",
+    name: "Compact"
+  }
+];
+
+function ToolbarComponent({
+  addRowButton,
+  onAddRow,
+  onToggleFilter,
+  slot,
+  viewModeButton,
+  setViewMode,
+  viewMode
+}) {
   // Filter show state
   const [show, setShow] = useState(false);
   const onChange = useCallback(() => {
@@ -285,7 +349,7 @@ function ToolbarComponent({ addRowButton, onAddRow, onToggleFilter, slot }) {
               className="mr-sm-3"
             />
           </span>
-          {addRowButton ? (
+          {addRowButton && (
             <button
               className={classNames("btn-primary mr-3")}
               onClick={onAddRow}
@@ -293,7 +357,24 @@ function ToolbarComponent({ addRowButton, onAddRow, onToggleFilter, slot }) {
               <Icon className="mr-2" name="plus" />
               Add Row
             </button>
-          ) : null}
+          )}
+          {viewModeButton && (
+            <div className="view-mode-toolbar">
+              {viewModes.map(({ icon, name }, i) => (
+                <button
+                  className={classNames("view-mode-toolbar--button", {
+                    active: viewMode === i
+                  })}
+                  key={icon}
+                  onClick={() => setViewMode(i)}
+                >
+                  <Tooltip top text={name}>
+                    <Icon name={icon} />
+                  </Tooltip>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </>
@@ -304,6 +385,9 @@ ToolbarComponent.propTypes = {
   onToggleFilter: PropTypes.func,
   addRowButton: PropTypes.bool,
   onAddRow: PropTypes.func,
+  viewModeButton: PropTypes.bool,
+  setViewMode: PropTypes.func,
+  viewMode: PropTypes.number,
   slot: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)])
 };
 
@@ -321,6 +405,23 @@ RowRenderer.propTypes = {
 };
 
 RowRenderer.displayName = "RowRenderer";
+
+const p = 137;
+const q = 11;
+const min = 4;
+function PlaceholderFormatter({ value }) {
+  const length = ((value * p) % q) + min;
+  const percentage = (length / (min + q)) * 100;
+  return (
+    <Placeholder.Auto block width={`${percentage.toFixed(3)}%`} height={20} />
+  );
+}
+
+PlaceholderFormatter.propTypes = {
+  value: PropTypes.any
+};
+
+PlaceholderFormatter.displayName = "PlaceholderFormatter";
 
 function HelpColumnWrapper({ name, renderer, tooltip }) {
   return (
@@ -364,6 +465,14 @@ function handleFilterChange(newFilter) {
     }
     return newState;
   };
+}
+
+function generateFakeRow(columns, row_idx) {
+  let row = {};
+  for (let i = 0; i < columns.length; ++i) {
+    row[columns[i].key] = row_idx + i;
+  }
+  return row;
 }
 
 function getRows(rows, filters) {

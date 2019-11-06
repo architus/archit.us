@@ -19,19 +19,9 @@ export function clientSide(component) {
 
 // Gets return query from the window location if not in production
 export function useReturnQuery() {
-  console.log("useReturnQuery was called :)");
   const [returnQuery, setReturnQuery] = useState("");
   useEffectOnce(() => {
-    console.log("inside effect :)");
-    console.log("state = " + returnQuery);
     if (!process.env.PRODUCTION_URL && returnQuery === "") {
-      console.log("setting state because not production :)");
-      console.log(
-        "state = " +
-          `return=${encodeURIComponent(
-            `${window.location.protocol}//${window.location.host}/app`
-          )}`
-      );
       setReturnQuery(
         `return=${encodeURIComponent(
           `${window.location.protocol}//${window.location.host}/app`
@@ -39,7 +29,6 @@ export function useReturnQuery() {
       );
     }
   });
-  console.log("state = " + returnQuery);
   return returnQuery;
 }
 

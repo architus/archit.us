@@ -26,6 +26,7 @@ input.form-control.editor-main {
     border: none;
     @include dark {
         background-color: $dark-200 !important;
+        color: $-light !important;
     }
 }
 
@@ -411,6 +412,37 @@ input.form-control.editor-main {
                 @include highlight-shadow($-primary, 0.4);
             }
             background-color: color-adjust($-dark, 10%) !important;
+        }
+    }
+}
+
+.view-mode-toolbar {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    margin-right: 1rem;
+
+    &--button {
+        @extend %button-blank;
+        padding: 0.65rem 0.4rem !important;
+
+        @include light {
+            color: $-dark !important;
+        }
+
+        &:not(.active) {
+            opacity: 0.5;
+        }
+
+        &.active {
+            @include light {
+                background-color: rgba($-dark, 0.1)
+            }
+
+            @include dark {
+                background-color: rgba($-light, 0.1)
+            }
         }
     }
 }

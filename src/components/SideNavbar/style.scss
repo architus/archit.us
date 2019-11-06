@@ -38,8 +38,6 @@
             height: auto;
 
             @include transitions("opacity, height");
-            @include dark-fg;
-            @include light-fg;
         }
 
         &:not(.active) {
@@ -63,6 +61,8 @@
             &:hover {
                 @include light-bg($side-navbar-tab-active-hover-light-bg);
                 @include dark-bg($side-navbar-tab-active-hover-dark-bg);
+                @include light-fg($side-navbar-tab-active-hover-light-fg);
+                @include dark-fg($side-navbar-tab-active-hover-dark-fg);
 
                 #{$this}--top-corner,
                 #{$this}--bottom-corner {
@@ -74,6 +74,10 @@
                             $side-navbar-tab-active-hover-dark-bg
                         );
                     }
+                }
+
+                svg {
+                    opacity: 0.8;
                 }
             }
 

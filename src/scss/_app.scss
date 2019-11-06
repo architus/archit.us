@@ -13,14 +13,22 @@ $guild-sidebar-light-bg: $light-200;
     @include light-bg($guild-sidebar-light-bg);
 }
 
+// AppContent
+$app-content-dark-bg: $dark-300;
+$app-content-light-bg: $-light;
+$app-content-dark-fg: $-light;
+$app-content-light-fg: $-dark;
+
 // SideNavbar
 $side-navbar-dark-bg: $dark-200;
-$side-navbar-light-bg: $light-300 ;
+$side-navbar-light-bg: $light-300;
 $side-navbar-tab-border-radius: 8px;
-$side-navbar-tab-hover-dark-bg: $dark-150;
-$side-navbar-tab-hover-light-bg: $light-250;
-$side-navbar-tab-active-hover-dark-bg: $dark-250;
-$side-navbar-tab-active-hover-light-bg: $light-350;
+$side-navbar-tab-hover-dark-bg: $side-navbar-dark-bg;
+$side-navbar-tab-hover-light-bg: $side-navbar-light-bg;
+$side-navbar-tab-active-hover-dark-bg: $app-content-dark-bg;
+$side-navbar-tab-active-hover-light-bg: $app-content-light-bg;
+$side-navbar-tab-active-hover-dark-fg: rgba($-light, 0.8);
+$side-navbar-tab-active-hover-light-fg: rgba($-dark, 0.8);
 $side-navbar-tab-svg-dark-fg: $-light;
 $side-navbar-tab-svg-light-fg: $-dark;
 
@@ -28,12 +36,6 @@ $side-navbar-tab-svg-light-fg: $-dark;
     @include dark-bg($side-navbar-dark-bg);
     @include light-bg($side-navbar-light-bg);
 }
-
-// AppContent
-$app-content-dark-bg: $dark-300;
-$app-content-light-bg: $-light;
-$app-content-dark-fg: $-light;
-$app-content-light-fg: $-dark;
 
 %app-content {
     @include light {

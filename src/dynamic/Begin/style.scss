@@ -106,6 +106,8 @@
             white-space: normal;
             line-height: 1.1;
             @extend %center;
+            $base-drop-shadow: 0 6px 16px rgba($-primary, 0.5);
+            box-shadow: $base-drop-shadow;
 
             &:hover {
                 background-color: color-adjust($-primary, 10%);
@@ -113,7 +115,7 @@
             }
 
             &:focus {
-                @include highlight-shadow($-primary);
+                box-shadow: highlight-shadow-value($-primary, 0.2), $base-drop-shadow;
             }
         }
     }

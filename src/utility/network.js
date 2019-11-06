@@ -31,7 +31,7 @@ export const HttpVerbs = {
   DELETE: "DELETE"
 };
 
-export const API_BASE = process.env.PRODUCTION_URL
+export const API_BASE = "https://api.archit.us"; process.env.PRODUCTION_URL
   ? "https://api.archit.us:8000"
   : "https://api.archit.us:8000";
 
