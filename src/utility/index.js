@@ -208,8 +208,8 @@ export const API_BASE = process.env.PRODUCTION_URL
   : "https://api.archit.us";
 
 export const WS_API_BASE = process.env.PRODUCTION_URL
-  ? "wss://api.archit.us:8300"
-  : "wss://api.archit.us:8300";
+  ? "wss://ws.archit.us"
+  : "wss://ws.archit.us";
 
 export * from "utility/colors";
 export * from "utility/string";
