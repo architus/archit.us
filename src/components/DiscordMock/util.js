@@ -1,11 +1,16 @@
-import { takeOrReplenish, invertMap, includes, isNil } from "utility";
+import {
+  takeOrReplenish,
+  invertMap,
+  includes,
+  isNil,
+  generateName
+} from "utility";
 import {
   transformMessage,
   transformReaction,
   transformOutgoingMessage
 } from "components/DiscordMock/transform";
 import { omit, pick } from "lodash";
-import { generateName } from "utility/string";
 
 // ? ==========================
 // ? User creation utilities

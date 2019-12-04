@@ -1,4 +1,5 @@
-import { Nil, Predicate, RecordKey, Comparator, Supplier } from "./types";
+import { randomInt } from "./primitives";
+import { Nil, Predicate, RecordKey, Comparator } from "./types";
 
 /**
  * Determines whether a value is defined (non-undefined or null). Returns true if the value
@@ -18,24 +19,6 @@ export function isDefined<T>(value: Nil | T): value is T {
  */
 export function isNil<T>(value: Nil | T): value is Nil {
   return value == null;
-}
-
-/**
- * Uses a value if it is non-nill, otherwise uses some default value
- *
- * @param value - The value to use if non-nil
- * @param defaultValue - The value to use if the first value is nil
- */
-export function coalesce<T, U extends Exclude<T, Function>>(
-  value: T | Nil,
-  defaultValue: U | Supplier<T>
-): T {
-  if (isDefined(value)) return value;
-  else if (typeof defaultValue === "function") {
-    return (defaultValue as Supplier<T>)();
-  } else {
-    return defaultValue;
-  }
 }
 
 // ? ========================
@@ -177,6 +160,15 @@ export function includes<T>(array: T[], func: Predicate<T>): boolean {
 }
 
 /**
+ * Selects a random item from an array
+ * @param arr Array to pull an item from
+ */
+export function randomItem<T>(arr: T[]): T | null {
+  if (arr.length <= 0) return null;
+  else return arr[randomInt(arr.length)];
+}
+
+/**
  * Performs a binary search on the pre-sorted array to find the given element's index, or
  * -1 if it could not be found. Guaranteed to run in O(lg(n)) time for input size of n
  *
@@ -205,8 +197,8 @@ export function binarySearch<T>(
   }
 ): number {
   const { start, end, comparator } = options;
-  let startIndex: number = coalesce(start, 0);
-  let endIndex: number = coalesce(end, sortedArr.length - 1);
+  let startIndex: number = start ?? 0;
+  let endIndex: number = end ?? sortedArr.length - 1;
   while (startIndex <= endIndex) {
     const midpoint: number = Math.floor((startIndex + endIndex) / 2);
     const comparatorResult = comparator(sortedArr[midpoint], element);

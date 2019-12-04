@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { formatAMPM, getScrollDistance, scrollToBottom } from "utility";
+import { formatAmPm, getScrollDistance, scrollToBottom } from "utility";
 
 import MessageClump from "components/DiscordMock/MessageClump";
 
@@ -35,7 +35,7 @@ class MessageView extends React.Component {
   render() {
     const { clumps, className, onReact, onUnreact, ...rest } = this.props;
     const makeKey = clump =>
-      `${clump.sender.username}=>${formatAMPM(
+      `${clump.sender.username}=>${formatAmPm(
         clump.timestamp
       )}.${clump.timestamp.getSeconds()}.${clump.timestamp.getMilliseconds()}`;
     return (

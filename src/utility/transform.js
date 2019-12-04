@@ -1,4 +1,4 @@
-import { replaceAll } from "./string";
+import { replaceAll } from "./primitives";
 
 // TODO migrate transformation pipeline library to this file
 

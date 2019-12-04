@@ -1,7 +1,8 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { globalHistory } from "@reach/router";
-import { log, addMissingUnit, collator } from "./string";
+import { addMissingUnit, collator } from "./primitives";
+import { log } from "./logging";
 import { isClient } from "./document";
 
 // ? =============

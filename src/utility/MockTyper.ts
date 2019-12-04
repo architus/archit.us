@@ -9,13 +9,23 @@ export interface MockTyperOptions {
   onFinish: (() => void) | null;
 }
 
-export interface MockTyperState {
-  currentLine: number;
+type Typing = {
+  readonly _kind: "typing";
   currentCharacter: number;
-  waitingLine: boolean;
-  waitingCounter: number;
-  finished: boolean;
-}
+  currentLine: number;
+};
+
+type Waiting = {
+  readonly _kind: "waiting";
+  currentLine: number;
+  durationRemaining: number;
+};
+
+type Idle = {
+  readonly _kind: "idle";
+};
+
+type MockTyperState = Typing | Waiting | Idle;
 
 /**
  * Class that simulates a user steadily typing a list of lines of text, one after
@@ -27,16 +37,6 @@ export class MockTyper {
   private state: MockTyperState;
   private options: MockTyperOptions;
   private tickTimer: number | null;
-
-  static makeInitialState(): MockTyperState {
-    return {
-      waitingLine: false,
-      waitingCounter: 0,
-      finished: false,
-      currentCharacter: 0,
-      currentLine: 0
-    };
-  }
 
   constructor({
     keypressDelay = 125,
@@ -52,11 +52,12 @@ export class MockTyper {
       onKeypress,
       onEnter,
       onFinish,
-      lines
+      // Perform shallow copy to prevent mutation safety concerns
+      lines: [...lines]
     };
 
     this.tick = this.tick.bind(this);
-    this.state = MockTyper.makeInitialState();
+    this.state = this.calculateInitialState();
     this.tickTimer = this.startTickTimer();
   }
 
@@ -72,7 +73,9 @@ export class MockTyper {
       ...this.options,
       ...options
     };
-    this.state = MockTyper.makeInitialState();
+    // Perform shallow copy to prevent mutation safety concerns
+    if (isDefined(options.lines)) this.options.lines = [...options.lines];
+    this.state = this.calculateInitialState();
     this.tickTimer = this.startTickTimer();
   }
 
@@ -101,56 +104,95 @@ export class MockTyper {
     return window.setInterval(this.tick, this.options.keypressDelay);
   }
 
+  private calculateInitialState(): MockTyperState {
+    const { lines } = this.options;
+
+    if (lines.length === 0) {
+      // Nothing to type, go immediately to idle
+      return {
+        _kind: "idle"
+      };
+    } else {
+      // Start at the beginning of the first line
+      return {
+        _kind: "typing",
+        currentLine: 0,
+        currentCharacter: 0
+      };
+    }
+  }
+
   private tick(): void {
-    const { waitingLine, finished } = this.state;
-    if (finished) return;
-    if (waitingLine) {
-      this.updateWaitingLine();
-    } else {
-      this.updateTyping();
+    switch (this.state._kind) {
+      case "idle":
+        return;
+
+      case "typing":
+        this.updateTyping(this.state);
+        break;
+
+      case "waiting":
+        this.updateWaiting(this.state);
+        break;
     }
   }
 
-  private updateWaitingLine(): void {
-    const { waitingCounter } = this.state;
-    const { lineDelay } = this.options;
-    if (waitingCounter > lineDelay) {
-      // Finished with waiting on the line
-      this.state.waitingLine = false;
-      this.state.waitingCounter = 0;
-    } else {
-      // Continue waiting
-      this.state.waitingCounter += this.options.keypressDelay;
+  private updateWaiting(state: Waiting): MockTyperState {
+    const { keypressDelay } = this.options;
+    state.durationRemaining -= keypressDelay;
+
+    // Transition condition
+    if (state.durationRemaining <= 0) {
+      // Start typing on the next line
+      return {
+        _kind: "typing",
+        currentCharacter: 0,
+        currentLine: state.currentLine + 1
+      };
     }
+
+    return state;
   }
 
-  private updateTyping(): void {
+  private updateTyping(state: Typing): MockTyperState {
     const { lines, onKeypress } = this.options;
-    const { currentLine, currentCharacter } = this.state;
-    if (currentCharacter >= lines[currentLine].length) {
-      this.handleEndOfLine();
-    } else {
+    const line = lines[state.currentLine];
+
+    if (state.currentCharacter < line.length) {
       // Type a single character
-      const typedChar = lines[currentLine].charAt(currentCharacter);
-      if (isDefined(onKeypress)) onKeypress(typedChar);
-      ++this.state.currentCharacter;
+      const typedChar = line.charAt(state.currentCharacter);
+      onKeypress?.(typedChar);
+      ++state.currentCharacter;
+    } else {
+      // Transition conditions
+      return this.handleEndOfLine(state);
     }
+
+    return state;
   }
 
-  private handleEndOfLine(): void {
-    const { lines, onEnter, onFinish } = this.options;
-    const { currentLine } = this.state;
-    if (isDefined(onEnter)) onEnter(lines[currentLine]);
-    if (currentLine === lines.length - 1) {
-      // Last line, finished
-      this.state.finished = true;
-      if (isDefined(onFinish)) onFinish();
+  private handleEndOfLine(state: Typing): MockTyperState {
+    const { lines, onEnter, onFinish, lineDelay } = this.options;
+    const line = lines[state.currentLine];
+
+    // Notify listener
+    onEnter?.(line);
+
+    if (state.currentLine === lines.length - 1) {
+      // Transition condition: notify listeners, stop, and move to idle
+      onFinish?.();
       this.stop();
+
+      return {
+        _kind: "idle"
+      };
     } else {
-      // Go to the next line, but first wait
-      ++this.state.currentLine;
-      this.state.currentCharacter = 0;
-      this.state.waitingLine = true;
+      // Transition condition: begin waiting
+      return {
+        _kind: "waiting",
+        currentLine: state.currentLine,
+        durationRemaining: lineDelay
+      };
     }
   }
 }

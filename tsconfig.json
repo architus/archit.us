@@ -3,7 +3,7 @@
     "target": "es6",
     "module": "esnext",
     "lib": ["es6", "dom"],
-    "moduleResolution": "node",
+    "moduleResolution": "classic",
     "skipLibCheck": true,
     "isolatedModules": true,
     "noEmit": true,
@@ -15,5 +15,9 @@
     "esModuleInterop": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
+    "baseUrl": "./",
+    "paths": {
+      "src/*": ["./src/*"]
+    }
   }
 }

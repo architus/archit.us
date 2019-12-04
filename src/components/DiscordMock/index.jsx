@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { addMissingUnit, randomDigitString, isNil, MockTyper } from "utility";
+import { addMissingUnit, randomNumericString, isNil, MockTyper } from "utility";
 import { sendMessage } from "store/actions";
 import { SLICED_LENGTH } from "store/reducers/interpret";
 import {
@@ -38,7 +38,7 @@ class DiscordMock extends React.Component {
   constructor(props) {
     super(props);
     // Class level fields (non-stateful)
-    this.guildId = randomDigitString(9);
+    this.guildId = randomNumericString(9);
     this.thisUser = createMockUser(this.guildId);
     this.idProvisioner = new IdProvisioner();
     this.users = this.buildUserMap(this.thisUser, architusUser);
