@@ -7,7 +7,7 @@
     "build": "react-static build",
     "analyze": "react-static build --analyze",
     "serve": "serve dist -p 3000",
-    "lint": "eslint ./src/**/*.js ./src/**/*.jsx",
+    "lint": "eslint  -f unix \"src/**/*.{js,jsx,ts,tsx}\"",
     "storybook": "export NODE_PATH=src/:.storybook/ && start-storybook -p 9009 -s public",
     "build-storybook": "export NODE_PATH=src/:.storybook/ && build-storybook -c .storybook -s public",
     "webpack-build": "react-static build --webpack-stats",
@@ -75,6 +75,9 @@
     ]
   },
   "devDependencies": {
+    "@types/react": "^16.9.14",
+    "@typescript-eslint/eslint-plugin": "^2.10.0",
+    "@typescript-eslint/parser": "^2.10.0",
     "babel-eslint": "9.x",
     "eslint": "5.x",
     "eslint-config-prettier": "^6.0.0",
@@ -86,8 +89,11 @@
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-react": "7.x",
     "eslint-plugin-react-hooks": "^1.7.0",
+    "eslint-plugin-tsdoc": "^0.2.0",
     "prettier": "^1.18.2",
+    "react-static-plugin-typescript": "^7.2.3",
     "serve": "10.1.2",
+    "typescript": "^3.7.3",
     "webpack-bundle-analyzer": "^3.4.1"
   }
 }

@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "esnext",
+    "lib": ["es6", "dom"],
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "allowJs": true,
+    "jsx": "preserve",
+    "sourceMap": true,
+    "removeComments": false,
+    "strict": true,
+    "esModuleInterop": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+  }
+}
