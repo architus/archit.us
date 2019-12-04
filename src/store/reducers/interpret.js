@@ -1,5 +1,5 @@
 import { SOCKET } from "store/actions";
-import { pick } from "utility";
+import { pick } from "lodash";
 
 export const initial = {
   responseQueue: []

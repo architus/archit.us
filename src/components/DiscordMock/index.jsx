@@ -1,8 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { addMissingUnit, randomDigitString, isNil } from "utility";
-import MockTyper from "utility/MockTyper";
+import { addMissingUnit, randomDigitString, isNil, MockTyper } from "utility";
 import { sendMessage } from "store/actions";
 import { SLICED_LENGTH } from "store/reducers/interpret";
 import {

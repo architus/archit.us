@@ -6,7 +6,6 @@ import { CustomEmojiExtension } from "components/DiscordMock/CustomEmojiExtensio
 import { connect, useSelector, shallowEqual, useDispatch } from "react-redux";
 import { useOauthUrl } from "components/LoginButton";
 import { mapStateToLoggedIn } from "store/reducers/session";
-import { useEffectOnce, isDefined } from "utility";
 import { useRouteData } from "react-static";
 
 import { getGuildCount } from "store/actions";

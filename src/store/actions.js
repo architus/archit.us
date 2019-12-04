@@ -1,11 +1,4 @@
-import {
-  HttpVerbs,
-  pick,
-  log,
-  API_BASE,
-  WS_API_BASE,
-  isDefined
-} from "utility";
+import { HttpVerbs, log, API_BASE, WS_API_BASE, isDefined } from "utility";
 import {
   TOKEN_EXCHANGE,
   IDENTIFY_SESSION,
@@ -17,6 +10,7 @@ import {
   DELETE_RESPONSE
 } from "store/api/labels";
 import { connect, send } from "@giantmachines/redux-websocket";
+import { pick } from "lodash";
 import { batchActions } from "redux-batched-actions";
 
 export const SIGN_OUT = "SIGN_OUT";
