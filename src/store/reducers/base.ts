@@ -1,7 +1,7 @@
 import { consume } from "Utility";
 import { Supplier } from "Utility/types";
 import { Action, StoreSliceState, Reducer } from "Store/types";
-import { SESSION_SIGN_OUT } from "./session";
+import { SESSION_SIGN_OUT, SESSION_NAMESPACE } from "./session";
 
 // ? ==================
 // ? Higher order slices
@@ -39,7 +39,10 @@ export function sessionAware<S extends StoreSliceState>(
   reducer: Reducer<S>
 ): Reducer<S> {
   return (state, action) => {
-    if (action.type === SESSION_SIGN_OUT) {
+    if (
+      action.namespace === SESSION_NAMESPACE &&
+      action.type === SESSION_SIGN_OUT
+    ) {
       return consume(initialState);
     } else {
       return reducer(state, action);

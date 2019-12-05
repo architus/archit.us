@@ -1,5 +1,5 @@
 import { randomInt } from "./primitives";
-import { Nil, Predicate, RecordKey, Comparator } from "./types";
+import { Nil, Predicate, RecordKey, Comparator, IPrototype } from "./types";
 
 /**
  * Determines whether a value is defined (non-undefined or null). Returns true if the value
@@ -106,6 +106,28 @@ export function takeOrReplenish<K extends RecordKey, V>(
     }
   }
   return result;
+}
+
+/**
+ *  Maps the entries of an object to another object
+ * 
+ * @param original The original object to map the entries of
+ * @param _ The mapping function to apply
+ * @param keepPrototype Whether or not to construct the new object with the prototype
+ * of the original. Defaults to `false` for type safety concerns
+ */
+export function map<A, B, K extends RecordKey>(
+  original: Record<K, A>,
+  _: (a: A, k: K) => B,
+  keepPrototype = false
+): Record<K, B> {
+  const newObj: Record<K, B> = new Object(
+    keepPrototype ? Object.getPrototypeOf(original) : null
+  ) as Record<K, B>;
+  for (const [key, value] of entries(original)) {
+    newObj[key] = _(value, key);
+  }
+  return newObj;
 }
 
 // ? ========================

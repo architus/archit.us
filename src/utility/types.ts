@@ -96,3 +96,11 @@ export const DateFromString = new t.Type<Date, string, unknown>(
     }),
   a => a.toISOString()
 );
+
+export type NotificationType = "alert" | "toast";
+export type NotificationId = number;
+export type NotificationVariant = "success" | "danger" | "warning" | "info";
+export interface Notification {
+  id: number;
+  variant: NotificationVariant;
+}

@@ -9,7 +9,7 @@ import {
 } from "Utility/index";
 import { User, DateFromString } from "Utility/types";
 import { Option, Some, None } from "Utility/option";
-import { StoreSlice, Reducer } from "Store/types";
+import { StoreSlice, Reducer, ActionBase } from "Store/types";
 import { scopeReducer } from "./base";
 import { isRight } from "fp-ts/lib/Either";
 import * as t from "io-ts";
@@ -20,25 +20,23 @@ import * as t from "io-ts";
 
 export const LOCAL_STORAGE_KEY = "session";
 
-const SESSION_NAMESPACE = "session";
-const SESSION_SIGN_OUT = "session:signOut";
-const SESSION_LOAD = "session:load";
+export const SESSION_NAMESPACE = "session";
+export const SESSION_SIGN_OUT = "signOut";
+export const SESSION_LOAD = "load";
 
-interface SessionSignOutAction {
-  readonly type: typeof SESSION_SIGN_OUT;
+type SessionBase<T> = ActionBase<T, typeof SESSION_NAMESPACE>;
+export type SessionAction = SessionSignOutAction | SessionLoadAction;
+
+interface SessionSignOutAction extends SessionBase<typeof SESSION_SIGN_OUT> {
+  readonly payload: void;
 }
 
-interface SessionLoadAction {
-  readonly type: typeof SESSION_LOAD;
+interface SessionLoadAction extends SessionBase<typeof SESSION_LOAD> {
   readonly payload: {
     readonly user: User;
     readonly access: Access;
   };
 }
-
-export type SessionAction = (SessionSignOutAction | SessionLoadAction) & {
-  readonly namespace: typeof SESSION_NAMESPACE;
-};
 
 /**
  * Tagged union ADT representing the current session state. `Session.state` can either be
