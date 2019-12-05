@@ -1,5 +1,5 @@
 import { sessionAware } from "./session";
-import { isDefined } from "utility";
+import { isDefined } from "Utility";
 import {
   LOAD_RESPONSES,
   LOCAL_ADD_RESPONSE,

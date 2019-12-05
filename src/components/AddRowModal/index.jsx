@@ -12,7 +12,7 @@ import {
   isNil,
   binarySearch,
   createObject
-} from "utility";
+} from "Utility";
 
 import { Modal, Button, Form } from "react-bootstrap";
 

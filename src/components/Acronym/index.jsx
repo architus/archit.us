@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { multiplyDimension, toAcronym } from "utility";
+import { multiplyDimension, toAcronym } from "Utility";
 
 function Acronym({ name, baseFontSize = "1rem" }) {
   const acronymText = toAcronym(name);

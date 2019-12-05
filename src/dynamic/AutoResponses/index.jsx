@@ -18,7 +18,7 @@ import {
   localEditResponse,
   localDeleteResponse
 } from "store/actions";
-import { useAuthDispatch, isDefined, isNil, useCallbackOnce } from "utility";
+import { useAuthDispatch, isDefined, isNil, useCallbackOnce } from "Utility";
 import { AppScrollContext } from "dynamic/AppRoot";
 
 import DataGrid, { NumericFilter } from "components/DataGrid";

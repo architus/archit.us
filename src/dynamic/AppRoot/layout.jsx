@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { colorBlend } from "utility";
+import { colorBlend } from "Utility";
 import useDarkMode from "use-dark-mode";
 import classNames from "classnames";
 

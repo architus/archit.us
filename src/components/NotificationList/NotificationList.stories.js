@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { select, boolean, number } from "@storybook/addon-knobs";
 import { action } from "@storybook/addon-actions";
-import { useCallbackOnce } from "utility";
+import { useCallbackOnce } from "Utility";
 
 import NotificationList from "./index";
 import { Form, Col, Button } from "react-bootstrap";

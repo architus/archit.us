@@ -2,8 +2,12 @@ import { replaceAll } from "./primitives";
 
 // TODO migrate transformation pipeline library to this file
 
-export function highlightTokens(string, tokens, firstOccurrence = false) {
-  let processed = string;
+export function highlightTokens(
+  string: string,
+  tokens: Array<{ token: string | string[]; className: string }>,
+  firstOccurrence = false
+): string {
+  let processed: string = string;
   tokens.forEach(({ token, className }) => {
     if (!Array.isArray(token)) {
       processed = replaceToken(processed, token, className, firstOccurrence);
@@ -16,16 +20,16 @@ export function highlightTokens(string, tokens, firstOccurrence = false) {
   return processed;
 }
 
-function makeTokenSpan(content, className) {
+function makeTokenSpan(content: string, className: string): string {
   return `<span class="${className}">${content}</span>`;
 }
 
 export function replaceToken(
-  string,
-  token,
-  className,
+  string: string,
+  token: string | RegExp,
+  className: string,
   firstOccurrence = false
-) {
+): string {
   if (typeof token === "string") {
     return firstOccurrence
       ? string.replace(token, makeTokenSpan(token, className))

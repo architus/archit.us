@@ -7,7 +7,7 @@ import {
   useClientSide,
   useMediaBreakpoints,
   useCallbackOnce
-} from "utility";
+} from "Utility";
 
 import Icon from "components/Icon";
 import Tooltip from "components/Tooltip";

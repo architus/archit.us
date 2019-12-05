@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { isNil } from "utility";
+import { isNil } from "Utility";
 import { siteName, description } from "global.json";
 import classNames from "classnames";
 

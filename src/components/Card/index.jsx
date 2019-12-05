@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { isDefined } from "utility";
+import { isDefined } from "Utility";
 import "./style.scss";
 
 function Card({ children, className, header, ...rest }) {

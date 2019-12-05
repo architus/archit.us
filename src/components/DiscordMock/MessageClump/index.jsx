@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { processIfNotEmptyOrNil, toHumanTime } from "utility";
+import { processIfNotEmptyOrNil, toHumanTime } from "Utility";
 import { Badge } from "react-bootstrap";
 
 import UserDisplay from "components/UserDisplay";

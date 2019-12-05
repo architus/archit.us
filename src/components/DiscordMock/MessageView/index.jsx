@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { formatAmPm, getScrollDistance, scrollToBottom } from "utility";
+import { formatAmPm, getScrollDistance, scrollToBottom } from "Utility";
 
 import MessageClump from "components/DiscordMock/MessageClump";
 

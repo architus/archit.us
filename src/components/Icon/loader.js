@@ -1,4 +1,4 @@
-import { invertMap } from "utility";
+import { invertMap } from "Utility";
 import { library } from "@fortawesome/fontawesome-svg-core";
 
 import * as FontAwesomeIcons from "./fontawesome";

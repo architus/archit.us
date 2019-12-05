@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { action } from "@storybook/addon-actions";
-import { useCallbackOnce } from "utility";
+import { useCallbackOnce } from "Utility";
 
 import ErrorBoundary from "./index";
 import { Button } from "react-bootstrap";

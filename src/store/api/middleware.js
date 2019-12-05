@@ -1,6 +1,6 @@
 import axios from "axios";
 import { API } from "store/actions";
-import { HttpVerbs, isNil, isDefined } from "utility";
+import { HttpVerbs, isNil, isDefined } from "Utility";
 import { apiError, apiStart, apiEnd } from "store/api/actions";
 
 // axios default configs

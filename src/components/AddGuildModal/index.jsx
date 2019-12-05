@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { getDiscordAdminGuildsWithoutArchitus } from "store/reducers/guilds";
 import { connect } from "react-redux";
-import { useReturnQuery, API_BASE, processIfNotEmptyOrNil } from "utility";
+import { useReturnQuery, API_BASE, processIfNotEmptyOrNil } from "Utility";
 
 import GuildCard from "components/GuildCard";
 import { Modal, Button } from "react-bootstrap";

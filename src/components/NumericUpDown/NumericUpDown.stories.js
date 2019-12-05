@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { boolean, text } from "@storybook/addon-knobs";
 import { action } from "@storybook/addon-actions";
-import { isDefined, isEmptyOrNil, useCallbackOnce } from "utility";
+import { isDefined, isEmptyOrNil, useCallbackOnce } from "Utility";
 
 import NumericUpDown from "./index";
 import MaxWidthDecorator from "MaxWidthDecorator";

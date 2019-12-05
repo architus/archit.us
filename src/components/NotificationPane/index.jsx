@@ -2,7 +2,7 @@ import React, { useCallback, Suspense, lazy, useState } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { hideNotification } from "store/actions";
-import { isDefined, clientSide } from "utility";
+import { isDefined, withClientSide } from "Utility";
 
 import ErrorBoundary from "components/ErrorBoundary";
 
@@ -66,7 +66,7 @@ NotificationPane.displayName = "NotificationPane";
 const NotificationList = lazy(() => import("components/NotificationList"));
 
 // Can't render lazy elements in SSR
-const LazyLoadingWrapper = clientSide(
+const LazyLoadingWrapper = withClientSide(
   ({ toast, alert, onDismissToast, onDismissAlert }) => {
     // Whether the are any active notifications
     const hasAnyItems = hasItems(toast) || hasItems(alert);

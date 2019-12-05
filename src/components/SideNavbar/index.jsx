@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { isInPath, useLocation, useInitialRender } from "utility";
+import { isInPath, useLocation, useInitialRender } from "Utility";
 
 import Tooltip from "components/Tooltip";
 

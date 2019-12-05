@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { text } from "@storybook/addon-knobs";
-import { useCallbackOnce } from "utility";
+import { useCallbackOnce } from "Utility";
 
 import AutoCompleteInput from "./index";
 import MaxWidthDecorator from "MaxWidthDecorator";

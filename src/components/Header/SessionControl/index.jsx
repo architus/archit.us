@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { signOut, identifySession } from "store/actions";
-import { isEmptyOrNil } from "utility";
+import { isEmptyOrNil } from "Utility";
 
 import { Link as RouterLink } from "components/Router";
 import UserDisplay from "components/UserDisplay";

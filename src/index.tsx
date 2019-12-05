@@ -3,27 +3,35 @@ import ReactDOM from "react-dom";
 import { AppContainer } from "react-hot-loader";
 
 import App from "./App";
+import { isDefined } from "Utility";
 export default App;
 
 // Render your app
 if (typeof document !== "undefined") {
   const target = document.getElementById("root");
+  if (isDefined(target)) {
+    const renderMethod = target.hasChildNodes()
+      ? ReactDOM.hydrate
+      : ReactDOM.render;
 
-  const renderMethod = target.hasChildNodes()
-    ? ReactDOM.hydrate
-    : ReactDOM.render;
+    const render: (component: React.ComponentType<{}>) => void = Component => {
+      renderMethod(
+        <AppContainer>
+          <Component />
+        </AppContainer>,
+        target
+      );
+    };
 
-  const render = Comp => {
-    renderMethod(
-      <AppContainer>
-        <Comp />
-      </AppContainer>,
-      target
-    );
-  };
+    render(App);
 
-  // Render!
-  render(App);
+    // Hot Module Replacement
+    if (module && module.hot) {
+      module.hot.accept("./App", () => {
+        render(App);
+      });
+    }
+  }
 
   // Register service worker
   if ("serviceWorker" in navigator) {
@@ -39,13 +47,6 @@ if (typeof document !== "undefined") {
             }
           });
       }
-    });
-  }
-
-  // Hot Module Replacement
-  if (module && module.hot) {
-    module.hot.accept("./App", () => {
-      render(App);
     });
   }
 }

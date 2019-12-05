@@ -1,9 +1,9 @@
 import { isNil, isDefined, randomItem } from "./data";
-import { isClient, isServer } from "./document";
+import { isClient, isRemote } from "./document";
 import { left, right } from "./names";
 import { identity } from "./functions";
 import { error } from "./logging";
-import { Option, Some, None } from "./option";
+import { OptionLike, Option, Some, None } from "./option";
 import {
   Dimension,
   RawDimension,
@@ -92,7 +92,7 @@ export const isEmptyOrNil = (input: string | Nil): input is string =>
 /**
  * Processes a string by applying the mapping function if not empty (all whitespace) or nil
  *
- * @deprecated use `Option.map(Option(input), apply)`
+ * @deprecated use `Option.from(input).map(apply).getOrNull()`
  * @param string - The string to consume/process
  * @param apply - The processing function to use
  */
@@ -108,14 +108,11 @@ export const processIfNotEmptyOrNil = (
  * @param dimension - The raw dimension text ot number to process
  */
 export function addMissingUnit(dimension: RawDimension): string {
-  return Option.getOrDefault(
-    Option.map(parseDimension(dimension), d => formatDimension(d)),
-    ""
-  );
+  const parsed: Option<Dimension> = parseDimension(dimension);
+  return parsed.map(d => formatDimension(d)).getOrElse("");
 }
 
 const DIMENSION_REGEX = /^([0-9]*\.?[0-9]*)([A-Za-z%]+)$/g;
-
 /**
  * Parses a raw dimension object (string or number) into a Some<Dimension> if successful,
  * else None
@@ -277,7 +274,7 @@ export const collator: Intl.Collator = new Intl.Collator(undefined, {
  * @param name - The name of the url parameter to look for
  */
 export function getUrlParameter(name: string): Option<string> {
-  if (isServer) return None;
+  if (isRemote) return None;
 
   var regex = new RegExp(`[\\?&]${escapeRegExp(name)}=([^&#]*)`);
   var results = Option(regex.exec(window.location.search));

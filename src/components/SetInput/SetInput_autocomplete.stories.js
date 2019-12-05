@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import PropTypes from "prop-types";
 import { text } from "@storybook/addon-knobs";
-import { isDefined } from "utility";
+import { isDefined } from "Utility";
 
 import SetInput from "./index";
 import MaxWidthDecorator from "MaxWidthDecorator";

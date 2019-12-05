@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from "react";
-import { clientSide } from "utility";
+import { withClientSide } from "Utility";
 
 import { Spinner } from "react-bootstrap";
 import ErrorBoundary from "components/ErrorBoundary";
@@ -37,7 +37,7 @@ DataGridLoader.displayName = "DataGridLoader";
 
 // Split bundle
 const DataGrid = lazy(() => import("components/DataGrid/DataGrid"));
-const LazyLoadingWrapper = clientSide(props => <DataGrid {...props} />);
+const LazyLoadingWrapper = withClientSide(props => <DataGrid {...props} />);
 LazyLoadingWrapper.displayName = "LazyLoadingWrapper";
 
 function LoadingFallback() {

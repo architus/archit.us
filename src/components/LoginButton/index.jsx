@@ -6,7 +6,7 @@ import {
   API_BASE,
   processIfNotEmptyOrNil,
   isDefined
-} from "utility";
+} from "Utility";
 
 import { Link as RouterLink } from "components/Router";
 import Icon from "components/Icon";

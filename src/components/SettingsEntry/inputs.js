@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useCallback } from "react";
-import { isEmptyOrNil, isDefined } from "utility";
+import { isEmptyOrNil, isDefined } from "Utility";
 
 import { Form } from "react-bootstrap";
 import NumericUpDown from "components/NumericUpDown";

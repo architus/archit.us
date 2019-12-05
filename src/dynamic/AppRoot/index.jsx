@@ -8,7 +8,7 @@ import {
   useLocation,
   useInitialRender,
   useCallbackOnce
-} from "utility";
+} from "Utility";
 import { navigate } from "@reach/router";
 import { getArchitusGuilds } from "store/reducers/guilds";
 

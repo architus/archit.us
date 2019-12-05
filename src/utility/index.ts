@@ -1,44 +1,46 @@
 // Utility types
-export * from "utility/types";
+export * from "Utility/types";
 
 // Data manipulation functions
 // TODO Write unit tests
-export * from "utility/data";
+export * from "Utility/data";
 
 // Function utilities & async/promise utilities
 // TODO Write unit tests
-export * from "utility/functions";
+export * from "Utility/functions";
 
 // Logging
 // TODO Write unit tests
-export * from "utility/logging";
+export * from "Utility/logging";
 
 // Custom React hooks
 // TODO Re-write in TypeScript
-export * from "utility/hooks";
+export * from "Utility/hooks";
 
-// String/number utility functions
+// String/number Utility functions
 // TODO Write unit tests
-export * from "utility/primitives";
+export * from "Utility/primitives";
 
 // Option/None/Some type definitions
 // TODO Write unit tests
-export * from "utility/option";
+export * from "Utility/option";
 
-// Useful utility methods/types for network communication
+// Useful Utility methods/types for network communication
 // TODO Write unit tests
-export * from "utility/network";
+export * from "Utility/network";
 
 // Utiltity methods about DOM/execution context
 // TODO Write unit tests
-export * from "utility/document";
+export * from "Utility/document";
 
 // Misc
 // TODO Write unit tests
-export * from "utility/MockTyper";
+export * from "Utility/MockTyper";
 // TODO Re-write in TypeScript
 // TODO Write unit tests
-export * from "utility/colors";
+export * from "Utility/colors";
 // TODO Re-write in TypeScript
 // TODO Write unit tests
-export * from "utility/transform";
+export * from "Utility/transform";
+// TODO Write unit tests
+export * from "Utility/components";

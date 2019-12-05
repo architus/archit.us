@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import classNames from "classnames";
 import { getGuildList } from "store/actions";
 import { getArchitusGuilds } from "store/reducers/guilds";
-import { splitPath } from "utility";
+import { splitPath } from "Utility";
 
 import Placeholder from "components/Placeholder";
 import GuildIcon from "components/GuildIcon";

@@ -6,7 +6,7 @@ import {
   replaceToken,
   highlightTokens,
   escapeHtml
-} from "utility";
+} from "Utility";
 import {
   applyTransformers,
   convertMentions,

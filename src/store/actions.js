@@ -1,4 +1,4 @@
-import { HttpVerbs, log, API_BASE, WS_API_BASE, isDefined } from "utility";
+import { HttpVerbs, log, API_BASE, WS_API_BASE, isDefined } from "Utility";
 import {
   TOKEN_EXCHANGE,
   IDENTIFY_SESSION,

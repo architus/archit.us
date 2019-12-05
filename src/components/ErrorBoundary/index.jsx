@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { warn, isDefined } from "utility";
+import { warn, isDefined } from "Utility";
 
 class ErrorBoundary extends React.Component {
   constructor(props) {

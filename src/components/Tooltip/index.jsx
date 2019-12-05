@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { addMissingUnit } from "utility";
+import { addMissingUnit } from "Utility";
 
 import { OverlayTrigger, Tooltip as BootstrapTooltip } from "react-bootstrap";
 

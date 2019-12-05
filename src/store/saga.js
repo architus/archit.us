@@ -1,7 +1,7 @@
 import { takeEvery, put } from "redux-saga/effects";
 import { SIGN_OUT, LOAD_SESSION } from "store/actions";
-import { LOCAL_STORAGE_KEY } from "store/reducers/session";
-import { log, isNil, sleep } from "utility";
+import { LOCAL_STORAGE_KEY } from "Store/reducers/session";
+import { log, isNil, sleep } from "Utility";
 import { navigate } from "@reach/router";
 import { SHOW_NOTIFICATION, hideNotification, showToast } from "./actions";
 

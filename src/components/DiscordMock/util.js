@@ -4,7 +4,7 @@ import {
   includes,
   isNil,
   generateName
-} from "utility";
+} from "Utility";
 import {
   transformMessage,
   transformReaction,

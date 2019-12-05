@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Prism from "prismjs";
 import "prismjs/components/prism-python.js";
-import { useCallbackOnce } from "utility";
+import { useCallbackOnce } from "Utility";
 
 import SyntaxHighlightedInput from "./index";
 

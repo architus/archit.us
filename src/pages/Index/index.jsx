@@ -5,7 +5,7 @@ import curry from "lodash/curry";
 import { CustomEmojiExtension } from "components/DiscordMock/CustomEmojiExtension";
 import { connect, useSelector, shallowEqual, useDispatch } from "react-redux";
 import { useOauthUrl } from "components/LoginButton";
-import { mapStateToLoggedIn } from "store/reducers/session";
+import { mapStateToLoggedIn } from "Store/reducers/session";
 import { useRouteData } from "react-static";
 
 import { getGuildCount } from "store/actions";

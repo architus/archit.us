@@ -1,7 +1,7 @@
 import React, { useMemo, useCallback } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { isDefined, escapeRegExp } from "utility";
+import { isDefined, escapeRegExp } from "Utility";
 import Prism from "prismjs";
 
 import Editor from "react-simple-code-editor";
