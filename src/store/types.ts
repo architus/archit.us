@@ -1,8 +1,14 @@
 import { Supplier } from "Utility/types";
-import { SessionAction } from "Store/reducers/session";
-import { NotificationAction } from "Store/reducers/notifications";
 import { AnyAction } from "redux";
+import { Store as _Store } from "Store/slices";
 
+import { SessionAction, NotificationAction } from "Store/actions";
+import { RestStatusAction, RestDispatchAction } from "Store/api/rest/actions";
+
+/**
+ * Represents the overall store object of the application
+ */
+export type Store = _Store;
 export type Reducer<S extends StoreSliceState> = (
   state: S,
   action: Action
@@ -22,10 +28,17 @@ export interface ActionBase<T, N> extends AnyAction {
   readonly namespace: N;
 }
 export type AuthAction = never;
-export type Action = AuthAction | SessionAction | NotificationAction;
+export type Action =
+  | AuthAction
+  | SessionAction
+  | NotificationAction
+  | RestStatusAction
+  | RestDispatchAction;
 
-export type ActionFactory<A extends Action, P> = (props: P) => A;
-export type AuthActionFactory<A extends AuthAction, P> = (
+export type ActionFactory<A extends Action, P extends any[]> = (
+  ...props: P
+) => A;
+export type AuthActionFactory<A extends AuthAction, P extends any[]> = (
   authToken: string,
-  props: P
+  ...props: P
 ) => A;

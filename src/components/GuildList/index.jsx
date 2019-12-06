@@ -3,7 +3,7 @@ import React from "react";
 import { connect } from "react-redux";
 import classNames from "classnames";
 import { getGuildList } from "store/actions";
-import { getArchitusGuilds } from "store/reducers/guilds";
+import { getArchitusGuilds } from "Store/slices/guilds";
 import { splitPath } from "Utility";
 
 import Placeholder from "components/Placeholder";

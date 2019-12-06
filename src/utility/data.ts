@@ -1,10 +1,9 @@
 import { randomInt } from "./primitives";
-import { Nil, Predicate, RecordKey, Comparator, IPrototype } from "./types";
+import { Nil, Predicate, RecordKey, Comparator } from "./types";
 
 /**
  * Determines whether a value is defined (non-undefined or null). Returns true if the value
  * is non-nil, false otherwise
- *
  * @param value - The value to check for nil-ness
  */
 export function isDefined<T>(value: Nil | T): value is T {
@@ -14,7 +13,6 @@ export function isDefined<T>(value: Nil | T): value is T {
 /**
  * Determines whether a value is nil (null or undefined). Returns true if the value is
  * nil, false otherwise
- *
  * @param value - The value to check for nil-ness
  */
 export function isNil<T>(value: Nil | T): value is Nil {
@@ -35,7 +33,6 @@ export function createObject(): object {
 
 /**
  * Returns an generator that iterates on each [key, value] tuple of the given object
- *
  * @param obj - The object to obtain an entries iterator for
  * @param checkHasProperty - Whether to check if the object has own property for each key
  *  (as to not include prototype-inherited keys)
@@ -55,7 +52,6 @@ export function* entries<K extends RecordKey, V>(
  * Tries to take a key from an object, trying until either a. one is found or b. the
  * currently attempted key reaches the initial one. Returns a record value, or null if
  * the nextKey function wrapped around to the initial key
- *
  * @param state - Current record set, where each value could be null
  * @param initial - The key to try first
  * @param nextKey - A function used to get the next key in a circular sequence, starting at
@@ -81,7 +77,6 @@ function tryTake<K extends RecordKey, V>(
 /**
  * Takes a value from the current record set, starting at the initial key and proceeding
  * until either a value is found or the record set needs to be replenished from the template.
- *
  * @param state - The current record set, where each value could be null
  * @param key - The key to try to take from first
  * @param nextKey - A function used to get the next key in a circular sequence, starting at
@@ -110,7 +105,6 @@ export function takeOrReplenish<K extends RecordKey, V>(
 
 /**
  *  Maps the entries of an object to another object
- * 
  * @param original The original object to map the entries of
  * @param _ The mapping function to apply
  * @param keepPrototype Whether or not to construct the new object with the prototype
@@ -136,7 +130,6 @@ export function map<A, B, K extends RecordKey>(
 
 /**
  * Inverts a map from key =\> value to value =\> [keys]
- *
  * @param map - The map to invert
  */
 export function invertMap<K, V>(map: Map<K, V>): Map<V, K[]> {
@@ -157,7 +150,6 @@ export function invertMap<K, V>(map: Map<K, V>): Map<V, K[]> {
 /**
  * Converts a vanilla JS object to an ES6 Map. Returns a new Map object consisting of the
  * direct entries in object
- *
  * @param obj - The object to convert to a map
  */
 export function toMap<K extends RecordKey, V>(obj: Record<K, V>): Map<K, V> {
@@ -173,7 +165,6 @@ export function toMap<K extends RecordKey, V>(obj: Record<K, V>): Map<K, V> {
 /**
  * Searches for a value in a function that passes the given predicate function. Returns
  * true if at least one value passes the predicate function, else false
- *
  * @param array - The array to search for the function result in
  * @param func - A predicate function
  */
@@ -193,7 +184,6 @@ export function randomItem<T>(arr: T[]): T | null {
 /**
  * Performs a binary search on the pre-sorted array to find the given element's index, or
  * -1 if it could not be found. Guaranteed to run in O(lg(n)) time for input size of n
- *
  * @param sortedArr - Pre-sorted array to perform binary search on
  * @param element - Element to search for (uses comparator function = 0)
  * @param start - Start index to begin searching at (inclusive)

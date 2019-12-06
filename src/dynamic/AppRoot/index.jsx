@@ -10,7 +10,7 @@ import {
   useCallbackOnce
 } from "Utility";
 import { navigate } from "@reach/router";
-import { getArchitusGuilds } from "store/reducers/guilds";
+import { getArchitusGuilds } from "Store/slices/guilds";
 
 import SwipeHandler from "components/SwipeHandler";
 import GuildList from "components/GuildList";

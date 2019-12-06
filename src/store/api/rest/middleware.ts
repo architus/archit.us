@@ -1,7 +1,7 @@
 import axios from "axios";
 import { API } from "store/actions";
 import { HttpVerbs, isNil, isDefined } from "Utility";
-import { apiError, apiStart, apiEnd } from "store/api/actions";
+import { apiError, apiStart, apiEnd } from "Store/api/rest/actions";
 
 // axios default configs
 if (isDefined(axios) && isDefined(axios.defaults))

@@ -3,7 +3,7 @@ import { isClient, isRemote } from "./document";
 import { left, right } from "./names";
 import { identity } from "./functions";
 import { error } from "./logging";
-import { OptionLike, Option, Some, None } from "./option";
+import { Option, Some, None } from "./option";
 import {
   Dimension,
   RawDimension,
@@ -15,7 +15,6 @@ import {
 /**
  * Generates a random name based on the Docker container naming algorithm (adjective,
  * famous scientist)
- *
  * @param separator - Separator used between first and last name
  */
 export function generateName(separator = " "): string {
@@ -37,7 +36,6 @@ const RANDOM_STRING_SPLIT_LENGTH =
 
 /**
  * Creates a random numeric string of the specified length
- *
  * @param length - Length of the generated string
  */
 export function randomNumericString(length: number): string {
@@ -66,7 +64,6 @@ export function randomNumericString(length: number): string {
 /**
  * Generates and returns an integer in the range of between 0, inclusive, and max,
  * exclusive
- *
  * @param max - Upper exclusive bound
  */
 export function randomInt(max: number): number {
@@ -77,7 +74,6 @@ export function randomInt(max: number): number {
 /**
  * Turns a string from a title to the corresponding acronym, keeping track of hyphens and
  * underscores
- *
  * @param title - The original title to transform into an acronym
  */
 export function toAcronym(title: string): string {
@@ -91,7 +87,6 @@ export const isEmptyOrNil = (input: string | Nil): input is string =>
 
 /**
  * Processes a string by applying the mapping function if not empty (all whitespace) or nil
- *
  * @deprecated use `Option.from(input).map(apply).getOrNull()`
  * @param string - The string to consume/process
  * @param apply - The processing function to use
@@ -103,7 +98,6 @@ export const processIfNotEmptyOrNil = (
 
 /**
  * Adds a missing unit to a dimension string
- *
  * @deprecated use `parseDimension(dimension)`
  * @param dimension - The raw dimension text ot number to process
  */
@@ -116,7 +110,6 @@ const DIMENSION_REGEX = /^([0-9]*\.?[0-9]*)([A-Za-z%]+)$/g;
 /**
  * Parses a raw dimension object (string or number) into a Some<Dimension> if successful,
  * else None
- *
  * @param rawDimension - The string or number value to parse and validate
  */
 export function parseDimension(rawDimension: RawDimension): Option<Dimension> {
@@ -146,7 +139,6 @@ export function parseDimension(rawDimension: RawDimension): Option<Dimension> {
 
 /**
  * Formats a dimension object into a CSS-consumable string
- *
  * @param dimension - The source Dimension object to format
  * @param precision - The number of digits of dimension.amount to include in the string
  * (defaults to 3)
@@ -157,7 +149,6 @@ export function formatDimension(dimension: Dimension, precision = 3): string {
 
 /**
  * Multiplies a dimension object's amount by the given amount
- *
  * @param dimension - Dimension object
  * @param scalar - Unitless number to multiply the dimension by
  */
@@ -175,7 +166,6 @@ export function multiplyDimension(
  * Escapes all HTML entities from a string using a different method depending on whether
  * the code runs in the browser or in node.js. For the client, it uses the fastest html
  * escaping function according to https://jsperf.com/htmlencoderegex/35
- *
  * @param string - String to escape HTML for
  */
 export function escapeHtml(input: string): string {
@@ -193,7 +183,6 @@ export function escapeHtml(input: string): string {
 /**
  * Applies a naive platform-agnostic method to escape HTML entities from a string using
  * a simple string replacement algorithm.
- *
  * @param input - String to escape HTML for
  */
 function naiveEscapeHtml(input: string): string {
@@ -207,7 +196,6 @@ function naiveEscapeHtml(input: string): string {
 
 /**
  * Escapes markdown entities from the given string using a naive string replacement algorithm.
- *
  * @param string - String to escape Markdown for
  */
 export function escapeMarkdown(input: string): string {
@@ -218,8 +206,7 @@ export function escapeMarkdown(input: string): string {
 }
 
 /**
- * Formats a date's time to appear in the format of HH:MM {A,P}M
- *
+ * Formats a date's time to appear in the format of `HH:MM {A,P}M`
  * @param date - The date to format
  */
 export function formatAmPm(date: Date): string {
@@ -231,7 +218,7 @@ export function formatAmPm(date: Date): string {
 }
 
 /**
- * Formats a date's time to appear in the format of Today at HH:MM {A,P}M
+ * Formats a date's time to appear in the format of `Today at HH:MM {A,P}M`
  * @param date - The date to format
  */
 export function toHumanTime(date: Date): string {
@@ -241,7 +228,6 @@ export function toHumanTime(date: Date): string {
 /**
  * Replaces all occurrences of the replace string with the replaceWith string in the
  * original string input
- *
  * @param string - The original string to look for matches in
  * @param replace - The match text to search for
  * @param replaceWith - The string to replace the match text once found
@@ -270,20 +256,18 @@ export const collator: Intl.Collator = new Intl.Collator(undefined, {
 
 /**
  * Gets a url parameter from the window's location, or None if not found
- *
  * @param name - The name of the url parameter to look for
  */
 export function getUrlParameter(name: string): Option<string> {
   if (isRemote) return None;
 
   var regex = new RegExp(`[\\?&]${escapeRegExp(name)}=([^&#]*)`);
-  var results = Option(regex.exec(window.location.search));
-  return Option.map(results, r => r[1].replace(/\+/g, " "));
+  var results = Option.from(regex.exec(window.location.search));
+  return results.map(r => r[1].replace(/\+/g, " "));
 }
 
 /**
  * Splits a path into its segments
- *
  * @param path - The path to split
  */
 export function splitPath(path: string): string[] {
@@ -296,7 +280,6 @@ export function splitPath(path: string): string[] {
 
 /**
  * Returns true if the given fragment is in the path
- *
  * @param path - The path to examine
  * @param param - A string or regular expression to search for in the given path
  * @param position - If specified, then the fragment must occur at the position in the path
@@ -342,7 +325,6 @@ export function isInPath({
 /**
  * Splits a string into alternating fragments of text that match the regular
  * expression between those that don't
- *
  * @param input - The string to split
  * @param regex - The regular expression to use to perform the splitting
  */
@@ -375,7 +357,6 @@ export function splitFragments(input: string, regex: RegExp): string[] {
 
 /**
  * Re-instantiates a new regular expression with the specified one's flags and pattern
- *
  * @param source - The source regular expression to use as a template
  */
 export function remakeRegex(source: RegExp): RegExp {
@@ -384,7 +365,6 @@ export function remakeRegex(source: RegExp): RegExp {
 
 /**
  * Finds all matches it can in a string before returning an array of total matches
- *
  * @param string The string to search for matches in
  * @param regex The regular expression to use to find matches of
  */
@@ -401,7 +381,6 @@ export function allMatches(string: string, regex: RegExp): string[] {
 
 /**
  * Escapes regular expression text to not cause improper special sequences
- *
  * @param text The text to escape so that it is safe to use in a regex
  */
 export function escapeRegExp(text: string): string {

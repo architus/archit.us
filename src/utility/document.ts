@@ -3,7 +3,6 @@ import { isDefined } from "Utility/data";
 
 /**
  * Gets the amount needed to scroll to be at the bottom from the top
- *
  * @param scrollContainer The HTML DOM element to get the remaining scroll of
  */
 export function getScrollRemainder(scrollContainer: HTMLElement): number {
@@ -14,7 +13,6 @@ export function getScrollRemainder(scrollContainer: HTMLElement): number {
 
 /**
  * Gets the current scroll distance from the scrollTop
- *
  * @param scrollContainer The HTML DOM element to get the scroll distance of
  */
 export function getScrollDistance(scrollContainer: HTMLElement): number {
@@ -23,7 +21,6 @@ export function getScrollDistance(scrollContainer: HTMLElement): number {
 
 /**
  * Imperatively scrolls to the bottom of the given HTML element
- *
  * @param scrollContainer The HTML DOM element to scroll to the bottom of
  */
 export function scrollToBottom(scrollContainer: HTMLElement): void {
@@ -44,8 +41,8 @@ export function clearUrlQueries(): void {
 }
 
 /**
- * Feature detection method from
- * https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
+ * Feature detection method
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
  */
 export function testLocalStorage(): boolean {
   let storage: Storage | undefined;
@@ -89,7 +86,6 @@ export function canUseLocalStorage(): boolean {
 
 /**
  * Gets a value from local storage if it exists, otherwise returns None
- *
  * @param key - Local storage key
  */
 export function getLocalStorage(key: string): Option<string> {
@@ -100,7 +96,6 @@ export function getLocalStorage(key: string): Option<string> {
 
 /**
  * Sets a value to local storage if it exists
- *
  * @param key - Local storage key
  * @returns Whether the set was successful
  */
@@ -134,7 +129,6 @@ export const isProduction: boolean = !(process.env.PRODUCTION_URL == null);
 
 /**
  * Executes the given function if the current execution context is the browser
- *
  * @deprecated Use isClient and Option instead
  * @param func The function to execute
  */
@@ -144,7 +138,6 @@ export function ifClient(func: Function) {
 
 /**
  * Executes the given function if the current execution context is node
- *
  * @deprecated Use isRemote and Option instead
  * @param func The function to execute
  */

@@ -7,36 +7,23 @@ import {
   getLocalStorage,
   setLocalStorage
 } from "Utility/index";
-import { User, DateFromString } from "Utility/types";
+import { User, TAccess, Access } from "Utility/types";
 import { Option, Some, None } from "Utility/option";
-import { StoreSlice, Reducer, ActionBase } from "Store/types";
-import { scopeReducer } from "./base";
-import { isRight } from "fp-ts/lib/Either";
-import * as t from "io-ts";
+import { Either, isRight } from "fp-ts/lib/Either";
+import { StoreSlice, Reducer } from "Store/types";
+import { scopeReducer } from "Store/slices/base";
+import { Errors } from "io-ts";
+
+import {
+  SESSION_NAMESPACE,
+  SESSION_LOAD,
+  SESSION_SIGN_OUT,
+  SessionAction
+} from "Store/actions/session";
 
 // ? ====================
-// ? Actions & Types
+// ? Types
 // ? ====================
-
-export const LOCAL_STORAGE_KEY = "session";
-
-export const SESSION_NAMESPACE = "session";
-export const SESSION_SIGN_OUT = "signOut";
-export const SESSION_LOAD = "load";
-
-type SessionBase<T> = ActionBase<T, typeof SESSION_NAMESPACE>;
-export type SessionAction = SessionSignOutAction | SessionLoadAction;
-
-interface SessionSignOutAction extends SessionBase<typeof SESSION_SIGN_OUT> {
-  readonly payload: void;
-}
-
-interface SessionLoadAction extends SessionBase<typeof SESSION_LOAD> {
-  readonly payload: {
-    readonly user: User;
-    readonly access: Access;
-  };
-}
 
 /**
  * Tagged union ADT representing the current session state. `Session.state` can either be
@@ -61,20 +48,6 @@ export interface AuthenticatedSession {
   readonly this?: User;
 }
 
-const TAccess = t.intersection([
-  t.partial({
-    expiresAt: DateFromString
-  }),
-  t.type({
-    token: t.string
-  })
-]);
-
-/**
- * Represents archit.us session access and expiration metadata
- */
-export type Access = t.TypeOf<typeof TAccess>;
-
 // ? ====================
 // ? Reducer exports
 // ? ====================
@@ -94,10 +67,22 @@ const reducer: Reducer<Session> = scopeReducer(
 
       case SESSION_LOAD:
         const { user, access } = action.payload;
+
+        // Resolve expires at timing
+        let expiresAt: Date | undefined;
+        if (isDefined(access.expiresIn)) {
+          const now = new Date();
+          now.setSeconds(now.getSeconds() + access.expiresIn);
+          expiresAt = now;
+        }
+
         return {
           state: "authenticated",
           this: user,
-          access
+          access: {
+            token: access.token,
+            expiresAt
+          }
         };
     }
   }
@@ -111,6 +96,7 @@ export default slice;
 // ? ====================
 
 const authPathNames = ["/app", "/app/"];
+export const LOCAL_STORAGE_KEY = "session";
 
 /**
  * Attempts to load session from either a. the browser's window location or b.
@@ -140,7 +126,7 @@ function tryLoadSession(): Option<Session> {
       .filter(value => value !== "")
       // Parse local storage data
       .flatMap<Access>(rawValue => {
-        const result = TAccess.decode(rawValue);
+        const result: Either<Errors, Access> = TAccess.decode(rawValue);
         if (isRight(result)) return Some(result.right);
         else return None;
       })

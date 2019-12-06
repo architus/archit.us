@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import classNames from "classnames";
-import { mapStateToLoggedIn } from "store/reducers/session";
+import { mapStateToLoggedIn } from "Store/slices/session";
 
 import NavLink from "components/NavLink";
 

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { addMissingUnit, randomNumericString, isNil, MockTyper } from "Utility";
 import { sendMessage } from "store/actions";
-import { SLICED_LENGTH } from "store/reducers/interpret";
+import { SLICED_LENGTH } from "Store/slices/interpret";
 import {
   architusUser,
   createMockUser,

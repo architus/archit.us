@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { mapStateToLoggedIn } from "store/reducers/session";
+import { mapStateToLoggedIn } from "Store/slices/session";
 
 import Login from "pages/Login";
 import NotFound from "pages/NotFound";

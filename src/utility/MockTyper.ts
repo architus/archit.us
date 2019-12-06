@@ -64,7 +64,6 @@ export class MockTyper {
   /**
    * Resets the Mock Typer, moving its cursor to the beginning of the message and optionally
    * letting new options be set before starting again.
-   *
    * @param options New options to use after restarting
    */
   public reset(options: Partial<MockTyperOptions>): void {

@@ -52,7 +52,6 @@ export interface OptionLike<A> {
    * Applies a filter function if this option is defined, resulting in the same option if
    * it passes and returning None if it fails. If it wasn't defined, then it remains None
    * and the filter function is not invoked
-   *
    * @param func The filter function to use if the option is defined
    */
   filter(_: Predicate<A>): OptionLike<A>;
@@ -60,7 +59,6 @@ export interface OptionLike<A> {
   /**
    * Flat maps the option to another option Option<B>, using a mapping function that
    * itself returns an Option<B>
-   *
    * @param func The mapping function that is invoked to transform this option's inner
    * value to a new Option<B> if and only if the original option is not None
    */
@@ -69,7 +67,6 @@ export interface OptionLike<A> {
   /**
    * Allows for conditional branching and value resolution depending on the value of
    * the option
-   *
    * @param m The matcher object to apply to the state of the Option
    */
   match<B> (m: Matcher<A, B>): B
@@ -99,7 +96,6 @@ export abstract class Option<A> implements OptionLike<A> {
   /**
    * Constructs a new instance of a Some<T> or None object in an Option<T>, depending
    * on whether value was nil or not
-   *
    * @param value The nullable value to wrap
    */
   static from<A>(value: A | Nil): Option<A> {
@@ -211,7 +207,6 @@ export class NoneType<A> extends Option<A> {
 
 /**
  * Constructs a new instance of a Some<T> object in an Option<T>
- *
  * @param value The value to wrap
  */
 export function Some<A>(value: A): Option<A> {

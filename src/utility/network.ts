@@ -10,7 +10,6 @@ function getNextLargerSize(size: number) {
 
 /**
  * Constructs a Discord CDN URL that gets the avatar of the specified user
- *
  * @param clientId The Discord Snowflake client id, as a string
  * @param discriminator The #XXXX discriminator
  * @param size The size of the requested avatar
@@ -34,17 +33,16 @@ export function constructAvatarUrl(
   }
 }
 
-const _httpVerbs = <const>["GET", "POST", "PUT", "PATCH", "DELETE"];
 /**
  * Defines HTTP verbs used for RESTful communication
  */
-export type HttpVerb = typeof _httpVerbs[number];
-/**
- * Maps HTTP verbs to themselves
- */
-export const HttpVerbs: Record<HttpVerb, HttpVerb> = Object.assign(
-  _httpVerbs.map(v => ({ [v]: v }))
-);
+export enum HttpVerbs {
+  GET = "GET",
+  POST = "POST",
+  PUT = "PUT",
+  PATCH = "PATCH",
+  DELETE = "DELETE"
+}
 
 /**
  * Gets the RESTful API base URL to use

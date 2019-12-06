@@ -1,32 +1,13 @@
-import { Notification, NotificationType, NotificationId } from "Utility/types";
-import { StoreSlice, Reducer, ActionBase } from "Store/types";
+import { Notification, NotificationType } from "Utility/types";
+import { StoreSlice, Reducer } from "Store/types";
 import { scopeReducer } from "./base";
 
-// ? ====================
-// ? Actions & Types
-// ? ====================
-
-export const NOTIFICATION_NAMESPACE = "notification";
-export const NOTIFICATION_SHOW = "show";
-export const NOTIFICATION_HIDE = "hide";
-
-type NotificationBase<T> = ActionBase<T, typeof NOTIFICATION_NAMESPACE>;
-export type NotificationAction =
-  | NotificationShowAction
-  | NotificationHideAction;
-
-interface NotificationShowAction
-  extends NotificationBase<typeof NOTIFICATION_SHOW> {
-  readonly payload: { type: NotificationType } & Notification;
-}
-
-interface NotificationHideAction
-  extends NotificationBase<typeof NOTIFICATION_HIDE> {
-  readonly payload: {
-    type: NotificationType;
-    id: NotificationId;
-  };
-}
+import {
+  NOTIFICATION_NAMESPACE,
+  NOTIFICATION_SHOW,
+  NOTIFICATION_HIDE,
+  NotificationAction
+} from "Store/actions/notifications";
 
 /**
  * Contains lists of notification objects for both alert and toast-type notifications

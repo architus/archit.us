@@ -39,7 +39,6 @@ export * from "Utility/MockTyper";
 // TODO Re-write in TypeScript
 // TODO Write unit tests
 export * from "Utility/colors";
-// TODO Re-write in TypeScript
 // TODO Write unit tests
 export * from "Utility/transform";
 // TODO Write unit tests

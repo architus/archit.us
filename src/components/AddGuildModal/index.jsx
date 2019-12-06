@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { getDiscordAdminGuildsWithoutArchitus } from "store/reducers/guilds";
+import { getDiscordAdminGuildsWithoutArchitus } from "Store/slices/guilds";
 import { connect } from "react-redux";
 import { useReturnQuery, API_BASE, processIfNotEmptyOrNil } from "Utility";
 

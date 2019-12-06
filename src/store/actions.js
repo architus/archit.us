@@ -8,7 +8,7 @@ import {
   ADD_RESPONSE,
   EDIT_RESPONSE,
   DELETE_RESPONSE
-} from "store/api/labels";
+} from "Store/api/rest/labels";
 import { connect, send } from "@giantmachines/redux-websocket";
 import { pick } from "lodash";
 import { batchActions } from "redux-batched-actions";
@@ -22,8 +22,6 @@ export const LOAD_GUILD_COUNT = "LOAD_GUILD_COUNT";
 export const LOCAL_ADD_RESPONSE = "LOCAL_ADD_RESPONSE";
 export const LOCAL_EDIT_RESPONSE = "LOCAL_EDIT_RESPONSE";
 export const LOCAL_DELETE_RESPONSE = "LOCAL_DELETE_RESPONSE";
-export const SHOW_NOTIFICATION = "SHOW_NOTIFICATION";
-export const HIDE_NOTIFICATION = "HIDE_NOTIFICATION";
 
 export const SOCKET = {
   CONNECT: "REDUX_WEBSOCKET::CONNECT",
@@ -77,13 +75,6 @@ function authApiAction(accessToken, { headers, ...rest }) {
 // ? Actions
 // ? ===================
 
-export function signOut() {
-  log("Signed out");
-  return {
-    type: SIGN_OUT
-  };
-}
-
 export function localAddResponse(guildId, { trigger, response }, session) {
   return {
     type: LOCAL_ADD_RESPONSE,
@@ -118,53 +109,6 @@ export function localDeleteResponse(guildId, response) {
       response
     }
   };
-}
-
-// ? ====================
-// ? Notification Actions
-// ? ====================
-
-let globalIdCounter = 0;
-export function showNotification(
-  type = "toast",
-  message = "",
-  variant = "info",
-  duration = 3000
-) {
-  const id = globalIdCounter++;
-  return [
-    {
-      type: SHOW_NOTIFICATION,
-      payload: {
-        type,
-        message,
-        variant,
-        duration,
-        id
-      }
-    },
-    id
-  ];
-}
-
-export function hideNotification(type = "toast", id) {
-  return {
-    type: HIDE_NOTIFICATION,
-    payload: {
-      type,
-      id
-    }
-  };
-}
-
-export function showToast(message = "", variant = "info", duration = 3000) {
-  const [action] = showNotification("toast", message, variant, duration);
-  return action;
-}
-
-export function showAlert(message = "", variant = "danger", duration = 4000) {
-  const [action] = showNotification("alert", message, variant, duration);
-  return action;
 }
 
 // ? ===================

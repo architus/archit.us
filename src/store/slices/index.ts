@@ -7,24 +7,22 @@ import { StoreSlice, StoreSliceState, Action } from "Store/types";
 // ? ====================
 
 import { default as session, Session } from "./session";
+import { default as notifications, Notifications } from "./notifications";
 
-const _storeKeys = <const>["session"];
-type _Store = {
-  session: Session;
-};
-const slices: Record<StoreKey, StoreSlice<Store[StoreKey]>> = {
-  session
+/**
+ * Represents the overall store object of the application
+ */
+export type Store = { session: Session; notifications: Notifications };
+const slices: Record<StoreKey, StoreSlice<any>> = {
+  session,
+  notifications
 };
 
 // ? ====================
 // ? Slice aggregation
 // ? ====================
 
-/**
- * Represents the overall store object of the application
- */
-export type Store = _Store;
-export type StoreKey = typeof _storeKeys[number];
+export type StoreKey = keyof Store;
 export const reducer: ReduxReducer<Store, Action> = combineReducers(
   map<
     StoreSlice<StoreSliceState>,

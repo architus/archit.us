@@ -49,31 +49,29 @@ export function useDispatch(): DispatchFunction {
 /**
  * Curries the useDispatch hook and a single action factory to produce a custom useDispatch
  * hook that creates an action with the auth token included
- *
  * @param actionFactory Action factory that gets curried to include the auth token
  */
-export function useAuthDispatch<A extends AuthAction, P>(
+export function useAuthDispatch<A extends AuthAction, P extends any[]>(
   actionFactory: AuthActionFactory<A, P>
-): (props: P) => void {
-  const isAuthenticated: boolean = useSelector(
-    store => store.session.authenticated
+): (...props: P) => void {
+  const token: Option<string> = useSelector(store =>
+    store.session.state === "authenticated"
+      ? Some(store.session.access.token)
+      : None
   );
-  const authToken: string = useSelector(store => store.session.access.token);
   const dispatch = useDispatch();
   return useCallback(
     (...args) => {
-      if (!isAuthenticated)
-        log("Authenticated dispatch attempted without valid auth session");
-      else dispatch(actionFactory(authToken, ...args));
+      if (token.isDefined()) dispatch(actionFactory(token.get, ...args));
+      else log("Authenticated dispatch attempted without valid auth session");
     },
-    [dispatch, isAuthenticated, authToken, actionFactory]
+    [dispatch, token, actionFactory]
   );
 }
 
 /**
  * Conditionally invokes a calculation function depending on the current execution
  * context
- *
  * @param calculate The callback function that supplies the value on the client
  * @param defaultValue The default fallback value used on the server
  */
@@ -84,7 +82,6 @@ export function useClientSide<A>(calculate: () => A, defaultValue: A): A {
 /**
  * Finds the active breakpoint from an array such that it is the greatest breakpoint where
  * the width of the viewport is greater than it.
- *
  * @param breakpoints List of breakpoints to use to match the width onto
  * @returns the value of the current min-width breakpoint from the given breakpoints
  * array, or None if none are active
@@ -169,7 +166,6 @@ export function useLocation() {
 
 /**
  * Runs an effect hook once, simulating `componentDidMount`/`componentWillUnmount`
- *
  * @param effectFunc - Effect function to run
  */
 export function useEffectOnce(effectFunc: React.EffectCallback): void {
@@ -178,7 +174,6 @@ export function useEffectOnce(effectFunc: React.EffectCallback): void {
 
 /**
  * Runs a callback hook once (never recalculates)
- *
  * @param callback - the template callback function
  */
 export function useCallbackOnce<T extends (...args: any[]) => any>(
@@ -189,7 +184,6 @@ export function useCallbackOnce<T extends (...args: any[]) => any>(
 
 /**
  * Runs a memo hook once (never recalculates)
- *
  * @param callback - the memo calculation function
  */
 export function useMemoOnce<A>(calculate: () => A): A {

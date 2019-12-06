@@ -39,10 +39,7 @@ export function sessionAware<S extends StoreSliceState>(
   reducer: Reducer<S>
 ): Reducer<S> {
   return (state, action) => {
-    if (
-      action.namespace === SESSION_NAMESPACE &&
-      action.type === SESSION_SIGN_OUT
-    ) {
+    if (action.type === SESSION_SIGN_OUT) {
       return consume(initialState);
     } else {
       return reducer(state, action);
