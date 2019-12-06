@@ -1,3 +1,4 @@
+import React from "react";
 import * as t from "io-ts";
 import { either } from "fp-ts/lib/Either";
 
@@ -103,4 +104,5 @@ export type NotificationVariant = "success" | "danger" | "warning" | "info";
 export interface Notification {
   id: number;
   variant: NotificationVariant;
+  message: React.ReactNode
 }
