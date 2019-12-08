@@ -250,6 +250,30 @@ export const collator: Intl.Collator = new Intl.Collator(undefined, {
   sensitivity: "base"
 });
 
+/**
+ * Encodes a string into base 64
+ * @param raw Raw plaintext string
+ */
+export function encodeBase64(raw: string) {
+  if (isClient) {
+    return window.btoa(raw);
+  } else {
+    return Buffer.from(raw).toString("base64");
+  }
+}
+
+/**
+ * Decodes a base 64 string
+ * @param encoded Base-64 encoded string
+ */
+export function decodeBase64(encoded: string) {
+  if (isClient) {
+    return window.atob(encoded);
+  } else {
+    return Buffer.from(encoded, "base64").toString();
+  }
+}
+
 // ? ==============
 // ? Path functions
 // ? ==============

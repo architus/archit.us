@@ -1,5 +1,5 @@
 import { log } from "Utility";
-import { User } from "Utility/types";
+import { User, Token } from "Utility/types";
 import { ActionBase, ActionFactory } from "Store/types";
 import { TokenExchangeResponse } from "Store/api/rest/types";
 
@@ -20,10 +20,7 @@ export interface SessionSignOutAction
 export interface SessionLoadAction extends SessionBase<typeof SESSION_LOAD> {
   payload: {
     user: User;
-    access: {
-      token: string;
-      expiresIn?: number;
-    };
+    token: Token
   };
 }
 
@@ -45,13 +42,13 @@ export const loadSession: ActionFactory<
 > = (response: TokenExchangeResponse) => {
   log("Loading session data from network");
 
-  const { user, access } = response;
+  const { user, token } = response;
   return {
     namespace: SESSION_NAMESPACE,
     type: SESSION_LOAD,
     payload: {
       user,
-      access
+      token
     }
   };
 };

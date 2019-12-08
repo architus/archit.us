@@ -140,6 +140,22 @@ export function authRestDispatch<R>(
     onFailure
   }: RestDispatch<R>
 ): RestDispatchAction<R> {
-
-  return {} as RestDispatchAction<R>;
+  return {
+    namespace: REST_NAMESPACE,
+    type: REST_DISPATCH,
+    payload: {
+      route,
+      label,
+      method,
+      data,
+      headers: {
+        // Attach the authorization header
+        Authorization: token.toString(),
+        ...headers
+      },
+      validate,
+      onSuccess,
+      onFailure
+    }
+  };
 }

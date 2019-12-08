@@ -2,17 +2,14 @@ import {
   getUrlParameter,
   clearUrlQueries,
   log,
-  isDefined,
   isRemote,
   getLocalStorage,
   setLocalStorage
 } from "Utility/index";
-import { User, TAccess, Access } from "Utility/types";
+import { User, Token, TToken } from "Utility/types";
 import { Option, Some, None } from "Utility/option";
-import { Either, isRight } from "fp-ts/lib/Either";
 import { StoreSlice, Reducer } from "Store/types";
 import { scopeReducer } from "Store/slices/base";
-import { Errors } from "io-ts";
 
 import {
   SESSION_NAMESPACE,
@@ -44,7 +41,7 @@ export interface ConnectedSession {
 }
 export interface AuthenticatedSession {
   readonly state: "authenticated";
-  readonly access: Access;
+  readonly token: Token;
   readonly this?: User;
 }
 
@@ -66,23 +63,11 @@ const reducer: Reducer<Session> = scopeReducer(
         return initialState;
 
       case SESSION_LOAD:
-        const { user, access } = action.payload;
-
-        // Resolve expires at timing
-        let expiresAt: Date | undefined;
-        if (isDefined(access.expiresIn)) {
-          const now = new Date();
-          now.setSeconds(now.getSeconds() + access.expiresIn);
-          expiresAt = now;
-        }
-
+        const { user, token } = action.payload;
         return {
           state: "authenticated",
           this: user,
-          access: {
-            token: access.token,
-            expiresAt
-          }
+          token
         };
     }
   }
@@ -121,30 +106,19 @@ function tryLoadSession(): Option<Session> {
   // Attempt to load session from local storage
   const storage = getLocalStorage(LOCAL_STORAGE_KEY);
 
-  return (
-    storage
-      .filter(value => value !== "")
-      // Parse local storage data
-      .flatMap<Access>(rawValue => {
-        const result: Either<Errors, Access> = TAccess.decode(rawValue);
-        if (isRight(result)) return Some(result.right);
-        else return None;
-      })
-      // Process expires at
-      .flatMap<Session>(({ expiresAt, token }) => {
-        if (isDefined(expiresAt) && expiresAt.getTime() - Date.now() < 0) {
-          log("Session has expired; clearing");
-          setLocalStorage(LOCAL_STORAGE_KEY, "");
-          return None;
-        } else {
-          return Some({
-            state: "authenticated",
-            access: {
-              expiresAt,
-              token
-            }
-          });
-        }
-      })
-  );
+  return storage
+    .filter(value => value !== "")
+    .flatMap<Token>(rawValue => Option.drop(TToken.decode(rawValue)))
+    .flatMap<Session>(token => {
+      if (token.expiresAt.getTime() - Date.now() < 0) {
+        log("Session has expired; clearing");
+        setLocalStorage(LOCAL_STORAGE_KEY, "");
+        return None;
+      } else {
+        return Some({
+          state: "authenticated",
+          token
+        });
+      }
+    });
 }

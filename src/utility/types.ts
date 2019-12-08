@@ -1,8 +1,8 @@
 import React from "react";
 import * as t from "io-ts";
-import { either, Either, isRight } from "fp-ts/lib/Either";
-import { Option, None, Some } from "Utility/option";
-import { isDefined } from "Utility";
+import { either, Either } from "fp-ts/lib/Either";
+import { Option } from "Utility/option";
+import { isDefined, decodeBase64 } from "Utility";
 
 export class EnumType<A> extends t.Type<A> {
   public readonly _tag: "EnumType" = "EnumType";
@@ -43,11 +43,13 @@ const _dimensionUnits = <const>[
   "vmin",
   "vmax"
 ];
+
 /**
  * CSS spatial units
  * @see https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Values_and_units
  */
 export type DimensionUnit = typeof _dimensionUnits[number];
+
 /**
  * CSS spatial units
  * @see https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Values_and_units
@@ -82,6 +84,7 @@ export const DateFromString = new t.Type<Date, string, unknown>(
  * @see https://discordapp.com/developers/docs/reference#snowflakes
  */
 export type Snowflake = string & { __snowflake__: void };
+
 /**
  * Architus Entity snowflake-format
  * @see https://docs.archit.us/internal/api-reference/#hoar-frost
@@ -94,6 +97,7 @@ const validateId: any = (input: string): boolean =>
   input.match(ID_REGEX) != null;
 export const isSnowflake: (input: string) => input is Snowflake = validateId;
 export const isHoarFrost: (input: string) => input is HoarFrost = validateId;
+
 /**
  * Discord Entity snowflake-format
  * @see https://discordapp.com/developers/docs/reference#snowflakes
@@ -109,6 +113,7 @@ export const TSnowflake = new t.Type<Snowflake, string, unknown>(
     }),
   t.identity
 );
+
 /**
  * Architus Entity snowflake-format
  * @see https://docs.archit.us/internal/api-reference/#hoar-frost
@@ -133,6 +138,7 @@ export enum PremiumType {
   NitroClassic = 1,
   Nitro = 2
 }
+
 /**
  * The type of premium on a user's account.
  * @see https://discordapp.com/developers/docs/resources/user#user-object-premium-types
@@ -147,6 +153,7 @@ export const TPremiumType = t.type({
  * @see https://discordapp.com/developers/docs/resources/user#user-object
  */
 export type User = t.TypeOf<typeof TUser>;
+
 /**
  * Discord user type
  * @see https://discordapp.com/developers/docs/resources/user#user-object
@@ -170,20 +177,6 @@ export const TUser = t.intersection([
   })
 ]);
 
-/**
- * Represents archit.us session access and expiration metadata
- * @see https://docs.archit.us/internal/api-reference/auth/
- */
-export type Access = t.TypeOf<typeof TAccess>;
-/**
- * Represents archit.us session access and expiration metadata
- * @see https://docs.archit.us/internal/api-reference/auth/
- */
-export const TAccess = t.type({
-  token: t.string,
-  expiresAt: t.union([DateFromString, t.null])
-});
-
 export type NotificationType = "alert" | "toast";
 export type NotificationId = number;
 export type NotificationVariant = "success" | "danger" | "warning" | "info";
@@ -202,7 +195,10 @@ export type TokenData = t.TypeOf<typeof TTokenData>;
 export const TTokenData = t.type({
   accessToken: t.string, // encrypted
   refreshToken: t.string, // encrypted
-  id: TSnowflake
+  id: TSnowflake,
+  issuedAt: DateFromString,
+  expiresIn: t.number,
+  permissions: t.any
 });
 
 /**
@@ -227,6 +223,11 @@ export class Token {
     return this._tokenData;
   }
 
+  public get expiresAt(): Date {
+    const { issuedAt, expiresIn } = this._tokenData;
+    return new Date(issuedAt.getTime() + expiresIn * 1000);
+  }
+
   static make(token: string): Option<Token> {
     const firstPeriod: number = token.indexOf(".") + 1;
     const secondPeriod: number = token.indexOf(".", firstPeriod);
@@ -234,10 +235,27 @@ export class Token {
     return Option.if(isFormatValid)
       .flatMap<TokenData>(() => {
         const encoded = token.substring(firstPeriod + 1, secondPeriod);
-        const decoded = window.btoa(encoded);
+        const decoded = decodeBase64(encoded);
         const result: Either<t.Errors, TokenData> = TTokenData.decode(decoded);
         return Option.drop(result);
       })
       .map<Token>(data => new Token(token, data));
   }
 }
+
+/**
+ * Represents a server-issued authentication token in the JWT format
+ * @see https://jwt.io/
+ * @see https://docs.archit.us/internal/api-reference/auth/
+ */
+export const TToken = new t.Type<Token, string, unknown>(
+  "token",
+  (u: unknown): u is Token => u instanceof Token,
+  (u: unknown, c: t.Context) =>
+    either.chain(t.string.validate(t, c), (s: string) => {
+      const token: Option<Token> = Token.make(s);
+      if (token.isDefined()) return t.success(token.get);
+      else return t.failure(t, c);
+    }),
+  (t: Token): string => t.toString()
+);
