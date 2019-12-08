@@ -1,5 +1,5 @@
 import { consume, map } from "Utility";
-import { combineReducers, Reducer as ReduxReducer, AnyAction } from "redux";
+import { combineReducers, Reducer as ReduxReducer } from "redux";
 import { StoreSlice, StoreSliceState, Action } from "Store/types";
 
 // ? ====================
@@ -12,8 +12,11 @@ import { default as notifications, Notifications } from "./notifications";
 /**
  * Represents the overall store object of the application
  */
-export type Store = { session: Session; notifications: Notifications };
-const slices: Record<StoreKey, StoreSlice<any>> = {
+export type Store = {
+  session: Session;
+  notifications: Notifications
+};
+const slices: { [K in StoreKey]: StoreSlice<Store[K]> } = {
   session,
   notifications
 };
@@ -33,7 +36,7 @@ export const reducer: ReduxReducer<Store, Action> = combineReducers(
       state = consume(slice.initial),
       action: Action
     ) => slice.reducer(state, action);
-    return safeReducer as ReduxReducer<StoreSliceState | undefined, AnyAction>;
+    return safeReducer;
   })
 );
 

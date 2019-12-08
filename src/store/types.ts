@@ -27,18 +27,12 @@ export interface ActionBase<T, N> extends AnyAction {
   readonly type: T;
   readonly namespace: N;
 }
-export type AuthAction = never;
 export type Action =
-  | AuthAction
   | SessionAction
   | NotificationAction
   | RestStatusAction
-  | RestDispatchAction;
+  | RestDispatchAction<any>;
 
 export type ActionFactory<A extends Action, P extends any[]> = (
-  ...props: P
-) => A;
-export type AuthActionFactory<A extends AuthAction, P extends any[]> = (
-  authToken: string,
   ...props: P
 ) => A;
