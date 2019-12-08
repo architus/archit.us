@@ -93,8 +93,8 @@ interface RestDispatch<R> {
   data: Record<string, any>;
   headers: Record<string, string>;
   validate: (result: unknown) => result is R;
-  onSuccess?: (result: R) => Action | undefined;
-  onFailure?: (error: ApiError) => Action | undefined;
+  onSuccess?: ((result: R) => Action | undefined);
+  onFailure?: ((error: ApiError) => Action | undefined);
 }
 
 // ? ====================
