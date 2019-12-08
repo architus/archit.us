@@ -1,6 +1,7 @@
 import React from "react";
 import * as t from "io-ts";
-import { either } from "fp-ts/lib/Either";
+import { either, Either, isRight } from "fp-ts/lib/Either";
+import { Option, None, Some } from "Utility/option";
 import { isDefined } from "Utility";
 
 export class EnumType<A> extends t.Type<A> {
@@ -43,13 +44,13 @@ const _dimensionUnits = <const>[
   "vmax"
 ];
 /**
- * Units from
- * https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Values_and_units
+ * CSS spatial units
+ * @see https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Values_and_units
  */
 export type DimensionUnit = typeof _dimensionUnits[number];
 /**
- * Units from
- * https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Values_and_units
+ * CSS spatial units
+ * @see https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Values_and_units
  */
 export const dimensionUnits = _dimensionUnits as readonly string[];
 
@@ -78,13 +79,11 @@ export const DateFromString = new t.Type<Date, string, unknown>(
 
 /**
  * Discord Entity snowflake-format
- *
  * @see https://discordapp.com/developers/docs/reference#snowflakes
  */
 export type Snowflake = string & { __snowflake__: void };
 /**
  * Architus Entity snowflake-format
- *
  * @see https://docs.archit.us/internal/api-reference/#hoar-frost
  */
 export type HoarFrost = string & { __id__: void };
@@ -97,7 +96,6 @@ export const isSnowflake: (input: string) => input is Snowflake = validateId;
 export const isHoarFrost: (input: string) => input is HoarFrost = validateId;
 /**
  * Discord Entity snowflake-format
- *
  * @see https://discordapp.com/developers/docs/reference#snowflakes
  */
 export const TSnowflake = new t.Type<Snowflake, string, unknown>(
@@ -113,7 +111,6 @@ export const TSnowflake = new t.Type<Snowflake, string, unknown>(
 );
 /**
  * Architus Entity snowflake-format
- *
  * @see https://docs.archit.us/internal/api-reference/#hoar-frost
  */
 export const THoarFrost = new t.Type<HoarFrost, string, unknown>(
@@ -130,7 +127,6 @@ export const THoarFrost = new t.Type<HoarFrost, string, unknown>(
 
 /**
  * The type of premium on a user's account.
- *
  * @see https://discordapp.com/developers/docs/resources/user#user-object-premium-types
  */
 export enum PremiumType {
@@ -139,7 +135,6 @@ export enum PremiumType {
 }
 /**
  * The type of premium on a user's account.
- *
  * @see https://discordapp.com/developers/docs/resources/user#user-object-premium-types
  */
 export const TPremiumType = t.type({
@@ -149,13 +144,11 @@ export const TPremiumType = t.type({
 
 /**
  * Discord user type
- *
  * @see https://discordapp.com/developers/docs/resources/user#user-object
  */
 export type User = t.TypeOf<typeof TUser>;
 /**
  * Discord user type
- *
  * @see https://discordapp.com/developers/docs/resources/user#user-object
  */
 export const TUser = t.intersection([
@@ -179,13 +172,11 @@ export const TUser = t.intersection([
 
 /**
  * Represents archit.us session access and expiration metadata
- *
  * @see https://docs.archit.us/internal/api-reference/auth/
  */
 export type Access = t.TypeOf<typeof TAccess>;
 /**
  * Represents archit.us session access and expiration metadata
- *
  * @see https://docs.archit.us/internal/api-reference/auth/
  */
 export const TAccess = t.type({
@@ -205,4 +196,48 @@ export interface Notification {
 export interface ApiError {
   readonly message: string;
   readonly error?: object | string;
+}
+
+export type TokenData = t.TypeOf<typeof TTokenData>;
+export const TTokenData = t.type({
+  accessToken: t.string, // encrypted
+  refreshToken: t.string, // encrypted
+  id: TSnowflake
+});
+
+/**
+ * Represents a server-issued authentication token in the JWT format
+ * @see https://jwt.io/
+ * @see https://docs.archit.us/internal/api-reference/auth/
+ */
+export class Token {
+  private _token: string;
+  private _tokenData: TokenData;
+
+  private constructor(token: string, data: TokenData) {
+    this._token = token;
+    this._tokenData = data;
+  }
+
+  public toString(): string {
+    return this._token;
+  }
+
+  public get data(): TokenData {
+    return this._tokenData;
+  }
+
+  static make(token: string): Option<Token> {
+    const firstPeriod: number = token.indexOf(".") + 1;
+    const secondPeriod: number = token.indexOf(".", firstPeriod);
+    const isFormatValid = firstPeriod !== -1 && secondPeriod !== -1;
+    return Option.if(isFormatValid)
+      .flatMap<TokenData>(() => {
+        const encoded = token.substring(firstPeriod + 1, secondPeriod);
+        const decoded = window.btoa(encoded);
+        const result: Either<t.Errors, TokenData> = TTokenData.decode(decoded);
+        return Option.drop(result);
+      })
+      .map<Token>(data => new Token(token, data));
+  }
 }

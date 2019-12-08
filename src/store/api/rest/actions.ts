@@ -1,5 +1,5 @@
 import { warn, HttpVerbs } from "Utility";
-import { ApiError } from "Utility/types";
+import { ApiError, Token } from "Utility/types";
 import { Action, ActionBase, ActionFactory } from "Store/types";
 import { RestLabel } from "Store/api/rest/labels";
 
@@ -93,14 +93,53 @@ interface RestDispatch<R> {
   data: Record<string, any>;
   headers: Record<string, string>;
   validate: (result: unknown) => result is R;
-  onSuccess?: ((result: R) => Action | undefined);
-  onFailure?: ((error: ApiError) => Action | undefined);
+  onSuccess?: (result: R) => Action | undefined;
+  onFailure?: (error: ApiError) => Action | undefined;
 }
 
 // ? ====================
 // ? Dispatch Factories
 // ? ====================
 
-const restDispatch:
+export function restDispatch<R>({
+  route,
+  label,
+  method = HttpVerbs.GET,
+  data = {},
+  headers = {},
+  validate,
+  onSuccess,
+  onFailure = (e: ApiError) => undefined
+}: RestDispatch<R>): RestDispatchAction<R> {
+  return {
+    namespace: REST_NAMESPACE,
+    type: REST_DISPATCH,
+    payload: {
+      route,
+      label,
+      method,
+      data,
+      headers,
+      validate,
+      onSuccess,
+      onFailure
+    }
+  };
+}
 
-// TODO implement
+export function authRestDispatch<R>(
+  token: Token,
+  {
+    route,
+    label,
+    method = HttpVerbs.GET,
+    data = {},
+    headers = {},
+    validate,
+    onSuccess,
+    onFailure
+  }: RestDispatch<R>
+): RestDispatchAction<R> {
+
+  return {} as RestDispatchAction<R>;
+}

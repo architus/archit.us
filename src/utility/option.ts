@@ -1,11 +1,12 @@
-import { isDefined } from "./data";
+import { isDefined, isNil } from "./data";
 import { Nil, Predicate } from "./types";
+import { isRight, Either } from "fp-ts/lib/Either";
 
 export interface OptionLike<A> {
   /**
    * Whether the option is `None`
    */
-  isEmpty(): this is NoneType<A>;
+  isEmpty(): this is NoneType;
 
   /**
    * Whether the option is `Some(...)`
@@ -81,7 +82,7 @@ interface ValuedOption<A> {
  * use `option.isEmpty`.
  */
 export abstract class Option<A> implements OptionLike<A> {
-  abstract isEmpty(): this is NoneType<A>;
+  abstract isEmpty(): this is NoneType;
   abstract isDefined(): this is SomeType<A>;
   abstract fastIsEmpty: boolean;
   abstract fastIsDefined: boolean;
@@ -100,6 +101,24 @@ export abstract class Option<A> implements OptionLike<A> {
    */
   static from<A>(value: A | Nil): Option<A> {
     if (isDefined(value)) return Some(value);
+    else return None;
+  }
+
+  /**
+   * Conditionally creates an Option based on some condition value
+   * @param cond Whether to initialize the option as Some({}) (if true) or None if
+   * false
+   */
+  static if(cond: boolean): Option<{}> {
+    if (cond) return Some({});
+    else return None;
+  }
+
+  /**
+   * Drops an either into an option
+   */
+  static drop<A>(either: Either<any, A>): Option<A> {
+    if (isRight(either)) return Some(either.right);
     else return None;
   }
 }
@@ -123,7 +142,7 @@ export class SomeType<A> extends Option<A> implements ValuedOption<A> {
     return true
   }
 
-  isEmpty(): this is NoneType<A> {
+  isEmpty(): this is NoneType {
     return false
   }
 
@@ -161,46 +180,55 @@ export class SomeType<A> extends Option<A> implements ValuedOption<A> {
   }
 }
 
-export class NoneType<A> extends Option<A> {
-  fastIsDefined = false;
-  fastIsEmpty = true;
-  constructor() {
+export class NoneType extends Option<never> {
+  private static _instance: NoneType | undefined = undefined
+  private constructor() {
     super();
   }
 
-  isDefined(): this is SomeType<A> {
+  public static get instance(): NoneType {
+    if (isNil(NoneType._instance)) {
+      NoneType._instance = new NoneType();
+    }
+    return NoneType._instance;
+  }
+
+  fastIsDefined = false;
+  fastIsEmpty = true;
+
+  isDefined(): this is SomeType<never> {
     return false
   }
 
-  isEmpty(): this is NoneType<A> {
+  isEmpty(): this is NoneType {
     return true
   }
 
-  orNull(): A | null {
+  orNull(): never | null {
     return null;
   }
 
-  orUndefined(): A | undefined {
+  orUndefined(): never | undefined {
     return undefined;
   }
 
-  getOrElse(_: A): A {
+  getOrElse(_: never): never {
     return _;
   }
 
-  map<B>(_: (_: A) => B): Option<B> {
+  map<B>(_: (_: never) => B): Option<B> {
     return None;
   }
 
-  filter(_: Predicate<A>): Option<A> {
+  filter(_: Predicate<never>): Option<never> {
     return None;
   }
 
-  flatMap<B>(_: (_: A) => Option<B>): Option<B> {
+  flatMap<B>(_: (_: never) => Option<B>): Option<B> {
     return None;
   }
 
-  match<B> (m: Matcher<A, B>): B {
+  match<B> (m: Matcher<never, B>): B {
     return m.None();
   }
 }
@@ -216,4 +244,4 @@ export function Some<A>(value: A): Option<A> {
 /**
  * Represents the singleton None object that represents no value in an Option<T>
  */
-export const None: Option<never> = new NoneType();
+export const None: Option<never> = NoneType.instance;
