@@ -4,7 +4,8 @@ import * as t from "io-ts";
 export type TokenExchangeResponse = t.TypeOf<typeof TTokenExchangeResponse>;
 export const TTokenExchangeResponse = t.interface({
   user: TUser,
-  access: TAccess
+  access: TAccess,
+  nonce: t.string
 });
 
 export type IdentifySessionResponse = t.TypeOf<typeof TIdentifySessionResponse>;

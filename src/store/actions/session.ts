@@ -1,5 +1,4 @@
 import { log } from "Utility";
-import { User, Access } from "Utility/types";
 import { ActionBase, ActionFactory } from "Store/types";
 import {
   TokenExchangeResponse,
@@ -13,19 +12,41 @@ import {
 export const SESSION_NAMESPACE = "session";
 export const SESSION_SIGN_OUT = "session:signOut";
 export const SESSION_LOAD = "session:load";
+export const SESSION_DISCARD_NONCE = "session:discardNonce";
+export const SESSION_ATTACH_LISTENER = "session:attachListener";
 
 type SessionBase<T> = ActionBase<T, typeof SESSION_NAMESPACE>;
-export type SessionAction = SessionSignOutAction | SessionLoadAction;
+export type SessionAction =
+  | SessionSignOutAction
+  | SessionLoadAction
+  | SessionDiscardNonceAction
+  | SessionAttachListenerAction;
 
 export interface SessionSignOutAction
   extends SessionBase<typeof SESSION_SIGN_OUT> {}
 
-export interface SessionLoadAction extends SessionBase<typeof SESSION_LOAD> {
-  payload: {
-    user: User;
-    access: Access;
-  };
+export interface SessionDiscardNonceAction
+  extends SessionBase<typeof SESSION_DISCARD_NONCE> {}
+
+export interface SessionAttachListenerAction
+  extends SessionBase<typeof SESSION_ATTACH_LISTENER> {
+  payload: () => void;
 }
+
+export interface SessionLoadAction extends SessionBase<typeof SESSION_LOAD> {
+  payload: SessionLoad;
+}
+
+interface IdentifyLoad extends IdentifySessionResponse {
+  mode: "identify";
+}
+
+interface TokenExchangeLoad extends TokenExchangeResponse {
+  mode: "tokenExchange";
+  nonce: string;
+}
+
+type SessionLoad = IdentifyLoad | TokenExchangeLoad;
 
 // ? ====================
 // ? Factories
@@ -39,19 +60,39 @@ export const signOut: ActionFactory<SessionSignOutAction, never> = () => {
   };
 };
 
-export const loadSession: ActionFactory<
-  SessionLoadAction,
-  [TokenExchangeResponse | IdentifySessionResponse]
-> = (response: TokenExchangeResponse | IdentifySessionResponse) => {
-  log("Loading session data from network");
-
-  const { user, access } = response;
+export const loadSession: ActionFactory<SessionLoadAction, [SessionLoad]> = (
+  load: SessionLoad
+) => {
+  if (load.mode === "identify") {
+    log("Refreshing session data from network");
+  } else {
+    log("Loading session data from network");
+  }
   return {
     namespace: SESSION_NAMESPACE,
     type: SESSION_LOAD,
-    payload: {
-      user,
-      access
-    }
+    payload: load
+  };
+};
+
+export const discardNonce: ActionFactory<
+  SessionDiscardNonceAction,
+  []
+> = () => {
+  log("Discarding gateway elevation nonce");
+  return {
+    namespace: SESSION_NAMESPACE,
+    type: SESSION_DISCARD_NONCE
+  };
+};
+
+export const attachListener: ActionFactory<
+  SessionAttachListenerAction,
+  [() => void]
+> = func => {
+  return {
+    namespace: SESSION_NAMESPACE,
+    type: SESSION_ATTACH_LISTENER,
+    payload: func
   };
 };

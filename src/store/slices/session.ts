@@ -4,8 +4,9 @@ import {
   log,
   isRemote,
   getLocalStorage,
-  setLocalStorage
-} from "Utility/index";
+  setLocalStorage,
+  warn
+} from "Utility";
 import {
   User,
   PersistentSession,
@@ -20,6 +21,8 @@ import {
   SESSION_NAMESPACE,
   SESSION_LOAD,
   SESSION_SIGN_OUT,
+  SESSION_DISCARD_NONCE,
+  SESSION_ATTACH_LISTENER,
   SessionAction
 } from "Store/actions/session";
 
@@ -39,7 +42,8 @@ export type Session =
   | NoneSession
   | ConnectedSession
   | PendingSession
-  | AuthenticatedSession;
+  | AuthenticatedSession
+  | GatewayAuthenticatedSession;
 
 export interface NoneSession {
   readonly state: "none";
@@ -52,11 +56,20 @@ interface LoggedInSession {
   readonly access: Access;
   readonly this: User;
 }
+interface NotifySession {
+  readonly signOutListeners: Array<() => void>;
+}
 export interface PendingSession extends LoggedInSession {
   readonly state: "pending";
 }
-export interface AuthenticatedSession extends LoggedInSession {
+export interface AuthenticatedSession extends LoggedInSession, NotifySession {
   readonly state: "authenticated";
+}
+export interface GatewayAuthenticatedSession
+  extends LoggedInSession,
+    NotifySession {
+  readonly state: "gateway";
+  readonly nonce: string;
 }
 
 // ? ====================
@@ -71,18 +84,59 @@ const initial: () => Session = () => {
 
 const reducer: Reducer<Session> = scopeReducer(
   SESSION_NAMESPACE,
-  (_: Session, action: SessionAction): Session => {
+  (prev: Session, action: SessionAction): Session => {
     switch (action.type) {
       case SESSION_SIGN_OUT:
-        return initialState;
+        return signOut(prev);
 
       case SESSION_LOAD:
         const { user, access } = action.payload;
-        return {
-          state: "authenticated",
-          this: user,
-          access
-        };
+        switch (action.payload.mode) {
+          case "identify":
+            return {
+              state: "authenticated",
+              this: user,
+              access,
+              signOutListeners: []
+            };
+
+          case "tokenExchange":
+            return {
+              state: "gateway",
+              this: user,
+              access,
+              nonce: action.payload.nonce,
+              signOutListeners: []
+            };
+        }
+
+      case SESSION_DISCARD_NONCE: {
+        if (prev.state === "gateway") {
+          return {
+            state: "authenticated",
+            this: prev.this,
+            access: prev.access,
+            signOutListeners: prev.signOutListeners
+          };
+        } else {
+          const message = `Invalid transition ${SESSION_DISCARD_NONCE} in Session state ${prev.state}. Terminating session.`;
+          warn(message);
+          return signOut(prev);
+        }
+      }
+
+      case SESSION_ATTACH_LISTENER: {
+        if (prev.state === "gateway" || prev.state === "authenticated") {
+          return {
+            ...prev,
+            signOutListeners: [...prev.signOutListeners, action.payload]
+          };
+        } else {
+          const message = `Invalid transition ${SESSION_ATTACH_LISTENER} in Session state ${prev.state}. Terminating session.`;
+          warn(message);
+          return signOut(prev);
+        }
+      }
     }
   }
 );
@@ -137,4 +191,15 @@ function tryLoadSession(): Option<Session> {
         });
       }
     });
+}
+
+/**
+ * Returns the session state to the initial one and notifies listeners
+ */
+function signOut(prev: Session): Session {
+  if (prev.state === "gateway" || prev.state === "authenticated") {
+    // Execute listeners
+    prev.signOutListeners.forEach(fn => fn());
+  }
+  return initialState;
 }

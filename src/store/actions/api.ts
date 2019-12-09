@@ -26,7 +26,8 @@ export function identify() {
   return restDispatch<IdentifySessionResponse>({
     route: "/identify",
     label: IDENTIFY_SESSION,
-    onSuccess: (response: IdentifySessionResponse) => loadSession(response),
+    onSuccess: (response: IdentifySessionResponse) =>
+      loadSession({ ...response, mode: "identify" }),
     decode: response =>
       Option.drop(
         either.chain(t.object.decode(response), TIdentifySessionResponse.decode)
@@ -43,7 +44,8 @@ export function tokenExchange(discordAuthCode: string) {
     label: TOKEN_EXCHANGE,
     method: HttpVerbs.POST,
     data: { code: discordAuthCode },
-    onSuccess: (response: TokenExchangeResponse) => loadSession(response),
+    onSuccess: (response: TokenExchangeResponse) =>
+      loadSession({ ...response, mode: "tokenExchange" }),
     decode: response =>
       Option.drop(
         either.chain(t.object.decode(response), TTokenExchangeResponse.decode)
