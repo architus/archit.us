@@ -1,4 +1,4 @@
-import { consume, map } from "Utility";
+import { consume, mapValues } from "Utility";
 import { combineReducers, Reducer as ReduxReducer } from "redux";
 import { StoreSlice, StoreSliceState, Action } from "Store/types";
 
@@ -8,17 +8,20 @@ import { StoreSlice, StoreSliceState, Action } from "Store/types";
 
 import { default as session, Session } from "./session";
 import { default as notifications, Notifications } from "./notifications";
+import { default as guildCount, GuildCount } from "./guildCount";
 
 /**
  * Represents the overall store object of the application
  */
 export type Store = {
   session: Session;
-  notifications: Notifications
+  notifications: Notifications;
+  guildCount: GuildCount;
 };
 const slices: { [K in StoreKey]: StoreSlice<Store[K]> } = {
   session,
-  notifications
+  notifications,
+  guildCount
 };
 
 // ? ====================
@@ -27,9 +30,9 @@ const slices: { [K in StoreKey]: StoreSlice<Store[K]> } = {
 
 export type StoreKey = keyof Store;
 export const reducer: ReduxReducer<Store, Action> = combineReducers(
-  map<
+  mapValues<
     StoreSlice<StoreSliceState>,
-    ReduxReducer<StoreSliceState | undefined>,
+    ReduxReducer<StoreSliceState | undefined, Action>,
     StoreKey
   >(slices, (slice: StoreSlice<StoreSliceState>) => {
     const safeReducer: ReduxReducer<StoreSliceState | undefined, Action> = (
@@ -40,7 +43,7 @@ export const reducer: ReduxReducer<Store, Action> = combineReducers(
   })
 );
 
-export const initial: Store = map<
+export const initial: Store = mapValues<
   StoreSlice<StoreSliceState>,
   StoreSliceState,
   StoreKey

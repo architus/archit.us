@@ -2,8 +2,12 @@ import { Supplier } from "Utility/types";
 import { AnyAction } from "redux";
 import { Store as _Store } from "Store/slices";
 
-import { SessionAction, NotificationAction } from "Store/actions";
-import { RestStatusAction, RestDispatchAction } from "Store/api/rest/actions";
+import {
+  SessionAction,
+  NotificationAction,
+  GuildCountAction
+} from "Store/actions";
+import { ApiAction } from "Store/api/actions";
 
 /**
  * Represents the overall store object of the application
@@ -30,9 +34,14 @@ export interface ActionBase<T, N> extends AnyAction {
 export type Action =
   | SessionAction
   | NotificationAction
-  | RestStatusAction
-  | RestDispatchAction<any>;
+  | GuildCountAction
+  | ApiAction;
 
 export type ActionFactory<A extends Action, P extends any[]> = (
   ...props: P
 ) => A;
+
+/**
+ * Dispatches the given action to the store
+ */
+export type Dispatch = (action: Action) => void;

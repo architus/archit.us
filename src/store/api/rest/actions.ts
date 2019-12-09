@@ -1,88 +1,26 @@
-import { warn, HttpVerbs } from "Utility";
-import { ApiError, Token } from "Utility/types";
+import { HttpVerbs, warn } from "Utility";
+import { ApiError } from "Utility/types";
 import { Action, ActionBase, ActionFactory } from "Store/types";
+import { Option } from "Utility/option";
 import { RestLabel } from "Store/api/rest/labels";
-
-// ? ====================
-// ? Status Actions & Types
-// ? ====================
-
-export const REST_NAMESPACE = "rest";
-export const REST_START = "rest:start";
-export const REST_END = "rest:end";
-export const REST_ERROR = "rest:error";
-
-type RestStatusActionBase<T> = ActionBase<T, typeof REST_NAMESPACE>;
-export type RestStatusAction =
-  | RestStartAction
-  | RestEndAction
-  | RestErrorAction;
-
-interface RestStartAction extends RestStatusActionBase<typeof REST_START> {
-  readonly payload: {
-    label: RestLabel;
-  };
-}
-
-interface RestEndAction extends RestStatusActionBase<typeof REST_END> {
-  readonly payload: {
-    label: RestLabel;
-  };
-}
-
-interface RestErrorAction extends RestStatusActionBase<typeof REST_ERROR> {
-  readonly payload: {
-    label: RestLabel;
-  } & ApiError;
-}
-
-// ? ====================
-// ? Status Factories
-// ? ====================
-
-export const apiStart: ActionFactory<RestStartAction, [RestLabel]> = label => {
-  return {
-    namespace: REST_NAMESPACE,
-    type: REST_START,
-    payload: {
-      label
-    }
-  };
-};
-
-export const apiEnd: ActionFactory<RestEndAction, [RestLabel]> = label => {
-  return {
-    namespace: REST_NAMESPACE,
-    type: REST_END,
-    payload: {
-      label
-    }
-  };
-};
-
-export const apiError: ActionFactory<RestErrorAction, [RestLabel, ApiError]> = (
-  label,
-  error
-) => {
-  warn(error);
-  return {
-    namespace: REST_NAMESPACE,
-    type: REST_ERROR,
-    payload: {
-      label,
-      ...error
-    }
-  };
-};
+import {
+  API_START,
+  API_END,
+  API_ERROR,
+  API_NAMESPACE,
+  ApiStartAction,
+  ApiEndAction,
+  ApiErrorAction
+} from "Store/api/actions";
 
 // ? ====================
 // ? Dispatch Actions & Types
 // ? ====================
 
-export const REST_DISPATCH = "rest:dispatch";
+export const API_REST_DISPATCH = "api:rest-dispatch";
 
 export interface RestDispatchAction<R>
-  extends ActionBase<typeof REST_DISPATCH, typeof REST_NAMESPACE> {
+  extends ActionBase<typeof API_REST_DISPATCH, typeof API_NAMESPACE> {
   readonly payload: RestDispatch<R>;
 }
 
@@ -92,70 +30,83 @@ interface RestDispatch<R> {
   method: HttpVerbs;
   data: Record<string, any>;
   headers: Record<string, string>;
-  validate: (result: unknown) => result is R;
-  onSuccess?: ((result: R) => Action | undefined);
-  onFailure?: ((error: ApiError) => Action | undefined);
+  decode?: (result: unknown) => Option<R>;
+  onSuccess?: (result: R) => Action | undefined;
+  onFailure?: (error: ApiError) => Action | undefined;
 }
 
 // ? ====================
 // ? Dispatch Factories
 // ? ====================
 
+type optionalRestDispatchParams = "data" | "headers" | "method";
 export function restDispatch<R>({
   route,
   label,
   method = HttpVerbs.GET,
   data = {},
   headers = {},
-  validate,
+  decode,
   onSuccess,
-  onFailure = (e: ApiError) => undefined
-}: RestDispatch<R>): RestDispatchAction<R> {
+  onFailure = () => undefined
+}: Omit<RestDispatch<R>, optionalRestDispatchParams> &
+  Partial<
+    Pick<RestDispatch<R>, optionalRestDispatchParams>
+  >): RestDispatchAction<R> {
   return {
-    namespace: REST_NAMESPACE,
-    type: REST_DISPATCH,
+    namespace: API_NAMESPACE,
+    type: API_REST_DISPATCH,
     payload: {
       route,
       label,
       method,
       data,
       headers,
-      validate,
+      decode,
       onSuccess,
       onFailure
     }
   };
 }
 
-export function authRestDispatch<R>(
-  token: Token,
-  {
-    route,
-    label,
-    method = HttpVerbs.GET,
-    data = {},
-    headers = {},
-    validate,
-    onSuccess,
-    onFailure
-  }: RestDispatch<R>
-): RestDispatchAction<R> {
+// ? ====================
+// ? Rest Action Factories
+// ? ====================
+
+export const restStart: ActionFactory<ApiStartAction, [RestLabel]> = label => {
   return {
-    namespace: REST_NAMESPACE,
-    type: REST_DISPATCH,
+    namespace: API_NAMESPACE,
+    type: API_START,
     payload: {
-      route,
-      label,
-      method,
-      data,
-      headers: {
-        // Attach the authorization header
-        Authorization: token.toString(),
-        ...headers
-      },
-      validate,
-      onSuccess,
-      onFailure
+      mode: "rest",
+      label
     }
   };
-}
+};
+
+export const restEnd: ActionFactory<ApiEndAction, [RestLabel]> = label => {
+  return {
+    namespace: API_NAMESPACE,
+    type: API_END,
+    payload: {
+      mode: "rest",
+      label
+    }
+  };
+};
+
+export const restError: ActionFactory<ApiErrorAction, [RestLabel, ApiError]> = (
+  label,
+  error
+) => {
+  warn(error);
+  return {
+    namespace: API_NAMESPACE,
+    type: API_ERROR,
+    payload: {
+      mode: "rest",
+      label,
+      ...error
+    }
+  };
+};

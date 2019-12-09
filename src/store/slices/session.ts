@@ -6,7 +6,12 @@ import {
   getLocalStorage,
   setLocalStorage
 } from "Utility/index";
-import { User, Token, TToken } from "Utility/types";
+import {
+  User,
+  PersistentSession,
+  TPersistentSession,
+  Access
+} from "Utility/types";
 import { Option, Some, None } from "Utility/option";
 import { StoreSlice, Reducer } from "Store/types";
 import { scopeReducer } from "Store/slices/base";
@@ -25,13 +30,17 @@ import {
 /**
  * Tagged union ADT representing the current session state. `Session.state` can either be
  * `"none"` (unauthenticated), `"connected"` (directly between Oauth return and token
- * exchange with API), or `"authenticated" `(after token exchange/local storage session
- * restoration).
- *
+ * exchange with API), `"pending" `(after local storage session restoration), or
+ * `"authenticated"` (after token exchange/identify)
  * For more information on authentication,
  * @see https://docs.archit.us/internal/api-reference/auth/
  */
-export type Session = NoneSession | ConnectedSession | AuthenticatedSession;
+export type Session =
+  | NoneSession
+  | ConnectedSession
+  | PendingSession
+  | AuthenticatedSession;
+
 export interface NoneSession {
   readonly state: "none";
 }
@@ -39,10 +48,15 @@ export interface ConnectedSession {
   readonly state: "connected";
   readonly discordAuthCode: string;
 }
-export interface AuthenticatedSession {
+interface LoggedInSession {
+  readonly access: Access;
+  readonly this: User;
+}
+export interface PendingSession extends LoggedInSession {
+  readonly state: "pending";
+}
+export interface AuthenticatedSession extends LoggedInSession {
   readonly state: "authenticated";
-  readonly token: Token;
-  readonly this?: User;
 }
 
 // ? ====================
@@ -63,11 +77,11 @@ const reducer: Reducer<Session> = scopeReducer(
         return initialState;
 
       case SESSION_LOAD:
-        const { user, token } = action.payload;
+        const { user, access } = action.payload;
         return {
           state: "authenticated",
           this: user,
-          token
+          access
         };
     }
   }
@@ -105,19 +119,21 @@ function tryLoadSession(): Option<Session> {
 
   // Attempt to load session from local storage
   const storage = getLocalStorage(LOCAL_STORAGE_KEY);
-
   return storage
     .filter(value => value !== "")
-    .flatMap<Token>(rawValue => Option.drop(TToken.decode(rawValue)))
-    .flatMap<Session>(token => {
-      if (token.expiresAt.getTime() - Date.now() < 0) {
-        log("Session has expired; clearing");
+    .flatMap<PersistentSession>(rawValue =>
+      Option.drop(TPersistentSession.decode(rawValue))
+    )
+    .flatMap<Session>(session => {
+      if (session.access.expiresAt.getTime() - Date.now() < 0) {
+        log("Session has expired. Clearing");
         setLocalStorage(LOCAL_STORAGE_KEY, "");
         return None;
       } else {
         return Some({
-          state: "authenticated",
-          token
+          state: "pending",
+          this: session.user,
+          access: session.access
         });
       }
     });

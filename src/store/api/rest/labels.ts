@@ -1,8 +1,6 @@
 export const TOKEN_EXCHANGE = "tokenExchange";
 export const IDENTIFY_SESSION = "identifySession";
-export const GET_GUILDS = "getGuilds";
 export const GET_GUILD_COUNT = "getGuildCount";
-export const GET_RESPONSES = "getResponses";
 export const ADD_RESPONSE = "addResponse";
 export const EDIT_RESPONSE = "editResponse";
 export const DELETE_RESPONSE = "deleteResponse";

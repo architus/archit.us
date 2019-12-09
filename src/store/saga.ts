@@ -7,7 +7,9 @@ import {
   NotificationShowAction
 } from "Store/actions";
 import { LOCAL_STORAGE_KEY } from "Store/slices/session";
-import { log, warn, sleep, setLocalStorage } from "Utility";
+import { log, warn, sleep, setLocalStorage, toJSON } from "Utility";
+import { PersistentSession } from "Utility/types";
+import { Option } from "Utility/option";
 import { navigate } from "@reach/router";
 import { hideNotification, showToast } from "Store/actions";
 
@@ -34,10 +36,14 @@ function* signOut() {
  * @param action The load session action dispatched upon token exchange success
  */
 function loadNewSession(action: SessionLoadAction) {
-  const { token } = action.payload;
-  const expiresAt: Date = token.expiresAt;
-  const result: boolean = setLocalStorage(LOCAL_STORAGE_KEY, token.toString());
-  if (result) {
+  const { user, access } = action.payload;
+  const session: PersistentSession = { user, access };
+  const serialized: Option<string> = toJSON(session);
+  const result: Option<boolean> = serialized.map<boolean>(s =>
+    setLocalStorage(LOCAL_STORAGE_KEY, s)
+  );
+  if (result.isDefined() && result.get) {
+    const expiresAt = session.access.expiresAt;
     log(`Saved session token that expires at ${expiresAt.toString()}`);
   } else {
     warn("Could not save session token to local storage");

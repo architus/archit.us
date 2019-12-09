@@ -104,13 +104,13 @@ export function takeOrReplenish<K extends RecordKey, V>(
 }
 
 /**
- *  Maps the entries of an object to another object
+ * Maps the values of an object to another object
  * @param original The original object to map the entries of
  * @param _ The mapping function to apply
  * @param keepPrototype Whether or not to construct the new object with the prototype
  * of the original. Defaults to `false` for type safety concerns
  */
-export function map<A, B, K extends RecordKey>(
+export function mapValues<A, B, K extends RecordKey>(
   original: Record<K, A>,
   _: (a: A, k: K) => B,
   keepPrototype = false
@@ -120,6 +120,28 @@ export function map<A, B, K extends RecordKey>(
   ) as Record<K, B>;
   for (const [key, value] of entries(original)) {
     newObj[key] = _(value, key);
+  }
+  return newObj;
+}
+
+/**
+ * Maps the entries of an object to another object
+ * @param original The original object to map the entries of
+ * @param _ The mapping function to apply
+ * @param keepPrototype Whether or not to construct the new object with the prototype
+ * of the original. Defaults to `false` for type safety concerns
+ */
+export function mapEntries<A, B, K extends RecordKey, L extends RecordKey>(
+  original: Record<K, A>,
+  _: (k: K, a: A) => [L, B],
+  keepPrototype = false
+): Record<L, B> {
+  const newObj: Record<L, B> = new Object(
+    keepPrototype ? Object.getPrototypeOf(original) : null
+  ) as Record<L, B>;
+  for (const [key, value] of entries(original)) {
+    const [newKey, newVal] = _(key, value);
+    newObj[newKey] = newVal;
   }
   return newObj;
 }

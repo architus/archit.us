@@ -1,8 +1,7 @@
 import React from "react";
 import * as t from "io-ts";
-import { either, Either } from "fp-ts/lib/Either";
-import { Option } from "Utility/option";
-import { isDefined, decodeBase64 } from "Utility";
+import { either, right } from "fp-ts/lib/Either";
+import { isDefined } from "Utility";
 
 export class EnumType<A> extends t.Type<A> {
   public readonly _tag: "EnumType" = "EnumType";
@@ -191,71 +190,36 @@ export interface ApiError {
   readonly error?: object | string;
 }
 
-export type TokenData = t.TypeOf<typeof TTokenData>;
-export const TTokenData = t.type({
-  accessToken: t.string, // encrypted
-  refreshToken: t.string, // encrypted
-  id: TSnowflake,
-  issuedAt: DateFromString,
-  expiresIn: t.number,
-  permissions: t.any
-});
+export class Access {
+  public readonly issuedAt: Date;
+  public readonly expiresIn: number;
 
-/**
- * Represents a server-issued authentication token in the JWT format
- * @see https://jwt.io/
- * @see https://docs.archit.us/internal/api-reference/auth/
- */
-export class Token {
-  private _token: string;
-  private _tokenData: TokenData;
-
-  private constructor(token: string, data: TokenData) {
-    this._token = token;
-    this._tokenData = data;
-  }
-
-  public toString(): string {
-    return this._token;
-  }
-
-  public get data(): TokenData {
-    return this._tokenData;
+  public constructor(issuedAt: Date, expiresIn: number) {
+    this.issuedAt = issuedAt;
+    this.expiresIn = expiresIn;
   }
 
   public get expiresAt(): Date {
-    const { issuedAt, expiresIn } = this._tokenData;
-    return new Date(issuedAt.getTime() + expiresIn * 1000);
-  }
-
-  static make(token: string): Option<Token> {
-    const firstPeriod: number = token.indexOf(".") + 1;
-    const secondPeriod: number = token.indexOf(".", firstPeriod);
-    const isFormatValid = firstPeriod !== -1 && secondPeriod !== -1;
-    return Option.if(isFormatValid)
-      .flatMap<TokenData>(() => {
-        const encoded = token.substring(firstPeriod + 1, secondPeriod);
-        const decoded = decodeBase64(encoded);
-        const result: Either<t.Errors, TokenData> = TTokenData.decode(decoded);
-        return Option.drop(result);
-      })
-      .map<Token>(data => new Token(token, data));
+    return new Date(this.issuedAt.getTime() + this.expiresIn * 1000);
   }
 }
 
-/**
- * Represents a server-issued authentication token in the JWT format
- * @see https://jwt.io/
- * @see https://docs.archit.us/internal/api-reference/auth/
- */
-export const TToken = new t.Type<Token, string, unknown>(
-  "token",
-  (u: unknown): u is Token => u instanceof Token,
+const TAccessObject = t.type({
+  issuedAt: DateFromString,
+  expiresIn: t.number
+});
+export const TAccess = new t.Type<Access, object, unknown>(
+  "access",
+  (u: unknown): u is Access => u instanceof Access,
   (u: unknown, c: t.Context) =>
-    either.chain(t.string.validate(t, c), (s: string) => {
-      const token: Option<Token> = Token.make(s);
-      if (token.isDefined()) return t.success(token.get);
-      else return t.failure(t, c);
-    }),
-  (t: Token): string => t.toString()
+    either.chain(TAccessObject.validate(u, c), o =>
+      right(new Access(o.issuedAt, o.expiresIn))
+    ),
+  (a: Access) => ({ issuedAt: a.issuedAt, expiresIn: a.expiresIn })
 );
+
+export type PersistentSession = t.TypeOf<typeof TPersistentSession>;
+export const TPersistentSession = t.type({
+  user: TUser,
+  access: TAccess
+});

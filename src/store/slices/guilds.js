@@ -24,9 +24,8 @@ export const reducer = sessionAware(initial, (state, action) => {
 
 const getGuildList = state => state.guilds.guildList;
 
-export const getArchitusGuilds = createSelector(
-  [getGuildList],
-  guildList => guildList.filter(guild => guild.has_architus)
+export const getArchitusGuilds = createSelector([getGuildList], guildList =>
+  guildList.filter(guild => guild.has_architus)
 );
 
 const MANAGE_SERVERS = 32; // 0x20

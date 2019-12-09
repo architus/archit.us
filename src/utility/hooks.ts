@@ -6,10 +6,9 @@ import {
 } from "react-redux";
 import { globalHistory } from "@reach/router";
 import { addMissingUnit, collator } from "./primitives";
-import { log } from "./logging";
 import { isClient, isProduction } from "./document";
 import { Option, Some, None } from "./option";
-import { Store, Action, AuthAction, AuthActionFactory } from "Store/types";
+import { Store, Dispatch } from "Store/types";
 
 /**
  * Gets the optional encoded return query param if not in production mode (where the
@@ -35,38 +34,10 @@ export function useReturnQuery(): string {
 export const useSelector: TypedUseSelectorHook<Store> = useRawSelector;
 
 /**
- * Dispatches the given action to the store
- */
-type DispatchFunction = (action: Action) => void;
-
-/**
  * Typed useDispatch hook that is aware of the dispatch arguments
  */
-export function useDispatch(): DispatchFunction {
+export function useDispatch(): Dispatch {
   return useRawDispatch();
-}
-
-/**
- * Curries the useDispatch hook and a single action factory to produce a custom useDispatch
- * hook that creates an action with the auth token included
- * @param actionFactory Action factory that gets curried to include the auth token
- */
-export function useAuthDispatch<A extends AuthAction, P extends any[]>(
-  actionFactory: AuthActionFactory<A, P>
-): (...props: P) => void {
-  const token: Option<string> = useSelector(store =>
-    store.session.state === "authenticated"
-      ? Some(store.session.access.token)
-      : None
-  );
-  const dispatch = useDispatch();
-  return useCallback(
-    (...args) => {
-      if (token.isDefined()) dispatch(actionFactory(token.get, ...args));
-      else log("Authenticated dispatch attempted without valid auth session");
-    },
-    [dispatch, token, actionFactory]
-  );
 }
 
 /**

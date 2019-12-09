@@ -274,6 +274,18 @@ export function decodeBase64(encoded: string) {
   }
 }
 
+export function toJSON(toEncode: any) {
+  if (isNil(toEncode)) return None;
+  else {
+    try {
+      const result: string = JSON.stringify(toEncode);
+      return Some(result);
+    } catch (e) {
+      return None;
+    }
+  }
+}
+
 // ? ==============
 // ? Path functions
 // ? ==============

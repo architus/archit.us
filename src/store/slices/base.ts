@@ -1,7 +1,7 @@
 import { consume } from "Utility";
 import { Supplier } from "Utility/types";
 import { Action, StoreSliceState, Reducer } from "Store/types";
-import { SESSION_SIGN_OUT, SESSION_NAMESPACE } from "./session";
+import { SESSION_SIGN_OUT } from "Store/actions";
 
 // ? ==================
 // ? Higher order slices
