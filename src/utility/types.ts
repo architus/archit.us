@@ -193,10 +193,12 @@ export interface ApiError {
 export class Access {
   public readonly issuedAt: Date;
   public readonly expiresIn: number;
+  public readonly refreshIn: number;
 
-  public constructor(issuedAt: Date, expiresIn: number) {
+  public constructor(issuedAt: Date, expiresIn: number, refreshIn: number) {
     this.issuedAt = issuedAt;
     this.expiresIn = expiresIn;
+    this.refreshIn = refreshIn;
   }
 
   public get expiresAt(): Date {
@@ -206,16 +208,21 @@ export class Access {
 
 const TAccessObject = t.type({
   issuedAt: DateFromString,
-  expiresIn: t.number
+  expiresIn: t.number,
+  refreshIn: t.number
 });
 export const TAccess = new t.Type<Access, object, unknown>(
   "access",
   (u: unknown): u is Access => u instanceof Access,
   (u: unknown, c: t.Context) =>
     either.chain(TAccessObject.validate(u, c), o =>
-      right(new Access(o.issuedAt, o.expiresIn))
+      right(new Access(o.issuedAt, o.expiresIn, o.refreshIn))
     ),
-  (a: Access) => ({ issuedAt: a.issuedAt, expiresIn: a.expiresIn })
+  (a: Access) => ({
+    issuedAt: a.issuedAt,
+    expiresIn: a.expiresIn,
+    refreshIn: a.refreshIn
+  })
 );
 
 export type PersistentSession = t.TypeOf<typeof TPersistentSession>;

@@ -23,6 +23,7 @@ import {
   SESSION_SIGN_OUT,
   SESSION_DISCARD_NONCE,
   SESSION_ATTACH_LISTENER,
+  SESSION_REFRESH,
   SessionAction
 } from "Store/actions/session";
 
@@ -110,33 +111,40 @@ const reducer: Reducer<Session> = scopeReducer(
             };
         }
 
-      case SESSION_DISCARD_NONCE: {
-        if (prev.state === "gateway") {
-          return {
+      case SESSION_DISCARD_NONCE:
+        return guardedTransition(
+          "gateway",
+          prev,
+          action,
+          (s: GatewayAuthenticatedSession) => ({
             state: "authenticated",
-            this: prev.this,
-            access: prev.access,
-            signOutListeners: prev.signOutListeners
-          };
-        } else {
-          const message = `Invalid transition ${SESSION_DISCARD_NONCE} in Session state ${prev.state}. Terminating session.`;
-          warn(message);
-          return signOut(prev);
-        }
-      }
+            this: s.this,
+            access: s.access,
+            signOutListeners: s.signOutListeners
+          })
+        );
 
-      case SESSION_ATTACH_LISTENER: {
-        if (prev.state === "gateway" || prev.state === "authenticated") {
-          return {
-            ...prev,
-            signOutListeners: [...prev.signOutListeners, action.payload]
-          };
-        } else {
-          const message = `Invalid transition ${SESSION_ATTACH_LISTENER} in Session state ${prev.state}. Terminating session.`;
-          warn(message);
-          return signOut(prev);
-        }
-      }
+      case SESSION_ATTACH_LISTENER:
+        return guardedTransitions(
+          ["gateway", "authenticated"],
+          prev,
+          action,
+          (s: GatewayAuthenticatedSession | AuthenticatedSession) => ({
+            ...s,
+            signOutListeners: [...s.signOutListeners, action.payload]
+          })
+        );
+
+      case SESSION_REFRESH:
+        return guardedTransition(
+          "authenticated",
+          prev,
+          action,
+          (s: AuthenticatedSession) => ({
+            ...s,
+            access: action.payload.access
+          })
+        );
     }
   }
 );
@@ -202,4 +210,48 @@ function signOut(prev: Session): Session {
     prev.signOutListeners.forEach(fn => fn());
   }
   return initialState;
+}
+
+/**
+ * Guards an action type against invalid state machine states
+ * @param desiredState - Valid state machine state
+ * @param state - Current state coming into the reducer
+ * @param action - Current action coming into the reducer
+ * @param func - Function to apply if the state passes
+ */
+function guardedTransition<T extends Session>(
+  desiredState: T["state"],
+  state: Session,
+  action: SessionAction,
+  func: (prev: T) => Session
+): Session {
+  if (state.state === desiredState) {
+    return func(state as T);
+  } else {
+    const message = `Invalid transition ${action.type} in Session state ${state.state}. Terminating session.`;
+    warn(message);
+    return signOut(state);
+  }
+}
+
+/**
+ * Guards an action type against invalid state machine states
+ * @param desiredState - Array of valid state machine states
+ * @param state - Current state coming into the reducer
+ * @param action - Current action coming into the reducer
+ * @param func - Function to apply if the state passes
+ */
+function guardedTransitions<T extends Session>(
+  desiredState: Array<T["state"]>,
+  state: Session,
+  action: SessionAction,
+  func: (prev: T) => Session
+): Session {
+  if (desiredState.includes(state.state)) {
+    return func(state as T);
+  } else {
+    const message = `Invalid transition ${action.type} in Session state ${state.state}. Terminating session.`;
+    warn(message);
+    return signOut(state);
+  }
 }

@@ -2,7 +2,8 @@ import { log } from "Utility";
 import { ActionBase, ActionFactory } from "Store/types";
 import {
   TokenExchangeResponse,
-  IdentifySessionResponse
+  IdentifySessionResponse,
+  SessionRefreshResponse
 } from "Store/api/rest/types";
 
 // ? ====================
@@ -14,13 +15,15 @@ export const SESSION_SIGN_OUT = "session:signOut";
 export const SESSION_LOAD = "session:load";
 export const SESSION_DISCARD_NONCE = "session:discardNonce";
 export const SESSION_ATTACH_LISTENER = "session:attachListener";
+export const SESSION_REFRESH = "session:refresh";
 
 type SessionBase<T> = ActionBase<T, typeof SESSION_NAMESPACE>;
 export type SessionAction =
   | SessionSignOutAction
   | SessionLoadAction
   | SessionDiscardNonceAction
-  | SessionAttachListenerAction;
+  | SessionAttachListenerAction
+  | SessionRefreshAction;
 
 export interface SessionSignOutAction
   extends SessionBase<typeof SESSION_SIGN_OUT> {}
@@ -31,6 +34,11 @@ export interface SessionDiscardNonceAction
 export interface SessionAttachListenerAction
   extends SessionBase<typeof SESSION_ATTACH_LISTENER> {
   payload: () => void;
+}
+
+export interface SessionRefreshAction
+  extends SessionBase<typeof SESSION_REFRESH> {
+  payload: SessionRefreshResponse;
 }
 
 export interface SessionLoadAction extends SessionBase<typeof SESSION_LOAD> {

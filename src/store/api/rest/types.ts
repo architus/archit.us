@@ -19,3 +19,8 @@ export const TGuildCountLoadResponse = t.interface({
   guildCount: t.number,
   userCount: t.number
 });
+
+export type SessionRefreshResponse = t.TypeOf<typeof TSessionRefreshResponse>;
+export const TSessionRefreshResponse = t.interface({
+  access: TAccess
+});

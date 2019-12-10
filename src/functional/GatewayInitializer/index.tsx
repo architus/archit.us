@@ -16,7 +16,7 @@ export const GatewayInitializer: React.FunctionComponent = () => {
         Gateway.authenticate(session.nonce);
         dispatch(discardNonce());
       } else if (
-        session.state === "authenticated" ||
+        session.state === "pending" ||
         session.state === "none"
       ) {
         Gateway.initialize();
