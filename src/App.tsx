@@ -1,14 +1,12 @@
 import React from "react";
-import { addPrefetchExcludes } from "react-static";
+import { addPrefetchExcludes, Root, Routes } from "react-static";
 import Store from "Store";
-
-import { Router } from "components/Router";
-import { Root, Routes } from "react-static";
+import { Router } from "Components/Router";
 import { Provider } from "react-redux";
-import { SEO } from "components/Layout";
-import NotificationPane from "components/NotificationPane";
+import { SEO } from "Components/Layout";
+import NotificationPane from "Components/NotificationPane";
 
-import AppRoot from "dynamic/AppRoot";
+import AppRoot from "Dynamic/AppRoot";
 
 import "scss/main.scss";
 

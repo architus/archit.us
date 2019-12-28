@@ -1,98 +1,81 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable react/prop-types */
 import React from "react";
 import axios from "axios";
-import { API_BASE } from "Utility";
+import path from "path";
+import fs from "fs";
 
-export default Object.assign(
-  {},
-  {
-    getRoutes: async () => {
-      const {
-        data: { guild_count, user_count }
-      } = await axios.get(`${API_BASE}/guild_count`);
-
-      return [
-        {
-          path: "/",
-          template: "src/pages/Index",
-          getData: async () => ({
-            guild_count,
-            user_count
-          })
-        },
-        {
-          path: "login",
-          template: "src/pages/Login"
-        },
-        {
-          path: "404",
-          template: "src/pages/NotFound"
-        },
-        {
-          path: "app",
-          template: "src/dynamic/AppRoot"
-        }
-      ];
-    },
-
-    plugins: [
-      require.resolve("react-static-plugin-reach-router"),
-      require.resolve("react-static-plugin-sitemap"),
-      require.resolve("react-static-plugin-sass"),
-      require.resolve("react-static-plugin-typescript")
-    ],
-
-    Document: ({ Html, Head, Body, children }) => (
-      <Html lang="en-US">
-        <Head>
-          <meta charSet="UTF-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-        </Head>
-        <Body className="dark-mode">{children}</Body>
-        <script
-          // Dark mode anti-flash script
-          dangerouslySetInnerHTML={{
-            __html: `(function() {
-  // Change these if you use something different in your hook.
-  var storageKey = 'darkMode';
-  var classNameDark = 'dark-mode';
-  var classNameLight = 'light-mode';
-
-  function setClassOnDocumentBody(darkMode) {
-    document.body.classList.add(darkMode ? classNameDark : classNameLight);
-    document.body.classList.remove(darkMode ? classNameLight : classNameDark);
-  }
-
-  var preferDarkQuery = '(prefers-color-scheme: dark)';
-  var mql = window.matchMedia(preferDarkQuery);
-  var supportsColorSchemeQuery = mql.media === preferDarkQuery;
-  var localStorageTheme = null;
-  try {
-    localStorageTheme = localStorage.getItem(storageKey);
-  } catch (err) {}
-  var localStorageExists = localStorageTheme !== null;
-  if (localStorageExists) {
-    localStorageTheme = JSON.parse(localStorageTheme);
-  }
-
-  // Determine the source of truth
-  if (localStorageExists) {
-    // source of truth from localStorage
-    setClassOnDocumentBody(localStorageTheme);
-  } else if (supportsColorSchemeQuery) {
-    // source of truth from system
-    setClassOnDocumentBody(mql.matches);
-    localStorage.setItem(storageKey, mql.matches);
-  } else {
-    // source of truth from document.body
-    var isDarkMode = document.body.classList.contains(classNameDark);
-    localStorage.setItem(storageKey, JSON.stringify(isDarkMode));
-  }
-})();`
-          }}
-        />
-      </Html>
-    )
-  },
-  process.env.PRODUCTION_URL ? { siteRoot: process.env.PRODUCTION_URL } : {}
+const API_BASE = "https://api.develop.archit.us/";
+const noFlashScript = fs.readFileSync(
+  path.resolve(__dirname, "./src/Build/no-flash.js")
 );
+
+const config = {
+  entry: path.join(__dirname, "src", "index.tsx"),
+  getRoutes: async () => {
+    // Load usage count from API
+    let guildCount = 0;
+    let userCount = 0;
+    try {
+      const result = await axios.get(`${API_BASE}/guild-count`);
+      guildCount = result.data.guildCount;
+      userCount = result.data.userCount;
+    } catch (e) {
+      console.log("An error ocurred while fetching usage count");
+      console.log(e);
+    }
+
+    return [
+      {
+        path: "/",
+        template: "src/Pages/Index",
+        getData: async () => ({
+          guildCount,
+          userCount
+        })
+      },
+      {
+        path: "login",
+        template: "src/Pages/Login"
+      },
+      {
+        path: "404",
+        template: "src/Pages/NotFound"
+      },
+      {
+        path: "app",
+        template: "src/Dynamic/AppRoot"
+      }
+    ];
+  },
+
+  plugins: [
+    require.resolve("react-static-plugin-reach-router"),
+    require.resolve("react-static-plugin-sitemap"),
+    require.resolve("react-static-plugin-sass"),
+    require.resolve("react-static-plugin-typescript")
+  ],
+
+  // eslint-disable-next-line react/display-name
+  Document: ({ Html, Head, Body, children }) => (
+    <Html lang="en-US">
+      <Head>
+        <meta charSet="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Head>
+      <Body className="dark-mode">{children}</Body>
+      <script
+        // Dark mode anti-flash script
+        dangerouslySetInnerHTML={{
+          __html: noFlashScript
+        }}
+      />
+    </Html>
+  )
+};
+
+if (process.env.PRODUCTION_URL) {
+  config.siteRoot = process.env.PRODUCTION_URL;
+}
+
+export default config;

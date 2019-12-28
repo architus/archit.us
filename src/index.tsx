@@ -2,8 +2,9 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { AppContainer } from "react-hot-loader";
 
-import App from "./App";
 import { isDefined } from "Utility";
+import App from "./App";
+
 export default App;
 
 // Render your app
@@ -35,17 +36,15 @@ if (typeof document !== "undefined") {
 
   // Register service worker
   if ("serviceWorker" in navigator) {
-    window.addEventListener("load", function() {
+    window.addEventListener("load", () => {
       if (process.env.PRODUCTION_URL) {
         navigator.serviceWorker.register("/service-worker.js");
       } else {
-        navigator.serviceWorker
-          .getRegistrations()
-          .then(function(registrations) {
-            for (let registration of registrations) {
-              registration.unregister();
-            }
-          });
+        navigator.serviceWorker.getRegistrations().then(registrations => {
+          for (const registration of registrations) {
+            registration.unregister();
+          }
+        });
       }
     });
   }

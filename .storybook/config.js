@@ -8,8 +8,8 @@ import ThemeDecorator from "./ThemeDecorator";
 import StoreDecorator from "./StoreDecorator";
 
 import { primaryColor, secondaryColor } from "global.json";
-import lightLogo from "assets/light_logo.png";
-import darkLogo from "assets/dark_logo.png";
+import lightLogo from "Assets/light_logo.png";
+import darkLogo from "Assets/dark_logo.png";
 import "scss/main.scss";
 
 const themeBase = {

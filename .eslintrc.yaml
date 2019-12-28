@@ -1,0 +1,105 @@
+---
+# Style configuration
+extends:
+  - airbnb-base
+  - plugin:import/errors
+  - plugin:import/warnings
+  - plugin:import/typescript
+  - react-app
+  - prettier
+  - prettier/react
+  - plugin:@typescript-eslint/recommended
+  - plugin:react/recommended
+plugins:
+  - react
+  - prettier
+  - react-hooks
+  - "@typescript-eslint/eslint-plugin"
+  - eslint-plugin-tsdoc
+  - import
+  - jsx-a11y
+rules:
+  tsdoc/syntax: warn
+  react/prop-types: warn
+  react-hooks/rules-of-hooks: error
+  react-hooks/exhaustive-deps: warn
+  import/no-named-as-default: off
+  import/no-named-as-default-member: off
+  import/prefer-default-export: off
+  no-underscore-dangle: 0
+  import/default: off
+  import/no-extraneous-dependencies: error
+  import/no-unresolved: error
+  no-plusplus:
+    - error
+    - allowForLoopAfterthoughts: true
+  import/extensions:
+    - warn
+    - js: never
+      ts: never
+      json: always
+      scss: always
+
+  # Prettier config
+  prettier/prettier:
+    - error
+    - semi: true
+      endOfLine: auto
+
+overrides:
+  # Disable warning `require` on Node-js files
+  - files:
+      - gatsby-*.js
+      - build/*.ts
+    rules:
+      "@typescript-eslint/no-var-requires": off
+  # Disable TypeScript specific rules on JS/JSXfiles
+  - files:
+      - "*.js"
+      - "*.jsx"
+    rules:
+      "@typescript-eslint/explicit-function-return-type": off
+  # Disable extensions on scss files inside scss files
+  - files:
+      - "*.scss"
+    rules:
+      import/extensions:
+        - warn
+        - scss: never
+  # Disable no-cycle warnings in utility files (unavoidable)
+  - files:
+      - "./src/Utility/*.ts"
+    rules:
+      import/no-cycle: off
+
+# ESLint Project Settings
+settings:
+  react:
+    version: detect
+  import/parsers:
+    "@typescript-eslint/parser":
+      - ".ts"
+      - ".tsx"
+  import/resolver:
+    typescript:
+      alwaysTryTypes: true
+    node:
+      paths:
+        - src
+      extensions:
+        - ".js"
+        - ".jsx"
+        - ".ts"
+        - ".tsx"
+env:
+  es6: true
+  node: true
+parser: "@typescript-eslint/parser"
+parserOptions:
+  ecmaVersion: 2019
+  sourceType: module
+  project: "./tsconfig.json"
+  ecmaFeatures:
+    jsx: true
+    experimentalObjectRestSpread: true
+    modules: true
