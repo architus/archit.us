@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 /* eslint-disable max-classes-per-file */
 import React from "react";
 import * as t from "io-ts";
@@ -162,10 +163,10 @@ export enum PremiumType {
  * @remarks
  * The format comes from {@link https://discordapp.com/developers/docs/resources/user#user-object-premium-types | the Discord API docs}
  */
-export const TPremiumType = t.type({
-  fruit: new EnumType<PremiumType>(PremiumType, "PremiumType"),
-  quatity: t.number
-});
+export const TPremiumType = new EnumType<PremiumType>(
+  PremiumType,
+  "PremiumType"
+);
 
 /**
  * Discord user type
@@ -191,13 +192,11 @@ export const TUser = t.intersection([
     avatar: t.string,
     bot: t.boolean,
     system: t.boolean,
-    // eslint-disable-next-line @typescript-eslint/camelcase
     mfa_enabled: t.boolean,
     locale: t.string,
     verified: t.boolean,
     email: t.string,
     flags: t.number,
-    // eslint-disable-next-line @typescript-eslint/camelcase
     premium_type: TPremiumType
   })
 ]);
@@ -258,3 +257,110 @@ export const TPersistentSession = t.type({
   user: TUser,
   access: TAccess
 });
+
+export enum VerificationLevel {
+  None = 0,
+  Low = 1,
+  Medium = 2,
+  High = 3,
+  VeryHigh = 4
+}
+export const TVerificationLevel = new EnumType<VerificationLevel>(
+  VerificationLevel,
+  "VerificationLevel"
+);
+
+export enum DefaultMessageNotificationLevel {
+  AllMessages = 0,
+  OnlyMentions = 1
+}
+export const TDefaultMessageNotificationLevel = new EnumType<
+  DefaultMessageNotificationLevel
+>(DefaultMessageNotificationLevel, "DefaultMessageNotificationLevel");
+
+export enum ExplicitContentFilter {
+  Disabled = 0,
+  MembersWithoutRoles = 1,
+  AllMembers = 2
+}
+export const TExplicitContentFilter = new EnumType<ExplicitContentFilter>(
+  ExplicitContentFilter,
+  "ExplicitContentFilter"
+);
+
+export enum MfaLevel {
+  None = 0,
+  Elevated = 1
+}
+export const TMfaLevel = new EnumType<MfaLevel>(MfaLevel, "MfaLevel");
+
+export enum PremiumTier {
+  None = 0,
+  Tier1 = 1,
+  Tier2 = 2,
+  Tier3 = 3
+}
+export const TPremiumTier = new EnumType<PremiumTier>(
+  PremiumTier,
+  "PremiumTier"
+);
+
+export enum GuildFeature {
+  InviteSplash = "INVITE_SPLASH",
+  VipRegions = "VIP_REGIONS",
+  VanityUrl = "VANITY_URL",
+  Verified = "VERIFIED",
+  Partnered = "PARTNERED",
+  Public = "PUBLIC",
+  Commerce = "COMMERCE",
+  News = "NEWS",
+  Discoverable = "DISCOVERABLE",
+  Featurable = "FEATURABLE",
+  AnimatedIcon = "ANIMATED_ICON",
+  Banner = "BANNER"
+}
+export const TGuildFeature = new EnumType<GuildFeature>(
+  GuildFeature,
+  "GuildFeature"
+);
+
+export type Guild = t.TypeOf<typeof TGuild>;
+export const TGuild = t.intersection([
+  t.type({
+    id: TSnowflake,
+    name: t.string,
+    owner_id: TSnowflake,
+    region: t.string,
+    afk_timeout: t.Integer,
+    verification_level: TVerificationLevel,
+    default_message_notifications: TDefaultMessageNotificationLevel,
+    explicit_content_filter: TExplicitContentFilter,
+    // foreign key reference
+    roles: t.array(TSnowflake),
+    // foreign key reference
+    emojis: t.array(TSnowflake),
+    features: t.array(TGuildFeature),
+    mfa_level: TMfaLevel,
+    premium_tier: TPremiumTier,
+    preferred_locale: t.string
+  }),
+  t.partial({
+    icon: t.string,
+    splash: t.string,
+    owner: t.boolean,
+    permissions: t.number,
+    afk_channel_id: TSnowflake,
+    embed_enabled: t.boolean,
+    embed_channel_id: TSnowflake,
+    application_id: TSnowflake,
+    widget_enabled: t.boolean,
+    widget_channel_id: TSnowflake,
+    system_channel_id: TSnowflake,
+    max_presences: t.Integer,
+    max_members: t.Integer,
+    vanity_url_code: t.string,
+    description: t.string,
+    banner: t.string,
+    premium_subscription_count: t.Integer
+  })
+]);

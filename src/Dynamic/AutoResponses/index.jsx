@@ -9,16 +9,7 @@ import React, {
 import { useMedia } from "react-use";
 import PropTypes from "prop-types";
 import { shallowEqual, useSelector, useDispatch } from "react-redux";
-import {
-  getResponses,
-  addResponse,
-  editResponse,
-  deleteResponse,
-  localAddResponse,
-  localEditResponse,
-  localDeleteResponse
-} from "Store/actions";
-import { useAuthDispatch, isDefined, isNil, useCallbackOnce } from "Utility";
+import { isDefined, isNil, useCallbackOnce } from "Utility";
 import { AppScrollContext } from "Dynamic/AppRoot";
 
 import DataGrid, { NumericFilter } from "Components/DataGrid";
@@ -35,9 +26,10 @@ import "./style.scss";
 function AutoResponses({ guildId }) {
   // Connect to store
   const dispatch = useDispatch();
-  const addRow = useAuthDispatch(addResponse);
-  const editRow = useAuthDispatch(editResponse);
-  const deleteRow = useAuthDispatch(deleteResponse);
+  // TODO Fix with Pool API
+  const addRow = () => null;
+  const editRow = () => null;
+  const deleteRow = () => null;
   const {
     commands,
     authors,
@@ -68,7 +60,8 @@ function AutoResponses({ guildId }) {
   const user_id = session.id;
 
   // API fetch upon guildId/authentication updates
-  const fetchResponses = useAuthDispatch(getResponses);
+  // TODO Fix with Pool API
+  const fetchResponses = () => [];
   useEffect(() => {
     if (authenticated) fetchResponses(guildId);
   }, [authenticated, guildId, fetchResponses]);

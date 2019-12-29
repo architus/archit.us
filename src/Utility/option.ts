@@ -49,7 +49,7 @@ export interface OptionLike<A> {
    * @param func - The mapping function that is invoked to transform this option's inner
    * value to a value of B if and only if the original option is not None
    */
-  map<B>(_: (_: A) => B): OptionLike<B>;
+  map<B>(func: (_: A) => B): OptionLike<B>;
 
   /**
    * Applies a filter function if this option is defined, resulting in the same option if
@@ -57,7 +57,7 @@ export interface OptionLike<A> {
    * and the filter function is not invoked
    * @param func - The filter function to use if the option is defined
    */
-  filter(_: Predicate<A>): OptionLike<A>;
+  filter(func: Predicate<A>): OptionLike<A>;
 
   /**
    * Flat maps the option to another option Option<B>, using a mapping function that
@@ -65,7 +65,15 @@ export interface OptionLike<A> {
    * @param func - The mapping function that is invoked to transform this option's inner
    * value to a new Option<B> if and only if the original option is not None
    */
-  flatMap<B>(_: (_: A) => OptionLike<B>): OptionLike<B>;
+  flatMap<B>(func: (_: A) => OptionLike<B>): OptionLike<B>;
+
+  /**
+   * Flat maps the option to another option Option<B>, using a mapping function that
+   * itself returns a nullable type
+   * @param func - The mapping function that is invoked to transform this option's inner
+   * value to a new value B | Nil if and only if the original option is not None
+   */
+  flatMapNil<B>(func: (_: A) => B | Nil): OptionLike<B>;
 
   /**
    * Allows for conditional branching and value resolution depending on the value of
@@ -73,6 +81,13 @@ export interface OptionLike<A> {
    * @param m - The matcher object to apply to the state of the Option
    */
   match<B>(m: Matcher<A, B>): B;
+
+  /**
+   * Invokes a callback if the internal value is defined, otherwise does nothing
+   * @param func - The callback function to call if the option's value is defined
+   * @returns The original option
+   */
+  forEach(func: (_: A) => void): OptionLike<A>;
 }
 
 interface ValuedOption<A> {
@@ -104,7 +119,11 @@ export abstract class Option<A> implements OptionLike<A> {
 
   abstract flatMap<B>(_: (_: A) => Option<B>): Option<B>;
 
+  abstract flatMapNil<B>(_: (_: A) => B | Nil): Option<B>;
+
   abstract match<B>(m: Matcher<A, B>): B;
+
+  abstract forEach(_: (_: A) => void): Option<A>;
 
   /**
    * Constructs a new instance of a Some<T> or None object in an Option<T>, depending
@@ -189,8 +208,19 @@ export class SomeType<A> extends Option<A> implements ValuedOption<A> {
     return _(this._value);
   }
 
+  flatMapNil<B>(_: (_: A) => B | Nil): Option<B> {
+    const result: B | Nil = _(this._value);
+    if (isNil(result)) return None;
+    return Some(result);
+  }
+
   match<B>(m: Matcher<A, B>): B {
     return m.Some(this._value);
+  }
+
+  forEach(_: (_: A) => void): Option<A> {
+    _(this._value);
+    return this;
   }
 }
 
@@ -244,8 +274,16 @@ export class NoneType extends Option<never> {
     return None;
   }
 
+  flatMapNil<B>(_: (_: never) => B | Nil): Option<B> {
+    return None;
+  }
+
   match<B>(m: Matcher<never, B>): B {
     return m.None();
+  }
+
+  forEach(_: (_: never) => void): Option<never> {
+    return this;
   }
 }
 

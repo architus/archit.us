@@ -9,6 +9,7 @@ import { Store, Dispatch } from "Store/types";
 import { addMissingUnit, collator } from "./primitives";
 import { isClient, isProduction } from "./document";
 import { Option, Some, None } from "./option";
+import { PoolType, PoolBacking } from "Store/slices/pools";
 
 /**
  * Gets the optional encoded return query param if not in production mode (where the
@@ -173,4 +174,22 @@ export function useInitialRender(): boolean {
   const [isInitial, setIsInitial] = useState(true);
   useEffectOnce(() => setIsInitial(false));
   return isInitial;
+}
+
+interface PoolProvider<T> {
+  all: T[];
+  isLoaded: boolean;
+}
+
+export function usePool<T extends PoolType>(
+  type: T,
+  options: {
+    filter: (elem: T) => boolean;
+  }
+): PoolProvider<PoolBacking[T]> {
+  // TODO Implement Pool API
+  return {
+    all: [],
+    isLoaded: false
+  };
 }

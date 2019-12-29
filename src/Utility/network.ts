@@ -47,12 +47,12 @@ export enum HttpVerbs {
  * Gets the RESTful API base URL to use
  */
 export const API_BASE: string = process.env.PRODUCTION_URL
-  ? "https://api.archit.us:8000"
-  : "https://api.archit.us:8000";
+  ? "https://api.archit.us"
+  : "https://api.develop.archit.us";
 
 /**
  * Gets the Gateway API base URL to use
  */
-export const WS_API_BASE: string = process.env.PRODUCTION_URL
-  ? "wss://ws.archit.us:8000"
-  : "wss://ws.archit.us:8000";
+export const GATEWAY_API_BASE: string = process.env.PRODUCTION_URL
+  ? "https://gateway.archit.us"
+  : "https://gateway.develop.archit.us";

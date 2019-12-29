@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { discardNonce, attachListener } from "Store/actions_old";
+import { discardNonce, attachListener } from "Store/actions";
 import { useSelector, useDispatch } from "Utility";
 import { Gateway } from "Store/api/gateway/middleware";
 
@@ -15,14 +15,12 @@ export const GatewayInitializer: React.FunctionComponent = () => {
       if (session.state === "gateway") {
         Gateway.authenticate(session.nonce);
         dispatch(discardNonce());
-      } else if (
-        session.state === "pending" ||
-        session.state === "none"
-      ) {
+        dispatch(attachListener(Gateway.onSignOut));
+      } else if (session.state === "pending" || session.state === "none") {
         Gateway.initialize();
+        dispatch(attachListener(Gateway.onSignOut));
       }
-      dispatch(attachListener(Gateway.onSignOut));
     }
-  }, [session]);
+  }, [session, dispatch]);
   return null;
 };

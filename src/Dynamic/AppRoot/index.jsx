@@ -7,18 +7,18 @@ import {
   useEffectOnce,
   useLocation,
   useInitialRender,
-  useCallbackOnce
+  useCallbackOnce,
+  usePool
 } from "Utility";
 import { navigate } from "@reach/router";
-import { getArchitusGuilds } from "Store/slices/guilds";
 
 import SwipeHandler from "Components/SwipeHandler";
 import GuildList from "Components/GuildList";
 import SideNavbar from "Components/SideNavbar";
-import AppContent from "./content";
-import AppLayout from "./layout";
 import AddGuildModal from "Components/AddGuildModal";
 import Icon from "Components/Icon";
+import AppContent from "./content";
+import AppLayout from "./layout";
 
 import "./style.scss";
 import { tabs, DEFAULT_TAB } from "./tabs";
@@ -26,12 +26,9 @@ import { APP_HTML_CLASS, APP_PATH_ROOT } from "./config.json";
 
 function AppRoot() {
   // Connect to store
-  const { guildList, guildsLoaded } = useSelector(state => {
-    return {
-      guildList: getArchitusGuilds(state),
-      guildsLoaded: state.guilds.hasLoaded
-    };
-  }, shallowEqual);
+  const { all: guildList, isLoaded: guildsLoaded } = usePool("guild", {
+    filter: guild => guild.hasArchitus
+  });
 
   // Nav drawer logic
   const [showAppNav, setShowAppNav] = useState(true);
@@ -89,12 +86,11 @@ function AppRoot() {
         if (guildList.length === 0) {
           showModal();
           return;
-        } else {
-          let defaultGuild = guildList[0];
-          const adminGuilds = guildList.filter(g => g.architus_admin);
-          if (adminGuilds.length > 0) defaultGuild = adminGuilds[0];
-          navigateTo = `${APP_PATH_ROOT}/${defaultGuild.id}/${path}`;
         }
+        let defaultGuild = guildList[0];
+        const adminGuilds = guildList.filter(g => g.architus_admin);
+        if (adminGuilds.length > 0) [defaultGuild] = adminGuilds;
+        navigateTo = `${APP_PATH_ROOT}/${defaultGuild.id}/${path}`;
       }
       if (!isNil(navigateTo)) {
         navigate(navigateTo);

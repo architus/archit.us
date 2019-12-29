@@ -5,7 +5,9 @@ import {
   isRemote,
   getLocalStorage,
   setLocalStorage,
-  warn
+  warn,
+  error,
+  toJSON
 } from "Utility";
 import {
   User,
@@ -32,12 +34,14 @@ import {
 // ? ====================
 
 /**
- * Tagged union ADT representing the current session state. `Session.state` can either be
+ * Tagged union ADT representing the current session state.
+ *
+ * @remarks `Session.state` can either be
  * `"none"` (unauthenticated), `"connected"` (directly between Oauth return and token
  * exchange with API), `"pending" `(after local storage session restoration), or
  * `"authenticated"` (after token exchange/identify)
- * For more information on authentication,
- * @see https://docs.archit.us/internal/api-reference/auth/
+ * For more information on authentication, see the
+ * {@link https://docs.archit.us/internal/api-reference/auth/ | Architus API docs}
  */
 export type Session =
   | NoneSession
@@ -85,44 +89,12 @@ const initial: () => Session = () => {
 
 const reducer: Reducer<Session> = scopeReducer(
   SESSION_NAMESPACE,
+  // exhaustive switch
+  // eslint-disable-next-line consistent-return
   (prev: Session, action: SessionAction): Session => {
     switch (action.type) {
       case SESSION_SIGN_OUT:
         return signOut(prev);
-
-      case SESSION_LOAD:
-        const { user, access } = action.payload;
-        switch (action.payload.mode) {
-          case "identify":
-            return {
-              state: "authenticated",
-              this: user,
-              access,
-              signOutListeners: []
-            };
-
-          case "tokenExchange":
-            return {
-              state: "gateway",
-              this: user,
-              access,
-              nonce: action.payload.nonce,
-              signOutListeners: []
-            };
-        }
-
-      case SESSION_DISCARD_NONCE:
-        return guardedTransition(
-          "gateway",
-          prev,
-          action,
-          (s: GatewayAuthenticatedSession) => ({
-            state: "authenticated",
-            this: s.this,
-            access: s.access,
-            signOutListeners: s.signOutListeners
-          })
-        );
 
       case SESSION_ATTACH_LISTENER:
         return guardedTransitions(
@@ -145,6 +117,41 @@ const reducer: Reducer<Session> = scopeReducer(
             access: action.payload.access
           })
         );
+
+      case SESSION_DISCARD_NONCE:
+        return guardedTransition(
+          "gateway",
+          prev,
+          action,
+          (s: GatewayAuthenticatedSession) => ({
+            state: "authenticated",
+            this: s.this,
+            access: s.access,
+            signOutListeners: s.signOutListeners
+          })
+        );
+
+      case SESSION_LOAD: {
+        const { user, access } = action.payload;
+        switch (action.payload.mode) {
+          case "identify":
+            return {
+              state: "authenticated",
+              this: user,
+              access,
+              signOutListeners: []
+            };
+
+          case "tokenExchange":
+            return {
+              state: "gateway",
+              this: user,
+              access,
+              nonce: action.payload.nonce,
+              signOutListeners: []
+            };
+        }
+      }
     }
   }
 );
@@ -191,13 +198,12 @@ function tryLoadSession(): Option<Session> {
         log("Session has expired. Clearing");
         setLocalStorage(LOCAL_STORAGE_KEY, "");
         return None;
-      } else {
-        return Some({
-          state: "pending",
-          this: session.user,
-          access: session.access
-        });
       }
+      return Some({
+        state: "pending",
+        this: session.user,
+        access: session.access
+      });
     });
 }
 
@@ -227,11 +233,10 @@ function guardedTransition<T extends Session>(
 ): Session {
   if (state.state === desiredState) {
     return func(state as T);
-  } else {
-    const message = `Invalid transition ${action.type} in Session state ${state.state}. Terminating session.`;
-    warn(message);
-    return signOut(state);
   }
+  const message = `Invalid transition ${action.type} in Session state ${state.state}. Terminating session.`;
+  warn(message);
+  return signOut(state);
 }
 
 /**
@@ -249,9 +254,8 @@ function guardedTransitions<T extends Session>(
 ): Session {
   if (desiredState.includes(state.state)) {
     return func(state as T);
-  } else {
-    const message = `Invalid transition ${action.type} in Session state ${state.state}. Terminating session.`;
-    warn(message);
-    return signOut(state);
   }
+  const message = `Invalid transition ${action.type} in Session state ${state.state}. Terminating session.`;
+  warn(message);
+  return signOut(state);
 }

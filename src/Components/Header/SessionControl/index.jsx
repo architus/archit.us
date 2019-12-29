@@ -1,8 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { signOut, identifySession } from "Store/actions_old";
+import { signOut, identify } from "Store/actions";
 import { isEmptyOrNil } from "Utility";
+import { useSessionStatus } from "Session";
 
 import { Link as RouterLink } from "Components/Router";
 import UserDisplay from "Components/UserDisplay";
@@ -10,6 +11,11 @@ import { Dropdown } from "react-bootstrap";
 import Icon from "Components/Icon";
 
 import "./style.scss";
+
+export default function SessionControl {
+  const [isSignedIn, isSigningIn] = useSessionStatus();
+
+}
 
 class SessionControl extends React.Component {
   constructor(props) {
@@ -74,18 +80,6 @@ export const mapStateToProps = state => {
     accessToken: state.session.accessToken
   };
 };
-
-export const mapDispatchToProps = dispatch => {
-  return {
-    identify: accessToken => dispatch(identifySession(accessToken)),
-    signOut: () => dispatch(signOut())
-  };
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SessionControl);
 
 SessionControl.propTypes = {
   signOut: PropTypes.func,
