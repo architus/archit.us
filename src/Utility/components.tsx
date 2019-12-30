@@ -9,7 +9,7 @@ import { isRemote } from "./document";
 export function withClientSide<P extends object>(
   Component: React.ComponentType<P>
 ): React.ComponentType<P> {
-  const WithClientSide: React.FunctionComponent<P> = (props: P) => {
+  const WithClientSide: React.FC<P> = (props: P) => {
     return isRemote ? null : <Component {...props} />;
   };
   return WithClientSide;

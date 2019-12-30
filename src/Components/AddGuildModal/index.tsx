@@ -1,17 +1,21 @@
 import React from "react";
-import PropTypes from "prop-types";
-import { getDiscordAdminGuildsWithoutArchitus } from "Store/slices/guilds";
-import { connect } from "react-redux";
+import { usePool } from "Store/slices/pools";
 import { useReturnQuery, API_BASE, processIfNotEmptyOrNil } from "Utility";
+import { Snowflake } from "Utility/types";
 
 import GuildCard from "Components/GuildCard";
 import { Modal, Button } from "react-bootstrap";
 
 import "./style.scss";
 
-function AddGuildModal({ onHide, guilds, dispatch, ...rest }) {
+type AddGuildModalProps = {
+  onHide: () => void;
+} & Partial<React.ComponentProps<typeof Modal>>;
+
+const AddGuildModal: React.FC<AddGuildModalProps> = ({ onHide, ...rest }) => {
+  const { all: guilds } = usePool("guilds");
   const returnQuery = useReturnQuery();
-  const inviteUrl = guildId =>
+  const inviteUrl = (guildId: Snowflake): string =>
     `${API_BASE}/invite/${guildId}${processIfNotEmptyOrNil(
       returnQuery,
       q => `?${q}`
@@ -37,8 +41,8 @@ function AddGuildModal({ onHide, guilds, dispatch, ...rest }) {
           </p>
           <p>
             <em>
-              Not seeing a server? Make sure you have the "Manage guild"
-              permission in that server.
+              Not seeing a server? Make sure you have the &quot;Manage
+              guild&quot; permission in that server.
             </em>
           </p>
         </Modal.Title>
@@ -63,16 +67,6 @@ function AddGuildModal({ onHide, guilds, dispatch, ...rest }) {
       </Modal.Footer>
     </Modal>
   );
-}
-
-const mapStateToProps = state => ({
-  guilds: getDiscordAdminGuildsWithoutArchitus(state)
-});
-
-export default connect(mapStateToProps)(AddGuildModal);
-
-AddGuildModal.propTypes = {
-  onHide: PropTypes.func,
-  guilds: PropTypes.array,
-  dispatch: PropTypes.func
 };
+
+export default AddGuildModal;

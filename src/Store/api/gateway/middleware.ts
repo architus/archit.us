@@ -5,10 +5,14 @@ import io from "socket.io-client";
 
 /**
  * Represents the Gateway connection singleton to the architus Gateway socket.io API
- * @see https://docs.archit.us/internal/socketio/
+ *
+ * @remarks
+ * For more information, see
+ * {@link https://docs.archit.us/internal/socketio/ | the Architus docs on Socket.io}
  */
 class GatewayConnection {
   private static _instance: GatewayConnection | undefined;
+
   static get instance(): GatewayConnection {
     if (isNil(GatewayConnection._instance)) {
       GatewayConnection._instance = new GatewayConnection();
@@ -17,10 +21,11 @@ class GatewayConnection {
   }
 
   _isInitialized: boolean;
+
   _socket?: SocketIOClient.Socket;
+
   private constructor() {
     this._isInitialized = false;
-    this.onSignOut = this.onSignOut.bind(this);
   }
 
   public get isInitialized(): boolean {
@@ -30,7 +35,10 @@ class GatewayConnection {
   /**
    * Bootstraps a new connection without an elevation nonce, called after either a. session
    * restoration from local storage or b. loading unauthenticated
-   * @see https://docs.archit.us/internal/api-reference/auth/
+   *
+   * @remarks
+   * For more information, see
+   * {@link https://docs.archit.us/internal/api-reference/auth/ | the Architus docs on Auth}
    */
   public initialize(): void {
     this._isInitialized = true;
@@ -40,7 +48,10 @@ class GatewayConnection {
   /**
    * Bootstraps a new connection with an elevation nonce, called after a successful token
    * exchange, which begins an elevated connection
-   * @see https://docs.archit.us/internal/api-reference/auth/
+   *
+   * @remarks
+   * For more information, see
+   * {@link https://docs.archit.us/internal/api-reference/auth/ | the Architus docs on Auth}
    */
   public authenticate(nonce: string): void {
     this._isInitialized = true;
@@ -48,24 +59,31 @@ class GatewayConnection {
   }
 
   /**
-   * Called upon session termination (either manual or as the result of an error)
+   * Bootstraps a new connection with an elevation nonce, called after a successful token
+   * exchange, which begins an elevated connection
+   *
+   * @remarks
+   * For more information, see
+   * {@link https://docs.archit.us/internal/api-reference/auth/ | the Architus docs on Auth}
    */
-  public onSignOut(): void {
-    this._isInitialized = false;
-    // TODO implement connection de-elevation
+  // eslint-disable-next-line class-methods-use-this
+  public demote(): void {
+    // TODO implement demotion
   }
 }
 
 /**
  * Represents the Gateway connection singleton to the architus Gateway socket.io API
- * @see https://docs.archit.us/internal/socketio/
+ *
+ * @remarks
+ * For more information, see
+ * {@link https://docs.archit.us/internal/socketio/ | the Architus docs on Socket.io}
  */
 export const Gateway: GatewayConnection = GatewayConnection.instance;
 
 /**
  * Creates a Gateway API middleware that handles both server push messages and request-response
  * patterns
- * @param param0 Store instance
  */
 const GatewayMiddleware: Middleware<{}, Store, ReduxDispatch<AnyAction>> = ({
   dispatch

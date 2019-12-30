@@ -21,6 +21,7 @@ plugins:
 rules:
   tsdoc/syntax: warn
   react/prop-types: warn
+  react/display-name: warn
   react-hooks/rules-of-hooks: error
   react-hooks/exhaustive-deps: warn
   import/no-named-as-default: off
@@ -55,12 +56,17 @@ overrides:
       "@typescript-eslint/no-var-requires": off
       "global-require": off
       "no-console": off
-  # Disable TypeScript specific rules on JS/JSXfiles
+  # Disable TypeScript specific rules on JS/JSX files
   - files:
       - "*.js"
       - "*.jsx"
     rules:
       "@typescript-eslint/explicit-function-return-type": off
+  # Disable requiring proptypes for TSX files
+  - files:
+      - "*.tsx"
+    rules:
+      "react/prop-types": off
   # Disable extensions on scss files inside scss files
   - files:
       - "*.scss"
@@ -70,8 +76,8 @@ overrides:
         - scss: never
   # Disable no-cycle warnings in utility files (unavoidable)
   - files:
-      - "../src/Utility/*.ts"
-      - "../src/Store/*.ts"
+      - "**/src/Utility/**/*.ts"
+      - "**/src/Store/**/*.ts"
     rules:
       "import/no-cycle": off
 

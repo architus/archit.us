@@ -1,4 +1,4 @@
-import axios, { AxiosError } from "axios";
+import axios, { AxiosError, AxiosRequestConfig, AxiosPromise } from "axios";
 import { HttpVerbs, isNil, isDefined, API_BASE, log, toJSON } from "Utility";
 import { Nil } from "Utility/types";
 import { Option, Some, None } from "Utility/option";
@@ -11,6 +11,7 @@ import {
 import { Middleware, Dispatch as ReduxDispatch, AnyAction } from "redux";
 import { Store, Dispatch } from "Store";
 import { ApiError } from "../actions";
+import { ApiRequest } from "./types";
 
 // axios default configs
 if (isNil(axios.defaults.headers)) {
@@ -32,30 +33,9 @@ const RestMiddleware: Middleware<{}, Store, ReduxDispatch<AnyAction>> = ({
     return;
   }
 
-  const {
-    route,
-    label,
-    method,
-    data,
-    headers,
-    decode,
-    onSuccess,
-    onFailure
-  } = action.payload;
-
-  const dataOrParams = [HttpVerbs.GET, HttpVerbs.DELETE].includes(method)
-    ? "params"
-    : "data";
-
-  const request = {
-    url: `${API_BASE}/${route}`,
-    method,
-    headers,
-    [dataOrParams]: data
-  };
-
+  const { decode, onSuccess, onFailure, label } = action.payload;
   dispatch(restStart(label));
-  axios(request)
+  makeRequest(action.payload)
     .then(({ data: responseData }: { data: unknown }) =>
       Option.from(decode)
         .match({
@@ -78,6 +58,24 @@ const RestMiddleware: Middleware<{}, Store, ReduxDispatch<AnyAction>> = ({
     });
 };
 
+export function makeRequest({
+  route,
+  method,
+  data,
+  headers
+}: ApiRequest): AxiosPromise {
+  const dataOrParams = [HttpVerbs.GET, HttpVerbs.DELETE].includes(method)
+    ? "params"
+    : "data";
+
+  return axios({
+    url: `${API_BASE}/${route}`,
+    method,
+    headers,
+    [dataOrParams]: data
+  });
+}
+
 export default RestMiddleware;
 
 /**
@@ -99,7 +97,7 @@ function consumeFactory<T>(
  * on why it occurred
  * @param error - The incoming axios error
  */
-function consumeAxiosError(axiosError: AxiosError): ApiError {
+export function consumeAxiosError(axiosError: AxiosError): ApiError {
   let message: string;
   let error: object;
   let logMessage: string;

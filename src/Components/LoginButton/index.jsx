@@ -6,13 +6,13 @@ import {
   processIfNotEmptyOrNil,
   isDefined
 } from "Utility";
+import { useSessionStatus } from "Store/slices/session";
 
 import { Link as RouterLink } from "Components/Router";
 import Icon from "Components/Icon";
 import { Button } from "react-bootstrap";
 
 import "./style.scss";
-import { useSessionStatus } from "Session";
 
 export function useOauthUrl() {
   const returnQuery = useReturnQuery();

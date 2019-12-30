@@ -12,6 +12,7 @@ export type Pools = {
   [key in PoolType]: { [key: string]: PoolBacking[key] };
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type DistributeToPatchPayload<U extends PoolType> = U extends any
   ? { type: U; entity: MakeRequired<PoolBacking[U], "id"> }
   : never;
@@ -27,10 +28,11 @@ const slice = createSlice({
   initialState,
   // TODO implement actions
   reducers: {
-    patchLocal: (state, action: PayloadAction<PatchLocalPayload>) => {
+    patchLocal: (state, action: PayloadAction<PatchLocalPayload>): void => {
       const pool: { [key: string]: PoolContent } = state[action.payload.type];
       const { id, ...patch } = action.payload.entity;
       if (id in pool) {
+        // Use immer mutations to handle immutable state change
         pool[id] = { ...pool[id], id, ...patch } as typeof pool[string];
       }
     }
@@ -39,3 +41,25 @@ const slice = createSlice({
 
 export const { patchLocal } = slice.actions;
 export default slice.reducer;
+
+// ? =================
+// ? Selector hooks
+// ? =================
+
+interface PoolProvider<T> {
+  all: T[];
+  isLoaded: boolean;
+}
+
+export function usePool<T extends PoolType>(
+  type: T,
+  options: {
+    filter: (elem: T) => boolean;
+  } = {}
+): PoolProvider<PoolBacking[T]> {
+  // TODO Implement Pool API
+  return {
+    all: [],
+    isLoaded: false
+  };
+}

@@ -7,9 +7,9 @@ import {
   useEffectOnce,
   useLocation,
   useInitialRender,
-  useCallbackOnce,
-  usePool
+  useCallbackOnce
 } from "Utility";
+import { usePool } from "Store/slices/pools";
 import { navigate } from "@reach/router";
 
 import SwipeHandler from "Components/SwipeHandler";

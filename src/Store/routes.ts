@@ -5,23 +5,28 @@ import {
   TokenExchangeResponse,
   TTokenExchangeResponse,
   GuildCountLoadResponse,
-  TGuildCountLoadResponse
+  TGuildCountLoadResponse,
+  SessionRefreshResponse,
+  TSessionRefreshResponse
 } from "Store/api/rest/types";
 import {
   IDENTIFY_SESSION,
   TOKEN_EXCHANGE,
-  GET_GUILD_COUNT
+  GET_GUILD_COUNT,
+  SESSION_REFRESH,
+  SESSION_END
 } from "Store/api/rest/labels";
 import { Option } from "Utility/option";
 import * as t from "io-ts";
 import { either } from "fp-ts/lib/Either";
 import { HttpVerbs } from "Utility";
 import { loadGuildCount, loadSession } from "Store/actions";
+import { refreshSession, signOut } from "./slices/session";
 
 type RestDispatchAction = ReturnType<typeof restDispatch>;
 
 /**
- * GET /identify
+ * GET /session/identify
  */
 export function identify(): RestDispatchAction {
   return restDispatch<IdentifySessionResponse>({
@@ -29,6 +34,7 @@ export function identify(): RestDispatchAction {
     label: IDENTIFY_SESSION,
     onSuccess: (response: IdentifySessionResponse) =>
       loadSession({ ...response, mode: "identify" }),
+    onFailure: () => signOut(),
     decode: response =>
       Option.drop(
         either.chain(t.object.decode(response), TIdentifySessionResponse.decode)
@@ -37,7 +43,7 @@ export function identify(): RestDispatchAction {
 }
 
 /**
- * POST /token-exchange
+ * POST /session/token-exchange
  */
 export function tokenExchange(discordAuthCode: string): RestDispatchAction {
   return restDispatch<TokenExchangeResponse>({
@@ -47,10 +53,40 @@ export function tokenExchange(discordAuthCode: string): RestDispatchAction {
     data: { code: discordAuthCode },
     onSuccess: (response: TokenExchangeResponse) =>
       loadSession({ ...response, mode: "tokenExchange" }),
+    onFailure: () => signOut(),
     decode: response =>
       Option.drop(
         either.chain(t.object.decode(response), TTokenExchangeResponse.decode)
       )
+  });
+}
+
+/**
+ * POST /session/refresh
+ */
+export function sessionRefresh(): RestDispatchAction {
+  return restDispatch<SessionRefreshResponse>({
+    route: "/session/refresh",
+    label: SESSION_REFRESH,
+    method: HttpVerbs.POST,
+    onSuccess: (response: SessionRefreshResponse) =>
+      refreshSession(response.access),
+    onFailure: () => signOut(),
+    decode: response =>
+      Option.drop(
+        either.chain(t.object.decode(response), TSessionRefreshResponse.decode)
+      )
+  });
+}
+
+/**
+ * POST /session/end
+ */
+export function sessionEnd(): RestDispatchAction {
+  return restDispatch<void>({
+    route: "/session/end",
+    label: SESSION_END,
+    method: HttpVerbs.POST
   });
 }
 

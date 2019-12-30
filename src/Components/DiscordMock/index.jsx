@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { addMissingUnit, randomNumericString, isNil, MockTyper } from "Utility";
-import { sendMessage } from "Store/actions_old";
 import { SLICED_LENGTH } from "Store/slices/interpret";
 import {
   architusUser,
@@ -30,7 +29,7 @@ const CLUMP_SLICED_LENGTH = 40;
 // Error display options
 const ERROR_DISPLAY_DELAY = 4000;
 
-class DiscordMock extends React.Component {
+export default class DiscordMock extends React.Component {
   // ? ===================
   // ? Initialization
   // ? ===================
@@ -421,13 +420,6 @@ class DiscordMock extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  responseQueue: state.interpret.responseQueue,
-  isConnected: state.socket.connected
-});
-
-export default connect(mapStateToProps)(DiscordMock);
-
 DiscordMock.propTypes = {
   height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   channelName: PropTypes.string,
@@ -441,8 +433,9 @@ DiscordMock.propTypes = {
   loop: PropTypes.bool,
   allowedCommands: PropTypes.arrayOf(PropTypes.string),
   offline: PropTypes.bool,
-  extension: PropTypes.func,
-  dispatch: PropTypes.func.isRequired,
-  responseQueue: PropTypes.arrayOf(PropTypes.object).isRequired,
-  isConnected: PropTypes.bool.isRequired
+  extension: PropTypes.func
+};
+
+DiscordMock.defaultProps = {
+  responseQueue: []
 };

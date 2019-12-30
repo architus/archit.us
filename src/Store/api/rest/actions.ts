@@ -4,18 +4,15 @@ import { Option } from "Utility/option";
 import { MakeOptional } from "Utility/types";
 import { RestLabel } from "Store/api/rest/labels";
 import { ApiError, apiStart, apiEnd, apiError } from "Store/api/actions";
+import { ApiRequest } from "Store/api/rest/types";
 import { createAction } from "@reduxjs/toolkit";
 
 // ? ====================
 // ? Dispatch Actions & Types
 // ? ====================
 
-interface RestDispatch<R> {
-  route: string;
+export interface RestDispatch<R> extends ApiRequest {
   label: RestLabel;
-  method: HttpVerbs;
-  data: Record<string, unknown>;
-  headers: Record<string, string>;
   decode?: (result: unknown) => Option<R>;
   onSuccess?: (result: R) => AnyAction | undefined;
   onFailure?: (error: ApiError) => AnyAction | undefined;

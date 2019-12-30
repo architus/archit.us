@@ -1,8 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { AppContainer } from "react-hot-loader";
-
+import { isHot } from "Utility/types";
 import { isDefined } from "Utility";
+
 import App from "./App";
 
 export default App;
@@ -27,7 +28,7 @@ if (typeof document !== "undefined") {
     render(App);
 
     // Hot Module Replacement
-    if (module && module.hot) {
+    if (module && isHot(module)) {
       module.hot.accept("./App", () => {
         render(App);
       });

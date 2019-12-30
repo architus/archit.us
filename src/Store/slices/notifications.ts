@@ -21,6 +21,7 @@ export type Notifications = { [key in NotificationType]: Notification[] };
 
 interface ShowNotificationArgs extends Notification {
   type: NotificationType;
+  duration: number;
 }
 
 interface HideNotificationArgs {
@@ -134,6 +135,6 @@ export function makeNotification({
 // ? Selector functions
 // ? ==================
 
-export function selectAllNotifications(store: Store) {
+export function selectAllNotifications(store: Store): Notifications {
   return store.notifications;
 }

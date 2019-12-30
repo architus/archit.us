@@ -1,5 +1,13 @@
 import { TUser, TAccess } from "Utility/types";
+import { HttpVerbs } from "Utility";
 import * as t from "io-ts";
+
+export interface ApiRequest {
+  route: string;
+  method: HttpVerbs;
+  data: Record<string, unknown>;
+  headers: Record<string, string>;
+}
 
 export type TokenExchangeResponse = t.TypeOf<typeof TTokenExchangeResponse>;
 export const TTokenExchangeResponse = t.interface({

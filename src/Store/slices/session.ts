@@ -6,7 +6,7 @@ import {
   getLocalStorage,
   setLocalStorage,
   warn,
-  assertUnreachable
+  useSelector
 } from "Utility";
 import {
   User,
@@ -27,6 +27,7 @@ import {
   IdentifySessionResponse,
   TokenExchangeResponse
 } from "Store/api/rest/types";
+import { Store } from "Store";
 
 // ? ====================
 // ? Types
@@ -47,8 +48,7 @@ export type Session =
   | NoneSession
   | ConnectedSession
   | PendingSession
-  | AuthenticatedSession
-  | GatewayAuthenticatedSession;
+  | AuthenticatedSession;
 
 export interface NoneSession {
   readonly state: "none";
@@ -61,20 +61,11 @@ interface LoggedInSession {
   readonly access: Access;
   readonly this: User;
 }
-interface NotifySession {
-  readonly signOutListeners: Array<() => void>;
-}
 export interface PendingSession extends LoggedInSession {
   readonly state: "pending";
 }
-export interface AuthenticatedSession extends LoggedInSession, NotifySession {
+export interface AuthenticatedSession extends LoggedInSession {
   readonly state: "authenticated";
-}
-export interface GatewayAuthenticatedSession
-  extends LoggedInSession,
-    NotifySession {
-  readonly state: "gateway";
-  readonly nonce: string;
 }
 
 interface IdentifyLoad extends IdentifySessionResponse {
@@ -87,76 +78,6 @@ interface TokenExchangeLoad extends TokenExchangeResponse {
 }
 
 type SessionLoad = IdentifyLoad | TokenExchangeLoad;
-
-// ? ====================
-// ? Reducer exports
-// ? ====================
-
-const initialState: Session = tryLoadSession().getOrElse({ state: "none" });
-const slice = createSlice({
-  name: "session",
-  initialState,
-  reducers: {
-    signOut: (state, _: PayloadAction<{}>): Session => signOutState(state),
-    attachSignOutListener: guardedTransitions(
-      ["gateway", "authenticated"],
-      (state, action: PayloadAction<() => void>) => ({
-        ...state,
-        signOutListeners: [...state.signOutListeners, action.payload]
-      })
-    ),
-    refreshSession: guardedTransition(
-      "authenticated",
-      (state, action: PayloadAction<Access>) => ({
-        ...state,
-        access: action.payload
-      })
-    ),
-    discardNonce: guardedTransition(
-      "gateway",
-      (state, _: PayloadAction<{}>) => ({
-        state: "authenticated",
-        this: state.this,
-        access: state.access,
-        signOutListeners: state.signOutListeners
-      })
-    ),
-    loadSession(state: Session, action: PayloadAction<SessionLoad>): Session {
-      const { user, access } = action.payload;
-      switch (action.payload.mode) {
-        case "identify":
-          return {
-            state: "authenticated",
-            this: user,
-            access,
-            signOutListeners: []
-          };
-
-        case "tokenExchange":
-          return {
-            state: "gateway",
-            this: user,
-            access,
-            nonce: action.payload.nonce,
-            signOutListeners: []
-          };
-
-        default:
-          assertUnreachable(action.payload);
-          return signOutState(state);
-      }
-    }
-  }
-});
-
-export const {
-  signOut,
-  attachSignOutListener,
-  refreshSession,
-  discardNonce,
-  loadSession
-} = slice.actions;
-export default slice.reducer;
 
 // ? ====================
 // ? State initialization
@@ -209,13 +130,40 @@ function tryLoadSession(): Option<Session> {
 /**
  * Returns the session state to the initial one and notifies listeners
  */
-function signOutState(prev: Session): Session {
-  if (prev.state === "gateway" || prev.state === "authenticated") {
-    // Execute listeners
-    prev.signOutListeners.forEach(fn => fn());
-  }
+function signOutState(): Session {
   return initialState;
 }
+
+// ? ====================
+// ? Reducer exports
+// ? ====================
+
+const initialState: Session = tryLoadSession().getOrElse({ state: "none" });
+const slice = createSlice({
+  name: "session",
+  initialState,
+  reducers: {
+    signOut: (): Session => signOutState(),
+    refreshSession: guardedTransition(
+      "authenticated",
+      (state, action: PayloadAction<Access>) => ({
+        ...state,
+        access: action.payload
+      })
+    ),
+    loadSession(_: Session, action: PayloadAction<SessionLoad>): Session {
+      const { user, access } = action.payload;
+      return {
+        state: "authenticated",
+        this: user,
+        access
+      };
+    }
+  }
+});
+
+export const { signOut, refreshSession, loadSession } = slice.actions;
+export default slice.reducer;
 
 /**
  * Guards an action type against invalid state machine states
@@ -256,7 +204,7 @@ function guardedTransitions<S extends Session["state"], P>(
     }
     const message = `Invalid transition ${action.type} in Session state ${prev.state}. Terminating session.`;
     warn(message);
-    return signOutState(prev);
+    return signOutState();
   };
 }
 
@@ -291,4 +239,50 @@ export function createSessionAwareState<
       ...reducers
     }
   });
+}
+
+// ? ==============
+// ? Selector hooks
+// ? ==============
+
+/**
+ * Gets the current user, or None if there is none
+ */
+export function useCurrentUser(): Option<User> {
+  return useSelector(store => {
+    const { session } = store;
+    if (session.state === "authenticated" || session.state === "pending") {
+      return Some(session.this);
+    }
+    return None;
+  });
+}
+
+/**
+ * @remarks
+ * `isSigningIn` counts as any stage other than `NoneSession`.
+ * `isSignedIn` counts as any stage with access/this and that is confirmed
+ * (not `PendingSession`)
+ * @returns a tuple containing [isSignedIn, isSigningIn, session.state]
+ */
+export function useSessionStatus(): [boolean, boolean, string] {
+  return useSelector(store => {
+    const {
+      session: { state }
+    } = store;
+    const isSigningIn = state !== "none";
+    const isSignedIn = state === "authenticated";
+    return [isSignedIn, isSigningIn, state];
+  });
+}
+
+/**
+ * Selector function that selects the Discord auth code if it exists,
+ * or `None`
+ * @param store - Current store state
+ */
+export function selectAuthCode(store: Store): Option<string> {
+  const { session } = store;
+  if (session.state === "connected") return Some(session.discordAuthCode);
+  return None;
 }

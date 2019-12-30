@@ -51,8 +51,7 @@ const config = {
   plugins: [
     require.resolve("react-static-plugin-reach-router"),
     require.resolve("react-static-plugin-sitemap"),
-    require.resolve("react-static-plugin-sass"),
-    require.resolve("react-static-plugin-typescript")
+    require.resolve("react-static-plugin-sass")
   ],
 
   // eslint-disable-next-line react/display-name
@@ -76,5 +75,16 @@ const config = {
 if (process.env.PRODUCTION_URL) {
   config.siteRoot = process.env.PRODUCTION_URL;
 }
+
+// Configure typescript based on args
+const args = process.argv.slice(3);
+let typeCheck = true;
+if (args.includes("--no-type-check")) {
+  typeCheck = false;
+}
+config.plugins.push([
+  require.resolve("react-static-plugin-typescript"),
+  { typeCheck }
+]);
 
 export default config;

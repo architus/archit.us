@@ -13,6 +13,14 @@ export type Loading = { [key in ApiLabels.RestLabel]: boolean };
 // ? Reducer exports
 // ? ====================
 
+const finishLoading = (
+  state: Loading,
+  action: ReturnType<typeof apiEnd | typeof apiError>
+): Loading => ({
+  ...state,
+  [action.payload.label]: false
+});
+
 const initialState: Loading = mapEntries(ApiLabels, (_, v) => [v, false]);
 const slice = createSlice({
   name: "loading",
@@ -29,11 +37,3 @@ const slice = createSlice({
 });
 
 export default slice.reducer;
-
-const finishLoading = (
-  state: Loading,
-  action: ReturnType<typeof apiEnd | typeof apiError>
-): Loading => ({
-  ...state,
-  [action.payload.label]: false
-});

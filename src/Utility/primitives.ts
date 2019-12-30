@@ -47,14 +47,14 @@ export function randomNumericString(length: number): string {
     if (isLast) {
       const remainder = length % RANDOM_STRING_SPLIT_LENGTH;
       generated += Math.random()
-        .toString(36)
+        .toString(10)
         .substring(
           RANDOM_STRING_SPLIT_START,
           RANDOM_STRING_SPLIT_START + remainder
         );
     } else {
       generated += Math.random()
-        .toString(36)
+        .toString(10)
         .substring(RANDOM_STRING_SPLIT_START, RANDOM_STRING_SPLIT_END);
     }
   }

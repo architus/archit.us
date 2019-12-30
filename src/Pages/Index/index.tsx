@@ -1,20 +1,15 @@
 import React from "react";
-import PropTypes from "prop-types";
 import classNames from "classnames";
 import curry from "lodash/curry";
 import { CustomEmojiExtension } from "Components/DiscordMock/CustomEmojiExtension";
-import { connect, shallowEqual } from "react-redux";
-import { useOauthUrl } from "Components/LoginButton";
+import { shallowEqual } from "react-redux";
+import LoginButton, { useOauthUrl } from "Components/LoginButton";
 import { useRouteData } from "react-static";
 
-import {
-  useEffectOnce,
-  isDefined,
-  Nil,
-  useSelector,
-  useDispatch
-} from "Utility";
-import { guildCount } from "Store/actions";
+import { useEffectOnce, isDefined, useSelector, useDispatch } from "Utility";
+import { Nil } from "Utility/types";
+import { useSessionStatus } from "Store/actions";
+import { guildCount } from "Store/routes";
 
 import {
   Jumbotron,
@@ -25,7 +20,6 @@ import {
   Button,
   Badge
 } from "react-bootstrap";
-import LoginButton from "Components/LoginButton";
 import DiscordMock from "Components/DiscordMock";
 import Footer from "Components/Footer";
 import Window from "Components/Window";
@@ -34,13 +28,12 @@ import Layout from "Components/Layout";
 import { Link as RouterLink } from "Components/Router";
 
 import "./style.scss";
-import { messageSets, customEmotes } from "./data.json";
+import LogoTextSvg from "Assets/logo-text.inline.svg";
 import LogsSvg from "./svg/logs.svg";
 import MusicSvg from "./svg/music.svg";
 import StatisticsSvg from "./svg/statistics.svg";
 import UserControlSvg from "./svg/user_control.svg";
-import LogoTextSvg from "Assets/logo-text.inline.svg";
-import { GatewayInitializer } from "Functional/GatewayInitializer";
+import { messageSets, customEmotes } from "./data.json";
 
 function takeGreater(cached: number | Nil, live: number | Nil): number {
   if (isDefined(cached) && isDefined(live)) {
@@ -52,7 +45,7 @@ function takeGreater(cached: number | Nil, live: number | Nil): number {
   return 0;
 }
 
-function Index() {
+const Index: React.FC<{}> = () => {
   const {
     guildCount: cachedGuildCount,
     userCount: cachedUserCount
@@ -65,7 +58,9 @@ function Index() {
   }, shallowEqual);
 
   const dispatch = useDispatch();
-  useEffectOnce(() => dispatch(guildCount()));
+  useEffectOnce(() => {
+    dispatch(guildCount());
+  });
 
   // Take the maximum of the hot-loaded and statically cached numbers
   const derivedGuildCount = takeGreater(cachedGuildCount, storeGuildCount);
@@ -74,7 +69,6 @@ function Index() {
   return (
     <Layout title="Home">
       <article>
-        <GatewayInitializer />
         <Jumbotron fluid>
           <Container>
             <Row as="section" className="head">
@@ -159,7 +153,7 @@ function Index() {
                 Use the
                 <code>!emotes</code> command to view a list of all available
                 emotes.
-                <TryCTA right />
+                <TryCTA />
               </p>
             }
           >
@@ -277,7 +271,7 @@ function Index() {
       </article>
     </Layout>
   );
-}
+};
 
 export default Index;
 
@@ -287,7 +281,23 @@ Index.displayName = "IndexPage";
 // ? Sub-components
 // ? ==============
 
-const Feature = ({ left, right, children, lead, header, content }) => (
+type FeatureProps = {
+  left?: boolean;
+  right?: boolean;
+  children: React.ReactNode;
+  lead: React.ReactNode;
+  header: React.ReactNode;
+  content: React.ReactNode;
+};
+
+const Feature: React.FC<FeatureProps> = ({
+  left,
+  right,
+  children,
+  lead,
+  header,
+  content
+}) => (
   <Row as="section" className="align-items-center">
     <Col
       lg={6}
@@ -312,33 +322,15 @@ const Feature = ({ left, right, children, lead, header, content }) => (
   </Row>
 );
 
-Feature.propTypes = {
-  left: PropTypes.bool,
-  right: PropTypes.bool,
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node
-  ]),
-  lead: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node,
-    PropTypes.string
-  ]),
-  header: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node,
-    PropTypes.string
-  ]),
-  content: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node,
-    PropTypes.string
-  ])
-};
-
 Feature.displayName = "Feature";
 
-const MinorFeature = ({ header, text, icon }) => (
+type MinorFeatureProps = {
+  header: React.ReactNode;
+  text: React.ReactNode;
+  icon: string;
+};
+
+const MinorFeature: React.FC<MinorFeatureProps> = ({ header, text, icon }) => (
   <Col md={6} className="minor-feature">
     <div className="minor-feature--inner">
       <span
@@ -351,53 +343,32 @@ const MinorFeature = ({ header, text, icon }) => (
   </Col>
 );
 
-MinorFeature.propTypes = {
-  header: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node,
-    PropTypes.string
-  ]),
-  text: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node,
-    PropTypes.string
-  ]),
-  icon: PropTypes.string
-};
-
 MinorFeature.displayName = "MinorFeature";
 
-const CallToAction = connect(mapStateToLoggedIn)(({ loggedIn }) => {
+const CallToAction: React.FC<{}> = () => {
+  const [loggedIn] = useSessionStatus();
   const oauthUrl = useOauthUrl();
   const additionalProps = loggedIn
-    ? {
-        as: RouterLink,
-        to: "/app"
-      }
-    : {
-        href: oauthUrl
-      };
+    ? { as: RouterLink, t: "/app" }
+    : { href: oauthUrl };
   return (
     <Button className="cta" variant="primary" size="lg" {...additionalProps}>
       Get Started
       <Icon name="chevron-right" />
     </Button>
   );
-});
+};
 
 CallToAction.displayName = "CallToAction";
 
-const TryCTA = ({ left }) => (
+type TryCTAProps = { left?: boolean };
+
+const TryCTA: React.FC<TryCTAProps> = ({ left }) => (
   <em className={classNames("try", { "text-right": !left })}>
     {left && <Icon name="chevron-left" className="mr-2" />}
     Try it out
     {!left && <Icon name="chevron-right" className="ml-2" />}
   </em>
 );
-
-TryCTA.propTypes = {
-  left: PropTypes.bool,
-  right: PropTypes.bool
-};
 
 TryCTA.displayName = "TryCTA";

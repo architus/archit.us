@@ -102,6 +102,24 @@ export const DateFromString = new t.Type<Date, string, unknown>(
   a => a.toISOString()
 );
 
+/**
+ * Represents a NodeJS module with HMR enabled
+ */
+type HmrModule = NodeJS.Module & {
+  hot: { accept: (path: string, cb: () => void) => void };
+};
+
+/**
+ * Determines whether the given module has HMR enabled (`module.hot`
+ * is defined)
+ * @param m - NodeJS global module reference
+ */
+export function isHot(m: NodeJS.Module): m is HmrModule {
+  return isDefined((m as HmrModule).hot);
+}
+
+
+
 // ? ==================
 // ? Ecosystem types
 // ? ==================
@@ -348,7 +366,9 @@ export const TGuild = t.intersection([
     features: t.array(TGuildFeature),
     mfa_level: TMfaLevel,
     premium_tier: TPremiumTier,
-    preferred_locale: t.string
+    preferred_locale: t.string,
+    // added field
+    architus_admin: t.boolean
   }),
   t.partial({
     icon: t.string,

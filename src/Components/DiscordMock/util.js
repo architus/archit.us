@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 import {
   takeOrReplenish,
   invertMap,
@@ -32,10 +33,12 @@ class DiscriminatorProvisioner {
   // while increasing the current one (wrapping around), optionally until all
   // have been checked. At that point, the pool is replenished.
   provision(seed) {
+    const { max } = this;
+    const initial = seed % max;
     return takeOrReplenish(
       this.currentPool,
-      seed % this.max,
-      key => (key + 1) % this.max,
+      initial,
+      key => (key + 1) % max,
       this.templatePool
     );
   }
@@ -207,9 +210,8 @@ function handleMessage(
   };
   if (edit) {
     return editMessage(clumps, messageData, context);
-  } else {
-    return addMessage(clumps, messageData, context);
   }
+  return addMessage(clumps, messageData, context);
 }
 
 // Adds the specific message with the given content, id, reactions, and sender
@@ -391,8 +393,8 @@ function constructMessage(
 // Merges the two lists of reactions, merging old ones with ones from the new list
 // if they match the same emoji
 function mergeReactions(prevReactions, newReactions) {
-  let baseReactionList = [...(!isNil(prevReactions) ? prevReactions : [])];
-  for (let newReactionIndex in newReactions) {
+  const baseReactionList = [...(!isNil(prevReactions) ? prevReactions : [])];
+  for (const newReactionIndex in newReactions) {
     const newReaction = newReactions[newReactionIndex];
     const prevReaction = baseReactionList.find(
       reaction => reaction.emoji === newReaction.emoji
@@ -476,7 +478,9 @@ export class Extension {
   constructor(context, commands) {
     Object.assign(this, context, commands);
   }
+
   destruct() {}
+
   onSend() {
     return true;
   }

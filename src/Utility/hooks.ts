@@ -6,7 +6,6 @@ import {
 } from "react-redux";
 import { globalHistory, History } from "@reach/router";
 import { Store, Dispatch } from "Store";
-import { PoolType, PoolBacking } from "Store/slices/pools";
 import { addMissingUnit, collator } from "./primitives";
 import { isClient, isProduction } from "./document";
 import { Option, Some, None } from "./option";
@@ -174,22 +173,4 @@ export function useInitialRender(): boolean {
   const [isInitial, setIsInitial] = useState(true);
   useEffectOnce(() => setIsInitial(false));
   return isInitial;
-}
-
-interface PoolProvider<T> {
-  all: T[];
-  isLoaded: boolean;
-}
-
-export function usePool<T extends PoolType>(
-  type: T,
-  options: {
-    filter: (elem: T) => boolean;
-  }
-): PoolProvider<PoolBacking[T]> {
-  // TODO Implement Pool API
-  return {
-    all: [],
-    isLoaded: false
-  };
 }
