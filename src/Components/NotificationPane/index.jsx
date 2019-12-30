@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { shallowEqual } from "react-redux";
 import { hideNotification } from "Store/actions";
 import { isDefined, withClientSide, useSelector, useDispatch } from "Utility";
+import { selectAllNotifications } from "Store/slices/notifications";
 
 import ErrorBoundary from "Components/ErrorBoundary";
 
@@ -27,13 +28,7 @@ function hasItems(array) {
 function NotificationPane() {
   // Connect to state
   const dispatch = useDispatch();
-  const { toast, alert } = useSelector(
-    state => ({
-      toast: state.notifications.toast,
-      alert: state.notifications.alert
-    }),
-    shallowEqual
-  );
+  const { toast, alert } = useSelector(selectAllNotifications, shallowEqual);
 
   const onDismissToast = useHideNotification(dispatch, "toast");
   const onDismissAlert = useHideNotification(dispatch, "alert");

@@ -6,28 +6,27 @@ import {
   getLocalStorage,
   setLocalStorage,
   warn,
-  error,
-  toJSON
+  assertUnreachable
 } from "Utility";
 import {
   User,
   PersistentSession,
   TPersistentSession,
-  Access
+  Access,
+  MapDiscriminatedUnion
 } from "Utility/types";
 import { Option, Some, None } from "Utility/option";
-import { StoreSlice, Reducer } from "Store/types";
-import { scopeReducer } from "Store/slices/base";
-
 import {
-  SESSION_NAMESPACE,
-  SESSION_LOAD,
-  SESSION_SIGN_OUT,
-  SESSION_DISCARD_NONCE,
-  SESSION_ATTACH_LISTENER,
-  SESSION_REFRESH,
-  SessionAction
-} from "Store/actions/session";
+  createSlice,
+  PayloadAction,
+  SliceCaseReducers,
+  ValidateSliceCaseReducers,
+  Slice
+} from "@reduxjs/toolkit";
+import {
+  IdentifySessionResponse,
+  TokenExchangeResponse
+} from "Store/api/rest/types";
 
 // ? ====================
 // ? Types
@@ -38,8 +37,9 @@ import {
  *
  * @remarks `Session.state` can either be
  * `"none"` (unauthenticated), `"connected"` (directly between Oauth return and token
- * exchange with API), `"pending" `(after local storage session restoration), or
- * `"authenticated"` (after token exchange/identify)
+ * exchange with API), `"pending" `(after local storage session restoration),
+ * `"authenticated"` (after token exchange/identify), or `"gateway"` (after token
+ * exchange and before gateway initialization)
  * For more information on authentication, see the
  * {@link https://docs.archit.us/internal/api-reference/auth/ | Architus API docs}
  */
@@ -77,87 +77,86 @@ export interface GatewayAuthenticatedSession
   readonly nonce: string;
 }
 
+interface IdentifyLoad extends IdentifySessionResponse {
+  mode: "identify";
+}
+
+interface TokenExchangeLoad extends TokenExchangeResponse {
+  mode: "tokenExchange";
+  nonce: string;
+}
+
+type SessionLoad = IdentifyLoad | TokenExchangeLoad;
+
 // ? ====================
 // ? Reducer exports
 // ? ====================
 
-const initialState: Session = { state: "none" };
-const initial: () => Session = () => {
-  const result: Option<Session> = tryLoadSession();
-  return result.getOrElse(initialState);
-};
-
-const reducer: Reducer<Session> = scopeReducer(
-  SESSION_NAMESPACE,
-  // exhaustive switch
-  // eslint-disable-next-line consistent-return
-  (prev: Session, action: SessionAction): Session => {
-    switch (action.type) {
-      case SESSION_SIGN_OUT:
-        return signOut(prev);
-
-      case SESSION_ATTACH_LISTENER:
-        return guardedTransitions(
-          ["gateway", "authenticated"],
-          prev,
-          action,
-          (s: GatewayAuthenticatedSession | AuthenticatedSession) => ({
-            ...s,
-            signOutListeners: [...s.signOutListeners, action.payload]
-          })
-        );
-
-      case SESSION_REFRESH:
-        return guardedTransition(
-          "authenticated",
-          prev,
-          action,
-          (s: AuthenticatedSession) => ({
-            ...s,
-            access: action.payload.access
-          })
-        );
-
-      case SESSION_DISCARD_NONCE:
-        return guardedTransition(
-          "gateway",
-          prev,
-          action,
-          (s: GatewayAuthenticatedSession) => ({
+const initialState: Session = tryLoadSession().getOrElse({ state: "none" });
+const slice = createSlice({
+  name: "session",
+  initialState,
+  reducers: {
+    signOut: (state, _: PayloadAction<{}>): Session => signOutState(state),
+    attachSignOutListener: guardedTransitions(
+      ["gateway", "authenticated"],
+      (state, action: PayloadAction<() => void>) => ({
+        ...state,
+        signOutListeners: [...state.signOutListeners, action.payload]
+      })
+    ),
+    refreshSession: guardedTransition(
+      "authenticated",
+      (state, action: PayloadAction<Access>) => ({
+        ...state,
+        access: action.payload
+      })
+    ),
+    discardNonce: guardedTransition(
+      "gateway",
+      (state, _: PayloadAction<{}>) => ({
+        state: "authenticated",
+        this: state.this,
+        access: state.access,
+        signOutListeners: state.signOutListeners
+      })
+    ),
+    loadSession(state: Session, action: PayloadAction<SessionLoad>): Session {
+      const { user, access } = action.payload;
+      switch (action.payload.mode) {
+        case "identify":
+          return {
             state: "authenticated",
-            this: s.this,
-            access: s.access,
-            signOutListeners: s.signOutListeners
-          })
-        );
+            this: user,
+            access,
+            signOutListeners: []
+          };
 
-      case SESSION_LOAD: {
-        const { user, access } = action.payload;
-        switch (action.payload.mode) {
-          case "identify":
-            return {
-              state: "authenticated",
-              this: user,
-              access,
-              signOutListeners: []
-            };
+        case "tokenExchange":
+          return {
+            state: "gateway",
+            this: user,
+            access,
+            nonce: action.payload.nonce,
+            signOutListeners: []
+          };
 
-          case "tokenExchange":
-            return {
-              state: "gateway",
-              this: user,
-              access,
-              nonce: action.payload.nonce,
-              signOutListeners: []
-            };
-        }
+        default:
+          assertUnreachable(action.payload);
+          return signOutState(state);
       }
     }
   }
-);
+});
 
-const slice: StoreSlice<Session> = { initial, reducer };
-export default slice;
+export const {
+  signOut,
+  attachSignOutListener,
+  refreshSession,
+  discardNonce,
+  loadSession
+} = slice.actions;
+export default slice.reducer;
 
 // ? ====================
 // ? State initialization
@@ -210,7 +209,7 @@ function tryLoadSession(): Option<Session> {
 /**
  * Returns the session state to the initial one and notifies listeners
  */
-function signOut(prev: Session): Session {
+function signOutState(prev: Session): Session {
   if (prev.state === "gateway" || prev.state === "authenticated") {
     // Execute listeners
     prev.signOutListeners.forEach(fn => fn());
@@ -225,18 +224,12 @@ function signOut(prev: Session): Session {
  * @param action - Current action coming into the reducer
  * @param func - Function to apply if the state passes
  */
-function guardedTransition<T extends Session>(
-  desiredState: T["state"],
-  state: Session,
-  action: SessionAction,
-  func: (prev: T) => Session
-): Session {
-  if (state.state === desiredState) {
-    return func(state as T);
-  }
-  const message = `Invalid transition ${action.type} in Session state ${state.state}. Terminating session.`;
-  warn(message);
-  return signOut(state);
+type StateMap = MapDiscriminatedUnion<Session, "state">;
+function guardedTransition<S extends Session["state"], P>(
+  desiredState: S,
+  actionReducer: (prev: StateMap[S], action: PayloadAction<P>) => Session
+): (prev: Session, action: PayloadAction<P>) => Session {
+  return guardedTransitions([desiredState] as const, actionReducer);
 }
 
 /**
@@ -246,16 +239,56 @@ function guardedTransition<T extends Session>(
  * @param action - Current action coming into the reducer
  * @param func - Function to apply if the state passes
  */
-function guardedTransitions<T extends Session>(
-  desiredState: Array<T["state"]>,
-  state: Session,
-  action: SessionAction,
-  func: (prev: T) => Session
-): Session {
-  if (desiredState.includes(state.state)) {
-    return func(state as T);
-  }
-  const message = `Invalid transition ${action.type} in Session state ${state.state}. Terminating session.`;
-  warn(message);
-  return signOut(state);
+function guardedTransitions<S extends Session["state"], P>(
+  desiredState: readonly S[],
+  actionReducer: (
+    prev: StateMap[typeof desiredState[number]],
+    action: PayloadAction<P>
+  ) => Session
+): (prev: Session, action: PayloadAction<P>) => Session {
+  return (prev, action: PayloadAction<P>): Session => {
+    const { state } = prev;
+    if (desiredState.includes(state as S)) {
+      return actionReducer(
+        prev as StateMap[typeof desiredState[number]],
+        action
+      );
+    }
+    const message = `Invalid transition ${action.type} in Session state ${prev.state}. Terminating session.`;
+    warn(message);
+    return signOutState(prev);
+  };
+}
+
+// ? =====================
+// ? Higher order reducers
+// ? =====================
+
+/**
+ * Acts as a middleware for the the reducer to reset its state upon a sign out
+ *
+ * @param name - Slice name
+ * @param initialState - Initial state to use upon logout
+ * @param reducers - Reducers to apply otherwise
+ */
+export function createSessionAwareState<
+  T,
+  Reducers extends SliceCaseReducers<T>
+>({
+  name = "",
+  initialState: initial,
+  reducers
+}: {
+  name: string;
+  initialState: T;
+  reducers: ValidateSliceCaseReducers<T, Reducers>;
+}): Slice<T, Reducers> {
+  return createSlice({
+    name,
+    initialState: initial,
+    reducers: {
+      [signOut.type]: (): T => initial,
+      ...reducers
+    }
+  });
 }

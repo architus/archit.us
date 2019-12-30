@@ -1,45 +1,42 @@
-import { HttpVerbs, warn } from "Utility";
-import { ApiError } from "Utility/types";
-import { Action, ActionBase, ActionFactory } from "Store/types";
+import { AnyAction } from "redux";
+import { HttpVerbs } from "Utility";
 import { Option } from "Utility/option";
+import { MakeOptional } from "Utility/types";
 import { RestLabel } from "Store/api/rest/labels";
-import {
-  API_START,
-  API_END,
-  API_ERROR,
-  API_NAMESPACE,
-  ApiStartAction,
-  ApiEndAction,
-  ApiErrorAction
-} from "Store/api/actions";
+import { ApiError, apiStart, apiEnd, apiError } from "Store/api/actions";
+import { createAction } from "@reduxjs/toolkit";
 
 // ? ====================
 // ? Dispatch Actions & Types
 // ? ====================
 
-export const API_REST_DISPATCH = "api:rest-dispatch";
-
-export interface RestDispatchAction<R>
-  extends ActionBase<typeof API_REST_DISPATCH, typeof API_NAMESPACE> {
-  readonly payload: RestDispatch<R>;
-}
-
 interface RestDispatch<R> {
   route: string;
   label: RestLabel;
   method: HttpVerbs;
-  data: Record<string, any>;
+  data: Record<string, unknown>;
   headers: Record<string, string>;
   decode?: (result: unknown) => Option<R>;
-  onSuccess?: (result: R) => Action | undefined;
-  onFailure?: (error: ApiError) => Action | undefined;
+  onSuccess?: (result: R) => AnyAction | undefined;
+  onFailure?: (error: ApiError) => AnyAction | undefined;
 }
 
 // ? ====================
 // ? Dispatch Factories
 // ? ====================
 
-type optionalRestDispatchParams = "data" | "headers" | "method";
+/**
+ * Type unsafe rest dispatch action creater. **Do not use to create new
+ * actions** (only use to match/get type for restDispatch action)
+ */
+export const restDispatchUnsafe = createAction<RestDispatch<unknown>>(
+  "api/restDispatch"
+);
+
+/**
+ * Type safe rest dispatch action creater
+ * @param options - Rest Dispatch options object
+ */
 export function restDispatch<R>({
   route,
   label,
@@ -48,65 +45,33 @@ export function restDispatch<R>({
   headers = {},
   decode,
   onSuccess,
-  onFailure = () => undefined
-}: Omit<RestDispatch<R>, optionalRestDispatchParams> &
-  Partial<
-    Pick<RestDispatch<R>, optionalRestDispatchParams>
-  >): RestDispatchAction<R> {
-  return {
-    namespace: API_NAMESPACE,
-    type: API_REST_DISPATCH,
-    payload: {
-      route,
-      label,
-      method,
-      data,
-      headers,
-      decode,
-      onSuccess,
-      onFailure
-    }
-  };
+  onFailure
+}: MakeOptional<RestDispatch<R>, "data" | "headers" | "method">): ReturnType<
+  typeof restDispatchUnsafe
+> {
+  return restDispatchUnsafe({
+    route,
+    label,
+    method,
+    data,
+    headers,
+    decode,
+    onSuccess,
+    onFailure
+  } as RestDispatch<unknown>);
 }
 
 // ? ====================
 // ? Rest Action Factories
 // ? ====================
 
-export const restStart: ActionFactory<ApiStartAction, [RestLabel]> = label => {
-  return {
-    namespace: API_NAMESPACE,
-    type: API_START,
-    payload: {
-      mode: "rest",
-      label
-    }
-  };
-};
+export const restStart = (label: RestLabel): ReturnType<typeof apiStart> =>
+  apiStart({ label, mode: "rest" });
 
-export const restEnd: ActionFactory<ApiEndAction, [RestLabel]> = label => {
-  return {
-    namespace: API_NAMESPACE,
-    type: API_END,
-    payload: {
-      mode: "rest",
-      label
-    }
-  };
-};
+export const restEnd = (label: RestLabel): ReturnType<typeof apiEnd> =>
+  apiEnd({ label, mode: "rest" });
 
-export const restError: ActionFactory<ApiErrorAction, [RestLabel, ApiError]> = (
-  label,
-  error
-) => {
-  warn(error);
-  return {
-    namespace: API_NAMESPACE,
-    type: API_ERROR,
-    payload: {
-      mode: "rest",
-      label,
-      ...error
-    }
-  };
-};
+export const restError = (
+  label: RestLabel,
+  error: ApiError
+): ReturnType<typeof apiError> => apiError({ label, ...error, mode: "rest" });

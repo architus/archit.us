@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/camelcase */
 /* eslint-disable max-classes-per-file */
-import React from "react";
 import * as t from "io-ts";
 import { either, right } from "fp-ts/lib/Either";
-import { isDefined } from "Utility";
+import { isDefined } from "./data";
 
 export class EnumType<A> extends t.Type<A> {
   public readonly _tag: "EnumType" = "EnumType";
@@ -27,6 +26,27 @@ export type Supplier<T> = () => T;
 export type RecordKey = string | number | symbol;
 export type Comparator<T> = (a: T, b: T) => number;
 export type RawDimension = string | number;
+
+export type DiscriminateUnion<
+  T,
+  K extends keyof T,
+  V extends T[K]
+> = T extends Record<K, V> ? T : never;
+
+export type MapDiscriminatedUnion<
+  T extends Record<K, string>,
+  K extends keyof T
+> = {
+  [V in T[K]]: DiscriminateUnion<T, K, V>;
+};
+
+export type MakeOptional<B extends {}, P extends keyof B> = Omit<B, P> &
+  Partial<Pick<B, P>>;
+
+export type MakeRequired<B extends {}, P extends keyof B> = Partial<
+  Omit<B, P>
+> &
+  Pick<B, P>;
 
 const _dimensionUnits = [
   "cm",
@@ -200,20 +220,6 @@ export const TUser = t.intersection([
     premium_type: TPremiumType
   })
 ]);
-
-export type NotificationType = "alert" | "toast";
-export type NotificationId = number;
-export type NotificationVariant = "success" | "danger" | "warning" | "info";
-export interface Notification {
-  readonly id: number;
-  readonly variant: NotificationVariant;
-  readonly message: React.ReactNode;
-}
-
-export interface ApiError {
-  readonly message: string;
-  readonly error?: object | string;
-}
 
 export class Access {
   public readonly issuedAt: Date;

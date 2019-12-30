@@ -1,6 +1,3 @@
-// Utility types
-export * from "Utility/types";
-
 // Data manipulation functions
 // TODO Write unit tests
 export * from "Utility/data";
@@ -20,10 +17,6 @@ export * from "Utility/hooks";
 // String/number Utility functions
 // TODO Write unit tests
 export * from "Utility/primitives";
-
-// Option/None/Some type definitions
-// TODO Write unit tests
-export * from "Utility/option";
 
 // Useful Utility methods/types for network communication
 // TODO Write unit tests

@@ -5,11 +5,11 @@ import {
   TypedUseSelectorHook
 } from "react-redux";
 import { globalHistory, History } from "@reach/router";
-import { Store, Dispatch } from "Store/types";
+import { Store, Dispatch } from "Store";
+import { PoolType, PoolBacking } from "Store/slices/pools";
 import { addMissingUnit, collator } from "./primitives";
 import { isClient, isProduction } from "./document";
 import { Option, Some, None } from "./option";
-import { PoolType, PoolBacking } from "Store/slices/pools";
 
 /**
  * Gets the optional encoded return query param if not in production mode (where the
@@ -52,11 +52,11 @@ export function useClientSide<A>(calculate: () => A, defaultValue: A): A {
 }
 
 /**
- * Finds the active breakpoint from an array such that it is the greatest breakpoint where
- * the width of the viewport is greater than it.
+ * Finds the active breakpoint from an array such that it is the greatest min-width
+ * breakpoint
  * @param breakpoints - List of breakpoints to use to match the width onto
  * @returns the value of the current min-width breakpoint from the given breakpoints
- * array, or None if none are active
+ * array, or `None` if none are active
  */
 export function useMediaBreakpoints(breakpoints: string[]): Option<string> {
   const sortedBreakpoints: string[] = useMemo(

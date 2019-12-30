@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { useSelector } from "react-redux";
 import {
   useReturnQuery,
   API_BASE,
@@ -13,6 +12,7 @@ import Icon from "Components/Icon";
 import { Button } from "react-bootstrap";
 
 import "./style.scss";
+import { useSessionStatus } from "Session";
 
 export function useOauthUrl() {
   const returnQuery = useReturnQuery();
@@ -25,8 +25,8 @@ export function useOauthUrl() {
 
 function LoginButton({ loggedIn, showLabel }) {
   const oauthUrl = useOauthUrl();
-  const storeLoggedIn = useSelector(state => state.session.connectedToDiscord);
-  const loggedInProp = isDefined(loggedIn) ? loggedIn : storeLoggedIn;
+  const [_, isLoggingIn] = useSessionStatus();
+  const loggedInProp = isDefined(loggedIn) ? loggedIn : isLoggingIn;
 
   return (
     <div className="login-button">

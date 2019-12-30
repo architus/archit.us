@@ -1,30 +1,19 @@
-import { createStore, applyMiddleware, compose } from "redux";
-import { isClient } from "Utility";
-import { reducer, initial } from "Store/slices";
-import createSagaMiddleware from "redux-saga";
+import { configureStore } from "@reduxjs/toolkit";
+import rootReducer from "./slices/index";
 
-import RestMiddleware from "Store/api/rest/middleware";
-import GatewayMiddleware from "Store/api/gateway/middleware";
-import saga from "Store/saga";
-import { batchDispatchMiddleware } from "redux-batched-actions";
+const store = configureStore({
+  reducer: rootReducer
+});
 
-const SagaMiddleware = createSagaMiddleware();
+// Enable hot module reloading for the store
+if (process.env.NODE_ENV === "development" && module.hot) {
+  module.hot.accept("./slices/index", () => {
+    // eslint-disable-next-line global-require
+    const newRootReducer = require("./slices/index").default;
+    store.replaceReducer(newRootReducer);
+  });
+}
 
-const composeEnhancers = isClient
-  ? (<any>window).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
-  : compose;
-
-export default createStore(
-  reducer,
-  initial,
-  composeEnhancers(
-    applyMiddleware(
-      RestMiddleware,
-      GatewayMiddleware,
-      SagaMiddleware,
-      batchDispatchMiddleware
-    )
-  )
-);
-
-SagaMiddleware.run(saga);
+export type Store = ReturnType<typeof rootReducer>;
+export type Dispatch = typeof store.dispatch;
+export default store;

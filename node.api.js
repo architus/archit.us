@@ -1,5 +1,5 @@
-const { GenerateSW } = require("workbox-webpack-plugin");
-const transform = require("./src/webpack.transform");
+import { GenerateSW } from "workbox-webpack-plugin";
+import transform from "./src/Build/webpack.transform";
 
 export default () => ({
   webpack: config => {
@@ -28,6 +28,7 @@ export default () => ({
     // Bundle analyzer
     const args = process.argv.slice(3);
     if (args.includes("--webpack-stats")) {
+      // eslint-disable-next-line import/no-extraneous-dependencies
       const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
       console.log("Building webpack statistics file > stats.json");
       config.plugins.push(

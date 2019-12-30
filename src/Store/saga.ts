@@ -33,7 +33,7 @@ function* signOut() {
 
 /**
  * Saves the session token/metadata to local storage upon logging in
- * @param action The load session action dispatched upon token exchange success
+ * @param action - The load session action dispatched upon token exchange success
  */
 function loadNewSession(action: SessionLoadAction) {
   const { user, access } = action.payload;

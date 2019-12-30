@@ -1,4 +1,4 @@
-const transform = require("../src/webpack.transform");
+const transform = require("../src/Build/webpack.transform");
 const path = require("path");
 
 module.exports = async ({ config }) => {

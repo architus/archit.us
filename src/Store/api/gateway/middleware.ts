@@ -1,6 +1,7 @@
-import { isNil } from "Utility";
-import { Dispatch, Action, Store } from "Store/types";
+import { isNil, GATEWAY_API_BASE } from "Utility";
 import { Middleware, Dispatch as ReduxDispatch, AnyAction } from "redux";
+import { Store, Dispatch } from "Store";
+import io from "socket.io-client";
 
 /**
  * Represents the Gateway connection singleton to the architus Gateway socket.io API
@@ -16,6 +17,7 @@ class GatewayConnection {
   }
 
   _isInitialized: boolean;
+  _socket?: SocketIOClient.Socket;
   private constructor() {
     this._isInitialized = false;
     this.onSignOut = this.onSignOut.bind(this);
@@ -32,7 +34,7 @@ class GatewayConnection {
    */
   public initialize(): void {
     this._isInitialized = true;
-    // TODO implement connection
+    this._socket = io(GATEWAY_API_BASE);
   }
 
   /**
@@ -42,7 +44,7 @@ class GatewayConnection {
    */
   public authenticate(nonce: string): void {
     this._isInitialized = true;
-    // TODO implement connection with nonce
+    this._socket = io(`${GATEWAY_API_BASE}/?nonce=${nonce}`);
   }
 
   /**
@@ -50,7 +52,7 @@ class GatewayConnection {
    */
   public onSignOut(): void {
     this._isInitialized = false;
-    // TODO implement connection severing
+    // TODO implement connection de-elevation
   }
 }
 
@@ -69,7 +71,7 @@ const GatewayMiddleware: Middleware<{}, Store, ReduxDispatch<AnyAction>> = ({
   dispatch
 }: {
   dispatch: Dispatch;
-}) => (next: Dispatch) => (action: Action) => {
+}) => (next: Dispatch) => (action: AnyAction): void => {
   // TODO Implement request-response pattern and server push messages
   next(action);
 };

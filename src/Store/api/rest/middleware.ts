@@ -1,15 +1,16 @@
 import axios, { AxiosError } from "axios";
 import { HttpVerbs, isNil, isDefined, API_BASE, log, toJSON } from "Utility";
-import { ApiError, Nil } from "Utility/types";
+import { Nil } from "Utility/types";
 import { Option, Some, None } from "Utility/option";
-import { Dispatch, Action, Store } from "Store/types";
 import {
   restStart,
   restEnd,
   restError,
-  API_REST_DISPATCH
+  restDispatchUnsafe
 } from "Store/api/rest/actions";
 import { Middleware, Dispatch as ReduxDispatch, AnyAction } from "redux";
+import { Store, Dispatch } from "Store";
+import { ApiError } from "../actions";
 
 // axios default configs
 if (isNil(axios.defaults.headers)) {
@@ -20,15 +21,16 @@ axios.defaults.headers.common["Content-Type"] = "application/json";
 /**
  * Creates an API middleware that asyncryonously enqueues Rest API dispatch events to axios,
  * dispatching additional actions as the requests are resolved
- * @param param0 - Store instance
  */
 const RestMiddleware: Middleware<{}, Store, ReduxDispatch<AnyAction>> = ({
   dispatch
 }: {
   dispatch: Dispatch;
-}) => (next: Dispatch) => (action: Action): void => {
+}) => (next: Dispatch) => (action: AnyAction): void => {
   next(action);
-  if (action.type !== API_REST_DISPATCH) return;
+  if (!restDispatchUnsafe.match(action)) {
+    return;
+  }
 
   const {
     route,
@@ -62,7 +64,7 @@ const RestMiddleware: Middleware<{}, Store, ReduxDispatch<AnyAction>> = ({
           None: () => Some(responseData)
         })
         // Dispatch onSuccess action if given and returns action
-        .flatMap<Action>(d => consumeFactory(onSuccess, d))
+        .flatMap<AnyAction>(d => consumeFactory(onSuccess, d))
         .forEach(dispatch)
     )
     .catch((error: AxiosError) => {
@@ -85,9 +87,9 @@ export default RestMiddleware;
  * @param arg - Argument to pass to the action factory
  */
 function consumeFactory<T>(
-  factory: ((u: T) => Action | Nil) | Nil,
+  factory: ((u: T) => AnyAction | Nil) | Nil,
   arg: T
-): Option<Action> {
+): Option<AnyAction> {
   if (isDefined(factory)) return Option.from(factory(arg));
   return None;
 }

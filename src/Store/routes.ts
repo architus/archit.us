@@ -1,4 +1,4 @@
-import { restDispatch, RestDispatchAction } from "Store/api/rest/actions";
+import { restDispatch } from "Store/api/rest/actions";
 import {
   IdentifySessionResponse,
   TIdentifySessionResponse,
@@ -13,18 +13,19 @@ import {
   GET_GUILD_COUNT
 } from "Store/api/rest/labels";
 import { Option } from "Utility/option";
-import { loadSession } from "Store/actions";
 import * as t from "io-ts";
 import { either } from "fp-ts/lib/Either";
 import { HttpVerbs } from "Utility";
-import { loadGuildCount } from "Store/actions";
+import { loadGuildCount, loadSession } from "Store/actions";
+
+type RestDispatchAction = ReturnType<typeof restDispatch>;
 
 /**
  * GET /identify
  */
-export function identify(): RestDispatchAction<IdentifySessionResponse> {
+export function identify(): RestDispatchAction {
   return restDispatch<IdentifySessionResponse>({
-    route: "/identify",
+    route: "/session/identify",
     label: IDENTIFY_SESSION,
     onSuccess: (response: IdentifySessionResponse) =>
       loadSession({ ...response, mode: "identify" }),
@@ -38,11 +39,9 @@ export function identify(): RestDispatchAction<IdentifySessionResponse> {
 /**
  * POST /token-exchange
  */
-export function tokenExchange(
-  discordAuthCode: string
-): RestDispatchAction<TokenExchangeResponse> {
+export function tokenExchange(discordAuthCode: string): RestDispatchAction {
   return restDispatch<TokenExchangeResponse>({
-    route: "/token-exchange",
+    route: "/session/token-exchange",
     label: TOKEN_EXCHANGE,
     method: HttpVerbs.POST,
     data: { code: discordAuthCode },
@@ -58,7 +57,7 @@ export function tokenExchange(
 /**
  * GET /guild-count
  */
-export function guildCount(): RestDispatchAction<GuildCountLoadResponse> {
+export function guildCount(): RestDispatchAction {
   return restDispatch<GuildCountLoadResponse>({
     route: "/guild-count",
     label: GET_GUILD_COUNT,

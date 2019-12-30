@@ -26,7 +26,7 @@ rules:
   import/no-named-as-default: off
   import/no-named-as-default-member: off
   import/prefer-default-export: off
-  no-underscore-dangle: 0
+  no-underscore-dangle: off
   import/default: off
   import/no-extraneous-dependencies: error
   import/no-unresolved: error
@@ -47,12 +47,14 @@ rules:
       endOfLine: auto
 
 overrides:
-  # Disable warning `require` on Node-js files
+  # Disable warning `require`/console-log on Node-js files
   - files:
-      - gatsby-*.js
-      - build/*.ts
+      - node.api.js
+      - static.config.js
     rules:
       "@typescript-eslint/no-var-requires": off
+      "global-require": off
+      "no-console": off
   # Disable TypeScript specific rules on JS/JSXfiles
   - files:
       - "*.js"
@@ -68,9 +70,10 @@ overrides:
         - scss: never
   # Disable no-cycle warnings in utility files (unavoidable)
   - files:
-      - "./src/Utility/*.ts"
+      - "../src/Utility/*.ts"
+      - "../src/Store/*.ts"
     rules:
-      import/no-cycle: off
+      "import/no-cycle": off
 
 # ESLint Project Settings
 settings:

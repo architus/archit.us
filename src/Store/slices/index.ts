@@ -1,50 +1,17 @@
-import { consume, mapValues } from "Utility";
-import { combineReducers, Reducer as ReduxReducer } from "redux";
-import { StoreSlice, StoreSliceState, Action } from "Store/types";
+import { combineReducers } from "@reduxjs/toolkit";
 
-// ? ====================
-// ? Slice configuration
-// ? ====================
+import Session from "Store/slices/session";
+import GuildCount from "Store/slices/guildCount";
+import Interpret from "Store/slices/interpret";
+import Loading from "Store/slices/loading";
+import Notifications from "Store/slices/notifications";
 
-import { default as session, Session } from "./session";
-import { default as notifications, Notifications } from "./notifications";
-import { default as guildCount, GuildCount } from "./guildCount";
+const rootReducer = combineReducers({
+  session: Session,
+  guildCount: GuildCount,
+  notifications: Notifications,
+  loading: Loading,
+  interpret: Interpret
+});
 
-/**
- * Represents the overall store object of the application
- */
-export type Store = {
-  session: Session;
-  notifications: Notifications;
-  guildCount: GuildCount;
-};
-const slices: { [K in StoreKey]: StoreSlice<Store[K]> } = {
-  session,
-  notifications,
-  guildCount
-};
-
-// ? ====================
-// ? Slice aggregation
-// ? ====================
-
-export type StoreKey = keyof Store;
-export const reducer: ReduxReducer<Store, Action> = combineReducers(
-  mapValues<
-    StoreSlice<StoreSliceState>,
-    ReduxReducer<StoreSliceState | undefined, Action>,
-    StoreKey
-  >(slices, (slice: StoreSlice<StoreSliceState>) => {
-    const safeReducer: ReduxReducer<StoreSliceState | undefined, Action> = (
-      state = consume(slice.initial),
-      action: Action
-    ) => slice.reducer(state, action);
-    return safeReducer;
-  })
-);
-
-export const initial: Store = mapValues<
-  StoreSlice<StoreSliceState>,
-  StoreSliceState,
-  StoreKey
->(slices, (slice: StoreSlice<StoreSliceState>) => consume(slice.initial));
+export default rootReducer;
