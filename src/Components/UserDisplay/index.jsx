@@ -73,7 +73,7 @@ const Avatar = ({
 }) => {
   const effectiveAvatarUrl = !isNil(avatarUrl)
     ? avatarUrl
-    : constructAvatarUrl(clientId, avatarHash, size, discriminator);
+    : constructAvatarUrl(clientId, discriminator, size, avatarHash);
   return (
     <Placeholder.Custom
       value={effectiveAvatarUrl}

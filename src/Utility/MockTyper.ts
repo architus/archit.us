@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { isDefined } from "./data";
 
 export interface MockTyperOptions {
@@ -11,19 +10,19 @@ export interface MockTyperOptions {
 }
 
 type Typing = {
-  readonly _kind: "typing";
+  readonly kind: "typing";
   currentCharacter: number;
   currentLine: number;
 };
 
 type Waiting = {
-  readonly _kind: "waiting";
+  readonly kind: "waiting";
   currentLine: number;
   durationRemaining: number;
 };
 
 type Idle = {
-  readonly _kind: "idle";
+  readonly kind: "idle";
 };
 
 type MockTyperState = Typing | Waiting | Idle;
@@ -112,48 +111,51 @@ export class MockTyper {
     if (lines.length === 0) {
       // Nothing to type, go immediately to idle
       return {
-        _kind: "idle"
+        kind: "idle"
       };
     }
     // Start at the beginning of the first line
     return {
-      _kind: "typing",
+      kind: "typing",
       currentLine: 0,
       currentCharacter: 0
     };
   }
 
   private tick(): void {
-    // eslint-disable-next-line no-underscore-dangle
-    switch (this.state._kind) {
+    switch (this.state.kind) {
       case "idle":
         return;
 
       case "typing":
-        this.updateTyping(this.state);
+        this.state = this.updateTyping(this.state);
         break;
 
       case "waiting":
-        this.updateWaiting(this.state);
+        this.state = this.updateWaiting(this.state);
         break;
     }
   }
 
   private updateWaiting(state: Waiting): MockTyperState {
     const { keypressDelay } = this.options;
-    state.durationRemaining -= keypressDelay;
+    const newDuration = state.durationRemaining - keypressDelay;
 
     // Transition condition
-    if (state.durationRemaining <= 0) {
+    if (newDuration) {
       // Start typing on the next line
       return {
-        _kind: "typing",
+        kind: "typing",
         currentCharacter: 0,
         currentLine: state.currentLine + 1
       };
     }
 
-    return state;
+    // Update duration
+    return {
+      ...state,
+      durationRemaining: newDuration
+    };
   }
 
   private updateTyping(state: Typing): MockTyperState {
@@ -164,14 +166,14 @@ export class MockTyper {
       // Type a single character
       const typedChar = line.charAt(state.currentCharacter);
       onKeypress?.(typedChar);
-      // eslint-disable-next-line no-plusplus
-      ++state.currentCharacter;
-    } else {
-      // Transition conditions
-      return this.handleEndOfLine(state);
+      return {
+        ...state,
+        currentCharacter: state.currentCharacter + 1
+      };
     }
 
-    return state;
+    // Transition conditions
+    return this.handleEndOfLine(state);
   }
 
   private handleEndOfLine(state: Typing): MockTyperState {
@@ -187,12 +189,12 @@ export class MockTyper {
       this.stop();
 
       return {
-        _kind: "idle"
+        kind: "idle"
       };
     }
     // Transition condition: begin waiting
     return {
-      _kind: "waiting",
+      kind: "waiting",
       currentLine: state.currentLine,
       durationRemaining: lineDelay
     };

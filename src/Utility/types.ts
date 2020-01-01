@@ -48,6 +48,19 @@ export type MakeRequired<B extends {}, P extends keyof B> = Partial<
 > &
   Pick<B, P>;
 
+/**
+ * Marks a type that can be omitted in call signatures
+ */
+export type Omitted = void;
+
+/**
+ * Discriminates between T being void or any other type. If `Omitted`, then
+ * returns empty object
+ */
+export type ConditionalWrap<K extends string, T> = T extends Omitted
+  ? {}
+  : { [k in K]: T };
+
 const _dimensionUnits = [
   "cm",
   "mm",
@@ -117,8 +130,6 @@ type HmrModule = NodeJS.Module & {
 export function isHot(m: NodeJS.Module): m is HmrModule {
   return isDefined((m as HmrModule).hot);
 }
-
-
 
 // ? ==================
 // ? Ecosystem types

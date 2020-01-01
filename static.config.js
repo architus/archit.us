@@ -3,8 +3,8 @@ import React from "react";
 import axios from "axios";
 import path from "path";
 import fs from "fs";
+import { API_BASE } from "./src/Utility/api.node";
 
-const API_BASE = "https://api.develop.archit.us/";
 const noFlashScript = fs.readFileSync(
   path.resolve(__dirname, "./src/Build/no-flash.js")
 );
@@ -21,7 +21,7 @@ const config = {
       userCount = result.data.userCount;
     } catch (e) {
       console.log("An error ocurred while fetching usage count");
-      console.log(e);
+      console.log(e.toString());
     }
 
     return [

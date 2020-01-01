@@ -1,9 +1,24 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import { isHot } from "Utility/types";
+import createSagaMiddleware from "redux-saga";
+import { batchDispatchMiddleware } from "redux-batched-actions";
+
+import saga from "Store/saga";
+import RestMiddleware from "Store/api/rest/middleware";
+import GatewayMiddleware from "Store/api/gateway/middleware";
 import rootReducer from "./slices/index";
 
+const SagaMiddleware = createSagaMiddleware();
+
 const store = configureStore({
-  reducer: rootReducer
+  reducer: rootReducer,
+  middleware: [
+    RestMiddleware,
+    SagaMiddleware,
+    GatewayMiddleware,
+    batchDispatchMiddleware,
+    ...getDefaultMiddleware().slice(1) // Remove redux-thunk
+  ]
 });
 
 // Enable hot module reloading for the store
@@ -14,6 +29,9 @@ if (process.env.NODE_ENV === "development" && isHot(module)) {
     store.replaceReducer(newRootReducer);
   });
 }
+
+// Run the saga
+SagaMiddleware.run(saga);
 
 export type Store = ReturnType<typeof rootReducer>;
 export type Dispatch = typeof store.dispatch;

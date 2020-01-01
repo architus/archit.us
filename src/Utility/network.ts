@@ -1,5 +1,7 @@
 import { isDefined } from "./data";
 
+export { API_BASE, GATEWAY_API_BASE } from "./api.node";
+
 const avatarSizes = [16, 32, 40, 64, 128, 256, 512, 1024];
 function getNextLargerSize(size: number): number {
   for (const avatarSize of avatarSizes) {
@@ -42,17 +44,3 @@ export enum HttpVerbs {
   PATCH = "PATCH",
   DELETE = "DELETE"
 }
-
-/**
- * Gets the RESTful API base URL to use
- */
-export const API_BASE: string = process.env.PRODUCTION_URL
-  ? "https://api.archit.us"
-  : "https://api.develop.archit.us";
-
-/**
- * Gets the Gateway API base URL to use
- */
-export const GATEWAY_API_BASE: string = process.env.PRODUCTION_URL
-  ? "https://gateway.archit.us"
-  : "https://gateway.develop.archit.us";

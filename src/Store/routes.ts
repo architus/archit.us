@@ -1,106 +1,82 @@
-import { restDispatch } from "Store/api/rest/actions";
-import {
-  IdentifySessionResponse,
-  TIdentifySessionResponse,
-  TokenExchangeResponse,
-  TTokenExchangeResponse,
-  GuildCountLoadResponse,
-  TGuildCountLoadResponse,
-  SessionRefreshResponse,
-  TSessionRefreshResponse
-} from "Store/api/rest/types";
-import {
-  IDENTIFY_SESSION,
-  TOKEN_EXCHANGE,
-  GET_GUILD_COUNT,
-  SESSION_REFRESH,
-  SESSION_END
-} from "Store/api/rest/labels";
-import { Option } from "Utility/option";
+import { TUser, TAccess } from "Utility/types";
 import * as t from "io-ts";
-import { either } from "fp-ts/lib/Either";
+import { makeRoute, Errors } from "Store/api/rest";
+import { Either, either } from "fp-ts/lib/Either";
 import { HttpVerbs } from "Utility";
-import { loadGuildCount, loadSession } from "Store/actions";
-import { refreshSession, signOut } from "./slices/session";
 
-type RestDispatchAction = ReturnType<typeof restDispatch>;
+export type IdentifySessionResponse = t.TypeOf<typeof TIdentifySessionResponse>;
+export const TIdentifySessionResponse = t.interface({
+  user: TUser,
+  access: TAccess
+});
 
 /**
  * GET /session/identify
  */
-export function identify(): RestDispatchAction {
-  return restDispatch<IdentifySessionResponse>({
-    route: "/session/identify",
-    label: IDENTIFY_SESSION,
-    onSuccess: (response: IdentifySessionResponse) =>
-      loadSession({ ...response, mode: "identify" }),
-    onFailure: () => signOut(),
-    decode: response =>
-      Option.drop(
-        either.chain(t.object.decode(response), TIdentifySessionResponse.decode)
-      )
-  });
-}
+export const identify = makeRoute()({
+  label: "session/identify",
+  route: "/session/identify",
+  method: HttpVerbs.GET,
+  decode: (response: unknown): Either<Errors, IdentifySessionResponse> =>
+    either.chain(t.object.decode(response), TIdentifySessionResponse.decode)
+});
+
+export type TokenExchangeResponse = t.TypeOf<typeof TTokenExchangeResponse>;
+export const TTokenExchangeResponse = t.interface({
+  user: TUser,
+  access: TAccess,
+  nonce: t.string
+});
 
 /**
  * POST /session/token-exchange
  */
-export function tokenExchange(discordAuthCode: string): RestDispatchAction {
-  return restDispatch<TokenExchangeResponse>({
-    route: "/session/token-exchange",
-    label: TOKEN_EXCHANGE,
-    method: HttpVerbs.POST,
-    data: { code: discordAuthCode },
-    onSuccess: (response: TokenExchangeResponse) =>
-      loadSession({ ...response, mode: "tokenExchange" }),
-    onFailure: () => signOut(),
-    decode: response =>
-      Option.drop(
-        either.chain(t.object.decode(response), TTokenExchangeResponse.decode)
-      )
-  });
-}
+export const tokenExchange = makeRoute<{ code: string }>()({
+  label: "session/tokenExchange",
+  route: "/session/token-exchange ",
+  method: HttpVerbs.POST,
+  decode: (response: unknown): Either<Errors, TokenExchangeResponse> =>
+    either.chain(t.object.decode(response), TTokenExchangeResponse.decode)
+});
+
+export type SessionRefreshResponse = t.TypeOf<typeof TSessionRefreshResponse>;
+export const TSessionRefreshResponse = t.interface({
+  access: TAccess
+});
 
 /**
  * POST /session/refresh
  */
-export function sessionRefresh(): RestDispatchAction {
-  return restDispatch<SessionRefreshResponse>({
-    route: "/session/refresh",
-    label: SESSION_REFRESH,
-    method: HttpVerbs.POST,
-    onSuccess: (response: SessionRefreshResponse) =>
-      refreshSession(response.access),
-    onFailure: () => signOut(),
-    decode: response =>
-      Option.drop(
-        either.chain(t.object.decode(response), TSessionRefreshResponse.decode)
-      )
-  });
-}
+export const refresh = makeRoute()({
+  label: "session/refresh",
+  route: "/session/refresh",
+  method: HttpVerbs.POST,
+  decode: (response: unknown): Either<Errors, SessionRefreshResponse> =>
+    either.chain(t.object.decode(response), TSessionRefreshResponse.decode)
+});
 
 /**
  * POST /session/end
  */
-export function sessionEnd(): RestDispatchAction {
-  return restDispatch<void>({
-    route: "/session/end",
-    label: SESSION_END,
-    method: HttpVerbs.POST
-  });
-}
+export const sessionEnd = makeRoute()({
+  label: "session/end",
+  route: "/session/end",
+  method: HttpVerbs.POST
+});
+
+export type GuildCountLoadResponse = t.TypeOf<typeof TGuildCountLoadResponse>;
+export const TGuildCountLoadResponse = t.interface({
+  guildCount: t.number,
+  userCount: t.number
+});
 
 /**
  * GET /guild-count
  */
-export function guildCount(): RestDispatchAction {
-  return restDispatch<GuildCountLoadResponse>({
-    route: "/guild-count",
-    label: GET_GUILD_COUNT,
-    onSuccess: (response: GuildCountLoadResponse) => loadGuildCount(response),
-    decode: response =>
-      Option.drop(
-        either.chain(t.object.decode(response), TGuildCountLoadResponse.decode)
-      )
-  });
-}
+export const guildCount = makeRoute()({
+  label: "general/guildCount",
+  route: "/guild-count",
+  method: HttpVerbs.GET,
+  decode: (response: unknown): Either<Errors, GuildCountLoadResponse> =>
+    either.chain(t.object.decode(response), TGuildCountLoadResponse.decode)
+});

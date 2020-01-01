@@ -54,7 +54,7 @@ interface PoolProvider<T> {
 export function usePool<T extends PoolType>(
   type: T,
   options: {
-    filter: (elem: T) => boolean;
+    filter?: (elem: T) => boolean;
   } = {}
 ): PoolProvider<PoolBacking[T]> {
   // TODO Implement Pool API

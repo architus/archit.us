@@ -46,17 +46,8 @@ export default function* saga(): SagaIterator {
   yield fork(gatewayFlow);
   yield fork(sessionFlow);
 
-  yield takeEvery(signOut.type, onSignOut);
+  yield takeEvery(signOut.type, handleSignOut);
   yield takeEvery(showNotification.type, autoHideNotification);
-}
-
-/**
- * Upon sign out, clears session storage, shows a toast, and navigates to the home
- */
-function* onSignOut(): SagaIterator {
-  navigate("/");
-  setLocalStorage(LOCAL_STORAGE_KEY, "");
-  yield put(showToast({ message: "Signed out" }));
 }
 
 /**
@@ -75,10 +66,19 @@ function* autoHideNotification(
 }
 
 /**
+ * Upon sign out, clears session storage, shows a toast, and navigates to the home
+ */
+function* handleSignOut(): SagaIterator {
+  navigate("/");
+  setLocalStorage(LOCAL_STORAGE_KEY, "");
+  yield put(showToast({ message: "Signed out" }));
+}
+
+/**
  * Saves the session token/metadata to local storage upon logging in
  * @param action - The load session action dispatched upon token exchange success
  */
-function loadNewSession(action: LoadSessionAction): void {
+function storeNewSession(action: LoadSessionAction): void {
   const { user, access } = action.payload;
   const session: PersistentSession = { user, access };
   const serialized: Option<string> = toJSON(session);
@@ -101,9 +101,11 @@ function* sessionFlow(): SagaIterator {
   if (session.state === "connected" || session.state === "pending") {
     if (session.state === "connected") {
       // Initialize token exchange if coming back from discord auth
-      put(tokenExchange(session.discordAuthCode));
+      log("Initiating token exchange with backend API");
+      yield put(tokenExchange(session.discordAuthCode));
     } else {
       // Identify session if coming back from session restoration
+      log("Identifying existing session");
       yield put(identify());
     }
 
@@ -114,7 +116,8 @@ function* sessionFlow(): SagaIterator {
     });
 
     if (isDefined(success)) {
-      yield call(loadNewSession, success as LoadSessionAction);
+      log("Loading session into local storage");
+      yield call(storeNewSession, success as LoadSessionAction);
     }
   }
 
@@ -151,28 +154,43 @@ function* sessionFlow(): SagaIterator {
 }
 
 function* gatewayFlow(): SagaIterator {
-  const session = yield* select(store => store.session);
-  let elevated = false;
+  const initialState = yield* select(store => store.session.state);
+  let wasElevated = false;
+  let initializedWithNonce = false;
 
-  if (session.state === "connected") {
-    // Use nonce to initialize gateway connection
-    const action: LoadSessionAction = yield take(loadSession.type);
-    const { payload } = action;
-    if (payload.mode === "tokenExchange") {
-      const { nonce } = payload;
-      yield apply(Gateway, Gateway.authenticate, [nonce]);
-      elevated = true;
+  if (initialState === "connected") {
+    // Wait for (successful) token exchange to finish and then use nonce to
+    // initialize gateway connection
+    const { success, timeout } = yield race({
+      success: take(loadSession.type),
+      failure: take(signOut.type),
+      timeout: delay(3000)
+    });
+
+    if (isDefined(success)) {
+      if (success.payload.mode === "tokenExchange") {
+        const { nonce } = success.payload;
+        yield apply(Gateway, Gateway.authenticate, [nonce]);
+        wasElevated = true;
+        initializedWithNonce = true;
+      }
+    } else if (isDefined(timeout)) {
+      yield put(signOut());
     }
-  } else {
-    // Initialize gateway without nonce
-    elevated = session.state !== "none";
-    yield apply(Gateway, Gateway.initialize, []);
   }
 
-  // Wait for a sign out before de-elevating
+  const currentState = yield* select(store => store.session.state);
+  if (!initializedWithNonce) {
+    yield apply(Gateway, Gateway.initialize, []);
+
+    // If initialized from anything but `none`, then there should be a valid
+    // token/session
+    wasElevated = currentState !== "none";
+  }
+
+  // Wait for a sign out
   yield take(signOut.type);
-  if (elevated) {
-    // Only demote if the connection was previously elevated
+  if (wasElevated) {
     yield apply(Gateway, Gateway.demote, []);
   }
 }

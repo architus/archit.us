@@ -16,8 +16,7 @@ import "./style.scss";
 
 export function useOauthUrl() {
   const returnQuery = useReturnQuery();
-  console.log(returnQuery);
-  return `${API_BASE}/login${processIfNotEmptyOrNil(
+  return `${API_BASE}/session/login${processIfNotEmptyOrNil(
     returnQuery,
     q => `?${q}`
   )}`;

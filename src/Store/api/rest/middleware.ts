@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosRequestConfig, AxiosPromise } from "axios";
+import axios, { AxiosError, AxiosPromise } from "axios";
 import { HttpVerbs, isNil, isDefined, API_BASE, log, toJSON } from "Utility";
 import { Nil } from "Utility/types";
 import { Option, Some, None } from "Utility/option";
@@ -28,15 +28,14 @@ const RestMiddleware: Middleware<{}, Store, ReduxDispatch<AnyAction>> = ({
 }: {
   dispatch: Dispatch;
 }) => (next: Dispatch) => (action: AnyAction): void => {
-  next(action);
   if (!restDispatchUnsafe.match(action)) {
-    return;
+    next(action);
   }
 
   const { decode, onSuccess, onFailure, label } = action.payload;
   dispatch(restStart(label));
   makeRequest(action.payload)
-    .then(({ data: responseData }: { data: unknown }) =>
+    .then(({ data: responseData }: { data: unknown }) => {
       Option.from(decode)
         .match({
           Some: d => d(responseData),
@@ -45,36 +44,16 @@ const RestMiddleware: Middleware<{}, Store, ReduxDispatch<AnyAction>> = ({
         })
         // Dispatch onSuccess action if given and returns action
         .flatMap<AnyAction>(d => consumeFactory(onSuccess, d))
-        .forEach(dispatch)
-    )
+        .forEach(dispatch);
+      dispatch(restEnd(label));
+    })
     .catch((error: AxiosError) => {
       const errorObject: ApiError = consumeAxiosError(error);
       dispatch(restError(label, errorObject));
       // Dispatch onFailure action if given and returns action
       consumeFactory(onFailure, errorObject).forEach(dispatch);
-    })
-    .finally(() => {
-      dispatch(restEnd(label));
     });
 };
-
-export function makeRequest({
-  route,
-  method,
-  data,
-  headers
-}: ApiRequest): AxiosPromise {
-  const dataOrParams = [HttpVerbs.GET, HttpVerbs.DELETE].includes(method)
-    ? "params"
-    : "data";
-
-  return axios({
-    url: `${API_BASE}/${route}`,
-    method,
-    headers,
-    [dataOrParams]: data
-  });
-}
 
 export default RestMiddleware;
 
@@ -92,43 +71,3 @@ function consumeFactory<T>(
   return None;
 }
 
-/**
- * Consumes an axios error object, transforming it into an ApiError object depending
- * on why it occurred
- * @param error - The incoming axios error
- */
-export function consumeAxiosError(axiosError: AxiosError): ApiError {
-  let message: string;
-  let error: object;
-  let logMessage: string;
-
-  if (isDefined(axiosError.response)) {
-    // Server error
-    const { data, status } = axiosError.response;
-    const asText = Option.from(data)
-      .flatMap<string>(o => toJSON(o))
-      .getOrElse(axiosError.toString());
-
-    logMessage = `${status} Error: ${asText}`;
-    message = `An error ocurred: status code ${asText}`;
-    error = data;
-  } else if (isDefined(axiosError.request)) {
-    // Client error
-    const { request } = axiosError;
-    const asText = Option.from(request)
-      .flatMap<string>(o => toJSON(o))
-      .getOrElse(axiosError.toString());
-
-    logMessage = `Client Error: ${asText}`;
-    message = "Could not make request. Check network connectivity";
-    error = request;
-  } else {
-    // Unknown error
-    logMessage = `Generic Error: ${axiosError.message}`;
-    message = axiosError.message;
-    error = axiosError;
-  }
-
-  log(logMessage);
-  return { error, message };
-}

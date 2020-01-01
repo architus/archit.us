@@ -6,7 +6,9 @@ interface InterpretResponse {}
 /**
  * Stores incoming responses from the Gateway interpret API
  */
-export type Interpret = { responseQueue: InterpretResponse[] };
+export interface Interpret {
+  responseQueue: InterpretResponse[];
+}
 
 export const SLICING_THRESHOLD = 100;
 export const SLICED_LENGTH = 5;

@@ -4,7 +4,10 @@ import { GuildCountLoadResponse } from "Store/api/rest/types";
 /**
  * Stores static guild count metadata about the bot
  */
-export type GuildCount = { guildCount: number; userCount: number };
+export interface GuildCount {
+  guildCount: number;
+  userCount: number;
+}
 
 // ? ====================
 // ? Reducer exports

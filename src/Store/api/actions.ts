@@ -6,10 +6,6 @@ import { GatewayLabel } from "Store/api/gateway/labels";
 // ? Status Actions & Types
 // ? ====================
 
-export interface ApiError {
-  readonly message: string;
-  readonly error?: object | string;
-}
 
 export interface RestMeta {
   mode: "rest";
