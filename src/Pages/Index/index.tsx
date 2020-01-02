@@ -146,11 +146,11 @@ const Index: React.FC<{}> = () => {
             content={
               <p>
                 The custom emoji module allows for effectively unlimited custom
-                emoji to be used on a server, working by replacing a user's
-                message with another that has the hot-loaded emotes included.
-                Both standard and animated emotes are supported, and the syntax
-                is the same as normal Discord emotes (<code>:shortcode:</code>).
-                Use the
+                emoji to be used on a server, working by replacing a
+                user&rsquo;s message with another that has the hot-loaded emotes
+                included. Both standard and animated emotes are supported, and
+                the syntax is the same as normal Discord emotes (
+                <code>:shortcode:</code>). Use the
                 <code>!emotes</code> command to view a list of all available
                 emotes.
                 <TryCTA />
@@ -207,7 +207,7 @@ const Index: React.FC<{}> = () => {
                   <p>
                     Let users learn who sends the most messages or misspells the
                     most words with message history analytics that search the
-                    server's message records.
+                    server&rsquo;s message records.
                   </p>
                 }
               />

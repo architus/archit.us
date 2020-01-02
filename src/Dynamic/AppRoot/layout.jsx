@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { colorBlend } from "Utility";
 import useDarkMode from "use-dark-mode";
 import classNames from "classnames";
+import tinycolor from "tinycolor2";
 
 import Switch from "Components/Switch";
 import Icon from "Components/Icon";
@@ -31,8 +31,12 @@ function AppLayout({ children, className, ...rest }) {
             checkedIcon={<Icon name="moon" className="switch-icon dark" />}
             offHandleColor={lightColor}
             onHandleColor={lightColor}
-            offColor={colorBlend(0.35, primaryColor)}
-            onColor={colorBlend(-0.6, primaryColor)}
+            offColor={tinycolor(primaryColor)
+              .lighten(35)
+              .toString()}
+            onColor={tinycolor(primaryColor)
+              .darken(60)
+              .toString()}
             height={28}
             width={56}
           />

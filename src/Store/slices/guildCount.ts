@@ -1,5 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { GuildCountLoadResponse } from "Store/api/rest/types";
+import { createSlice } from "@reduxjs/toolkit";
+import { guildCount } from "Store/routes";
+import { restSuccess } from "Store/api/rest";
 
 /**
  * Stores static guild count metadata about the bot
@@ -17,13 +18,18 @@ const initialState: GuildCount = { guildCount: 0, userCount: 0 };
 const slice = createSlice({
   name: "guildCount",
   initialState,
-  reducers: {
-    loadGuildCount: (
-      _,
-      action: PayloadAction<GuildCountLoadResponse>
-    ): GuildCount => action.payload
+  reducers: {},
+  extraReducers: {
+    [restSuccess.type]: (state, action): GuildCount => {
+      if (guildCount.match(action)) {
+        const decoded = guildCount.decode(action.payload);
+        if (decoded.isDefined()) {
+          return decoded.get;
+        }
+      }
+      return state;
+    }
   }
 });
 
-export const { loadGuildCount } = slice.actions;
 export default slice.reducer;

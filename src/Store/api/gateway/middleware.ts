@@ -53,7 +53,7 @@ class GatewayConnection {
    * For more information, see
    * {@link https://docs.archit.us/internal/api-reference/auth/ | the Architus docs on Auth}
    */
-  public authenticate(nonce: string): void {
+  public authenticate(nonce: number): void {
     this._isInitialized = true;
     this._socket = io(`${GATEWAY_API_BASE}/?nonce=${nonce}`);
   }

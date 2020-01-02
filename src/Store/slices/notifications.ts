@@ -86,7 +86,7 @@ type NotificationProps = Readonly<
 type ScopedNotificationArgs = Omit<NotificationProps, "type">;
 type NotificationShowAction = ReturnType<typeof showNotification>;
 
-const defaultDuration = 3000;
+const defaultDuration = 6000;
 const defaultVariant: NotificationVariant = "info";
 
 export function displayNotification({

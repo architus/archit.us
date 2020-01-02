@@ -1,13 +1,14 @@
-import { TUser, TAccess } from "Utility/types";
+import { User, Access } from "Utility/types";
 import * as t from "io-ts";
-import { makeRoute, Errors } from "Store/api/rest";
+import { makeRoute } from "Store/api/rest";
+import { Errors } from "Store/api/rest/types";
 import { Either, either } from "fp-ts/lib/Either";
 import { HttpVerbs } from "Utility";
 
-export type IdentifySessionResponse = t.TypeOf<typeof TIdentifySessionResponse>;
-export const TIdentifySessionResponse = t.interface({
-  user: TUser,
-  access: TAccess
+export type IdentifySessionResponse = t.TypeOf<typeof IdentifySessionResponse>;
+export const IdentifySessionResponse = t.interface({
+  user: User,
+  access: Access
 });
 
 /**
@@ -18,14 +19,14 @@ export const identify = makeRoute()({
   route: "/session/identify",
   method: HttpVerbs.GET,
   decode: (response: unknown): Either<Errors, IdentifySessionResponse> =>
-    either.chain(t.object.decode(response), TIdentifySessionResponse.decode)
+    either.chain(t.object.decode(response), IdentifySessionResponse.decode)
 });
 
-export type TokenExchangeResponse = t.TypeOf<typeof TTokenExchangeResponse>;
-export const TTokenExchangeResponse = t.interface({
-  user: TUser,
-  access: TAccess,
-  nonce: t.string
+export type TokenExchangeResponse = t.TypeOf<typeof TokenExchangeResponse>;
+export const TokenExchangeResponse = t.interface({
+  user: User,
+  access: Access,
+  gatewayNonce: t.number
 });
 
 /**
@@ -36,23 +37,23 @@ export const tokenExchange = makeRoute<{ code: string }>()({
   route: "/session/token-exchange ",
   method: HttpVerbs.POST,
   decode: (response: unknown): Either<Errors, TokenExchangeResponse> =>
-    either.chain(t.object.decode(response), TTokenExchangeResponse.decode)
+    either.chain(t.object.decode(response), TokenExchangeResponse.decode)
 });
 
-export type SessionRefreshResponse = t.TypeOf<typeof TSessionRefreshResponse>;
-export const TSessionRefreshResponse = t.interface({
-  access: TAccess
+export type SessionRefreshResponse = t.TypeOf<typeof SessionRefreshResponse>;
+export const SessionRefreshResponse = t.interface({
+  access: Access
 });
 
 /**
  * POST /session/refresh
  */
-export const refresh = makeRoute()({
+export const sessionRefresh = makeRoute()({
   label: "session/refresh",
   route: "/session/refresh",
   method: HttpVerbs.POST,
   decode: (response: unknown): Either<Errors, SessionRefreshResponse> =>
-    either.chain(t.object.decode(response), TSessionRefreshResponse.decode)
+    either.chain(t.object.decode(response), SessionRefreshResponse.decode)
 });
 
 /**
@@ -64,8 +65,8 @@ export const sessionEnd = makeRoute()({
   method: HttpVerbs.POST
 });
 
-export type GuildCountLoadResponse = t.TypeOf<typeof TGuildCountLoadResponse>;
-export const TGuildCountLoadResponse = t.interface({
+export type GuildCountLoadResponse = t.TypeOf<typeof GuildCountLoadResponse>;
+export const GuildCountLoadResponse = t.interface({
   guildCount: t.number,
   userCount: t.number
 });
@@ -78,5 +79,5 @@ export const guildCount = makeRoute()({
   route: "/guild-count",
   method: HttpVerbs.GET,
   decode: (response: unknown): Either<Errors, GuildCountLoadResponse> =>
-    either.chain(t.object.decode(response), TGuildCountLoadResponse.decode)
+    either.chain(t.object.decode(response), GuildCountLoadResponse.decode)
 });

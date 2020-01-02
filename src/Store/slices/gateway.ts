@@ -16,8 +16,8 @@ const slice = createSlice({
   name: "gateway",
   initialState,
   reducers: {
-    connect: () => ({ isConnected: true }),
-    disconnect: () => ({ isConnected: false })
+    connect: (): GatewayStatus => ({ isConnected: true }),
+    disconnect: (): GatewayStatus => ({ isConnected: false })
   }
 });
 

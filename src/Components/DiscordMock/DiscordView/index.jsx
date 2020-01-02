@@ -45,7 +45,7 @@ function DiscordView({
           <span className="error-image" />
           <h4>Uh oh!</h4>
           <p>
-            It looks like there’s been an error connecting to the architus API
+            It looks like there has been an error connecting to the architus API
           </p>
         </div>
       </div>

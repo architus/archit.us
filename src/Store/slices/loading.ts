@@ -1,13 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-
-import * as ApiLabels from "Store/api/rest/labels";
-import { mapEntries } from "Utility";
-import { apiStart, apiEnd, apiError } from "Store/api/actions";
+import { restStart, restSuccess, restFailure, Route } from "Store/api/rest";
+import { Store } from "Store";
 
 /**
  * Stores loading status for each request =\> response API request type
  */
-export type Loading = { [key in ApiLabels.RestLabel]: boolean };
+export type Loading = { [key: string]: boolean };
 
 // ? ====================
 // ? Reducer exports
@@ -15,25 +13,32 @@ export type Loading = { [key in ApiLabels.RestLabel]: boolean };
 
 const finishLoading = (
   state: Loading,
-  action: ReturnType<typeof apiEnd | typeof apiError>
+  action: ReturnType<typeof restSuccess | typeof restFailure>
 ): Loading => ({
   ...state,
   [action.payload.label]: false
 });
 
-const initialState: Loading = mapEntries(ApiLabels, (_, v) => [v, false]);
+const initialState: Loading = {};
 const slice = createSlice({
   name: "loading",
   initialState,
   reducers: {},
   extraReducers: builder =>
     builder
-      .addCase(apiStart, (state, action) => ({
+      .addCase(restStart, (state, action) => ({
         ...state,
         [action.payload.label]: true
       }))
-      .addCase(apiEnd, finishLoading)
-      .addCase(apiError, finishLoading)
+      .addCase(restSuccess, finishLoading)
+      .addCase(restFailure, finishLoading)
 });
 
 export default slice.reducer;
+
+export function isLoading(store: Store, route: string | Route): boolean {
+  let label: string;
+  if (typeof route === "string") label = route;
+  else label = route.label;
+  return !!store.loading[label];
+}

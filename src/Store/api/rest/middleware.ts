@@ -1,17 +1,16 @@
-import axios, { AxiosError, AxiosPromise } from "axios";
-import { HttpVerbs, isNil, isDefined, API_BASE, log, toJSON } from "Utility";
-import { Nil } from "Utility/types";
-import { Option, Some, None } from "Utility/option";
-import {
-  restStart,
-  restEnd,
-  restError,
-  restDispatchUnsafe
-} from "Store/api/rest/actions";
+import axios from "axios";
+import { isNil } from "Utility";
 import { Middleware, Dispatch as ReduxDispatch, AnyAction } from "redux";
 import { Store, Dispatch } from "Store";
-import { ApiError } from "../actions";
-import { ApiRequest } from "./types";
+import {
+  restDispatch,
+  restStart,
+  apiFetch,
+  restSuccess,
+  isApiError,
+  restFailure
+} from "Store/api/rest";
+import { ApiError } from "./types";
 
 // axios default configs
 if (isNil(axios.defaults.headers)) {
@@ -28,46 +27,52 @@ const RestMiddleware: Middleware<{}, Store, ReduxDispatch<AnyAction>> = ({
 }: {
   dispatch: Dispatch;
 }) => (next: Dispatch) => (action: AnyAction): void => {
-  if (!restDispatchUnsafe.match(action)) {
-    next(action);
+  next(action);
+  if (restDispatch.match(action)) {
+    const { route, method, data, headers } = action.payload;
+    const start = performance.now();
+    dispatch(restStart({ ...action.payload, timing: { start } }));
+    apiFetch({ route, method, data, headers })
+      .then(result => {
+        const end = performance.now();
+        const duration = end - start;
+        const { data: response } = result;
+        dispatch(
+          restSuccess({
+            ...action.payload,
+            response,
+            timing: { start, end, duration }
+          })
+        );
+      })
+      .catch(e => {
+        const end = performance.now();
+        const duration = start - end;
+        let error: ApiError;
+        if (isApiError(e)) {
+          error = e;
+        } else {
+          error = {
+            type: "api",
+            reason: "client",
+            message: `An unexpected error ocurred: ${e.toString()}`,
+            request: {
+              url: route,
+              method,
+              data,
+              headers
+            }
+          };
+        }
+        dispatch(
+          restFailure({
+            ...action.payload,
+            error,
+            timing: { start, end, duration }
+          })
+        );
+      });
   }
-
-  const { decode, onSuccess, onFailure, label } = action.payload;
-  dispatch(restStart(label));
-  makeRequest(action.payload)
-    .then(({ data: responseData }: { data: unknown }) => {
-      Option.from(decode)
-        .match({
-          Some: d => d(responseData),
-          // Fall back to raw data if no decode function given
-          None: () => Some(responseData)
-        })
-        // Dispatch onSuccess action if given and returns action
-        .flatMap<AnyAction>(d => consumeFactory(onSuccess, d))
-        .forEach(dispatch);
-      dispatch(restEnd(label));
-    })
-    .catch((error: AxiosError) => {
-      const errorObject: ApiError = consumeAxiosError(error);
-      dispatch(restError(label, errorObject));
-      // Dispatch onFailure action if given and returns action
-      consumeFactory(onFailure, errorObject).forEach(dispatch);
-    });
 };
 
 export default RestMiddleware;
-
-/**
- * Consumes a nullable Action factory to produce a Some(Action) if the factory was
- * defined and the creation was successful, else None.
- * @param factory - Nullable Action factory that can also produce Nil instead of an Action
- * @param arg - Argument to pass to the action factory
- */
-function consumeFactory<T>(
-  factory: ((u: T) => AnyAction | Nil) | Nil,
-  arg: T
-): Option<AnyAction> {
-  if (isDefined(factory)) return Option.from(factory(arg));
-  return None;
-}
-

@@ -11,23 +11,22 @@ import {
 import {
   User,
   PersistentSession,
-  TPersistentSession,
+  MapDiscriminatedUnion,
   Access,
-  MapDiscriminatedUnion
+  expiresAt
 } from "Utility/types";
 import { Option, Some, None } from "Utility/option";
 import {
   createSlice,
   PayloadAction,
   SliceCaseReducers,
-  ValidateSliceCaseReducers,
-  Slice
+  Slice,
+  CreateSliceOptions
 } from "@reduxjs/toolkit";
-import {
-  IdentifySessionResponse,
-  TokenExchangeResponse
-} from "Store/api/rest/types";
+import { IdentifySessionResponse, TokenExchangeResponse } from "Store/routes";
 import { Store } from "Store";
+import { PathReporter } from "io-ts/lib/PathReporter";
+import { isLeft } from "fp-ts/lib/Either";
 
 // ? ====================
 // ? Types
@@ -74,10 +73,10 @@ interface IdentifyLoad extends IdentifySessionResponse {
 
 interface TokenExchangeLoad extends TokenExchangeResponse {
   mode: "tokenExchange";
-  nonce: string;
+  gatewayNonce: number;
 }
 
-type SessionLoad = IdentifyLoad | TokenExchangeLoad;
+export type SessionLoad = IdentifyLoad | TokenExchangeLoad;
 
 // ? ====================
 // ? State initialization
@@ -111,10 +110,10 @@ function tryLoadSession(): Option<Session> {
   return storage
     .filter(value => value !== "")
     .flatMap<PersistentSession>(rawValue =>
-      Option.drop(TPersistentSession.decode(rawValue))
+      Option.drop(PersistentSession.decode(JSON.parse(rawValue)))
     )
     .flatMap<Session>(session => {
-      if (session.access.expiresAt.getTime() - Date.now() < 0) {
+      if (expiresAt(session.access).getTime() - Date.now() < 0) {
         log("Session has expired. Clearing");
         setLocalStorage(LOCAL_STORAGE_KEY, "");
         return None;
@@ -131,7 +130,7 @@ function tryLoadSession(): Option<Session> {
  * Returns the session state to the initial one and notifies listeners
  */
 function signOutState(): Session {
-  return initialState;
+  return { state: "none" };
 }
 
 // ? ====================
@@ -143,7 +142,8 @@ const slice = createSlice({
   name: "session",
   initialState,
   reducers: {
-    signOut: (): Session => signOutState(),
+    signOut: (_1: Session, _2: PayloadAction<{ silent?: boolean }>): Session =>
+      signOutState(),
     refreshSession: guardedTransition(
       "authenticated",
       (state, action: PayloadAction<Access>) => ({
@@ -223,20 +223,16 @@ export function createSessionAwareState<
   T,
   Reducers extends SliceCaseReducers<T>
 >({
-  name = "",
   initialState: initial,
-  reducers
-}: {
-  name: string;
-  initialState: T;
-  reducers: ValidateSliceCaseReducers<T, Reducers>;
-}): Slice<T, Reducers> {
+  extraReducers,
+  ...rest
+}: CreateSliceOptions<T, Reducers>): Slice<T, Reducers> {
   return createSlice({
-    name,
+    ...rest,
     initialState: initial,
-    reducers: {
+    extraReducers: {
       [signOut.type]: (): T => initial,
-      ...reducers
+      ...extraReducers
     }
   });
 }

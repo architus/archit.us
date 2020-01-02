@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-empty-interface */
 /* eslint-disable @typescript-eslint/camelcase */
 /* eslint-disable max-classes-per-file */
 import * as t from "io-ts";
-import { either, right } from "fp-ts/lib/Either";
+import { either } from "fp-ts/lib/Either";
 import { isDefined } from "./data";
 
 export class EnumType<A> extends t.Type<A> {
@@ -40,6 +41,35 @@ export type MapDiscriminatedUnion<
   [V in T[K]]: DiscriminateUnion<T, K, V>;
 };
 
+// From https://github.com/gcanti/io-ts/issues/149
+export type Exact<T, X extends T> = T &
+  { [K in Exclude<keyof X, keyof T>]?: never };
+
+export function alias<P extends t.Props, A, O, I>(
+  type: t.InterfaceType<P, A, O, I>
+): <
+  AA extends Exact<A, AA>,
+  OO extends Exact<O, OO> = O,
+  II extends Exact<I, II> = I
+>() => t.InterfaceType<P, AA, OO, II>;
+export function alias<A, O, I>(
+  type: t.Type<A, O, I>
+): <
+  AA extends Exact<A, AA>,
+  OO extends Exact<O, OO> = O,
+  II extends Exact<I, II> = I
+>() => t.Type<AA, OO, II>;
+export function alias<A, O, I>(
+  type: t.Type<A, O, I>
+): <
+  AA extends Exact<A, AA>,
+  OO extends Exact<O, OO> = O,
+  II extends Exact<I, II> = I
+>() => t.Type<AA, OO, II> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return (): any => type as any;
+}
+
 export type MakeOptional<B extends {}, P extends keyof B> = Omit<B, P> &
   Partial<Pick<B, P>>;
 
@@ -52,6 +82,11 @@ export type MakeRequired<B extends {}, P extends keyof B> = Partial<
  * Marks a type that can be omitted in call signatures
  */
 export type Omitted = void;
+
+/**
+ * Gets an empty object if omitted
+ */
+export type OrEmpty<T> = T extends Omitted ? {} : T;
 
 /**
  * Discriminates between T being void or any other type. If `Omitted`, then
@@ -104,15 +139,15 @@ export interface Dimension {
   unit: DimensionUnit;
 }
 
-export const DateFromString = new t.Type<Date, string, unknown>(
-  "DateFromString",
-  (u): u is Date => u instanceof Date,
+export const TimeFromString = new t.Type<number, string, unknown>(
+  "TimeFromString",
+  (u): u is number => typeof u === "number",
   (u, c) =>
     either.chain(t.string.validate(u, c), s => {
       const d = new Date(s);
-      return isNaN(d.getTime()) ? t.failure(u, c) : t.success(d);
+      return isNaN(d.getTime()) ? t.failure(u, c) : t.success(d.getTime());
     }),
-  a => a.toISOString()
+  a => new Date(a).toISOString()
 );
 
 /**
@@ -217,21 +252,7 @@ export const TPremiumType = new EnumType<PremiumType>(
   "PremiumType"
 );
 
-/**
- * Discord user type
- *
- * @remarks
- * The format comes from {@link https://discordapp.com/developers/docs/resources/user#user-object | the Discord API docs}
- */
-export type User = t.TypeOf<typeof TUser>;
-
-/**
- * Discord user type
- *
- * @remarks
- * The format comes from {@link https://discordapp.com/developers/docs/resources/user#user-object | the Discord API docs}
- */
-export const TUser = t.intersection([
+const TUser = t.intersection([
   t.type({
     id: TSnowflake,
     username: t.string,
@@ -250,48 +271,41 @@ export const TUser = t.intersection([
   })
 ]);
 
-export class Access {
-  public readonly issuedAt: Date;
+/**
+ * Discord user type
+ *
+ * @remarks
+ * The format comes from {@link https://discordapp.com/developers/docs/resources/user#user-object | the Discord API docs}
+ */
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface User extends t.TypeOf<typeof TUser> {}
 
-  public readonly expiresIn: number;
+/**
+ * Discord user type
+ *
+ * @remarks
+ * The format comes from {@link https://discordapp.com/developers/docs/resources/user#user-object | the Discord API docs}
+ */
+export const User = alias(TUser)<User>();
 
-  public readonly refreshIn: number;
-
-  public constructor(issuedAt: Date, expiresIn: number, refreshIn: number) {
-    this.issuedAt = issuedAt;
-    this.expiresIn = expiresIn;
-    this.refreshIn = refreshIn;
-  }
-
-  public get expiresAt(): Date {
-    return new Date(this.issuedAt.getTime() + this.expiresIn * 1000);
-  }
-}
-
-const TAccessObject = t.type({
-  issuedAt: DateFromString,
+const TAccess = t.type({
+  issuedAt: TimeFromString,
   expiresIn: t.number,
   refreshIn: t.number
 });
-export const TAccess = new t.Type<Access, object, unknown>(
-  "access",
-  (u: unknown): u is Access => u instanceof Access,
-  (u: unknown, c: t.Context) =>
-    either.chain(TAccessObject.validate(u, c), o =>
-      right(new Access(o.issuedAt, o.expiresIn, o.refreshIn))
-    ),
-  (a: Access) => ({
-    issuedAt: a.issuedAt,
-    expiresIn: a.expiresIn,
-    refreshIn: a.refreshIn
-  })
-);
+export interface Access extends t.TypeOf<typeof TAccess> {}
+export const Access = alias(TAccess)<Access>();
+export function expiresAt(access: Access): Date {
+  return new Date(access.issuedAt + access.expiresIn * 1000);
+}
 
-export type PersistentSession = t.TypeOf<typeof TPersistentSession>;
-export const TPersistentSession = t.type({
-  user: TUser,
-  access: TAccess
+const TPersistentSession = t.type({
+  user: User,
+  access: Access
 });
+export interface PersistentSession
+  extends t.TypeOf<typeof TPersistentSession> {}
+export const PersistentSession = alias(TPersistentSession)<PersistentSession>();
 
 export enum VerificationLevel {
   None = 0,
@@ -359,8 +373,7 @@ export const TGuildFeature = new EnumType<GuildFeature>(
   "GuildFeature"
 );
 
-export type Guild = t.TypeOf<typeof TGuild>;
-export const TGuild = t.intersection([
+const TGuild = t.intersection([
   t.type({
     id: TSnowflake,
     name: t.string,
@@ -401,3 +414,5 @@ export const TGuild = t.intersection([
     premium_subscription_count: t.Integer
   })
 ]);
+export interface Guild extends t.TypeOf<typeof TGuild> {}
+export const Guild = alias(TGuild)<Guild>();
