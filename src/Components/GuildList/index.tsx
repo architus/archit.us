@@ -125,12 +125,11 @@ const Section: React.FC<SectionProps> = ({
           id={id}
           name={name}
           key={id}
-          width={ICON_WIDTH}
           onClick={(): void => onClickGuild(id)}
           style={iconStyle}
-          tabIndex="0"
+          tabIndex={0}
           elevated={elevated}
-          className={id === activeGuildId ? "guild-icon__active" : null}
+          className={id === activeGuildId ? "guild-icon__active" : undefined}
         />
       ))}
       <hr />
