@@ -3,44 +3,35 @@ import { useDispatch } from "Utility";
 import { Option } from "Utility/option";
 import { User } from "Utility/types";
 import { signOut } from "Store/actions";
-import { useCurrentUser } from "Store/slices/session";
-
-import { Link as RouterLink } from "Components/Router";
+import { useCurrentUser, useSessionStatus } from "Store/slices/session";
+import { useOauthUrl } from "Components/LoginButton";
 import UserDisplay from "Components/UserDisplay";
 import { Dropdown } from "react-bootstrap";
 import Icon from "Components/Icon";
-
 import "./style.scss";
 
-export default function SessionControl(): React.ReactNode {
+const SessionControl: React.FC = () => {
   const user: Option<User> = useCurrentUser();
+  const isLoggingIn: boolean = useSessionStatus()[1];
   const dispatch = useDispatch();
+  const oauthUrl = useOauthUrl();
 
-  return user.match({
-    // eslint-disable-next-line react/prop-types, react/display-name
-    Some: ({ avatar, username, discriminator, id }) => (
-      <Dropdown className="session-dropdown">
-        <Dropdown.Toggle id="session-dropdown-button">
-          <UserDisplay
-            className="mr-2"
-            avatarHash={avatar}
-            username={username}
-            discriminator={discriminator}
-            clientId={id}
-          />
-        </Dropdown.Toggle>
-        <Dropdown.Menu alignRight>
-          <Dropdown.Item onClick={(): void => dispatch(signOut())}>
-            <Icon name="sign-out-alt" className="mr-2" /> Sign Out
-          </Dropdown.Item>
-        </Dropdown.Menu>
-      </Dropdown>
-    ),
-    // eslint-disable-next-line react/display-name
-    None: () => (
-      <RouterLink className="nav-link" to="/login">
-        Sign In
-      </RouterLink>
-    )
-  });
-}
+  return isLoggingIn ? (
+    <Dropdown className="session-dropdown">
+      <Dropdown.Toggle id="session-dropdown-button">
+        <UserDisplay className="mr-2" user={user.getOrElse(undefined)} />
+      </Dropdown.Toggle>
+      <Dropdown.Menu alignRight>
+        <Dropdown.Item onClick={(): unknown => dispatch(signOut({}))}>
+          <Icon name="sign-out-alt" className="mr-2" /> Sign Out
+        </Dropdown.Item>
+      </Dropdown.Menu>
+    </Dropdown>
+  ) : (
+    <a className="nav-link" href={oauthUrl}>
+      Sign In
+    </a>
+  );
+};
+
+export default SessionControl;

@@ -21,7 +21,7 @@ plugins:
 rules:
   tsdoc/syntax: warn
   react/prop-types: warn
-  react/display-name: warn
+  react/display-name: off
   react-hooks/rules-of-hooks: error
   react-hooks/exhaustive-deps: warn
   import/no-named-as-default: off

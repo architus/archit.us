@@ -1,4 +1,7 @@
 import { isDefined } from "./data";
+import { Snowflake } from "./types";
+import { Option } from "./option";
+import { parseInteger } from "./primitives";
 
 export { API_BASE, GATEWAY_API_BASE } from "./api.node";
 
@@ -10,27 +13,47 @@ function getNextLargerSize(size: number): number {
   return avatarSizes[avatarSizes.length - 1];
 }
 
+interface DefaultAvatarUrlConfig {
+  discriminator: string;
+}
+
+interface RealAvatarUrlConfig {
+  clientId: Snowflake;
+  hash: string;
+  size?: number;
+}
+
+function isRealAvatarUrlConfig(
+  a: RealAvatarUrlConfig | DefaultAvatarUrlConfig
+): a is RealAvatarUrlConfig {
+  return (
+    isDefined((a as RealAvatarUrlConfig).hash) &&
+    isDefined((a as RealAvatarUrlConfig).clientId)
+  );
+}
+
 /**
  * Constructs a Discord CDN URL that gets the avatar of the specified user
- * @param clientId - The Discord Snowflake client id, as a string
+ * @param clientId - The Discord Snowflake client id
  * @param discriminator - The #XXXX discriminator
  * @param size - The size of the requested avatar
  * @param hash - The avatar hash
  */
 export function constructAvatarUrl(
-  clientId: string,
-  discriminator: number,
-  size?: number,
-  hash?: string
+  options: RealAvatarUrlConfig | DefaultAvatarUrlConfig
 ): string {
-  if (isDefined(hash)) {
+  if (isRealAvatarUrlConfig(options)) {
+    const { clientId, hash, size } = options;
     const sizeAppend = isDefined(size)
       ? `?size=${getNextLargerSize(size)}`
       : "";
     return `https://cdn.discordapp.com/avatars/${clientId}/${hash}.png${sizeAppend}`;
   }
   // default avatar
-  const avatarNumber = discriminator % 5;
+  const avatarNumber = Option.from(options.discriminator)
+    .flatMap(parseInteger)
+    .map(i => i % 5)
+    .getOrElse(0);
   return `https://cdn.discordapp.com/embed/avatars/${avatarNumber}.png`;
 }
 

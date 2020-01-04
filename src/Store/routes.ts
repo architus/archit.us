@@ -18,6 +18,7 @@ export const identify = makeRoute()({
   label: "session/identify",
   route: "/session/identify",
   method: HttpVerbs.GET,
+  auth: true,
   decode: (response: unknown): Either<Errors, IdentifySessionResponse> =>
     either.chain(t.object.decode(response), IdentifySessionResponse.decode)
 });
@@ -36,6 +37,7 @@ export const tokenExchange = makeRoute<{ code: string }>()({
   label: "session/tokenExchange",
   route: "/session/token-exchange ",
   method: HttpVerbs.POST,
+  auth: true,
   decode: (response: unknown): Either<Errors, TokenExchangeResponse> =>
     either.chain(t.object.decode(response), TokenExchangeResponse.decode)
 });
@@ -52,6 +54,7 @@ export const sessionRefresh = makeRoute()({
   label: "session/refresh",
   route: "/session/refresh",
   method: HttpVerbs.POST,
+  auth: true,
   decode: (response: unknown): Either<Errors, SessionRefreshResponse> =>
     either.chain(t.object.decode(response), SessionRefreshResponse.decode)
 });
@@ -62,7 +65,8 @@ export const sessionRefresh = makeRoute()({
 export const sessionEnd = makeRoute()({
   label: "session/end",
   route: "/session/end",
-  method: HttpVerbs.POST
+  method: HttpVerbs.POST,
+  auth: true
 });
 
 export type GuildCountLoadResponse = t.TypeOf<typeof GuildCountLoadResponse>;

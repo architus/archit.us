@@ -25,8 +25,6 @@ import {
 } from "@reduxjs/toolkit";
 import { IdentifySessionResponse, TokenExchangeResponse } from "Store/routes";
 import { Store } from "Store";
-import { PathReporter } from "io-ts/lib/PathReporter";
-import { isLeft } from "fp-ts/lib/Either";
 
 // ? ====================
 // ? Types

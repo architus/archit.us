@@ -1,47 +1,108 @@
 import React from "react";
 import { useSessionStatus } from "Store/slices/session";
-
 import Login from "Pages/Login";
-import NotFound from "Pages/NotFound";
-
 import Begin from "Dynamic/Begin";
-import { Redirect } from "@reach/router";
-import { Router } from "Components/Router";
+import { Redirect, Router } from "@reach/router";
+import {
+  withClientSide,
+  useLocation,
+  splitPath,
+  attach,
+  useInitialRender,
+  isNil,
+  useMemoOnce
+} from "Utility";
+import { Snowflake, isSnowflake } from "Utility/types";
+import { Option } from "Utility/option";
+import classNames from "classnames";
+import { usePool } from "Store/slices/pools";
+import { APP_PATH_ROOT } from "Dynamic/AppRoot/config.json";
+import { DEFAULT_TAB, tabs, tabPaths, TabPath } from "Dynamic/AppRoot/tabs";
+import { NavigationContext } from "Dynamic/AppRoot/context";
 
-import { withClientSide } from "Utility";
-import { APP_PATH_ROOT } from "./config.json";
-import { DEFAULT_TAB, tabs } from "./tabs";
+interface AppLocation {
+  currentTab: TabPath | null;
+  currentGuild: Snowflake | null;
+}
+
+function isValidTab(tab: string): tab is TabPath {
+  return tabPaths.includes(tab as TabPath);
+}
+
+export function useAppLocation(): AppLocation {
+  const { all: guildList } = usePool("guilds", {
+    filter: guild => guild.has_architus
+  });
+
+  const { location } = useLocation();
+  const fragments = splitPath(location.pathname);
+  const tabFragment = fragments.length >= 3 ? fragments[2] : "";
+  const guildFragment = fragments.length >= 2 ? fragments[1] : "";
+
+  const currentTab: TabPath | null = isValidTab(tabFragment)
+    ? tabFragment
+    : null;
+  const currentGuild: Snowflake | null =
+    isSnowflake(guildFragment) &&
+    guildList.find(guild => guild.id === guildFragment)
+      ? guildFragment
+      : null;
+
+  return { currentTab, currentGuild };
+}
 
 type AppContentProps = {
-  openAddGuild: () => void;
+  currentTab: TabPath | null;
+  currentGuild: Snowflake | null;
 };
 
 const AppContent: React.ComponentType<AppContentProps> = withClientSide(
-  ({ openAddGuild }) => {
+  ({ currentTab, currentGuild }: AppContentProps) => {
     const [loggedIn] = useSessionStatus();
+    const navigationCtx = useMemoOnce(() => ({ defaultPath: DEFAULT_TAB }));
+
     // Render restricted view if not logged in
     if (!loggedIn) return <Login fromRestricted={true} />;
     return (
-      <>
+      <NavigationContext.Provider value={navigationCtx}>
         <Router>
-          <Begin path="/" openAddGuild={openAddGuild} />
           <Redirect
             from=":guildId"
             to={`${APP_PATH_ROOT}/:guildId/${DEFAULT_TAB}`}
             noThrow
           />
-          {tabs.map(({ path, component: Component }) => (
-            <Component
-              path={`:guildId/${path}`}
-              key={path}
-              openAddGuild={openAddGuild}
-            />
-          ))}
-          <NotFound default fromApp={true} />
+          {Option.merge(Option.from(currentTab), Option.from(currentGuild))
+            .map(([tab, guild]) => {
+              const Component = tabs[tab].component;
+              return (
+                // eslint-disable-next-line react/jsx-key
+                <Component guild={guild} />
+              );
+            })
+            .getOrElse(null)}
+          <Begin default />
         </Router>
-      </>
+      </NavigationContext.Provider>
     );
   }
 );
 
-export default AppContent;
+type WrapperProps = {};
+
+const Wrapper: React.FC<WrapperProps> = () => {
+  // App content class selection logic
+  const { currentTab, currentGuild } = useAppLocation();
+  const isInitial = useInitialRender();
+  const contentClass =
+    isInitial || isNil(currentTab) ? "" : tabs[currentTab].contentClass;
+
+  return (
+    <div className={classNames("app-content", contentClass)}>
+      <React.Suspense fallback={<em>Loading...</em>}>
+        <AppContent currentTab={currentTab} currentGuild={currentGuild} />
+      </React.Suspense>
+    </div>
+  );
+};
+
+export default attach(AppContent, { Wrapper });

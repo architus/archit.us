@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import {
   useSelector as useRawSelector,
   useDispatch as useRawDispatch,
@@ -9,6 +9,7 @@ import { Store, Dispatch } from "Store";
 import { addMissingUnit, collator } from "./primitives";
 import { isClient, isProduction } from "./document";
 import { Option, Some, None } from "./option";
+import { isDefined } from "./data";
 
 /**
  * Gets the optional encoded return query param if not in production mode (where the
@@ -173,4 +174,22 @@ export function useInitialRender(): boolean {
   const [isInitial, setIsInitial] = useState(true);
   useEffectOnce(() => setIsInitial(false));
   return isInitial;
+}
+
+/**
+ * Gets the previous value of a value in a function component
+ * @param value - Current value to use to update
+ */
+export function usePrevious<T>(
+  value: T,
+  effect?: (prev: T | undefined, current: T) => void,
+  deps?: unknown[]
+): T | undefined {
+  const ref = useRef<T | undefined>(undefined);
+  useEffect(() => {
+    if (isDefined(effect)) effect(ref.current, value);
+    ref.current = value;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value, effect, ...(isDefined(deps) ? deps : [])]);
+  return ref.current;
 }

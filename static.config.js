@@ -3,12 +3,25 @@ import React from "react";
 import axios from "axios";
 import path from "path";
 import fs from "fs";
-import { API_BASE } from "./src/Utility/api.node";
+import SoureMapSupport from "source-map-support";
 
-const noFlashScript = fs.readFileSync(
-  path.resolve(__dirname, "./src/Build/no-flash.js")
-);
+const TypeScript = require("ts-node");
 
+// Bootstrap TypeScript
+SoureMapSupport.install();
+TypeScript.register({
+  files: true,
+  isolatedModules: false,
+  compilerOptions: {
+    module: "commonjs",
+    target: "es2019"
+  }
+});
+
+const { API_BASE } = require("./src/Utility/api.node");
+
+const noFlashPath = path.resolve(__dirname, "./src/Build/no-flash.js");
+const noFlashScript = fs.readFileSync(noFlashPath);
 const config = {
   entry: path.join(__dirname, "src", "index.tsx"),
   getRoutes: async () => {
@@ -54,7 +67,6 @@ const config = {
     require.resolve("react-static-plugin-sass")
   ],
 
-  // eslint-disable-next-line react/display-name
   Document: ({ Html, Head, Body, children }) => (
     <Html lang="en-US">
       <Head>

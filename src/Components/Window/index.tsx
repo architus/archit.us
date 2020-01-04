@@ -1,6 +1,5 @@
 import React from "react";
 import classNames from "classnames";
-
 import "./style.scss";
 
 type WindowVariant = "discord" | "light";
@@ -15,10 +14,10 @@ type WindowProps = {
 
 const Window: React.FC<WindowProps> = ({
   children,
-  variant,
+  variant = "light",
   className,
-  noPadding,
-  noChrome,
+  noPadding = false,
+  noChrome = false,
   ...rest
 }: WindowProps) => (
   <figure
@@ -38,13 +37,6 @@ const Window: React.FC<WindowProps> = ({
   </figure>
 );
 
-export default Window;
-
-Window.defaultProps = {
-  noPadding: false,
-  noChrome: false,
-  variant: "light",
-  className: ""
-};
-
 Window.displayName = "Window";
+
+export default Window;

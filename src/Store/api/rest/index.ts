@@ -88,6 +88,7 @@ export interface RouteConfig<
   method: HttpVerbs;
   decode?: (resp: TResponse) => Either<Errors, TDecoded>;
   headers?: Record<string, string>;
+  auth?: boolean;
   onSuccess?: (
     result: TDecoded,
     metadata: TRequestMetadata
@@ -187,7 +188,8 @@ export function apiFetch<TResponse>({
   route,
   method,
   data,
-  headers
+  headers,
+  auth
 }: ApiRequest): SagaCancellablePromise<ApiResponse<TResponse>> {
   type Response = ApiResponse<TResponse>;
   async function fetchInner(cancelToken: CancelToken): Promise<Response> {
@@ -250,7 +252,8 @@ export function makeRoute<
     label,
     method,
     decode: decodeFunc,
-    headers
+    headers,
+    auth
   }: RouteConfig<
     TLabel,
     TRouteData,
@@ -275,7 +278,8 @@ export function makeRoute<
         route: route(routeData),
         data,
         method,
-        headers: { ...headers }
+        headers: { ...headers },
+        auth: !!auth
       };
 
       async function fetchInner(
@@ -348,6 +352,7 @@ export function makeRoute<
         data,
         metadata,
         method,
+        auth: !!auth,
         headers: { ...headers }
       });
     }

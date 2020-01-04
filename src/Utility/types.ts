@@ -26,7 +26,19 @@ export type Predicate<T> = (arg: T) => boolean;
 export type Supplier<T> = () => T;
 export type RecordKey = string | number | symbol;
 export type Comparator<T> = (a: T, b: T) => number;
-export type RawDimension = string | number;
+export type RawDimension = string | number | Dimension;
+export type StyleObject = React.CSSProperties;
+
+export function isDimension(o: unknown): o is Dimension {
+  return (
+    typeof o === "object" &&
+    isDefined(o) &&
+    isDefined((o as Dimension).amount) &&
+    isDefined((o as Dimension).unit) &&
+    typeof (o as Dimension).amount === "number" &&
+    typeof (o as Dimension).unit === "string"
+  );
+}
 
 export type DiscriminateUnion<
   T,
@@ -391,8 +403,9 @@ const TGuild = t.intersection([
     mfa_level: TMfaLevel,
     premium_tier: TPremiumTier,
     preferred_locale: t.string,
-    // added field
-    architus_admin: t.boolean
+    // added fields
+    architus_admin: t.boolean,
+    has_architus: t.boolean
   }),
   t.partial({
     icon: t.string,

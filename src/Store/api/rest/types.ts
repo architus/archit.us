@@ -110,6 +110,7 @@ export interface RestDispatch<
   label: string;
   method: HttpVerbs;
   headers: Record<string, string>;
+  auth: boolean;
   data: TData;
   routeData: TRouteData;
   metadata: TRequestMetadata;
@@ -166,4 +167,5 @@ export interface ApiRequest {
   method: HttpVerbs;
   data: Record<string, unknown>;
   headers: Record<string, string>;
+  auth: boolean
 }

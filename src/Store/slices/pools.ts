@@ -1,4 +1,5 @@
 import { Guild, User, MakeRequired } from "Utility/types";
+import { Option, None } from "Utility/option";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export type PoolBacking = {
@@ -51,15 +52,43 @@ interface PoolProvider<T> {
   isLoaded: boolean;
 }
 
+/**
+ * Gets every element in a pool
+ * @param type - Pool type to pull from
+ * @param options - Options object
+ */
 export function usePool<T extends PoolType>(
   type: T,
   options: {
-    filter?: (elem: T) => boolean;
+    filter?: (elem: PoolBacking[T]) => boolean;
   } = {}
 ): PoolProvider<PoolBacking[T]> {
   // TODO Implement Pool API
   return {
     all: [],
+    isLoaded: false
+  };
+}
+
+interface PoolEntityProvider<T> {
+  entity: Option<T>;
+  isLoaded: boolean;
+}
+
+/**
+ * Gets a single element in a pool
+ * @param type - Pool type to pull from
+ * @param options - Options object
+ */
+export function usePoolEntity<T extends PoolType>(
+  type: T,
+  options: {
+    filter?: (elem: PoolBacking[T]) => boolean;
+  } = {}
+): PoolEntityProvider<PoolBacking[T]> {
+  // TODO Implement Pool API
+  return {
+    entity: None,
     isLoaded: false
   };
 }

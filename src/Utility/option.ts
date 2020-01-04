@@ -111,7 +111,7 @@ export abstract class Option<A> implements OptionLike<A> {
 
   abstract orUndefined(): A | undefined;
 
-  abstract getOrElse(_: A): A;
+  abstract getOrElse<B = A>(_: B): A | B;
 
   abstract map<B>(_: (_: A) => B): Option<B>;
 
@@ -150,6 +150,17 @@ export abstract class Option<A> implements OptionLike<A> {
    */
   static drop<A>(either: Either<unknown, A>): Option<A> {
     if (isRight(either)) return Some(either.right);
+    return None;
+  }
+
+  /**
+   * Merges two options together, creating an option of their tuple iff both are
+   * defined
+   * @param op2 - Option A
+   * @param op1 - Option B
+   */
+  static merge<A, B>(op1: Option<A>, op2: Option<B>): Option<[A, B]> {
+    if (op1.isDefined() && op2.isDefined()) return Some([op1.get, op2.get]);
     return None;
   }
 }
@@ -191,7 +202,7 @@ export class SomeType<A> extends Option<A> implements ValuedOption<A> {
     return this._value;
   }
 
-  getOrElse(_: A): A {
+  getOrElse<B>(_: B): A | B {
     return this._value;
   }
 

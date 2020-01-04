@@ -29,10 +29,10 @@ const RestMiddleware: Middleware<{}, Store, ReduxDispatch<AnyAction>> = ({
 }) => (next: Dispatch) => (action: AnyAction): void => {
   next(action);
   if (restDispatch.match(action)) {
-    const { route, method, data, headers } = action.payload;
+    const { route, method, data, headers, auth } = action.payload;
     const start = performance.now();
     dispatch(restStart({ ...action.payload, timing: { start } }));
-    apiFetch({ route, method, data, headers })
+    apiFetch({ route, method, data, headers, auth })
       .then(result => {
         const end = performance.now();
         const duration = end - start;

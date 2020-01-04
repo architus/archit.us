@@ -5,12 +5,10 @@ import { CustomEmojiExtension } from "Components/DiscordMock/CustomEmojiExtensio
 import { shallowEqual } from "react-redux";
 import LoginButton, { useOauthUrl } from "Components/LoginButton";
 import { useRouteData } from "react-static";
-
 import { useEffectOnce, isDefined, useSelector, useDispatch } from "Utility";
 import { Nil } from "Utility/types";
 import { useSessionStatus } from "Store/actions";
 import { guildCount } from "Store/routes";
-
 import {
   Jumbotron,
   Container,
@@ -20,13 +18,8 @@ import {
   Button,
   Badge
 } from "react-bootstrap";
-import DiscordMock from "Components/DiscordMock";
-import Footer from "Components/Footer";
-import Window from "Components/Window";
-import Icon from "Components/Icon";
-import Layout from "Components/Layout";
-import { Link as RouterLink } from "Components/Router";
-
+import { Layout, Icon, Window, Footer, DiscordMock } from "Components";
+import { Link } from "Components/Router";
 import "./style.scss";
 import LogoTextSvg from "Assets/logo-text.inline.svg";
 import LogsSvg from "./svg/logs.svg";
@@ -345,11 +338,11 @@ const MinorFeature: React.FC<MinorFeatureProps> = ({ header, text, icon }) => (
 
 MinorFeature.displayName = "MinorFeature";
 
-const CallToAction: React.FC<{}> = () => {
+const CallToAction: React.FC = () => {
   const [loggedIn] = useSessionStatus();
   const oauthUrl = useOauthUrl();
   const additionalProps = loggedIn
-    ? { as: RouterLink, t: "/app" }
+    ? { as: Link, t: "/app" }
     : { href: oauthUrl };
   return (
     <Button className="cta" variant="primary" size="lg" {...additionalProps}>

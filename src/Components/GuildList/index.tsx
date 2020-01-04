@@ -62,7 +62,7 @@ const GuildList: React.FC<GuildListProps> = ({ onClickGuild, onClickAdd }) => {
               activeGuildId={activeGuildId.orNull()}
             />
           ) : null}
-          <Tooltip text="Add architus to a server...">
+          <Tooltip id="add-architus-tooltip" text="Add architus to a server...">
             <AddButton style={squareStyle} onClick={onClickAdd} />
           </Tooltip>
         </>
@@ -114,7 +114,7 @@ const Section: React.FC<SectionProps> = ({
   onClickGuild,
   activeGuildId,
   iconStyle,
-  elevated,
+  elevated = false,
   className
 }: SectionProps) => {
   return (
@@ -136,8 +136,4 @@ const Section: React.FC<SectionProps> = ({
       <hr />
     </div>
   );
-};
-
-Section.defaultProps = {
-  elevated: false
 };

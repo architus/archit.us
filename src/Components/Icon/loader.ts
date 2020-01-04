@@ -6,7 +6,6 @@ import {
   IconName,
   IconPrefix
 } from "@fortawesome/fontawesome-svg-core";
-
 import * as FontAwesomeIcons from "./fontawesome";
 import { icons, CustomIconDefinition, CustomIconName } from "./custom";
 

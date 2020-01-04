@@ -9,7 +9,8 @@ import {
   RawDimension,
   DimensionUnit,
   dimensionUnits,
-  Nil
+  Nil,
+  isDimension
 } from "./types";
 
 /**
@@ -102,9 +103,9 @@ export const processIfNotEmptyOrNil = (
  * @deprecated use `parseDimension(dimension)`
  * @param dimension - The raw dimension text ot number to process
  */
-export function addMissingUnit(dimension: RawDimension): string {
+export function addMissingUnit(dimension: RawDimension): Dimension {
   const parsed: Option<Dimension> = parseDimension(dimension);
-  return parsed.map(d => formatDimension(d)).getOrElse("");
+  return parsed.getOrElse({ unit: "px", amount: 0 });
 }
 
 const DIMENSION_REGEX = /^([0-9]*\.?[0-9]*)([A-Za-z%]+)$/g;
@@ -114,6 +115,14 @@ const DIMENSION_REGEX = /^([0-9]*\.?[0-9]*)([A-Za-z%]+)$/g;
  * @param rawDimension - The string or number value to parse and validate
  */
 export function parseDimension(rawDimension: RawDimension): Option<Dimension> {
+  if (typeof rawDimension === "object") {
+    if (isDimension(rawDimension)) {
+      return Some(rawDimension);
+    }
+
+    return None;
+  }
+
   if (typeof rawDimension === "number")
     return Some({ unit: "px", amount: rawDimension });
 
@@ -279,6 +288,17 @@ export function toJSON(toEncode: unknown): Option<string> {
   } catch (e) {
     return None;
   }
+}
+
+/**
+ * Attempts to parse an integer from a string, resulting in a `Some<number>`
+ * if successful, and `None` if unsuccessful
+ * @param str - Raw numeric string to parse
+ */
+export function parseInteger(str: string): Option<number> {
+  const num = parseInt(str, 10);
+  if (Number.isNaN(num)) return None;
+  return Some(num);
 }
 
 // ? ==============
