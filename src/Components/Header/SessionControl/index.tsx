@@ -4,6 +4,7 @@ import { Option } from "Utility/option";
 import { User } from "Utility/types";
 import { signOut } from "Store/actions";
 import { useCurrentUser, useSessionStatus } from "Store/slices/session";
+import { AutoLink } from "Components";
 import { useOauthUrl } from "Components/LoginButton";
 import UserDisplay from "Components/UserDisplay";
 import { Dropdown } from "react-bootstrap";
@@ -28,9 +29,9 @@ const SessionControl: React.FC = () => {
       </Dropdown.Menu>
     </Dropdown>
   ) : (
-    <a className="nav-link" href={oauthUrl}>
+    <AutoLink className="nav-link" to={oauthUrl}>
       Sign In
-    </a>
+    </AutoLink>
   );
 };
 

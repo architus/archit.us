@@ -6,4 +6,5 @@ export { default as Switch } from "./Switch";
 export { default as Layout } from "./Layout";
 export { default as Footer } from "./Footer";
 export { default as Window } from "./Window";
+export { default as AutoLink } from "./AutoLink";
 export { default as DiscordMock } from "./DiscordMock";

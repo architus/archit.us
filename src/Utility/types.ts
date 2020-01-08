@@ -429,3 +429,33 @@ const TGuild = t.intersection([
 ]);
 export interface Guild extends t.TypeOf<typeof TGuild> {}
 export const Guild = alias(TGuild)<Guild>();
+
+// Mock Discord types
+
+export interface MockReaction {
+  emoji: string;
+  number: number;
+  userHasReacted: boolean;
+}
+
+export interface MockMessage {
+  id: number;
+  content: string;
+  mentionsUser: boolean;
+  edited: boolean;
+  reactions: MockReaction[];
+}
+
+export interface MockUser {
+  discriminator: string;
+  avatar?: string;
+  username: string;
+  nameColor: string;
+  bot: boolean;
+}
+
+export interface MockMessageClump {
+  timestamp: Date;
+  sender: MockUser;
+  messages: MockMessage[];
+}

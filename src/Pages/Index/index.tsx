@@ -345,7 +345,7 @@ const CallToAction: React.FC = () => {
   const [loggedIn] = useSessionStatus();
   const oauthUrl = useOauthUrl();
   const additionalProps = loggedIn
-    ? { as: Link, t: "/app" }
+    ? { as: Link, to: "/app" }
     : { href: oauthUrl };
   return (
     <Button className="cta" variant="primary" size="lg" {...additionalProps}>

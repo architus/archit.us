@@ -5,6 +5,7 @@ export { faChevronRight } from "@fortawesome/free-solid-svg-icons/faChevronRight
 export { faChevronLeft } from "@fortawesome/free-solid-svg-icons/faChevronLeft";
 export { faPlus } from "@fortawesome/free-solid-svg-icons/faPlus";
 export { faSignOutAlt } from "@fortawesome/free-solid-svg-icons/faSignOutAlt";
+export { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons/faExternalLinkAlt";
 export { faMoon } from "@fortawesome/free-solid-svg-icons/faMoon";
 export { faSun } from "@fortawesome/free-solid-svg-icons/faSun";
 export { faShieldAlt } from "@fortawesome/free-solid-svg-icons/faShieldAlt";

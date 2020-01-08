@@ -108,7 +108,8 @@ export function addMissingUnit(dimension: RawDimension): Dimension {
   return parsed.getOrElse({ unit: "px", amount: 0 });
 }
 
-const DIMENSION_REGEX = /^([0-9]*\.?[0-9]*)([A-Za-z%]+)$/g;
+const DIMENSION_REGEX = /^([0-9]*\.?[0-9]*)([A-Za-z%]+)$/;
+
 /**
  * Parses a raw dimension object (string or number) into a Some<Dimension> if successful,
  * else None
@@ -363,6 +364,31 @@ export function isInPath({
   }
   // Regex test
   return fragment.test(pathComponents[position]);
+}
+
+let cachedExternalRegex = /^(?:(?:http|https):\/\/(?!(?:www\.)?archit.us)[\w./=?#-_]+)|(?:mailto:.+)$/;
+let externalRegex: RegExp | null = null;
+
+/**
+ * Lazily gets the regular expression used to determine if a link is external, using
+ * `window.location.host` if available and caching the created regex
+ */
+export function getExternalRegex(): RegExp {
+  if (isDefined(externalRegex)) return externalRegex;
+  if (isClient) {
+    const regexStr = `^(?:(?:http|https):\\/\\/(?!(?:www\\.)?${window.location.host})[\\w./=?#-_]+)|(?:mailto:.+)$`
+    const regex = new RegExp(regexStr);
+    externalRegex = regex;
+    return externalRegex;
+  } else return cachedExternalRegex;
+}
+
+/**
+ * Determines whether a link is an external link or not
+ * @param href Href to test
+ */
+export function isExternal(href: string): boolean {
+  return getExternalRegex().test(href);
 }
 
 // ? ===============

@@ -15,7 +15,7 @@ import {
 import { Snowflake, isSnowflake } from "Utility/types";
 import { Option } from "Utility/option";
 import classNames from "classnames";
-import { usePool } from "Store/slices/pools";
+import { usePool, usePoolEntity } from "Store/slices/pools";
 import { APP_PATH_ROOT } from "Dynamic/AppRoot/config.json";
 import { DEFAULT_TAB, tabs, tabPaths, TabPath } from "Dynamic/AppRoot/tabs";
 import { NavigationContext } from "Dynamic/AppRoot/context";
@@ -58,11 +58,17 @@ type AppContentProps = {
 
 const AppContent: React.ComponentType<AppContentProps> = withClientSide(
   ({ currentTab, currentGuild }: AppContentProps) => {
-    const [loggedIn] = useSessionStatus();
+    const [loggedIn, loggingIn] = useSessionStatus();
     const navigationCtx = useMemoOnce(() => ({ defaultPath: DEFAULT_TAB }));
 
     // Render restricted view if not logged in
-    if (!loggedIn) return <Login fromRestricted={true} />;
+    if (!loggingIn) return <Login fromRestricted={true} />;
+    // Render beginning screen if loading
+    if (!loggedIn) return <Begin />;
+
+    // Load guild from store
+    const { entity: guild } = usePoolEntity("guilds", { id: currentGuild });
+
     return (
       <NavigationContext.Provider value={navigationCtx}>
         <Router>

@@ -1,12 +1,12 @@
 import React from "react";
 import classNames from "classnames";
 import {
-  processIfNotEmptyOrNil,
   constructAvatarUrl,
   attach,
   isDefined
 } from "Utility";
 import { User } from "Utility/types";
+import { Option } from "Utility/option";
 import Placeholder from "Components/Placeholder";
 import "./style.scss";
 
@@ -32,21 +32,18 @@ const UserDisplay: React.FC<UserDisplayProps> = ({
     <Avatar avatarUrl={avatarUrl} user={user} />
     <div>
       <Placeholder.Text
-        text={isDefined(user) ? user.username : username || ""}
+        text={Option.from(user?.username).getOrElse("")}
         className="username"
         width={90}
         size="0.95em"
         light
       />
       <Placeholder.Text
-        text={
-          processIfNotEmptyOrNil(
-            isDefined(user) ? user.discriminator : discriminator,
-            d => `#${d}`
-          ) || ""
-        }
+        text={Option.from(user?.discriminator || discriminator)
+          .map(d => `#${d}`)
+          .getOrElse("")}
         className="discriminator"
-        size="0.85em"
+        size="0.95em"
         width={40}
         light
       />
@@ -85,9 +82,9 @@ const Avatar: React.FC<AvatarProps> = ({
       hash: user.avatar
     });
   } else {
-    const resolvedDiscriminator = isDefined(discriminator)
-      ? discriminator
-      : "0";
+    let resolvedDiscriminator = "0";
+    if (isDefined(discriminator)) resolvedDiscriminator = discriminator;
+    else if (isDefined(user)) resolvedDiscriminator = user.discriminator;
     effectiveAvatarUrl = constructAvatarUrl({
       discriminator: resolvedDiscriminator
     });

@@ -1,21 +1,26 @@
 import React from "react";
-import PropTypes from "prop-types";
-import { Link as RouterLink } from "Components/Router";
+import { AutoLink } from "Components";
 import classNames from "classnames";
 
 // this link will be active when itself or deeper routes are current
-export const isPartiallyActive = ({ baseClassName, activeClassName }) => ({
-  isPartiallyCurrent
-}) => {
+export const isPartiallyActive = ({
+  baseClassName,
+  activeClassName
+}: {
+  baseClassName: string;
+  activeClassName: string;
+}) => ({ isPartiallyCurrent }: { isPartiallyCurrent: boolean }): {} => {
   return isPartiallyCurrent
     ? { className: classNames(activeClassName, baseClassName) }
     : { className: baseClassName };
 };
 
-const NavLink = ({ to, children, ...rest }) => {
+type NavLinkProps = React.ComponentProps<typeof AutoLink>;
+
+const NavLink: React.FC<NavLinkProps> = ({ to, children, ...rest }) => {
   return (
     <li className="nav-item">
-      <RouterLink
+      <AutoLink
         to={to}
         getProps={isPartiallyActive({
           baseClassName: "nav-link",
@@ -24,17 +29,9 @@ const NavLink = ({ to, children, ...rest }) => {
         {...rest}
       >
         {children}
-      </RouterLink>
+      </AutoLink>
     </li>
   );
 };
 
 export default NavLink;
-
-NavLink.propTypes = {
-  to: PropTypes.string,
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node
-  ])
-};

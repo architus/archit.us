@@ -1,7 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { addMissingUnit, randomNumericString, isNil, MockTyper } from "Utility";
+import {
+  addMissingUnit,
+  randomNumericString,
+  isNil,
+  MockTyper,
+  formatDimension
+} from "Utility";
 import { SLICED_LENGTH } from "Store/slices/interpret";
 import {
   architusUser,
@@ -404,7 +410,7 @@ export default class DiscordMock extends React.Component {
 
     return (
       <DiscordView
-        style={{ height: addMissingUnit(height) }}
+        style={{ height: formatDimension(addMissingUnit(height)) }}
         channelName={channelName}
         onSend={this.onSend}
         onReact={this.onReact}
