@@ -38,6 +38,8 @@ function takeGreater(cached: number | Nil, live: number | Nil): number {
   return 0;
 }
 
+const customEmojiExtension = curry(CustomEmojiExtension as unknown as (...args: unknown[]) => unknown)(customEmotes)
+
 const Index: React.FC<{}> = () => {
   const {
     guildCount: cachedGuildCount,
@@ -157,7 +159,8 @@ const Index: React.FC<{}> = () => {
                 index={1}
                 messageSet={messageSets.customEmoji}
                 allowedCommands={["emotes"]}
-                extension={curry(CustomEmojiExtension)(customEmotes)}
+                // TODO update types
+                extension={customEmojiExtension}
                 offline
                 loop
               />

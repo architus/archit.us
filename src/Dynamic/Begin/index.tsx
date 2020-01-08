@@ -5,7 +5,7 @@ import { showGuildAddModal } from "Dynamic/AppRoot/actions";
 import { AppPageProps } from "Dynamic/AppRoot/types";
 import "./style.scss";
 
-type BeginProps = {} & Omit<AppPageProps, "guild">;
+type BeginProps = Omit<AppPageProps, "guild">;
 
 const Begin: React.FC<BeginProps> = () => {
   const { dispatch } = useContext(AppContext);
