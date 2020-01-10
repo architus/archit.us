@@ -5,7 +5,6 @@ import { batchDispatchMiddleware } from "redux-batched-actions";
 
 import saga from "Store/saga";
 import RestMiddleware from "Store/api/rest/middleware";
-import GatewayMiddleware from "Store/api/gateway/middleware";
 import rootReducer from "./slices/index";
 
 const SagaMiddleware = createSagaMiddleware();
@@ -15,7 +14,6 @@ const store = configureStore({
   middleware: [
     RestMiddleware,
     SagaMiddleware,
-    GatewayMiddleware,
     batchDispatchMiddleware,
     ...getDefaultMiddleware().slice(1) // Remove redux-thunk
   ]
