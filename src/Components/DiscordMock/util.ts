@@ -15,9 +15,20 @@ import {
   transformOutgoingMessage
 } from "Components/DiscordMock/transform";
 import { omit, pick } from "lodash";
-import { MockUser, Snowflake, User, MockMessageClump } from "Utility/types";
+import {
+  MockUser,
+  Snowflake,
+  User,
+  MockMessageClump,
+  MockMessage
+} from "Utility/types";
 import { getAvatarUrl } from "Components/UserDisplay";
-import { MockUserEvent } from "Store/gatewayRoutes";
+import { MockUserEvent } from "Store/routes";
+
+export interface MockDiscordContext {
+  thisUser: MockUser;
+  users: MockUser[];
+}
 
 // ? ==========================
 // ? User creation utilities
@@ -146,8 +157,12 @@ export function makeFakeWebhookUser(base: MockUser): MockUser {
 // ? ==========================
 
 export class Extension {
-  constructor(context, commands) {
-    Object.assign(this, context, commands);
+  context: MockDiscordContext;
+  commands: string[];
+
+  constructor(context: MockDiscordContext, commands: string[]) {
+    this.context = context;
+    this.commands = commands;
   }
 
   destruct() {}
@@ -204,6 +219,15 @@ export function mergeClumps(a: MockMessageClump, b: MockMessageClump) {
   };
 }
 
+// Initializes a new clump with a single message
+function createClump(message: MockMessage, sender: MockUser): MockMessageClump {
+  return {
+    timestamp: new Date(),
+    sender,
+    messages: [message]
+  };
+}
+
 // Converts message data to its websocket message format
 // TODO implement
 export function serializeOutgoingMessage({
@@ -224,6 +248,94 @@ export function serializeOutgoingMessage({
     allowed_commands: allowedCommands,
     silent
   };
+}
+
+// Parses a reaction from its network equivalent to the internal representation
+function parseReaction(reaction) {
+  return {
+    emoji: transformReaction(reaction[1]),
+    rawEmoji: reaction[1],
+    number: 1,
+    userHasReacted: false,
+    targetId: reaction[0]
+  };
+}
+
+// Converts a reaction to its network representation
+export function serializeReaction(messageId, reaction) {
+  return [messageId, reaction.rawEmoji];
+}
+
+// Filters a list of reactions by using an id filter predicate function, removing
+// the targetId tag in the process
+function filterReactionsById(reactions, idFilter, removeTag = true) {
+  const filtered = reactions.filter(r => idFilter(r.targetId));
+  return removeTag ? filtered.map(r => omit(r, ["targetId"])) : filtered;
+}
+
+// Adds a clump to the end of the clumps array, merging if neccessary
+function withAddedClump(clumps, newClump) {
+  if (clumps.length > 0) {
+    const lastClump = clumps[clumps.length - 1];
+    if (shouldMergeClumps(lastClump, newClump)) {
+      const otherClumps = clumps.slice(0, -1);
+      return [...otherClumps, mergeClumps(lastClump, newClump)];
+    }
+  }
+  // Default: return with the new clump appended
+  return [...clumps, newClump];
+}
+
+// Finds the index of the clump contanining the message with the given id
+function containingClumpIndex(clumps, messageId) {
+  return clumps.findIndex(clump =>
+    includes(clump.messages, message => message.messageId === messageId)
+  );
+}
+
+// Constructs a message object with the given content, reactions, and id
+function constructMessage(
+  { content, customTransformer, reactions, messageId },
+  { thisUser, users }
+) {
+  // Transform the message to its display form
+  const { result, mentions } = transformMessage(
+    content,
+    {
+      users,
+      clientId: thisUser.clientId
+    },
+    customTransformer
+  );
+  return {
+    content: result,
+    reactions,
+    mentionsUser: mentions.includes(thisUser.clientId),
+    messageId
+  };
+}
+
+// Merges the two lists of reactions, merging old ones with ones from the new list
+// if they match the same emoji
+function mergeReactions(prevReactions, newReactions) {
+  const baseReactionList = [...(!isNil(prevReactions) ? prevReactions : [])];
+  for (const newReactionIndex in newReactions) {
+    const newReaction = newReactions[newReactionIndex];
+    const prevReaction = baseReactionList.find(
+      reaction => reaction.emoji === newReaction.emoji
+    );
+    if (!isNil(prevReaction)) {
+      // reaction is already included, merge
+      const prevReactionIndex = baseReactionList.indexOf(prevReaction);
+      baseReactionList[prevReactionIndex] = {
+        ...prevReaction,
+        newReaction
+      };
+    } else {
+      baseReactionList.push(newReaction);
+    }
+  }
+  return baseReactionList;
 }
 
 // ? ==========================
@@ -403,103 +515,6 @@ export function withUpdatedReaction({
       number: typeof number === "function" ? number(r.number) : number
     })
   });
-}
-
-// Parses a reaction from its network equivalent to the internal representation
-function parseReaction(reaction) {
-  return {
-    emoji: transformReaction(reaction[1]),
-    rawEmoji: reaction[1],
-    number: 1,
-    userHasReacted: false,
-    targetId: reaction[0]
-  };
-}
-
-// Converts a reaction to its network representation
-export function serializeReaction(messageId, reaction) {
-  return [messageId, reaction.rawEmoji];
-}
-
-// Filters a list of reactions by using an id filter predicate function, removing
-// the targetId tag in the process
-function filterReactionsById(reactions, idFilter, removeTag = true) {
-  const filtered = reactions.filter(r => idFilter(r.targetId));
-  return removeTag ? filtered.map(r => omit(r, ["targetId"])) : filtered;
-}
-
-// Initializes a new clump with a single message
-function createClump({ message, sender }) {
-  return {
-    timestamp: new Date(),
-    sender,
-    messages: [message]
-  };
-}
-
-// Adds a clump to the end of the clumps array, merging if neccessary
-function withAddedClump(clumps, newClump) {
-  if (clumps.length > 0) {
-    const lastClump = clumps[clumps.length - 1];
-    if (shouldMergeClumps(lastClump, newClump)) {
-      const otherClumps = clumps.slice(0, -1);
-      return [...otherClumps, mergeClumps(lastClump, newClump)];
-    }
-  }
-  // Default: return with the new clump appended
-  return [...clumps, newClump];
-}
-
-// Finds the index of the clump contanining the message with the given id
-function containingClumpIndex(clumps, messageId) {
-  return clumps.findIndex(clump =>
-    includes(clump.messages, message => message.messageId === messageId)
-  );
-}
-
-// Constructs a message object with the given content, reactions, and id
-function constructMessage(
-  { content, customTransformer, reactions, messageId },
-  { thisUser, users }
-) {
-  // Transform the message to its display form
-  const { result, mentions } = transformMessage(
-    content,
-    {
-      users,
-      clientId: thisUser.clientId
-    },
-    customTransformer
-  );
-  return {
-    content: result,
-    reactions,
-    mentionsUser: mentions.includes(thisUser.clientId),
-    messageId
-  };
-}
-
-// Merges the two lists of reactions, merging old ones with ones from the new list
-// if they match the same emoji
-function mergeReactions(prevReactions, newReactions) {
-  const baseReactionList = [...(!isNil(prevReactions) ? prevReactions : [])];
-  for (const newReactionIndex in newReactions) {
-    const newReaction = newReactions[newReactionIndex];
-    const prevReaction = baseReactionList.find(
-      reaction => reaction.emoji === newReaction.emoji
-    );
-    if (!isNil(prevReaction)) {
-      // reaction is already included, merge
-      const prevReactionIndex = baseReactionList.indexOf(prevReaction);
-      baseReactionList[prevReactionIndex] = {
-        ...prevReaction,
-        newReaction
-      };
-    } else {
-      baseReactionList.push(newReaction);
-    }
-  }
-  return baseReactionList;
 }
 
 // ? ==========================

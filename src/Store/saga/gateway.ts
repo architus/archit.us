@@ -8,16 +8,16 @@ import {
   gatewayConnect,
   gatewayDisconnect,
   gatewayReconnect,
-  GatewayEvent,
   gatewayEvent,
   gatewayMalformed,
   gatewayDispatch,
   GatewayDispatch,
-  gatewaySend
+  gatewaySend,
+  isGatewayEvent
 } from "Store/api/gateway";
 import { AnyAction } from "redux";
 import io from "socket.io-client";
-import { events } from "Store/gatewayRoutes";
+import * as events from "Store/routes/events";
 import { failure } from "io-ts/lib/PathReporter";
 import { isRight } from "fp-ts/lib/Either";
 
@@ -84,7 +84,10 @@ function* dispatchHandler(socket: Socket): SagaIterator {
 
     if (!isConnected) {
       // Wait until connected to continue with dispatch
-      yield take(gatewayConnect);
+      yield race({
+        connect: take(gatewayConnect),
+        reconnect: take(gatewayReconnect)
+      });
     }
     const isElevated = yield* select(
       store =>
@@ -125,33 +128,37 @@ function createGatewayEventChannel(socket: Socket): EventChannel<AnyAction> {
     });
 
     // Subscribe to each known event
-    Object.values(events).forEach(({ event, decode }: GatewayEvent) => {
-      socket.on(event, (data: unknown) => {
-        const decodeResult = decode(data as object);
-        if (isRight(decodeResult)) {
-          emitter(
-            gatewayEvent({
-              event,
-              data: decodeResult.right,
-              timestamp: performance.now()
-            })
-          );
-        } else {
-          const errors = decodeResult.left;
-          const message: string[] = failure(errors);
-          emitter(
-            gatewayMalformed({
-              event,
-              timestamp: performance.now(),
-              error: {
-                message: `Errors ocurred while parsing server response: ${message.toString()}`,
-                error: errors,
-                original: data
-              }
-            })
-          );
-        }
-      });
+    Object.values(events).forEach(eventExport => {
+      // Filter only gateway events (and not, for example, io-ts types)
+      if (isGatewayEvent(eventExport)) {
+        const { event, decode } = eventExport;
+        socket.on(event, (data: unknown) => {
+          const decodeResult = decode(data as object);
+          if (isRight(decodeResult)) {
+            emitter(
+              gatewayEvent({
+                event,
+                data: decodeResult.right,
+                timestamp: performance.now()
+              })
+            );
+          } else {
+            const errors = decodeResult.left;
+            const message: string[] = failure(errors);
+            emitter(
+              gatewayMalformed({
+                event,
+                timestamp: performance.now(),
+                error: {
+                  message: `Errors ocurred while parsing server response: ${message.toString()}`,
+                  error: errors,
+                  original: data
+                }
+              })
+            );
+          }
+        });
+      }
     });
 
     return () => {

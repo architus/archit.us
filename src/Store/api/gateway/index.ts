@@ -2,6 +2,7 @@ import { createAction, AnyAction, PayloadAction } from "@reduxjs/toolkit";
 import { ErrorContents, Omitted } from "Utility/types";
 import { Errors } from "io-ts";
 import { Either } from "fp-ts/lib/Either";
+import { isDefined } from "Utility";
 
 // ? ==================
 // ? Actions
@@ -63,6 +64,7 @@ export interface GatewayEvent<
   TDecoded = unknown,
   TResponse = object
 > {
+  type: "gatewayEvent";
   event: TEvent;
   match: (
     action: AnyAction
@@ -90,6 +92,7 @@ export function makeGatewayEvent<
   config: GatewayEventConfig<TEvent, TDecoded, TResponse>
 ): GatewayEvent<TEvent, TDecoded, TResponse> {
   return {
+    type: "gatewayEvent",
     event: config.event,
     decode: config.decode,
     match: (
@@ -101,6 +104,15 @@ export function makeGatewayEvent<
     ): action is PayloadAction<GatewayMalformed> =>
       gatewayMalformed.match(action) && action.payload.event === config.event
   };
+}
+
+export function isGatewayEvent(test: unknown): test is GatewayEvent {
+  return (
+    typeof test === "object" &&
+    isDefined(test) &&
+    isDefined((test as GatewayEvent).type) &&
+    (test as GatewayEvent).type === "gatewayEvent"
+  );
 }
 
 // ? ==================
@@ -131,7 +143,7 @@ export function makeGatewayRoute<
     elevated
   }: GatewayRouteConfig<TEvent>) => {
     function dispatch(args: TPayload): PayloadAction<GatewayDispatch> {
-      return gatewayDispatch({ payload: args, event });
+      return gatewayDispatch({ payload: args, event, elevated });
     }
 
     dispatch.event = event;

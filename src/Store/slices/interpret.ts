@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { MockBotEvent, mockBotEvent } from "Store/gatewayRoutes";
+import { MockBotEvent, mockBotEvent } from "Store/routes";
 import { gatewayEvent } from "Store/api/gateway";
 
 /**
@@ -31,7 +31,7 @@ const slice = createSlice({
             ...(responseQueue.length >= SLICING_THRESHOLD
               ? responseQueue.slice(-SLICED_LENGTH)
               : responseQueue),
-            action.payload
+            action.payload.data
           ];
       }
       return state;
