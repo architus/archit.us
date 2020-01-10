@@ -1,5 +1,6 @@
 import { ConditionalWrap, Omitted } from "Utility/types";
 import { HttpVerbs } from "Utility";
+import { ErrorContents } from "Utility/types";
 import * as t from "io-ts";
 
 export type Errors = t.Errors;
@@ -43,15 +44,6 @@ export interface ApiResponse<D> {
     headers: Record<string, string>;
   };
 }
-
-/**
- * Common error contents with message and optional more detailed object
- * object/string
- */
-type ErrorContents = {
-  readonly error?: object | string;
-  readonly message: string;
-};
 
 interface ApiErrorBase extends ErrorContents {
   readonly type: "api";

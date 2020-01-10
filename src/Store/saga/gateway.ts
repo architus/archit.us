@@ -1,16 +1,25 @@
 import { SagaIterator, EventChannel, eventChannel } from "@redux-saga/core";
 import { take, race, call, put, fork } from "@redux-saga/core/effects";
-import { isDefined, GATEWAY_API_BASE } from "Utility";
+import { isDefined, GATEWAY_API_BASE, warn } from "Utility";
 import { signOut, loadSession } from "Store/actions";
 import { select } from "Store/saga/utility";
 import {
   gatewayInitialize,
   gatewayConnect,
   gatewayDisconnect,
-  gatewayReconnect
-} from "Store/api/gateway/actions";
+  gatewayReconnect,
+  GatewayEvent,
+  gatewayEvent,
+  gatewayMalformed,
+  gatewayDispatch,
+  GatewayDispatch,
+  gatewaySend
+} from "Store/api/gateway";
 import { AnyAction } from "redux";
 import io from "socket.io-client";
+import { events } from "Store/gatewayRoutes";
+import { failure } from "io-ts/lib/PathReporter";
+import { isRight } from "fp-ts/lib/Either";
 
 type LoadSessionAction = ReturnType<typeof loadSession>;
 type Socket = SocketIOClient.Socket;
@@ -22,11 +31,16 @@ type Socket = SocketIOClient.Socket;
 export default function* gatewayFlow(): SagaIterator {
   // Initialize socket.io connection
   const { socket, wasElevated } = yield call(initializeConnection);
-  yield put(gatewayInitialize({ wasElevated, url: GATEWAY_API_BASE }));
+  yield put(
+    gatewayInitialize({ isElevated: wasElevated, url: GATEWAY_API_BASE })
+  );
 
   // Attach all listeners
   const eventChannel = yield call(createGatewayEventChannel, socket);
   yield fork(gatewayEventHandler, eventChannel);
+
+  // Dispatch sends
+  yield fork(dispatchHandler, socket);
 
   // Fork sign out handler
   if (wasElevated) {
@@ -56,6 +70,42 @@ function* demoteOnSignout(socket: Socket): SagaIterator {
 }
 
 /**
+ * Dispatches each incoming dispatch request
+ * @param socket Socket instance
+ */
+function* dispatchHandler(socket: Socket): SagaIterator {
+  while (true) {
+    const { event, payload, elevated } = (yield take(
+      gatewayDispatch
+    )) as GatewayDispatch;
+    const isConnected = yield* select(
+      store => store.gateway.state === "established"
+    );
+
+    if (!isConnected) {
+      // Wait until connected to continue with dispatch
+      yield take(gatewayConnect);
+    }
+    const isElevated = yield* select(
+      store =>
+        store.gateway.state !== "noConnection" && store.gateway.isElevated
+    );
+
+    if (elevated && !isElevated) {
+      warn(
+        "A route marked as elevated was dispatched without elevation! Skipping."
+      );
+    } else {
+      // TODO implement callback
+      socket.emit(event, payload);
+      yield put(
+        gatewaySend({ event, payload, timestamp: performance.now(), elevated })
+      );
+    }
+  }
+}
+
+/**
  * Creates a gateway action event channel
  * @param socket Socket.IO socket instance
  */
@@ -72,6 +122,36 @@ function createGatewayEventChannel(socket: Socket): EventChannel<AnyAction> {
 
     socket.on("reconnect", () => {
       emitter(gatewayReconnect());
+    });
+
+    // Subscribe to each known event
+    Object.values(events).forEach(({ event, decode }: GatewayEvent) => {
+      socket.on(event, (data: unknown) => {
+        const decodeResult = decode(data as object);
+        if (isRight(decodeResult)) {
+          emitter(
+            gatewayEvent({
+              event,
+              data: decodeResult.right,
+              timestamp: performance.now()
+            })
+          );
+        } else {
+          const errors = decodeResult.left;
+          const message: string[] = failure(errors);
+          emitter(
+            gatewayMalformed({
+              event,
+              timestamp: performance.now(),
+              error: {
+                message: `Errors ocurred while parsing server response: ${message.toString()}`,
+                error: errors,
+                original: data
+              }
+            })
+          );
+        }
+      });
     });
 
     return () => {

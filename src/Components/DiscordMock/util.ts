@@ -17,6 +17,7 @@ import {
 import { omit, pick } from "lodash";
 import { MockUser, Snowflake, User, MockMessageClump } from "Utility/types";
 import { getAvatarUrl } from "Components/UserDisplay";
+import { MockUserEvent } from "Store/gatewayRoutes";
 
 // ? ==========================
 // ? User creation utilities
@@ -213,7 +214,7 @@ export function serializeOutgoingMessage({
   addedReactions = [],
   removedReactions = [],
   silent = false
-}) {
+}): MockUserEvent {
   return {
     content: content === "" ? null : transformOutgoingMessage(content),
     message_id: messageId,

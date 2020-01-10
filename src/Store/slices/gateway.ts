@@ -4,46 +4,69 @@ import {
   gatewayDisconnect,
   gatewayReconnect,
   gatewayInitialize
-} from "Store/api/gateway/actions";
+} from "Store/api/gateway";
 
 /**
  * Current state of the gateway (whether it is connected or not)
  */
-export interface GatewayStatus {
-  isConnected: boolean;
-  isInitialized: boolean;
+export type GatewayStatus =
+  | NoConnection
+  | Initializing
+  | Established
+  | Disconnected;
+
+export interface NoConnection {
+  readonly state: "noConnection";
+}
+
+export interface Initializing {
+  readonly state: "initializing";
+  readonly isElevated: boolean;
+}
+
+export interface Established {
+  readonly state: "established";
+  readonly isElevated: boolean;
+}
+
+export interface Disconnected {
+  readonly state: "disconnected";
+  readonly isElevated: boolean;
 }
 
 // ? ====================
 // ? Reducer exports
 // ? ====================
 
-const initialState: GatewayStatus = {
-  isConnected: false,
-  isInitialized: false
-};
+const initialState: GatewayStatus = { state: "noConnection" };
 const slice = createSlice({
   name: "gateway",
-  initialState,
+  initialState: initialState as GatewayStatus,
   reducers: {},
-  extraReducers: {
-    [gatewayInitialize.type]: (state): GatewayStatus => ({
-      ...state,
-      isInitialized: true
-    }),
-    [gatewayConnect.type]: (state): GatewayStatus => ({
-      ...state,
-      isConnected: true
-    }),
-    [gatewayReconnect.type]: (state): GatewayStatus => ({
-      ...state,
-      isConnected: true
-    }),
-    [gatewayDisconnect.type]: (state): GatewayStatus => ({
-      ...state,
-      isConnected: false
-    })
-  }
+  extraReducers: builder =>
+    builder
+      .addCase(gatewayInitialize, (_, action) => ({
+        state: "initializing",
+        isElevated: action.payload.isElevated
+      }))
+      .addCase(gatewayConnect, state => {
+        if (state.state === "initializing") {
+          return { state: "established", isElevated: state.isElevated };
+        }
+        return { state: "noConnection" };
+      })
+      .addCase(gatewayDisconnect, state => {
+        if (state.state === "established") {
+          return { state: "disconnected", isElevated: state.isElevated };
+        }
+        return { state: "noConnection" };
+      })
+      .addCase(gatewayReconnect, state => {
+        if (state.state === "disconnected") {
+          return { state: "established", isElevated: state.isElevated };
+        }
+        return { state: "noConnection" };
+      })
 });
 
 export default slice.reducer;

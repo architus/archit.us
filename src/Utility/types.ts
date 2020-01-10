@@ -460,3 +460,12 @@ export interface MockMessageClump {
   sender: MockUser;
   messages: MockMessage[];
 }
+
+/**
+ * Common error contents with message and optional more detailed object
+ * object/string
+ */
+export type ErrorContents = {
+  readonly error?: object | string;
+  readonly message: string;
+};

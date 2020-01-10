@@ -1,13 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-
-// TODO implement
-interface InterpretResponse {}
+import { MockBotEvent, mockBotEvent } from "Store/gatewayRoutes";
+import { gatewayEvent } from "Store/api/gateway";
 
 /**
  * Stores incoming responses from the Gateway interpret API
  */
 export interface Interpret {
-  responseQueue: InterpretResponse[];
+  responseQueue: MockBotEvent[];
 }
 
 export const SLICING_THRESHOLD = 100;
@@ -21,8 +20,23 @@ const initialState: Interpret = { responseQueue: [] };
 const slice = createSlice({
   name: "interpret",
   initialState,
-  // TODO implement as direct reducer or extraReducers
-  reducers: {}
+  reducers: {},
+  extraReducers: {
+    [gatewayEvent.type]: (state, action): Interpret => {
+      if (mockBotEvent.match(action)) {
+        const { responseQueue } = state;
+        state.responseQueue =
+          // If the array has grown to 100, slice off all but the last 5 elements
+          [
+            ...(responseQueue.length >= SLICING_THRESHOLD
+              ? responseQueue.slice(-SLICED_LENGTH)
+              : responseQueue),
+            action.payload
+          ];
+      }
+      return state;
+    }
+  }
 });
 
 export default slice.reducer;
