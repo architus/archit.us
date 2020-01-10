@@ -199,7 +199,8 @@ export function apiFetch<TResponse>({
         method,
         headers,
         [dataOrParams(method)]: data,
-        cancelToken
+        cancelToken,
+        withCredentials: auth
       });
       return {
         data: result.data,

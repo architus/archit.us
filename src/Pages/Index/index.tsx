@@ -124,14 +124,14 @@ const Index: React.FC<{}> = () => {
             }
           >
             <Window variant="discord">
-              <DiscordMock
+              {/* <DiscordMock
                 height={400}
                 channelName="auto-response-demo"
                 index={0}
                 messageSet={messageSets.autoResponse}
                 allowedCommands={["set", "remove"]}
                 loop
-              />
+              /> */}
             </Window>
           </Feature>
           <Feature
@@ -153,7 +153,7 @@ const Index: React.FC<{}> = () => {
             }
           >
             <Window variant="discord">
-              <DiscordMock
+              {/* <DiscordMock
                 height={400}
                 channelName="custom-emoji-demo"
                 index={1}
@@ -163,7 +163,7 @@ const Index: React.FC<{}> = () => {
                 extension={customEmojiExtension}
                 offline
                 loop
-              />
+              /> */}
             </Window>
           </Feature>
           <Feature
@@ -182,14 +182,14 @@ const Index: React.FC<{}> = () => {
             }
           >
             <Window variant="discord">
-              <DiscordMock
+              {/* <DiscordMock
                 height={400}
                 channelName="polls-schedules-demo"
                 index={2}
                 messageSet={messageSets.pollsSchedules}
                 allowedCommands={["poll", "schedule"]}
                 loop
-              />
+              /> */}
             </Window>
           </Feature>
         </Container>

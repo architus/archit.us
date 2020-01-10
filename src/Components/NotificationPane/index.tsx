@@ -1,12 +1,14 @@
 import React, { useCallback, Suspense, lazy, useState } from "react";
-import PropTypes from "prop-types";
 import { shallowEqual } from "react-redux";
 import { hideNotification } from "Store/actions";
-import { isDefined, withClientSide, useSelector, useDispatch } from "Utility";
-import { selectAllNotifications } from "Store/slices/notifications";
-
+import { isDefined, withClientSide, useSelector, useDispatch, useCallbackOnce, error } from "Utility";
+import {
+  selectAllNotifications,
+  NotificationType,
+  Notification
+} from "Store/slices/notifications";
+import { Dispatch } from "Store";
 import ErrorBoundary from "Components/ErrorBoundary";
-
 import "./style.scss";
 
 // Lazy-loading tree contains:
@@ -14,18 +16,21 @@ import "./style.scss";
 // - Notification
 // - NotificationList
 
-function useHideNotification(dispatch, type) {
-  return useCallback(id => dispatch(hideNotification(type, id)), [
+function useHideNotification(
+  dispatch: Dispatch,
+  type: NotificationType
+): (id: number) => void {
+  return useCallback(id => dispatch(hideNotification({ type, id })), [
     dispatch,
     type
   ]);
 }
 
-function hasItems(array) {
+function hasItems(array: unknown[]): boolean {
   return isDefined(array) && array.length !== 0;
 }
 
-function NotificationPane() {
+const NotificationPane: React.FC = () => {
   // Connect to state
   const dispatch = useDispatch();
   const { toast, alert } = useSelector(selectAllNotifications, shallowEqual);
@@ -35,7 +40,7 @@ function NotificationPane() {
 
   return (
     <div className="notification-pane">
-      <ErrorBoundary>
+      <ErrorBoundary onError={useCallbackOnce(e => error(e))}>
         <Suspense fallback={<div />}>
           <LazyLoadingWrapper
             toast={toast}
@@ -49,8 +54,6 @@ function NotificationPane() {
   );
 }
 
-export default NotificationPane;
-
 NotificationPane.displayName = "NotificationPane";
 
 // ? =================
@@ -60,9 +63,16 @@ NotificationPane.displayName = "NotificationPane";
 // Split bundle
 const NotificationList = lazy(() => import("Components/NotificationList"));
 
+type LazyLoadingWrapperProps = {
+  toast: Notification[];
+  alert: Notification[];
+  onDismissToast: (id: number) => void;
+  onDismissAlert: (id: number) => void;
+}
+
 // Can't render lazy elements in SSR
 const LazyLoadingWrapper = withClientSide(
-  ({ toast, alert, onDismissToast, onDismissAlert }) => {
+  ({ toast, alert, onDismissToast, onDismissAlert }: LazyLoadingWrapperProps) => {
     // Whether the are any active notifications
     const hasAnyItems = hasItems(toast) || hasItems(alert);
 
@@ -92,11 +102,6 @@ const LazyLoadingWrapper = withClientSide(
   }
 );
 
-LazyLoadingWrapper.propTypes = {
-  alert: PropTypes.arrayOf(PropTypes.object),
-  toast: PropTypes.arrayOf(PropTypes.object),
-  onDismissAlert: PropTypes.func,
-  onDismissToast: PropTypes.func
-};
-
 LazyLoadingWrapper.displayName = "LazyLoadingWrapper";
+
+export default NotificationPane;

@@ -302,6 +302,25 @@ export function parseInteger(str: string): Option<number> {
   return Some(num);
 }
 
+/**
+ * Generates a random color with a maxmimum target brightness
+ * @remarks
+ * Source code used from
+ * {@link https://stackoverflow.com/a/17373688 | this Stack Overflow answer}
+ * @param brightness Maximum target brightness (0-1)
+ */
+export function randomColor(brightness: number): string {
+  function randomChannel(brightness: number): string {
+    var r = 255 - brightness;
+    var n = 0 | (Math.random() * r + brightness);
+    var s = n.toString(16);
+    return s.length == 1 ? "0" + s : s;
+  }
+  return `#${randomChannel(brightness)}
+    ${randomChannel(brightness)}
+    ${randomChannel(brightness)}`;
+}
+
 // ? ==============
 // ? Path functions
 // ? ==============
@@ -376,7 +395,7 @@ let externalRegex: RegExp | null = null;
 export function getExternalRegex(): RegExp {
   if (isDefined(externalRegex)) return externalRegex;
   if (isClient) {
-    const regexStr = `^(?:(?:http|https):\\/\\/(?!(?:www\\.)?${window.location.host})[\\w./=?#-_]+)|(?:mailto:.+)$`
+    const regexStr = `^(?:(?:http|https):\\/\\/(?!(?:www\\.)?${window.location.host})[\\w./=?#-_]+)|(?:mailto:.+)$`;
     const regex = new RegExp(regexStr);
     externalRegex = regex;
     return externalRegex;

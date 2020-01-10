@@ -36,7 +36,7 @@ const MessageClump: React.FC<MessageClumpProps> = React.forwardRef(
     },
     ref: React.Ref<HTMLDivElement>
   ) => {
-    const { discriminator, avatar, username, nameColor, bot } = sender;
+    const { discriminator, avatarUrl, username, nameColor, bot } = sender;
     return (
       <div
         ref={ref}
@@ -48,7 +48,7 @@ const MessageClump: React.FC<MessageClumpProps> = React.forwardRef(
       >
         <div>
           <UserDisplay.Avatar
-            avatarUrl={avatar}
+            avatarUrl={avatarUrl}
             discriminator={discriminator}
             circle
             size={44}

@@ -1,14 +1,48 @@
 import React from "react";
 import classNames from "classnames";
-import {
-  constructAvatarUrl,
-  attach,
-  isDefined
-} from "Utility";
+import { constructAvatarUrl, attach, isDefined } from "Utility";
 import { User } from "Utility/types";
 import { Option } from "Utility/option";
 import Placeholder from "Components/Placeholder";
 import "./style.scss";
+
+/**
+ * Constructs an avatar URL for a user from either a pre-made avatar URL,
+ * @param options User specified by avatar URL, user, or default discriminator.
+ * Additionally, includes CDN image size
+ */
+export function getAvatarUrl({
+  avatarUrl,
+  user,
+  discriminator,
+  size
+}: {
+  avatarUrl?: string;
+  user?: User;
+  discriminator?: string;
+  size?: number;
+}): string {
+  // Use specified avatar url
+  if (isDefined(avatarUrl)) return avatarUrl;
+
+  // Construct new avatar url
+  if (isDefined(user) && isDefined(user.avatar)) {
+    return constructAvatarUrl({
+      clientId: user.id,
+      size,
+      hash: user.avatar
+    });
+  }
+
+  // Use default avatar url
+  let resolvedDiscriminator = "0";
+  if (isDefined(discriminator)) resolvedDiscriminator = discriminator;
+  else if (isDefined(user)) resolvedDiscriminator = user.discriminator;
+  return constructAvatarUrl({
+    discriminator: resolvedDiscriminator,
+    size
+  });
+}
 
 const avatarSize = 40;
 
@@ -73,23 +107,12 @@ const Avatar: React.FC<AvatarProps> = ({
   size = avatarSize,
   ...rest
 }) => {
-  let effectiveAvatarUrl: string;
-  if (isDefined(avatarUrl)) effectiveAvatarUrl = avatarUrl;
-  else if (isDefined(user) && isDefined(user.avatar)) {
-    effectiveAvatarUrl = constructAvatarUrl({
-      clientId: user.id,
-      size,
-      hash: user.avatar
-    });
-  } else {
-    let resolvedDiscriminator = "0";
-    if (isDefined(discriminator)) resolvedDiscriminator = discriminator;
-    else if (isDefined(user)) resolvedDiscriminator = user.discriminator;
-    effectiveAvatarUrl = constructAvatarUrl({
-      discriminator: resolvedDiscriminator
-    });
-  }
-
+  const effectiveAvatarUrl = getAvatarUrl({
+    avatarUrl,
+    discriminator,
+    user,
+    size
+  });
   return (
     <Placeholder.Custom
       value={effectiveAvatarUrl}

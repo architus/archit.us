@@ -447,11 +447,12 @@ export interface MockMessage {
 }
 
 export interface MockUser {
+  id: number;
   discriminator: string;
-  avatar?: string;
   username: string;
   nameColor: string;
   bot: boolean;
+  avatarUrl?: string;
 }
 
 export interface MockMessageClump {
