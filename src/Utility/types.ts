@@ -4,6 +4,7 @@
 import * as t from "io-ts";
 import { either } from "fp-ts/lib/Either";
 import { isDefined } from "./data";
+import { TransformerStep } from "./transform";
 
 export class EnumType<A> extends t.Type<A> {
   public readonly _tag: "EnumType" = "EnumType";
@@ -436,18 +437,24 @@ export interface MockReaction {
   emoji: string;
   number: number;
   userHasReacted: boolean;
+  rawEmoji: string;
+  targetId: number;
 }
+
+/**
+ * Represents [message id, raw emoji] tuple
+ */
+export type SerializedMockReaction = [number, string];
 
 export interface MockMessage {
   id: number;
   content: string;
-  mentionsUser: boolean;
   edited: boolean;
   reactions: MockReaction[];
 }
 
 export interface MockUser {
-  id: number;
+  id: string;
   discriminator: string;
   username: string;
   nameColor: string;
@@ -456,9 +463,41 @@ export interface MockUser {
 }
 
 export interface MockMessageClump {
-  timestamp: Date;
+  timestamp: number;
   sender: MockUser;
   messages: MockMessage[];
+}
+
+export interface MockMessageSet {
+  messages: string[];
+  setup?: string[];
+  cleanup?: string[];
+}
+
+export interface DiscordMockContext {
+  thisUser: MockUser;
+  users: Record<number, MockUser>;
+  architusUser: MockUser;
+  guildId: number;
+  allowedCommands?: string[];
+}
+
+export interface MockReactionContext {
+  clumpIndex: number;
+  id: number;
+  reaction: MockReaction;
+}
+
+export type TransformMessage = (
+  message: MockMessage,
+  sender: MockUser,
+  context: DiscordMockContext,
+  customTransformer: TransformerStep
+) => { result: string; mentions: string[] };
+
+export interface DiscordMockCommands {
+  sendMessage: (message: string, sender: MockUser) => void;
+  deleteMessage: (id: number) => void;
 }
 
 /**

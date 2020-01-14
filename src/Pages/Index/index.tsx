@@ -1,12 +1,11 @@
 import React from "react";
 import classNames from "classnames";
-import curry from "lodash/curry";
-import { CustomEmojiExtension } from "Components/DiscordMock/CustomEmojiExtension";
 import { shallowEqual } from "react-redux";
 import LoginButton, { useOauthUrl } from "Components/LoginButton";
 import { useRouteData } from "react-static";
-import { useEffectOnce, isDefined, useSelector, useDispatch } from "Utility";
-import { Nil } from "Utility/types";
+import { useEffectOnce, isDefined, useCallbackOnce } from "Utility";
+import { useSelector, useDispatch } from "Store/hooks";
+import { Nil, DiscordMockContext, DiscordMockCommands } from "Utility/types";
 import { useSessionStatus } from "Store/actions";
 import { guildCount } from "Store/routes";
 import {
@@ -20,13 +19,15 @@ import {
 } from "react-bootstrap";
 import { Layout, Icon, Window, Footer, DiscordMock } from "Components";
 import { Link } from "Components/Router";
+import { CustomEmojiExtension } from "Components/DiscordMock/CustomEmojiExtension";
+import { Extension } from "Components/DiscordMock/util";
 import "./style.scss";
 import LogoTextSvg from "Assets/logo-text.inline.svg";
 import LogsSvg from "./svg/logs.svg";
 import MusicSvg from "./svg/music.svg";
 import StatisticsSvg from "./svg/statistics.svg";
 import UserControlSvg from "./svg/user_control.svg";
-import { messageSets, customEmotes } from "./data.json";
+import { messageSets, allowedCommands, customEmotes } from "./data.json";
 
 function takeGreater(cached: number | Nil, live: number | Nil): number {
   if (isDefined(cached) && isDefined(live)) {
@@ -37,8 +38,6 @@ function takeGreater(cached: number | Nil, live: number | Nil): number {
   if (isDefined(live)) return live;
   return 0;
 }
-
-const customEmojiExtension = curry(CustomEmojiExtension as unknown as (...args: unknown[]) => unknown)(customEmotes)
 
 const Index: React.FC<{}> = () => {
   const {
@@ -124,14 +123,13 @@ const Index: React.FC<{}> = () => {
             }
           >
             <Window variant="discord">
-              {/* <DiscordMock
+              <DiscordMock
                 height={400}
                 channelName="auto-response-demo"
-                index={0}
-                messageSet={messageSets.autoResponse}
-                allowedCommands={["set", "remove"]}
+                messageSets={messageSets.autoResponse}
+                allowedCommands={allowedCommands.autoResponse}
                 loop
-              /> */}
+              />
             </Window>
           </Feature>
           <Feature
@@ -153,17 +151,22 @@ const Index: React.FC<{}> = () => {
             }
           >
             <Window variant="discord">
-              {/* <DiscordMock
+              <DiscordMock
                 height={400}
                 channelName="custom-emoji-demo"
-                index={1}
-                messageSet={messageSets.customEmoji}
-                allowedCommands={["emotes"]}
-                // TODO update types
-                extension={customEmojiExtension}
+                messageSets={messageSets.customEmoji}
+                allowedCommands={allowedCommands.customEmoji}
                 offline
                 loop
-              /> */}
+                // Inject custom emotes into custom emoji extension
+                extensionCreator={useCallbackOnce(
+                  (
+                    context: DiscordMockContext,
+                    commands: DiscordMockCommands
+                  ): Extension =>
+                    new CustomEmojiExtension(customEmotes, context, commands)
+                )}
+              />
             </Window>
           </Feature>
           <Feature
@@ -182,14 +185,13 @@ const Index: React.FC<{}> = () => {
             }
           >
             <Window variant="discord">
-              {/* <DiscordMock
+              <DiscordMock
                 height={400}
                 channelName="polls-schedules-demo"
-                index={2}
-                messageSet={messageSets.pollsSchedules}
-                allowedCommands={["poll", "schedule"]}
+                messageSets={messageSets.pollsSchedules}
+                allowedCommands={allowedCommands.pollsSchedules}
                 loop
-              /> */}
+              />
             </Window>
           </Feature>
         </Container>
@@ -342,9 +344,9 @@ const MinorFeature: React.FC<MinorFeatureProps> = ({ header, text, icon }) => (
 MinorFeature.displayName = "MinorFeature";
 
 const CallToAction: React.FC = () => {
-  const [loggedIn] = useSessionStatus();
+  const { isSignedIn } = useSessionStatus();
   const oauthUrl = useOauthUrl();
-  const additionalProps = loggedIn
+  const additionalProps = isSignedIn
     ? { as: Link, to: "/app" }
     : { href: oauthUrl };
   return (

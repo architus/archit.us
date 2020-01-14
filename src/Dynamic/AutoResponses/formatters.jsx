@@ -5,14 +5,12 @@ import {
   isEmptyOrNil,
   replaceToken,
   highlightTokens,
-  escapeHtml
-} from "Utility";
-import {
-  applyTransformers,
+  escapeHtml,
   convertMentions,
   convertUnicodeEmoji,
-  convertDiscordEmoji
-} from "Components/DiscordMock/transform";
+  convertDiscordEmoji,
+  makeTransformer
+} from "Utility";
 
 import UserDisplay from "Components/UserDisplay";
 
@@ -51,7 +49,7 @@ function mockMentions(string) {
 }
 
 const triggerTokens = [{ token: "*", className: "token-capture source" }];
-const triggerPipeline = [
+const triggerPipeline = makeTransformer([
   escapeHtml,
   mockEmoji,
   convertRawDiscordEmoji,
@@ -60,14 +58,14 @@ const triggerPipeline = [
   mockMentions,
   convertMentions,
   s => highlightTokens(s, triggerTokens, true)
-];
+]);
 
 export function createTriggerCellFormatter(contextRef) {
   const formatter = ({ value }) => (
     <div
       className="response"
       dangerouslySetInnerHTML={{
-        __html: applyTransformers(value, contextRef.current, triggerPipeline)
+        __html: triggerPipeline(value, contextRef.current)
       }}
     />
   );
@@ -96,7 +94,7 @@ const responseTokens = [
     className: "token-string"
   }
 ];
-const responsePipeline = [
+const responsePipeline = makeTransformer([
   escapeHtml,
   s => replaceToken(s, listRegex, "token-list"),
   convertMentions,
@@ -105,14 +103,14 @@ const responsePipeline = [
   convertUnicodeEmoji,
   convertDiscordEmoji,
   s => replaceToken(s, reactionRegex, "token-reaction")
-];
+]);
 
 export function createResponseCellFormatter(contextRef) {
   const formatter = ({ value }) => (
     <div
       className="response"
       dangerouslySetInnerHTML={{
-        __html: applyTransformers(value, contextRef.current, responsePipeline)
+        __html: responsePipeline(value, contextRef.current)
       }}
     />
   );

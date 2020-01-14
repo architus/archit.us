@@ -6,25 +6,29 @@ import {
   scrollToBottom,
   isDefined
 } from "Utility";
-import { MockMessageClump, StyleObject, MockReaction } from "Utility/types";
+import { MockMessageClump, StyleObject } from "Utility/types";
 import MessageClump from "Components/DiscordMock/MessageClump";
+import {
+  DiscordMockDispatchContext,
+  react,
+  unreact
+} from "Components/DiscordMock/actions";
 import "./style.scss";
 
 const scrollThreshold = 100;
 
 function makeKey(clump: MockMessageClump): string {
-  const timestamp = formatAmPm(clump.timestamp);
-  const seconds = clump.timestamp.getSeconds();
-  const millis = clump.timestamp.getMilliseconds();
+  const date = new Date(clump.timestamp);
+  const timestamp = formatAmPm(date);
+  const seconds = date.getSeconds();
+  const millis = date.getMilliseconds();
   return `${clump.sender.username}=>${timestamp}.${seconds}.${millis}`;
 }
 
 type MessageViewProps = {
   clumps: MockMessageClump[];
-  onReact: (clumpIndex: number, id: number, reaction: MockReaction) => void;
-  onUnreact: (clumpIndex: number, id: number, reaction: MockReaction) => void;
-  className?: string;
   style?: StyleObject;
+  className?: string;
 };
 
 type MessageViewSnapshot = {
@@ -33,7 +37,7 @@ type MessageViewSnapshot = {
 
 type MessageViewState = {};
 
-class MessageView extends React.Component<
+class MessageView extends React.PureComponent<
   MessageViewProps,
   MessageViewState,
   MessageViewSnapshot
@@ -49,7 +53,7 @@ class MessageView extends React.Component<
     _prevProps: MessageViewProps,
     _prevState: MessageViewState,
     snapshot: MessageViewSnapshot
-  ) {
+  ): void {
     if (isDefined(this.list.current)) {
       const scrollDistance = getScrollDistance(this.list.current);
       const { prevScrollDistance } = snapshot;
@@ -76,28 +80,32 @@ class MessageView extends React.Component<
     };
   }
 
-  render() {
-    const { clumps, onReact, onUnreact, className, style } = this.props;
+  render(): React.ReactNode {
+    const { clumps, style, className } = this.props;
     return (
       <article
         className={classNames(className, "discord-messages")}
         ref={this.list}
         style={style}
       >
-        {clumps.map((clump, index) => (
-          <MessageClump
-            {...clump}
-            first={index === 0}
-            last={index === clumps.length - 1}
-            key={makeKey(clump)}
-            onReact={(messageId, reactionObj) =>
-              onReact(index, messageId, reactionObj)
-            }
-            onUnreact={(messageId, reactionObj) =>
-              onUnreact(index, messageId, reactionObj)
-            }
-          />
-        ))}
+        <DiscordMockDispatchContext.Consumer>
+          {({ dispatch }): React.ReactNode =>
+            clumps.map((clump, index) => (
+              <MessageClump
+                {...clump}
+                first={index === 0}
+                last={index === clumps.length - 1}
+                key={makeKey(clump)}
+                onReact={(id, reaction): void =>
+                  dispatch(react({ clumpIndex: index, id, reaction }))
+                }
+                onUnreact={(id, reaction): void =>
+                  dispatch(unreact({ clumpIndex: index, id, reaction }))
+                }
+              />
+            ))
+          }
+        </DiscordMockDispatchContext.Consumer>
       </article>
     );
   }

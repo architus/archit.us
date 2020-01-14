@@ -88,6 +88,14 @@ export interface OptionLike<A> {
    * @returns The original option
    */
   forEach(func: (_: A) => void): OptionLike<A>;
+
+  /**
+   * Compares the two options, performing a shallow equality on their real values
+   * (if defined), unless a custom equality function is given
+   * @param other - Other option to perform equality check against
+   * @param compare - Optional custom value equality function
+   */
+  equals(other: Option<A>, compare?: (left: A, right: A) => boolean): boolean;
 }
 
 interface ValuedOption<A> {
@@ -124,6 +132,11 @@ export abstract class Option<A> implements OptionLike<A> {
   abstract match<B>(m: Matcher<A, B>): B;
 
   abstract forEach(_: (_: A) => void): Option<A>;
+
+  abstract equals(
+    other: Option<A>,
+    compare?: (left: A, right: A) => boolean
+  ): boolean;
 
   /**
    * Constructs a new instance of a Some<T> or None object in an Option<T>, depending
@@ -233,6 +246,12 @@ export class SomeType<A> extends Option<A> implements ValuedOption<A> {
     _(this._value);
     return this;
   }
+
+  equals(other: Option<A>, compare?: (left: A, right: A) => boolean): boolean {
+    if (!other.isDefined()) return false;
+    if (isDefined(compare)) return compare(this._value, other._value);
+    else return this._value === other._value;
+  }
 }
 
 export class NoneType extends Option<never> {
@@ -295,6 +314,10 @@ export class NoneType extends Option<never> {
 
   forEach(_: (_: never) => void): Option<never> {
     return this;
+  }
+
+  equals(other: Option<never>): boolean {
+    return other.fastIsEmpty;
   }
 }
 

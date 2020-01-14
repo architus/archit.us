@@ -1,11 +1,13 @@
 import React, { useCallback } from "react";
 import classNames from "classnames";
-import { MockReaction } from "Utility/types";
+import { MockReaction, StyleObject } from "Utility/types";
 import "./style.scss";
 
 type ReactionProps = {
   onReact: () => void;
   onUnreact: () => void;
+  style?: StyleObject;
+  className?: string;
 } & MockReaction;
 
 const Reaction: React.FC<ReactionProps> = ({
@@ -13,10 +15,13 @@ const Reaction: React.FC<ReactionProps> = ({
   onUnreact,
   emoji,
   number,
-  userHasReacted
+  userHasReacted,
+  style,
+  className
 }) => (
   <button
-    className={classNames("reaction", { active: userHasReacted })}
+    className={classNames("reaction", { active: userHasReacted }, className)}
+    style={style}
     onClick={useCallback(() => {
       if (userHasReacted) onUnreact();
       else onReact();

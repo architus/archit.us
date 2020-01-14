@@ -29,8 +29,8 @@ const LoginButton: React.FC<LoginButtonProps> = ({
   showLabel = true
 }) => {
   const oauthUrl = useOauthUrl();
-  const isLoggingIn = useSessionStatus()[1];
-  const loggedInProp = isDefined(loggedIn) ? loggedIn : isLoggingIn;
+  const { isSigningIn } = useSessionStatus();
+  const loggedInProp = isDefined(loggedIn) ? loggedIn : isSigningIn;
 
   return (
     <div className="login-button">

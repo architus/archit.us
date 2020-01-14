@@ -20,6 +20,7 @@ import io from "socket.io-client";
 import * as events from "Store/routes/events";
 import { failure } from "io-ts/lib/PathReporter";
 import { isRight } from "fp-ts/lib/Either";
+import { PayloadAction } from "@reduxjs/toolkit";
 
 type LoadSessionAction = ReturnType<typeof loadSession>;
 type Socket = SocketIOClient.Socket;
@@ -36,8 +37,8 @@ export default function* gatewayFlow(): SagaIterator {
   );
 
   // Attach all listeners
-  const eventChannel = yield call(createGatewayEventChannel, socket);
-  yield fork(gatewayEventHandler, eventChannel);
+  const gatewayEventChannel = yield call(createGatewayEventChannel, socket);
+  yield fork(gatewayEventHandler, gatewayEventChannel);
 
   // Dispatch sends
   yield fork(dispatchHandler, socket);
@@ -50,18 +51,18 @@ export default function* gatewayFlow(): SagaIterator {
 
 /**
  * Puts all incoming actions created from the gateway event channel
- * @param channel Gateway event channel
+ * @param channel - Gateway event channel
  */
-function* gatewayEventHandler(channel: EventChannel<AnyAction>) {
+function* gatewayEventHandler(channel: EventChannel<AnyAction>): SagaIterator {
   while (true) {
-    const action = yield take(channel) as AnyAction;
+    const action = (yield take(channel)) as AnyAction;
     yield put(action);
   }
 }
 
 /**
  * Demotes the socket upon signout
- * @param socket Socket instance
+ * @param socket - Socket instance
  */
 function* demoteOnSignout(socket: Socket): SagaIterator {
   yield take(signOut.type);
@@ -71,13 +72,13 @@ function* demoteOnSignout(socket: Socket): SagaIterator {
 
 /**
  * Dispatches each incoming dispatch request
- * @param socket Socket instance
+ * @param socket - Socket instance
  */
 function* dispatchHandler(socket: Socket): SagaIterator {
   while (true) {
-    const { event, payload, elevated } = (yield take(
-      gatewayDispatch
-    )) as GatewayDispatch;
+    const {
+      payload: { event, data, elevated }
+    } = (yield take(gatewayDispatch)) as PayloadAction<GatewayDispatch>;
     const isConnected = yield* select(
       store => store.gateway.state === "established"
     );
@@ -100,9 +101,9 @@ function* dispatchHandler(socket: Socket): SagaIterator {
       );
     } else {
       // TODO implement callback
-      socket.emit(event, payload);
+      socket.emit(event, data);
       yield put(
-        gatewaySend({ event, payload, timestamp: performance.now(), elevated })
+        gatewaySend({ event, data, timestamp: performance.now(), elevated })
       );
     }
   }
@@ -110,7 +111,7 @@ function* dispatchHandler(socket: Socket): SagaIterator {
 
 /**
  * Creates a gateway action event channel
- * @param socket Socket.IO socket instance
+ * @param socket - Socket.IO socket instance
  */
 function createGatewayEventChannel(socket: Socket): EventChannel<AnyAction> {
   return eventChannel(emitter => {
@@ -161,7 +162,7 @@ function createGatewayEventChannel(socket: Socket): EventChannel<AnyAction> {
       }
     });
 
-    return () => {
+    return (): void => {
       socket.close();
     };
   });

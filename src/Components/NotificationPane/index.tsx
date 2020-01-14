@@ -1,13 +1,13 @@
 import React, { useCallback, Suspense, lazy, useState } from "react";
 import { shallowEqual } from "react-redux";
 import { hideNotification } from "Store/actions";
-import { isDefined, withClientSide, useSelector, useDispatch, useCallbackOnce, error } from "Utility";
+import { isDefined, withClientSide, useCallbackOnce, error } from "Utility";
+import { Dispatch, useSelector, useDispatch } from "Store";
 import {
   selectAllNotifications,
   NotificationType,
   Notification
 } from "Store/slices/notifications";
-import { Dispatch } from "Store";
 import ErrorBoundary from "Components/ErrorBoundary";
 import "./style.scss";
 
@@ -52,7 +52,7 @@ const NotificationPane: React.FC = () => {
       </ErrorBoundary>
     </div>
   );
-}
+};
 
 NotificationPane.displayName = "NotificationPane";
 
@@ -68,11 +68,16 @@ type LazyLoadingWrapperProps = {
   alert: Notification[];
   onDismissToast: (id: number) => void;
   onDismissAlert: (id: number) => void;
-}
+};
 
 // Can't render lazy elements in SSR
 const LazyLoadingWrapper = withClientSide(
-  ({ toast, alert, onDismissToast, onDismissAlert }: LazyLoadingWrapperProps) => {
+  ({
+    toast,
+    alert,
+    onDismissToast,
+    onDismissAlert
+  }: LazyLoadingWrapperProps) => {
     // Whether the are any active notifications
     const hasAnyItems = hasItems(toast) || hasItems(alert);
 

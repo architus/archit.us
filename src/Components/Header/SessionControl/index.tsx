@@ -1,5 +1,5 @@
 import React from "react";
-import { useDispatch } from "Utility";
+import { useDispatch } from "Store";
 import { Option } from "Utility/option";
 import { User } from "Utility/types";
 import { signOut } from "Store/actions";
@@ -13,11 +13,11 @@ import "./style.scss";
 
 const SessionControl: React.FC = () => {
   const user: Option<User> = useCurrentUser();
-  const isLoggingIn: boolean = useSessionStatus()[1];
+  const { isSigningIn } = useSessionStatus();
   const dispatch = useDispatch();
   const oauthUrl = useOauthUrl();
 
-  return isLoggingIn ? (
+  return isSigningIn ? (
     <Dropdown className="session-dropdown">
       <Dropdown.Toggle id="session-dropdown-button">
         <UserDisplay className="mr-2" user={user.getOrElse(undefined)} />

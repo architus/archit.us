@@ -1,20 +1,17 @@
-import React from "react";
+import React, { useContext } from "react";
 import classNames from "classnames";
 import MessageView from "Components/DiscordMock/MessageView";
-import Input from "Components/DiscordMock/Input";
+import InputController from "Components/DiscordMock/InputController";
+import { MockMessageClump, StyleObject, MockMessageSet } from "Utility/types";
+import { DiscordMockDispatchContext } from "Components/DiscordMock/actions";
 import "./style.scss";
-import { MockReaction, MockMessageClump, StyleObject } from "Utility/types";
 
 type DiscordViewProps = {
   clumps: MockMessageClump[];
   channelName: string;
-  onSend: () => void;
-  onReact: (clumpIndex: number, id: number, reaction: MockReaction) => void;
-  onUnreact: (clumpIndex: number, id: number, reaction: MockReaction) => void;
   displayError: boolean;
-  inputValue: string;
-  onInputFocus: () => void;
-  onInputChange: (newValue: string) => void;
+  loop?: boolean;
+  messageSets?: MockMessageSet[];
   style?: StyleObject;
   className?: string;
 };
@@ -22,30 +19,21 @@ type DiscordViewProps = {
 const DiscordView: React.FC<DiscordViewProps> = ({
   clumps = [],
   channelName,
-  className,
-  onSend,
-  onReact,
-  onUnreact,
-  onInputFocus,
-  onInputChange,
-  inputValue,
   displayError = false,
-  ...rest
+  loop,
+  messageSets,
+  className,
+  style
 }) => (
-  <div className={classNames("discord-view", className)} {...rest}>
-    <MessageView
-      clumps={clumps}
-      style={{ flexGrow: 1 }}
-      onReact={onReact}
-      onUnreact={onUnreact}
-    />
+  <div className={classNames("discord-view", className)} style={style}>
+    <MessageView clumps={clumps} style={{ flexGrow: 1 }} />
     <hr className="input-border" />
-    <Input
+    <InputController
+      dispatch={useContext(DiscordMockDispatchContext).dispatch}
       channelName={channelName}
-      onSend={onSend}
-      onFocus={onInputFocus}
-      onChange={onInputChange}
-      value={inputValue}
+      loop={loop}
+      messageSets={messageSets}
+      pause={displayError}
     />
     <div
       className={classNames("error-overlay", {

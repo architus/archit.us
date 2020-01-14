@@ -42,7 +42,7 @@ export class MockTyper {
 
   constructor({
     keypressDelay = 125,
-    lineDelay = 400,
+    lineDelay = 1200,
     onKeypress = null,
     onEnter = null,
     onFinish = null,
@@ -142,7 +142,7 @@ export class MockTyper {
     const newDuration = state.durationRemaining - keypressDelay;
 
     // Transition condition
-    if (newDuration) {
+    if (newDuration < 0) {
       // Start typing on the next line
       return {
         kind: "typing",

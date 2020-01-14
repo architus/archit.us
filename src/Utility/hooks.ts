@@ -1,11 +1,12 @@
-import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import {
-  useSelector as useRawSelector,
-  useDispatch as useRawDispatch,
-  TypedUseSelectorHook
-} from "react-redux";
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  useRef,
+  MutableRefObject
+} from "react";
 import { globalHistory, History } from "@reach/router";
-import { Store, Dispatch } from "Store";
 import { addMissingUnit, collator } from "./primitives";
 import { isClient, isProduction } from "./document";
 import { Option, Some, None } from "./option";
@@ -27,18 +28,6 @@ export function useReturnQuery(): string {
     }
   });
   return returnQuery;
-}
-
-/**
- * Typed useSelector hook that is aware of the root store state shape
- */
-export const useSelector: TypedUseSelectorHook<Store> = useRawSelector;
-
-/**
- * Typed useDispatch hook that is aware of the dispatch arguments
- */
-export function useDispatch(): Dispatch {
-  return useRawDispatch();
 }
 
 /**
@@ -192,4 +181,18 @@ export function usePrevious<T>(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value, effect, ...(isDefined(deps) ? deps : [])]);
   return ref.current;
+}
+
+/**
+ * Creates a ref wrapper - a stable reference proxy to a mutable value normally
+ * contained in the render closure
+ * @param value - Current value
+ */
+export function useRefWrapper<T>(value: T): MutableRefObject<T> {
+  const ref = useRef(value);
+
+  useEffect(() => {
+    ref.current = value;
+  }, [value]);
+  return ref;
 }

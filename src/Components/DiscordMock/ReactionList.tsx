@@ -1,8 +1,7 @@
 import React from "react";
 import classNames from "classnames";
-import { MockReaction } from "Utility/types";
+import { MockReaction, StyleObject } from "Utility/types";
 import Reaction from "Components/DiscordMock/Reaction";
-import { StyleObject } from "Utility/types";
 
 type ReactionListProps = {
   reactions: MockReaction[];
@@ -23,8 +22,8 @@ const ReactionList: React.FC<ReactionListProps> = ({
     {reactions.map((reaction, index) => (
       <Reaction
         key={index}
-        onReact={() => onReact(reaction)}
-        onUnreact={() => onUnreact(reaction)}
+        onReact={(): void => onReact(reaction)}
+        onUnreact={(): void => onUnreact(reaction)}
         {...reaction}
       />
     ))}

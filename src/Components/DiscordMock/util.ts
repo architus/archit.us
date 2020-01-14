@@ -1,34 +1,26 @@
 /* eslint-disable max-classes-per-file */
 import {
   takeOrReplenish,
-  invertMap,
   includes,
   isNil,
   generateName,
-  constructAvatarUrl,
   randomColor,
   randomInt
 } from "Utility";
 import {
-  transformMessage,
-  transformReaction,
-  transformOutgoingMessage
-} from "Components/DiscordMock/transform";
-import { omit, pick } from "lodash";
-import {
   MockUser,
-  Snowflake,
   User,
   MockMessageClump,
-  MockMessage
+  MockMessage,
+  SerializedMockReaction,
+  MockReaction,
+  Predicate,
+  DiscordMockContext,
+  TransformMessage,
+  DiscordMockCommands
 } from "Utility/types";
+import { transformReaction } from "Components/DiscordMock/transform";
 import { getAvatarUrl } from "Components/UserDisplay";
-import { MockUserEvent } from "Store/routes";
-
-export interface MockDiscordContext {
-  thisUser: MockUser;
-  users: MockUser[];
-}
 
 // ? ==========================
 // ? User creation utilities
@@ -53,7 +45,9 @@ export class DiscriminatorProvisioner {
   }
 
   private max: number;
+
   private templatePool: Readonly<Record<number, number>>;
+
   private currentPool: Record<number, number>;
 
   constructor(max: number) {
@@ -72,7 +66,7 @@ export class DiscriminatorProvisioner {
    * have been checked. At that point, the pool is replenished.
    * @param seed - base (random) number to start at
    */
-  provision(seed: number) {
+  provision(seed: number): number {
     const { max } = this;
     const initial = seed % max;
     return takeOrReplenish(
@@ -83,20 +77,6 @@ export class DiscriminatorProvisioner {
     );
   }
 }
-
-const architusId: Snowflake = "448546825532866560" as Snowflake;
-const architusAvatar = "99de1e495875fb5c27ba9ac7303b45b7";
-export const architusUser: MockUser = {
-  id: -1,
-  avatarUrl: constructAvatarUrl({
-    clientId: architusId,
-    hash: architusAvatar
-  }),
-  discriminator: "7145",
-  username: "architus",
-  nameColor: "#d34c4f",
-  bot: true
-};
 
 /**
  * Username colors of the default avatar users
@@ -113,7 +93,7 @@ export function createMockUser(guildId: number): MockUser {
   const mockNameColor = colors[mockDiscriminator];
   const mockUsername = generateName();
   return {
-    id,
+    id: id.toString(),
     username: mockUsername,
     nameColor: mockNameColor,
     discriminator: mockDiscriminator.toString(),
@@ -122,11 +102,11 @@ export function createMockUser(guildId: number): MockUser {
 }
 
 const userColor = randomColor(0.5);
-const userId = randomInt(120000);
+const userId = randomInt(120000).toString();
 
 /**
  * Creates the accompanying mock user for a given real user
- * @param base real user
+ * @param base - real user
  */
 export function makeMockUser(base: User): MockUser {
   return {
@@ -141,12 +121,12 @@ export function makeMockUser(base: User): MockUser {
 
 /**
  * Creates the accompanying fake webhook user for a given mock user
- * @param base real user
+ * @param base - real user
  */
 export function makeFakeWebhookUser(base: MockUser): MockUser {
   return {
     ...base,
-    id: base.id + 1,
+    id: `${base.id}_mock`,
     nameColor: "white",
     bot: true
   };
@@ -156,19 +136,23 @@ export function makeFakeWebhookUser(base: MockUser): MockUser {
 // ? Extension class definition
 // ? ==========================
 
-export class Extension {
-  context: MockDiscordContext;
-  commands: string[];
+export abstract class Extension {
+  context: DiscordMockContext;
 
-  constructor(context: MockDiscordContext, commands: string[]) {
+  commands: DiscordMockCommands;
+
+  constructor(context: DiscordMockContext, commands: DiscordMockCommands) {
     this.context = context;
     this.commands = commands;
   }
 
-  destruct() {}
+  abstract destruct(): void;
 
-  onSend() {
-    return true;
+  abstract onSend(message: string, id: number): boolean;
+
+  // eslint-disable-next-line class-methods-use-this
+  wrapTransform(transform: TransformMessage): TransformMessage {
+    return transform;
   }
 }
 
@@ -188,8 +172,10 @@ export class IdProvisioner {
     this.internalCount = 0;
   }
 
-  provision() {
-    return 2 * ++this.internalCount;
+  provision(): number {
+    const next = 2 * this.internalCount;
+    this.internalCount += 1;
+    return next;
   }
 }
 
@@ -198,11 +184,16 @@ export class IdProvisioner {
  * @param a - The first clump
  * @param b - The second clump
  */
-export function shouldMergeClumps(a: MockMessageClump, b: MockMessageClump) {
+export function shouldMergeClumps(
+  a: MockMessageClump,
+  b: MockMessageClump
+): boolean {
+  if (a.sender.id !== b.sender.id) return false;
+  const aDate = new Date(a.timestamp);
+  const bDate = new Date(b.timestamp);
   return (
-    a.sender.id === b.sender.id &&
-    a.timestamp.getHours() === b.timestamp.getHours() &&
-    a.timestamp.getMinutes() === b.timestamp.getMinutes()
+    aDate.getHours() === bDate.getHours() &&
+    aDate.getMinutes() === bDate.getMinutes()
   );
 }
 
@@ -211,7 +202,10 @@ export function shouldMergeClumps(a: MockMessageClump, b: MockMessageClump) {
  * @param a - The first clump (metadata preserved)
  * @param b - The second clump
  */
-export function mergeClumps(a: MockMessageClump, b: MockMessageClump) {
+export function mergeClumps(
+  a: MockMessageClump,
+  b: MockMessageClump
+): MockMessageClump {
   return {
     // Keep clump A's other properties
     ...a,
@@ -219,39 +213,27 @@ export function mergeClumps(a: MockMessageClump, b: MockMessageClump) {
   };
 }
 
-// Initializes a new clump with a single message
-function createClump(message: MockMessage, sender: MockUser): MockMessageClump {
+/**
+ * Initializes a new clump with a single message
+ * @param message - Single contained message
+ * @param sender - Sender of the message
+ */
+export function createClump(
+  message: MockMessage,
+  sender: MockUser
+): MockMessageClump {
   return {
-    timestamp: new Date(),
+    timestamp: Date.now(),
     sender,
     messages: [message]
   };
 }
 
-// Converts message data to its websocket message format
-// TODO implement
-export function serializeOutgoingMessage({
-  content = "",
-  messageId,
-  guildId,
-  allowedCommands = [],
-  addedReactions = [],
-  removedReactions = [],
-  silent = false
-}): MockUserEvent {
-  return {
-    content: content === "" ? null : transformOutgoingMessage(content),
-    message_id: messageId,
-    guild_id: guildId,
-    added_reactions: addedReactions,
-    removed_reactions: removedReactions,
-    allowed_commands: allowedCommands,
-    silent
-  };
-}
-
-// Parses a reaction from its network equivalent to the internal representation
-function parseReaction(reaction) {
+/**
+ * Parses a reaction from its network equivalent to the internal representation
+ * @param reaction - Incoming network reaction
+ */
+export function parseReaction(reaction: SerializedMockReaction): MockReaction {
   return {
     emoji: transformReaction(reaction[1]),
     rawEmoji: reaction[1],
@@ -261,315 +243,40 @@ function parseReaction(reaction) {
   };
 }
 
-// Converts a reaction to its network representation
-export function serializeReaction(messageId, reaction) {
+/**
+ * Converts a reaction to its network representation
+ * @param messageId - Target message ID
+ * @param reaction - Mock reaction object
+ */
+export function serializeReaction(
+  messageId: number,
+  reaction: MockReaction
+): SerializedMockReaction {
   return [messageId, reaction.rawEmoji];
 }
 
-// Filters a list of reactions by using an id filter predicate function, removing
-// the targetId tag in the process
-function filterReactionsById(reactions, idFilter, removeTag = true) {
-  const filtered = reactions.filter(r => idFilter(r.targetId));
-  return removeTag ? filtered.map(r => omit(r, ["targetId"])) : filtered;
+/**
+ * Filters a list of reactions by using an id filter predicate function
+ * @param reactions - Reactions array
+ * @param idFilter - Predicate function
+ */
+export function filterReactionsById(
+  reactions: MockReaction[],
+  idFilter: Predicate<number>
+): MockReaction[] {
+  return reactions.filter(r => idFilter(r.targetId));
 }
 
-// Adds a clump to the end of the clumps array, merging if neccessary
-function withAddedClump(clumps, newClump) {
-  if (clumps.length > 0) {
-    const lastClump = clumps[clumps.length - 1];
-    if (shouldMergeClumps(lastClump, newClump)) {
-      const otherClumps = clumps.slice(0, -1);
-      return [...otherClumps, mergeClumps(lastClump, newClump)];
-    }
-  }
-  // Default: return with the new clump appended
-  return [...clumps, newClump];
-}
-
-// Finds the index of the clump contanining the message with the given id
-function containingClumpIndex(clumps, messageId) {
+/**
+ * Finds the index of the clump contanining the message with the given id
+ * @param clumps - Clumps array to search
+ * @param messageId - Target message id
+ */
+export function containingClumpIndex(
+  clumps: MockMessageClump[],
+  messageId: number
+): number {
   return clumps.findIndex(clump =>
-    includes(clump.messages, message => message.messageId === messageId)
+    includes(clump.messages, message => message.id === messageId)
   );
-}
-
-// Constructs a message object with the given content, reactions, and id
-function constructMessage(
-  { content, customTransformer, reactions, messageId },
-  { thisUser, users }
-) {
-  // Transform the message to its display form
-  const { result, mentions } = transformMessage(
-    content,
-    {
-      users,
-      clientId: thisUser.clientId
-    },
-    customTransformer
-  );
-  return {
-    content: result,
-    reactions,
-    mentionsUser: mentions.includes(thisUser.clientId),
-    messageId
-  };
-}
-
-// Merges the two lists of reactions, merging old ones with ones from the new list
-// if they match the same emoji
-function mergeReactions(prevReactions, newReactions) {
-  const baseReactionList = [...(!isNil(prevReactions) ? prevReactions : [])];
-  for (const newReactionIndex in newReactions) {
-    const newReaction = newReactions[newReactionIndex];
-    const prevReaction = baseReactionList.find(
-      reaction => reaction.emoji === newReaction.emoji
-    );
-    if (!isNil(prevReaction)) {
-      // reaction is already included, merge
-      const prevReactionIndex = baseReactionList.indexOf(prevReaction);
-      baseReactionList[prevReactionIndex] = {
-        ...prevReaction,
-        newReaction
-      };
-    } else {
-      baseReactionList.push(newReaction);
-    }
-  }
-  return baseReactionList;
-}
-
-// ? ==========================
-// ? State mutation functions
-// ? ==========================
-
-// Applies a client-side update to the message clumps list, optionally adding a
-// new message if applicable
-export function withAddedMessage({ clumps, message, thisUser, users }) {
-  let newClumps = clumps;
-  const {
-    content,
-    messageId,
-    addedReactions,
-    edit,
-    sender,
-    customTransformer
-  } = message;
-  const reactions = addedReactions.map(parseReaction);
-
-  // Handle the specific message if parameters are valid
-  if (!isNil(content) && !isNil(messageId)) {
-    newClumps = handleMessage(
-      newClumps,
-      { content, edit, customTransformer, messageId, reactions, sender },
-      { thisUser, users }
-    );
-  }
-
-  // Handle all other reactions
-  const otherReactions = filterReactionsById(
-    reactions,
-    id => id !== messageId,
-    false
-  );
-  if (otherReactions.length > 0) {
-    newClumps = addReactions(newClumps, otherReactions);
-  }
-
-  return newClumps;
-}
-
-// Applies a client-side update to the message clumps list, removing a message
-export function withRemovedMessage({ clumps, messageId }) {
-  const clumpIndex = containingClumpIndex(clumps, messageId);
-  const removedClumps = updateClumps({
-    clumps,
-    shouldUpdateClump: (_clump, index) => index === clumpIndex,
-    map: clump => ({
-      ...clump,
-      messages: clump.messages.filter(m => m.messageId !== messageId)
-    })
-  });
-  return removedClumps.filter(clump => clump.messages.length > 0);
-}
-
-// Handles either a message add or edit
-function handleMessage(
-  clumps,
-  { content, edit, messageId, reactions, sender, customTransformer },
-  context
-) {
-  const messageReactions = filterReactionsById(
-    reactions,
-    id => id === messageId
-  );
-  const messageData = {
-    content,
-    messageId,
-    reactions: messageReactions,
-    sender,
-    customTransformer
-  };
-  if (edit) {
-    return editMessage(clumps, messageData, context);
-  }
-  return addMessage(clumps, messageData, context);
-}
-
-// Adds the specific message with the given content, id, reactions, and sender
-function addMessage(
-  clumps,
-  { content, customTransformer, messageId, reactions, sender },
-  context
-) {
-  const message = constructMessage(
-    { content, customTransformer, messageId, reactions },
-    context
-  );
-  const newClump = createClump({ message, sender });
-  return withAddedClump(clumps, newClump);
-}
-
-// Edits the specific message, setting its content and optionally updating its reactions
-function editMessage(
-  clumps,
-  { content, customTransformer, messageId, reactions },
-  context
-) {
-  const clumpIndex = containingClumpIndex(clumps, messageId);
-  return updateMessages({
-    clumps,
-    shouldUpdateClump: (_clump, index) => clumpIndex === index,
-    shouldUpdateMessage: message => message.messageId === messageId,
-    map: message =>
-      constructMessage(
-        {
-          content,
-          messageId,
-          customTransformer,
-          reactions: mergeReactions(message.reactions, reactions)
-        },
-        context
-      )
-  });
-}
-
-// Adds each reaction in the list to its corresponding message
-function addReactions(clumps, reactions) {
-  const messageIdToContainingClumpMap = Object.assign(
-    {},
-    ...reactions.map(reaction => ({
-      [reaction.targetId]: clumps.findIndex(clump =>
-        includes(
-          clump.messages,
-          message => message.messageId === reaction.targetId
-        )
-      )
-    }))
-  );
-
-  const clumpIndicesToMessageIdsMap = invertMap(
-    messageIdToContainingClumpMap,
-    x => parseInt(x, 10)
-  );
-
-  const dirtyClumps = Object.keys(clumpIndicesToMessageIdsMap).map(index =>
-    parseInt(index, 10)
-  );
-
-  return updateMessages({
-    clumps,
-    shouldUpdateClump: (_clump, index) => dirtyClumps.includes(index),
-    shouldUpdateMessage: (_message, id, _clump, clumpIndex) =>
-      clumpIndicesToMessageIdsMap[clumpIndex].includes(id),
-    map: message => ({
-      ...message,
-      reactions: mergeReactions(
-        message.reactions,
-        reactions
-          .filter(reaction => reaction.targetId === message.messageId)
-          .map(reaction =>
-            pick(reaction, ["emoji", "rawEmoji", "number", "userHasReacted"])
-          )
-      )
-    })
-  });
-}
-
-// Applies a client-side update to the reactions of a specific message
-export function withUpdatedReaction({
-  clumps,
-  clumpIndex,
-  messageId,
-  reaction,
-  number = 1,
-  userHasReacted = false
-}) {
-  return updateReactions({
-    clumps,
-    shouldUpdateClump: (_clump, index) => index === clumpIndex,
-    shouldUpdateMessage: message => message.messageId === messageId,
-    shouldUpdateReaction: r => r === reaction,
-    map: r => ({
-      ...r,
-      userHasReacted,
-      number: typeof number === "function" ? number(r.number) : number
-    })
-  });
-}
-
-// ? ==========================
-// ? State mutation utilities
-// ? ==========================
-
-// Performs an immutable deep update of the message clumps state object
-function updateClumps({ clumps, shouldUpdateClump, map }) {
-  return clumps.map((clump, index) =>
-    shouldUpdateClump(clump, index) ? map(clump, index) : clump
-  );
-}
-
-// Performs an immutable deep update of the message clumps state object, allowing
-// for the update of specific messages that satisfy the given predicates
-function updateMessages({
-  clumps,
-  shouldUpdateClump,
-  shouldUpdateMessage,
-  map
-}) {
-  return updateClumps({
-    clumps,
-    shouldUpdateClump,
-    map: (clump, index) => ({
-      ...clump,
-      messages: clump.messages.map((message, messageIndex) =>
-        shouldUpdateMessage(message, messageIndex, clump, index)
-          ? map(message, messageIndex, clump, index)
-          : message
-      )
-    })
-  });
-}
-
-// Performs an immutable deep update of the message clumps state object, allowing
-// for the update of specific reactions that satisfy the given predicates
-function updateReactions({
-  clumps,
-  shouldUpdateClump,
-  shouldUpdateMessage,
-  shouldUpdateReaction,
-  map
-}) {
-  return updateMessages({
-    clumps,
-    shouldUpdateClump,
-    shouldUpdateMessage,
-    map: (message, messageIndex, clump, index) => ({
-      ...message,
-      reactions: message.reactions.map((r, rIndex) =>
-        shouldUpdateReaction(r, rIndex, message, messageIndex, clump, index)
-          ? map(r, rIndex, message, messageIndex, clump, index)
-          : r
-      )
-    })
-  });
 }

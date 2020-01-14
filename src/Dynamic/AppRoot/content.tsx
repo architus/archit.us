@@ -58,17 +58,18 @@ type AppContentProps = {
 
 const AppContent: React.ComponentType<AppContentProps> = withClientSide(
   ({ currentTab, currentGuild }: AppContentProps) => {
-    const [loggedIn, loggingIn] = useSessionStatus();
+    const { isSigningIn, isSignedIn } = useSessionStatus();
     const navigationCtx = useMemoOnce(() => ({ defaultPath: DEFAULT_TAB }));
 
     // Render restricted view if not logged in
-    if (!loggingIn) return <Login fromRestricted={true} />;
+    if (!isSigningIn) return <Login fromRestricted={true} />;
     // Render beginning screen if loading
-    if (!loggedIn) return <Begin />;
+    if (!isSignedIn) return <Begin />;
 
     // Load guild from store
     const { entity: guild } = usePoolEntity("guilds", { id: currentGuild });
 
+    // TODO memoize inner app content so it doesn't re-render on outer changes
     return (
       <NavigationContext.Provider value={navigationCtx}>
         <Router>

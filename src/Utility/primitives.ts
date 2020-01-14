@@ -218,9 +218,9 @@ export function escapeMarkdown(input: string): string {
  * @param date - The date to format
  */
 export function formatAmPm(date: Date): string {
-  let hours = date.getHours() % 12;
   const minutes = date.getMinutes();
-  const amPm = hours >= 12 ? "PM" : "AM";
+  const amPm = date.getHours() >= 12 ? "PM" : "AM";
+  let hours = date.getHours() % 12;
   if (hours === 0) hours = 12;
   return `${hours}:${minutes.toString().padStart(2, "0")} ${amPm}`;
 }

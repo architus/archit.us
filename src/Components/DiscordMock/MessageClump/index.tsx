@@ -1,11 +1,18 @@
-import React from "react";
+import React, { useContext, useMemo } from "react";
 import classNames from "classnames";
 import { toHumanTime } from "Utility";
-import { StyleObject, MockReaction, MockMessageClump } from "Utility/types";
+import {
+  StyleObject,
+  MockReaction,
+  MockMessageClump,
+  MockMessage,
+  MockUser
+} from "Utility/types";
 import { Badge, BadgeProps } from "react-bootstrap";
 import UserDisplay from "Components/UserDisplay";
 import Placeholder from "Components/Placeholder";
 import Message from "Components/DiscordMock/Message";
+import { TransformMessageContext } from "Components/DiscordMock/transform";
 import "./style.scss";
 
 // pseudorandom yet determinate placeholder amount
@@ -70,7 +77,7 @@ const MessageClump: React.FC<MessageClumpProps> = React.forwardRef(
               )}
             </Placeholder.Custom>
             <Placeholder.Text
-              text={toHumanTime(timestamp)}
+              text={toHumanTime(new Date(timestamp))}
               size="0.7em"
               width={90}
               light
@@ -79,12 +86,13 @@ const MessageClump: React.FC<MessageClumpProps> = React.forwardRef(
             />
           </div>
           {messages.map((message, index) => (
-            <Message
-              {...message}
+            <RenderedMessage
               key={message.id}
-              onReact={(r: MockReaction) => onReact(message.id, r)}
-              onUnreact={(r: MockReaction) => onUnreact(message.id, r)}
+              sender={sender}
+              onReact={(r: MockReaction): void => onReact(message.id, r)}
+              onUnreact={(r: MockReaction): void => onUnreact(message.id, r)}
               placeholderAmount={placeholderMessageWidth(index)}
+              message={message}
             />
           ))}
         </div>
@@ -92,5 +100,42 @@ const MessageClump: React.FC<MessageClumpProps> = React.forwardRef(
     );
   }
 );
+
+type RenderedMessageProps = {
+  message: MockMessage;
+  sender: MockUser;
+} & Pick<
+  React.ComponentProps<typeof Message>,
+  "onReact" | "onUnreact" | "placeholderAmount"
+>;
+
+/**
+ * Memoized message which transforms its content via `useMemo`
+ */
+const RenderedMessage: React.FC<RenderedMessageProps> = ({
+  message,
+  sender,
+  onReact,
+  onUnreact,
+  placeholderAmount
+}) => {
+  const { transform, context } = useContext(TransformMessageContext);
+  const { result, mentions } = useMemo(
+    () => transform(message, sender, context),
+    [transform, message, sender, context]
+  );
+  return (
+    <Message
+      content={result}
+      edited={message.edited}
+      reactions={message.reactions}
+      mentionsUser={mentions.includes(context.thisUser.id)}
+      key={message.id}
+      onReact={onReact}
+      onUnreact={onUnreact}
+      placeholderAmount={placeholderAmount}
+    />
+  );
+};
 
 export default MessageClump;

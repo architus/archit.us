@@ -80,6 +80,11 @@ overrides:
       - "**/src/Store/**/*.ts"
     rules:
       "import/no-cycle": off
+  # Disable no-param-reassign warnings in store slices (using immer.js)
+  - files:
+      - "**/src/Store/slices/**/*.ts"
+    rules:
+      no-param-reassign: off
 
 # ESLint Project Settings
 settings:

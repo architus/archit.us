@@ -6,7 +6,7 @@ import {
   getLocalStorage,
   setLocalStorage,
   warn,
-  useSelector
+  isNil
 } from "Utility";
 import {
   User,
@@ -25,6 +25,8 @@ import {
 } from "@reduxjs/toolkit";
 import { IdentifySessionResponse, TokenExchangeResponse } from "Store/routes";
 import { Store } from "Store";
+import { useSelector } from "Store/hooks";
+import { shallowEqual } from "react-redux";
 
 // ? ====================
 // ? Types
@@ -140,6 +142,7 @@ const slice = createSlice({
   name: "session",
   initialState,
   reducers: {
+    // Silent payload prop is used in saga side effect for displaying toast
     signOut: (_1: Session, _2: PayloadAction<{ silent?: boolean }>): Session =>
       signOutState(),
     refreshSession: guardedTransition(
@@ -243,13 +246,17 @@ export function createSessionAwareState<
  * Gets the current user, or None if there is none
  */
 export function useCurrentUser(): Option<User> {
-  return useSelector(store => {
-    const { session } = store;
-    if (session.state === "authenticated" || session.state === "pending") {
-      return Some(session.this);
-    }
-    return None;
-  });
+  return useSelector(
+    store => {
+      const { session } = store;
+      if (session.state === "authenticated" || session.state === "pending") {
+        return Some(session.this);
+      }
+      return None;
+    },
+    // Perform equality check on options
+    (left, right): boolean => left.equals(right, shallowEqual)
+  );
 }
 
 /**
@@ -259,15 +266,23 @@ export function useCurrentUser(): Option<User> {
  * (not `PendingSession`)
  * @returns a tuple containing [isSignedIn, isSigningIn, session.state]
  */
-export function useSessionStatus(): [boolean, boolean, string] {
+export function useSessionStatus(): {
+  isSignedIn: boolean;
+  isSigningIn: boolean;
+  state: string;
+} {
   return useSelector(store => {
+    if (isNil(store.session)) {
+      console.log("WHY IS THIS HAPPENING");
+      return { isSignedIn: false, isSigningIn: false, state: "none" };
+    }
     const {
       session: { state }
     } = store;
     const isSigningIn = state !== "none";
     const isSignedIn = state === "authenticated";
-    return [isSignedIn, isSigningIn, state];
-  });
+    return { isSignedIn, isSigningIn, state };
+  }, shallowEqual);
 }
 
 /**

@@ -12,11 +12,11 @@ type HeaderLinksProps = {
 } & Partial<React.HTMLAttributes<HTMLUListElement>>;
 
 const HeaderLinks: React.FC<HeaderLinksProps> = ({ className, ...rest }) => {
-  const [loggedIn] = useSessionStatus();
+  const { isSigningIn } = useSessionStatus();
   return (
     <ul className={classNames("navbar-nav", className)} {...rest}>
       <CommonLinks />
-      {loggedIn ? <LoggedInLinks /> : <LoggedOutLinks />}
+      {isSigningIn ? <LoggedInLinks /> : <LoggedOutLinks />}
     </ul>
   );
 };

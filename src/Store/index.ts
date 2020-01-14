@@ -7,6 +7,8 @@ import saga from "Store/saga";
 import RestMiddleware from "Store/api/rest/middleware";
 import rootReducer from "./slices/index";
 
+export * from "Store/hooks";
+
 const SagaMiddleware = createSagaMiddleware();
 
 const store = configureStore({

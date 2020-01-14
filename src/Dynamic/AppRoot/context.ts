@@ -14,7 +14,7 @@ export type ScrollContext = {
 };
 
 export const ScrollContext = React.createContext<ScrollContext>({
-  scrollHandler: () => null
+  scrollHandler: () => undefined
 });
 
 export type AppContext = {
@@ -22,5 +22,5 @@ export type AppContext = {
 };
 
 export const AppContext = React.createContext<AppContext>({
-  dispatch: () => null
+  dispatch: () => undefined
 });

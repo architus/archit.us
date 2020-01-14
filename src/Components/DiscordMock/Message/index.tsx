@@ -2,27 +2,31 @@ import React from "react";
 import classNames from "classnames";
 import ReactionList from "Components/DiscordMock/ReactionList";
 import Placeholder from "Components/Placeholder";
-import { MockReaction, MockMessage, StyleObject } from "Utility/types";
+import { MockReaction, StyleObject } from "Utility/types";
 import "./style.scss";
 
 type MessageProps = {
   onReact: (r: MockReaction) => void;
   onUnreact: (r: MockReaction) => void;
+  content: string;
+  edited: boolean;
+  reactions: MockReaction[];
+  mentionsUser: boolean;
   placeholderAmount?: number;
-  className?: string;
   style?: StyleObject;
-} & MockMessage;
+  className?: string;
+};
 
 const Message: React.FC<MessageProps> = ({
   content,
-  mentionsUser,
   edited,
   reactions,
+  mentionsUser,
   onReact,
   onUnreact,
   placeholderAmount = 80,
-  className,
-  style
+  style,
+  className
 }) => (
   <div className={className} style={style}>
     <div

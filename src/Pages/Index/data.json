@@ -53,6 +53,11 @@
       }
     ]
   },
+  "allowedCommands": {
+    "autoResponse": ["set", "remove"],
+    "customEmoji": ["emotes"],
+    "pollsSchedules": ["poll", "schedule"]
+  },
   "customEmotes": {
     "PepeLaugh": "https://cdn.frankerfacez.com/emoticon/263833/2",
     "Jebaited": "https://static-cdn.jtvnw.net/emoticons/v1/114836/2.0",

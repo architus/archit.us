@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import { takeEvery, put, fork } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/core";
 import { delay } from "@redux-saga/core/effects";
@@ -12,6 +13,8 @@ import {
 } from "Store/actions";
 import sessionFlow from "Store/saga/session";
 import gatewayFlow from "Store/saga/gateway";
+import { interpretInvisible, interpretMessage } from "Store/slices/interpret";
+import { mockUserEvent } from "Store/routes";
 
 /**
  * Root saga
@@ -22,6 +25,7 @@ export default function* saga(): SagaIterator {
 
   yield takeEvery(signOut.type, handleSignOut);
   yield takeEvery(showNotification.type, autoHideNotification);
+  yield fork(interpret);
 }
 
 /**
@@ -48,4 +52,38 @@ function* handleSignOut(action: ReturnType<typeof signOut>): SagaIterator {
   if (!action.payload.silent) {
     yield put(showToast({ message: "Signed out" }));
   }
+}
+
+function* interpret(): SagaIterator {
+  yield takeEvery(interpretMessage.type, handleInterpretMessage);
+  yield takeEvery(interpretInvisible.type, handleInterpretInvisble);
+}
+
+function* handleInterpretMessage(
+  action: ReturnType<typeof interpretMessage>
+): SagaIterator {
+  const { context, message, id } = action.payload;
+  yield put(
+    mockUserEvent({
+      guild_id: context.guildId,
+      content: message,
+      message_id: id,
+      allowed_commands: context.allowedCommands
+    })
+  );
+}
+
+function* handleInterpretInvisble(
+  action: ReturnType<typeof interpretMessage>
+): SagaIterator {
+  const { context, message, id } = action.payload;
+  yield put(
+    mockUserEvent({
+      guild_id: context.guildId,
+      content: message,
+      message_id: id,
+      allowed_commands: context.allowedCommands,
+      silent: true
+    })
+  );
 }

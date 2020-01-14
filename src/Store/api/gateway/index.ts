@@ -32,12 +32,11 @@ export interface GatewayMalformed {
 export interface GatewayDispatch {
   event: string;
   elevated: boolean;
-  payload: unknown;
+  data: unknown;
 }
 
 export interface GatewaySend extends GatewayDispatch {
   timestamp: number;
-  elevated: boolean;
 }
 
 export const gatewayInitialize = createAction<GatewayInitialize>(
@@ -141,9 +140,9 @@ export function makeGatewayRoute<
   return <TEvent extends string = string>({
     event,
     elevated
-  }: GatewayRouteConfig<TEvent>) => {
+  }: GatewayRouteConfig<TEvent>): GatewayRoute<TEvent, TPayload> => {
     function dispatch(args: TPayload): PayloadAction<GatewayDispatch> {
-      return gatewayDispatch({ payload: args, event, elevated });
+      return gatewayDispatch({ data: args, event, elevated });
     }
 
     dispatch.event = event;
