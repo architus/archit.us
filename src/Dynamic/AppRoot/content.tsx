@@ -2,7 +2,7 @@ import React from "react";
 import { useSessionStatus } from "Store/slices/session";
 import Login from "Pages/Login";
 import Begin from "Dynamic/Begin";
-import { Redirect, Router } from "@reach/router";
+import { Redirect, Router } from "Components/Router";
 import {
   withClientSide,
   useLocation,
@@ -10,15 +10,18 @@ import {
   attach,
   useInitialRender,
   isNil,
-  useMemoOnce
+  useMemoOnce,
+  isDefined,
+  error
 } from "Utility";
-import { Snowflake, isSnowflake } from "Utility/types";
+import { Snowflake, isSnowflake, Guild } from "Utility/types";
 import { Option } from "Utility/option";
 import classNames from "classnames";
 import { usePool, usePoolEntity } from "Store/slices/pools";
 import { APP_PATH_ROOT } from "Dynamic/AppRoot/config.json";
 import { DEFAULT_TAB, tabs, tabPaths, TabPath } from "Dynamic/AppRoot/tabs";
 import { NavigationContext } from "Dynamic/AppRoot/context";
+import ErrorBoundary from "Components/ErrorBoundary";
 
 interface AppLocation {
   currentTab: TabPath | null;
@@ -61,15 +64,17 @@ const AppContent: React.ComponentType<AppContentProps> = withClientSide(
     const { isSigningIn, isSignedIn } = useSessionStatus();
     const navigationCtx = useMemoOnce(() => ({ defaultPath: DEFAULT_TAB }));
 
+    // Load guild from store
+    const { entity: guildOption } = usePoolEntity("guilds", {
+      filter: g => isDefined(currentGuild) && g.id === currentGuild
+    });
+
     // Render restricted view if not logged in
     if (!isSigningIn) return <Login fromRestricted={true} />;
     // Render beginning screen if loading
+    // TODO design better loading screen
     if (!isSignedIn) return <Begin />;
 
-    // Load guild from store
-    const { entity: guild } = usePoolEntity("guilds", { id: currentGuild });
-
-    // TODO memoize inner app content so it doesn't re-render on outer changes
     return (
       <NavigationContext.Provider value={navigationCtx}>
         <Router>
@@ -78,18 +83,28 @@ const AppContent: React.ComponentType<AppContentProps> = withClientSide(
             to={`${APP_PATH_ROOT}/:guildId/${DEFAULT_TAB}`}
             noThrow
           />
-          {Option.merge(Option.from(currentTab), Option.from(currentGuild))
-            .map(([tab, guild]) => {
-              const Component = tabs[tab].component;
-              return (
-                // eslint-disable-next-line react/jsx-key
-                <Component guild={guild} />
-              );
-            })
-            .getOrElse(null)}
-          <Begin default />
         </Router>
+        {Option.merge(Option.from(currentTab), guildOption)
+          // eslint-disable-next-line react/jsx-key
+          .map(([tab, guild]) => <PageRenderer guild={guild} tab={tab} />)
+          .getOrElse(<Begin default />)}
       </NavigationContext.Provider>
+    );
+  }
+);
+
+type PageRendererProps = {
+  tab: TabPath;
+  guild: Guild;
+};
+
+const PageRenderer: React.FC<PageRendererProps> = React.memo(
+  ({ tab, guild }) => {
+    const Component = tabs[tab].component;
+    return (
+      <ErrorBoundary onError={(e: Error): void => error(e)}>
+        <Component guild={guild} />
+      </ErrorBoundary>
     );
   }
 );

@@ -9,31 +9,35 @@ import "./style.scss";
 type DiscordViewProps = {
   clumps: MockMessageClump[];
   channelName: string;
-  displayError: boolean;
+  displayError?: boolean;
+  pause?: boolean;
   loop?: boolean;
   messageSets?: MockMessageSet[];
   style?: StyleObject;
   className?: string;
 };
 
+const discordViewStyle = { flexGrow: 1 };
+
 const DiscordView: React.FC<DiscordViewProps> = ({
   clumps = [],
   channelName,
   displayError = false,
+  pause = false,
   loop,
   messageSets,
   className,
   style
 }) => (
   <div className={classNames("discord-view", className)} style={style}>
-    <MessageView clumps={clumps} style={{ flexGrow: 1 }} />
+    <MessageView clumps={clumps} style={discordViewStyle} />
     <hr className="input-border" />
     <InputController
       dispatch={useContext(DiscordMockDispatchContext).dispatch}
       channelName={channelName}
       loop={loop}
       messageSets={messageSets}
-      pause={displayError}
+      pause={pause}
     />
     <div
       className={classNames("error-overlay", {

@@ -307,18 +307,19 @@ export function parseInteger(str: string): Option<number> {
  * @remarks
  * Source code used from
  * {@link https://stackoverflow.com/a/17373688 | this Stack Overflow answer}
- * @param brightness Maximum target brightness (0-1)
+ * @param brightness - Maximum target brightness (0-1)
  */
 export function randomColor(brightness: number): string {
-  function randomChannel(brightness: number): string {
-    var r = 255 - brightness;
-    var n = 0 | (Math.random() * r + brightness);
-    var s = n.toString(16);
-    return s.length == 1 ? "0" + s : s;
+  function randomChannel(b: number): string {
+    const r = 255 - b;
+    // eslint-disable-next-line no-bitwise
+    const n = 0 | (Math.random() * r + b);
+    const s = n.toString(16);
+    return s.length === 1 ? `0${s}` : s;
   }
-  return `#${randomChannel(brightness)}
-    ${randomChannel(brightness)}
-    ${randomChannel(brightness)}`;
+  return `#${randomChannel(brightness)}${randomChannel(
+    brightness
+  )}${randomChannel(brightness)}`;
 }
 
 // ? ==============
@@ -385,7 +386,7 @@ export function isInPath({
   return fragment.test(pathComponents[position]);
 }
 
-let cachedExternalRegex = /^(?:(?:http|https):\/\/(?!(?:www\.)?archit.us)[\w./=?#-_]+)|(?:mailto:.+)$/;
+const cachedExternalRegex = /^(?:(?:http|https):\/\/(?!(?:www\.)?archit.us)[\w./=?#-_]+)|(?:mailto:.+)$/;
 let externalRegex: RegExp | null = null;
 
 /**
@@ -399,12 +400,13 @@ export function getExternalRegex(): RegExp {
     const regex = new RegExp(regexStr);
     externalRegex = regex;
     return externalRegex;
-  } else return cachedExternalRegex;
+  }
+  return cachedExternalRegex;
 }
 
 /**
  * Determines whether a link is an external link or not
- * @param href Href to test
+ * @param href - Href to test
  */
 export function isExternal(href: string): boolean {
   return getExternalRegex().test(href);

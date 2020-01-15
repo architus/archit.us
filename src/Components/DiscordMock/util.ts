@@ -101,7 +101,7 @@ export function createMockUser(guildId: number): MockUser {
   };
 }
 
-const userColor = randomColor(0.5);
+const userColor = randomColor(130);
 const userId = randomInt(120000).toString();
 
 /**

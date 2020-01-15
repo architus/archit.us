@@ -11,7 +11,7 @@ import { Dropdown } from "react-bootstrap";
 import Icon from "Components/Icon";
 import "./style.scss";
 
-const SessionControl: React.FC = () => {
+const SessionControl: React.FC = React.memo(() => {
   const user: Option<User> = useCurrentUser();
   const { isSigningIn } = useSessionStatus();
   const dispatch = useDispatch();
@@ -33,6 +33,6 @@ const SessionControl: React.FC = () => {
       Sign In
     </AutoLink>
   );
-};
+});
 
 export default SessionControl;

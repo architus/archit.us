@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from "react";
+import React, { useMemo, useCallback, useState, useEffect } from "react";
 import {
   addMissingUnit,
   formatDimension,
@@ -8,7 +8,8 @@ import {
   useEffectOnce,
   useRefWrapper,
   isNil,
-  architusUser
+  architusUser,
+  error
 } from "Utility";
 import { Option } from "Utility/option";
 import { useDispatch, useSelector } from "Store/hooks";
@@ -51,7 +52,8 @@ import {
   transformMockMessage
 } from "Components/DiscordMock/transform";
 import { AnyAction } from "redux";
-import { useSessionStatus, useCurrentUser } from "Store/actions";
+import { useCurrentUser } from "Store/actions";
+import ErrorBoundary from "Components/ErrorBoundary";
 
 // Error display options
 const ERROR_DISPLAY_DELAY = 4000;
@@ -94,7 +96,6 @@ const DiscordMock: React.FC<DiscordMockProps> = ({
   style,
   className
 }) => {
-  // TODO implement display error timeout
   // Initialize discord mock context once
   const guildId = useMemoOnce(() => randomInt(10000000));
   const idProvisioner = useMemoOnce(() => new IdProvisioner());
@@ -208,22 +209,56 @@ const DiscordMock: React.FC<DiscordMockProps> = ({
   });
 
   // Manage connection timeout display
-  const connected = useSelector(state => state.gateway.state !== "established");
+  const connected = useSelector(state => state.gateway.state === "established");
+  const [connectionError, setConnectionError] = useState(false);
+  useEffect(() => {
+    let timeout: number | undefined;
+    if (!connected && !connectionError) {
+      timeout = window.setTimeout(
+        () => setConnectionError(true),
+        ERROR_DISPLAY_DELAY
+      );
+    } else if (connected && connectionError) {
+      setConnectionError(false);
+    }
+
+    return (): void => {
+      if (isDefined(timeout)) {
+        clearTimeout(timeout);
+      }
+    };
+  }, [connected, connectionError]);
 
   return (
-    <DiscordMockDispatchContext.Provider value={memoizedContext}>
-      <TransformMessageContext.Provider value={transformContext}>
-        <DiscordView
-          style={{ height: formatDimension(addMissingUnit(height)), ...style }}
-          className={className}
-          channelName={channelName}
-          messageSets={messageSets}
-          loop={loop}
-          displayError={connected && !offline}
-          clumps={clumps}
+    <ErrorBoundary
+      onError={(e: Error): void => error(e)}
+      fallback={
+        <div
+          style={{
+            height: formatDimension(addMissingUnit(height)),
+            ...style
+          }}
         />
-      </TransformMessageContext.Provider>
-    </DiscordMockDispatchContext.Provider>
+      }
+    >
+      <DiscordMockDispatchContext.Provider value={memoizedContext}>
+        <TransformMessageContext.Provider value={transformContext}>
+          <DiscordView
+            style={{
+              height: formatDimension(addMissingUnit(height)),
+              ...style
+            }}
+            className={className}
+            channelName={channelName}
+            messageSets={messageSets}
+            loop={loop}
+            displayError={connectionError && !offline}
+            pause={!connected && !offline}
+            clumps={clumps}
+          />
+        </TransformMessageContext.Provider>
+      </DiscordMockDispatchContext.Provider>
+    </ErrorBoundary>
   );
 };
 

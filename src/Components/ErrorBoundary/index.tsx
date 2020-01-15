@@ -32,7 +32,7 @@ class ErrorBoundary extends React.Component<
   render(): React.ReactElement | null {
     if (this.state.hasError) {
       const { fallback } = this.props;
-      return isDefined(fallback) ? <>fallback</> : null;
+      return isDefined(fallback) ? <>{fallback}</> : null;
     }
 
     return <>{this.props.children}</>;

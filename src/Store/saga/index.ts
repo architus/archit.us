@@ -13,6 +13,7 @@ import {
 } from "Store/actions";
 import sessionFlow from "Store/saga/session";
 import gatewayFlow from "Store/saga/gateway";
+import pools from "Store/saga/pools";
 import { interpretInvisible, interpretMessage } from "Store/slices/interpret";
 import { mockUserEvent } from "Store/routes";
 
@@ -22,10 +23,11 @@ import { mockUserEvent } from "Store/routes";
 export default function* saga(): SagaIterator {
   yield fork(gatewayFlow);
   yield fork(sessionFlow);
+  yield fork(interpret);
+  yield fork(pools);
 
   yield takeEvery(signOut.type, handleSignOut);
   yield takeEvery(showNotification.type, autoHideNotification);
-  yield fork(interpret);
 }
 
 /**
@@ -74,7 +76,7 @@ function* handleInterpretMessage(
 }
 
 function* handleInterpretInvisble(
-  action: ReturnType<typeof interpretMessage>
+  action: ReturnType<typeof interpretInvisible>
 ): SagaIterator {
   const { context, message, id } = action.payload;
   yield put(

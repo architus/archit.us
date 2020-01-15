@@ -22,10 +22,13 @@ type GuildListProps = {
 };
 
 const GuildList: React.FC<GuildListProps> = ({ onClickGuild, onClickAdd }) => {
-  const { all: guildList, isLoaded: hasLoaded } = usePool("guilds");
+  const { all: architusAdminGuilds, isLoaded: hasLoaded } = usePool("guilds", {
+    filter: guild => guild.has_architus && guild.architus_admin
+  });
+  const { all: otherGuilds } = usePool("guilds", {
+    filter: guild => guild.has_architus && !guild.architus_admin
+  });
   const squareStyle = { width: `${ICON_WIDTH}px`, height: `${ICON_WIDTH}px` };
-  const architusAdminGuilds = guildList.filter(guild => guild.architus_admin);
-  const otherGuilds = guildList.filter(guild => !guild.architus_admin);
 
   // Parse active guild ID from location
   const location = useLocation();

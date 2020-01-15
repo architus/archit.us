@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import classNames from "classnames";
 import {
   formatAmPm,
@@ -14,6 +14,7 @@ import {
   unreact
 } from "Components/DiscordMock/actions";
 import "./style.scss";
+import { AnyAction } from "redux";
 
 const scrollThreshold = 100;
 
@@ -91,17 +92,13 @@ class MessageView extends React.PureComponent<
         <DiscordMockDispatchContext.Consumer>
           {({ dispatch }): React.ReactNode =>
             clumps.map((clump, index) => (
-              <MessageClump
+              <RenderedMessageClump
                 {...clump}
                 first={index === 0}
                 last={index === clumps.length - 1}
                 key={makeKey(clump)}
-                onReact={(id, reaction): void =>
-                  dispatch(react({ clumpIndex: index, id, reaction }))
-                }
-                onUnreact={(id, reaction): void =>
-                  dispatch(unreact({ clumpIndex: index, id, reaction }))
-                }
+                index={index}
+                dispatch={dispatch}
               />
             ))
           }
@@ -110,5 +107,32 @@ class MessageView extends React.PureComponent<
     );
   }
 }
+
+type MessageClumpProps = React.ComponentProps<typeof MessageClump>;
+type RenderedMessageClumpProps = {
+  index: number;
+  dispatch: React.Dispatch<AnyAction>;
+} & Omit<MessageClumpProps, "onReact" | "onUnreact">;
+
+/**
+ * Id-aware component to stablize onReact/onUnreact callbacks
+ */
+const RenderedMessageClump: React.FC<RenderedMessageClumpProps> = React.memo(
+  ({ index, dispatch, ...rest }) => (
+    <MessageClump
+      {...rest}
+      onReact={useCallback(
+        (id, reaction): void =>
+          dispatch(react({ clumpIndex: index, id, reaction })),
+        [dispatch, index]
+      )}
+      onUnreact={useCallback(
+        (id, reaction): void =>
+          dispatch(unreact({ clumpIndex: index, id, reaction })),
+        [dispatch, index]
+      )}
+    />
+  )
+);
 
 export default MessageView;

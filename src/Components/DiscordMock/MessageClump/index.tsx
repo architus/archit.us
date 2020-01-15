@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from "react";
+import React, { useContext, useMemo, useCallback } from "react";
 import classNames from "classnames";
 import { toHumanTime } from "Utility";
 import {
@@ -89,8 +89,8 @@ const MessageClump: React.FC<MessageClumpProps> = React.forwardRef(
             <RenderedMessage
               key={message.id}
               sender={sender}
-              onReact={(r: MockReaction): void => onReact(message.id, r)}
-              onUnreact={(r: MockReaction): void => onUnreact(message.id, r)}
+              genericOnReact={onReact}
+              genericOnUnreact={onUnreact}
               placeholderAmount={placeholderMessageWidth(index)}
               message={message}
             />
@@ -101,41 +101,57 @@ const MessageClump: React.FC<MessageClumpProps> = React.forwardRef(
   }
 );
 
+type MessageProps = React.ComponentProps<typeof Message>;
 type RenderedMessageProps = {
   message: MockMessage;
   sender: MockUser;
-} & Pick<
-  React.ComponentProps<typeof Message>,
-  "onReact" | "onUnreact" | "placeholderAmount"
->;
+  genericOnReact: MessageClumpProps["onReact"];
+  genericOnUnreact: MessageClumpProps["onUnreact"];
+} & Pick<MessageProps, "placeholderAmount">;
 
 /**
  * Memoized message which transforms its content via `useMemo`
  */
-const RenderedMessage: React.FC<RenderedMessageProps> = ({
-  message,
-  sender,
-  onReact,
-  onUnreact,
-  placeholderAmount
-}) => {
-  const { transform, context } = useContext(TransformMessageContext);
-  const { result, mentions } = useMemo(
-    () => transform(message, sender, context),
-    [transform, message, sender, context]
-  );
-  return (
-    <Message
-      content={result}
-      edited={message.edited}
-      reactions={message.reactions}
-      mentionsUser={mentions.includes(context.thisUser.id)}
-      key={message.id}
-      onReact={onReact}
-      onUnreact={onUnreact}
-      placeholderAmount={placeholderAmount}
-    />
-  );
-};
+const RenderedMessage: React.FC<RenderedMessageProps> = React.memo(
+  ({
+    message,
+    sender,
+    genericOnReact,
+    genericOnUnreact,
+    placeholderAmount
+  }) => {
+    const { transform, context } = useContext(TransformMessageContext);
+    const { result, mentions } = useMemo(
+      () =>
+        transform(
+          message,
+          sender,
+          context,
+          (fragment: string): string => fragment
+        ),
+      [transform, message, sender, context]
+    );
+    return (
+      <Message
+        content={result}
+        edited={message.edited}
+        reactions={message.reactions}
+        mentionsUser={mentions.includes(context.thisUser.id)}
+        key={message.id}
+        onReact={useCallback(
+          (r: MockReaction): void => genericOnReact(message.id, r),
+          [genericOnReact, message.id]
+        )}
+        onUnreact={useCallback(
+          (r: MockReaction): void => genericOnUnreact(message.id, r),
+          [genericOnUnreact, message.id]
+        )}
+        placeholderAmount={placeholderAmount}
+      />
+    );
+  }
+);
+
+RenderedMessage.whyDidYouRender = true;
 
 export default MessageClump;

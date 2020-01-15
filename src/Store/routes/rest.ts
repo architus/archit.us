@@ -1,4 +1,4 @@
-import { User, Access } from "Utility/types";
+import { User, Access, Guild } from "Utility/types";
 import * as t from "io-ts";
 import { makeRoute } from "Store/api/rest";
 import { Errors } from "Store/api/rest/types";
@@ -84,4 +84,21 @@ export const guildCount = makeRoute()({
   method: HttpVerbs.GET,
   decode: (response: unknown): Either<Errors, GuildCountLoadResponse> =>
     either.chain(t.object.decode(response), GuildCountLoadResponse.decode)
+});
+
+export type GuildsListResponse = t.TypeOf<typeof GuildsListResponse>;
+export const GuildsListResponse = t.interface({
+  guilds: t.array(Guild)
+});
+
+/**
+ * GET /guilds
+ */
+export const guilds = makeRoute()({
+  label: "general/guilds",
+  route: "/guilds",
+  method: HttpVerbs.GET,
+  auth: true,
+  decode: (response: unknown): Either<Errors, GuildsListResponse> =>
+    either.chain(t.object.decode(response), GuildsListResponse.decode)
 });

@@ -379,7 +379,11 @@ export enum GuildFeature {
   Discoverable = "DISCOVERABLE",
   Featurable = "FEATURABLE",
   AnimatedIcon = "ANIMATED_ICON",
-  Banner = "BANNER"
+  Banner = "BANNER",
+  EnabledDiscoverableBefore = "ENABLED_DISCOVERABLE_BEFORE",
+  MemberListDisabled = "MEMBER_LIST_DISABLED",
+  MoreEmoji = "MORE_EMOJI",
+  PublicDisabled = "PUBLIC_DISABLED"
 }
 export const TGuildFeature = new EnumType<GuildFeature>(
   GuildFeature,
@@ -390,26 +394,26 @@ const TGuild = t.intersection([
   t.type({
     id: TSnowflake,
     name: t.string,
-    owner_id: TSnowflake,
-    region: t.string,
-    afk_timeout: t.Integer,
-    verification_level: TVerificationLevel,
-    default_message_notifications: TDefaultMessageNotificationLevel,
-    explicit_content_filter: TExplicitContentFilter,
-    // foreign key reference
-    roles: t.array(TSnowflake),
-    // foreign key reference
-    emojis: t.array(TSnowflake),
-    features: t.array(TGuildFeature),
-    mfa_level: TMfaLevel,
-    premium_tier: TPremiumTier,
-    preferred_locale: t.string,
+    // owner_id: TSnowflake,
+    // region: t.string,
+    // afk_timeout: t.Integer,
+    // verification_level: TVerificationLevel,
+    // default_message_notifications: TDefaultMessageNotificationLevel,
+    // explicit_content_filter: TExplicitContentFilter,
+    // // foreign key reference
+    // roles: t.array(TSnowflake),
+    // // foreign key reference
+    // emojis: t.array(TSnowflake),
+    features: t.array(t.union([TGuildFeature, t.string])),
+    // mfa_level: TMfaLevel,
+    // premium_tier: TPremiumTier,
+    // preferred_locale: t.string,
     // added fields
     architus_admin: t.boolean,
     has_architus: t.boolean
   }),
   t.partial({
-    icon: t.string,
+    icon: t.union([t.string, t.null]),
     splash: t.string,
     owner: t.boolean,
     permissions: t.number,

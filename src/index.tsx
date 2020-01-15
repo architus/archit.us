@@ -7,6 +7,11 @@ import App from "./App";
 
 export default App;
 
+if (process.env.NODE_ENV !== "production") {
+  const whyDidYouRender = require("@welldone-software/why-did-you-render");
+  whyDidYouRender(React);
+}
+
 // Render your app
 if (typeof document !== "undefined") {
   const target = document.getElementById("root");

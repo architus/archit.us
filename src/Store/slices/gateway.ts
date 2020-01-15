@@ -50,22 +50,22 @@ const slice = createSlice({
         isElevated: action.payload.isElevated
       }))
       .addCase(gatewayConnect, state => {
-        if (state.state === "initializing") {
+        if (state.state === "initializing" || state.state === "disconnected") {
           return { state: "established", isElevated: state.isElevated };
         }
-        return { state: "noConnection" };
+        return state;
       })
       .addCase(gatewayDisconnect, state => {
         if (state.state === "established") {
           return { state: "disconnected", isElevated: state.isElevated };
         }
-        return { state: "noConnection" };
+        return state;
       })
       .addCase(gatewayReconnect, state => {
-        if (state.state === "disconnected") {
+        if (state.state === "initializing" || state.state === "disconnected") {
           return { state: "established", isElevated: state.isElevated };
         }
-        return { state: "noConnection" };
+        return state;
       })
 });
 
