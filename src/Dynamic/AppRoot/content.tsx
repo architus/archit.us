@@ -32,9 +32,11 @@ function isValidTab(tab: string): tab is TabPath {
   return tabPaths.includes(tab as TabPath);
 }
 
+const hasArchitusFilter = (guild: Guild): boolean => guild.has_architus;
+
 export function useAppLocation(): AppLocation {
   const { all: guildList } = usePool("guilds", {
-    filter: guild => guild.has_architus
+    filter: hasArchitusFilter
   });
 
   const { location } = useLocation();

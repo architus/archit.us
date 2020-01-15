@@ -130,6 +130,8 @@ interface LocalGuildStore {
 
 type AppRootProps = {} & PageProps;
 
+const architusGuildFilter = (guild: Guild): boolean => guild.has_architus;
+
 const AppRoot: React.FC<AppRootProps> = () => {
   // Root class adding/removing
   useEffectOnce(() => {
@@ -145,7 +147,7 @@ const AppRoot: React.FC<AppRootProps> = () => {
     isLoaded: false
   });
   const { all: guildList, isLoaded: guildsLoaded } = usePool("guilds", {
-    filter: guild => guild.has_architus
+    filter: architusGuildFilter
   });
   guildStore.current = { guilds: guildList, isLoaded: guildsLoaded };
 

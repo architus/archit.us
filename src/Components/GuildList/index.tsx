@@ -21,12 +21,17 @@ type GuildListProps = {
   onClickAdd: () => void;
 };
 
+const architusAdminGuildsFilter = (guild: Guild): boolean =>
+  guild.has_architus && guild.architus_admin;
+const otherGuildsFilter = (guild: Guild): boolean =>
+  guild.has_architus && !guild.architus_admin;
+
 const GuildList: React.FC<GuildListProps> = ({ onClickGuild, onClickAdd }) => {
   const { all: architusAdminGuilds, isLoaded: hasLoaded } = usePool("guilds", {
-    filter: guild => guild.has_architus && guild.architus_admin
+    filter: architusAdminGuildsFilter
   });
   const { all: otherGuilds } = usePool("guilds", {
-    filter: guild => guild.has_architus && !guild.architus_admin
+    filter: otherGuildsFilter
   });
   const squareStyle = { width: `${ICON_WIDTH}px`, height: `${ICON_WIDTH}px` };
 

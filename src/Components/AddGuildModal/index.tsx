@@ -1,11 +1,15 @@
 import React from "react";
 import { usePool } from "Store/slices/pools";
-import { useReturnQuery, API_BASE, processIfNotEmptyOrNil } from "Utility";
+import {
+  useReturnQuery,
+  API_BASE,
+  processIfNotEmptyOrNil,
+  isDiscordAdminWithoutArchitus,
+  isDefined
+} from "Utility";
 import { Snowflake } from "Utility/types";
-
 import GuildCard from "Components/GuildCard";
 import { Modal, Button } from "react-bootstrap";
-
 import "./style.scss";
 
 type AddGuildModalProps = {
@@ -13,7 +17,9 @@ type AddGuildModalProps = {
 } & Partial<React.ComponentProps<typeof Modal>>;
 
 const AddGuildModal: React.FC<AddGuildModalProps> = ({ onHide, ...rest }) => {
-  const { all: guilds } = usePool("guilds");
+  const { all: guilds } = usePool("guilds", {
+    filter: isDiscordAdminWithoutArchitus
+  });
   const returnQuery = useReturnQuery();
   const inviteUrl = (guildId: Snowflake): string =>
     `${API_BASE}/invite/${guildId}${processIfNotEmptyOrNil(
@@ -53,7 +59,7 @@ const AddGuildModal: React.FC<AddGuildModalProps> = ({ onHide, ...rest }) => {
             <GuildCard
               id={id}
               name={name}
-              icon={icon}
+              icon={isDefined(icon) ? icon : undefined}
               key={id}
               href={inviteUrl(id)}
             />

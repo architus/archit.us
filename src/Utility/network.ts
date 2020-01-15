@@ -67,17 +67,3 @@ export enum HttpVerbs {
   PATCH = "PATCH",
   DELETE = "DELETE"
 }
-
-const architusId: Snowflake = "448546825532866560" as Snowflake;
-const architusAvatar = "99de1e495875fb5c27ba9ac7303b45b7";
-export const architusUser: MockUser = {
-  id: "-1",
-  avatarUrl: constructAvatarUrl({
-    clientId: architusId,
-    hash: architusAvatar
-  }),
-  discriminator: "7145",
-  username: "architus",
-  nameColor: "#d34c4f",
-  bot: true
-};
