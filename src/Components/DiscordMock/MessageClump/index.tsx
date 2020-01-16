@@ -152,6 +152,4 @@ const RenderedMessage: React.FC<RenderedMessageProps> = React.memo(
   }
 );
 
-RenderedMessage.whyDidYouRender = true;
-
 export default MessageClump;

@@ -10,7 +10,7 @@ import {
   parseDimension
 } from "Utility";
 import "./style.scss";
-import { RawDimension, StyleObject, Nil, Dimension } from "Utility/types";
+import { RawDimension, StyleObject, Nil } from "Utility/types";
 
 type BasePlaceholderProps = {
   width: RawDimension;

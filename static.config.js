@@ -24,12 +24,6 @@ const noFlashPath = path.resolve(__dirname, "./src/Build/no-flash.js");
 const noFlashScript = fs.readFileSync(noFlashPath);
 const config = {
   entry: path.join(__dirname, "src", "index.tsx"),
-  devServer: {
-    port: 443,
-    host: "joazlazer.develop.archit.us",
-    https: true,
-    public: "joazlazer.develop.archit.us:443"
-  },
   getRoutes: async () => {
     // Load usage count from API
     let guildCount = 0;

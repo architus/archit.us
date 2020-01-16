@@ -1,5 +1,5 @@
 import { isDefined } from "./data";
-import { Snowflake, MockUser } from "./types";
+import { Snowflake } from "./types";
 import { Option } from "./option";
 import { parseInteger } from "./primitives";
 

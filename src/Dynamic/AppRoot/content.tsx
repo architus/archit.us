@@ -1,8 +1,7 @@
 import React from "react";
 import { useSessionStatus } from "Store/slices/session";
 import Login from "Pages/Login";
-import Begin from "Dynamic/Begin";
-import { Redirect, Router } from "Components/Router";
+import { Redirect, Router, PageProps } from "Components/Router";
 import {
   withClientSide,
   useLocation,
@@ -22,6 +21,8 @@ import { APP_PATH_ROOT } from "Dynamic/AppRoot/config.json";
 import { DEFAULT_TAB, tabs, tabPaths, TabPath } from "Dynamic/AppRoot/tabs";
 import { NavigationContext } from "Dynamic/AppRoot/context";
 import ErrorBoundary from "Components/ErrorBoundary";
+import Placeholder from "Components/Placeholder";
+import Begin from "Dynamic/Begin";
 
 interface AppLocation {
   currentTab: TabPath | null;
@@ -65,17 +66,19 @@ const AppContent: React.ComponentType<AppContentProps> = withClientSide(
   ({ currentTab, currentGuild }: AppContentProps) => {
     const { isSigningIn, isSignedIn } = useSessionStatus();
     const navigationCtx = useMemoOnce(() => ({ defaultPath: DEFAULT_TAB }));
+    const isInitial = useInitialRender();
 
     // Load guild from store
     const { entity: guildOption } = usePoolEntity("guilds", {
       filter: g => isDefined(currentGuild) && g.id === currentGuild
     });
 
+    // Render app placeholder on server/first render
+    if (isInitial) return <AppPlaceholder />;
     // Render restricted view if not logged in
     if (!isSigningIn) return <Login fromRestricted={true} />;
-    // Render beginning screen if loading
-    // TODO design better loading screen
-    if (!isSignedIn) return <Begin />;
+    // Render placeholder screen if loading
+    if (!isSignedIn) return <AppPlaceholder />;
 
     return (
       <NavigationContext.Provider value={navigationCtx}>
@@ -85,28 +88,37 @@ const AppContent: React.ComponentType<AppContentProps> = withClientSide(
             to={`${APP_PATH_ROOT}/:guildId/${DEFAULT_TAB}`}
             noThrow
           />
+          <Begin path="/" />
+          <PageRenderer
+            default
+            guildOption={guildOption}
+            tabOption={Option.from(currentTab)}
+          />
         </Router>
-        {Option.merge(Option.from(currentTab), guildOption)
-          // eslint-disable-next-line react/jsx-key
-          .map(([tab, guild]) => <PageRenderer guild={guild} tab={tab} />)
-          .getOrElse(<Begin default />)}
       </NavigationContext.Provider>
     );
   }
 );
 
 type PageRendererProps = {
-  tab: TabPath;
-  guild: Guild;
-};
+  tabOption: Option<TabPath>;
+  guildOption: Option<Guild>;
+} & PageProps;
 
 const PageRenderer: React.FC<PageRendererProps> = React.memo(
-  ({ tab, guild }) => {
-    const Component = tabs[tab].component;
+  ({ tabOption, guildOption }) => {
     return (
-      <ErrorBoundary onError={(e: Error): void => error(e)}>
-        <Component guild={guild} />
-      </ErrorBoundary>
+      Option.merge(tabOption, guildOption)
+        // eslint-disable-next-line react/jsx-key
+        .map(([tab, guild]) => {
+          const Component = tabs[tab].component;
+          return (
+            <ErrorBoundary onError={(e: Error): void => error(e)}>
+              <Component guild={guild} />
+            </ErrorBoundary>
+          );
+        })
+        .getOrElse(<AppPlaceholder />)
     );
   }
 );
@@ -129,4 +141,18 @@ const Wrapper: React.FC<WrapperProps> = () => {
   );
 };
 
-export default attach(AppContent, { Wrapper });
+type AppPlaceholderProps = {};
+
+const AppPlaceholder: React.FC<AppPlaceholderProps> = () => (
+  <div className="settings">
+    <Placeholder.Auto
+      block
+      width={170}
+      height={40}
+      style={{ marginBottom: "1rem" }}
+    />
+    <Placeholder.Auto block width={300} height={20} />
+  </div>
+);
+
+export default attach(AppContent, { Wrapper, Placeholder: AppPlaceholder });

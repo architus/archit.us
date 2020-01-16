@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleObject, MockMessageSet } from "Utility/types";
-import { isDefined, MockTyper, isNil } from "Utility";
+import { isDefined, MockTyper, isNil, isClient } from "Utility";
 import {
   DiscordMockDispatch,
   sendInvisibleMessage,
@@ -68,7 +68,7 @@ export default class InputController extends React.Component<
    */
   initializeTyperState(): TyperState {
     const { messageSets } = this.props;
-    if (isDefined(messageSets) && messageSets.length > 0) {
+    if (isClient && isDefined(messageSets) && messageSets.length > 0) {
       return {
         mode: "automatic",
         currentSet: 0,

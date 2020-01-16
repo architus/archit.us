@@ -496,7 +496,7 @@ export type TransformMessage = (
   message: MockMessage,
   sender: MockUser,
   context: DiscordMockContext,
-  customTransformer: TransformerStep
+  customTransformer?: TransformerStep
 ) => { result: string; mentions: string[] };
 
 export interface DiscordMockCommands {
