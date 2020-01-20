@@ -1,76 +1,123 @@
 import React, { useRef, useState, useMemo, useCallback } from "react";
-import PropTypes from "prop-types";
 import classNames from "classnames";
 import {
   isNil,
   isDefined,
-  useClientSide,
   useMediaBreakpoints,
-  useCallbackOnce
+  useCallbackOnce,
+  isArray
 } from "Utility";
-
-import Icon from "Components/Icon";
-import Tooltip from "Components/Tooltip";
-import HelpTooltip from "Components/HelpTooltip";
-import Switch from "Components/Switch";
-import Placeholder from "Components/Placeholder";
+import {
+  Icon,
+  Tooltip,
+  HelpTooltip,
+  Switch,
+  Placeholder,
+  AddRowModal
+} from "Components";
 import ReactDataGrid from "react-data-grid";
 import { Data } from "react-data-grid-addons";
-import AddRowModal from "Components/AddRowModal";
 
-import "./style.scss";
+type Column<D> = ReactDataGrid.Column<D> & {};
 
-function DataGrid({
+type EditorPosition = { rowIdx: number; idx: number };
+
+type SortDirection = "ASC" | "DESC" | "NONE";
+type SortMeta = { sortDirection: SortDirection; sortColumn: number };
+
+type CellAction =
+  | AdazzleReactDataGrid.ActionButton
+  | AdazzleReactDataGrid.ActionMenu;
+
+export type DataGridProps<
+  R extends Record<string, unknown>,
+  T extends Record<string, unknown> = R
+> = {
+  data: T[];
+  columns: Array<Column<T>>;
+  baseColumnMeta?: Partial<Column<T>>;
+  isLoading?: boolean;
+  loadingRowCount?: number;
+  emptyLabel?: string;
+  addRowButton?: boolean;
+  viewModeButton?: boolean;
+  dialogTitle?: string;
+  toolbarComponents?: React.ReactNode;
+  columnWidths?: Record<"base" | number, number[]>;
+
+  transformRow?: (row: R) => T;
+  canDeleteRow?: (row: T) => boolean;
+  getRowActions?: (
+    row: T
+  ) => (AdazzleReactDataGrid.ActionButton | AdazzleReactDataGrid.ActionMenu)[];
+
+  // TODO type onRowAdd and onRowUpdate
+  onRowAdd: () => void;
+  onRowUpdate: () => void;
+  onRowDelete?: (row: T) => void;
+};
+
+const DataGrid = <
+  R extends Record<string, unknown>,
+  T extends Record<string, unknown> = R
+>({
   data,
   columns,
-  baseColumnMeta,
+  baseColumnMeta = {},
+  isLoading = true,
+  loadingRowCount = 5,
+  emptyLabel = "No items to display",
+  addRowButton = false,
+  viewModeButton = true,
+  dialogTitle,
+  toolbarComponents = null,
+  columnWidths,
+
+  transformRow,
+  canDeleteRow,
+  getRowActions,
   onRowAdd,
   onRowUpdate,
-  onRowDelete,
-  isLoading,
-  loadingRowCount,
-  emptyLabel,
-  transformRow,
-  columnWidths,
-  addRowButton,
-  dialogTitle,
-  canDeleteRow,
-  toolbarComponents,
-  viewModeButton,
-  ...rest
-}) {
+  onRowDelete
+}: DataGridProps<R, T>): React.ReactNode => {
   // Escape hatch to access library methods imperatively
-  const dataGrid = useRef(null);
+  const dataGrid = useRef<ReactDataGrid<T>>(null);
 
   // Open the editor upon cell selection
-  const [lastEditedPos, setLastEditedPos] = useState({ rowIdx: -1, idx: -1 });
+  const [lastEditedPos, setLastEditedPos] = useState<EditorPosition>({
+    rowIdx: -1,
+    idx: -1
+  });
   const onCellSelected = useCallback(
-    ({ rowIdx, idx }) => {
-      dataGrid.current.openCellEditor(rowIdx, idx);
+    ({ rowIdx, idx }: EditorPosition) => {
+      dataGrid.current?.openCellEditor(rowIdx, idx);
       setLastEditedPos({ rowIdx, idx });
     },
     [dataGrid]
   );
+
   // Fix after-edit click
   const onRowClick = useCallback(
-    (newRowIdx, _rowData, column) => {
+    (newRowIdx: number, _: T, column: { idx: number }): void => {
       if (isNil(column)) return;
       const { idx, rowIdx } = lastEditedPos;
       if (newRowIdx === rowIdx && column.idx === idx) {
-        dataGrid.current.openCellEditor(newRowIdx, column.idx);
+        dataGrid.current?.openCellEditor(newRowIdx, column.idx);
       }
     },
     [lastEditedPos, dataGrid]
   );
 
   // Row sorting
-  const [sortMeta, setSortMeta] = useState({
+  const [sortMeta, setSortMeta] = useState<SortMeta>({
     sortColumn: 0,
     sortDirection: "NONE"
   });
-  const onGridSort = useCallbackOnce((sortColumn, sortDirection) => {
-    setSortMeta({ sortColumn, sortDirection });
-  });
+  const onGridSort = useCallbackOnce(
+    (sortColumn: number, sortDirection: SortDirection) => {
+      setSortMeta({ sortColumn, sortDirection });
+    }
+  );
   // Sorted view array
   const rows = useMemo(
     () => sortRows(data, sortMeta.sortColumn, sortMeta.sortDirection),
@@ -78,24 +125,39 @@ function DataGrid({
   );
 
   // Row deletion
-  const getCellActions = useCallback(
-    (column, row) =>
-      column.idx === columns.length - 1 && canDeleteRow(row)
-        ? [
+  const getCellActions: (
+    column: ReactDataGrid.Column<T> & { idx: number },
+    row: T
+  ) => CellAction[] = useCallback(
+    (column, row) => {
+      if (column.idx === columns.length - 1) {
+        let deleteRowAction: CellAction[] = [];
+        if (isDefined(canDeleteRow) && canDeleteRow(row)) {
+          deleteRowAction = [
             {
-              icon: <Icon name="times-circle" size="lg" noAutoWidth />,
-              callback: () => {
-                onRowDelete(row);
+              icon: ((
+                <Icon name="times-circle" size="lg" noAutoWidth />
+              ) as unknown) as string,
+              callback: (): void => {
+                if (isDefined(onRowDelete)) onRowDelete(row);
               }
             }
-          ]
-        : null,
-    [onRowDelete, canDeleteRow, columns.length]
+          ];
+        }
+        const rowActions = isDefined(getRowActions) ? getRowActions(row) : [];
+        return [...deleteRowAction, ...rowActions];
+      }
+
+      return [];
+    },
+    [onRowDelete, canDeleteRow, columns.length, getRowActions]
   );
 
   // Filtering
+  // TODO type
   const [filters, setFilters] = useState({});
-  const filteredRows = getRows(rows, filters);
+  let filteredRows = getRows(rows, filters);
+  if (!isArray(filteredRows)) filteredRows = [];
 
   // Empty display
   const EmptyDisplay = useCallback(
@@ -123,20 +185,25 @@ function DataGrid({
   );
 
   // Responsive column widths
+  const derivedColumnWidths = isDefined(columnWidths)
+    ? columnWidths
+    : {
+        base: columns.map(() => null)
+      };
   function getBreakpoints(columnWidthMap) {
     return Object.keys(columnWidthMap).filter(k => k !== "base");
   }
-  const breakpointArray = getBreakpoints(columnWidths);
+  const breakpointArray = getBreakpoints(derivedColumnWidths);
   const activeBreakpoint = useMediaBreakpoints(breakpointArray);
   const currentColumnWidths = isNil(activeBreakpoint)
-    ? columnWidths.base
-    : columnWidths[activeBreakpoint];
+    ? derivedColumnWidths.base
+    : derivedColumnWidths[activeBreakpoint];
 
   // Process column meta to add base info, column widths, and help text
   const columnMeta = columns.map((c, i) => {
     const withBase = { ...c, ...baseColumnMeta };
     if ("tooltip" in withBase) {
-      const tooltip = withBase.tooltip;
+      const { tooltip } = withBase;
       withBase.headerRenderer = (
         <HelpColumnWrapper
           renderer={withBase.headerRenderer}
@@ -186,13 +253,20 @@ function DataGrid({
       columnMeta.map(c => ({
         ...c,
         formatter: props => {
-          return (isLoadingRef.current
-            ? isDefined(c.placeholderFormatter)
-              ? c.placeholderFormatter
-              : PlaceholderFormatter
-            : c.formatter)(props);
+          if (isLoadingRef.current) {
+            if (isDefined(c.placeholderFormatter)) {
+              return c.placeholderFormatter(props);
+            }
+            return PlaceholderFormatter(props);
+          }
+          if (isDefined(c.formatter)) {
+            return c.formatter(props);
+          }
+          return isDefined(props.value) ? props.value.toString() : "";
         },
-        editable: !isLoading && c.editable
+        editable: !isLoading && c.editable,
+        filterable: !isLoading && c.filterable,
+        sortable: !isLoading && c.sortable
       })),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [isLoading, columnMeta]
@@ -203,6 +277,12 @@ function DataGrid({
   const updateViewMode = i => {
     setViewMode(i);
     setTimeout(() => {
+      if (
+        isNil(dataGrid.current) ||
+        isNil(dataGrid.current.base) ||
+        isNil(dataGrid.current.base.viewport)
+      )
+        return;
       dataGrid.current.base.viewport.metricsUpdated();
       dataGrid.current.base.viewport.onScroll(
         dataGrid.current.base.viewport.canvas._scroll
@@ -210,43 +290,43 @@ function DataGrid({
     });
   };
 
-  return useClientSide(
-    () => (
-      <>
-        <div className="table-outer">
-          <ReactDataGrid
-            ref={dataGrid}
-            columns={derivedColumns}
-            rowGetter={rowGetter}
-            rowsCount={isLoading ? loadingRowCount : filteredRows.length}
-            onGridRowsUpdated={handleRowUpdate}
-            onCellSelected={onCellSelected}
-            onRowClick={onRowClick}
-            enableCellSelect={true}
-            enableCellAutoFocus={false}
-            onGridSort={onGridSort}
-            onAddFilter={onAddFilter}
-            onClearFilters={onClearFilters}
-            rowHeight={[60, 45, 35][viewMode]}
-            headerFiltersHeight={55}
-            headerRowHeight={45}
-            rowRenderer={RowRenderer}
-            getCellActions={getCellActions}
-            enableRowSelect={null}
-            emptyRowsView={EmptyDisplay}
-            toolbar={
-              <ToolbarComponent
-                onAddRow={onAddRow}
-                addRowButton={addRowButton}
-                slot={toolbarComponents}
-                viewModeButton={viewModeButton}
-                setViewMode={updateViewMode}
-                viewMode={viewMode}
-              />
-            }
-            {...rest}
-          />
-        </div>
+  return (
+    <>
+      <div className="table-outer">
+        <ReactDataGrid
+          ref={dataGrid}
+          columns={derivedColumns}
+          rowGetter={rowGetter}
+          rowsCount={isLoading ? loadingRowCount : filteredRows.length}
+          onGridRowsUpdated={handleRowUpdate}
+          onCellSelected={onCellSelected}
+          onRowClick={onRowClick}
+          enableCellSelect={true}
+          enableCellAutoFocus={false}
+          onGridSort={onGridSort}
+          onAddFilter={onAddFilter}
+          onClearFilters={onClearFilters}
+          rowHeight={[60, 45, 35][viewMode]}
+          headerFiltersHeight={55}
+          headerRowHeight={45}
+          rowRenderer={RowRenderer}
+          getCellActions={getCellActions}
+          enableRowSelect={null}
+          emptyRowsView={EmptyDisplay}
+          toolbar={
+            <ToolbarComponent
+              onAddRow={onAddRow}
+              addRowButton={addRowButton}
+              slot={toolbarComponents}
+              viewModeButton={viewModeButton}
+              setViewMode={updateViewMode}
+              viewMode={viewMode}
+              isLoading={isLoading}
+            />
+          }
+        />
+      </div>
+      {addRowButton && (
         <AddRowModal
           show={showAddRowDialog}
           onHide={hideAddRowDialog}
@@ -255,49 +335,9 @@ function DataGrid({
           columns={columnMeta}
           data={filteredRows}
         />
-      </>
-    ),
-    null
+      )}
+    </>
   );
-}
-
-export default DataGrid;
-
-DataGrid.propTypes = {
-  onRowAdd: PropTypes.func,
-  onRowUpdate: PropTypes.func,
-  onRowDelete: PropTypes.func,
-  data: PropTypes.array.isRequired,
-  transformRow: PropTypes.func,
-  columns: PropTypes.arrayOf(PropTypes.object),
-  columnWidths: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.number)),
-  baseColumnMeta: PropTypes.object,
-  isLoading: PropTypes.bool,
-  emptyLabel: PropTypes.string,
-  addRowButton: PropTypes.bool,
-  dialogTitle: PropTypes.string,
-  canDeleteRow: PropTypes.func,
-  loadingRowCount: PropTypes.number,
-  viewModeButton: PropTypes.bool,
-  toolbarComponents: PropTypes.oneOfType([
-    PropTypes.node,
-    PropTypes.arrayOf(PropTypes.node)
-  ])
-};
-
-DataGrid.defaultProps = {
-  onRowAdd() {},
-  onRowUpdate() {},
-  onRowDelete() {},
-  canDeleteRow: () => true,
-  transformRow: r => r,
-  columns: [],
-  baseColumnMeta: {},
-  isLoading: false,
-  emptyLabel: "No items to display",
-  addRowButton: true,
-  loadingRowCount: 5,
-  viewModeButton: true
 };
 
 DataGrid.displayName = "DataGrid";
@@ -328,7 +368,8 @@ function ToolbarComponent({
   slot,
   viewModeButton,
   setViewMode,
-  viewMode
+  viewMode,
+  isLoading
 }) {
   // Filter show state
   const [show, setShow] = useState(false);
@@ -345,6 +386,7 @@ function ToolbarComponent({
             <Switch
               onChange={onChange}
               checked={show}
+              disabled={isLoading}
               label="Show Filters"
               className="mr-sm-3"
             />
@@ -361,17 +403,16 @@ function ToolbarComponent({
           {viewModeButton && (
             <div className="view-mode-toolbar">
               {viewModes.map(({ icon, name }, i) => (
-                <button
-                  className={classNames("view-mode-toolbar--button", {
-                    active: viewMode === i
-                  })}
-                  key={icon}
-                  onClick={() => setViewMode(i)}
-                >
-                  <Tooltip top text={name}>
+                <Tooltip top text={name} key={name}>
+                  <button
+                    className={classNames("view-mode-toolbar--button", {
+                      active: viewMode === i
+                    })}
+                    onClick={() => setViewMode(i)}
+                  >
                     <Icon name={icon} />
-                  </Tooltip>
-                </button>
+                  </button>
+                </Tooltip>
               ))}
             </div>
           )}
@@ -468,7 +509,7 @@ function handleFilterChange(newFilter) {
 }
 
 function generateFakeRow(columns, row_idx) {
-  let row = {};
+  const row = {};
   for (let i = 0; i < columns.length; ++i) {
     row[columns[i].key] = row_idx + i;
   }
@@ -479,19 +520,29 @@ function getRows(rows, filters) {
   return Data.Selectors.getRows({ rows, filters });
 }
 
-function compareStrings(a, b) {
+function compareStrings(a: string, b: string): number {
   return a.toLowerCase().trim() > b.toLowerCase().trim() ? 1 : -1;
 }
 
-function sortRows(rows, sortColumn, sortDirection) {
-  const innerComp =
-    isDefined(rows) &&
-    rows.length >= 1 &&
-    typeof rows[0][sortColumn] === "string"
-      ? compareStrings
-      : (a, b) => (a > b ? 1 : -1);
-  const comparer = (a, b) =>
-    innerComp(a[sortColumn], b[sortColumn]) *
-    (sortDirection === "ASC" ? 1 : -1);
-  return sortDirection === "NONE" ? rows : [...rows].sort(comparer);
+function sortRows<T extends Record<string, unknown>>(
+  rows: readonly T[],
+  sortColumn: number,
+  sortDirection: SortDirection
+): readonly T[] {
+  if (sortDirection === "NONE") return rows;
+  const sortModifier = sortDirection === "ASC" ? 1 : -1;
+  if (rows.length >= 1 && typeof rows[0][sortColumn] === "string") {
+    return [...rows].sort(
+      (a: T, b: T) =>
+        compareStrings(a[sortColumn] as string, b[sortColumn] as string) *
+        sortModifier
+    );
+  }
+
+  const comparator = (a: T, b: T): number =>
+    ((a[sortColumn] as number) > (b[sortColumn] as number) ? 1 : -1) *
+    sortModifier;
+  return [...rows].sort(comparator);
 }
+
+export default DataGrid;

@@ -186,6 +186,14 @@ export function toMap<K extends RecordKey, V>(obj: Record<K, V>): Map<K, V> {
 // ? ========================
 
 /**
+ * Determines whether some unknown instance is an array
+ * @param data - unknown data
+ */
+export function isArray(data: unknown): data is unknown[] {
+  return typeof data === "object" && isDefined(data) && Array.isArray(data);
+}
+
+/**
  * Searches for a value in a function that passes the given predicate function. Returns
  * true if at least one value passes the predicate function, else false
  * @param array - The array to search for the function result in

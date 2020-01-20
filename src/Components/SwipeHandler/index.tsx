@@ -76,13 +76,13 @@ class SwipeHandler extends React.Component<SwipeHandlerProps> {
 
   private swiper = React.createRef<HTMLElement>();
 
-  private mouseDown = false;
+  public mouseDown = false;
 
-  private moveStart: Position | null = null;
+  public moveStart: Position | null = null;
 
-  private movePosition: { deltaX: number; deltaY: number } | null = null;
+  public movePosition: { deltaX: number; deltaY: number } | null = null;
 
-  private moving = false;
+  public moving = false;
 
   componentDidMount(): void {
     if (this.swiper) {

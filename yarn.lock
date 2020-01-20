@@ -2092,6 +2092,13 @@
     "@types/history" "*"
     "@types/react" "*"
 
+"@types/react-data-grid@^4.0.5":
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/@types/react-data-grid/-/react-data-grid-4.0.5.tgz#183d1684057236dc6c44d577dcc4c43e5a70158c"
+  integrity sha512-TVJt6Ss60H9z9V2sgPTUrN39UM2YZ7Ij+NnK8E1OKC+3A60L9kEY+noK2G5wKpvVRy68RamGUkgAHYJg2M39lA==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-dom@^16.9.4":
   version "16.9.4"
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-16.9.4.tgz#0b58df09a60961dcb77f62d4f1832427513420df"
