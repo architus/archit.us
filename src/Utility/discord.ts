@@ -28,6 +28,10 @@ const MANAGE_SERVERS = 32; // 0x20
  * @param guild - Guild to eamine
  */
 export function isDiscordAdminWithoutArchitus(guild: Guild): boolean {
-  return isDefined(guild.permissions) && !!(guild.permissions & MANAGE_SERVERS) && !guild.has_architus;
+  return (
+    isDefined(guild.permissions) &&
+    // eslint-disable-next-line no-bitwise
+    !!(guild.permissions & MANAGE_SERVERS) &&
+    !guild.has_architus
+  );
 }
-

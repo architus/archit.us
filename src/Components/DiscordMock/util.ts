@@ -12,14 +12,12 @@ import {
   User,
   MockMessageClump,
   MockMessage,
-  SerializedMockReaction,
   MockReaction,
   Predicate,
   DiscordMockContext,
   TransformMessage,
   DiscordMockCommands
 } from "Utility/types";
-import { transformReaction } from "Components/DiscordMock/transform";
 import { getAvatarUrl } from "Components/UserDisplay";
 
 // ? ==========================
@@ -227,32 +225,6 @@ export function createClump(
     sender,
     messages: [message]
   };
-}
-
-/**
- * Parses a reaction from its network equivalent to the internal representation
- * @param reaction - Incoming network reaction
- */
-export function parseReaction(reaction: SerializedMockReaction): MockReaction {
-  return {
-    emoji: transformReaction(reaction[1]),
-    rawEmoji: reaction[1],
-    number: 1,
-    userHasReacted: false,
-    targetId: reaction[0]
-  };
-}
-
-/**
- * Converts a reaction to its network representation
- * @param messageId - Target message ID
- * @param reaction - Mock reaction object
- */
-export function serializeReaction(
-  messageId: number,
-  reaction: MockReaction
-): SerializedMockReaction {
-  return [messageId, reaction.rawEmoji];
 }
 
 /**

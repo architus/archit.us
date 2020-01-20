@@ -273,7 +273,6 @@ export function useSessionStatus(): {
 } {
   return useSelector(store => {
     if (isNil(store.session)) {
-      console.log("WHY IS THIS HAPPENING");
       return { isSignedIn: false, isSigningIn: false, state: "none" };
     }
     const {

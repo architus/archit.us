@@ -250,7 +250,7 @@ export class SomeType<A> extends Option<A> implements ValuedOption<A> {
   equals(other: Option<A>, compare?: (left: A, right: A) => boolean): boolean {
     if (!other.isDefined()) return false;
     if (isDefined(compare)) return compare(this._value, other._value);
-    else return this._value === other._value;
+    return this._value === other._value;
   }
 }
 

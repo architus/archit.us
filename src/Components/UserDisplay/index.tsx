@@ -8,7 +8,7 @@ import "./style.scss";
 
 /**
  * Constructs an avatar URL for a user from either a pre-made avatar URL,
- * @param options User specified by avatar URL, user, or default discriminator.
+ * @param options - User specified by avatar URL, user, or default discriminator.
  * Additionally, includes CDN image size
  */
 export function getAvatarUrl({

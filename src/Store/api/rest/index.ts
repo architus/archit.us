@@ -309,8 +309,8 @@ export function makeRoute<
             const error: DecodeError = {
               type: "decode",
               original: result.data,
-              message: `Errors ocurred while parsing server response: ${message.toString()}`,
-              error: errors
+              message: `Errors ocurred while parsing server response:`,
+              error: message.toString()
             };
             throw error;
           }

@@ -14,8 +14,14 @@ import {
 import sessionFlow from "Store/saga/session";
 import gatewayFlow from "Store/saga/gateway";
 import pools from "Store/saga/pools";
-import { interpretInvisible, interpretMessage } from "Store/slices/interpret";
+import {
+  interpretInvisible,
+  interpretMessage,
+  interpretReact,
+  interpretUnreact
+} from "Store/slices/interpret";
 import { mockUserEvent } from "Store/routes";
+import { LogEvents } from "Utility/types";
 
 /**
  * Root saga
@@ -59,6 +65,8 @@ function* handleSignOut(action: ReturnType<typeof signOut>): SagaIterator {
 function* interpret(): SagaIterator {
   yield takeEvery(interpretMessage.type, handleInterpretMessage);
   yield takeEvery(interpretInvisible.type, handleInterpretInvisble);
+  yield takeEvery(interpretReact.type, handleInterpretReact);
+  yield takeEvery(interpretUnreact.type, handleInterpretUnreact);
 }
 
 function* handleInterpretMessage(
@@ -67,10 +75,12 @@ function* handleInterpretMessage(
   const { context, message, id } = action.payload;
   yield put(
     mockUserEvent({
-      guild_id: context.guildId,
+      action: LogEvents.MessageSend,
+      guildId: context.guildId,
       content: message,
-      message_id: id,
-      allowed_commands: context.allowedCommands
+      messageId: id,
+      allowedCommands: context.allowedCommands || [],
+      silent: false
     })
   );
 }
@@ -81,11 +91,40 @@ function* handleInterpretInvisble(
   const { context, message, id } = action.payload;
   yield put(
     mockUserEvent({
-      guild_id: context.guildId,
+      action: LogEvents.MessageSend,
+      guildId: context.guildId,
+      messageId: id,
       content: message,
-      message_id: id,
-      allowed_commands: context.allowedCommands,
+      allowedCommands: context.allowedCommands || [],
       silent: true
+    })
+  );
+}
+
+function* handleInterpretReact(
+  action: ReturnType<typeof interpretReact>
+): SagaIterator {
+  const { context, reaction } = action.payload;
+  yield put(
+    mockUserEvent({
+      action: LogEvents.ReactionAdd,
+      guildId: context.guildId,
+      messageId: reaction.id,
+      emoji: reaction.reaction.rawEmoji
+    })
+  );
+}
+
+function* handleInterpretUnreact(
+  action: ReturnType<typeof interpretUnreact>
+): SagaIterator {
+  const { context, reaction } = action.payload;
+  yield put(
+    mockUserEvent({
+      action: LogEvents.ReactionRemove,
+      guildId: context.guildId,
+      messageId: reaction.id,
+      emoji: reaction.reaction.rawEmoji
     })
   );
 }

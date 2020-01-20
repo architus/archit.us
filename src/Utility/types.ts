@@ -445,10 +445,7 @@ export interface MockReaction {
   targetId: number;
 }
 
-/**
- * Represents [message id, raw emoji] tuple
- */
-export type SerializedMockReaction = [number, string];
+export type SerializedMockReaction = { emoji: string; targetsUser: boolean };
 
 export interface MockMessage {
   id: number;
@@ -505,10 +502,62 @@ export interface DiscordMockCommands {
 }
 
 /**
- * Common error contents with message and optional more detailed object
- * object/string
+ * Common error contents with human-readable message and optional more detailed
+ * technical error string
  */
 export type ErrorContents = {
-  readonly error?: object | string;
+  readonly error?: string;
   readonly message: string;
 };
+
+export enum LogEvents {
+  GuildUpdate = 1,
+  ChannelCreate = 10,
+  ChannelUpdate = 11,
+  ChannelDelete = 12,
+  ChannelOverwriteCreate = 13,
+  ChannelOverwriteUpdate = 14,
+  ChannelOverwriteDelete = 15,
+  MemberKick = 20,
+  MemberPrune = 21,
+  MemberBanAdd = 22,
+  MemberBanRemove = 23,
+  MemberUpdate = 24,
+  MemberRoleUpdate = 25,
+  MemberMove = 26,
+  MemberDisconnect = 27,
+  BotAdd = 28,
+  RoleCreate = 30,
+  RoleUpdate = 31,
+  RoleDelete = 32,
+  InviteCreate = 40,
+  InviteUpdate = 41,
+  InviteDelete = 42,
+  WebhookCreate = 50,
+  WebhookUpdate = 51,
+  WebhookDelete = 52,
+  EmojiCreate = 60,
+  EmojiUpdate = 61,
+  EmojiDelete = 62,
+  MessageDelete = 72,
+  MessageBulkDelete = 73,
+  MessagePin = 74,
+  MessageUnpin = 75,
+  IntegrationCreate = 80,
+  IntegrationUpdate = 81,
+  IntegrationDelete = 82,
+  MessageSend = 3001,
+  MessageEdit = 3002,
+  ReactionAdd = 3100,
+  ReactionRemove = 3101,
+  AutoResponseAdd = 3200,
+  AutoResponseRemove = 3201,
+  AutoResponseEdit = 3202,
+  AutoResponseTrigger = 3203,
+  LogRevert = 3300,
+  LogRollback = 3301,
+  EmojiManagerTrigger = 3400,
+  EmojiManagerCreate = 3401,
+  EmojiManagerDelete = 3402,
+  EmojiManagerExchange = 3403
+}

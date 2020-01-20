@@ -65,7 +65,7 @@ type ConditionalContainerProps = {
 const ConditionalContainer: React.FC<ConditionalContainerProps> = ({
   useContainer,
   children
-}) => (useContainer ? <Container children={children} /> : <>{children}</>);
+}) => (useContainer ? <Container>{children}</Container> : <>{children}</>);
 
 ConditionalContainer.displayName = "ConditionalContainer";
 

@@ -107,19 +107,17 @@ type PageRendererProps = {
 
 const PageRenderer: React.FC<PageRendererProps> = React.memo(
   ({ tabOption, guildOption }) => {
-    return (
-      Option.merge(tabOption, guildOption)
-        // eslint-disable-next-line react/jsx-key
-        .map(([tab, guild]) => {
-          const Component = tabs[tab].component;
-          return (
-            <ErrorBoundary onError={(e: Error): void => error(e)}>
-              <Component guild={guild} />
-            </ErrorBoundary>
-          );
-        })
-        .getOrElse(<AppPlaceholder />)
-    );
+    return Option.merge(tabOption, guildOption)
+      .map(([tab, guild]) => {
+        const Component = tabs[tab].component;
+        return (
+          // eslint-disable-next-line react/jsx-key
+          <ErrorBoundary onError={(e: Error): void => error(e)}>
+            <Component guild={guild} />
+          </ErrorBoundary>
+        );
+      })
+      .getOrElse(<AppPlaceholder />);
   }
 );
 

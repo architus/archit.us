@@ -8,13 +8,15 @@ import {
   MockMessageClump,
   MockUser,
   MockMessage,
-  MockReaction
+  MockReaction,
+  SerializedMockReaction,
+  LogEvents
 } from "Utility/types";
+import { transformReaction } from "Components/DiscordMock/transform";
 import {
   createClump,
   shouldMergeClumps,
   mergeClumps,
-  parseReaction,
   containingClumpIndex
 } from "Components/DiscordMock/util";
 import { isNil, isDefined, architusUser } from "Utility";
@@ -75,12 +77,10 @@ const slice = createSlice({
       action: PayloadAction<InterpretMessage>
     ): Interpret => {
       const {
-        payload: {
-          message,
-          id,
-          context: { guildId, thisUser }
-        }
-      } = action;
+        message,
+        id,
+        context: { guildId, thisUser }
+      } = action.payload;
 
       const newMessage = { content: message, id, edited: false, reactions: [] };
       addMessage(prev, guildId, newMessage, thisUser);
@@ -92,7 +92,15 @@ const slice = createSlice({
       prev: Interpret,
       action: PayloadAction<InterpretReaction>
     ): Interpret => {
-      // TODO implement
+      const { reaction, context } = action.payload;
+
+      addReactions(prev, context.guildId, reaction.id, [
+        {
+          emoji: reaction.reaction.rawEmoji,
+          rendered: reaction.reaction.emoji,
+          targetsUser: true
+        }
+      ]);
       return prev;
     },
 
@@ -100,7 +108,14 @@ const slice = createSlice({
       prev: Interpret,
       action: PayloadAction<InterpretReaction>
     ): Interpret => {
-      // TODO implement
+      const { reaction, context } = action.payload;
+
+      removeReactions(prev, context.guildId, reaction.id, [
+        {
+          emoji: reaction.reaction.rawEmoji,
+          targetsUser: true
+        }
+      ]);
       return prev;
     },
 
@@ -109,13 +124,11 @@ const slice = createSlice({
       action: PayloadAction<InterpretLocalMessage>
     ): Interpret => {
       const {
-        payload: {
-          message,
-          id,
-          sender,
-          context: { guildId }
-        }
-      } = action;
+        message,
+        id,
+        sender,
+        context: { guildId }
+      } = action.payload;
 
       const newMessage = { content: message, id, edited: false, reactions: [] };
       addMessage(prev, guildId, newMessage, sender);
@@ -128,11 +141,9 @@ const slice = createSlice({
       action: PayloadAction<InterpretLocalDelete>
     ): Interpret => {
       const {
-        payload: {
-          id,
-          context: { guildId }
-        }
-      } = action;
+        id,
+        context: { guildId }
+      } = action.payload;
 
       removeMessage(prev, guildId, id);
       sliceClumps(prev, guildId);
@@ -151,47 +162,37 @@ const slice = createSlice({
   extraReducers: {
     [gatewayEvent.type]: (state, action): Interpret => {
       if (mockBotEvent.match(action)) {
-        const {
-          payload: {
-            data: { guild_id, message_id, edit, content, added_reactions }
-          }
-        } = action;
+        const { actions, guildId } = action.payload.data;
+        for (const event of actions) {
+          const { messageId } = event;
 
-        if (isDefined(message_id)) {
-          if (isDefined(content) && !edit) {
-            // Message send
+          if (event.action === LogEvents.MessageSend) {
+            const { content } = event;
             addMessage(
               state,
-              guild_id,
-              {
-                content,
-                id: message_id,
-                reactions: isDefined(added_reactions)
-                  ? added_reactions.map(parseReaction)
-                  : [],
-                edited: false
-              },
+              guildId,
+              { content, id: messageId, reactions: [], edited: false },
               architusUser
             );
-          } else {
-            if (isDefined(content) && edit) {
-              // Message edit
-              editMessage(state, guild_id, message_id, content);
-            }
-
-            // Process reactions if not a new message
-            if (isDefined(added_reactions)) {
-              addReactions(
-                state,
-                guild_id,
-                message_id,
-                added_reactions.map(parseReaction)
-              );
-            }
+          } else if (event.action === LogEvents.MessageEdit) {
+            const { content } = event;
+            editMessage(state, guildId, messageId, content);
+          } else if (event.action === LogEvents.MessageDelete) {
+            removeMessage(state, guildId, messageId);
+          } else if (event.action === LogEvents.ReactionAdd) {
+            const { emoji } = event;
+            addReactions(state, guildId, messageId, [
+              { emoji, targetsUser: false }
+            ]);
+          } else if (event.action === LogEvents.ReactionRemove) {
+            const { emoji, targetsUser } = event;
+            removeReactions(state, guildId, messageId, [
+              { emoji, targetsUser }
+            ]);
           }
         }
 
-        sliceClumps(state, guild_id);
+        sliceClumps(state, guildId);
       }
       return state;
     }
@@ -222,23 +223,101 @@ function getMessage(
   return undefined;
 }
 
+type PrerenderedReaction = SerializedMockReaction & { rendered?: string };
+
 /**
  * Adds a list of reactions to a message
  * @param state - Current state (immer.js)
  * @param guildId - Guild id to add message to
  * @param id - Id of message to add reactions to
- * @param reactions - List of internal reaction objects
+ * @param reactions - List of network reaction objects
  */
 function addReactions(
   state: Interpret,
   guildId: number,
   id: number,
-  reactions: MockReaction[]
+  reactions: PrerenderedReaction[]
 ): void {
   const message = getMessage(state, guildId, id);
   if (isDefined(message)) {
-    message.reactions = [...message.reactions, ...reactions];
-    message.edited = true;
+    const emojiToReactionMap: Map<
+      PrerenderedReaction["emoji"],
+      PrerenderedReaction
+    > = new Map();
+    for (const reaction of reactions) {
+      emojiToReactionMap.set(reaction.emoji, reaction);
+    }
+
+    const newReactions: MockReaction[] = [];
+    for (const messageReaction of message.reactions) {
+      const { rawEmoji } = messageReaction;
+      const result = emojiToReactionMap.get(rawEmoji);
+      if (isDefined(result)) {
+        emojiToReactionMap.delete(rawEmoji);
+        const { targetsUser } = result;
+        if (targetsUser && !messageReaction.userHasReacted) {
+          messageReaction.userHasReacted = true;
+          messageReaction.number += 1;
+        } else if (!targetsUser) {
+          messageReaction.number += 1;
+        }
+      }
+    }
+
+    // Add all new reactions
+    emojiToReactionMap.forEach(({ emoji, rendered, targetsUser }) => {
+      newReactions.push({
+        emoji: isDefined(rendered) ? rendered : transformReaction(emoji),
+        number: 1,
+        userHasReacted: targetsUser,
+        rawEmoji: emoji,
+        targetId: id
+      });
+    });
+
+    message.reactions = [...message.reactions, ...newReactions];
+  }
+}
+
+/**
+ * Adds a list of reactions to a message
+ * @param state - Current state (immer.js)
+ * @param guildId - Guild id to add message to
+ * @param id - Id of message to add reactions to
+ * @param reactions - List of network reaction objects
+ */
+function removeReactions(
+  state: Interpret,
+  guildId: number,
+  id: number,
+  reactions: SerializedMockReaction[]
+): void {
+  const message = getMessage(state, guildId, id);
+  if (isDefined(message)) {
+    const emojiToReactionMap: Map<
+      SerializedMockReaction["emoji"],
+      SerializedMockReaction
+    > = new Map();
+    for (const reaction of reactions) {
+      emojiToReactionMap.set(reaction.emoji, reaction);
+    }
+
+    for (const messageReaction of message.reactions) {
+      const { rawEmoji } = messageReaction;
+      const result = emojiToReactionMap.get(rawEmoji);
+      if (isDefined(result)) {
+        emojiToReactionMap.delete(rawEmoji);
+        const { targetsUser } = result;
+        if (targetsUser && messageReaction.userHasReacted) {
+          messageReaction.userHasReacted = false;
+          messageReaction.number -= 1;
+        } else if (!targetsUser) {
+          messageReaction.number -= 1;
+        }
+      }
+    }
+
+    message.reactions = message.reactions.filter(r => r.number > 0);
   }
 }
 

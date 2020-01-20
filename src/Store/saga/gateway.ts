@@ -151,8 +151,8 @@ function createGatewayEventChannel(socket: Socket): EventChannel<AnyAction> {
                 event,
                 timestamp: performance.now(),
                 error: {
-                  message: `Errors ocurred while parsing server response: ${message.toString()}`,
-                  error: errors,
+                  message: `Errors ocurred while parsing server response`,
+                  error: message.toString(),
                   original: data
                 }
               })

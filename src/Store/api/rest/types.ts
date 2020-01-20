@@ -1,6 +1,5 @@
-import { ConditionalWrap, Omitted } from "Utility/types";
+import { ConditionalWrap, Omitted, ErrorContents } from "Utility/types";
 import { HttpVerbs } from "Utility";
-import { ErrorContents } from "Utility/types";
 import * as t from "io-ts";
 
 export type Errors = t.Errors;
@@ -159,5 +158,5 @@ export interface ApiRequest {
   method: HttpVerbs;
   data: Record<string, unknown>;
   headers: Record<string, string>;
-  auth: boolean
+  auth: boolean;
 }
