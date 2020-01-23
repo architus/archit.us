@@ -18,7 +18,6 @@ import { Modal, Button, Form } from "react-bootstrap";
 
 import "./style.scss";
 
-console.log(Modal);
 function AddRowModal({ data, show, columns, onHide, onAdd, title, ...rest }) {
   // Filter columns based on whether they should have a field
   const relevantColumns = useMemo(

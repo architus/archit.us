@@ -4,6 +4,8 @@ import { User } from "Utility/types";
 import "./style.scss";
 import { useCurrentUser } from "Store/actions";
 import { Option } from "Utility/option";
+import DataGrid from "Components/DataGrid";
+import { left } from "Utility/names.json";
 
 interface AutoResponse {}
 
@@ -22,14 +24,29 @@ class AutoResponses extends React.Component<
   AutoResponsesProps,
   AutoResponsesState
 > {
-  constructor(props: AutoResponsesProps) {
-    super(props);
-  }
-
   state: AutoResponsesState = {};
 
-  render(): React.ReactNode {
-    return null;
+  // eslint-disable-next-line class-methods-use-this
+  render() {
+    type Data = { index: number; name: string; upper: string; length: number };
+    const data: Data[] = left.map((name, index) => ({
+      name,
+      index,
+      upper: name.toUpperCase(),
+      length: name.length
+    }));
+    return (
+      <DataGrid
+        data={data}
+        rowKey="index"
+        columns={[
+          { key: "index", name: "Index" },
+          { key: "name", name: "Name" },
+          { key: "upper", name: "Upper" },
+          { key: "length", name: "Length" }
+        ]}
+      />
+    );
   }
 }
 

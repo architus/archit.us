@@ -4,7 +4,8 @@ import { withClientSide, error } from "Utility";
 import { StyleObject } from "Utility/types";
 import { Spinner } from "react-bootstrap";
 import ErrorBoundary from "Components/ErrorBoundary";
-import { DataGridProps } from "./DataGrid";
+import { DataGridProps, DataGridType } from "./DataGrid";
+import "react-data-grid/dist/react-data-grid.css";
 import "./style.scss";
 
 // Re-export filter
@@ -18,18 +19,26 @@ export { default as NumericFilter } from "./NumericFilter";
 
 const DataGridLoader = <
   R extends Record<string, unknown>,
-  T extends Record<string, unknown> = R
+  T extends Record<string, unknown> = R,
+  K extends keyof T = keyof T
 >(
-  props: DataGridProps<R, T> & { className?: string; style?: StyleObject }
-): React.ReactNode => (
-  <div className={classNames("data-grid", props.className)} style={props.style}>
-    <ErrorBoundary onError={(e: Error): void => error(e)}>
-      <Suspense fallback={<LoadingFallback />}>
-        <LazyLoadingWrapper {...props} />
-      </Suspense>
-    </ErrorBoundary>
-  </div>
-);
+  props: DataGridProps<R, T, K> & { className?: string; style?: StyleObject }
+): JSX.Element => {
+  const { style, className, ...rest } = props;
+  return (
+    <div className={classNames("data-grid", className)} style={style}>
+      <ErrorBoundary onError={(e: Error): void => error(e)}>
+        <Suspense fallback={<LoadingFallback />}>
+          <LazyLoadingWrapper
+            {...((rest as unknown) as React.ComponentProps<
+              typeof LazyLoadingWrapper
+            >)}
+          />
+        </Suspense>
+      </ErrorBoundary>
+    </div>
+  );
+};
 
 DataGridLoader.displayName = "DataGridLoader";
 
@@ -38,10 +47,13 @@ DataGridLoader.displayName = "DataGridLoader";
 // ? =================
 
 // Split bundle
-/* eslint-disable @typescript-eslint/no-explicit-any */
-const DataGrid = lazy(() => import("Components/DataGrid/DataGrid") as any);
-const lazyLoadingInner: React.FC<DataGridProps<any>> = p => <DataGrid {...p} />;
-/* eslint-enable @typescript-eslint/no-explicit-any */
+const DataGrid = lazy(
+  () =>
+    import("Components/DataGrid/DataGrid") as Promise<{
+      default: DataGridType;
+    }>
+);
+const lazyLoadingInner: React.FC<DataGridProps<{}>> = p => <DataGrid {...p} />;
 const LazyLoadingWrapper = withClientSide(lazyLoadingInner);
 LazyLoadingWrapper.displayName = "LazyLoadingWrapper";
 
