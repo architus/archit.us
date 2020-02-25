@@ -20,8 +20,6 @@
 // } from "react-data-grid";
 // import { Data } from "react-data-grid-addons";
 
-// type EditorPosition = { rowIdx: number; idx: number };
-
 // type SortDirection = "ASC" | "DESC" | "NONE";
 // type SortMeta = { sortDirection: SortDirection; sortColumn: number };
 
@@ -45,14 +43,32 @@
 // toolbarComponents?: React.ReactNode;
 // columnWidths?: Record<"base" | number, number[]>;
 
-import React from "react";
+import React, { useCallback } from "react";
 import Measure, { ContentRect } from "react-measure";
+// import { isNil } from "Utility";
 import ReactDataGrid, {
   Column as LibraryColumn,
-  DataGridHandle
+  DataGridHandle,
+  RowRendererProps,
+  Row,
+  Position,
+  CalculatedColumn
+  // RowRendererProps
 } from "react-data-grid";
 
 type Column<D> = LibraryColumn<D> & {};
+
+type CellActionBase = {
+  tooltip?: string;
+};
+
+type CustomCellAction = CellActionBase & { button: React.ReactNode };
+type StandardCellAction = CellActionBase & {
+  icon: React.ReactNode;
+  callback: () => void;
+};
+
+export type CellAction = CustomCellAction | StandardCellAction;
 
 export type DataGridProps<
   R extends Record<string, unknown>,
@@ -64,7 +80,9 @@ export type DataGridProps<
   columns: readonly Column<T>[];
   transformRow?: (row: R) => T;
   baseColumnMeta?: Partial<Column<T>>;
+  getActions?: (row: T) => CellAction[];
 
+  singleClickEdit?: boolean;
   isLoading?: boolean;
   loadingRowCount?: number;
   emptyLabel?: string;
@@ -81,22 +99,36 @@ export default class DataGrid<
   T extends Record<string, unknown> = R,
   K extends keyof T = keyof T
 > extends React.Component<DataGridProps<R, T, K>, DataGridState> {
+  static displayName = "DataGrid";
+
   private dataGrid = React.createRef<DataGridHandle>();
 
   state = { height: 0 };
 
-  static displayName = "DataGrid";
-
   getProps(): Required<DataGridProps<R, T, K>> {
     return {
+      singleClickEdit: true,
       isLoading: true,
       loadingRowCount: 5,
       emptyLabel: "No items to display",
       baseColumnMeta: {},
       transformRow: (r: R): T => r as T,
+      getActions: (): CellAction[] => [],
       ...this.props
     };
   }
+
+  onResize = (contentRect: ContentRect): void => {
+    this.setState({ height: contentRect.bounds?.height || 0 });
+  };
+
+  // onRowClick = (newRowIdx: number, _: T, column: { idx: number }): void => {
+  //   // if (isNil(column)) return;
+  //   // const { idx, rowIdx } = this.position;
+  //   // if (newRowIdx === rowIdx && column.idx === idx) {
+  //   this.dataGrid.current?.openCellEditor(newRowIdx, column.idx);
+  //   // }
+  // };
 
   renderEmptyRowsView: React.FC = () => {
     const { emptyLabel } = this.getProps();
@@ -107,23 +139,47 @@ export default class DataGrid<
     );
   };
 
-  onResize = (contentRect: ContentRect): void => {
-    this.setState({ height: contentRect.bounds?.height || 0 });
+  onRowClick = (rowIdx: number, _: T, column: CalculatedColumn<T>): void => {
+    const position: Position = { rowIdx, idx: column.idx };
+    this.dataGrid.current?.selectCell(position, true);
+  };
+
+  rowRenderer: React.FC<RowRendererProps<T>> = (props: RowRendererProps<T>) => {
+    const onRowClick = useCallback(
+      (rowIdx: number, row: T, column: CalculatedColumn<T>): void => {
+        props.onRowClick?.(rowIdx, row, column);
+        this.onRowClick(rowIdx, row, column);
+      },
+      [props.onRowClick]
+    );
+    const { getActions } = this.getProps();
+    const actions = getActions(props.row);
+    return (
+      <div className="row-wrapper">
+        <Row {...props} onRowClick={onRowClick} />
+        <ActionBar actions={actions} />
+      </div>
+    );
   };
 
   render(): React.ReactNode {
-    const { columns, data, rowKey } = this.getProps();
+    const { columns, baseColumnMeta, data, rowKey } = this.getProps();
+    const derivedColumns: Column<T>[] = columns.map(c => ({
+      ...c,
+      ...baseColumnMeta
+    }));
     return (
       <Measure bounds onResize={this.onResize}>
         {({ measureRef }): JSX.Element => (
-          <div className="table-outer" ref={measureRef}>
+          <div className="data-grid" ref={measureRef}>
             <ReactDataGrid<T, K>
               height={this.state.height}
-              columns={columns}
+              columns={derivedColumns}
               rows={data}
               rowKey={rowKey}
               ref={this.dataGrid}
               emptyRowsView={this.renderEmptyRowsView}
+              rowRenderer={this.rowRenderer}
             />
           </div>
         )}
@@ -131,6 +187,14 @@ export default class DataGrid<
     );
   }
 }
+
+type ActionBarProps = {
+  actions: CellAction[];
+};
+
+const ActionBar: React.FC<ActionBarProps> = ({ actions }) => (
+  <div className="action-bar"></div>
+);
 
 // const DataGrid = ({
 //   data,
@@ -161,31 +225,6 @@ export default class DataGrid<
 //     ),
 //     [emptyLabel]
 //   );
-
-//   // // Open the editor upon cell selection
-//   // const [lastEditedPos, setLastEditedPos] = useState<EditorPosition>({
-//   //   rowIdx: -1,
-//   //   idx: -1
-//   // });
-//   // const onCellSelected = useCallback(
-//   //   ({ rowIdx, idx }: EditorPosition) => {
-//   //     dataGrid.current?.openCellEditor(rowIdx, idx);
-//   //     setLastEditedPos({ rowIdx, idx });
-//   //   },
-//   //   [dataGrid]
-//   // );
-
-//   // // Fix after-edit click
-//   // const onRowClick = useCallback(
-//   //   (newRowIdx: number, _: T, column: { idx: number }): void => {
-//   //     if (isNil(column)) return;
-//   //     const { idx, rowIdx } = lastEditedPos;
-//   //     if (newRowIdx === rowIdx && column.idx === idx) {
-//   //       dataGrid.current?.openCellEditor(newRowIdx, column.idx);
-//   //     }
-//   //   },
-//   //   [lastEditedPos, dataGrid]
-//   // );
 
 //   // // Row sorting
 //   // const [sortMeta, setSortMeta] = useState<SortMeta>({

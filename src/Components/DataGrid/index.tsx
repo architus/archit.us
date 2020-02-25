@@ -26,7 +26,7 @@ const DataGridLoader = <
 ): JSX.Element => {
   const { style, className, ...rest } = props;
   return (
-    <div className={classNames("data-grid", className)} style={style}>
+    <div className={classNames("data-grid-outer", className)} style={style}>
       <ErrorBoundary onError={(e: Error): void => error(e)}>
         <Suspense fallback={<LoadingFallback />}>
           <LazyLoadingWrapper

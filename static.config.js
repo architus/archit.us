@@ -64,7 +64,8 @@ const config = {
   plugins: [
     require.resolve("react-static-plugin-reach-router"),
     require.resolve("react-static-plugin-sitemap"),
-    require.resolve("react-static-plugin-sass")
+    require.resolve("react-static-plugin-sass"),
+    require.resolve("react-static-plugin-emotion")
   ],
 
   Document: ({ Html, Head, Body, children }) => (

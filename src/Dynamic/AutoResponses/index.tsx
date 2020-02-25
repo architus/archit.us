@@ -7,6 +7,7 @@ import { Option } from "Utility/option";
 import DataGrid from "Components/DataGrid";
 import { left } from "Utility/names.json";
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface AutoResponse {}
 
 type AutoResponsesProps = {
@@ -27,7 +28,7 @@ class AutoResponses extends React.Component<
   state: AutoResponsesState = {};
 
   // eslint-disable-next-line class-methods-use-this
-  render() {
+  render(): React.ReactNode {
     type Data = { index: number; name: string; upper: string; length: number };
     const data: Data[] = left.map((name, index) => ({
       name,
@@ -39,11 +40,12 @@ class AutoResponses extends React.Component<
       <DataGrid
         data={data}
         rowKey="index"
+        baseColumnMeta={{ editable: true }}
         columns={[
-          { key: "index", name: "Index" },
-          { key: "name", name: "Name" },
-          { key: "upper", name: "Upper" },
-          { key: "length", name: "Length" }
+          { key: "index", name: "Index", width: 400 },
+          { key: "name", name: "Name", width: 600 },
+          { key: "upper", name: "Upper", width: 400 },
+          { key: "length", name: "Length", width: 600 }
         ]}
       />
     );
