@@ -9,7 +9,7 @@
 
 ## 🚀 Getting Started
 
-To use archit.us to manage the Architus bot on installed servers or add it to new ones, [connect with Discord](https://api.archit.us/login) to be redirected to the web dashboard, where you can view settings and add the bot to your servers.
+To use archit.us to manage the Architus bot on installed servers or add it to new ones, [connect with Discord](https://api.archit.us/session/login) to be redirected to the web dashboard, where you can view settings and add the bot to your servers.
 
 ### Setup
 

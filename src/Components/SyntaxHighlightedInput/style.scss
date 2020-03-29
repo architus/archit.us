@@ -1,0 +1,137 @@
+@import "scss/theme";
+@import "scss/fonts";
+
+.syntax-highlighted-input {
+    @extend %input-base;
+    font-family: $font-family-monospace;
+
+    &.is-invalid {
+        border-color: $-danger;
+
+        &:focus-within {
+            @include highlight-shadow($-danger);
+        }
+    }
+
+    &.is-valid {
+        border-color: $-success;
+
+        &:focus-within {
+            @include highlight-shadow($-success);
+        }
+    }
+
+    pre,
+    textarea {
+        @include light-fg;
+        @include dark-fg;
+        outline: none !important;
+    }
+
+    &:focus-within {
+        @include highlight-shadow($-primary);
+    }
+
+    @include light {
+        ::selection {
+            background: rgba($light-text-selection, 0.7) !important;
+        }
+    }
+
+    @include dark {
+        ::selection {
+            background: rgba($dark-500, 0.99);
+        }
+    }
+
+    span {
+        font-weight: normal !important;
+    }
+
+    .token-0 {
+        @extend %token-0;
+    }
+    .token-1 {
+        @extend %token-1;
+    }
+    .token-2 {
+        @extend %token-2;
+    }
+    .token-3 {
+        @extend %token-3;
+    }
+    .token-4 {
+        @extend %token-4;
+    }
+    .token-5 {
+        @extend %token-5;
+    }
+
+    .token.comment,
+    .token.prolog,
+    .token.doctype,
+    .token.cdata {
+        @include light-fg(rgba($-dark, 0.5));
+        @include dark-fg(rgba($-light, 0.35));
+    }
+
+    .token.punctuation {
+        @include light-fg(rgba($-dark, 0.7));
+        @include dark-fg(rgba($-light, 0.7));
+    }
+
+    .token.selector,
+    .token.tag {
+        @extend %token-4;
+    }
+
+    .token.property,
+    .token.boolean,
+    .token.number,
+    .token.constant,
+    .token.symbol,
+    .token.attr-name,
+    .token.deleted {
+        @extend %token-2;
+    }
+
+    .token.string,
+    .token.char,
+    .token.attr-value,
+    .token.builtin,
+    .token.inserted {
+        @extend %token-0;
+    }
+
+    .token.operator,
+    .token.entity,
+    .token.url,
+    .language-css .token.string,
+    .style .token.string {
+        @extend %token-1;
+    }
+
+    .token.atrule,
+    .token.keyword {
+        @extend %token-5;
+    }
+
+    .token.function {
+        @extend %token-3;
+    }
+
+    .token.regex,
+    .token.important,
+    .token.variable {
+        @extend %token-5;
+    }
+
+    .token.important,
+    .token.bold {
+        font-weight: bold;
+    }
+
+    .token.italic {
+        font-style: italic;
+    }
+}

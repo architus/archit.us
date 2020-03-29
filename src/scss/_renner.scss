@@ -1,0 +1,33 @@
+/* ? Web font license file: /font/renner/license.txt */
+
+$font-name: "Renner*";
+$font-display: swap;
+$base-path: "/font/renner/";
+
+@mixin renner-font-face($weight-text, $weight) {
+    @font-face {
+        font-family: $font-name;
+        font-display: $font-display;
+        src: url("#{$base-path}renner-#{$weight-text}-webfont.woff2")
+                format("woff2"),
+            url("#{$base-path}renner-#{$weight-text}-webfont.woff")
+                format("woff");
+        font-weight: $weight;
+        font-style: normal;
+    }
+    @font-face {
+        font-family: $font-name;
+        font-display: $font-display;
+        src: url("#{$base-path}renner-#{$weight-text}italic-webfont.woff2")
+                format("woff2"),
+            url("#{$base-path}renner-#{$weight-text}italic-webfont.woff")
+                format("woff");
+        font-weight: $weight;
+        font-style: italic;
+    }
+}
+
+@include renner-font-face("light", 300);
+@include renner-font-face("book", 400);
+@include renner-font-face("medium", 500);
+@include renner-font-face("bold", 700);

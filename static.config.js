@@ -1,96 +1,103 @@
 /* eslint-disable react/prop-types */
 import React from "react";
 import axios from "axios";
+import path from "path";
+import fs from "fs";
+import SoureMapSupport from "source-map-support";
 
-export default Object.assign(
-  {},
-  {
-    getRoutes: async () => {
-      const {
-        data: { guild_count, user_count }
-      } = await axios.get("https://api.archit.us/guild_count");
+const TypeScript = require("ts-node");
 
-      return [
-        {
-          path: "/",
-          template: "src/pages/Index",
-          getData: async () => ({
-            guild_count,
-            user_count
-          })
-        },
-        {
-          path: "login",
-          template: "src/pages/Login"
-        },
-        {
-          path: "404",
-          template: "src/pages/NotFound"
-        },
-        {
-          path: "app",
-          template: "src/dynamic/AppRoot"
-        }
-      ];
-    },
-
-    plugins: [
-      require.resolve("react-static-plugin-reach-router"),
-      require.resolve("react-static-plugin-sitemap"),
-      require.resolve("react-static-plugin-sass")
-    ],
-
-    Document: ({ Html, Head, Body, children }) => (
-      <Html lang="en-US">
-        <Head>
-          <meta charSet="UTF-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-        </Head>
-        <Body className="dark-mode">{children}</Body>
-        <script
-          // Dark mode anti-flash script
-          dangerouslySetInnerHTML={{
-            __html: `(function() {
-  // Change these if you use something different in your hook.
-  var storageKey = 'darkMode';
-  var classNameDark = 'dark-mode';
-  var classNameLight = 'light-mode';
-
-  function setClassOnDocumentBody(darkMode) {
-    document.body.classList.add(darkMode ? classNameDark : classNameLight);
-    document.body.classList.remove(darkMode ? classNameLight : classNameDark);
+// Bootstrap TypeScript
+SoureMapSupport.install();
+TypeScript.register({
+  files: true,
+  isolatedModules: false,
+  compilerOptions: {
+    module: "commonjs",
+    target: "es2019"
   }
+});
 
-  var preferDarkQuery = '(prefers-color-scheme: dark)';
-  var mql = window.matchMedia(preferDarkQuery);
-  var supportsColorSchemeQuery = mql.media === preferDarkQuery;
-  var localStorageTheme = null;
-  try {
-    localStorageTheme = localStorage.getItem(storageKey);
-  } catch (err) {}
-  var localStorageExists = localStorageTheme !== null;
-  if (localStorageExists) {
-    localStorageTheme = JSON.parse(localStorageTheme);
-  }
+const { API_BASE } = require("./src/Utility/api.node");
 
-  // Determine the source of truth
-  if (localStorageExists) {
-    // source of truth from localStorage
-    setClassOnDocumentBody(localStorageTheme);
-  } else if (supportsColorSchemeQuery) {
-    // source of truth from system
-    setClassOnDocumentBody(mql.matches);
-    localStorage.setItem(storageKey, mql.matches);
-  } else {
-    // source of truth from document.body
-    var isDarkMode = document.body.classList.contains(classNameDark);
-    localStorage.setItem(storageKey, JSON.stringify(isDarkMode));
-  }
-})();`
-          }}
-        />
-      </Html>
-    )
+const noFlashPath = path.resolve(__dirname, "./src/Build/no-flash.js");
+const noFlashScript = fs.readFileSync(noFlashPath);
+const config = {
+  entry: path.join(__dirname, "src", "index.tsx"),
+  getRoutes: async () => {
+    // Load usage count from API
+    let guildCount = 0;
+    let userCount = 0;
+    try {
+      const result = await axios.get(`${API_BASE}/guild-count`);
+      guildCount = result.data.guildCount;
+      userCount = result.data.userCount;
+    } catch (e) {
+      console.log("An error ocurred while fetching usage count");
+      console.log(e.toString());
+    }
+
+    return [
+      {
+        path: "/",
+        template: "src/Pages/Index",
+        getData: async () => ({
+          guildCount,
+          userCount
+        })
+      },
+      {
+        path: "login",
+        template: "src/Pages/Login"
+      },
+      {
+        path: "404",
+        template: "src/Pages/NotFound"
+      },
+      {
+        path: "app",
+        template: "src/Dynamic/AppRoot"
+      }
+    ];
   },
-  process.env.PRODUCTION_URL ? { siteRoot: process.env.PRODUCTION_URL } : {}
-);
+
+  plugins: [
+    require.resolve("react-static-plugin-reach-router"),
+    require.resolve("react-static-plugin-sitemap"),
+    require.resolve("react-static-plugin-sass"),
+    require.resolve("react-static-plugin-emotion")
+  ],
+
+  Document: ({ Html, Head, Body, children }) => (
+    <Html lang="en-US">
+      <Head>
+        <meta charSet="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Head>
+      <Body className="dark-mode">{children}</Body>
+      <script
+        // Dark mode anti-flash script
+        dangerouslySetInnerHTML={{
+          __html: noFlashScript
+        }}
+      />
+    </Html>
+  )
+};
+
+if (process.env.PRODUCTION_URL) {
+  config.siteRoot = process.env.PRODUCTION_URL;
+}
+
+// Configure typescript based on args
+const args = process.argv.slice(3);
+let typeCheck = true;
+if (args.includes("--no-type-check")) {
+  typeCheck = false;
+}
+config.plugins.push([
+  require.resolve("react-static-plugin-typescript"),
+  { typeCheck }
+]);
+
+export default config;

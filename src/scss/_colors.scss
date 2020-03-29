@@ -135,6 +135,8 @@ $discord-pre-border: #2b2c31;
 $osx-close: #ff5f56;
 $osx-minimize: #ffbd2e;
 $osx-fullscreen: #27c93f;
+// From Chrome on OSX
+$light-text-selection: #ACCEF7;
 
 // ? =======================
 // ? Dark/light theme mixins
@@ -170,4 +172,62 @@ $osx-fullscreen: #27c93f;
 
 @mixin light-border($color, $adjust: 0%, $border: 1px solid, $side: null) {
     @include theme-border(light, $color, $adjust, $border, $side);
+}
+
+// ? ==========================
+// ? Syntax highlighting tokens
+// ? ==========================
+
+// From One Light/One Dark themes
+$token-0-dark: #98c379;
+$token-0-light: #53a053;
+$token-1-dark: #56b6c2;
+$token-1-light: #1485ba;
+$token-2-dark: #d19a66;
+$token-2-light: #976715;
+$token-3-dark: #61afef;
+$token-3-light: #447bef;
+$token-4-dark: #e06c75;
+$token-4-light: #e2574e;
+$token-5-dark: #c678dd;
+$token-5-light: #a42ea2;
+
+%token-base {
+    font-weight: bold;
+}
+
+%token-0 {
+    @extend %token-base;
+    @include dark-fg($token-0-dark);
+    @include light-fg($token-0-light);
+}
+
+%token-1 {
+    @extend %token-base;
+    @include dark-fg($token-1-dark);
+    @include light-fg($token-1-light);
+}
+
+%token-2 {
+    @extend %token-base;
+    @include dark-fg($token-2-dark);
+    @include light-fg($token-2-light);
+}
+
+%token-3 {
+    @extend %token-base;
+    @include dark-fg($token-3-dark);
+    @include light-fg($token-3-light);
+}
+
+%token-4 {
+    @extend %token-base;
+    @include dark-fg($token-4-dark);
+    @include light-fg($token-4-light);
+}
+
+%token-5 {
+    @extend %token-base;
+    @include dark-fg($token-5-dark);
+    @include light-fg($token-5-light);
 }
