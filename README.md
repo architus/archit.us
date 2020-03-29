@@ -1,6 +1,6 @@
 # [![architus](https://i.imgur.com/vcZzSQC.png)](https://archit.us)
 
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Farchitus%2Farchit.us.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Farchitus%2Farchit.us?ref=badge_shield) [![Build Status](https://travis-ci.org/architus/archit.us.svg?branch=master)](https://travis-ci.org/architus/archit.us) [![Website Uptime](https://img.shields.io/uptimerobot/ratio/7/m782992402-55108abd64186f416df0be18.svg?label=website%20uptime)](https://status.archit.us/) [![API Uptime](https://img.shields.io/uptimerobot/ratio/7/m782992399-3443671051db8aeaecfe7434.svg?label=API%20uptime)](https://status.archit.us/) [![Netlify Status](https://api.netlify.com/api/v1/badges/bbdc33fe-8cac-4466-beaa-97ea193d92f9/deploy-status)](https://app.netlify.com/sites/architus/deploys) [![Storybook](https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg)](https://storybook.archit.us) [![Discord Server](https://img.shields.io/discord/607637793107345431?color=7289DA&logo=discord&logoColor=white)](https://discord.gg/FpyhED)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Farchitus%2Farchit.us.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Farchitus%2Farchit.us?ref=badge_shield) [![Build Status](https://travis-ci.org/architus/archit.us.svg?branch=master)](https://travis-ci.org/architus/archit.us) [![Website Uptime](https://img.shields.io/uptimerobot/ratio/7/m782992402-55108abd64186f416df0be18.svg?label=website%20uptime)](https://status.archit.us/) [![API Uptime](https://img.shields.io/uptimerobot/ratio/7/m782992399-3443671051db8aeaecfe7434.svg?label=API%20uptime)](https://status.archit.us/) [![Netlify Status](https://api.netlify.com/api/v1/badges/bbdc33fe-8cac-4466-beaa-97ea193d92f9/deploy-status)](https://app.netlify.com/sites/architus/deploys) [![Storybook](https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg)](https://storybook.archit.us) [![Discord Server](https://img.shields.io/discord/607637793107345431?color=7289DA&logo=discord&logoColor=white)](https://discord.gg/FpyhED) [![Codacity](https://api.codacy.com/project/badge/Grade/ca99ce2723ff40739a64fb87a2b17ade)](https://www.codacy.com/app/jazevedo620/archit.us?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=architus/archit.us&amp;utm_campaign=Badge_Grade)
 
 > Archit.us provides a web dashboard server administrators and members can use to modify settings, view statistics and logs, and manage custom emoji and auto-responses
 <br/>
@@ -61,6 +61,7 @@ This project uses a variety of useful tooling to help preview, manage, and deplo
 - [TravisCI](https://travis-ci.org/) - Used to automatically run the linter on ever PR
 - [FOSSA](https://fossa.com/) - Used to scan dependencies and perform license compliance
 - [UptimeRobot](uptimerobot.com) - Used to track uptime and notify upon outage for [the websites and the API](https://status.archit.us/)
+- [Codacy](https://www.codacy.com/) - Used to analyze code quality and track regressions
 
 ## 📜 License
 
