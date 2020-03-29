@@ -49,7 +49,7 @@ function mockMentions(string) {
 }
 
 const triggerTokens = [{ token: "*", className: "token-capture source" }];
-const triggerPipeline = makeTransformer([
+export const triggerPipeline = makeTransformer([
   escapeHtml,
   mockEmoji,
   convertRawDiscordEmoji,
