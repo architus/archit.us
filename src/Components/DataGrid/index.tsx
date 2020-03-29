@@ -4,8 +4,6 @@ import { withClientSide, error } from "Utility";
 import { StyleObject } from "Utility/types";
 import { Spinner } from "react-bootstrap";
 import ErrorBoundary from "Components/ErrorBoundary";
-import { DataGridProps, DataGridType } from "./DataGrid";
-import "react-data-grid/dist/react-data-grid.css";
 import "./style.scss";
 
 // Re-export filter
@@ -17,6 +15,39 @@ export { default as NumericFilter } from "./NumericFilter";
 // - react-data-grid
 // - react-data-grid-addons
 
+// Temporarily located here until DataGrid.js is migrated to TS
+type DataGridProps<
+  R extends Record<string, unknown>,
+  T extends Record<string, unknown> = R,
+  K extends keyof T = keyof T
+> = {
+  data: readonly R[];
+  transformRow?: (row: R) => T;
+  emptyLabel?: string;
+  columns: readonly Column<T>[];
+  baseColumnMeta?: Partial<Column<T>>;
+  getRowActions?: (row: T) => CellAction[];
+  isLoading?: boolean;
+  loadingRowCount?: number;
+  toolbarComponents?: React.ReactNode;
+  viewModeButton?: React.ReactNode;
+  singleClickEdit?: boolean;
+  dialogTitle?: string;
+  columnWidths?: Map<string, (number | null)[]>;
+  sortColumn?: K;
+
+  onRowAdd: Function;
+  onRowUpdate: Function;
+  onRowDelete: Function;
+  addRowButton?: Function;
+  canDeleteRow: Function;
+  onScroll: Function;
+};
+
+type CellAction = object;
+type Column<D extends Record<string, unknown>> = object;
+type DataGridType = React.ComponentType<DataGridProps<Record<string, unknown>>>;
+
 const DataGridLoader = <
   R extends Record<string, unknown>,
   T extends Record<string, unknown> = R,
@@ -26,7 +57,7 @@ const DataGridLoader = <
 ): JSX.Element => {
   const { style, className, ...rest } = props;
   return (
-    <div className={classNames("data-grid", className)} style={style}>
+    <div className={classNames("data-grid-outer", className)} style={style}>
       <ErrorBoundary onError={(e: Error): void => error(e)}>
         <Suspense fallback={<LoadingFallback />}>
           <LazyLoadingWrapper
@@ -49,7 +80,7 @@ DataGridLoader.displayName = "DataGridLoader";
 // Split bundle
 const DataGrid = lazy(
   () =>
-    import("Components/DataGrid/DataGrid") as Promise<{
+    (import("Components/DataGrid/DataGrid") as unknown) as Promise<{
       default: DataGridType;
     }>
 );
