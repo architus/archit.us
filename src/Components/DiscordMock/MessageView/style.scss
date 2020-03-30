@@ -1,0 +1,21 @@
+@import "scss/theme";
+@import "scss/util";
+
+.discord-messages {
+    overflow-y: auto;
+    overflow-x: hidden;
+    color: inherit;
+    margin-right: 12px;
+    @include discord-scrollbar(
+        $discord-bg,
+        $discord-scroll-thumb,
+        $discord-scroll-track
+    );
+
+    .inner {
+        padding: {
+            right: 0.75rem;
+            top: 16px;
+        }
+    }
+}

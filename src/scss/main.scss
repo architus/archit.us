@@ -1,6 +1,7 @@
 @import "./colors";
 @import "./fonts";
 @import "./theme";
+@import "./media";
 
 // Bootstrap config options
 $enable-rounded: true !default;
@@ -33,6 +34,22 @@ $link-hover-decoration: none !default;
 @import "./bootstrap";
 @import "node_modules/bootstrap/scss/mixins/buttons";
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+    letter-spacing: $headings-letter-spacing;
+    margin-bottom: $headings-margin-bottom;
+}
+
 * {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -46,7 +63,7 @@ hr {
     @include button-variant($discord, lighten($discord, 5%));
 }
 
-.card {
+.border-card {
     background-color: rgba(white, 0.75);
     padding: 2rem;
     border-radius: $border-radius;
@@ -81,18 +98,105 @@ main > div[role="group"] {
 }
 
 :not(pre) > code {
-    color: darken($aqua-forest, 10%);
+    color: $-primary;
     display: inline-block;
-    background-color: white;
-    padding: 0.1em 0.35em 0.05em;
+    background-color: #f6f8f9;
     border-radius: 4px;
-    border: 1px solid darken($-light, 10%);
-}
-
-.tooltip {
-    z-index: 1090;
+    border: 1px solid #1b273333;
+    padding: 0.1em 0.35em 0.05em;
+    font-size: 87.5%;
 }
 
 .modal-backdrop.show {
     opacity: 0.65 !important;
 }
+
+.modal {
+    .modal-content {
+        $modal-border-radius: 0.6rem;
+        $border-color-dark: rgba($-light, 0.2);
+
+        border-radius: $modal-border-radius;
+        box-shadow: none;
+
+        @include light-bg;
+        @include dark-bg;
+        @include light-fg;
+        @include dark-fg;
+
+        .modal-header {
+            padding-left: 2rem;
+            padding-right: 2rem;
+            padding-top: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-top-right-radius: $modal-border-radius;
+            border-top-left-radius: $modal-border-radius;
+            @include dark-border($border-color-dark, $side: bottom);
+        }
+
+        .modal-body {
+            @extend %custom-scrollbar;
+        }
+
+        .modal-footer {
+            padding: 1.4rem;
+            border-bottom-right-radius: $modal-border-radius;
+            border-bottom-left-radius: $modal-border-radius;
+            @include dark-border($border-color-dark, $side: top);
+        }
+
+        .close {
+            @include dark {
+                @extend %close-dark;
+            }
+        }
+    }
+}
+
+.text-muted {
+    @include dark {
+        color: rgba($-light, 0.6) !important;
+    }
+}
+
+.badge {
+    font-weight: 400;
+    padding: 0.35em 0.6em 0.4em;
+    border-radius: 4px;
+    margin-left: 0.4em;
+    margin-top: 0.2em;
+}
+
+.form-control.is-valid,
+.form-control.is-invalid {
+    background-position: calc(100% - 8px) calc(0.375em + 0.1875rem);
+}
+
+input[type="text"] {
+    @extend %input-base;
+}
+
+.button-blank {
+    @extend %button-blank;
+}
+
+.theme-fg {
+    @include light-fg;
+    @include dark-fg;
+}
+
+.theme-bg {
+    @include light-bg;
+    @include dark-bg;
+}
+
+@mixin generate-color-classes($map, $prefix, $property) {
+    @each $name, $color in $map {
+        .#{$prefix}-#{$name} {
+            #{$property}: $color;
+        }
+    }
+}
+
+@include generate-color-classes(($dark-shades), bg, background-color);
+@include generate-color-classes(($light-shades), bg, background-color);

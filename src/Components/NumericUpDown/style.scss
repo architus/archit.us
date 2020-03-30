@@ -1,0 +1,122 @@
+@import "scss/colors";
+@import "scss/util";
+
+@mixin status-state($color) {
+    .btn-input-control {
+        border: 1px solid $color;
+
+        &:first-child {
+            border-right: none;
+        }
+
+        &:last-child {
+            border-left: none;
+        }
+
+        @include light {
+            background-color: rgba($color, 0.075);
+        }
+
+        @include dark {
+            background-color: rgba($color, 0.125);
+        }
+
+        &:focus {
+            @include highlight-shadow($color);
+
+            &:active {
+                @include highlight-active-shadow($color, $important: true);
+            }
+        }
+    }
+}
+
+.numeric-up-down {
+    .is-invalid + .input-group-append {
+        @include status-state($-danger);
+    }
+
+    .is-valid + .input-group-append {
+        @include status-state($-success);
+    }
+}
+
+.btn-input-control {
+    @include light {
+        background-color: rgba($dark-000, 0.075);
+        color: rgba($-dark, 0.7);
+        border-top: 1px solid #ced4da;
+        border-bottom: 1px solid #ced4da;
+
+        &:hover {
+            background-color: rgba($dark-000, 0.125);
+            color: rgba($-dark, 0.7);
+        }
+
+        &:active {
+            background-color: rgba($dark-000, 0.15);
+        }
+
+        &:focus {
+            @include highlight-shadow($-dark, 0.125);
+
+            &:active {
+                @include highlight-active-shadow(
+                    $-dark,
+                    0.125,
+                    $important: true
+                );
+            }
+        }
+    }
+
+    @include dark {
+        background-color: rgba($light-400, 0.05);
+        color: rgba($-light, 0.7);
+
+        &:hover {
+            background-color: rgba($light-400, 0.1);
+            color: rgba($-light, 0.7);
+        }
+
+        &:active {
+            background-color: rgba($light-400, 0.125);
+        }
+
+        &:focus {
+            @include highlight-shadow($-light, 0.125);
+
+            &:active {
+                @include highlight-active-shadow(
+                    $-light,
+                    0.125,
+                    $important: true
+                );
+            }
+        }
+    }
+
+    &:last-child {
+        margin-left: 0 !important;
+        position: relative;
+
+        @include light {
+            border-right: 1px solid #ced4da;
+
+            &::after {
+                background-color: $-dark;
+            }
+        }
+
+        &::after {
+            position: absolute;
+            content: " ";
+            top: 4px;
+            bottom: 4px;
+            left: -2px;
+            width: 2px;
+            opacity: 0.175;
+            background-color: $-light;
+        }
+    }
+}

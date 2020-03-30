@@ -1,0 +1,58 @@
+@import "scss/colors";
+
+.avatar {
+    .avatar-image {
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-color: rgba($-light, 0.15);
+
+        &.circle {
+            border-radius: 50%;
+        }
+    }
+}
+
+.user-display {
+    display: inline-block;
+
+    & > * {
+        vertical-align: middle;
+        display: inline-block;
+    }
+
+    %name {
+        white-space: nowrap;
+        overflow: hidden;
+        text-align: left;
+        line-height: 1;
+    }
+
+    .avatar {
+        margin-right: 0.6rem;
+
+        &.avatar-image,
+        .avatar-image {
+            box-shadow: 0 0 4px rgba(black, 0.3);
+        }
+    }
+
+    .username {
+        @extend %name;
+        line-height: 1.3;
+        margin-bottom: 0.3rem;
+    }
+
+    p.username {
+        margin-bottom: 0.2rem;
+    }
+
+    .discriminator {
+        @extend %name;
+        margin-bottom: 0;
+    }
+
+    p.discriminator {
+        opacity: 0.6;
+    }
+}

@@ -1,3 +1,5 @@
+@import "./colorfunctions";
+
 // B/W color ramp
 $white: #fff !default;
 $gray-100: #f8f9fa !default;
@@ -16,7 +18,7 @@ $porcelain: #f6f8f9 !default;
 $linh-blue: #6496c4 !default;
 $olivine: #cba15b !default;
 $tundora: #453e3e !default;
-$mine-shaft: #222020 !default;
+$mine-shaft: #202020 !default;
 $neptune: #73a3ba !default;
 $equator: #e3c75b !default;
 $aqua-forest: #5da161 !default;
@@ -58,6 +60,61 @@ $-danger: map-get($theme-colors, danger);
 $-light: map-get($theme-colors, light);
 $-dark: map-get($theme-colors, dark);
 
+// App color ramps
+$dark-000: color-adjust($-dark, -37%);
+$dark-100: color-adjust($-dark, -11%);
+$dark-200: color-adjust($-dark, 1.5%);
+$dark-300: color-adjust($-dark, 6%);
+$dark-400: color-adjust($-dark, 9%);
+$dark-500: color-adjust($-dark, 13%);
+
+$dark-050: blend($dark-000, $dark-100);
+$dark-150: blend($dark-100, $dark-200);
+$dark-250: blend($dark-200, $dark-300);
+$dark-350: blend($dark-300, $dark-400);
+$dark-450: blend($dark-400, $dark-500);
+
+$dark-shades: (
+    dark-000: $dark-000,
+    dark-050: $dark-050,
+    dark-100: $dark-100,
+    dark-150: $dark-150,
+    dark-200: $dark-200,
+    dark-250: $dark-250,
+    dark-300: $dark-300,
+    dark-350: $dark-350,
+    dark-400: $dark-400,
+    dark-450: $dark-450,
+    dark-500: $dark-500
+);
+
+$light-000: color-adjust($-light, -35%);
+$light-100: color-adjust($-light, -25%);
+$light-200: color-adjust($-light, -15%);
+$light-300: color-adjust($-light, -5%);
+$light-400: color-adjust($-light, 0%);
+$light-500: white;
+
+$light-050: blend($light-000, $light-100);
+$light-150: blend($light-100, $light-200);
+$light-250: blend($light-200, $light-300);
+$light-350: blend($light-300, $light-400);
+$light-450: blend($light-400, $light-500);
+
+$light-shades: (
+    light-000: $light-000,
+    light-050: $light-050,
+    light-100: $light-100,
+    light-150: $light-150,
+    light-200: $light-200,
+    light-250: $light-250,
+    light-300: $light-300,
+    light-350: $light-350,
+    light-400: $light-400,
+    light-450: $light-450,
+    light-500: $light-500
+);
+
 // Additional colors
 $discord: #7289da;
 $discord-bg: #36393f;
@@ -78,114 +135,18 @@ $discord-pre-border: #2b2c31;
 $osx-close: #ff5f56;
 $osx-minimize: #ffbd2e;
 $osx-fullscreen: #27c93f;
-
-@function color-adjust($color, $adjust: 0%) {
-    @if $adjust == 0% {
-        @return $color;
-    } @else {
-        @return scale-color($color, $lightness: $adjust);
-    }
-}
-
-@function blend($color1, $color2, $mu: 0.5) {
-    $c1R: red($color1);
-    $c1G: green($color1);
-    $c1B: blue($color1);
-    $c1A: alpha($color1);
-
-    $c2R: red($color2);
-    $c2G: green($color2);
-    $c2B: blue($color2);
-    $c2A: alpha($color2);
-
-    $muMinus: (1 - $mu);
-    $r: ($c1R * $muMinus) + ($c2R * $mu);
-    $g: ($c1G * $muMinus) + ($c2G * $mu);
-    $b: ($c1B * $muMinus) + ($c2B * $mu);
-    $a: ($c1A * $muMinus) + ($c2A * $mu);
-
-    @return rgba($r, $g, $b, $a);
-}
+// From Chrome on OSX
+$light-text-selection: #ACCEF7;
 
 // ? =======================
 // ? Dark/light theme mixins
 // ? =======================
 
-@mixin theme-transitions($properties) {
-    transition-duration: 0.25s;
-    transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
-    transition-property: unquote($properties);
-}
-
-@mixin theme-property($property, $value, $theme) {
-    .#{$theme}-mode & {
-        #{$property}: $value;
-    }
-}
-
-@mixin light($property: null, $value: null) {
-    @if $property == null {
-        .light-mode & {
-            @content;
-        }
-    } @else {
-        .light-mode & {
-            #{$property}: $value;
-        }
-    }
-}
-
-@mixin dark($property: null, $value: null) {
-    @if $property == null {
-        .dark-mode & {
-            @content;
-        }
-    } @else {
-        .dark-mode & {
-            #{$property}: $value;
-        }
-    }
-}
-
-@mixin theme-bg($theme, $color, $adjust: 0%) {
-    @include theme-property(
-        background-color,
-        color-adjust($color, $adjust),
-        $theme
-    );
-}
-
-@mixin theme-fg($theme, $color, $adjust: 0%) {
-    @include theme-property(color, color-adjust($color, $adjust), $theme);
-}
-
-@mixin theme-border(
-    $theme,
-    $color,
-    $adjust: 0%,
-    $border: 1px solid,
-    $side: null
-) {
-    @if $side == null {
-        @include theme-property(
-            border,
-            $border color-adjust($color, $adjust),
-            $theme
-        );
-    } @else {
-        @include theme-property(
-            border-#{$side},
-            $border color-adjust($color, $adjust),
-            $theme
-        );
-    }
-}
-
-@mixin dark-bg($color: color-adjust($-dark, 7.5%), $adjust: 0%) {
+@mixin dark-bg($color: $dark-300, $adjust: 0%) {
     @include theme-bg(dark, $color, $adjust);
 }
 
-@mixin light-bg($color: $-light, $adjust: 0%) {
+@mixin light-bg($color: $light-400, $adjust: 0%) {
     @include theme-bg(light, $color, $adjust);
 }
 
@@ -211,4 +172,62 @@ $osx-fullscreen: #27c93f;
 
 @mixin light-border($color, $adjust: 0%, $border: 1px solid, $side: null) {
     @include theme-border(light, $color, $adjust, $border, $side);
+}
+
+// ? ==========================
+// ? Syntax highlighting tokens
+// ? ==========================
+
+// From One Light/One Dark themes
+$token-0-dark: #98c379;
+$token-0-light: #53a053;
+$token-1-dark: #56b6c2;
+$token-1-light: #1485ba;
+$token-2-dark: #d19a66;
+$token-2-light: #976715;
+$token-3-dark: #61afef;
+$token-3-light: #447bef;
+$token-4-dark: #e06c75;
+$token-4-light: #e2574e;
+$token-5-dark: #c678dd;
+$token-5-light: #a42ea2;
+
+%token-base {
+    font-weight: bold;
+}
+
+%token-0 {
+    @extend %token-base;
+    @include dark-fg($token-0-dark);
+    @include light-fg($token-0-light);
+}
+
+%token-1 {
+    @extend %token-base;
+    @include dark-fg($token-1-dark);
+    @include light-fg($token-1-light);
+}
+
+%token-2 {
+    @extend %token-base;
+    @include dark-fg($token-2-dark);
+    @include light-fg($token-2-light);
+}
+
+%token-3 {
+    @extend %token-base;
+    @include dark-fg($token-3-dark);
+    @include light-fg($token-3-light);
+}
+
+%token-4 {
+    @extend %token-base;
+    @include dark-fg($token-4-dark);
+    @include light-fg($token-4-light);
+}
+
+%token-5 {
+    @extend %token-base;
+    @include dark-fg($token-5-dark);
+    @include light-fg($token-5-light);
 }

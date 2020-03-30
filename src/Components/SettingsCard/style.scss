@@ -1,0 +1,43 @@
+@import "scss/media";
+
+@mixin card-width($width: 5) {
+    @include respond-above(md) {
+        flex-grow: $width;
+        flex-basis: min(100% * ($width / 10), 100%);
+    }
+
+    @media (min-width: 1700px) {
+        $size: min(100% * ($width / 20), 100%);
+        flex-basis: $size;
+        max-width: $size;
+    }
+
+    @include respond-below(md) {
+        width: 100%;
+    }
+}
+
+.settings-card {
+    position: relative;
+    min-height: 1px;
+
+    @for $i from 1 through 10 {
+        &.width-#{$i} {
+            @include card-width($i);
+        }
+    }
+
+    &--table {
+        width: 100%;
+    }
+
+    .card_--body {
+        padding-right: 1rem;
+        padding-bottom: 0.7rem;
+        padding-top: 1.05rem;
+    }
+
+    .card_ {
+        height: 100%;
+    }
+}

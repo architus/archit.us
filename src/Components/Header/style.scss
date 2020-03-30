@@ -1,0 +1,84 @@
+@import "scss/colors";
+@import "scss/theme";
+@import "scss/media";
+@import "scss/util";
+
+.navbar {
+    padding: {
+        top: 0.75rem;
+        bottom: 0.85rem;
+    }
+    box-shadow: $drop-shadow;
+    background-image: linear-gradient($-primary, $-primary);
+    @include theme-property(
+        background-image,
+        linear-gradient($-primary, color-adjust($-primary, -2.5%)),
+        dark
+    );
+
+    @include respond-above(sm) {
+        height: 68px;
+    }
+
+    .nav-link {
+        transition: all 0.25s;
+        color: $-light;
+        outline: none !important;
+        border-radius: $border-radius-sm;
+
+        &:hover,
+        &:active {
+            opacity: 0.8;
+        }
+        &.active {
+            font-weight: 600;
+        }
+        &:focus {
+            @include highlight-shadow($-light, 0.4);
+        }
+    }
+
+    .header-children {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-end;
+
+        @include respond-below(sm) {
+            flex-direction: row-reverse;
+        }
+    }
+
+    .container-fluid {
+        .navbar-collapse {
+            flex-grow: 0 !important;
+        }
+    }
+}
+
+.brand {
+    margin: {
+        right: 1.25rem !important;
+    }
+    padding: {
+        top: 0 !important;
+        bottom: 3px !important;
+        left: 10px !important;
+        right: 10px !important;
+    }
+    outline: none !important;
+    background-color: transparent !important;
+
+    &:focus {
+        background-color: rgba($-light, 0.05) !important;
+    }
+
+    display: inline-block;
+    border-radius: 4px;
+
+    svg {
+        width: auto;
+        height: 40px;
+        fill: currentColor;
+    }
+}
