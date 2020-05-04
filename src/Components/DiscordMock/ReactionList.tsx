@@ -16,7 +16,7 @@ const ReactionList: React.FC<ReactionListProps> = ({
   onReact,
   onUnreact,
   style,
-  className
+  className,
 }) => (
   <div className={classNames("reaction-list", className)} style={style}>
     {reactions.map((reaction, index) => (

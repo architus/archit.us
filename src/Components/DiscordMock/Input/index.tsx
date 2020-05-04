@@ -20,7 +20,7 @@ const Input: React.FC<InputProps> = ({
   onChange,
   value,
   style,
-  className
+  className,
 }) => (
   <div className={classNames(className, "discord-input")} style={style}>
     <div className="discord-input--inner">

@@ -5,7 +5,7 @@ import {
   replaceAll,
   escapeHtml,
   allMatches,
-  splitFragments
+  splitFragments,
 } from "../primitives";
 import { isNil } from "../data";
 import { MockUser } from "../types";
@@ -27,14 +27,14 @@ const markdownOverrides = {
   list: (body: string): string => body,
   listitem: (text: string): string => text,
   checkbox: (): string => "",
-  codespan: (code: string): string => `\`${code}\``
+  codespan: (code: string): string => `\`${code}\``,
 };
 const markedOptions = {
   renderer: Object.assign(markdownRenderer, markdownOverrides),
   gfm: true, // needed for auto-linking
   tables: false, // disable tables
   breaks: true,
-  sanitize: false // content is sanitized manually in the pipeline
+  sanitize: false, // content is sanitized manually in the pipeline
 };
 marked.setOptions(markedOptions);
 const markdownLexer = new marked.Lexer(markedOptions);
@@ -47,6 +47,8 @@ const markdownParser = new marked.Parser(markedOptions);
 export function transformMarkdown(fragment: string): string {
   const tokens = markdownLexer.lex(fragment);
   const html = markdownParser.parse(tokens);
+  // Clear tokens list (array is re-used between calls to `lex`)
+  tokens.splice(0, tokens.length);
   return html;
 }
 
@@ -81,11 +83,11 @@ export function tokenizeFragments(source: string): TaggedFragment[] {
  * @param sourceFragments - Split fragment strings
  */
 function tagFragments(sourceFragments: string[]): TaggedFragment[] {
-  return sourceFragments.map(content => {
+  return sourceFragments.map((content) => {
     const tag = codeRegex.test(content) ? "code" : "text";
     return {
       content,
-      tag
+      tag,
     };
   });
 }
@@ -270,7 +272,7 @@ export function highlightTokens(
     if (!Array.isArray(token)) {
       processed = replaceToken(processed, token, className, firstOccurrence);
     } else {
-      token.forEach(t => {
+      token.forEach((t) => {
         processed = replaceToken(processed, t, className, firstOccurrence);
       });
     }
@@ -306,8 +308,8 @@ export function replaceToken(
       : replaceAll(string, token, makeTokenSpan(token, className));
   }
   return firstOccurrence
-    ? string.replace(new RegExp(token), match =>
+    ? string.replace(new RegExp(token), (match) =>
         makeTokenSpan(match, className)
       )
-    : string.replace(token, match => makeTokenSpan(match, className));
+    : string.replace(token, (match) => makeTokenSpan(match, className));
 }

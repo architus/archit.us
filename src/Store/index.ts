@@ -1,5 +1,11 @@
-import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
+import {
+  configureStore,
+  createSerializableStateInvariantMiddleware,
+  createImmutableStateInvariantMiddleware,
+  isPlain,
+} from "@reduxjs/toolkit";
 import { isHot } from "Utility/types";
+import { Option } from "Utility/option";
 import createSagaMiddleware from "redux-saga";
 import { batchDispatchMiddleware } from "redux-batched-actions";
 
@@ -11,14 +17,32 @@ export * from "Store/hooks";
 
 const SagaMiddleware = createSagaMiddleware();
 
+const middleware = [RestMiddleware, SagaMiddleware, batchDispatchMiddleware];
+
+// Add debug middleware
+if (process.env.NODE_ENV === "development") {
+  middleware.push(createImmutableStateInvariantMiddleware());
+
+  // Augment middleware to consider Options serializable
+  const isSerializable = (value: unknown): boolean =>
+    value instanceof Option || isPlain(value);
+
+  const getEntries = (value: unknown): Array<[string, unknown]> =>
+    value instanceof Option
+      ? Object.entries({ inner: value.orNull() })
+      : Object.entries(value as {});
+
+  middleware.push(
+    createSerializableStateInvariantMiddleware({
+      isSerializable,
+      getEntries,
+    })
+  );
+}
+
 const store = configureStore({
   reducer: rootReducer,
-  middleware: [
-    RestMiddleware,
-    SagaMiddleware,
-    batchDispatchMiddleware,
-    ...getDefaultMiddleware().slice(1) // Remove redux-thunk
-  ]
+  middleware,
 });
 
 // Enable hot module reloading for the store

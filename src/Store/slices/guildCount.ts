@@ -28,8 +28,8 @@ const slice = createSlice({
         }
       }
       return state;
-    }
-  }
+    },
+  },
 });
 
 export default slice.reducer;

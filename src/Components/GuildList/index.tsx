@@ -28,10 +28,10 @@ const otherGuildsFilter = (guild: Guild): boolean =>
 
 const GuildList: React.FC<GuildListProps> = ({ onClickGuild, onClickAdd }) => {
   const { all: architusAdminGuilds, isLoaded: hasLoaded } = usePool("guilds", {
-    filter: architusAdminGuildsFilter
+    filter: architusAdminGuildsFilter,
   });
   const { all: otherGuilds } = usePool("guilds", {
-    filter: otherGuildsFilter
+    filter: otherGuildsFilter,
   });
   const squareStyle = { width: `${ICON_WIDTH}px`, height: `${ICON_WIDTH}px` };
 
@@ -42,7 +42,7 @@ const GuildList: React.FC<GuildListProps> = ({ onClickGuild, onClickAdd }) => {
     const fragments = splitPath(location.pathname);
     activeGuildId = Option.from(
       fragments.length >= 2 ? fragments[1] : null
-    ).flatMap(str => {
+    ).flatMap((str) => {
       if (isSnowflake(str)) return Some(str);
       return None;
     });
@@ -123,7 +123,7 @@ const Section: React.FC<SectionProps> = ({
   activeGuildId,
   iconStyle,
   elevated = false,
-  className
+  className,
 }: SectionProps) => {
   return (
     <div className={classNames("guild-list--section", className)}>

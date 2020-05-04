@@ -78,11 +78,11 @@ const slice = createSlice({
         pool.pool[id] = {
           ...pool.pool[id],
           id,
-          ...patch
+          ...patch,
         } as typeof pool.pool[string];
       }
-    }
-  }
+    },
+  },
 });
 
 export const { fetchPool, populatePool, patchLocal } = slice.actions;
@@ -96,7 +96,7 @@ function makeInitialPools<T extends PoolType, S extends { [K in T]: Pool<K> }>(
     obj[k] = ({
       pool: {},
       fullyPopulated: false,
-      loading: false
+      loading: false,
     } as unknown) as S[T];
   }
   return obj;
@@ -125,7 +125,9 @@ export function usePool<T extends PoolType>(
 ): PoolProvider<PoolBacking[T]> {
   const { filter } = options;
   const dispatch = useDispatch();
-  const pool = (useSelector(store => store.pools[type]) as unknown) as Pool<T>;
+  const pool = (useSelector((store) => store.pools[type]) as unknown) as Pool<
+    T
+  >;
   useEffect(() => {
     if (!pool.fullyPopulated && !pool.loading) {
       dispatch(fetchPool({ type, requiresAuth: true }));
@@ -140,7 +142,7 @@ export function usePool<T extends PoolType>(
   return {
     all: filtered,
     loading: pool.loading,
-    isLoaded: pool.fullyPopulated
+    isLoaded: pool.fullyPopulated,
   };
 }
 
@@ -163,7 +165,9 @@ export function usePoolEntity<T extends PoolType>(
 ): PoolEntityProvider<PoolBacking[T]> {
   const { filter } = options;
   const dispatch = useDispatch();
-  const pool = (useSelector(store => store.pools[type]) as unknown) as Pool<T>;
+  const pool = (useSelector((store) => store.pools[type]) as unknown) as Pool<
+    T
+  >;
   useEffect(() => {
     if (!pool.fullyPopulated && !pool.loading) {
       dispatch(fetchPool({ type, requiresAuth: true }));
@@ -181,6 +185,6 @@ export function usePoolEntity<T extends PoolType>(
   return {
     entity,
     isLoaded: pool.fullyPopulated,
-    loading: pool.loading
+    loading: pool.loading,
   };
 }

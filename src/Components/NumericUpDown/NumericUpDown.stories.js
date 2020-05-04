@@ -9,7 +9,7 @@ import MaxWidthDecorator from "MaxWidthDecorator";
 export default {
   title: "Inputs|NumericUpDown",
   decorators: [MaxWidthDecorator],
-  parameters: { component: NumericUpDown }
+  parameters: { component: NumericUpDown },
 };
 
 export const Basic = () => {
@@ -17,7 +17,7 @@ export const Basic = () => {
   return (
     <NumericUpDown
       value={value}
-      onChange={useCallbackOnce(e => setValue(e.target.value))}
+      onChange={useCallbackOnce((e) => setValue(e.target.value))}
       onUp={action("up-click")}
       onDown={action("down-click")}
       placeholder={text("Placeholder", "basic")}
@@ -30,7 +30,7 @@ export const IsValid = () => {
   return (
     <NumericUpDown
       value={value}
-      onChange={useCallbackOnce(e => setValue(e.target.value))}
+      onChange={useCallbackOnce((e) => setValue(e.target.value))}
       onUp={action("up-click")}
       onDown={action("down-click")}
       placeholder={text("Placeholder", "basic")}
@@ -44,7 +44,7 @@ export const IsInvalid = () => {
   return (
     <NumericUpDown
       value={value}
-      onChange={useCallbackOnce(e => setValue(e.target.value))}
+      onChange={useCallbackOnce((e) => setValue(e.target.value))}
       onUp={action("up-click")}
       onDown={action("down-click")}
       placeholder={text("Placeholder", "basic")}
@@ -62,7 +62,7 @@ export const Controlled = () => {
     setValue(isEmptyOrNil(value) ? 0 : (parseFloat(value) - 1).toString());
   }, [value]);
   const numericRegex = new RegExp(text("Input filter", "[^0-9.-]*"), "g");
-  const onChange = useCallbackOnce(event => {
+  const onChange = useCallbackOnce((event) => {
     const newValue = isDefined(event.target) ? event.target.value : "";
     setValue(newValue.replace(numericRegex, ""));
   });

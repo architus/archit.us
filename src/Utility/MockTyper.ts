@@ -46,7 +46,7 @@ export class MockTyper {
     onKeypress = null,
     onEnter = null,
     onFinish = null,
-    lines
+    lines,
   }: MockTyperOptions) {
     this.options = {
       keypressDelay,
@@ -55,7 +55,7 @@ export class MockTyper {
       onEnter,
       onFinish,
       // Perform shallow copy to prevent mutation safety concerns
-      lines: [...lines]
+      lines: [...lines],
     };
 
     this.tick = this.tick.bind(this);
@@ -72,7 +72,7 @@ export class MockTyper {
     this.stop();
     this.options = {
       ...this.options,
-      ...options
+      ...options,
     };
     // Perform shallow copy to prevent mutation safety concerns
     if (isDefined(options.lines)) this.options.lines = [...options.lines];
@@ -111,14 +111,14 @@ export class MockTyper {
     if (lines.length === 0) {
       // Nothing to type, go immediately to idle
       return {
-        kind: "idle"
+        kind: "idle",
       };
     }
     // Start at the beginning of the first line
     return {
       kind: "typing",
       currentLine: 0,
-      currentCharacter: 0
+      currentCharacter: 0,
     };
   }
 
@@ -147,14 +147,14 @@ export class MockTyper {
       return {
         kind: "typing",
         currentCharacter: 0,
-        currentLine: state.currentLine + 1
+        currentLine: state.currentLine + 1,
       };
     }
 
     // Update duration
     return {
       ...state,
-      durationRemaining: newDuration
+      durationRemaining: newDuration,
     };
   }
 
@@ -168,7 +168,7 @@ export class MockTyper {
       onKeypress?.(typedChar);
       return {
         ...state,
-        currentCharacter: state.currentCharacter + 1
+        currentCharacter: state.currentCharacter + 1,
       };
     }
 
@@ -189,14 +189,14 @@ export class MockTyper {
       this.stop();
 
       return {
-        kind: "idle"
+        kind: "idle",
       };
     }
     // Transition condition: begin waiting
     return {
       kind: "waiting",
       currentLine: state.currentLine,
-      durationRemaining: lineDelay
+      durationRemaining: lineDelay,
     };
   }
 }

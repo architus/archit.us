@@ -3,7 +3,7 @@ import {
   multiplyDimension,
   toAcronym,
   parseDimension,
-  formatDimension
+  formatDimension,
 } from "Utility";
 import { RawDimension, StyleObject } from "Utility/types";
 
@@ -16,7 +16,7 @@ type AcronymProps = {
 const Acronym: React.FC<AcronymProps> = ({
   name,
   baseFontSize = "1rem",
-  style = {}
+  style = {},
 }) => {
   const acronymText = toAcronym(name);
   let multiplier = 1;
@@ -27,9 +27,9 @@ const Acronym: React.FC<AcronymProps> = ({
     <span
       style={{
         fontSize: parseDimension(baseFontSize)
-          .map(d => formatDimension(multiplyDimension(d, multiplier)))
+          .map((d) => formatDimension(multiplyDimension(d, multiplier)))
           .getOrElse("1rem"),
-        ...style
+        ...style,
       }}
     >
       {acronymText}

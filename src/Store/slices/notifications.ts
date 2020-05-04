@@ -45,7 +45,7 @@ const slice = createSlice({
       const { type, ...rest } = action.payload;
       return {
         ...state,
-        [type]: [...state[type], rest]
+        [type]: [...state[type], rest],
       };
     },
     hideNotification: (
@@ -55,10 +55,10 @@ const slice = createSlice({
       const { type, id } = action.payload;
       return {
         ...state,
-        [type]: state[type].filter(notification => notification.id !== id)
+        [type]: state[type].filter((notification) => notification.id !== id),
       };
-    }
-  }
+    },
+  },
 });
 
 export const { showNotification, hideNotification } = slice.actions;
@@ -93,20 +93,20 @@ export function displayNotification({
   type,
   message,
   variant = defaultVariant,
-  duration = defaultDuration
+  duration = defaultDuration,
 }: NotificationProps): NotificationShowAction {
   const notification = makeNotification({ message, variant });
   return showNotification({
     type,
     duration,
-    ...notification
+    ...notification,
   });
 }
 
 export function showToast({
   message,
   variant = defaultVariant,
-  duration = defaultDuration
+  duration = defaultDuration,
 }: ScopedNotificationArgs): NotificationShowAction {
   return displayNotification({ message, type: "toast", variant, duration });
 }
@@ -114,7 +114,7 @@ export function showToast({
 export function showAlert({
   message,
   variant = defaultVariant,
-  duration = defaultDuration
+  duration = defaultDuration,
 }: ScopedNotificationArgs): NotificationShowAction {
   return displayNotification({ message, type: "alert", variant, duration });
 }
@@ -122,12 +122,12 @@ export function showAlert({
 export function makeNotification({
   message,
   variant = defaultVariant,
-  id = provisionId()
+  id = provisionId(),
 }: Partial<Notification>): Notification {
   return {
     message,
     variant,
-    id
+    id,
   };
 }
 

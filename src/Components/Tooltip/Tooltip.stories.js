@@ -7,7 +7,7 @@ import { Button } from "react-bootstrap";
 
 export default {
   title: "Components|Tooltip",
-  parameters: { component: Tooltip }
+  parameters: { component: Tooltip },
 };
 
 export const Basic = () => (
@@ -19,7 +19,7 @@ export const Basic = () => (
       range: true,
       min: 0,
       max: 4,
-      step: 0.05
+      step: 0.05,
     })}rem`}
     style={object("Style", {})}
     hide={boolean("Hide", false)}
@@ -28,7 +28,7 @@ export const Basic = () => (
       range: true,
       min: 0,
       max: 2000,
-      step: 50
+      step: 50,
     })}
     text={text("Text", "Example tooltip")}
     children={<Button variant="primary">Basic</Button>}
@@ -38,8 +38,8 @@ Basic.story = {
   parameters: {
     notes:
       "`Tooltip` exists primarily as a wrapper for the tooltip/overlay component from " +
-      "[react-bootstrap](https://react-bootstrap.github.io/components/overlays/#tooltip-props)"
-  }
+      "[react-bootstrap](https://react-bootstrap.github.io/components/overlays/#tooltip-props)",
+  },
 };
 
 export const AdvancedContent = () => (
@@ -51,7 +51,7 @@ export const AdvancedContent = () => (
       range: true,
       min: 0,
       max: 4,
-      step: 0.05
+      step: 0.05,
     })}rem`}
     style={object("Style", {})}
     hide={boolean("Hide", false)}
@@ -60,7 +60,7 @@ export const AdvancedContent = () => (
       range: true,
       min: 0,
       max: 2000,
-      step: 50
+      step: 50,
     })}
     text={
       <span>

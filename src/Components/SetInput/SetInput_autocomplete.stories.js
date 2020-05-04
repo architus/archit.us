@@ -12,7 +12,7 @@ import { data } from "Components/AutoCompleteInput/story/sample.json.js";
 export default {
   title: "Inputs|SetInput/Autocomplete",
   decorators: [MaxWidthDecorator],
-  parameters: { component: SetInput }
+  parameters: { component: SetInput },
 };
 
 function SuggestionEntry({ title, author }) {
@@ -28,16 +28,16 @@ function SuggestionEntry({ title, author }) {
 
 SuggestionEntry.propTypes = {
   title: PropTypes.string,
-  author: PropTypes.object
+  author: PropTypes.object,
 };
 
 export const Default = () => {
   const [value, setValue] = useState("");
   const [items, setItems] = useState([data[0], data[1], data[2]]);
-  const onRemove = index => setItems(items.filter((_o, i) => i !== index));
+  const onRemove = (index) => setItems(items.filter((_o, i) => i !== index));
   const onAdd = () => {
     if (value.trim() !== "") {
-      const book = data.find(d => d.title === value);
+      const book = data.find((d) => d.title === value);
       if (isDefined(book)) setItems([...items, book]);
       setValue("");
     }
@@ -48,7 +48,7 @@ export const Default = () => {
       items={items}
       addItem={onAdd}
       removeItem={onRemove}
-      renderItem={item => <div>{item.title}</div>}
+      renderItem={(item) => <div>{item.title}</div>}
     >
       <AutoCompleteInput
         value={value}
@@ -58,9 +58,9 @@ export const Default = () => {
         items={data}
         fields={[
           { name: "title", weight: 0.7 },
-          { name: "author.lastName", weight: 0.3 }
+          { name: "author.lastName", weight: 0.3 },
         ]}
-        getSuggestionValue={item => item.title}
+        getSuggestionValue={(item) => item.title}
         renderSuggestion={SuggestionEntry}
       />
     </SetInput>
@@ -70,10 +70,10 @@ export const Default = () => {
 export const IsValid = () => {
   const [value, setValue] = useState("");
   const [items, setItems] = useState([data[0], data[1], data[2]]);
-  const onRemove = index => setItems(items.filter((_o, i) => i !== index));
+  const onRemove = (index) => setItems(items.filter((_o, i) => i !== index));
   const onAdd = () => {
     if (value.trim() !== "") {
-      const book = data.find(d => d.title === value);
+      const book = data.find((d) => d.title === value);
       if (isDefined(book)) setItems([...items, book]);
       setValue("");
     }
@@ -84,7 +84,7 @@ export const IsValid = () => {
       items={items}
       addItem={onAdd}
       removeItem={onRemove}
-      renderItem={item => <div>{item.title}</div>}
+      renderItem={(item) => <div>{item.title}</div>}
     >
       <AutoCompleteInput
         value={value}
@@ -94,9 +94,9 @@ export const IsValid = () => {
         items={data}
         fields={[
           { name: "title", weight: 0.7 },
-          { name: "author.lastName", weight: 0.3 }
+          { name: "author.lastName", weight: 0.3 },
         ]}
-        getSuggestionValue={item => item.title}
+        getSuggestionValue={(item) => item.title}
         renderSuggestion={SuggestionEntry}
         isValid
       />
@@ -107,10 +107,10 @@ export const IsValid = () => {
 export const IsInvalid = () => {
   const [value, setValue] = useState("");
   const [items, setItems] = useState([data[0], data[1], data[2]]);
-  const onRemove = index => setItems(items.filter((_o, i) => i !== index));
+  const onRemove = (index) => setItems(items.filter((_o, i) => i !== index));
   const onAdd = () => {
     if (value.trim() !== "") {
-      const book = data.find(d => d.title === value);
+      const book = data.find((d) => d.title === value);
       if (isDefined(book)) setItems([...items, book]);
       setValue("");
     }
@@ -121,7 +121,7 @@ export const IsInvalid = () => {
       items={items}
       addItem={onAdd}
       removeItem={onRemove}
-      renderItem={item => <div>{item.title}</div>}
+      renderItem={(item) => <div>{item.title}</div>}
     >
       <AutoCompleteInput
         value={value}
@@ -131,9 +131,9 @@ export const IsInvalid = () => {
         items={data}
         fields={[
           { name: "title", weight: 0.7 },
-          { name: "author.lastName", weight: 0.3 }
+          { name: "author.lastName", weight: 0.3 },
         ]}
-        getSuggestionValue={item => item.title}
+        getSuggestionValue={(item) => item.title}
         renderSuggestion={SuggestionEntry}
         isInvalid
       />
@@ -146,11 +146,11 @@ export const Advanced = () => {
   const [items, setItems] = useState([data[0], data[1], data[2]]);
   const [showValidation, setShowValidation] = useState(false);
 
-  const onRemove = index => setItems(items.filter((_o, i) => i !== index));
+  const onRemove = (index) => setItems(items.filter((_o, i) => i !== index));
   const onAdd = () => {
     const trimmed = value.trim();
     if (trimmed !== "") {
-      const book = data.find(d => d.title === trimmed);
+      const book = data.find((d) => d.title === trimmed);
       if (isDefined(book)) {
         setItems([...items, book]);
         setValue("");
@@ -165,12 +165,12 @@ export const Advanced = () => {
     if (!showValidation) return true;
     else {
       const trimmed = value.trim();
-      if (data.findIndex(d => d.title.trim() === trimmed) !== -1) return true;
+      if (data.findIndex((d) => d.title.trim() === trimmed) !== -1) return true;
       else return false;
     }
   }, [showValidation, value]);
 
-  const onChange = v => {
+  const onChange = (v) => {
     setValue(v);
     if (v.trim() === "") setShowValidation(false);
   };
@@ -180,7 +180,7 @@ export const Advanced = () => {
       items={items}
       addItem={onAdd}
       removeItem={onRemove}
-      renderItem={item => <div>{item.title}</div>}
+      renderItem={(item) => <div>{item.title}</div>}
     >
       <AutoCompleteInput
         value={value}
@@ -190,9 +190,9 @@ export const Advanced = () => {
         items={data}
         fields={[
           { name: "title", weight: 0.7 },
-          { name: "author.lastName", weight: 0.3 }
+          { name: "author.lastName", weight: 0.3 },
         ]}
-        getSuggestionValue={item => item.title}
+        getSuggestionValue={(item) => item.title}
         renderSuggestion={SuggestionEntry}
         isInvalid={showValidation && !isValid}
         isValid={showValidation && isValid}

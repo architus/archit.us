@@ -35,12 +35,8 @@ const AppLayout: React.FC<AppLayoutProps> = ({
             checkedIcon={<Icon name="moon" className="switch-icon dark" />}
             offHandleColor={lightColor}
             onHandleColor={lightColor}
-            offColor={tinycolor(primaryColor)
-              .lighten(35)
-              .toString()}
-            onColor={tinycolor(primaryColor)
-              .darken(30)
-              .toString()}
+            offColor={tinycolor(primaryColor).lighten(35).toString()}
+            onColor={tinycolor(primaryColor).darken(30).toString()}
             height={28}
             width={56}
           />

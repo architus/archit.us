@@ -236,7 +236,7 @@ export function binarySearch<T>(
       if (a < b) return -1;
       if (a > b) return 1;
       return 0;
-    }
+    },
   }
 ): number {
   const { start, end, comparator } = options;

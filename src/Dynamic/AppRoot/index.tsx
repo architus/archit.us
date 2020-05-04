@@ -4,17 +4,12 @@ import React, {
   useCallback,
   useMemo,
   useReducer,
-  useContext
+  useContext,
+  useLayoutEffect,
 } from "react";
 import classNames from "classnames";
 import { navigate } from "@reach/router";
-import {
-  useEffectOnce,
-  useCallbackOnce,
-  splitPath,
-  isDefined,
-  usePrevious
-} from "Utility";
+import { useCallbackOnce, splitPath, isDefined, usePrevious } from "Utility";
 import { AnyAction } from "redux";
 import SwipeHandler from "Components/SwipeHandler";
 import GuildList from "Components/GuildList";
@@ -33,7 +28,7 @@ import {
   focusGuild,
   showGuildAddModal,
   hideGuildAddModal,
-  focusTab
+  focusTab,
 } from "Dynamic/AppRoot/actions";
 import "./style.scss";
 import { usePool } from "Store/slices/pools";
@@ -46,7 +41,7 @@ const DrawerWrapper: React.FC<DrawerWrapperProps> = ({ children }) => {
   // Nav drawer logic
   const [showAppNav, setShowAppNav] = useState(true);
   const expandClick = useCallback(() => setShowAppNav(!showAppNav), [
-    showAppNav
+    showAppNav,
   ]);
   const closeAppNav = useCallbackOnce(() => setShowAppNav(false));
   const { currentTab } = useAppLocation();
@@ -79,17 +74,17 @@ const DrawerWrapper: React.FC<DrawerWrapperProps> = ({ children }) => {
     }
   }, [swipeHandler, wasSwipeScroll]);
   const memoizedContext = useMemo(() => ({ scrollHandler: handleAppScroll }), [
-    handleAppScroll
+    handleAppScroll,
   ]);
 
   // Dispatch actions
   const { dispatch } = useContext(AppContext);
   const clickGuild = useCallback((id: Snowflake) => dispatch(focusGuild(id)), [
-    dispatch
+    dispatch,
   ]);
   const clickAdd = useCallback(() => dispatch(showGuildAddModal()), [dispatch]);
   const clickTab = useCallback((tab: TabPath) => dispatch(focusTab(tab)), [
-    dispatch
+    dispatch,
   ]);
 
   return (
@@ -134,23 +129,26 @@ const architusGuildFilter = (guild: Guild): boolean => guild.has_architus;
 
 const AppRoot: React.FC<AppRootProps> = () => {
   // Root class adding/removing
-  useEffectOnce(() => {
+  useLayoutEffect(() => {
     document.documentElement.classList.add(APP_HTML_CLASS);
     return (): void => {
       document.documentElement.classList.remove(APP_HTML_CLASS);
     };
-  });
+  }, []);
 
   // Connect to store
   const guildStore = useRef<LocalGuildStore>({
     guilds: [],
-    isLoaded: false
+    isLoaded: false,
   });
   const { all: guildList, isLoaded: guildsLoaded } = usePool("guilds", {
-    filter: architusGuildFilter
+    filter: architusGuildFilter,
   });
   guildStore.current = { guilds: guildList, isLoaded: guildsLoaded };
 
+  // TODO wrap the dispatch function with a side-effect inducing version
+  // to avoid the "optimizations" around useReducer invoking its reducer
+  // function side of component renders instead of upon dispatch invocations... :)
   const [state, dispatch] = useReducer(
     (prev: AppRootState, action: AnyAction) => {
       if (showGuildAddModal.match(action)) {
@@ -176,7 +174,7 @@ const AppRoot: React.FC<AppRootProps> = () => {
           }
 
           let defaultGuild = guilds[0];
-          const adminGuilds = guilds.filter(g => g.architus_admin);
+          const adminGuilds = guilds.filter((g) => g.architus_admin);
           if (adminGuilds.length > 0) [defaultGuild] = adminGuilds;
           navigateTo = `${APP_PATH_ROOT}/${defaultGuild.id}/${path}`;
         }
@@ -203,7 +201,7 @@ const AppRoot: React.FC<AppRootProps> = () => {
   );
   const { showAddGuildModal } = state;
   const hideModal = useCallback((): void => dispatch(hideGuildAddModal()), [
-    dispatch
+    dispatch,
   ]);
   const memoizedContext = useMemo(
     () => ({ dispatch: dispatch as AppDispatch }),

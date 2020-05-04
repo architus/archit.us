@@ -5,7 +5,7 @@ import classNames from "classnames";
 // this link will be active when itself or deeper routes are current
 export const isPartiallyActive = ({
   baseClassName,
-  activeClassName
+  activeClassName,
 }: {
   baseClassName: string;
   activeClassName: string;
@@ -24,7 +24,7 @@ const NavLink: React.FC<NavLinkProps> = ({ to, children, ...rest }) => {
         to={to}
         getProps={isPartiallyActive({
           baseClassName: "nav-link",
-          activeClassName: "active"
+          activeClassName: "active",
         })}
         {...rest}
       >

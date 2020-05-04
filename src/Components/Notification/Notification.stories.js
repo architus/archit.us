@@ -8,7 +8,7 @@ import { Button } from "react-bootstrap";
 
 export default {
   title: "Components|Notification",
-  parameters: { component: Notification }
+  parameters: { component: Notification },
 };
 
 export const Alert = () => (
@@ -34,8 +34,8 @@ Alert.story = {
       "built-in contextual variants. There are two types:\n\n- `toast`: Small, easily " +
       "dismissible notification meant to convey non-critical information\n- `alert`: " +
       "Larger, focus-drawing notification meant to convey critical information and force " +
-      "dismissals to be deliberate"
-  }
+      "dismissals to be deliberate",
+  },
 };
 
 export const Toast = () => (
@@ -58,7 +58,7 @@ export const Toast = () => (
 export const AdvancedContent = () => {
   const innerButtonAction = action("inner-button-click");
   const onClick = useCallback(
-    e => {
+    (e) => {
       e.stopPropagation();
       innerButtonAction();
     },

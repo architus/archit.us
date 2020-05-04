@@ -9,7 +9,7 @@ import {
   convertMentions,
   convertUnicodeEmoji,
   convertDiscordEmoji,
-  makeTransformer
+  makeTransformer,
 } from "Utility";
 
 import UserDisplay from "Components/UserDisplay";
@@ -57,7 +57,7 @@ export const triggerPipeline = makeTransformer([
   convertDiscordEmoji,
   mockMentions,
   convertMentions,
-  s => highlightTokens(s, triggerTokens, true)
+  (s) => highlightTokens(s, triggerTokens, true),
 ]);
 
 export function createTriggerCellFormatter(contextRef) {
@@ -65,13 +65,13 @@ export function createTriggerCellFormatter(contextRef) {
     <div
       className="response"
       dangerouslySetInnerHTML={{
-        __html: triggerPipeline(value, contextRef.current)
+        __html: triggerPipeline(value, contextRef.current),
       }}
     />
   );
 
   formatter.propTypes = {
-    value: PropTypes.string.isRequired
+    value: PropTypes.string.isRequired,
   };
 
   return formatter;
@@ -87,22 +87,22 @@ const responseTokens = [
   { token: "[count]", className: "token-meta" },
   {
     token: linkRegex,
-    className: "token-link"
+    className: "token-link",
   },
   {
     token: ["[author]", "[noun]", "[adj]", "[adv]", "[member]", "[owl]"],
-    className: "token-string"
-  }
+    className: "token-string",
+  },
 ];
 const responsePipeline = makeTransformer([
   escapeHtml,
-  s => replaceToken(s, listRegex, "token-list"),
+  (s) => replaceToken(s, listRegex, "token-list"),
   convertMentions,
-  s => highlightTokens(s, responseTokens),
+  (s) => highlightTokens(s, responseTokens),
   convertRawDiscordEmoji,
   convertUnicodeEmoji,
   convertDiscordEmoji,
-  s => replaceToken(s, reactionRegex, "token-reaction")
+  (s) => replaceToken(s, reactionRegex, "token-reaction"),
 ]);
 
 export function createResponseCellFormatter(contextRef) {
@@ -110,13 +110,13 @@ export function createResponseCellFormatter(contextRef) {
     <div
       className="response"
       dangerouslySetInnerHTML={{
-        __html: responsePipeline(value, contextRef.current)
+        __html: responsePipeline(value, contextRef.current),
       }}
     />
   );
 
   formatter.propTypes = {
-    value: PropTypes.string.isRequired
+    value: PropTypes.string.isRequired,
   };
 
   return formatter;
@@ -131,7 +131,7 @@ export function createCountCellFormatter(maxCountRef) {
   const formatter = ({ value }) => (
     <div
       className={classNames("count", {
-        withSparkline: maxCountRef.current !== 0
+        withSparkline: maxCountRef.current !== 0,
       })}
     >
       {maxCountRef.current !== 0 ? (
@@ -139,7 +139,7 @@ export function createCountCellFormatter(maxCountRef) {
           <span
             className="value"
             style={{
-              width: `${maxCountRef.current.toString().length * digitWidth}px`
+              width: `${maxCountRef.current.toString().length * digitWidth}px`,
             }}
           >
             <span>{value}</span>
@@ -157,7 +157,7 @@ export function createCountCellFormatter(maxCountRef) {
   );
 
   formatter.propTypes = {
-    value: PropTypes.number.isRequired
+    value: PropTypes.number.isRequired,
   };
 
   return formatter;
@@ -168,7 +168,7 @@ export function createCountCellFormatter(maxCountRef) {
 // ? =====================
 
 export function AuthorCellFormatter({
-  row: { name, discriminator, avatar, author_id }
+  row: { name, discriminator, avatar, author_id },
 }) {
   return (
     <div className="author-display">
@@ -188,5 +188,5 @@ export function AuthorCellFormatter({
 }
 
 AuthorCellFormatter.propTypes = {
-  row: PropTypes.object
+  row: PropTypes.object,
 };

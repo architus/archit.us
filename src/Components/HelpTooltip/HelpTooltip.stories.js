@@ -6,7 +6,7 @@ import Icon from "Components/Icon";
 
 export default {
   title: "Components|HelpTooltip",
-  parameters: { component: HelpTooltip }
+  parameters: { component: HelpTooltip },
 };
 
 export const Basic = () => (
@@ -18,7 +18,7 @@ export const Basic = () => (
       range: true,
       min: 0,
       max: 4,
-      step: 0.05
+      step: 0.05,
     })}rem`}
     style={object("Style", {})}
     hide={boolean("Hide", false)}
@@ -27,7 +27,7 @@ export const Basic = () => (
       range: true,
       min: 0,
       max: 2000,
-      step: 50
+      step: 50,
     })}
     content={text("Content", "Example help tooltip")}
   />
@@ -38,8 +38,8 @@ Basic.story = {
       "`HelpTooltip` provides a way to give explanatory content to users hidden behind " +
       "an interactive tooltip.\n\n> **Note:** The component supports many of the same props as " +
       "`Tooltip`, with one exception beind that `HelpTooltip` is bottom-placed by default, " +
-      "whereas `Tooltip` is right-placed by default."
-  }
+      "whereas `Tooltip` is right-placed by default.",
+  },
 };
 
 export const AdvancedContent = () => (
@@ -51,7 +51,7 @@ export const AdvancedContent = () => (
       range: true,
       min: 0,
       max: 4,
-      step: 0.05
+      step: 0.05,
     })}rem`}
     style={object("Style", {})}
     hide={boolean("Hide", false)}
@@ -60,7 +60,7 @@ export const AdvancedContent = () => (
       range: true,
       min: 0,
       max: 2000,
-      step: 50
+      step: 50,
     })}
     content={
       <span>

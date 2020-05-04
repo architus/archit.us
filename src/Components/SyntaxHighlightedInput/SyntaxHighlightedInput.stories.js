@@ -11,8 +11,8 @@ import { content, tokens } from "./story/custom.json.js";
 export default {
   title: "Inputs|SyntaxHighlightedInput",
   parameters: {
-    component: SyntaxHighlightedInput
-  }
+    component: SyntaxHighlightedInput,
+  },
 };
 
 export const Basic = () => {
@@ -27,8 +27,8 @@ Basic.story = {
       "`SyntaxHighlightedInput` uses [`react-simple-code-editor`](https://www.npmjs" +
       ".com/package/react-simple-code-editor) to display syntax-highlighted text. Languages " +
       "can be selected from [PrismJS](https://prismjs.com/index.html) or can be specified " +
-      "as a list of string tokens.\n\n> **Note:** this is a controlled component"
-  }
+      "as a list of string tokens.\n\n> **Note:** this is a controlled component",
+  },
 };
 
 export const IsValid = () => {
@@ -61,7 +61,7 @@ export const PrismJS = () => {
     <SyntaxHighlightedInput
       value={value}
       onChange={setValue}
-      highlightFunc={useCallbackOnce(code =>
+      highlightFunc={useCallbackOnce((code) =>
         Prism.highlight(code, Prism.languages.python)
       )}
     />

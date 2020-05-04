@@ -6,7 +6,7 @@ import { Dispatch, useSelector, useDispatch } from "Store";
 import {
   selectAllNotifications,
   NotificationType,
-  Notification
+  Notification,
 } from "Store/slices/notifications";
 import ErrorBoundary from "Components/ErrorBoundary";
 import "./style.scss";
@@ -20,9 +20,9 @@ function useHideNotification(
   dispatch: Dispatch,
   type: NotificationType
 ): (id: number) => void {
-  return useCallback(id => dispatch(hideNotification({ type, id })), [
+  return useCallback((id) => dispatch(hideNotification({ type, id })), [
     dispatch,
-    type
+    type,
   ]);
 }
 
@@ -40,7 +40,7 @@ const NotificationPane: React.FC = () => {
 
   return (
     <div className="notification-pane">
-      <ErrorBoundary onError={useCallbackOnce(e => error(e))}>
+      <ErrorBoundary onError={useCallbackOnce((e) => error(e))}>
         <Suspense fallback={<div />}>
           <LazyLoadingWrapper
             toast={toast}
@@ -76,7 +76,7 @@ const LazyLoadingWrapper = withClientSide(
     toast,
     alert,
     onDismissToast,
-    onDismissAlert
+    onDismissAlert,
   }: LazyLoadingWrapperProps) => {
     // Whether the are any active notifications
     const hasAnyItems = hasItems(toast) || hasItems(alert);

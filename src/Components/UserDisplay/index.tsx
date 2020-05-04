@@ -15,7 +15,7 @@ export function getAvatarUrl({
   avatarUrl,
   user,
   discriminator,
-  size
+  size,
 }: {
   avatarUrl?: string;
   user?: User;
@@ -26,11 +26,11 @@ export function getAvatarUrl({
   if (isDefined(avatarUrl)) return avatarUrl;
 
   // Construct new avatar url
-  if (isDefined(user) && isDefined(user.avatar)) {
+  if (isDefined(user) && user.avatar.isDefined()) {
     return constructAvatarUrl({
       clientId: user.id,
       size,
-      hash: user.avatar
+      hash: user.avatar.get,
     });
   }
 
@@ -40,7 +40,7 @@ export function getAvatarUrl({
   else if (isDefined(user)) resolvedDiscriminator = user.discriminator;
   return constructAvatarUrl({
     discriminator: resolvedDiscriminator,
-    size
+    size,
   });
 }
 
@@ -74,7 +74,7 @@ const UserDisplay: React.FC<UserDisplayProps> = ({
       />
       <Placeholder.Text
         text={Option.from(user?.discriminator || discriminator)
-          .map(d => `#${d}`)
+          .map((d) => `#${d}`)
           .getOrElse("")}
         className="discriminator"
         size="0.95em"
@@ -111,7 +111,7 @@ const Avatar: React.FC<AvatarProps> = ({
     avatarUrl,
     discriminator,
     user,
-    size
+    size,
   });
   return (
     <Placeholder.Custom
@@ -127,7 +127,7 @@ const Avatar: React.FC<AvatarProps> = ({
         style={{
           backgroundImage: `url(${effectiveAvatarUrl})`,
           width: `${size}px`,
-          height: `${size}px`
+          height: `${size}px`,
         }}
         {...rest}
       />

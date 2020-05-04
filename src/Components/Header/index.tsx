@@ -45,7 +45,7 @@ const Header: React.FC<HeaderProps> = ({
 
 type BrandProps = Partial<LinkProps>;
 
-const Brand: React.FC<BrandProps> = props => (
+const Brand: React.FC<BrandProps> = (props) => (
   <Link {...props} className="nav-link brand" to="/">
     <div dangerouslySetInnerHTML={{ __html: LogoSvg }} />
   </Link>

@@ -8,8 +8,8 @@ import { Button } from "react-bootstrap";
 export default {
   title: "Components|ErrorBoundary",
   parameters: {
-    component: ErrorBoundary
-  }
+    component: ErrorBoundary,
+  },
 };
 
 export const SilentHandling = () => {
@@ -18,7 +18,7 @@ export const SilentHandling = () => {
   const onClick = useCallbackOnce(() => setCauseError(true));
   const onClickReset = useCallbackOnce(() => {
     setCauseError(false);
-    setKey(key => key + 1);
+    setKey((key) => key + 1);
   });
 
   return (
@@ -41,8 +41,8 @@ export const SilentHandling = () => {
 SilentHandling.story = {
   parameters: {
     notes:
-      "See the [React documentation on the subject](https://reactjs.org/docs/error-boundaries.html)"
-  }
+      "See the [React documentation on the subject](https://reactjs.org/docs/error-boundaries.html)",
+  },
 };
 
 export const Fallback = () => {
@@ -51,7 +51,7 @@ export const Fallback = () => {
   const onClick = useCallbackOnce(() => setCauseError(true));
   const onClickReset = useCallbackOnce(() => {
     setCauseError(false);
-    setKey(key => key + 1);
+    setKey((key) => key + 1);
   });
 
   return (

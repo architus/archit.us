@@ -6,7 +6,7 @@ import Icon from "Components/Icon";
 
 export default {
   title: "Components|Window",
-  parameters: { component: Window }
+  parameters: { component: Window },
 };
 
 export const Light = () => (
@@ -33,8 +33,8 @@ Light.story = {
       "`HelpTooltip` provides a way to give explanatory content to users hidden behind " +
       "an interactive tooltip.\n\n> **Note:** The component supports many of the same props as " +
       "`Tooltip`, with one exception beind that `HelpTooltip` is bottom-placed by default, " +
-      "whereas `Tooltip` is right-placed by default."
-  }
+      "whereas `Tooltip` is right-placed by default.",
+  },
 };
 
 export const Discord = () => (

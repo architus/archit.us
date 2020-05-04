@@ -4,7 +4,7 @@ import { delay, take, race, call } from "@redux-saga/core/effects";
 import {
   LOCAL_STORAGE_KEY,
   refreshSession,
-  SessionLoad
+  SessionLoad,
 } from "Store/slices/session";
 import { log, warn, setLocalStorage, toJSON, isDefined, error } from "Utility";
 import { PersistentSession, expiresAt } from "Utility/types";
@@ -16,7 +16,7 @@ import {
   sessionEnd,
   sessionRefresh,
   TokenExchangeResponse,
-  IdentifySessionResponse
+  IdentifySessionResponse,
 } from "Store/routes";
 import { ApiResponse } from "Store/api/rest/types";
 import { isApiError, isDecodeError } from "Store/api/rest";
@@ -30,7 +30,7 @@ const TIMEOUT = 3000;
  * as a forked saga
  */
 export default function* sessionFlow(): SagaIterator {
-  const initial = yield* select(store => store.session);
+  const initial = yield* select((store) => store.session);
 
   if (initial.state === "connected" || initial.state === "pending") {
     if (initial.state === "connected") {
@@ -45,14 +45,14 @@ export default function* sessionFlow(): SagaIterator {
   }
 
   // Above actions could have failed, test again for being authenticated
-  let session = yield* select(store => store.session);
+  let session = yield* select((store) => store.session);
   while (session.state === "authenticated") {
     const { access } = session;
 
     // Start refresh, or wait for sign out
     const { refreshTimer, failure } = yield race({
       signOutResult: take(signOut.type),
-      refreshTimer: delay(expiresAt(access).getTime() - Date.now())
+      refreshTimer: delay(expiresAt(access).getTime() - Date.now()),
     });
 
     if (isDefined(refreshTimer)) {
@@ -60,7 +60,7 @@ export default function* sessionFlow(): SagaIterator {
       yield put(sessionRefresh());
       yield race({
         failure: take(signOut.type),
-        success: take(refreshSession.type)
+        success: take(refreshSession.type),
       });
     }
 
@@ -70,7 +70,7 @@ export default function* sessionFlow(): SagaIterator {
     }
 
     // Get most up to date access info
-    session = yield* select(store => store.session);
+    session = yield* select((store) => store.session);
   }
 }
 
@@ -83,7 +83,7 @@ function storeNewSession(action: LoadSessionAction): void {
   const session: PersistentSession = { user, access };
   const serialized: Option<string> = toJSON(PersistentSession.encode(session));
   const result: boolean = serialized
-    .map<boolean>(s => setLocalStorage(LOCAL_STORAGE_KEY, s))
+    .map<boolean>((s) => setLocalStorage(LOCAL_STORAGE_KEY, s))
     .getOrElse(false);
   if (result) {
     log(
@@ -102,7 +102,7 @@ function* signOutAndWarn(message: string): SagaIterator {
   yield put(
     showToast({
       message,
-      variant: "warning"
+      variant: "warning",
     })
   );
 }
@@ -119,7 +119,7 @@ function* sessionLoad<T extends SessionLoad>(
   const { data } = result;
   const action: LoadSessionAction = loadSession({
     mode,
-    ...data
+    ...data,
   } as T);
   yield put(action);
   log("Loading session into local storage");
@@ -135,7 +135,7 @@ function* exchangeToken(code: string): SagaIterator {
     const { timeout, success } = yield race({
       timeout: delay(TIMEOUT),
       signOut: take(signOut.type),
-      success: call(tokenExchange.fetch, { data: { code } })
+      success: call(tokenExchange.fetch, { data: { code } }),
     });
 
     if (isDefined(success))
@@ -168,7 +168,7 @@ function* identifySession(): SagaIterator {
     const { timeout, success } = yield race({
       timeout: delay(TIMEOUT),
       signOut: take(signOut.type),
-      success: call(identify.fetch)
+      success: call(identify.fetch),
     });
 
     if (isDefined(success)) {

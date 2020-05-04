@@ -16,7 +16,7 @@ import {
   RestSuccess,
   RestFailure,
   RestStart,
-  ApiRequest
+  ApiRequest,
 } from "Store/api/rest/types";
 import { Errors } from "io-ts";
 
@@ -112,14 +112,14 @@ export function consumeAxiosError(axiosError: AxiosError): ApiError {
     url: axiosError.config.url || "",
     method,
     data: axiosError.config[dataOrParams(method)] as Record<string, unknown>,
-    headers: (axiosError.config.headers as Record<string, string>) || {}
+    headers: (axiosError.config.headers as Record<string, string>) || {},
   };
 
   if (isDefined(axiosError.response)) {
     // Server error
     const { data, status, statusText, headers } = axiosError.response;
     const asText = Option.from(data)
-      .flatMap<string>(o => toJSON(o))
+      .flatMap<string>((o) => toJSON(o))
       .getOrElse(axiosError.toString());
 
     logMessage = `${status} Error: ${asText}\n${axiosError.message}`;
@@ -131,13 +131,13 @@ export function consumeAxiosError(axiosError: AxiosError): ApiError {
       statusText,
       headers,
       request,
-      message: `An API error ocurred (status code ${status} - ${statusText}): ${asText}`
+      message: `An API error ocurred (status code ${status} - ${statusText}): ${asText}`,
     };
   } else if (isDefined(axiosError.request)) {
     // Network error
     const { request: requestObj } = axiosError;
     const asText = Option.from(requestObj)
-      .flatMap<string>(o => toJSON(o))
+      .flatMap<string>((o) => toJSON(o))
       .getOrElse(axiosError.toString());
 
     logMessage = `Network Error: ${asText}`;
@@ -145,7 +145,7 @@ export function consumeAxiosError(axiosError: AxiosError): ApiError {
       type: "api",
       reason: "network",
       message: "Could not make request. Check network connectivity",
-      request
+      request,
     };
   } else {
     // Client error
@@ -154,7 +154,7 @@ export function consumeAxiosError(axiosError: AxiosError): ApiError {
       type: "api",
       reason: "client",
       message: axiosError.message,
-      request
+      request,
     };
   }
 
@@ -189,7 +189,7 @@ export function apiFetch<TResponse>({
   method,
   data,
   headers,
-  auth
+  auth,
 }: ApiRequest): SagaCancellablePromise<ApiResponse<TResponse>> {
   type Response = ApiResponse<TResponse>;
   async function fetchInner(cancelToken: CancelToken): Promise<Response> {
@@ -200,7 +200,7 @@ export function apiFetch<TResponse>({
         headers,
         [dataOrParams(method)]: data,
         cancelToken,
-        withCredentials: auth
+        withCredentials: auth,
       });
       return {
         data: result.data,
@@ -209,8 +209,8 @@ export function apiFetch<TResponse>({
         headers: result.headers as Record<string, string>,
         request: {
           url: result.config.url || "",
-          headers: (result.config.headers as Record<string, string>) || {}
-        }
+          headers: (result.config.headers as Record<string, string>) || {},
+        },
       };
     } catch (e) {
       const error: AxiosError = e;
@@ -254,7 +254,7 @@ export function makeRoute<
     method,
     decode: decodeFunc,
     headers,
-    auth
+    auth,
   }: RouteConfig<
     TLabel,
     TRouteData,
@@ -280,7 +280,7 @@ export function makeRoute<
         data,
         method,
         headers: { ...headers },
-        auth: !!auth
+        auth: !!auth,
       };
 
       async function fetchInner(
@@ -298,7 +298,7 @@ export function makeRoute<
               type: "decode",
               original: result.data,
               message: `An error ocurred while decoding: ${e.toString()}`,
-              error: e
+              error: e,
             };
             throw error;
           }
@@ -310,14 +310,14 @@ export function makeRoute<
               type: "decode",
               original: result.data,
               message: `Errors ocurred while parsing server response:`,
-              error: message.toString()
+              error: message.toString(),
             };
             throw error;
           }
 
           response = {
             ...result,
-            data: decodeResult.right
+            data: decodeResult.right,
           };
         } else {
           // Unsafe: decode function omitted
@@ -354,7 +354,7 @@ export function makeRoute<
         metadata,
         method,
         auth: !!auth,
-        headers: { ...headers }
+        headers: { ...headers },
       });
     }
 
@@ -421,7 +421,7 @@ function extractArgs<D, R, M>(
   const base = ({
     data: undefined,
     routeData: undefined,
-    metadata: undefined
+    metadata: undefined,
   } as unknown) as ExtractedArgs<D, R, M>;
   if (typeof args === "undefined") return base;
   return { ...base, ...args };

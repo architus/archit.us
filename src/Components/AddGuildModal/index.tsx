@@ -5,32 +5,37 @@ import {
   API_BASE,
   processIfNotEmptyOrNil,
   isDiscordAdminWithoutArchitus,
-  isDefined
+  isDefined,
 } from "Utility";
 import { Snowflake } from "Utility/types";
 import GuildCard from "Components/GuildCard";
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, ModalProps } from "react-bootstrap";
 import "./style.scss";
 
 type AddGuildModalProps = {
   onHide: () => void;
-} & Partial<React.ComponentProps<typeof Modal>>;
+} & Partial<ModalProps>;
 
-const AddGuildModal: React.FC<AddGuildModalProps> = ({ onHide, ...rest }) => {
+const AddGuildModal: React.FC<AddGuildModalProps> = ({
+  onHide,
+  as,
+  ...rest
+}) => {
   const { all: guilds } = usePool("guilds", {
-    filter: isDiscordAdminWithoutArchitus
+    filter: isDiscordAdminWithoutArchitus,
   });
   const returnQuery = useReturnQuery();
   const inviteUrl = (guildId: Snowflake): string =>
     `${API_BASE}/invite/${guildId}${processIfNotEmptyOrNil(
       returnQuery,
-      q => `?${q}`
+      (q) => `?${q}`
     )}`;
   return (
     <Modal
       size="lg"
       aria-labelledby="add-guild-header"
       centered
+      as={as}
       onHide={onHide}
       className="add-guild-modal"
       restoreFocus={false}

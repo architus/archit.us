@@ -1,7 +1,7 @@
 import {
   useSelector as useRawSelector,
   useDispatch as useRawDispatch,
-  TypedUseSelectorHook
+  TypedUseSelectorHook,
 } from "react-redux";
 import { Store, Dispatch } from "Store";
 

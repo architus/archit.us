@@ -9,8 +9,8 @@ import { text, number } from "@storybook/addon-knobs";
 export default {
   title: "Components|SettingsCard",
   parameters: {
-    component: SettingsCard
-  }
+    component: SettingsCard,
+  },
 };
 
 export const Basic = () => (
@@ -30,8 +30,8 @@ Basic.story = {
       "card width is `100% * (width / 20)`, while on medium devices **(width > " +
       "768px)**, the final card width is double that at `100% * (width / 10)`. " +
       "On mobile, cards stretch to the full container width no matter what their " +
-      "`width` prop is set to."
-  }
+      "`width` prop is set to.",
+  },
 };
 
 export const Example = () => (

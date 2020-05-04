@@ -19,8 +19,8 @@ module.exports = (api, { external, hot, node, modules } = {}) => {
         r("@babel/plugin-syntax-dynamic-import"),
         r("@babel/plugin-proposal-class-properties"),
         r("@babel/plugin-proposal-optional-chaining"),
-        r("@babel/plugin-proposal-export-default-from")
-      ]
+        r("@babel/plugin-proposal-export-default-from"),
+      ],
     };
   }
 
@@ -34,11 +34,11 @@ module.exports = (api, { external, hot, node, modules } = {}) => {
           r("@babel/plugin-transform-runtime"),
           {
             corejs: false,
-            useESModules: true
-          }
+            useESModules: true,
+          },
         ],
-        r("@babel/plugin-syntax-dynamic-import")
-      ]
+        r("@babel/plugin-syntax-dynamic-import"),
+      ],
     };
   }
 
@@ -46,7 +46,7 @@ module.exports = (api, { external, hot, node, modules } = {}) => {
     return {
       presets: [
         r("@babel/preset-env"),
-        [r("@babel/preset-react"), { development: false }]
+        [r("@babel/preset-react"), { development: false }],
       ],
       plugins: [
         r("babel-plugin-macros"),
@@ -55,8 +55,8 @@ module.exports = (api, { external, hot, node, modules } = {}) => {
         r("@babel/plugin-transform-runtime"),
         r("@babel/plugin-proposal-class-properties"),
         r("@babel/plugin-proposal-optional-chaining"),
-        r("@babel/plugin-proposal-export-default-from")
-      ]
+        r("@babel/plugin-proposal-export-default-from"),
+      ],
     };
   }
 
@@ -64,13 +64,13 @@ module.exports = (api, { external, hot, node, modules } = {}) => {
   return {
     presets: [
       r("@babel/preset-env"),
-      [r("@babel/preset-react"), { development: !PRODUCTION }]
+      [r("@babel/preset-react"), { development: !PRODUCTION }],
     ],
     plugins: [
       ...((modules && [r("@babel/plugin-transform-modules-commonjs")]) || []),
       ...((PRODUCTION && [
         r("babel-plugin-universal-import"),
-        r("babel-plugin-transform-react-remove-prop-types")
+        r("babel-plugin-transform-react-remove-prop-types"),
       ]) ||
         []),
       r("@babel/plugin-transform-runtime"),
@@ -79,7 +79,7 @@ module.exports = (api, { external, hot, node, modules } = {}) => {
       r("@babel/plugin-syntax-dynamic-import"),
       r("@babel/plugin-proposal-class-properties"),
       r("@babel/plugin-proposal-optional-chaining"),
-      r("@babel/plugin-proposal-export-default-from")
-    ]
+      r("@babel/plugin-proposal-export-default-from"),
+    ],
   };
 };

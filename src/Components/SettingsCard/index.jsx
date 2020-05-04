@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import Card from "Components/Card";
 import SettingsEntry, {
-  propShape as settingPropShape
+  propShape as settingPropShape,
 } from "Components/SettingsEntry";
 
 import "./style.scss";
@@ -36,7 +36,7 @@ export const propShape = {
     PropTypes.shape({ ...settingPropShape, key: PropTypes.string.isRequired })
   ).isRequired,
   title: PropTypes.string.isRequired,
-  width: PropTypes.number
+  width: PropTypes.number,
 };
 
 SettingsCard.propTypes = { ...propShape, onCommit: PropTypes.func };
@@ -61,7 +61,7 @@ function EntryWrapper({ entryIndex, onCommit, ...rest }) {
 
 EntryWrapper.propTypes = {
   entryIndex: PropTypes.number.isRequired,
-  onCommit: PropTypes.func.isRequired
+  onCommit: PropTypes.func.isRequired,
 };
 
 EntryWrapper.displayName = "EntryWrapper";

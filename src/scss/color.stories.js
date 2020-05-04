@@ -12,7 +12,7 @@ function Color({ weight, className, primary, style }) {
           height: "80px",
           marginBottom: "8px",
           borderRadius: primary ? "100rem" : "0",
-          ...style
+          ...style,
         }}
         className={className}
       />
@@ -27,13 +27,13 @@ Color.propTypes = {
   weight: PropTypes.number,
   className: PropTypes.string,
   primary: PropTypes.bool,
-  style: PropTypes.object
+  style: PropTypes.object,
 };
 
 function ColorsDisplay({ name, weights, primary, primaryStyle }) {
   return (
     <div className="d-flex">
-      {weights.map(weight => (
+      {weights.map((weight) => (
         <Color
           key={weight}
           weight={weight}
@@ -50,7 +50,7 @@ ColorsDisplay.propTypes = {
   name: PropTypes.string,
   weights: PropTypes.arrayOf(PropTypes.number),
   primary: PropTypes.bool,
-  primaryStyle: PropTypes.object
+  primaryStyle: PropTypes.object,
 };
 
 export const Colors = () => (

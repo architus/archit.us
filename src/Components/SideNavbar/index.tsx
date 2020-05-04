@@ -49,7 +49,7 @@ const NavbarIcon: React.FC<NavbarIconProps> = ({
   path,
   icon,
   onClickTab,
-  isActive
+  isActive,
 }) => (
   <Outer name={name} isActive={isActive} path={path}>
     <button

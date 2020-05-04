@@ -3,7 +3,7 @@ import {
   useReturnQuery,
   API_BASE,
   processIfNotEmptyOrNil,
-  isDefined
+  isDefined,
 } from "Utility";
 import { useSessionStatus } from "Store/slices/session";
 import { Link as RouterLink } from "Components/Router";
@@ -15,7 +15,7 @@ export function useOauthUrl(): string {
   const returnQuery = useReturnQuery();
   return `${API_BASE}/session/login${processIfNotEmptyOrNil(
     returnQuery,
-    q => `?${q}`
+    (q) => `?${q}`
   )}`;
 }
 
@@ -26,7 +26,7 @@ type LoginButtonProps = {
 
 const LoginButton: React.FC<LoginButtonProps> = ({
   loggedIn,
-  showLabel = true
+  showLabel = true,
 }) => {
   const oauthUrl = useOauthUrl();
   const { isSigningIn } = useSessionStatus();

@@ -3,7 +3,7 @@ import {
   MockMessage,
   TransformMessage,
   DiscordMockContext,
-  MockUser
+  MockUser,
 } from "Utility/types";
 import {
   makeTransformer,
@@ -23,7 +23,7 @@ import {
   transformMarkdown,
   emojiToShortcode,
   architusUser,
-  isDefined
+  isDefined,
 } from "Utility";
 
 export type TransformerContext = {
@@ -41,13 +41,13 @@ const transformMessageText = makeTransformer<TransformerContext>([
   convertGlobalMentions,
   convertMentions,
   convertDiscordEmoji,
-  convertUnicodeEmoji
+  convertUnicodeEmoji,
 ]);
 const transformMessageCode: TransformerStep<TransformerContext> = renderCode;
 
 /**
  * Transforms a mock discord message using the default transformation pipeline
- * @param message - Oirignal message string
+ * @param message - Original message string
  * @param _ - Sender (unused)
  * @param context - Discord mock context object
  */
@@ -59,7 +59,7 @@ export function transformMockMessage(
 ): ReturnType<TransformMessage> {
   const transformContext: TransformerContext = {
     thisUserId: context.thisUser.id,
-    users: context.users
+    users: context.users,
   };
   const mentions = allMentionedIds(message.content, transformContext);
   const taggedFragments = tokenizeFragments(message.content);
@@ -75,23 +75,23 @@ export function transformMockMessage(
         }
         return {
           tag,
-          content: result
+          content: result,
         };
       }
 
       return {
         tag,
-        content: transformMessageCode(content, transformContext)
+        content: transformMessageCode(content, transformContext),
       };
     }
   );
   const joinedResult = mappedFragments
-    .map(fragment => fragment.content)
+    .map((fragment) => fragment.content)
     .join("");
   const markdownProcessed = transformMarkdown(joinedResult);
   return {
     result: markdownProcessed,
-    mentions
+    mentions,
   };
 }
 
@@ -120,7 +120,7 @@ export const TransformMessageContext = React.createContext<{
     thisUser: architusUser,
     architusUser,
     users: { [architusUser.id]: architusUser },
-    guildId: 0
+    guildId: 0,
   },
-  transform: transformMockMessage
+  transform: transformMockMessage,
 });

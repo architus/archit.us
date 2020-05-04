@@ -7,7 +7,7 @@ import MaxWidthDecorator from "MaxWidthDecorator";
 export default {
   title: "Inputs|Switch",
   decorators: [MaxWidthDecorator],
-  parameters: { component: Switch }
+  parameters: { component: Switch },
 };
 
 export const Controlled = () => {

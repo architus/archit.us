@@ -51,7 +51,7 @@ function SyntaxHighlightedInput({
   const highlight = useCallback(
     isDefined(highlightFunc)
       ? highlightFunc
-      : code => Prism.highlight(code, languageDef),
+      : (code) => Prism.highlight(code, languageDef),
     [highlightFunc, languageDef]
   );
 
@@ -59,7 +59,7 @@ function SyntaxHighlightedInput({
     <div
       className={classNames("syntax-highlighted-input", className, {
         "is-invalid": isInvalid,
-        "is-valid": isValid
+        "is-valid": isValid,
       })}
     >
       <Editor
@@ -82,7 +82,7 @@ SyntaxHighlightedInput.propTypes = {
   className: PropTypes.string,
   isInvalid: PropTypes.bool,
   isValid: PropTypes.bool,
-  prismLanguage: PropTypes.object
+  prismLanguage: PropTypes.object,
 };
 
 SyntaxHighlightedInput.defaultProps = {
@@ -91,5 +91,5 @@ SyntaxHighlightedInput.defaultProps = {
   tokens: [],
   className: "",
   isInvalid: false,
-  isValid: false
+  isValid: false,
 };

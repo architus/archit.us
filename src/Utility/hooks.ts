@@ -4,7 +4,7 @@ import {
   useMemo,
   useCallback,
   useRef,
-  MutableRefObject
+  MutableRefObject,
 } from "react";
 import { globalHistory, History } from "@reach/router";
 import { addMissingUnit, collator } from "./primitives";
@@ -55,14 +55,14 @@ export function useMediaBreakpoints(breakpoints: string[]): Option<string> {
 
   const queries = useMemo(
     () =>
-      sortedBreakpoints.map<string>(b => `(min-width: ${addMissingUnit(b)})`),
+      sortedBreakpoints.map<string>((b) => `(min-width: ${addMissingUnit(b)})`),
     [sortedBreakpoints]
   );
 
   const getActive = useCallback(
     (matches: boolean[]) => {
       // Find first media query that fails
-      const result = matches.findIndex(m => !m);
+      const result = matches.findIndex((m) => !m);
       // If none fail, then return last breakpoint; else return the last passing
       return result === -1 ? sortedBreakpoints.length - 1 : result - 1;
     },
@@ -72,26 +72,28 @@ export function useMediaBreakpoints(breakpoints: string[]): Option<string> {
   const [state, setState] = useState(
     isClient
       ? (): number =>
-          getActive(queries.map<boolean>(q => window.matchMedia(q).matches))
+          getActive(queries.map<boolean>((q) => window.matchMedia(q).matches))
       : -1
   );
 
   useEffect(() => {
     let mounted = true;
-    const mediaQueries = queries.map<MediaQueryList>(q => window.matchMedia(q));
+    const mediaQueries = queries.map<MediaQueryList>((q) =>
+      window.matchMedia(q)
+    );
     const onChange = (): void => {
       if (!mounted) {
         return;
       }
-      setState(getActive(mediaQueries.map<boolean>(m => m.matches)));
+      setState(getActive(mediaQueries.map<boolean>((m) => m.matches)));
     };
 
-    mediaQueries.forEach(mql => mql.addListener(onChange));
-    setState(getActive(mediaQueries.map<boolean>(m => m.matches)));
+    mediaQueries.forEach((mql) => mql.addListener(onChange));
+    setState(getActive(mediaQueries.map<boolean>((m) => m.matches)));
 
     return (): void => {
       mounted = false;
-      mediaQueries.forEach(mql => mql.removeListener(onChange));
+      mediaQueries.forEach((mql) => mql.removeListener(onChange));
     };
   }, [getActive, queries]);
 
@@ -111,12 +113,12 @@ export function useLocation(): {
 } {
   const initialState = {
     location: globalHistory.location,
-    navigate: globalHistory.navigate
+    navigate: globalHistory.navigate,
   };
 
   const [state, setState] = useState(initialState);
   useEffectOnce(() => {
-    const removeListener = globalHistory.listen(params => {
+    const removeListener = globalHistory.listen((params) => {
       const { location } = params;
       const newState = { ...initialState, location };
       setState(newState);

@@ -2,26 +2,26 @@ import { GenerateSW } from "workbox-webpack-plugin";
 import transform from "./src/Build/webpack.transform";
 
 export default () => ({
-  webpack: config => {
+  webpack: (config) => {
     // Service Worker
     config.plugins.push(
       new GenerateSW({
         runtimeCaching: [
           {
             urlPattern: /img/,
-            handler: "CacheFirst"
+            handler: "CacheFirst",
           },
           {
             urlPattern: new RegExp(
               "^https://fonts.(?:googleapis|gstatic).com/(.*)"
             ),
-            handler: "CacheFirst"
+            handler: "CacheFirst",
           },
           {
             urlPattern: /.*/,
-            handler: "NetworkFirst"
-          }
-        ]
+            handler: "NetworkFirst",
+          },
+        ],
       })
     );
 
@@ -34,12 +34,12 @@ export default () => ({
       config.plugins.push(
         new BundleAnalyzerPlugin({
           analyzerMode: "disabled",
-          generateStatsFile: true
+          generateStatsFile: true,
         })
       );
     }
 
     // Run common webpack transformer
     return transform(config);
-  }
+  },
 });

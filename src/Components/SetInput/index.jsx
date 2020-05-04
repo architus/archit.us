@@ -22,12 +22,12 @@ function SetInput({ items, addItem, removeItem, renderItem, children }) {
           variant="input-control"
           className="set-input--add"
           onClick={addItem}
-          onMouseDown={e => {
+          onMouseDown={(e) => {
             if (e) {
               e.preventDefault();
             }
           }}
-          onKeyUp={e => {
+          onKeyUp={(e) => {
             if (e.keyCode === 13 || e.keyCode === 32) {
               addItem();
             }
@@ -49,15 +49,15 @@ SetInput.propTypes = {
   renderItem: PropTypes.func,
   children: PropTypes.oneOfType([
     PropTypes.node,
-    PropTypes.arrayOf(PropTypes.node)
-  ])
+    PropTypes.arrayOf(PropTypes.node),
+  ]),
 };
 
 SetInput.defaultProps = {
   items: [],
   addItem() {},
   removeItem() {},
-  renderItem: item => <div>{String(item)}</div>
+  renderItem: (item) => <div>{String(item)}</div>,
 };
 
 SetInput.displayName = "SetInput";
@@ -85,6 +85,6 @@ SetInputItem.propTypes = {
   onRemove: PropTypes.func.isRequired,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node
-  ]).isRequired
+    PropTypes.node,
+  ]).isRequired,
 };

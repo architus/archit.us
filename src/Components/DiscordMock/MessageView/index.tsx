@@ -4,14 +4,14 @@ import {
   formatAmPm,
   getScrollDistance,
   scrollToBottom,
-  isDefined
+  isDefined,
 } from "Utility";
 import { MockMessageClump, StyleObject } from "Utility/types";
 import MessageClump from "Components/DiscordMock/MessageClump";
 import {
   DiscordMockDispatchContext,
   react,
-  unreact
+  unreact,
 } from "Components/DiscordMock/actions";
 import "./style.scss";
 import { AnyAction } from "redux";
@@ -73,11 +73,11 @@ class MessageView extends React.PureComponent<
   ): MessageViewSnapshot {
     if (isDefined(this.list.current)) {
       return {
-        prevScrollDistance: getScrollDistance(this.list.current)
+        prevScrollDistance: getScrollDistance(this.list.current),
       };
     }
     return {
-      prevScrollDistance: 0
+      prevScrollDistance: 0,
     };
   }
 
@@ -115,7 +115,7 @@ type RenderedMessageClumpProps = {
 } & Omit<MessageClumpProps, "onReact" | "onUnreact">;
 
 /**
- * Id-aware component to stablize onReact/onUnreact callbacks
+ * Id-aware component to stabilize onReact/onUnreact callbacks
  */
 const RenderedMessageClump: React.FC<RenderedMessageClumpProps> = React.memo(
   ({ index, dispatch, ...rest }) => (

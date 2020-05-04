@@ -6,7 +6,7 @@ import {
   MockReaction,
   MockMessageClump,
   MockMessage,
-  MockUser
+  MockUser,
 } from "Utility/types";
 import { Badge, BadgeProps } from "react-bootstrap";
 import UserDisplay from "Components/UserDisplay";
@@ -39,7 +39,7 @@ const MessageClump: React.FC<MessageClumpProps> = React.forwardRef(
       onReact,
       onUnreact,
       style,
-      className
+      className,
     },
     ref: React.Ref<HTMLDivElement>
   ) => {
@@ -50,7 +50,7 @@ const MessageClump: React.FC<MessageClumpProps> = React.forwardRef(
         style={style}
         className={classNames(className, "message-clump", {
           "clump-first": first,
-          "clump-last": last
+          "clump-last": last,
         })}
       >
         <div>
@@ -118,17 +118,11 @@ const RenderedMessage: React.FC<RenderedMessageProps> = React.memo(
     sender,
     genericOnReact,
     genericOnUnreact,
-    placeholderAmount
+    placeholderAmount,
   }) => {
     const { transform, context } = useContext(TransformMessageContext);
     const { result, mentions } = useMemo(
-      () =>
-        transform(
-          message,
-          sender,
-          context,
-          (fragment: string): string => fragment
-        ),
+      () => transform(message, sender, context),
       [transform, message, sender, context]
     );
     return (
