@@ -13,6 +13,7 @@ export { faFilter } from "@fortawesome/free-solid-svg-icons/faFilter";
 export { faTimesCircle } from "@fortawesome/free-solid-svg-icons/faTimesCircle";
 export { faQuestionCircle } from "@fortawesome/free-solid-svg-icons/faQuestionCircle";
 export { faMinus } from "@fortawesome/free-solid-svg-icons/faMinus";
+export { faTrash } from "@fortawesome/free-solid-svg-icons/faTrash";
 
 // Brand icons
 export { faDiscord } from "@fortawesome/free-brands-svg-icons/faDiscord";

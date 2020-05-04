@@ -1,6 +1,6 @@
 import React from "react";
 import { addPrefetchExcludes, Root, Routes } from "react-static";
-import { ThemeProvider } from "@xstyled/emotion";
+import { ThemeProvider, ColorModeProvider } from "@xstyled/emotion";
 import Store from "Store";
 import { Router } from "Components/Router";
 import { Provider } from "react-redux";
@@ -20,17 +20,19 @@ const App: React.FunctionComponent<{}> = () => (
   <Root>
     <SEO />
     <ThemeProvider theme={theme}>
-      <Provider store={Store}>
-        <NotificationPane />
-        <main>
-          <React.Suspense fallback={<em>Loading...</em>}>
-            <Router>
-              <AppRoot path="/app/*" />
-              <Routes path="*" />
-            </Router>
-          </React.Suspense>
-        </main>
-      </Provider>
+      <ColorModeProvider>
+        <Provider store={Store}>
+          <NotificationPane />
+          <main>
+            <React.Suspense fallback={<em>Loading...</em>}>
+              <Router>
+                <AppRoot path="/app/*" />
+                <Routes path="*" />
+              </Router>
+            </React.Suspense>
+          </main>
+        </Provider>
+      </ColorModeProvider>
     </ThemeProvider>
   </Root>
 );

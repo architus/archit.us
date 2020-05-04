@@ -1,23 +1,43 @@
-import React, { useContext } from "react";
+import React, { useContext, useMemo } from "react";
+import styled, { css, up, Box } from "@xstyled/emotion";
+import DataGrid from "react-data-grid";
 import { AppPageProps } from "Dynamic/AppRoot/types";
-import { User, Snowflake } from "Utility/types";
-import "./style.scss";
+import { User, Snowflake, HoarFrost } from "Utility/types";
 import { useCurrentUser } from "Store/actions";
-import { Option } from "Utility/option";
-// import DataGrid from "Components/DataGrid";
-// import { Switch } from "Components";
-// import { isDefined } from "Utility";
+import { Option, None } from "Utility/option";
 import { ScrollContext } from "Dynamic/AppRoot/context";
-// import { triggerPipeline } from "./formatters";
+import { Tooltip, Icon, Switch, HelpTooltip } from "Components";
+import { AutoSizer } from "react-virtualized";
+import { AnyIconName } from "Components/Icon/loader";
+import "react-data-grid/dist/react-data-grid.css";
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 type AutoResponse = {
+  id: HoarFrost;
   author_id: Snowflake;
+  trigger: string;
+  response: string;
   count: number;
 };
 
+type TransformedAutoResponse = {
+  id: HoarFrost;
+  author_id: Snowflake;
+  trigger: string;
+  response: string;
+  count: number;
+  authorData: AuthorData;
+};
+
+type ViewMode = keyof typeof viewModes;
+const viewModeOrder: ViewMode[] = ["Sparse", "Comfy", "Compact"];
+const viewModes = {
+  Compact: { icon: "compact" as AnyIconName, label: "Compact", height: 24 },
+  Comfy: { icon: "comfy" as AnyIconName, label: "Comfy", height: 32 },
+  Sparse: { icon: "sparse" as AnyIconName, label: "Sparse", height: 40 },
+};
+
 type AutoResponsesProps = {
-  commands: AutoResponse[];
+  commands: TransformedAutoResponse[];
   authors: Map<Snowflake, User>;
   authenticated: boolean;
   hasLoaded: boolean;
@@ -28,6 +48,10 @@ type AutoResponsesProps = {
 
 type AutoResponsesState = {
   filterSelfAuthored: boolean;
+  viewMode: ViewMode;
+  showFilters: boolean;
+  deleteSelectedEnable: boolean;
+  addNewRowEnable: boolean;
 };
 
 type AuthorData = {
@@ -37,9 +61,147 @@ type AuthorData = {
   discriminator: string;
 };
 
-type Row = AuthorData & AutoResponse;
+const Styled = {
+  PageOuter: styled.div`
+    position: relative;
+    display: flex;
+    justify-content: stretch;
+    align-items: stretch;
+    flex-direction: column;
+    height: 100%;
 
-// const trueCallback = (): boolean => true;
+    padding-top: milli;
+  `,
+  Header: styled.div`
+    padding: 0 milli;
+  `,
+  GridWrapper: styled.div`
+    position: relative;
+    flex-grow: 1;
+    display: flex;
+    justify-content: stretch;
+    align-items: stretch;
+    flex-direction: column;
+
+    background-color: b_300;
+
+    ${up(
+      "md",
+      css`
+        margin-left: milli;
+        border-top-left-radius: 1rem;
+      `
+    )}
+  `,
+  GridHeader: styled.div`
+    display: flex;
+    height: centi;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+
+    border-top: 1px solid border;
+    box-shadow: 1;
+    background-color: b_500;
+
+    ${up(
+      "md",
+      css`
+        border-top-left-radius: 1rem;
+      `
+    )}
+  `,
+  ViewModeButtonGroup: styled.div`
+    margin: 0 0.5rem;
+    padding: 0 0.25rem;
+    border-radius: 0.5rem;
+    margin-left: auto;
+
+    ${up(
+      "lg",
+      css`
+        margin-right: 0.75rem;
+      `
+    )}
+  `,
+  ViewModeButton: styled.button<{ active: boolean }>`
+    outline: none;
+    border: none;
+    background-color: transparent;
+    padding: 0.5rem 0.6rem;
+    color: foreground_fade;
+
+    ${(props): string =>
+      props.active
+        ? css`
+            background-color: dark_overlay;
+            color: text;
+          `
+        : ""}
+
+    &:first-of-type {
+      border-top-left-radius: 0.5rem;
+      border-bottom-left-radius: 0.5em;
+    }
+
+    &:last-of-type {
+      border-top-right-radius: 0.5rem;
+      border-bottom-right-radius: 0.5em;
+    }
+  `,
+  FilterSwitch: styled(Switch)`
+    padding: 0 1rem;
+  `,
+  FilterSelfSwitch: styled(Switch)`
+    padding: 0 1rem;
+  `,
+  GridHeaderButton: styled.button`
+    outline: none;
+    background-color: transparent;
+    margin-left: nano;
+    padding: 0.5rem nano;
+    transition-duration: 0.15s;
+    transition-easing-function: linear;
+    transition-property: opacity, background-color;
+    color: text;
+    border-radius: 0.5rem;
+    border: 1.5px solid transparent;
+    border-color: contrast_border;
+
+    ${(props): string =>
+      props.disabled
+        ? css`
+            opacity: 0;
+          `
+        : css`
+            opacity: 1;
+            background-color: light_overlay;
+            box-shadow: none;
+
+            &:not(:hover):not(:active) {
+              box-shadow: 0;
+            }
+
+            &:hover {
+              background-color: dark_overlay_slight;
+            }
+            &:active {
+              background-color: dark_overlay;
+            }
+          `}
+  `,
+  DataGridWrapper: styled.div`
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+    flex-grow: 1;
+
+    & .rdg-cell-mask {
+      display: none !important;
+    }
+  `,
+};
 
 class AutoResponses extends React.Component<
   AutoResponsesProps,
@@ -47,250 +209,118 @@ class AutoResponses extends React.Component<
 > {
   state: AutoResponsesState = {
     filterSelfAuthored: false,
+    viewMode: "Comfy",
+    showFilters: false,
+    deleteSelectedEnable: false,
+    addNewRowEnable: true,
   };
 
-  // TODO implement
-  addRow = (): null => null;
-
-  editRow = (): null => null;
-
-  deleteRow = (): null => null;
-
-  compareRowAuthor = (r: AutoResponse): boolean =>
-    r.author_id === this.props.currentUser.id;
-
-  transformRow(r: AutoResponse): Row {
-    const { authors } = this.props;
-    return { ...r, ...foldAuthorData(r, authors) };
-  }
-
-  onRowAdd = (): void => {
-    // if (isDefined(row)) {
-    //   this.addRow(guildId, row);
-    //   dispatch(localAddResponse(guildId, row, session));
-    // }
+  setViewMode = (newMode: ViewMode): void => {
+    this.setState({ viewMode: newMode });
   };
 
-  onRowUpdate = (): void => {
-    // if (isDefined(row) && canChangeRow(row)) {
-    //   this.editRow(guildId, row.trigger, { ...row, [key]: updatedCell });
-    //   dispatch(localEditResponse(guildId, row, key, updatedCell));
-    // }
+  onChangeShowFilters = (newShow: boolean): void => {
+    this.setState({ showFilters: newShow });
   };
 
-  onRowDelete = (): void => {
-    // if (isDefined(row) && canChangeRow(row)) {
-    //   this.deleteRow(guildId, row);
-    //   dispatch(localDeleteResponse(guildId, row));
-    // }
+  onChangeFilterSelfAuthored = (newFilter: boolean): void => {
+    this.setState({ filterSelfAuthored: newFilter });
   };
 
-  baseColumnMeta = {
-    sortable: true,
-    filterable: true,
-    resizable: true,
+  onDeleteSelected = (): void => {
+    // TODO implement
   };
 
-  columnWidths = new Map(
-    Object.entries({
-      base: [150, 300, 90, 200],
-      "768": [200, 300, 100, 200],
-      "992": [200, null, 90, 200],
-      "1200": [270, null, 200, 240],
-    })
-  );
-
-  onToggleSelfAuthored = (): void => {
-    this.setState(({ filterSelfAuthored }) => ({
-      filterSelfAuthored: !filterSelfAuthored,
-    }));
+  onAddNewRow = (): void => {
+    // TODO implement
   };
-
-  // triggerCellFormatter = ({ value }: { value: string }): React.ReactNode => (
-  //   <div
-  //     className="response"
-  //     dangerouslySetInnerHTML={{
-  //       __html: triggerPipeline(value, contextRef.current)
-  //     }}
-  //   />
-  // );
 
   render(): React.ReactNode {
-    const { isArchitusAdmin } = this.props;
-    // const { commands, isArchitusAdmin, hasLoaded, scrollHandler } = this.props;
-    // const { filterSelfAuthored } = this.state;
-
-    // const canChangeRow = isArchitusAdmin ? trueCallback : this.compareRowAuthor;
-    // const canEditRow = isArchitusAdmin ? true : this.compareRowAuthor;
-
-    // // Self-authored filter
-    // let processedData = commands;
-
-    // if (filterSelfAuthored) {
-    //   processedData = processedData.filter(this.compareRowAuthor);
-    // }
-
-    // // Column definitions
-    // const columns = [
-    //   {
-    //     key: "trigger",
-    //     name: "Trigger",
-    //     editable: canEditRow,
-    //     formatter: useMemo(() => createTriggerCellFormatter(contextRef), []),
-    //     unique: true,
-    //     tooltip: (
-    //       <span>
-    //         Include <strong>*</strong> as a wildcard, and use a corresponding{" "}
-    //         <strong>[capture]</strong> in the response to use the matched
-    //         string.
-    //       </span>
-    //     ),
-    //     hasAddField: true,
-    //     required: true,
-    //     info: (
-    //       <span>
-    //         Include <strong>*</strong> as a wildcard, and use a corresponding{" "}
-    //         <strong>[capture]</strong> in the response to use the matched
-    //         string.
-    //       </span>
-    //     ),
-    //     validator: value => {
-    //       if (value.trim().length < 2) {
-    //         return {
-    //           result: false,
-    //           message: "Trigger must be 2 characters or longer"
-    //         };
-    //       }
-    //       return true;
-    //     },
-    //     processValue: value => value.replace(/[_*\W]+/g, "")
-    //   },
-    //   {
-    //     key: "response",
-    //     name: "Response",
-    //     editable: canEditRow,
-    //     formatter: useMemo(() => createResponseCellFormatter(contextRef), []),
-    //     tooltip: (
-    //       <span>
-    //         <h6>Syntax</h6>
-    //         [noun], [adj], [adv], [member], [owl], [:reaction:], [count],
-    //         [capture], [author], [@author], [comma,separated,choices]
-    //       </span>
-    //     ),
-    //     hasAddField: true,
-    //     required: true,
-    //     info: (
-    //       <span>
-    //         <strong>Allowed Syntax:</strong> [noun], [adj], [adv], [member],
-    //         [owl], [:reaction:], [count], [capture], [author], [@author],
-    //         [comma,separated,choices]
-    //       </span>
-    //     ),
-    //     validator: value => {
-    //       if (value.trim() === "list") {
-    //         return {
-    //           result: false,
-    //           message: "Response cannot be a special command like list"
-    //         };
-    //       }
-
-    //       if (value.trim() === "author") {
-    //         return {
-    //           result: false,
-    //           message: "Response cannot be a special command like author"
-    //         };
-    //       }
-
-    //       return true;
-    //     }
-    //   },
-    //   {
-    //     key: "count",
-    //     name: "Count",
-    //     sortDescendingFirst: true,
-    //     formatter: useMemo(() => createCountCellFormatter(maxCountRef), []),
-    //     filterRenderer: NumericFilter
-    //   },
-    //   {
-    //     key: "author",
-    //     name: "Author",
-    //     formatter: AuthorCellFormatter
-    //   }
-    // ];
-
-    // // Max count
-    // const maxCountRef = useRef(0);
-    // maxCountRef.current = useMemo(() => {
-    //   if (isNil(commands) || commands.length === 0) return 0;
-
-    //   let maxCount = 0;
-    //   for (let i = 0; i < commands.length; ++i) {
-    //     if (commands[i].count > maxCount) maxCount = commands[i].count;
-    //   }
-    //   return maxCount;
-    // }, []);
-
-    // // Mentions context
-    // const contextRef = useRef({ users: {} });
-    // contextRef.current = useMemo(() => {
-    //   const map = {};
-    //   for (const id in authors) {
-    //     if (isDefined(authors[id])) {
-    //       map[id] = { username: authors[id].name };
-    //     }
-    //   }
-    //   return Object.freeze({ users: map });
-    // }, []);
-
-    // // Remove count column on mobile
-    // const isMobile = useMedia("(max-width: 767.9px)");
-    // if (isMobile) {
-    //   const countColumnIndex = 2;
-    //   const removeCountColumn = arr =>
-    //     arr.filter((_c, i) => i !== countColumnIndex);
-    //   columns = removeCountColumn(columns);
-    //   for (const breakpoint in columnWidths) {
-    //     if (columnWidths.hasOwnProperty(breakpoint)) {
-    //       columnWidths[breakpoint] = removeCountColumn(columnWidths[breakpoint]);
-    //     }
-    //   }
-    // }
+    const { isArchitusAdmin, commands } = this.props;
+    const {
+      viewMode,
+      showFilters,
+      filterSelfAuthored,
+      // deleteSelectedEnable,
+      addNewRowEnable,
+    } = this.state;
 
     return (
-      <div className="auto-responses">
-        <div className="hide-mobile-landscape">
+      <Styled.PageOuter>
+        <Styled.Header>
           <h2>Automatic Responses</h2>
           <p className="hide-mobile">
             Manage the triggers and automatic responses for{" "}
             {isArchitusAdmin ? "all entries" : "self-authored entries"} on the
             current server.
           </p>
-        </div>
-        {/* <DataGrid<AutoResponse, Row>
-          data={processedData}
-          columns={columns}
-          columnWidths={this.columnWidths}
-          sortColumn="count"
-          baseColumnMeta={this.baseColumnMeta}
-          transformRow={this.transformRow}
-          onRowAdd={this.onRowAdd}
-          onRowUpdate={this.onRowUpdate}
-          onRowDelete={this.onRowDelete}
-          canDeleteRow={canChangeRow}
-          isLoading={!hasLoaded}
-          emptyLabel="No responses to display"
-          onScroll={scrollHandler}
-          dialogTitle="Add new auto response"
-          toolbarComponents={
-            <Switch
-              onChange={this.onToggleSelfAuthored}
-              checked={filterSelfAuthored}
-              label="Show self-authored"
-              className="mr-sm-4"
-            />
-          }
-        /> */}
-      </div>
+        </Styled.Header>
+        <Styled.GridWrapper>
+          <GridHeader
+            viewMode={viewMode}
+            setViewMode={this.setViewMode}
+            showFilters={showFilters}
+            onChangeShowFilters={this.onChangeShowFilters}
+            filterSelfAuthored={filterSelfAuthored}
+            onChangeFilterSelfAuthored={this.onChangeFilterSelfAuthored}
+            deleteSelectedEnable={filterSelfAuthored}
+            onDeleteSelected={this.onDeleteSelected}
+            addNewRowEnable={addNewRowEnable}
+            onAddNewRow={this.onAddNewRow}
+          />
+          <Styled.DataGridWrapper>
+            <AutoSizer>
+              {({
+                height,
+                width,
+              }: {
+                height: number;
+                width: number;
+              }): React.ReactNode => (
+                <>
+                  <DataGrid
+                    rows={commands}
+                    height={height}
+                    width={width}
+                    columns={[
+                      {
+                        name: "Trigger",
+                        key: "trigger",
+                        formatter: ({ row }): React.ReactElement => (
+                          <>{row.trigger}</>
+                        ),
+                      },
+                      {
+                        name: "Response",
+                        key: "response",
+                        formatter: ({ row }): React.ReactElement => (
+                          <>{row.response}</>
+                        ),
+                      },
+                      {
+                        name: "Author",
+                        key: "authorData.author",
+                        formatter: ({ row }): React.ReactElement => (
+                          <>{row.authorData.author}</>
+                        ),
+                      },
+                      {
+                        name: "Count",
+                        key: "count",
+                        formatter: ({ row }): React.ReactElement => (
+                          <>{row.count}</>
+                        ),
+                      },
+                    ]}
+                    rowKey="id"
+                    rowHeight={viewModes[viewMode].height}
+                  />
+                </>
+              )}
+            </AutoSizer>
+          </Styled.DataGridWrapper>
+        </Styled.GridWrapper>
+      </Styled.PageOuter>
     );
   }
 }
@@ -325,16 +355,95 @@ function foldAuthorData(
 }
 
 const AutoResponsesProvider: React.FC<AppPageProps> = (pageProps) => {
-  // TODO implement
-  const authors: Map<Snowflake, User> = new Map();
-  const commands: AutoResponse[] = [];
+  // TODO hook up to state
+  // TODO add test data
+  const fakeUser: User = {
+    id: "2" as Snowflake,
+    username: "user",
+    discriminator: "1881",
+    avatar: None,
+    bot: None,
+    system: None,
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    mfa_enabled: None,
+    locale: None,
+    verified: None,
+    email: None,
+    flags: None,
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    premium_type: None,
+  };
+  const authors: Map<Snowflake, User> = new Map([[fakeUser.id, fakeUser]]);
+  const commandsBase: AutoResponse[] = [
+    {
+      id: "3" as HoarFrost,
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      author_id: fakeUser.id,
+      trigger: "hello*",
+      response: "[:JUST:]",
+      count: 2352,
+    },
+    {
+      id: "4" as HoarFrost,
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      author_id: fakeUser.id,
+      trigger: "YEP",
+      response: "COCK",
+      count: 12,
+    },
+    {
+      id: "5" as HoarFrost,
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      author_id: fakeUser.id,
+      trigger: "*night",
+      response: "[:night:]",
+      count: 3456,
+    },
+    {
+      id: "6" as HoarFrost,
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      author_id: fakeUser.id,
+      trigger: "*get on",
+      response: ":Pepega: [capture] get on",
+      count: 654,
+    },
+    {
+      id: "7" as HoarFrost,
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      author_id: fakeUser.id,
+      trigger: "no",
+      response: "[:JUST:]",
+      count: 2,
+    },
+  ];
+  const commands = [
+    ...commandsBase,
+    ...commandsBase.map((c) => ({ ...c, id: `${c.id}_` as HoarFrost })),
+    ...commandsBase.map((c) => ({ ...c, id: `${c.id}1` as HoarFrost })),
+    ...commandsBase.map((c) => ({ ...c, id: `${c.id}2` as HoarFrost })),
+    ...commandsBase.map((c) => ({ ...c, id: `${c.id}3` as HoarFrost })),
+    ...commandsBase.map((c) => ({ ...c, id: `${c.id}4` as HoarFrost })),
+    ...commandsBase.map((c) => ({ ...c, id: `${c.id}5` as HoarFrost })),
+    ...commandsBase.map((c) => ({ ...c, id: `${c.id}6` as HoarFrost })),
+    ...commandsBase.map((c) => ({ ...c, id: `${c.id}7` as HoarFrost })),
+    ...commandsBase.map((c) => ({ ...c, id: `${c.id}8` as HoarFrost })),
+    ...commandsBase.map((c) => ({ ...c, id: `${c.id}9` as HoarFrost })),
+    ...commandsBase.map((c) => ({ ...c, id: `${c.id}1_` as HoarFrost })),
+    ...commandsBase.map((c) => ({ ...c, id: `${c.id}2_` as HoarFrost })),
+    ...commandsBase.map((c) => ({ ...c, id: `${c.id}3_` as HoarFrost })),
+  ];
   const currentUser: Option<User> = useCurrentUser();
   const { scrollHandler } = useContext(ScrollContext);
+  const formattedCommands = useMemo(
+    () =>
+      commands.map((c) => ({ ...c, authorData: foldAuthorData(c, authors) })),
+    [commands, authors]
+  );
   if (currentUser.isDefined())
     return (
       <AutoResponses
         authors={authors}
-        commands={commands}
+        commands={formattedCommands}
         hasLoaded={false}
         currentUser={currentUser.get}
         authenticated={true}
@@ -348,3 +457,89 @@ const AutoResponsesProvider: React.FC<AppPageProps> = (pageProps) => {
 };
 
 export default AutoResponsesProvider;
+
+// ? ==============
+// ? Sub-components
+// ? ==============
+
+type GridHeaderProps = {
+  viewMode: ViewMode;
+  setViewMode: (newMode: ViewMode) => void;
+  showFilters: boolean;
+  onChangeShowFilters: (newShow: boolean) => void;
+  filterSelfAuthored: boolean;
+  onChangeFilterSelfAuthored: (newShow: boolean) => void;
+  deleteSelectedEnable: boolean;
+  onDeleteSelected: () => void;
+  addNewRowEnable: boolean;
+  onAddNewRow: () => void;
+};
+
+const GridHeader: React.FC<GridHeaderProps> = ({
+  viewMode,
+  setViewMode,
+  showFilters,
+  onChangeShowFilters,
+  filterSelfAuthored,
+  onChangeFilterSelfAuthored,
+  deleteSelectedEnable,
+  onDeleteSelected,
+  addNewRowEnable,
+  onAddNewRow,
+}) => (
+  <Styled.GridHeader>
+    <Styled.FilterSwitch
+      label="Show filters"
+      checked={showFilters}
+      onChange={onChangeShowFilters}
+    />
+    <Styled.FilterSelfSwitch
+      checked={filterSelfAuthored}
+      onChange={onChangeFilterSelfAuthored}
+      label={
+        <>
+          <Box mr="nano" display="inline">
+            Filter by self-authored
+          </Box>
+          <HelpTooltip
+            top
+            id="self-authored-auto-response-help"
+            content="When selected, only show auto responses you have authored"
+          ></HelpTooltip>
+        </>
+      }
+    />
+    <Styled.GridHeaderButton disabled={!addNewRowEnable} onClick={onAddNewRow}>
+      <Icon name="plus" />
+      <Box ml="nano" display="inline">
+        New auto response
+      </Box>
+    </Styled.GridHeaderButton>
+    <Styled.GridHeaderButton
+      disabled={!deleteSelectedEnable}
+      onClick={onDeleteSelected}
+    >
+      <Icon name="trash" />
+      <Box ml="nano" display="inline">
+        Delete Selected
+      </Box>
+    </Styled.GridHeaderButton>
+    <Styled.ViewModeButtonGroup>
+      {viewModeOrder.map((key) => (
+        <Tooltip
+          top
+          text={viewModes[key].label}
+          key={key}
+          id={`data-grid-view-mode-${key}`}
+        >
+          <Styled.ViewModeButton
+            onClick={(): void => setViewMode(key as ViewMode)}
+            active={viewMode === key}
+          >
+            <Icon name={viewModes[key].icon} />
+          </Styled.ViewModeButton>
+        </Tooltip>
+      ))}
+    </Styled.ViewModeButtonGroup>
+  </Styled.GridHeader>
+);

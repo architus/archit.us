@@ -162,7 +162,7 @@ html.html--app {
                 overflow-y: hidden;
                 position: relative;
 
-                div[role="group"] {
+                div[tabindex="-1"] {
                     height: 100%;
                     position: relative;
                 }
