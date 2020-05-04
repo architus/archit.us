@@ -3,7 +3,7 @@ import {
   gatewayConnect,
   gatewayDisconnect,
   gatewayReconnect,
-  gatewayInitialize
+  gatewayInitialize,
 } from "Store/api/gateway";
 
 /**
@@ -43,30 +43,30 @@ const slice = createSlice({
   name: "gateway",
   initialState: initialState as GatewayStatus,
   reducers: {},
-  extraReducers: builder =>
+  extraReducers: (builder) =>
     builder
       .addCase(gatewayInitialize, (_, action) => ({
         state: "initializing",
-        isElevated: action.payload.isElevated
+        isElevated: action.payload.isElevated,
       }))
-      .addCase(gatewayConnect, state => {
+      .addCase(gatewayConnect, (state) => {
         if (state.state === "initializing" || state.state === "disconnected") {
           return { state: "established", isElevated: state.isElevated };
         }
         return state;
       })
-      .addCase(gatewayDisconnect, state => {
+      .addCase(gatewayDisconnect, (state) => {
         if (state.state === "established") {
           return { state: "disconnected", isElevated: state.isElevated };
         }
         return state;
       })
-      .addCase(gatewayReconnect, state => {
+      .addCase(gatewayReconnect, (state) => {
         if (state.state === "initializing" || state.state === "disconnected") {
           return { state: "established", isElevated: state.isElevated };
         }
         return state;
-      })
+      }),
 });
 
 export default slice.reducer;

@@ -11,7 +11,7 @@ import { data } from "./story/sample.json.js";
 export default {
   title: "Inputs|AutoCompleteInput",
   decorators: [MaxWidthDecorator],
-  parameters: { component: AutoCompleteInput }
+  parameters: { component: AutoCompleteInput },
 };
 
 function SuggestionEntry({ title, author }) {
@@ -27,7 +27,7 @@ function SuggestionEntry({ title, author }) {
 
 SuggestionEntry.propTypes = {
   title: PropTypes.string,
-  author: PropTypes.object
+  author: PropTypes.object,
 };
 
 export const Basic = () => {
@@ -40,9 +40,9 @@ export const Basic = () => {
       items={data}
       fields={[
         { name: "title", weight: 0.7 },
-        { name: "author.lastName", weight: 0.3 }
+        { name: "author.lastName", weight: 0.3 },
       ]}
-      getSuggestionValue={useCallbackOnce(item => item.title)}
+      getSuggestionValue={useCallbackOnce((item) => item.title)}
       renderSuggestion={SuggestionEntry}
     />
   );
@@ -58,9 +58,9 @@ export const IsValid = () => {
       items={data}
       fields={[
         { name: "title", weight: 0.7 },
-        { name: "author.lastName", weight: 0.3 }
+        { name: "author.lastName", weight: 0.3 },
       ]}
-      getSuggestionValue={useCallbackOnce(item => item.title)}
+      getSuggestionValue={useCallbackOnce((item) => item.title)}
       renderSuggestion={SuggestionEntry}
       isValid
     />
@@ -77,9 +77,9 @@ export const IsInvalid = () => {
       items={data}
       fields={[
         { name: "title", weight: 0.7 },
-        { name: "author.lastName", weight: 0.3 }
+        { name: "author.lastName", weight: 0.3 },
       ]}
-      getSuggestionValue={useCallbackOnce(item => item.title)}
+      getSuggestionValue={useCallbackOnce((item) => item.title)}
       renderSuggestion={SuggestionEntry}
       isInvalid
     />

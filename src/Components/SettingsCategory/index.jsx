@@ -4,7 +4,7 @@ import classNames from "classnames";
 import { isDefined, useCallbackOnce } from "Utility";
 
 import SettingsCard, {
-  propShape as cardPropShape
+  propShape as cardPropShape,
 } from "Components/SettingsCard";
 import Icon from "Components/Icon";
 
@@ -15,13 +15,13 @@ function SettingsCategory({ title, cards, noCollapse, onCommit }) {
 
   // Open/close behavior (enabled on small screens)
   const [open, setOpen] = useState(!hasTitle);
-  const onExpandClick = useCallbackOnce(() => setOpen(open => !open));
+  const onExpandClick = useCallbackOnce(() => setOpen((open) => !open));
 
   return (
     <div
       className={classNames("settings-category", {
         expandable: hasTitle && !(isDefined(noCollapse) && noCollapse),
-        open
+        open,
       })}
     >
       {hasTitle ? (
@@ -50,13 +50,13 @@ function SettingsCategory({ title, cards, noCollapse, onCommit }) {
 export default SettingsCategory;
 export const propShape = {
   cards: PropTypes.arrayOf(PropTypes.shape(cardPropShape)).isRequired,
-  title: PropTypes.string
+  title: PropTypes.string,
 };
 
 SettingsCategory.propTypes = {
   ...propShape,
   onCommit: PropTypes.func,
-  noCollapse: PropTypes.bool
+  noCollapse: PropTypes.bool,
 };
 
 SettingsCategory.defaultProps = { onCommit() {}, noCollapse: false };
@@ -70,14 +70,14 @@ SettingsCategory.displayName = "SettingsCategory";
 function CardWrapper({ cardIndex, onCommit, ...rest }) {
   const specificOnCommit = useCallback((...args) => onCommit(cardIndex, args), [
     cardIndex,
-    onCommit
+    onCommit,
   ]);
   return <SettingsCard onCommit={specificOnCommit} {...rest} />;
 }
 
 CardWrapper.propTypes = {
   cardIndex: PropTypes.number.isRequired,
-  onCommit: PropTypes.func.isRequired
+  onCommit: PropTypes.func.isRequired,
 };
 
 CardWrapper.displayName = "CardWrapper";

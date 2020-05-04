@@ -17,7 +17,7 @@ const Reaction: React.FC<ReactionProps> = ({
   number,
   userHasReacted,
   style,
-  className
+  className,
 }) => (
   <button
     className={classNames("reaction", { active: userHasReacted }, className)}

@@ -12,7 +12,7 @@ export const identity = <T>(o: T): T => o;
  * @param ms - Milliseconds to sleep for
  */
 export function sleep(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 /**

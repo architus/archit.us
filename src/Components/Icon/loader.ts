@@ -4,7 +4,7 @@ import {
   IconDefinition,
   IconPack,
   IconName,
-  IconPrefix
+  IconPrefix,
 } from "@fortawesome/fontawesome-svg-core";
 import * as FontAwesomeIcons from "./fontawesome";
 import { icons, CustomIconDefinition, CustomIconName } from "./custom";
@@ -20,7 +20,7 @@ export type AnyIconName = IconName | CustomIconName;
 
 const allIcons: AnyIconDefinition[] = [...faIcons, ...customIcons];
 const nameToTypeMap: Map<AnyIconName, IconPrefix> = new Map(
-  allIcons.map(i => [i.iconName, i.prefix])
+  allIcons.map((i) => [i.iconName, i.prefix])
 );
 export const allIconNames: AnyIconName[] = Array.from(nameToTypeMap.keys());
 

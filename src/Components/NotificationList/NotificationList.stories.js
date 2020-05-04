@@ -8,7 +8,7 @@ import { Form, Col, Button } from "react-bootstrap";
 
 export default {
   title: "Components|NotificationList",
-  parameters: { component: NotificationList }
+  parameters: { component: NotificationList },
 };
 
 export const Basic = () => (
@@ -17,7 +17,7 @@ export const Basic = () => (
       { id: 0, message: "Notification 1", variant: "info" },
       { id: 1, message: "Notification 2", variant: "success" },
       { id: 2, message: "Notification 3", variant: "warning" },
-      { id: 3, message: "Notification 4", variant: "danger" }
+      { id: 3, message: "Notification 4", variant: "danger" },
     ]}
     onDismiss={action("on-dismiss")}
     type={select("type", ["toast", "alert"])}
@@ -32,27 +32,27 @@ export const Interactive = () => {
   const dismissAction = action("notification-dismiss");
 
   const [newMessage, setNewMessage] = useState("");
-  const onChangeNewMessage = useCallbackOnce(e =>
+  const onChangeNewMessage = useCallbackOnce((e) =>
     setNewMessage(e.target.value)
   );
 
   const [variant, setVariant] = useState("info");
-  const onChangeVariant = useCallbackOnce(e => setVariant(e.target.value));
+  const onChangeVariant = useCallbackOnce((e) => setVariant(e.target.value));
 
   const [items, setItems] = useState([]);
   const onNewNotification = useCallback(
     () =>
-      setItems(items => {
+      setItems((items) => {
         const id = currentId.current++;
         addAction(`id: ${id}; message: ${newMessage}`);
         return [...items, { id, message: newMessage, variant }];
       }),
     [newMessage, variant, addAction]
   );
-  const onDismiss = useCallbackOnce(id => {
-    const { message } = items.find(item => item.id === id);
+  const onDismiss = useCallbackOnce((id) => {
+    const { message } = items.find((item) => item.id === id);
     dismissAction(`id: ${id}; message: ${message}`);
-    setItems(items => items.filter(item => item.id !== id));
+    setItems((items) => items.filter((item) => item.id !== id));
   });
 
   return (

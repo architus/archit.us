@@ -6,14 +6,14 @@ import {
   getLocalStorage,
   setLocalStorage,
   warn,
-  isNil
+  isNil,
 } from "Utility";
 import {
   User,
   PersistentSession,
   MapDiscriminatedUnion,
   Access,
-  expiresAt
+  expiresAt,
 } from "Utility/types";
 import { Option, Some, None } from "Utility/option";
 import {
@@ -21,7 +21,7 @@ import {
   PayloadAction,
   SliceCaseReducers,
   Slice,
-  CreateSliceOptions
+  CreateSliceOptions,
 } from "@reduxjs/toolkit";
 import { IdentifySessionResponse, TokenExchangeResponse } from "Store/routes";
 import { Store } from "Store";
@@ -101,18 +101,18 @@ function tryLoadSession(): Option<Session> {
     // State will initiate token exchange when /app is loaded
     return Some({
       state: "connected",
-      discordAuthCode: urlCode.get
+      discordAuthCode: urlCode.get,
     });
   }
 
   // Attempt to load session from local storage
   const storage = getLocalStorage(LOCAL_STORAGE_KEY);
   return storage
-    .filter(value => value !== "")
-    .flatMap<PersistentSession>(rawValue =>
+    .filter((value) => value !== "")
+    .flatMap<PersistentSession>((rawValue) =>
       Option.drop(PersistentSession.decode(JSON.parse(rawValue)))
     )
-    .flatMap<Session>(session => {
+    .flatMap<Session>((session) => {
       if (expiresAt(session.access).getTime() - Date.now() < 0) {
         log("Session has expired. Clearing");
         setLocalStorage(LOCAL_STORAGE_KEY, "");
@@ -121,7 +121,7 @@ function tryLoadSession(): Option<Session> {
       return Some({
         state: "pending",
         this: session.user,
-        access: session.access
+        access: session.access,
       });
     });
 }
@@ -149,7 +149,7 @@ const slice = createSlice({
       "authenticated",
       (state, action: PayloadAction<Access>) => ({
         ...state,
-        access: action.payload
+        access: action.payload,
       })
     ),
     loadSession(_: Session, action: PayloadAction<SessionLoad>): Session {
@@ -157,10 +157,10 @@ const slice = createSlice({
       return {
         state: "authenticated",
         this: user,
-        access
+        access,
       };
-    }
-  }
+    },
+  },
 });
 
 export const { signOut, refreshSession, loadSession } = slice.actions;
@@ -233,8 +233,8 @@ export function createSessionAwareState<
     initialState: initial,
     extraReducers: {
       [signOut.type]: (): T => initial,
-      ...extraReducers
-    }
+      ...extraReducers,
+    },
   });
 }
 
@@ -247,7 +247,7 @@ export function createSessionAwareState<
  */
 export function useCurrentUser(): Option<User> {
   return useSelector(
-    store => {
+    (store) => {
       const { session } = store;
       if (session.state === "authenticated" || session.state === "pending") {
         return Some(session.this);
@@ -271,12 +271,12 @@ export function useSessionStatus(): {
   isSigningIn: boolean;
   state: string;
 } {
-  return useSelector(store => {
+  return useSelector((store) => {
     if (isNil(store.session)) {
       return { isSignedIn: false, isSigningIn: false, state: "none" };
     }
     const {
-      session: { state }
+      session: { state },
     } = store;
     const isSigningIn = state !== "none";
     const isSignedIn = state === "authenticated";

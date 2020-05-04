@@ -26,12 +26,12 @@ const Message: React.FC<MessageProps> = ({
   onUnreact,
   placeholderAmount = 80,
   style,
-  className
+  className,
 }) => (
   <div className={className} style={style}>
     <div
       className={classNames("message", {
-        "mentions-user": mentionsUser
+        "mentions-user": mentionsUser,
       })}
     >
       <Placeholder.Multiline
@@ -43,7 +43,7 @@ const Message: React.FC<MessageProps> = ({
       >
         <div
           dangerouslySetInnerHTML={{
-            __html: content
+            __html: content,
           }}
         />
         {edited && <span className="edited">(edited)</span>}

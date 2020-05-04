@@ -3,7 +3,7 @@ import React, {
   useEffect,
   useState,
   useMemo,
-  useRef
+  useRef,
 } from "react";
 import PropTypes from "prop-types";
 import {
@@ -11,7 +11,7 @@ import {
   identity,
   isNil,
   binarySearch,
-  createObject
+  createObject,
 } from "Utility";
 
 import { Modal, Button, Form } from "react-bootstrap";
@@ -21,7 +21,7 @@ import "./style.scss";
 function AddRowModal({ data, show, columns, onHide, onAdd, title, ...rest }) {
   // Filter columns based on whether they should have a field
   const relevantColumns = useMemo(
-    () => columns.filter(col => col.hasAddField),
+    () => columns.filter((col) => col.hasAddField),
     [columns]
   );
   const relevantColumnsMap = useMemo(
@@ -38,7 +38,7 @@ function AddRowModal({ data, show, columns, onHide, onAdd, title, ...rest }) {
     calculateInitialState(relevantColumns)
   );
   useEffect(() => setValues(calculateInitialState(relevantColumns)), [
-    relevantColumns
+    relevantColumns,
   ]);
   const onChange = useCallback(
     (key, event) => {
@@ -47,7 +47,7 @@ function AddRowModal({ data, show, columns, onHide, onAdd, title, ...rest }) {
       const newValue = isDefined(event.target) ? event.target.value : "";
       setValues({
         ...values,
-        [key]: processFunc(newValue)
+        [key]: processFunc(newValue),
       });
     },
     [values, relevantColumnsMap]
@@ -58,7 +58,7 @@ function AddRowModal({ data, show, columns, onHide, onAdd, title, ...rest }) {
     // Skip updates if not rendering
     if (!show) return [];
     else {
-      let uniqueColumns = columns.filter(c => c.unique).map(c => c.key);
+      let uniqueColumns = columns.filter((c) => c.unique).map((c) => c.key);
       if (uniqueColumns.length === 0) return [];
       let sorted = createObject();
       for (const col of uniqueColumns) {
@@ -95,7 +95,7 @@ function AddRowModal({ data, show, columns, onHide, onAdd, title, ...rest }) {
         if (value.trim().length === 0) {
           validationStatus[key] = {
             result: false,
-            message: `${name} is a required field`
+            message: `${name} is a required field`,
           };
           allPass = false;
           continue;
@@ -107,7 +107,7 @@ function AddRowModal({ data, show, columns, onHide, onAdd, title, ...rest }) {
         if (index !== -1) {
           validationStatus[key] = {
             result: false,
-            message: `${name} must be unique`
+            message: `${name} must be unique`,
           };
           allPass = false;
           continue;
@@ -121,7 +121,7 @@ function AddRowModal({ data, show, columns, onHide, onAdd, title, ...rest }) {
           allPass = allPass && result;
           validationStatus[key] = {
             result,
-            message: ""
+            message: "",
           };
         } else {
           allPass = allPass && result.result;
@@ -157,7 +157,7 @@ function AddRowModal({ data, show, columns, onHide, onAdd, title, ...rest }) {
 
   // Enter press handler
   const handleKeyPressed = useCallback(
-    e => {
+    (e) => {
       var code = e.keyCode || e.which;
       // Enter keycode
       if (code === 13) {
@@ -179,7 +179,7 @@ function AddRowModal({ data, show, columns, onHide, onAdd, title, ...rest }) {
     calculateInitialFocusState(relevantColumns)
   );
   const onBlur = useCallback(
-    key => {
+    (key) => {
       if (values[key] !== "")
         setFinishedInputs({ ...finishedInputs, [key]: true });
     },
@@ -188,7 +188,7 @@ function AddRowModal({ data, show, columns, onHide, onAdd, title, ...rest }) {
 
   // Whether a column should appear with a validation outline
   const validated = useCallback(
-    col => showValidation || finishedInputs[col.key],
+    (col) => showValidation || finishedInputs[col.key],
     [showValidation, finishedInputs]
   );
 
@@ -230,9 +230,7 @@ function AddRowModal({ data, show, columns, onHide, onAdd, title, ...rest }) {
               </Form.Control.Feedback>
               {isDefined(col.info) ? (
                 <Form.Text className="text-muted">{col.info}</Form.Text>
-              ) : (
-                undefined
-              )}
+              ) : undefined}
             </Form.Group>
           ))}
         </Form>
@@ -257,14 +255,14 @@ AddRowModal.propTypes = {
   onAdd: PropTypes.func.isRequired,
   title: PropTypes.string,
   show: PropTypes.bool,
-  data: PropTypes.arrayOf(PropTypes.object)
+  data: PropTypes.arrayOf(PropTypes.object),
 };
 
 AddRowModal.defaultProps = {
   columns: [],
   title: null,
   show: false,
-  data: []
+  data: [],
 };
 
 AddRowModal.displayName = "AddRowModal";
@@ -276,7 +274,7 @@ AddRowModal.displayName = "AddRowModal";
 const FormInput = React.forwardRef(
   ({ onChange, onBlur, inputKey, ...rest }, ref) => (
     <Form.Control
-      onChange={useCallback(e => onChange(inputKey, e), [onChange, inputKey])}
+      onChange={useCallback((e) => onChange(inputKey, e), [onChange, inputKey])}
       onBlur={useCallback(() => onBlur(inputKey), [onBlur, inputKey])}
       ref={ref}
       {...rest}
@@ -287,11 +285,11 @@ const FormInput = React.forwardRef(
 FormInput.propTypes = {
   onChange: PropTypes.func.isRequired,
   inputKey: PropTypes.string.isRequired,
-  onBlur: PropTypes.func
+  onBlur: PropTypes.func,
 };
 
 FormInput.defaultProps = {
-  onBlur() {}
+  onBlur() {},
 };
 
 // ? =================

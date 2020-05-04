@@ -1,5 +1,5 @@
 /* eslint-disable */
-(function() {
+(function () {
   var storageKey = "darkMode";
   var classNameDark = "dark-mode";
   var classNameLight = "light-mode";

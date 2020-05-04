@@ -19,34 +19,34 @@ const tabs = {
   stats: tab({
     icon: chartSvg,
     name: "Statistics",
-    component: Statistics
+    component: Statistics,
   }),
   emoji: tab({
     icon: emojiSvg,
     name: "Emoji Manager",
-    component: EmojiManager
+    component: EmojiManager,
   }),
   queue: tab({
     icon: musicSvg,
     name: "Music Queue",
-    component: MusicQueue
+    component: MusicQueue,
   }),
   responses: tab({
     icon: responsesSvg,
     name: "Auto Responses",
     component: AutoResponses,
-    contentClass: "no-scroll"
+    contentClass: "no-scroll",
   }),
   logs: tab({
     icon: scrollSvg,
     name: "Logs",
-    component: Logs
+    component: Logs,
   }),
   settings: tab({
     icon: cogsSvg,
     name: "Settings",
-    component: Settings
-  })
+    component: Settings,
+  }),
 };
 
 export type TabPath = keyof typeof tabs;

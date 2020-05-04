@@ -6,8 +6,8 @@ import LoginButton from "./index";
 export default {
   title: "Components|LoginButton",
   parameters: {
-    component: LoginButton
-  }
+    component: LoginButton,
+  },
 };
 
 export const WithLabel = () => (
@@ -16,8 +16,8 @@ export const WithLabel = () => (
 WithLabel.story = {
   parameters: {
     notes:
-      "`LoginButton` provides an interface for users to either:\n\n1. log in to the architus app or\n2. enter the primary app dashboard"
-  }
+      "`LoginButton` provides an interface for users to either:\n\n1. log in to the architus app or\n2. enter the primary app dashboard",
+  },
 };
 
 export const WithoutLabel = () => (

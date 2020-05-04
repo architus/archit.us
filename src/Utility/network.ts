@@ -52,7 +52,7 @@ export function constructAvatarUrl(
   // default avatar
   const avatarNumber = Option.from(options.discriminator)
     .flatMap(parseInteger)
-    .map(i => i % 5)
+    .map((i) => i % 5)
     .getOrElse(0);
   return `https://cdn.discordapp.com/embed/avatars/${avatarNumber}.png`;
 }
@@ -65,5 +65,5 @@ export enum HttpVerbs {
   POST = "POST",
   PUT = "PUT",
   PATCH = "PATCH",
-  DELETE = "DELETE"
+  DELETE = "DELETE",
 }

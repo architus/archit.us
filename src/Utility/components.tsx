@@ -25,7 +25,7 @@ export function attach<P, L>(
   children: L
 ): React.ComponentType<P> & { [k in keyof L]: L[k] } {
   const toAttach = (base as unknown) as L;
-  Object.keys(children).forEach(k => {
+  Object.keys(children).forEach((k) => {
     const key = (k as unknown) as keyof L;
     toAttach[key] = children[key];
   });

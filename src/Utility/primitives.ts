@@ -10,7 +10,7 @@ import {
   DimensionUnit,
   dimensionUnits,
   Nil,
-  isDimension
+  isDimension,
 } from "./types";
 
 /**
@@ -167,7 +167,7 @@ export function multiplyDimension(
 ): Dimension {
   return {
     amount: dimension.amount * scalar,
-    unit: dimension.unit
+    unit: dimension.unit,
   };
 }
 
@@ -255,7 +255,7 @@ export function replaceAll(
  */
 export const collator: Intl.Collator = new Intl.Collator(undefined, {
   numeric: true,
-  sensitivity: "base"
+  sensitivity: "base",
 });
 
 /**
@@ -335,7 +335,7 @@ export function getUrlParameter(name: string): Option<string> {
 
   const regex = new RegExp(`[\\?&]${escapeRegExp(name)}=([^&#]*)`);
   const results = Option.from(regex.exec(window.location.search));
-  return results.map(r => r[1].replace(/\+/g, " "));
+  return results.map((r) => r[1].replace(/\+/g, " "));
 }
 
 /**
@@ -359,7 +359,7 @@ export function splitPath(path: string): string[] {
 export function isInPath({
   path,
   fragment,
-  position = null
+  position = null,
 }: {
   path: string;
   fragment: string | RegExp;

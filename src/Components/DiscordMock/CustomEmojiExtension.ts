@@ -5,7 +5,7 @@ import {
   DiscordMockCommands,
   TransformMessage,
   MockMessage,
-  MockUser
+  MockUser,
 } from "Utility/types";
 import { TransformerStep, makeTransformer, isDefined } from "Utility";
 
@@ -32,7 +32,7 @@ export class CustomEmojiExtension extends Extension {
   }
 
   destruct(): void {
-    this.deleteTimers.forEach(d => window.clearTimeout(d));
+    this.deleteTimers.forEach((d) => window.clearTimeout(d));
     this.deleteTimers.clear();
   }
 
@@ -56,7 +56,7 @@ export class CustomEmojiExtension extends Extension {
       content: message,
       id,
       edited: false,
-      reactions: []
+      reactions: [],
     };
     const original = transformMockMessage(
       messageObj,
@@ -88,7 +88,7 @@ export class CustomEmojiExtension extends Extension {
   replaceEmoji(fragment: string): string {
     const { emojiMap } = this;
     let accum = fragment;
-    Object.keys(emojiMap).forEach(emoji => {
+    Object.keys(emojiMap).forEach((emoji) => {
       const imgPath = emojiMap[emoji];
       accum = accum.replace(`:${emoji}:`, formatEmojiImage(emoji, imgPath));
     });
@@ -97,7 +97,7 @@ export class CustomEmojiExtension extends Extension {
 
   formatListString(): string {
     const emoteList = Object.keys(this.emojiMap)
-      .map(e => `:${e}:`)
+      .map((e) => `:${e}:`)
       .join("\n");
     return `\`\`\`Available emotes\n=====================\n${emoteList}\`\`\``;
   }

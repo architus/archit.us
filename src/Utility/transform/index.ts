@@ -3,7 +3,7 @@ import { Omitted } from "Utility/types";
 export * from "./steps";
 
 export type TransformerStep<TContext = Omitted> = (
-  framgnet: string,
+  fragment: string,
   context: TContext
 ) => string;
 

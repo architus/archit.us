@@ -22,7 +22,7 @@ const Notification: React.FC<NotificationProps> = ({
   variant,
   onDismiss,
   style,
-  className
+  className,
 }) => {
   const isToast = type === "toast";
 

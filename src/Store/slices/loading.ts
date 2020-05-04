@@ -16,7 +16,7 @@ const finishLoading = (
   action: ReturnType<typeof restSuccess | typeof restFailure>
 ): Loading => ({
   ...state,
-  [action.payload.label]: false
+  [action.payload.label]: false,
 });
 
 const initialState: Loading = {};
@@ -24,14 +24,14 @@ const slice = createSlice({
   name: "loading",
   initialState,
   reducers: {},
-  extraReducers: builder =>
+  extraReducers: (builder) =>
     builder
       .addCase(restStart, (state, action) => ({
         ...state,
-        [action.payload.label]: true
+        [action.payload.label]: true,
       }))
       .addCase(restSuccess, finishLoading)
-      .addCase(restFailure, finishLoading)
+      .addCase(restFailure, finishLoading),
 });
 
 export default slice.reducer;

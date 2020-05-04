@@ -16,5 +16,5 @@ export type DiscordMockDispatchContext = { dispatch: DiscordMockDispatch };
 export const DiscordMockDispatchContext = React.createContext<
   DiscordMockDispatchContext
 >({
-  dispatch: () => undefined
+  dispatch: () => undefined,
 });

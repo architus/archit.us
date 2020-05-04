@@ -7,7 +7,7 @@ import {
   PoolType,
   poolKeys,
   fetchPool,
-  populatePool
+  populatePool,
 } from "Store/slices/pools";
 import { ApiResponse } from "Store/api/rest/types";
 import { signOut } from "Store/slices/session";
@@ -33,7 +33,7 @@ function* createLoadHandler(key: PoolType): SagaIterator {
           const { load, logout } = yield race({
             load: call(guilds.fetch),
             timeout: delay(9000),
-            logout: take(signOut.type)
+            logout: take(signOut.type),
           });
 
           if (isDefined(load)) {
@@ -52,7 +52,7 @@ function* createLoadHandler(key: PoolType): SagaIterator {
           error(e);
           const { logout } = yield race({
             timeout: delay(2000),
-            logout: take(signOut.type)
+            logout: take(signOut.type),
           });
 
           // Stop fetching upon sign out

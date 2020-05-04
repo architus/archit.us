@@ -1,20 +1,42 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable max-classes-per-file */
-import { isRight, Either } from "fp-ts/lib/Either";
+import * as t from "io-ts";
+import { isRight, Either, either, right } from "fp-ts/lib/Either";
 import { isDefined, isNil } from "./data";
 import { Nil, Predicate } from "./types";
 
+/**
+ * Provides a runtime type wrapper around the given type, using None if the type is null or undefined
+ * @param type - Underlying runtime type
+ * @param preferNull - Whether to prefer null when encoding a None Option<A> to O | Nil
+ */
+export function option<T extends t.Mixed>(
+  type: T,
+  preferNull = true
+): t.Type<Option<t.TypeOf<T>>, t.OutputOf<T> | Nil, unknown> {
+  return new t.Type<Option<t.TypeOf<T>>, t.OutputOf<T> | Nil, unknown>(
+    `Option<${type.name}>`,
+    (u: unknown): u is Option<t.TypeOf<T>> => {
+      if (isNil(u)) return true;
+      return type.is(u);
+    },
+    (u: unknown, c: t.Context) => {
+      if (isNil(u)) return right(None);
+      const decodeResult = type.validate(u, c);
+      return either.chain(
+        decodeResult,
+        (a: t.TypeOf<T>): Either<t.Errors, Option<t.TypeOf<T>>> =>
+          right(Some(a))
+      );
+    },
+    (a: Option<t.TypeOf<T>>): t.OutputOf<T> | Nil => {
+      const outputOption = a.map(type.encode);
+      return preferNull ? outputOption.orNull() : outputOption.orUndefined();
+    }
+  );
+}
+
 export interface OptionLike<A> {
-  /**
-   * Whether the option is `None`
-   */
-  isEmpty(): this is NoneType;
-
-  /**
-   * Whether the option is `Some(...)`
-   */
-  isDefined(): this is SomeType<A>;
-
   /**
    * Whether the option is `None`
    * **Note: does not act as a type guard**
@@ -26,6 +48,16 @@ export interface OptionLike<A> {
    * **Note: does not act as a type guard**
    */
   fastIsDefined: boolean;
+
+  /**
+   * Whether the option is `None`
+   */
+  isEmpty(): this is NoneType;
+
+  /**
+   * Whether the option is `Some(...)`
+   */
+  isDefined(): this is SomeType<A>;
 
   /**
    * Gets the inner value of the option if it is defined, else `null`
@@ -161,8 +193,8 @@ export abstract class Option<A> implements OptionLike<A> {
   /**
    * Drops an either into an option
    */
-  static drop<A>(either: Either<unknown, A>): Option<A> {
-    if (isRight(either)) return Some(either.right);
+  static drop<A>(e: Either<unknown, A>): Option<A> {
+    if (isRight(e)) return Some(e.right);
     return None;
   }
 

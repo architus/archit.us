@@ -5,7 +5,7 @@ import Icon from "./index";
 
 export default {
   title: "Components|Icon",
-  parameters: { component: Icon }
+  parameters: { component: Icon },
 };
 
 export const Basic = () => (
@@ -17,8 +17,8 @@ Basic.story = {
       "`Icon` provides a wrapper for [FontAwesome](https://fontawesome.com/how-to-use/on-the-web/using-with/react) icons.\n\n" +
       "> **Note:** When adding new icons, first find the desired icon at [the Font Awesome website](https://fontawesome.com/) and " +
       "then add it to `fontawesome.js`.\n\n> Alternatively, if no pre-made icon is found, there is the option of importing svg " +
-      "data and manually specifying an icon in `custom.js`."
-  }
+      "data and manually specifying an icon in `custom.js`.",
+  },
 };
 
 export const Styled = () => (

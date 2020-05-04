@@ -17,14 +17,14 @@ function SettingsEntry({
   validation_steps,
   onCommit,
   settingKey,
-  standalone
+  standalone,
 }) {
   // Resolve input control from map
   const InputControl = inputControls[input_type];
 
   // Controlled component
   const [buffer, setBuffer] = useState(value);
-  const onChange = useCallbackOnce(value => setBuffer(value));
+  const onChange = useCallbackOnce((value) => setBuffer(value));
 
   // Validation
   const isInvalid = false;
@@ -68,7 +68,7 @@ export const propShape = {
     "string_auto_complete",
     "string_highlighted",
     "switch",
-    "string_array_auto_complete"
+    "string_array_auto_complete",
   ]).isRequired,
   default: PropTypes.any.isRequired,
   value: PropTypes.any.isRequired,
@@ -77,22 +77,22 @@ export const propShape = {
   validation_steps: PropTypes.arrayOf(
     PropTypes.oneOfType([
       PropTypes.string,
-      PropTypes.shape({ key: PropTypes.string.isRequired })
+      PropTypes.shape({ key: PropTypes.string.isRequired }),
     ])
   ),
   cli: PropTypes.exact({
     name: PropTypes.string,
     emoji: PropTypes.string,
     message: PropTypes.string,
-    input_mode: PropTypes.oneOf(["replace", "array_toggle"])
-  })
+    input_mode: PropTypes.oneOf(["replace", "array_toggle"]),
+  }),
 };
 
 SettingsEntry.propTypes = {
   ...propShape,
   onCommit: PropTypes.func,
   settingKey: PropTypes.string.isRequired,
-  standalone: PropTypes.bool
+  standalone: PropTypes.bool,
 };
 
 SettingsEntry.defaultProps = { width: 5, onCommit() {}, standalone: true };

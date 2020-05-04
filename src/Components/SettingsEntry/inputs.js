@@ -14,7 +14,7 @@ export default {
   string_highlighted: StringHighlightedInput,
   numeric: NumericInput,
   string_auto_complete: StringAutoCompleteInput,
-  string_array_auto_complete: StringArrayAutoCompleteInput
+  string_array_auto_complete: StringArrayAutoCompleteInput,
 };
 
 // ? ===================
@@ -24,7 +24,7 @@ export default {
 const baseProps = (value, onChange, isInvalid) => ({
   value,
   onChange,
-  isInvalid
+  isInvalid,
 });
 
 // Basic string input
@@ -33,7 +33,7 @@ function StringInput({
   onChange,
   isInvalid,
   onTryCommit,
-  name
+  name,
   // // general configuration properties
   // append
 }) {
@@ -41,7 +41,7 @@ function StringInput({
     <Form.Control
       {...baseProps(
         value,
-        useCallback(e => onChange(e.target.value), [onChange]),
+        useCallback((e) => onChange(e.target.value), [onChange]),
         isInvalid
       )}
       placeholder={name}
@@ -58,7 +58,7 @@ function SwitchInput({ value, onChange, onTryCommit }) {
     <Switch
       checked={value}
       onChange={useCallback(
-        checked => {
+        (checked) => {
           onChange(checked);
           onTryCommit();
         },
@@ -77,7 +77,7 @@ function StringHighlightedInput({
   // append,
   // string_highlighted-specific configuration properties
   tokens = [],
-  language
+  language,
 }) {
   return (
     <SyntaxHighlightedInput
@@ -102,7 +102,7 @@ function NumericInput({
   integer = false,
   min,
   max,
-  step = 1
+  step = 1,
 }) {
   const transformDeps = [value, step, onChange, integer];
   const transformValue = (step, value, onChange) => () => {
@@ -131,14 +131,14 @@ function StringAutoCompleteInput({
   // // general configuration properties
   // append,
   // string_auto_complete-specific configuration properties
-  "auto-complete-type": type
+  "auto-complete-type": type,
 }) {
   return (
     <AutoCompleteInput
       {...baseProps(value, onChange, isInvalid)}
       placeholder={name}
-      renderSuggestion={s => <div>{s}</div>}
-      getSuggestionValue={s => s}
+      renderSuggestion={(s) => <div>{s}</div>}
+      getSuggestionValue={(s) => s}
     />
   );
 }
@@ -170,7 +170,7 @@ const parseNumber = (value, float = false) =>
 const transform = (value, step, float = false) =>
   canTransform(value, float) ? 0 : parseNumber(value, float) + step;
 
-const handleInputKeyPress = onEnter => e => {
+const handleInputKeyPress = (onEnter) => (e) => {
   const code = e.keyCode || e.which;
   // Enter keycode
   if (code === 13) {

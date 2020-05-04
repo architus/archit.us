@@ -16,7 +16,7 @@ export * from "Utility/primitives";
 // Useful Utility methods/types for network communication
 export * from "Utility/network";
 
-// Utiltity methods about DOM/execution context
+// Utility methods about DOM/execution context
 export * from "Utility/document";
 
 // Misc

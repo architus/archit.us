@@ -9,7 +9,7 @@ import {
   useRefWrapper,
   isNil,
   architusUser,
-  error
+  error,
 } from "Utility";
 import { Option } from "Utility/option";
 import { useDispatch, useSelector } from "Store/hooks";
@@ -20,13 +20,13 @@ import {
   interpretUnreact,
   interpretLocalMessage,
   interpretLocalDelete,
-  interpretClear
+  interpretClear,
 } from "Store/slices/interpret";
 import {
   createMockUser,
   IdProvisioner,
   Extension,
-  makeMockUser
+  makeMockUser,
 } from "Components/DiscordMock/util";
 import DiscordView from "Components/DiscordMock/DiscordView";
 import {
@@ -37,7 +37,7 @@ import {
   DiscordMockContext,
   DiscordMockCommands,
   TransformMessage,
-  User
+  User,
 } from "Utility/types";
 import {
   DiscordMockDispatchContext,
@@ -45,11 +45,11 @@ import {
   sendMessage,
   react,
   unreact,
-  clearMessages
+  clearMessages,
 } from "Components/DiscordMock/actions";
 import {
   TransformMessageContext,
-  transformMockMessage
+  transformMockMessage,
 } from "Components/DiscordMock/transform";
 import { AnyAction } from "redux";
 import { useCurrentUser } from "Store/actions";
@@ -64,7 +64,7 @@ const ERROR_DISPLAY_DELAY = 4000;
  */
 function buildUserMap(...users: MockUser[]): Record<string, MockUser> {
   const userMap: Record<string, MockUser> = {};
-  users.forEach(user => {
+  users.forEach((user) => {
     userMap[user.id] = user;
   });
   return userMap;
@@ -94,7 +94,7 @@ const DiscordMock: React.FC<DiscordMockProps> = ({
   height = 300,
   extensionCreator,
   style,
-  className
+  className,
 }) => {
   // Initialize discord mock context once
   const guildId = useMemoOnce(() => randomInt(10000000));
@@ -114,7 +114,7 @@ const DiscordMock: React.FC<DiscordMockProps> = ({
       thisUser,
       users,
       architusUser,
-      allowedCommands: allowedCommandsSnapshot
+      allowedCommands: allowedCommandsSnapshot,
     }),
     [guildId, thisUser, users, allowedCommandsSnapshot]
   );
@@ -122,7 +122,7 @@ const DiscordMock: React.FC<DiscordMockProps> = ({
   // Pull clumps from store
   const storeDispatch = useDispatch();
   const clumps = useSelector(
-    state => state.interpret.messageClumps[guildId] || []
+    (state) => state.interpret.messageClumps[guildId] || []
   );
 
   // Initialize the extension
@@ -134,13 +134,13 @@ const DiscordMock: React.FC<DiscordMockProps> = ({
             context,
             message,
             sender,
-            id: idProvisioner.provision()
+            id: idProvisioner.provision(),
           })
         );
       },
       deleteMessage: (id: number): void => {
         storeDispatch(interpretLocalDelete({ context, id }));
-      }
+      },
     }),
     [context, storeDispatch, idProvisioner]
   );
@@ -159,7 +159,7 @@ const DiscordMock: React.FC<DiscordMockProps> = ({
           interpretInvisible({
             context,
             message: action.payload,
-            id: idProvisioner.provision()
+            id: idProvisioner.provision(),
           })
         );
       } else if (sendMessage.match(action)) {
@@ -172,7 +172,7 @@ const DiscordMock: React.FC<DiscordMockProps> = ({
             interpretMessage({
               context,
               message: action.payload,
-              id
+              id,
             })
           );
         }
@@ -209,7 +209,9 @@ const DiscordMock: React.FC<DiscordMockProps> = ({
   });
 
   // Manage connection timeout display
-  const connected = useSelector(state => state.gateway.state === "established");
+  const connected = useSelector(
+    (state) => state.gateway.state === "established"
+  );
   const [connectionError, setConnectionError] = useState(false);
   useEffect(() => {
     let timeout: number | undefined;
@@ -236,7 +238,7 @@ const DiscordMock: React.FC<DiscordMockProps> = ({
         <div
           style={{
             height: formatDimension(addMissingUnit(height)),
-            ...style
+            ...style,
           }}
         />
       }
@@ -246,7 +248,7 @@ const DiscordMock: React.FC<DiscordMockProps> = ({
           <DiscordView
             style={{
               height: formatDimension(addMissingUnit(height)),
-              ...style
+              ...style,
             }}
             className={className}
             channelName={channelName}
