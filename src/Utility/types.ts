@@ -5,6 +5,7 @@ import * as t from "io-ts";
 import { either } from "fp-ts/lib/Either";
 import { isDefined } from "./data";
 import { TransformerStep } from "./transform";
+import { option } from "./option";
 
 export class EnumType<A> extends t.Type<A> {
   public readonly _tag: "EnumType" = "EnumType";
@@ -14,7 +15,7 @@ export class EnumType<A> extends t.Type<A> {
   public constructor(e: object, name?: string) {
     super(
       name || "enum",
-      (u): u is A => Object.values(this.enumObject).some(v => v === u),
+      (u): u is A => Object.values(this.enumObject).some((v) => v === u),
       (u, c) => (this.is(u) ? t.success(u) : t.failure(u, c)),
       t.identity
     );
@@ -125,7 +126,7 @@ const _dimensionUnits = [
   "vw",
   "vh",
   "vmin",
-  "vmax"
+  "vmax",
 ] as const;
 
 /**
@@ -156,11 +157,11 @@ export const TimeFromString = new t.Type<number, string, unknown>(
   "TimeFromString",
   (u): u is number => typeof u === "number",
   (u, c) =>
-    either.chain(t.string.validate(u, c), s => {
+    either.chain(t.string.validate(u, c), (s) => {
       const d = new Date(s);
       return isNaN(d.getTime()) ? t.failure(u, c) : t.success(d.getTime());
     }),
-  a => new Date(a).toISOString()
+  (a) => new Date(a).toISOString()
 );
 
 /**
@@ -218,7 +219,7 @@ export const TSnowflake = new t.Type<Snowflake, string, unknown>(
   (u): u is Snowflake =>
     isDefined(u) && typeof u === "string" && isSnowflake(u),
   (u, c) =>
-    either.chain(t.string.validate(u, c), s => {
+    either.chain(t.string.validate(u, c), (s) => {
       if (isSnowflake(s)) return t.success(s);
       return t.failure(u, c);
     }),
@@ -236,7 +237,7 @@ export const THoarFrost = new t.Type<HoarFrost, string, unknown>(
   (u): u is HoarFrost =>
     isDefined(u) && typeof u === "string" && isHoarFrost(u),
   (u, c) =>
-    either.chain(t.string.validate(u, c), s => {
+    either.chain(t.string.validate(u, c), (s) => {
       if (isHoarFrost(s)) return t.success(s);
       return t.failure(u, c);
     }),
@@ -251,7 +252,7 @@ export const THoarFrost = new t.Type<HoarFrost, string, unknown>(
  */
 export enum PremiumType {
   NitroClassic = 1,
-  Nitro = 2
+  Nitro = 2,
 }
 
 /**
@@ -265,24 +266,20 @@ export const TPremiumType = new EnumType<PremiumType>(
   "PremiumType"
 );
 
-const TUser = t.intersection([
-  t.type({
-    id: TSnowflake,
-    username: t.string,
-    discriminator: t.string
-  }),
-  t.partial({
-    avatar: t.string,
-    bot: t.boolean,
-    system: t.boolean,
-    mfa_enabled: t.boolean,
-    locale: t.string,
-    verified: t.boolean,
-    email: t.string,
-    flags: t.number,
-    premium_type: TPremiumType
-  })
-]);
+const TUser = t.interface({
+  id: TSnowflake,
+  username: t.string,
+  discriminator: t.string,
+  avatar: option(t.string),
+  bot: option(t.boolean),
+  system: option(t.boolean),
+  mfa_enabled: option(t.boolean),
+  locale: option(t.string),
+  verified: option(t.boolean),
+  email: option(t.string),
+  flags: option(t.number),
+  premium_type: option(TPremiumType),
+});
 
 /**
  * Discord user type
@@ -304,7 +301,7 @@ export const User = alias(TUser)<User>();
 const TAccess = t.type({
   issuedAt: TimeFromString,
   expiresIn: t.number,
-  refreshIn: t.number
+  refreshIn: t.number,
 });
 export interface Access extends t.TypeOf<typeof TAccess> {}
 export const Access = alias(TAccess)<Access>();
@@ -314,7 +311,7 @@ export function expiresAt(access: Access): Date {
 
 const TPersistentSession = t.type({
   user: User,
-  access: Access
+  access: Access,
 });
 export interface PersistentSession
   extends t.TypeOf<typeof TPersistentSession> {}
@@ -325,7 +322,7 @@ export enum VerificationLevel {
   Low = 1,
   Medium = 2,
   High = 3,
-  VeryHigh = 4
+  VeryHigh = 4,
 }
 export const TVerificationLevel = new EnumType<VerificationLevel>(
   VerificationLevel,
@@ -334,7 +331,7 @@ export const TVerificationLevel = new EnumType<VerificationLevel>(
 
 export enum DefaultMessageNotificationLevel {
   AllMessages = 0,
-  OnlyMentions = 1
+  OnlyMentions = 1,
 }
 export const TDefaultMessageNotificationLevel = new EnumType<
   DefaultMessageNotificationLevel
@@ -343,7 +340,7 @@ export const TDefaultMessageNotificationLevel = new EnumType<
 export enum ExplicitContentFilter {
   Disabled = 0,
   MembersWithoutRoles = 1,
-  AllMembers = 2
+  AllMembers = 2,
 }
 export const TExplicitContentFilter = new EnumType<ExplicitContentFilter>(
   ExplicitContentFilter,
@@ -352,7 +349,7 @@ export const TExplicitContentFilter = new EnumType<ExplicitContentFilter>(
 
 export enum MfaLevel {
   None = 0,
-  Elevated = 1
+  Elevated = 1,
 }
 export const TMfaLevel = new EnumType<MfaLevel>(MfaLevel, "MfaLevel");
 
@@ -360,7 +357,7 @@ export enum PremiumTier {
   None = 0,
   Tier1 = 1,
   Tier2 = 2,
-  Tier3 = 3
+  Tier3 = 3,
 }
 export const TPremiumTier = new EnumType<PremiumTier>(
   PremiumTier,
@@ -383,7 +380,7 @@ export enum GuildFeature {
   EnabledDiscoverableBefore = "ENABLED_DISCOVERABLE_BEFORE",
   MemberListDisabled = "MEMBER_LIST_DISABLED",
   MoreEmoji = "MORE_EMOJI",
-  PublicDisabled = "PUBLIC_DISABLED"
+  PublicDisabled = "PUBLIC_DISABLED",
 }
 export const TGuildFeature = new EnumType<GuildFeature>(
   GuildFeature,
@@ -410,7 +407,7 @@ const TGuild = t.intersection([
     // preferred_locale: t.string,
     // added fields
     architus_admin: t.boolean,
-    has_architus: t.boolean
+    has_architus: t.boolean,
   }),
   t.partial({
     icon: t.union([t.string, t.null]),
@@ -429,8 +426,8 @@ const TGuild = t.intersection([
     vanity_url_code: t.string,
     description: t.string,
     banner: t.string,
-    premium_subscription_count: t.Integer
-  })
+    premium_subscription_count: t.Integer,
+  }),
 ]);
 export interface Guild extends t.TypeOf<typeof TGuild> {}
 export const Guild = alias(TGuild)<Guild>();
@@ -559,5 +556,5 @@ export enum LogEvents {
   EmojiManagerTrigger = 3400,
   EmojiManagerCreate = 3401,
   EmojiManagerDelete = 3402,
-  EmojiManagerExchange = 3403
+  EmojiManagerExchange = 3403,
 }

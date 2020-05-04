@@ -9,7 +9,7 @@ import {
   hideNotification,
   showToast,
   signOut,
-  showNotification
+  showNotification,
 } from "Store/actions";
 import sessionFlow from "Store/saga/session";
 import gatewayFlow from "Store/saga/gateway";
@@ -18,7 +18,7 @@ import {
   interpretInvisible,
   interpretMessage,
   interpretReact,
-  interpretUnreact
+  interpretUnreact,
 } from "Store/slices/interpret";
 import { mockUserEvent } from "Store/routes";
 import { LogEvents } from "Utility/types";
@@ -80,7 +80,7 @@ function* handleInterpretMessage(
       content: message,
       messageId: id,
       allowedCommands: context.allowedCommands || [],
-      silent: false
+      silent: false,
     })
   );
 }
@@ -96,7 +96,7 @@ function* handleInterpretInvisble(
       messageId: id,
       content: message,
       allowedCommands: context.allowedCommands || [],
-      silent: true
+      silent: true,
     })
   );
 }
@@ -110,7 +110,7 @@ function* handleInterpretReact(
       action: LogEvents.ReactionAdd,
       guildId: context.guildId,
       messageId: reaction.id,
-      emoji: reaction.reaction.rawEmoji
+      emoji: reaction.reaction.rawEmoji,
     })
   );
 }
@@ -124,7 +124,7 @@ function* handleInterpretUnreact(
       action: LogEvents.ReactionRemove,
       guildId: context.guildId,
       messageId: reaction.id,
-      emoji: reaction.reaction.rawEmoji
+      emoji: reaction.reaction.rawEmoji,
     })
   );
 }

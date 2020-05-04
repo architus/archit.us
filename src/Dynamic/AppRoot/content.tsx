@@ -11,7 +11,7 @@ import {
   isNil,
   useMemoOnce,
   isDefined,
-  error
+  error,
 } from "Utility";
 import { Snowflake, isSnowflake, Guild } from "Utility/types";
 import { Option } from "Utility/option";
@@ -37,7 +37,7 @@ const hasArchitusFilter = (guild: Guild): boolean => guild.has_architus;
 
 export function useAppLocation(): AppLocation {
   const { all: guildList } = usePool("guilds", {
-    filter: hasArchitusFilter
+    filter: hasArchitusFilter,
   });
 
   const { location } = useLocation();
@@ -50,7 +50,7 @@ export function useAppLocation(): AppLocation {
     : null;
   const currentGuild: Snowflake | null =
     isSnowflake(guildFragment) &&
-    guildList.find(guild => guild.id === guildFragment)
+    guildList.find((guild) => guild.id === guildFragment)
       ? guildFragment
       : null;
 
@@ -70,7 +70,7 @@ const AppContent: React.ComponentType<AppContentProps> = withClientSide(
 
     // Load guild from store
     const { entity: guildOption } = usePoolEntity("guilds", {
-      filter: g => isDefined(currentGuild) && g.id === currentGuild
+      filter: (g) => isDefined(currentGuild) && g.id === currentGuild,
     });
 
     // Render app placeholder on server/first render
@@ -84,7 +84,7 @@ const AppContent: React.ComponentType<AppContentProps> = withClientSide(
       <NavigationContext.Provider value={navigationCtx}>
         <Router>
           <Redirect
-            from=":guildId"
+            path=":guildId"
             to={`${APP_PATH_ROOT}/:guildId/${DEFAULT_TAB}`}
             noThrow
           />

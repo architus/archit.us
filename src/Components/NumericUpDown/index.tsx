@@ -7,7 +7,7 @@ import {
   FormControl,
   Button,
   ButtonProps,
-  FormControlProps
+  FormControlProps,
 } from "react-bootstrap";
 import "./style.scss";
 
@@ -34,7 +34,7 @@ const NumericUpDown: React.FC<NumericUpDownProps> = React.forwardRef(
       isValid = false,
       isInvalid = false,
       className,
-      style
+      style,
     },
     ref: React.Ref<HTMLInputElement>
   ) => {
@@ -49,7 +49,7 @@ const NumericUpDown: React.FC<NumericUpDownProps> = React.forwardRef(
           onChange={onChange}
           isValid={isValid}
           isInvalid={isInvalid}
-          innerRef={ref}
+          ref={ref}
           type="text"
           as="input"
         />

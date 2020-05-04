@@ -60,20 +60,20 @@ function AutoCompleteInput({
         distance: 100,
         keys: fields,
         maxPatternLength: MAX_FUZZY_SEARCH_LENGTH,
-        minMatchCharLength: triggerLength
+        minMatchCharLength: triggerLength,
       }),
     [items, fields, triggerLength]
   );
 
   // Collection of suggestions
   const [suggestions, setSuggestions] = useState([]);
-  const calculateSuggestions = search => {
+  const calculateSuggestions = (search) => {
     const trimmed = search.trim();
     if (trimmed.length > MAX_FUZZY_SEARCH_LENGTH) {
       return naiveSearch(trimmed, items, {
         fields,
         minLength: triggerLength,
-        maxItems
+        maxItems,
       });
     } else {
       const result = fuse.search(trimmed);
@@ -86,10 +86,10 @@ function AutoCompleteInput({
   // Calculate validation status className
   const validationClass = classNames({
     "is-valid": isValid,
-    "is-invalid": isInvalid
+    "is-invalid": isInvalid,
   });
 
-  const onKeyDown = e => {
+  const onKeyDown = (e) => {
     const code = e.keyCode || e.which;
     // Enter keycode
     if (code === 13) {
@@ -119,7 +119,7 @@ function AutoCompleteInput({
           onChange: (_event, { newValue }) => onChange(newValue),
           className: validationClass,
           onKeyDown,
-          ...rest
+          ...rest,
         }}
         getSuggestionValue={getSuggestionValue}
         onSuggestionsClearRequested={() => setSuggestions([])}
@@ -143,14 +143,14 @@ AutoCompleteInput.propTypes = {
   fields: PropTypes.arrayOf(
     PropTypes.oneOfType([
       PropTypes.string,
-      PropTypes.shape({ name: PropTypes.string, weight: PropTypes.number })
+      PropTypes.shape({ name: PropTypes.string, weight: PropTypes.number }),
     ])
   ),
   isValid: PropTypes.bool,
   isInvalid: PropTypes.bool,
   triggerLength: PropTypes.number,
   maxItems: PropTypes.number,
-  onSubmit: PropTypes.func
+  onSubmit: PropTypes.func,
 };
 
 AutoCompleteInput.defaultProps = {
@@ -163,7 +163,7 @@ AutoCompleteInput.defaultProps = {
   isInvalid: false,
   triggerLength: 1,
   maxItems: 5,
-  onSubmit() {}
+  onSubmit() {},
 };
 
 AutoCompleteInput.displayName = "AutoCompleteInput";

@@ -9,7 +9,7 @@ import { Button } from "react-bootstrap";
 export default {
   title: "Components/Card",
   decorators: [MaxWidthDecorator],
-  parameters: { component: Card }
+  parameters: { component: Card },
 };
 
 export const Basic = () => {

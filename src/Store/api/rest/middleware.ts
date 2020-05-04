@@ -8,7 +8,7 @@ import {
   apiFetch,
   restSuccess,
   isApiError,
-  restFailure
+  restFailure,
 } from "Store/api/rest";
 import { ApiError } from "./types";
 
@@ -23,7 +23,7 @@ axios.defaults.headers.common["Content-Type"] = "application/json";
  * dispatching additional actions as the requests are resolved
  */
 const RestMiddleware: Middleware<{}, Store, ReduxDispatch<AnyAction>> = ({
-  dispatch
+  dispatch,
 }: {
   dispatch: Dispatch;
 }) => (next: Dispatch) => (action: AnyAction): void => {
@@ -33,7 +33,7 @@ const RestMiddleware: Middleware<{}, Store, ReduxDispatch<AnyAction>> = ({
     const start = performance.now();
     dispatch(restStart({ ...action.payload, timing: { start } }));
     apiFetch({ route, method, data, headers, auth })
-      .then(result => {
+      .then((result) => {
         const end = performance.now();
         const duration = end - start;
         const { data: response } = result;
@@ -41,11 +41,11 @@ const RestMiddleware: Middleware<{}, Store, ReduxDispatch<AnyAction>> = ({
           restSuccess({
             ...action.payload,
             response,
-            timing: { start, end, duration }
+            timing: { start, end, duration },
           })
         );
       })
-      .catch(e => {
+      .catch((e) => {
         const end = performance.now();
         const duration = start - end;
         let error: ApiError;
@@ -60,15 +60,15 @@ const RestMiddleware: Middleware<{}, Store, ReduxDispatch<AnyAction>> = ({
               url: route,
               method,
               data,
-              headers
-            }
+              headers,
+            },
           };
         }
         dispatch(
           restFailure({
             ...action.payload,
             error,
-            timing: { start, end, duration }
+            timing: { start, end, duration },
           })
         );
       });

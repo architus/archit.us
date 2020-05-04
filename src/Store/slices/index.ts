@@ -15,7 +15,7 @@ const rootReducer = combineReducers({
   loading: Loading,
   interpret: Interpret,
   gateway: Gateway,
-  pools: Pools
+  pools: Pools,
 });
 
 export default rootReducer;

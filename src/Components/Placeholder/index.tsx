@@ -7,7 +7,7 @@ import {
   isNil,
   attach,
   formatDimension,
-  parseDimension
+  parseDimension,
 } from "Utility";
 import "./style.scss";
 import { RawDimension, StyleObject, Nil } from "Utility/types";
@@ -47,7 +47,7 @@ const Placeholder: React.FC<PlaceholderProps> = ({
       height: formatDimension(
         circle ? addMissingUnit(width) : addMissingUnit(height)
       ),
-      ...style
+      ...style,
     }}
     {...rest}
   />
@@ -121,7 +121,7 @@ const Text: React.FC<TextProps> = ({
     <RenderContent
       style={{
         fontSize: formatDimension(addMissingUnit(size)),
-        ...style
+        ...style,
       }}
       inline={inline}
       {...rest}
@@ -198,10 +198,10 @@ const Multiline: React.FC<MultilineProps> = ({
     const remainder = Math.floor(amount % lineAmount);
     const lineElements: React.ReactNode[] = [];
     const lineSpacing = parseDimension(size)
-      .map(d => formatDimension(multiplyDimension(d, 0.25)))
+      .map((d) => formatDimension(multiplyDimension(d, 0.25)))
       .getOrElse("0.3em");
     const lineHeight = parseDimension(size)
-      .map(d => multiplyDimension(d, 1.1))
+      .map((d) => multiplyDimension(d, 1.1))
       .getOrElse("1.32em");
     for (let i = 0; i < lines; ++i) {
       lineElements.push(
@@ -237,10 +237,8 @@ const Multiline: React.FC<MultilineProps> = ({
   ) : (
     <RenderContent
       style={{
-        fontSize: parseDimension(size)
-          .map(formatDimension)
-          .getOrElse("1.2em"),
-        ...style
+        fontSize: parseDimension(size).map(formatDimension).getOrElse("1.2em"),
+        ...style,
       }}
       inline={inline}
       {...rest}

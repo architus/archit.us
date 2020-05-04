@@ -9,8 +9,8 @@ import { cards } from "./story/example.json.js";
 export default {
   title: "Components|SettingsCategory",
   parameters: {
-    component: SettingsCategory
-  }
+    component: SettingsCategory,
+  },
 };
 
 export const WithTitle = () => (
@@ -26,8 +26,8 @@ WithTitle.story = {
     notes:
       "`SettingsCategory` displays a single Settings category that contains multiple " +
       "Settings cards. This component will auto-collapse on mobile if it has a non-null " +
-      "`title` and `noCollapse` is not set to `true`"
-  }
+      "`title` and `noCollapse` is not set to `true`",
+  },
 };
 
 export const WithoutTitle = () => (

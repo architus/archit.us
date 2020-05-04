@@ -9,8 +9,8 @@ import { cards } from "Components/SettingsCategory/story/example.json.js";
 export default {
   title: "Components|SettingsGallery",
   parameters: {
-    component: SettingsGallery
-  }
+    component: SettingsGallery,
+  },
 };
 
 export const Basic = () => (
@@ -21,11 +21,11 @@ export const Basic = () => (
       ...[
         ...Array(
           number("categories", 3, { min: 0, max: 10, range: true, step: 1 }) - 1
-        )
+        ),
       ].map((_o, i) => ({
         title: `Category ${i + 1}`,
-        cards
-      }))
+        cards,
+      })),
     ]}
     noCollapse={boolean("noCollapse", false)}
   />
@@ -34,6 +34,6 @@ Basic.story = {
   parameters: {
     notes:
       "`SettingsGallery` displays multiple Settings categories, auto-collapsing them " +
-      "on mobile (unless `noCollapse` is set to `true`)"
-  }
+      "on mobile (unless `noCollapse` is set to `true`)",
+  },
 };

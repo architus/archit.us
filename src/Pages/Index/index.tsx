@@ -15,7 +15,7 @@ import {
   Card,
   Col,
   Button,
-  Badge
+  Badge,
 } from "react-bootstrap";
 import { Layout, Icon, Window, Footer, DiscordMock } from "Components";
 import { Link } from "Components/Router";
@@ -42,12 +42,12 @@ function takeGreater(cached: number | Nil, live: number | Nil): number {
 const Index: React.FC<{}> = () => {
   const {
     guildCount: cachedGuildCount,
-    userCount: cachedUserCount
+    userCount: cachedUserCount,
   } = useRouteData();
   const {
     guildCount: storeGuildCount,
-    userCount: storeUserCount
-  } = useSelector(state => {
+    userCount: storeUserCount,
+  } = useSelector((state) => {
     return state.guildCount;
   }, shallowEqual);
 
@@ -294,14 +294,14 @@ const Feature: React.FC<FeatureProps> = ({
   children,
   lead,
   header,
-  content
+  content,
 }) => (
   <Row as="section" className="align-items-center">
     <Col
       lg={6}
       className={classNames("mt-2 mt-lg-0 order-2", {
         "order-lg-1": left,
-        "order-lg-2": right
+        "order-lg-2": right,
       })}
     >
       {children}
@@ -310,7 +310,7 @@ const Feature: React.FC<FeatureProps> = ({
       lg={6}
       className={classNames("order-1", {
         "order-lg-2": left,
-        "order-lg-1": right
+        "order-lg-1": right,
       })}
     >
       <h4>{lead}</h4>

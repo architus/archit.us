@@ -22,7 +22,7 @@ const Window: React.FC<WindowProps> = ({
 }) => (
   <figure
     className={classNames("window", `window--${variant}`, className, {
-      "pb-0": noPadding
+      "pb-0": noPadding,
     })}
     {...rest}
   >

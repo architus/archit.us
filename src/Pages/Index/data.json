@@ -4,7 +4,8 @@
       {
         "messages": [
           "!help",
-          "!set thanks::you're welcome!",
+          "!set thanks::[you're welcome!, no problem!]",
+          "thanks",
           "thanks",
           "!remove thanks"
         ]
@@ -12,6 +13,7 @@
       {
         "messages": [
           "!set hi::hey",
+          "hi",
           "!set hi::hello :wave:",
           "!remove hi",
           "!set hi::hello :wave:",
@@ -41,13 +43,13 @@
       {
         "messages": [
           "!schedule cool event 12pm",
-          "!poll a hot dog is a: sandwich, not a sandwich"
+          "!xpoll \"a hot dog is a:\" sandwich, not a sandwich"
         ]
       },
       {
         "messages": [
           "!help",
-          "!schedule Overwatch scrims Wednesday",
+          "!schedule Overwatch scrims 8pm Wednesday",
           "Vote in the poll above @everyone"
         ]
       }
@@ -56,7 +58,7 @@
   "allowedCommands": {
     "autoResponse": ["set", "remove"],
     "customEmoji": ["emotes"],
-    "pollsSchedules": ["poll", "schedule"]
+    "pollsSchedules": ["poll", "xpoll", "schedule"]
   },
   "customEmotes": {
     "PepeLaugh": "https://cdn.frankerfacez.com/emoticon/263833/2",

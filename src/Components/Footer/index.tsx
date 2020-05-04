@@ -52,7 +52,7 @@ type FooterPanel = {
 const FooterPanel: React.FC<FooterPanel> = ({
   children,
   header,
-  className
+  className,
 }) => (
   <div className={classNames("footer--panel", className)}>
     <h3>{header}</h3>

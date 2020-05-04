@@ -13,7 +13,7 @@ import {
   gatewayDispatch,
   GatewayDispatch,
   gatewaySend,
-  isGatewayEvent
+  isGatewayEvent,
 } from "Store/api/gateway";
 import { AnyAction } from "redux";
 import io from "socket.io-client";
@@ -77,21 +77,21 @@ function* demoteOnSignout(socket: Socket): SagaIterator {
 function* dispatchHandler(socket: Socket): SagaIterator {
   while (true) {
     const {
-      payload: { event, data, elevated }
+      payload: { event, data, elevated },
     } = (yield take(gatewayDispatch)) as PayloadAction<GatewayDispatch>;
     const isConnected = yield* select(
-      store => store.gateway.state === "established"
+      (store) => store.gateway.state === "established"
     );
 
     if (!isConnected) {
       // Wait until connected to continue with dispatch
       yield race({
         connect: take(gatewayConnect),
-        reconnect: take(gatewayReconnect)
+        reconnect: take(gatewayReconnect),
       });
     }
     const isElevated = yield* select(
-      store =>
+      (store) =>
         store.gateway.state !== "noConnection" && store.gateway.isElevated
     );
 
@@ -114,7 +114,7 @@ function* dispatchHandler(socket: Socket): SagaIterator {
  * @param socket - Socket.IO socket instance
  */
 function createGatewayEventChannel(socket: Socket): EventChannel<AnyAction> {
-  return eventChannel(emitter => {
+  return eventChannel((emitter) => {
     // Basic lifecycle events
     socket.on("connect", () => {
       emitter(gatewayConnect());
@@ -129,7 +129,7 @@ function createGatewayEventChannel(socket: Socket): EventChannel<AnyAction> {
     });
 
     // Subscribe to each known event
-    Object.values(events).forEach(eventExport => {
+    Object.values(events).forEach((eventExport) => {
       // Filter only gateway events (and not, for example, io-ts types)
       if (isGatewayEvent(eventExport)) {
         const { event, decode } = eventExport;
@@ -140,7 +140,7 @@ function createGatewayEventChannel(socket: Socket): EventChannel<AnyAction> {
               gatewayEvent({
                 event,
                 data: decodeResult.right,
-                timestamp: performance.now()
+                timestamp: performance.now(),
               })
             );
           } else {
@@ -153,8 +153,8 @@ function createGatewayEventChannel(socket: Socket): EventChannel<AnyAction> {
                 error: {
                   message: `Errors ocurred while parsing server response`,
                   error: message.toString(),
-                  original: data
-                }
+                  original: data,
+                },
               })
             );
           }
@@ -177,13 +177,13 @@ function* initializeConnection(): SagaIterator<{
   socket: Socket;
   wasElevated: boolean;
 }> {
-  const initialState = yield* select(store => store.session.state);
+  const initialState = yield* select((store) => store.session.state);
   if (initialState === "connected") {
     // Wait for (successful) token exchange to finish and then use nonce to
     // initialize gateway connection
     const { success } = yield race({
       success: take(loadSession.type),
-      failure: take(signOut.type)
+      failure: take(signOut.type),
     });
 
     if (isDefined(success)) {
@@ -192,17 +192,17 @@ function* initializeConnection(): SagaIterator<{
         const { gatewayNonce } = payload;
         return {
           socket: io(`${GATEWAY_API_BASE}/?nonce=${gatewayNonce}`),
-          wasElevated: true
+          wasElevated: true,
         };
       }
     }
   }
 
-  const currentState = yield* select(store => store.session.state);
+  const currentState = yield* select((store) => store.session.state);
   return {
     socket: io(GATEWAY_API_BASE),
     // If initialized from anything but `none`, then there should be a valid
     // token/session
-    wasElevated: currentState !== "none"
+    wasElevated: currentState !== "none",
   };
 }

@@ -15,10 +15,10 @@ if (typeof document !== "undefined") {
       ? ReactDOM.hydrate
       : ReactDOM.render;
 
-    const render: (component: React.ComponentType<{}>) => void = Component => {
+    const render: (component: React.ComponentType<{}>) => void = (Inner) => {
       renderMethod(
         <AppContainer>
-          <Component />
+          <Inner />
         </AppContainer>,
         target
       );
@@ -40,7 +40,7 @@ if (typeof document !== "undefined") {
       if (process.env.PRODUCTION_URL) {
         navigator.serviceWorker.register("/service-worker.js");
       } else {
-        navigator.serviceWorker.getRegistrations().then(registrations => {
+        navigator.serviceWorker.getRegistrations().then((registrations) => {
           for (const registration of registrations) {
             registration.unregister();
           }

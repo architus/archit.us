@@ -1,13 +1,18 @@
 import React from "react";
-import { parseDimension, formatDimension } from "Utility";
-import { OverlayTrigger, Tooltip as BootstrapTooltip } from "react-bootstrap";
-import { Placement, PopperOptions, Modifiers } from "popper.js";
+import { parseDimension, formatDimension, isNil } from "Utility";
+import {
+  OverlayTrigger,
+  Tooltip as BootstrapTooltip,
+  OverlayProps,
+} from "react-bootstrap";
+import { toModifierArray } from "react-overlays/esm/usePopper";
+import { Placement } from "popper.js";
 import "./style.scss";
 
 function resolvePlacement({
   top,
   bottom,
-  left
+  left,
 }: {
   top?: boolean;
   bottom?: boolean;
@@ -32,15 +37,13 @@ type TooltipProps = {
   padding?: string | number;
   delay?: number;
   toggle?: TooltipMode;
-  modifiers?: Modifiers;
-  popperConfig?: PopperOptions;
+  popperConfig?: OverlayProps["popperConfig"];
 };
 
 const Tooltip: React.FC<TooltipProps> = ({
   id,
   text,
   children,
-  modifiers,
   popperConfig,
   left,
   top,
@@ -50,42 +53,47 @@ const Tooltip: React.FC<TooltipProps> = ({
   toggle = "hover",
   delay = 0,
   ...rest
-}) => (
-  <OverlayTrigger
-    trigger={toggle === "click" ? "click" : undefined}
-    placement={resolvePlacement({ top, bottom, left })}
-    popperConfig={{
-      modifiers: {
-        preventOverflow: {
-          enabled: true,
-          boundariesElement: "window"
-        },
-        ...modifiers
-      },
-      ...popperConfig
-    }}
-    delay={delay}
-    overlay={
-      <BootstrapTooltip
-        id={id}
-        bsPrefix={hide ? "hide-tooltip" : undefined}
-        {...rest}
-      >
-        <div
-          style={{
-            padding: parseDimension(padding)
-              .map(formatDimension)
-              .getOrElse(undefined)
-          }}
+}) => {
+  const baseModifiers = popperConfig?.modifiers;
+  const modifiers = isNil(baseModifiers) ? [] : toModifierArray(baseModifiers);
+  modifiers.push({
+    name: "preventOverflow",
+    options: {
+      boundary: "window",
+    },
+  });
+
+  return (
+    <OverlayTrigger
+      trigger={toggle === "click" ? "click" : undefined}
+      placement={resolvePlacement({ top, bottom, left })}
+      popperConfig={{
+        ...popperConfig,
+        modifiers,
+      }}
+      delay={delay}
+      overlay={
+        <BootstrapTooltip
+          id={id}
+          bsPrefix={hide ? "hide-tooltip" : undefined}
+          {...rest}
         >
-          {text}
-        </div>
-      </BootstrapTooltip>
-    }
-  >
-    {children}
-  </OverlayTrigger>
-);
+          <div
+            style={{
+              padding: parseDimension(padding)
+                .map(formatDimension)
+                .getOrElse(undefined),
+            }}
+          >
+            {text}
+          </div>
+        </BootstrapTooltip>
+      }
+    >
+      {children}
+    </OverlayTrigger>
+  );
+};
 
 Tooltip.displayName = "Tooltip";
 

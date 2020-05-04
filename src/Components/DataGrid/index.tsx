@@ -84,7 +84,9 @@ const DataGrid = lazy(
       default: DataGridType;
     }>
 );
-const lazyLoadingInner: React.FC<DataGridProps<{}>> = p => <DataGrid {...p} />;
+const lazyLoadingInner: React.FC<DataGridProps<{}>> = (p) => (
+  <DataGrid {...p} />
+);
 const LazyLoadingWrapper = withClientSide(lazyLoadingInner);
 LazyLoadingWrapper.displayName = "LazyLoadingWrapper";
 

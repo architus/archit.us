@@ -101,7 +101,7 @@ export function makeGatewayEvent<
     matchMalformed: (
       action: AnyAction
     ): action is PayloadAction<GatewayMalformed> =>
-      gatewayMalformed.match(action) && action.payload.event === config.event
+      gatewayMalformed.match(action) && action.payload.event === config.event,
   };
 }
 
@@ -139,7 +139,7 @@ export function makeGatewayRoute<
 ) => GatewayRoute<TEvent, TPayload> {
   return <TEvent extends string = string>({
     event,
-    elevated
+    elevated,
   }: GatewayRouteConfig<TEvent>): GatewayRoute<TEvent, TPayload> => {
     function dispatch(args: TPayload): PayloadAction<GatewayDispatch> {
       return gatewayDispatch({ data: args, event, elevated });

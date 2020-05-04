@@ -8,7 +8,7 @@ import {
   isDefined,
   useMediaBreakpoints,
   useCallbackOnce,
-  isArray
+  isArray,
 } from "Utility";
 
 import {
@@ -17,7 +17,7 @@ import {
   HelpTooltip,
   Switch,
   Placeholder,
-  AddRowModal
+  AddRowModal,
 } from "Components";
 import ReactDataGrid from "react-data-grid";
 import { Data } from "react-data-grid-addons";
@@ -69,7 +69,7 @@ function DataGrid({
   // Row sorting
   const [sortMeta, setSortMeta] = useState({
     sortColumn: 0,
-    sortDirection: "NONE"
+    sortDirection: "NONE",
   });
   const onGridSort = useCallbackOnce((sortColumn, sortDirection) => {
     setSortMeta({ sortColumn, sortDirection });
@@ -91,11 +91,11 @@ function DataGrid({
                     icon: <Icon name="times-circle" size="lg" noAutoWidth />,
                     callback: () => {
                       onRowDelete(row);
-                    }
-                  }
+                    },
+                  },
                 ]
               : []),
-            ...(isDefined(getRowActions) ? getRowActions(row) : [])
+            ...(isDefined(getRowActions) ? getRowActions(row) : []),
           ]
         : null,
     [onRowDelete, canDeleteRow, columns.length, getRowActions]
@@ -125,7 +125,7 @@ function DataGrid({
         idx: toRow,
         key: cellKey,
         previousRow: fromRowData,
-        updatedCell: updated[cellKey]
+        updatedCell: updated[cellKey],
       });
     },
     [onRowUpdate]
@@ -135,10 +135,10 @@ function DataGrid({
   const derivedColumnWidths = isDefined(columnWidths)
     ? columnWidths
     : {
-        base: columns.map(() => null)
+        base: columns.map(() => null),
       };
   function getBreakpoints(columnWidthMap) {
-    return Object.keys(columnWidthMap).filter(k => k !== "base");
+    return Object.keys(columnWidthMap).filter((k) => k !== "base");
   }
   const breakpointArray = getBreakpoints(derivedColumnWidths);
   const activeBreakpoint = useMediaBreakpoints(breakpointArray);
@@ -180,13 +180,13 @@ function DataGrid({
 
   // Direct callbacks
   const rowGetter = useCallback(
-    i =>
+    (i) =>
       isLoading
         ? generateFakeRow(columns, i * (columns.length + 1))
         : transformRow(filteredRows[i]),
     [transformRow, filteredRows, isLoading, columns]
   );
-  const onAddFilter = useCallbackOnce(filter =>
+  const onAddFilter = useCallbackOnce((filter) =>
     setFilters(handleFilterChange(filter))
   );
   const onClearFilters = useCallbackOnce(() => setFilters({}));
@@ -197,9 +197,9 @@ function DataGrid({
   isLoadingRef.current = isLoading;
   const derivedColumns = useMemo(
     () =>
-      columnMeta.map(c => ({
+      columnMeta.map((c) => ({
         ...c,
-        formatter: props => {
+        formatter: (props) => {
           if (isLoadingRef.current) {
             if (isDefined(c.placeholderFormatter)) {
               return c.placeholderFormatter(props);
@@ -213,7 +213,7 @@ function DataGrid({
         },
         editable: !isLoading && c.editable,
         filterable: !isLoading && c.filterable,
-        sortable: !isLoading && c.sortable
+        sortable: !isLoading && c.sortable,
       })),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [isLoading, columnMeta]
@@ -221,7 +221,7 @@ function DataGrid({
 
   // View mode (compact/comfy/sparse)
   const [viewMode, setViewMode] = useState(1);
-  const updateViewMode = i => {
+  const updateViewMode = (i) => {
     setViewMode(i);
     setTimeout(() => {
       if (
@@ -308,8 +308,8 @@ DataGrid.propTypes = {
   viewModeButton: PropTypes.bool,
   toolbarComponents: PropTypes.oneOfType([
     PropTypes.node,
-    PropTypes.arrayOf(PropTypes.node)
-  ])
+    PropTypes.arrayOf(PropTypes.node),
+  ]),
 };
 
 DataGrid.defaultProps = {
@@ -317,7 +317,7 @@ DataGrid.defaultProps = {
   onRowUpdate() {},
   onRowDelete() {},
   canDeleteRow: () => true,
-  transformRow: r => r,
+  transformRow: (r) => r,
   columns: [],
   data: [],
   baseColumnMeta: {},
@@ -325,7 +325,7 @@ DataGrid.defaultProps = {
   emptyLabel: "No items to display",
   addRowButton: false,
   loadingRowCount: 5,
-  viewModeButton: true
+  viewModeButton: true,
 };
 
 DataGrid.displayName = "DataGrid";
@@ -337,16 +337,16 @@ DataGrid.displayName = "DataGrid";
 const viewModes = [
   {
     icon: "sparse",
-    name: "Sparse"
+    name: "Sparse",
   },
   {
     icon: "comfy",
-    name: "Comfy"
+    name: "Comfy",
   },
   {
     icon: "compact",
-    name: "Compact"
-  }
+    name: "Compact",
+  },
 ];
 
 function ToolbarComponent({
@@ -357,7 +357,7 @@ function ToolbarComponent({
   viewModeButton,
   setViewMode,
   viewMode,
-  isLoading
+  isLoading,
 }) {
   // Filter show state
   const [show, setShow] = useState(false);
@@ -394,7 +394,7 @@ function ToolbarComponent({
                 <Tooltip top text={name} key={name}>
                   <button
                     className={classNames("view-mode-toolbar--button", {
-                      active: viewMode === i
+                      active: viewMode === i,
                     })}
                     onClick={() => setViewMode(i)}
                   >
@@ -417,7 +417,10 @@ ToolbarComponent.propTypes = {
   viewModeButton: PropTypes.bool,
   setViewMode: PropTypes.func,
   viewMode: PropTypes.number,
-  slot: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)])
+  slot: PropTypes.oneOfType([
+    PropTypes.node,
+    PropTypes.arrayOf(PropTypes.node),
+  ]),
 };
 
 ToolbarComponent.displayName = "ToolbarComponent";
@@ -430,7 +433,7 @@ function RowRenderer({ renderBaseRow, ...props }) {
 
 RowRenderer.propTypes = {
   renderBaseRow: PropTypes.func.isRequired,
-  idx: PropTypes.number.isRequired
+  idx: PropTypes.number.isRequired,
 };
 
 RowRenderer.displayName = "RowRenderer";
@@ -447,7 +450,7 @@ function PlaceholderFormatter({ value }) {
 }
 
 PlaceholderFormatter.propTypes = {
-  value: PropTypes.any
+  value: PropTypes.any,
 };
 
 PlaceholderFormatter.displayName = "PlaceholderFormatter";
@@ -465,17 +468,17 @@ HelpColumnWrapper.propTypes = {
   name: PropTypes.string.isRequired,
   tooltip: PropTypes.oneOfType([
     PropTypes.node,
-    PropTypes.arrayOf(PropTypes.node)
+    PropTypes.arrayOf(PropTypes.node),
   ]),
   renderer: PropTypes.oneOfType([
     PropTypes.node,
-    PropTypes.arrayOf(PropTypes.node)
-  ])
+    PropTypes.arrayOf(PropTypes.node),
+  ]),
 };
 
 HelpColumnWrapper.defaultProps = {
   tooltip: undefined,
-  renderer: null
+  renderer: null,
 };
 
 HelpColumnWrapper.displayName = "HelpColumnWrapper";
@@ -485,7 +488,7 @@ HelpColumnWrapper.displayName = "HelpColumnWrapper";
 // ? =================
 
 function handleFilterChange(newFilter) {
-  return state => {
+  return (state) => {
     const newState = { ...state };
     if (newFilter.filterTerm) {
       newState[newFilter.column.key] = newFilter;

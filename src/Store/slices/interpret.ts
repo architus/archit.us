@@ -10,14 +10,14 @@ import {
   MockMessage,
   MockReaction,
   SerializedMockReaction,
-  LogEvents
+  LogEvents,
 } from "Utility/types";
 import { transformReaction } from "Components/DiscordMock/transform";
 import {
   createClump,
   shouldMergeClumps,
   mergeClumps,
-  containingClumpIndex
+  containingClumpIndex,
 } from "Components/DiscordMock/util";
 import { isNil, isDefined, architusUser } from "Utility";
 
@@ -79,7 +79,7 @@ const slice = createSlice({
       const {
         message,
         id,
-        context: { guildId, thisUser }
+        context: { guildId, thisUser },
       } = action.payload;
 
       const newMessage = { content: message, id, edited: false, reactions: [] };
@@ -98,8 +98,8 @@ const slice = createSlice({
         {
           emoji: reaction.reaction.rawEmoji,
           rendered: reaction.reaction.emoji,
-          targetsUser: true
-        }
+          targetsUser: true,
+        },
       ]);
       return prev;
     },
@@ -113,8 +113,8 @@ const slice = createSlice({
       removeReactions(prev, context.guildId, reaction.id, [
         {
           emoji: reaction.reaction.rawEmoji,
-          targetsUser: true
-        }
+          targetsUser: true,
+        },
       ]);
       return prev;
     },
@@ -127,7 +127,7 @@ const slice = createSlice({
         message,
         id,
         sender,
-        context: { guildId }
+        context: { guildId },
       } = action.payload;
 
       const newMessage = { content: message, id, edited: false, reactions: [] };
@@ -142,7 +142,7 @@ const slice = createSlice({
     ): Interpret => {
       const {
         id,
-        context: { guildId }
+        context: { guildId },
       } = action.payload;
 
       removeMessage(prev, guildId, id);
@@ -157,7 +157,7 @@ const slice = createSlice({
       // Clear the message clumps for the given guild id
       prev.messageClumps[action.payload] = [];
       return prev;
-    }
+    },
   },
   extraReducers: {
     [gatewayEvent.type]: (state, action): Interpret => {
@@ -182,12 +182,12 @@ const slice = createSlice({
           } else if (event.action === LogEvents.ReactionAdd) {
             const { emoji } = event;
             addReactions(state, guildId, messageId, [
-              { emoji, targetsUser: false }
+              { emoji, targetsUser: false },
             ]);
           } else if (event.action === LogEvents.ReactionRemove) {
             const { emoji, targetsUser } = event;
             removeReactions(state, guildId, messageId, [
-              { emoji, targetsUser }
+              { emoji, targetsUser },
             ]);
           }
         }
@@ -195,8 +195,8 @@ const slice = createSlice({
         sliceClumps(state, guildId);
       }
       return state;
-    }
-  }
+    },
+  },
 });
 
 export const {
@@ -206,7 +206,7 @@ export const {
   interpretUnreact,
   interpretLocalMessage,
   interpretLocalDelete,
-  interpretClear
+  interpretClear,
 } = slice.actions;
 export default slice.reducer;
 
@@ -271,7 +271,7 @@ function addReactions(
         number: 1,
         userHasReacted: targetsUser,
         rawEmoji: emoji,
-        targetId: id
+        targetId: id,
       });
     });
 
@@ -317,7 +317,7 @@ function removeReactions(
       }
     }
 
-    message.reactions = message.reactions.filter(r => r.number > 0);
+    message.reactions = message.reactions.filter((r) => r.number > 0);
   }
 }
 
@@ -388,7 +388,7 @@ function addMessage(
     if (shouldMergeClumps(lastClump, newClump)) {
       state.messageClumps[guildId] = [
         ...clumps.slice(0, -1),
-        mergeClumps(lastClump, newClump)
+        mergeClumps(lastClump, newClump),
       ];
     } else {
       state.messageClumps[guildId] = [...clumps, newClump];

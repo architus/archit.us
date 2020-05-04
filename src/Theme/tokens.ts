@@ -27,7 +27,7 @@ const theme = {
     body: sansSerif,
     heading: `'Renner*', ${sansSerif}`,
     code:
-      "SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace"
+      "SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
   },
   space: withAliases(
     [0, 3, 5, 13, 21, 34, 55, 89, 144, 233, 377, 610],
@@ -43,7 +43,7 @@ const theme = {
       "mega",
       "giga",
       "tera",
-      "peta"
+      "peta",
     ]
   ),
   colors: {
@@ -75,10 +75,10 @@ const theme = {
         "b.500": "hsl(0, 0%, 24%)",
         "b.600": "hsl(0, 0%, 30%)",
         primary: "hsl(209, 45%, 65%)",
-        secondary: "hsl(38, 52%, 62%)"
-      }
-    }
-  }
+        secondary: "hsl(38, 52%, 62%)",
+      },
+    },
+  },
 };
 
 export default theme;

@@ -12,12 +12,12 @@ export const architusUser: MockUser = {
   id: "-1",
   avatarUrl: constructAvatarUrl({
     clientId: architusId,
-    hash: architusAvatar
+    hash: architusAvatar,
   }),
   discriminator: "7145",
   username: "architus",
   nameColor: "#d34c4f",
-  bot: true
+  bot: true,
 };
 
 const MANAGE_SERVERS = 32; // 0x20

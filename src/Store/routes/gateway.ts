@@ -34,5 +34,5 @@ export type MockUserEvent =
 
 export const mockUserEvent = makeGatewayRoute<MockUserEvent>()({
   event: "mock_user_event",
-  elevated: false
+  elevated: false,
 });

@@ -21,7 +21,7 @@ try {
       // eslint-disable-next-line getter-return
       get: function get() {
         setHasSupportToCaptureOption(true);
-      }
+      },
     })
   );
 } catch (e) {} // eslint-disable-line no-empty
@@ -91,7 +91,7 @@ class SwipeHandler extends React.Component<SwipeHandlerProps> {
         this.handleSwipeMove as EventListener,
         getSafeEventHandlerOpts({
           capture: true,
-          passive: false
+          passive: false,
         })
       );
     }
@@ -104,7 +104,7 @@ class SwipeHandler extends React.Component<SwipeHandlerProps> {
         this.handleSwipeMove as EventListener,
         getSafeEventHandlerOpts({
           capture: true,
-          passive: false
+          passive: false,
         })
       );
     }

@@ -8,7 +8,7 @@ import { HttpVerbs } from "Utility";
 export type IdentifySessionResponse = t.TypeOf<typeof IdentifySessionResponse>;
 export const IdentifySessionResponse = t.interface({
   user: User,
-  access: Access
+  access: Access,
 });
 
 /**
@@ -20,14 +20,14 @@ export const identify = makeRoute()({
   method: HttpVerbs.GET,
   auth: true,
   decode: (response: unknown): Either<Errors, IdentifySessionResponse> =>
-    either.chain(t.object.decode(response), IdentifySessionResponse.decode)
+    either.chain(t.object.decode(response), IdentifySessionResponse.decode),
 });
 
 export type TokenExchangeResponse = t.TypeOf<typeof TokenExchangeResponse>;
 export const TokenExchangeResponse = t.interface({
   user: User,
   access: Access,
-  gatewayNonce: t.number
+  gatewayNonce: t.number,
 });
 
 /**
@@ -39,12 +39,12 @@ export const tokenExchange = makeRoute<{ code: string }>()({
   method: HttpVerbs.POST,
   auth: true,
   decode: (response: unknown): Either<Errors, TokenExchangeResponse> =>
-    either.chain(t.object.decode(response), TokenExchangeResponse.decode)
+    either.chain(t.object.decode(response), TokenExchangeResponse.decode),
 });
 
 export type SessionRefreshResponse = t.TypeOf<typeof SessionRefreshResponse>;
 export const SessionRefreshResponse = t.interface({
-  access: Access
+  access: Access,
 });
 
 /**
@@ -56,7 +56,7 @@ export const sessionRefresh = makeRoute()({
   method: HttpVerbs.POST,
   auth: true,
   decode: (response: unknown): Either<Errors, SessionRefreshResponse> =>
-    either.chain(t.object.decode(response), SessionRefreshResponse.decode)
+    either.chain(t.object.decode(response), SessionRefreshResponse.decode),
 });
 
 /**
@@ -66,13 +66,13 @@ export const sessionEnd = makeRoute()({
   label: "session/end",
   route: "/session/end",
   method: HttpVerbs.POST,
-  auth: true
+  auth: true,
 });
 
 export type GuildCountLoadResponse = t.TypeOf<typeof GuildCountLoadResponse>;
 export const GuildCountLoadResponse = t.interface({
   guildCount: t.number,
-  userCount: t.number
+  userCount: t.number,
 });
 
 /**
@@ -83,12 +83,12 @@ export const guildCount = makeRoute()({
   route: "/guild-count",
   method: HttpVerbs.GET,
   decode: (response: unknown): Either<Errors, GuildCountLoadResponse> =>
-    either.chain(t.object.decode(response), GuildCountLoadResponse.decode)
+    either.chain(t.object.decode(response), GuildCountLoadResponse.decode),
 });
 
 export type GuildsListResponse = t.TypeOf<typeof GuildsListResponse>;
 export const GuildsListResponse = t.interface({
-  guilds: t.array(Guild)
+  guilds: t.array(Guild),
 });
 
 /**
@@ -100,5 +100,5 @@ export const guilds = makeRoute()({
   method: HttpVerbs.GET,
   auth: true,
   decode: (response: unknown): Either<Errors, GuildsListResponse> =>
-    either.chain(t.object.decode(response), GuildsListResponse.decode)
+    either.chain(t.object.decode(response), GuildsListResponse.decode),
 });

@@ -5,7 +5,7 @@ import {
   DiscordMockDispatch,
   sendInvisibleMessage,
   sendMessage,
-  clearMessages
+  clearMessages,
 } from "Components/DiscordMock/actions";
 import Input from "Components/DiscordMock/Input";
 
@@ -79,8 +79,8 @@ export default class InputController extends React.Component<
           onKeypress: this.onMockKeypress,
           onEnter: this.onMockEnter,
           onFinish: this.onMockFinish,
-          lines: messageSets[0].messages
-        })
+          lines: messageSets[0].messages,
+        }),
       };
     }
     return { mode: "manual" };
@@ -96,7 +96,7 @@ export default class InputController extends React.Component<
     if (this.typerState.mode === "automatic" && isDefined(messageSets)) {
       const lineSet = messageSets[this.typerState.currentSet][mode];
       if (isDefined(lineSet)) {
-        lineSet.forEach(line => dispatch(sendInvisibleMessage(line)));
+        lineSet.forEach((line) => dispatch(sendInvisibleMessage(line)));
       }
     }
   }

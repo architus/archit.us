@@ -27,7 +27,7 @@ const DiscordView: React.FC<DiscordViewProps> = ({
   loop,
   messageSets,
   className,
-  style
+  style,
 }) => (
   <div className={classNames("discord-view", className)} style={style}>
     <MessageView clumps={clumps} style={discordViewStyle} />
@@ -41,7 +41,7 @@ const DiscordView: React.FC<DiscordViewProps> = ({
     />
     <div
       className={classNames("error-overlay", {
-        "show-error": displayError
+        "show-error": displayError,
       })}
     >
       <div className="error-inner">

@@ -4,7 +4,7 @@ import Notification from "Components/Notification";
 import { Container } from "react-bootstrap";
 import {
   Notification as NotificationInterface,
-  NotificationType
+  NotificationType,
 } from "Store/actions";
 import { StyleObject } from "Utility/types";
 import "./style.scss";
@@ -26,7 +26,7 @@ const NotificationList: React.FC<NotificationListProps> = ({
   transitionLength = 250,
   container = false,
   style,
-  className
+  className,
 }) => (
   <div className={className} style={style}>
     <ConditionalContainer useContainer={container}>
@@ -64,7 +64,7 @@ type ConditionalContainerProps = {
 
 const ConditionalContainer: React.FC<ConditionalContainerProps> = ({
   useContainer,
-  children
+  children,
 }) => (useContainer ? <Container>{children}</Container> : <>{children}</>);
 
 ConditionalContainer.displayName = "ConditionalContainer";

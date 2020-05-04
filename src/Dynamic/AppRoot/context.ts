@@ -6,7 +6,7 @@ export type NavigationContext = {
 };
 
 export const NavigationContext = React.createContext<NavigationContext>({
-  defaultPath: ""
+  defaultPath: "",
 });
 
 export type ScrollContext = {
@@ -14,7 +14,7 @@ export type ScrollContext = {
 };
 
 export const ScrollContext = React.createContext<ScrollContext>({
-  scrollHandler: () => undefined
+  scrollHandler: () => undefined,
 });
 
 export type AppContext = {
@@ -22,5 +22,5 @@ export type AppContext = {
 };
 
 export const AppContext = React.createContext<AppContext>({
-  dispatch: () => undefined
+  dispatch: () => undefined,
 });

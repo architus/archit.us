@@ -1,7 +1,7 @@
 import React from "react";
 import {
   LinkProps as RouterLinkProps,
-  RouteComponentProps
+  RouteComponentProps,
 } from "@reach/router";
 
 export { Link, Router, Redirect } from "@reach/router";

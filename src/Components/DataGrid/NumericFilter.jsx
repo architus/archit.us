@@ -13,7 +13,7 @@ const RuleType = {
   Number: 1,
   Range: 2,
   GreaterThen: 3,
-  LessThen: 4
+  LessThen: 4,
 };
 
 class NumericFilter extends React.Component {
@@ -121,7 +121,7 @@ class NumericFilter extends React.Component {
       filterTerm: filters.length > 0 ? filters : null,
       column: this.props.column,
       rawValue: value,
-      filterValues: this.filterValues
+      filterValues: this.filterValues,
     });
   }
 
@@ -130,7 +130,7 @@ class NumericFilter extends React.Component {
     const columnStyle = {
       float: "left",
       maxWidth: "calc(100% - 32px)",
-      width: "100%"
+      width: "100%",
     };
 
     const tooltipText =
@@ -164,5 +164,5 @@ export default NumericFilter;
 
 NumericFilter.propTypes = {
   onChange: PropTypes.func.isRequired,
-  column: PropTypes.object
+  column: PropTypes.object,
 };

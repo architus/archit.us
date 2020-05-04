@@ -46,7 +46,7 @@ class AutoResponses extends React.Component<
   AutoResponsesState
 > {
   state: AutoResponsesState = {
-    filterSelfAuthored: false
+    filterSelfAuthored: false,
   };
 
   // TODO implement
@@ -88,7 +88,7 @@ class AutoResponses extends React.Component<
   baseColumnMeta = {
     sortable: true,
     filterable: true,
-    resizable: true
+    resizable: true,
   };
 
   columnWidths = new Map(
@@ -96,13 +96,13 @@ class AutoResponses extends React.Component<
       base: [150, 300, 90, 200],
       "768": [200, 300, 100, 200],
       "992": [200, null, 90, 200],
-      "1200": [270, null, 200, 240]
+      "1200": [270, null, 200, 240],
     })
   );
 
   onToggleSelfAuthored = (): void => {
     this.setState(({ filterSelfAuthored }) => ({
-      filterSelfAuthored: !filterSelfAuthored
+      filterSelfAuthored: !filterSelfAuthored,
     }));
   };
 
@@ -311,20 +311,20 @@ function foldAuthorData(
     const { username, avatar, discriminator } = userOption.get;
     return {
       author: `${username}#${discriminator}|${id}`,
-      avatar,
+      avatar: avatar.orUndefined(),
       username,
-      discriminator
+      discriminator,
     };
   }
 
   return {
     author: "Unknown",
     username: "Unknown",
-    discriminator: "0000"
+    discriminator: "0000",
   };
 }
 
-const AutoResponsesProvider: React.FC<AppPageProps> = pageProps => {
+const AutoResponsesProvider: React.FC<AppPageProps> = (pageProps) => {
   // TODO implement
   const authors: Map<Snowflake, User> = new Map();
   const commands: AutoResponse[] = [];

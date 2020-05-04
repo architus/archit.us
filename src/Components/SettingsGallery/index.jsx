@@ -24,7 +24,7 @@ export default SettingsGallery;
 SettingsGallery.propTypes = {
   categories: PropTypes.arrayOf(PropTypes.shape(propShape)).isRequired,
   onCommit: PropTypes.func,
-  noCollapse: PropTypes.bool
+  noCollapse: PropTypes.bool,
 };
 
 SettingsGallery.defaultProps = { onCommit() {}, noCollapse: false };
@@ -45,7 +45,7 @@ function CategoryWrapper({ categoryIndex, onCommit, ...rest }) {
 
 CategoryWrapper.propTypes = {
   categoryIndex: PropTypes.number.isRequired,
-  onCommit: PropTypes.func.isRequired
+  onCommit: PropTypes.func.isRequired,
 };
 
 CategoryWrapper.displayName = "CategoryWrapper";

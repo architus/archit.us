@@ -11,28 +11,28 @@ export const MockBotEventAction = t.taggedUnion(
     t.type({
       action: t.literal(LogEvents.MessageSend),
       messageId: t.number,
-      content: t.string
+      content: t.string,
     }),
     t.type({
       action: t.literal(LogEvents.MessageEdit),
       messageId: t.number,
-      content: t.string
+      content: t.string,
     }),
     t.type({
       action: t.literal(LogEvents.MessageDelete),
-      messageId: t.number
+      messageId: t.number,
     }),
     t.type({
       action: t.literal(LogEvents.ReactionAdd),
       messageId: t.number,
-      emoji: t.string
+      emoji: t.string,
     }),
     t.type({
       action: t.literal(LogEvents.ReactionRemove),
       messageId: t.number,
       emoji: t.string,
-      targetsUser: t.boolean
-    })
+      targetsUser: t.boolean,
+    }),
   ],
   "MockBotEvent"
 );
@@ -40,11 +40,11 @@ export const MockBotEventAction = t.taggedUnion(
 export type MockBotEvent = t.TypeOf<typeof MockBotEvent>;
 export const MockBotEvent = t.type({
   guildId: t.number,
-  actions: t.array(MockBotEventAction)
+  actions: t.array(MockBotEventAction),
 });
 
 export const mockBotEvent = makeGatewayEvent({
   event: "mock_bot_event",
   decode: (response: unknown): Either<t.Errors, MockBotEvent> =>
-    either.chain(t.object.decode(response), MockBotEvent.decode)
+    either.chain(t.object.decode(response), MockBotEvent.decode),
 });

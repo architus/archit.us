@@ -5,7 +5,7 @@ import {
   isNil,
   generateName,
   randomColor,
-  randomInt
+  randomInt,
 } from "Utility";
 import {
   MockUser,
@@ -16,7 +16,7 @@ import {
   Predicate,
   DiscordMockContext,
   TransformMessage,
-  DiscordMockCommands
+  DiscordMockCommands,
 } from "Utility/types";
 import { getAvatarUrl } from "Components/UserDisplay";
 
@@ -70,7 +70,7 @@ export class DiscriminatorProvisioner {
     return takeOrReplenish(
       this.currentPool,
       initial,
-      key => (key + 1) % max,
+      (key) => (key + 1) % max,
       this.templatePool
     );
   }
@@ -95,7 +95,7 @@ export function createMockUser(guildId: number): MockUser {
     username: mockUsername,
     nameColor: mockNameColor,
     discriminator: mockDiscriminator.toString(),
-    bot: false
+    bot: false,
   };
 }
 
@@ -113,7 +113,7 @@ export function makeMockUser(base: User): MockUser {
     username: base.username,
     avatarUrl: getAvatarUrl({ user: base }),
     nameColor: userColor,
-    bot: false
+    bot: false,
   };
 }
 
@@ -126,7 +126,7 @@ export function makeFakeWebhookUser(base: MockUser): MockUser {
     ...base,
     id: `${base.id}_mock`,
     nameColor: "white",
-    bot: true
+    bot: true,
   };
 }
 
@@ -207,7 +207,7 @@ export function mergeClumps(
   return {
     // Keep clump A's other properties
     ...a,
-    messages: [...a.messages, ...b.messages]
+    messages: [...a.messages, ...b.messages],
   };
 }
 
@@ -223,7 +223,7 @@ export function createClump(
   return {
     timestamp: Date.now(),
     sender,
-    messages: [message]
+    messages: [message],
   };
 }
 
@@ -236,7 +236,7 @@ export function filterReactionsById(
   reactions: MockReaction[],
   idFilter: Predicate<number>
 ): MockReaction[] {
-  return reactions.filter(r => idFilter(r.targetId));
+  return reactions.filter((r) => idFilter(r.targetId));
 }
 
 /**
@@ -248,7 +248,7 @@ export function containingClumpIndex(
   clumps: MockMessageClump[],
   messageId: number
 ): number {
-  return clumps.findIndex(clump =>
-    includes(clump.messages, message => message.id === messageId)
+  return clumps.findIndex((clump) =>
+    includes(clump.messages, (message) => message.id === messageId)
   );
 }
