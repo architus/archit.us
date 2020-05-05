@@ -1,12 +1,12 @@
 import React from "react";
-import { parseDimension, formatDimension, isNil } from "Utility";
+import { parseDimension, formatDimension } from "Utility";
 import {
   OverlayTrigger,
   Tooltip as BootstrapTooltip,
   OverlayProps,
 } from "react-bootstrap";
-import { toModifierArray } from "react-overlays/esm/usePopper";
-import { Placement } from "popper.js";
+import * as Popper from "@popperjs/core";
+import { UsePopperOptions } from "react-overlays/esm/usePopper";
 import "./style.scss";
 
 function resolvePlacement({
@@ -17,7 +17,7 @@ function resolvePlacement({
   top?: boolean;
   bottom?: boolean;
   left?: boolean;
-}): Placement {
+}): Popper.Placement {
   if (top) return "top";
   if (bottom) return "bottom";
   if (left) return "left";
@@ -40,6 +40,21 @@ type TooltipProps = {
   popperConfig?: OverlayProps["popperConfig"];
 };
 
+function toModifierArray(
+  map?: UsePopperOptions["modifiers"] | undefined
+): Partial<Popper.Modifier<unknown, unknown>>[] {
+  if (map == null) return [];
+  if (Array.isArray(map)) return map;
+  const result = Object.keys(map).map((k) => {
+    const modObj = map[k];
+    if (modObj == null)
+      return (null as unknown) as Partial<Popper.Modifier<unknown, unknown>>;
+    modObj.name = k;
+    return modObj;
+  });
+  return result as Partial<Popper.Modifier<unknown, unknown>>[];
+}
+
 const Tooltip: React.FC<TooltipProps> = ({
   id,
   text,
@@ -55,7 +70,7 @@ const Tooltip: React.FC<TooltipProps> = ({
   ...rest
 }) => {
   const baseModifiers = popperConfig?.modifiers;
-  const modifiers = isNil(baseModifiers) ? [] : toModifierArray(baseModifiers);
+  const modifiers = toModifierArray(baseModifiers);
   modifiers.push({
     name: "preventOverflow",
     options: {
