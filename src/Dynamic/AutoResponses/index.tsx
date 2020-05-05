@@ -1,13 +1,13 @@
 import React, { useContext, useMemo } from "react";
 import styled, { css, up, Box } from "@xstyled/emotion";
 import DataGrid from "react-data-grid";
+import AutoSizer from "react-virtualized-auto-sizer";
 import { AppPageProps } from "Dynamic/AppRoot/types";
 import { User, Snowflake, HoarFrost } from "Utility/types";
 import { useCurrentUser } from "Store/actions";
 import { Option, None } from "Utility/option";
 import { ScrollContext } from "Dynamic/AppRoot/context";
 import { Tooltip, Icon, Switch, HelpTooltip } from "Components";
-import { AutoSizer } from "react-virtualized";
 import { AnyIconName } from "Components/Icon/loader";
 import "react-data-grid/dist/react-data-grid.css";
 
@@ -388,7 +388,7 @@ const AutoResponsesProvider: React.FC<AppPageProps> = (pageProps) => {
       // eslint-disable-next-line @typescript-eslint/camelcase
       author_id: fakeUser.id,
       trigger: "YEP",
-      response: "COCK",
+      response: ":thumbsup:",
       count: 12,
     },
     {

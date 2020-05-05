@@ -14,8 +14,8 @@ TypeScript.register({
   isolatedModules: false,
   compilerOptions: {
     module: "commonjs",
-    target: "es2019",
-  },
+    target: "es2019"
+  }
 });
 
 const { API_BASE } = require("./src/Utility/api.node");
@@ -43,21 +43,21 @@ const config = {
         template: "src/Pages/Index",
         getData: async () => ({
           guildCount,
-          userCount,
-        }),
+          userCount
+        })
       },
       {
         path: "login",
-        template: "src/Pages/Login",
+        template: "src/Pages/Login"
       },
       {
         path: "404",
-        template: "src/Pages/NotFound",
+        template: "src/Pages/NotFound"
       },
       {
         path: "app",
-        template: "src/Dynamic/AppRoot",
-      },
+        template: "src/Dynamic/AppRoot"
+      }
     ];
   },
 
@@ -65,7 +65,7 @@ const config = {
     require.resolve("react-static-plugin-reach-router"),
     require.resolve("react-static-plugin-sitemap"),
     require.resolve("react-static-plugin-sass"),
-    require.resolve("react-static-plugin-emotion"),
+    require.resolve("react-static-plugin-emotion")
   ],
 
   Document: ({ Html, Head, Body, children }) => (
@@ -78,11 +78,11 @@ const config = {
       <script
         // Dark mode anti-flash script
         dangerouslySetInnerHTML={{
-          __html: noFlashScript,
+          __html: noFlashScript
         }}
       />
     </Html>
-  ),
+  )
 };
 
 if (process.env.PRODUCTION_URL) {
@@ -97,7 +97,7 @@ if (args.includes("--no-type-check")) {
 }
 config.plugins.push([
   require.resolve("react-static-plugin-typescript"),
-  { typeCheck },
+  { typeCheck }
 ]);
 
 export default config;
