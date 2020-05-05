@@ -31,7 +31,7 @@ const Footer: React.FC = () => (
         </Col>
         <Col sm={6} lg={4} xl={3}>
           <Card className="border-card">
-            <Header.Brand style={{ pointerEvents: "none" }} />
+            <Header.Brand style={{ pointerEvents: "none" }} top />
           </Card>
         </Col>
       </Row>

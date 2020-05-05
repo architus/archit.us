@@ -49,14 +49,14 @@ const Header: React.FC<HeaderProps> = ({
   </Navbar>
 );
 
-type BrandProps = Partial<LinkProps>;
+type BrandProps = Partial<LinkProps> & BuildMarkerProps;
 
-const Brand: React.FC<BrandProps> = (props) => (
+const Brand: React.FC<BrandProps> = ({ top, ...props }) => (
   <Box display="flex" alignItems="center" mr="micro">
     <Link {...props} className="nav-link brand" to="/">
       <div dangerouslySetInnerHTML={{ __html: LogoSvg }} />
     </Link>
-    <BuildMarker />
+    <BuildMarker top={top} />
   </Box>
 );
 
@@ -91,7 +91,9 @@ const Styled = {
   `,
 };
 
-const BuildMarker: React.FC = () => {
+type BuildMarkerProps = { top?: boolean };
+
+const BuildMarker: React.FC<BuildMarkerProps> = ({ top = false }) => {
   // See https://docs.netlify.com/configure-builds/environment-variables/#build-metadata
   const isLocal = process.env.BUILD_LOCATION !== "remote";
   const isProduction = process.env.BUILD_TAG === "prod";
@@ -153,7 +155,8 @@ const BuildMarker: React.FC = () => {
     <Tooltip
       id="site-version-tooltip"
       text={tooltip}
-      bottom
+      bottom={!top}
+      top={top}
       padding={6}
       maxWidth={320}
     >
