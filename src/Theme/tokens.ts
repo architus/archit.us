@@ -40,9 +40,10 @@ const theme = {
       "SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
   },
   space: withAliases(
-    [0, 3, 5, 13, 21, 34, 55, 89, 144, 233, 377, 610],
+    [0, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610],
     [
       "none",
+      "atto",
       "femto",
       "pico",
       "nano",
@@ -83,6 +84,7 @@ const theme = {
     text_strong: "rgb(33, 33, 33)",
     text_fade: "rgba(33, 33, 33, 0.7)",
     foreground_fade: "rgba(33, 33, 33, 0.4)",
+    light: "rgb(246, 248, 249)",
     b_100: "hsl(200, 20%, 80%)",
     b_200: "hsl(200, 20%, 85%)",
     b_300: "hsl(200, 20%, 93%)",

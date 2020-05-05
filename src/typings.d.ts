@@ -59,8 +59,21 @@ declare module "@xstyled/emotion" {
       | "none"
       | "inherit"
       | "initial";
+    textAlign?: "left" | "right" | "center" | "justify" | "initial" | "inherit";
+    alignItems?:
+      | "stretch"
+      | "center"
+      | "flex-start"
+      | "flex-end"
+      | "baseline"
+      | "initial"
+      | "inherit";
   }
   export const Box: React.ComponentType<BoxProps>;
 
   export default styled;
+}
+
+declare module "preval.macro" {
+  export default function apply(code: string | TemplateStringsArray): string;
 }

@@ -24,7 +24,8 @@
   force = true
 
 [context.production]
-  environment = { PRODUCTION_URL = "https://archit.us" }
+  environment = { PRODUCTION_URL = "https://archit.us", BUILD_TAG = "prod" }
 
 [build]
-  environment = { NODE_ENV = "production" }
+  environment = { NODE_ENV = "production", BUILD_LOCATION = "remote" }
+
