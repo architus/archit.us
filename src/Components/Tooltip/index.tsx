@@ -28,13 +28,14 @@ type TooltipMode = "hover" | "click";
 
 type TooltipProps = {
   id: string;
-  text: string;
+  text: React.ReactNode;
   children: React.ReactNode;
   left?: boolean;
   bottom?: boolean;
   top?: boolean;
   hide?: boolean;
   padding?: string | number;
+  maxWidth?: string | number;
   delay?: number;
   toggle?: TooltipMode;
   popperConfig?: OverlayProps["popperConfig"];
@@ -67,6 +68,7 @@ const Tooltip: React.FC<TooltipProps> = ({
   padding = "0.35rem",
   toggle = "hover",
   delay = 0,
+  maxWidth = "240px",
   ...rest
 }) => {
   const baseModifiers = popperConfig?.modifiers;
@@ -93,14 +95,19 @@ const Tooltip: React.FC<TooltipProps> = ({
           bsPrefix={hide ? "hide-tooltip" : undefined}
           {...rest}
         >
-          <div
-            style={{
-              padding: parseDimension(padding)
-                .map(formatDimension)
-                .getOrElse(undefined),
-            }}
-          >
-            {text}
+          <div className="tooltip-content">
+            <div
+              style={{
+                padding: parseDimension(padding)
+                  .map(formatDimension)
+                  .getOrElse(undefined),
+                maxWidth: parseDimension(maxWidth)
+                  .map(formatDimension)
+                  .getOrElse(undefined),
+              }}
+            >
+              {text}
+            </div>
           </div>
         </BootstrapTooltip>
       }

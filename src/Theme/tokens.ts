@@ -30,9 +30,10 @@ const theme = {
       "SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
   },
   space: withAliases(
-    [0, 3, 5, 13, 21, 34, 55, 89, 144, 233, 377, 610],
+    [0, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610],
     [
       "none",
+      "atto",
       "femto",
       "pico",
       "nano",
@@ -48,6 +49,7 @@ const theme = {
   ),
   colors: {
     text: "rgba(33, 33, 33, 0.85)",
+    light: "rgb(246, 248, 249)",
     "text.strong": "rgb(33, 33, 33)",
     "text.fade": "rgba(33, 33, 33, 0.7)",
     "b.100": "hsl(200, 20%, 80%)",
@@ -81,4 +83,5 @@ const theme = {
   },
 };
 
+export type Theme = typeof theme;
 export default theme;
