@@ -136,4 +136,5 @@ const theme = {
 };
 
 export type Theme = typeof theme;
+export type Space = number | Exclude<keyof Theme["space"], keyof never[]>;
 export default theme;

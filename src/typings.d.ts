@@ -12,7 +12,7 @@ declare module "@xstyled/emotion" {
   import React from "react";
   import { jsx, css } from "emotion";
   import styled from "@emotion/styled";
-  import { Theme } from "Theme/tokens";
+  import { Theme, Space } from "Theme/tokens";
 
   export const jsx: typeof jsx;
   export const css: typeof css;
@@ -21,10 +21,6 @@ declare module "@xstyled/emotion" {
   export const ThemeProvider: React.ComponentType<{ theme: object }>;
   export const ColorModeProvider: React.ComponentType<{}>;
   export const useColorMode: () => [string, (newMode: str) => void];
-  export type Space =
-    | number
-    | string
-    | Exclude<keyof Theme["space"], keyof never[]>;
   export interface BoxProps {
     // Spacing props
     margin?: Space;
