@@ -1,32 +1,29 @@
 import React, { useContext, useMemo } from "react";
 import styled, { css, up, Box } from "@xstyled/emotion";
-import DataGrid from "react-data-grid";
+import DataGrid, { SelectColumn } from "react-data-grid";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { AppPageProps } from "Dynamic/AppRoot/types";
+import {
+  generateName,
+  randomNumericString,
+  randomInt,
+  useMemoOnce,
+} from "Utility";
 import { User, Snowflake, HoarFrost } from "Utility/types";
 import { useCurrentUser } from "Store/actions";
 import { Option, None } from "Utility/option";
 import { ScrollContext } from "Dynamic/AppRoot/context";
 import { Tooltip, Icon, Switch, HelpTooltip } from "Components";
 import { AnyIconName } from "Components/Icon/loader";
+import { getAvatarUrl } from "Components/UserDisplay";
+import {
+  TriggerFormatter,
+  ResponseFormatter,
+  AuthorFormatter,
+  CountFormatter,
+} from "./formatters";
+import { AutoResponse, TransformedAutoResponse, AuthorData } from "./types";
 import "react-data-grid/dist/react-data-grid.css";
-
-type AutoResponse = {
-  id: HoarFrost;
-  author_id: Snowflake;
-  trigger: string;
-  response: string;
-  count: number;
-};
-
-type TransformedAutoResponse = {
-  id: HoarFrost;
-  author_id: Snowflake;
-  trigger: string;
-  response: string;
-  count: number;
-  authorData: AuthorData;
-};
 
 type ViewMode = keyof typeof viewModes;
 const viewModeOrder: ViewMode[] = ["Sparse", "Comfy", "Compact"];
@@ -52,13 +49,6 @@ type AutoResponsesState = {
   showFilters: boolean;
   deleteSelectedEnable: boolean;
   addNewRowEnable: boolean;
-};
-
-type AuthorData = {
-  author: string;
-  username: string;
-  avatar?: string;
-  discriminator: string;
 };
 
 const Styled = {
@@ -235,6 +225,30 @@ class AutoResponses extends React.Component<
     // TODO implement
   };
 
+  columns = [
+    SelectColumn,
+    {
+      name: "Trigger",
+      key: "trigger",
+      formatter: TriggerFormatter,
+    },
+    {
+      name: "Response",
+      key: "response",
+      formatter: ResponseFormatter,
+    },
+    {
+      name: "Count",
+      key: "count",
+      formatter: CountFormatter,
+    },
+    {
+      name: "Author",
+      key: "author",
+      formatter: AuthorFormatter,
+    },
+  ];
+
   render(): React.ReactNode {
     const { isArchitusAdmin, commands } = this.props;
     const {
@@ -282,36 +296,9 @@ class AutoResponses extends React.Component<
                     rows={commands}
                     height={height}
                     width={width}
-                    columns={[
-                      {
-                        name: "Trigger",
-                        key: "trigger",
-                        formatter: ({ row }): React.ReactElement => (
-                          <>{row.trigger}</>
-                        ),
-                      },
-                      {
-                        name: "Response",
-                        key: "response",
-                        formatter: ({ row }): React.ReactElement => (
-                          <>{row.response}</>
-                        ),
-                      },
-                      {
-                        name: "Author",
-                        key: "authorData.author",
-                        formatter: ({ row }): React.ReactElement => (
-                          <>{row.authorData.author}</>
-                        ),
-                      },
-                      {
-                        name: "Count",
-                        key: "count",
-                        formatter: ({ row }): React.ReactElement => (
-                          <>{row.count}</>
-                        ),
-                      },
-                    ]}
+                    headerRowHeight={36}
+                    headerFiltersHeight={36}
+                    columns={this.columns}
                     rowKey="id"
                     rowHeight={viewModes[viewMode].height}
                   />
@@ -335,104 +322,91 @@ function foldAuthorData(
   autoResponse: AutoResponse,
   authors: Map<Snowflake, User>
 ): AuthorData {
-  const id = autoResponse.author_id;
+  const id = autoResponse.authorId;
   const userOption = Option.from(authors.get(id));
   if (userOption.isDefined()) {
-    const { username, avatar, discriminator } = userOption.get;
+    const { username, discriminator } = userOption.get;
     return {
       author: `${username}#${discriminator}|${id}`,
-      avatar: avatar.orUndefined(),
+      avatarUrl: getAvatarUrl({ user: userOption.get }),
       username,
       discriminator,
     };
   }
 
   return {
-    author: "Unknown",
-    username: "Unknown",
+    author: "unknown",
+    username: "unknown",
     discriminator: "0000",
+    avatarUrl: "/img/unknown.png",
   };
 }
 
+function mockAuthors(
+  currentUser: Option<User>,
+  count: number
+): Map<Snowflake, User> {
+  const authors = new Map<Snowflake, User>();
+  for (let i = 0; i < count; ++i) {
+    const id = i.toString() as Snowflake;
+    authors.set(id, {
+      id,
+      username: generateName(),
+      discriminator: randomNumericString(4),
+      avatar: None,
+      bot: None,
+      system: None,
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      mfa_enabled: None,
+      locale: None,
+      verified: None,
+      email: None,
+      flags: None,
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      premium_type: None,
+    });
+  }
+  if (currentUser.isDefined()) {
+    authors.set(currentUser.get.id, currentUser.get);
+  }
+  return authors;
+}
+
+const baseCommands: [string, string][] = [
+  ["hello*", "[:JUST:]"],
+  ["YEP", ":thumbsup:"],
+  ["*night", "[:night:]"],
+  ["*get on", ":Pepega: :mega: [capture] get on"],
+  ["no", "[:JUST:"],
+];
+
+function mockData(
+  authors: Map<Snowflake, User>,
+  count: number
+): AutoResponse[] {
+  const responses: AutoResponse[] = [];
+  const authorArray = Array.from(authors.keys());
+  // Add unknown user
+  authorArray.push("-1" as Snowflake);
+  for (let i = 0; i < count; ++i) {
+    const authorIndex = randomInt(authorArray.length);
+    const commandIndex = randomInt(baseCommands.length);
+    const authorId = authorArray[authorIndex];
+    responses.push({
+      id: i.toString() as HoarFrost,
+      authorId,
+      trigger: baseCommands[commandIndex][0],
+      response: baseCommands[commandIndex][1],
+      count: randomInt(1000000),
+    });
+  }
+  return responses;
+}
+
 const AutoResponsesProvider: React.FC<AppPageProps> = (pageProps) => {
-  // TODO hook up to state
-  // TODO add test data
-  const fakeUser: User = {
-    id: "2" as Snowflake,
-    username: "user",
-    discriminator: "1881",
-    avatar: None,
-    bot: None,
-    system: None,
-    // eslint-disable-next-line @typescript-eslint/camelcase
-    mfa_enabled: None,
-    locale: None,
-    verified: None,
-    email: None,
-    flags: None,
-    // eslint-disable-next-line @typescript-eslint/camelcase
-    premium_type: None,
-  };
-  const authors: Map<Snowflake, User> = new Map([[fakeUser.id, fakeUser]]);
-  const commandsBase: AutoResponse[] = [
-    {
-      id: "3" as HoarFrost,
-      // eslint-disable-next-line @typescript-eslint/camelcase
-      author_id: fakeUser.id,
-      trigger: "hello*",
-      response: "[:JUST:]",
-      count: 2352,
-    },
-    {
-      id: "4" as HoarFrost,
-      // eslint-disable-next-line @typescript-eslint/camelcase
-      author_id: fakeUser.id,
-      trigger: "YEP",
-      response: ":thumbsup:",
-      count: 12,
-    },
-    {
-      id: "5" as HoarFrost,
-      // eslint-disable-next-line @typescript-eslint/camelcase
-      author_id: fakeUser.id,
-      trigger: "*night",
-      response: "[:night:]",
-      count: 3456,
-    },
-    {
-      id: "6" as HoarFrost,
-      // eslint-disable-next-line @typescript-eslint/camelcase
-      author_id: fakeUser.id,
-      trigger: "*get on",
-      response: ":Pepega: [capture] get on",
-      count: 654,
-    },
-    {
-      id: "7" as HoarFrost,
-      // eslint-disable-next-line @typescript-eslint/camelcase
-      author_id: fakeUser.id,
-      trigger: "no",
-      response: "[:JUST:]",
-      count: 2,
-    },
-  ];
-  const commands = [
-    ...commandsBase,
-    ...commandsBase.map((c) => ({ ...c, id: `${c.id}_` as HoarFrost })),
-    ...commandsBase.map((c) => ({ ...c, id: `${c.id}1` as HoarFrost })),
-    ...commandsBase.map((c) => ({ ...c, id: `${c.id}2` as HoarFrost })),
-    ...commandsBase.map((c) => ({ ...c, id: `${c.id}3` as HoarFrost })),
-    ...commandsBase.map((c) => ({ ...c, id: `${c.id}4` as HoarFrost })),
-    ...commandsBase.map((c) => ({ ...c, id: `${c.id}5` as HoarFrost })),
-    ...commandsBase.map((c) => ({ ...c, id: `${c.id}6` as HoarFrost })),
-    ...commandsBase.map((c) => ({ ...c, id: `${c.id}7` as HoarFrost })),
-    ...commandsBase.map((c) => ({ ...c, id: `${c.id}8` as HoarFrost })),
-    ...commandsBase.map((c) => ({ ...c, id: `${c.id}9` as HoarFrost })),
-    ...commandsBase.map((c) => ({ ...c, id: `${c.id}1_` as HoarFrost })),
-    ...commandsBase.map((c) => ({ ...c, id: `${c.id}2_` as HoarFrost })),
-    ...commandsBase.map((c) => ({ ...c, id: `${c.id}3_` as HoarFrost })),
-  ];
   const currentUser: Option<User> = useCurrentUser();
+  const authors = useMemoOnce(() => mockAuthors(currentUser, 5));
+  const commands = useMemoOnce(() => mockData(authors, 100));
   const { scrollHandler } = useContext(ScrollContext);
   const formattedCommands = useMemo(
     () =>
@@ -512,7 +486,7 @@ const GridHeader: React.FC<GridHeaderProps> = ({
     <Styled.GridHeaderButton disabled={!addNewRowEnable} onClick={onAddNewRow}>
       <Icon name="plus" />
       <Box ml="nano" display="inline">
-        New auto response
+        New
       </Box>
     </Styled.GridHeaderButton>
     <Styled.GridHeaderButton
@@ -521,7 +495,7 @@ const GridHeader: React.FC<GridHeaderProps> = ({
     >
       <Icon name="trash" />
       <Box ml="nano" display="inline">
-        Delete Selected
+        Delete
       </Box>
     </Styled.GridHeaderButton>
     <Styled.ViewModeButtonGroup>

@@ -21,7 +21,10 @@ declare module "@xstyled/emotion" {
   export const ThemeProvider: React.ComponentType<{ theme: object }>;
   export const ColorModeProvider: React.ComponentType<{}>;
   export const useColorMode: () => [string, (newMode: str) => void];
-  export type Space = number | Exclude<keyof Theme["space"], keyof never[]>;
+  export type Space =
+    | number
+    | string
+    | Exclude<keyof Theme["space"], keyof never[]>;
   export interface BoxProps {
     // Spacing props
     margin?: Space;
@@ -60,6 +63,7 @@ declare module "@xstyled/emotion" {
       | "inherit"
       | "initial";
     textAlign?: "left" | "right" | "center" | "justify" | "initial" | "inherit";
+    height?: string | number;
     alignItems?:
       | "stretch"
       | "center"

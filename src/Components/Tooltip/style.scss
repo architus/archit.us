@@ -3,8 +3,6 @@
 
 .tooltip {
     z-index: 1090;
-    transition: opacity 0.1s linear !important;
-    opacity: 1 !important;
 
     &[x-placement^="top"] .arrow::before {
         border-top-color: $dark-000 !important;
@@ -22,68 +20,19 @@
         border-right-color: $dark-000 !important;
     }
 
-    .arrow {
-        transition: 0.15s linear opacity;
-        transition-delay: 0.1s;
-    }
-
-    &.fade {
+    @include light {
         .arrow {
-            opacity: 0;
+            opacity: 0.6;
         }
-
-        .tooltip-inner {
-            backdrop-filter: blur(0) opacity(0);
-            .tooltip-content {
-                opacity: 0;
-            }
-        }
-    }
-
-    &.show {
-        .arrow {
-            opacity: 1;
-
-            @include light {
-                opacity: 0.6;
-            }
-        }
-
-        .tooltip-inner {
-            backdrop-filter: blur(10px) opacity(1);
-            .tooltip-content {
-                opacity: 1;
-            }
-        }
-    }
-
-    &.fade,
-    &.show {
-        opacity: 1 !important;
     }
 
     .tooltip-inner {
-        transition: 0.15s linear backdrop-filter;
-        transition-delay: 0.1s;
-        background-color: transparent;
-        padding: 0;
-        border-radius: 8px;
-        max-width: none;
+        padding: 0.1rem 0.35rem;
+        max-width: 240px;
+        background-color: $dark-000;
 
-        .tooltip-content {
-            transition: 0.15s linear opacity;
-            transition-delay: 0.1s;
-            padding: 0.1rem 0.35rem;
-            background-color: rgba($dark-000, 0.75);
-            border-radius: 8px;
-
-            @include light {
-                background-color: rgba($dark-000, 0.6);
-            }
-
-            & > div {
-                max-width: 240px;
-            }
+        @include light {
+            background-color: rgba($dark-000, 0.85);
         }
 
         h6 {
@@ -93,5 +42,5 @@
 }
 
 .hide-tooltip {
-    opacity: 0 !important;
+    opacity: 0;
 }
