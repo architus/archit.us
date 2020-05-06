@@ -1,8 +1,16 @@
-import React from "react";
+import React, { MutableRefObject } from "react";
 import styled, { Box } from "@xstyled/emotion";
-import { FormatterProps } from "react-data-grid";
+import { ContextMenuTrigger } from "react-contextmenu";
+import {
+  FormatterProps,
+  HeaderRendererProps,
+  SelectCellFormatter,
+  RowRendererProps,
+  Row as GridRow,
+} from "react-data-grid";
 import { UserDisplay } from "Components";
 import { isEmptyOrNil } from "Utility";
+import { User } from "Utility/types";
 import { TransformedAutoResponse } from "./types";
 
 const Styled = {
@@ -16,6 +24,65 @@ const Styled = {
     color: text_fade;
   `,
 };
+
+// Use a ref here to allow for external mutability to the internal all rows
+// selected state (allowing for custom values)
+export const SelectionHeader: (
+  allRowsSelectedRef: MutableRefObject<boolean>
+) => React.FC<HeaderRendererProps<TransformedAutoResponse, {}>> = (
+  allRowsSelectedRef
+) => {
+  const renderer: React.FC<HeaderRendererProps<
+    TransformedAutoResponse,
+    {}
+  >> = ({ allRowsSelected, onAllRowsSelectionChange }) => (
+    <SelectCellFormatter
+      value={allRowsSelected || allRowsSelectedRef.current}
+      onChange={onAllRowsSelectionChange}
+    />
+  );
+  return renderer;
+};
+
+export const SelectionFormatter: (
+  selfAuthor: User,
+  canDeleteAny: boolean
+) => React.FC<FormatterProps<TransformedAutoResponse, {}>> = (
+  selfAuthor,
+  canDeleteAny
+) => ({
+  row,
+  isRowSelected,
+  onRowSelectionChange,
+}): React.ReactElement | null => {
+  if (canDeleteAny || selfAuthor.id === row.authorId) {
+    return (
+      <SelectCellFormatter
+        value={isRowSelected}
+        onChange={onRowSelectionChange}
+      />
+    );
+  }
+  return null;
+};
+
+export const RowRenderer: (
+  selfAuthor: User,
+  canDeleteAny: boolean
+) => React.FC<RowRendererProps<TransformedAutoResponse, {}>> = (
+  selfAuthor,
+  canDeleteAny
+) => (props): React.ReactElement | null => (
+  <ContextMenuTrigger
+    id="auto-response-grid-context-menu"
+    collect={(): { rowIdx: number; canDelete: boolean } => ({
+      rowIdx: props.rowIdx,
+      canDelete: canDeleteAny || selfAuthor.id === props.row.authorId,
+    })}
+  >
+    <GridRow {...props} />
+  </ContextMenuTrigger>
+);
 
 export const TriggerFormatter: React.FC<FormatterProps<
   TransformedAutoResponse,

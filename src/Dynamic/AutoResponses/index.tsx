@@ -1,13 +1,16 @@
-import React, { useContext, useMemo } from "react";
+import React, { useContext, useMemo, MutableRefObject } from "react";
 import styled, { css, up, Box } from "@xstyled/emotion";
-import DataGrid, { SelectColumn } from "react-data-grid";
+import DataGrid, { Column } from "react-data-grid";
 import AutoSizer from "react-virtualized-auto-sizer";
+import { ContextMenu, MenuItem, connectMenu } from "react-contextmenu";
+import { createPortal } from "react-dom";
 import { AppPageProps } from "Dynamic/AppRoot/types";
 import {
   generateName,
   randomNumericString,
   randomInt,
   useMemoOnce,
+  intersection,
 } from "Utility";
 import { User, Snowflake, HoarFrost } from "Utility/types";
 import { useCurrentUser } from "Store/actions";
@@ -16,11 +19,15 @@ import { ScrollContext } from "Dynamic/AppRoot/context";
 import { Tooltip, Icon, Switch, HelpTooltip } from "Components";
 import { AnyIconName } from "Components/Icon/loader";
 import { getAvatarUrl } from "Components/UserDisplay";
+import { opacity } from "Theme/getters";
 import {
   TriggerFormatter,
   ResponseFormatter,
   AuthorFormatter,
   CountFormatter,
+  SelectionHeader,
+  SelectionFormatter,
+  RowRenderer,
 } from "./formatters";
 import { AutoResponse, TransformedAutoResponse, AuthorData } from "./types";
 import "react-data-grid/dist/react-data-grid.css";
@@ -47,8 +54,9 @@ type AutoResponsesState = {
   filterSelfAuthored: boolean;
   viewMode: ViewMode;
   showFilters: boolean;
-  deleteSelectedEnable: boolean;
   addNewRowEnable: boolean;
+  selectedRows: Set<HoarFrost>;
+  columns: Column<TransformedAutoResponse, {}>[];
 };
 
 const Styled = {
@@ -191,6 +199,32 @@ const Styled = {
       display: none !important;
     }
   `,
+  ContextMenu: styled(ContextMenu)`
+    &.react-contextmenu {
+      background-color: b_600;
+      border-radius: 8px;
+      border: 1px solid;
+      border-color: contrast_border;
+      box-shadow: 1;
+      color: text;
+      padding: pico 0;
+      user-select: none;
+    }
+
+    & .react-contextmenu-item {
+      padding: 2px nano;
+      cursor: pointer;
+      outline: none;
+
+      &:hover {
+        background-color: ${opacity("primary", 0.2)};
+      }
+
+      &:active {
+        background-color: ${opacity("primary", 0.4)};
+      }
+    }
+  `,
 };
 
 class AutoResponses extends React.Component<
@@ -201,9 +235,19 @@ class AutoResponses extends React.Component<
     filterSelfAuthored: false,
     viewMode: "Comfy",
     showFilters: false,
-    deleteSelectedEnable: false,
     addNewRowEnable: true,
+    selectedRows: new Set<HoarFrost>(),
+    columns: [],
   };
+
+  selfAuthored: Set<HoarFrost> = new Set<HoarFrost>();
+
+  allRowsSelectedRef: MutableRefObject<boolean> = { current: false };
+
+  constructor(props: AutoResponsesProps) {
+    super(props);
+    this.updateSelfAuthored();
+  }
 
   setViewMode = (newMode: ViewMode): void => {
     this.setState({ viewMode: newMode });
@@ -221,43 +265,126 @@ class AutoResponses extends React.Component<
     // TODO implement
   };
 
+  onDelete = (
+    e: React.MouseEvent<HTMLDivElement>,
+    { rowIdx }: { rowIdx: number }
+  ): void => {
+    // TODO implement
+  };
+
+  onCopy = (
+    e: React.MouseEvent<HTMLDivElement>,
+    { rowIdx }: { rowIdx: number }
+  ): void => {
+    // TODO implement
+  };
+
   onAddNewRow = (): void => {
     // TODO implement
   };
 
-  columns = [
-    SelectColumn,
-    {
-      name: "Trigger",
-      key: "trigger",
-      formatter: TriggerFormatter,
-    },
-    {
-      name: "Response",
-      key: "response",
-      formatter: ResponseFormatter,
-    },
-    {
-      name: "Count",
-      key: "count",
-      formatter: CountFormatter,
-    },
-    {
-      name: "Author",
-      key: "author",
-      formatter: AuthorFormatter,
-    },
-  ];
+  setSelectedRows = (newSet: Set<HoarFrost>): void => {
+    const { isArchitusAdmin } = this.props;
+    let newSelectedRows: Set<HoarFrost>;
+    let maxRowCount: number;
+    if (isArchitusAdmin) {
+      newSelectedRows = newSet;
+      maxRowCount = this.props.commands.length;
+    } else {
+      newSelectedRows = intersection(newSet, this.selfAuthored);
+      maxRowCount = this.selfAuthored.size;
+    }
+    // We use a ref here to pass internal changes to our all row selection logic
+    // to the header renderer without recreating the component function. The header
+    // will get re-rendered anyways when the row selection changes, causing it
+    // to read the most up-to-date value from the ref.
+    this.allRowsSelectedRef.current = newSelectedRows.size === maxRowCount;
+    this.setState({ selectedRows: newSelectedRows });
+  };
+
+  updateSelfAuthored = (): void => {
+    const { commands, currentUser } = this.props;
+    this.selfAuthored = new Set<HoarFrost>(
+      commands
+        .filter((command) => command.authorId === currentUser.id)
+        .map((command) => command.id)
+    );
+  };
+
+  componentDidUpdate(prevProps: AutoResponsesProps): void {
+    if (prevProps.commands !== this.props.commands) {
+      this.updateSelfAuthored();
+    }
+  }
 
   render(): React.ReactNode {
-    const { isArchitusAdmin, commands } = this.props;
+    const { isArchitusAdmin, commands, currentUser } = this.props;
     const {
       viewMode,
       showFilters,
       filterSelfAuthored,
-      // deleteSelectedEnable,
+      selectedRows,
       addNewRowEnable,
     } = this.state;
+
+    const columns: Column<TransformedAutoResponse, {}>[] = [
+      {
+        key: "selection",
+        name: "",
+        width: 35,
+        maxWidth: 35,
+        frozen: true,
+        headerRenderer: SelectionHeader(this.allRowsSelectedRef),
+        formatter: SelectionFormatter(currentUser, isArchitusAdmin),
+      },
+      {
+        name: "Trigger",
+        key: "trigger",
+        resizable: true,
+        formatter: TriggerFormatter,
+      },
+      {
+        name: "Response",
+        key: "response",
+        resizable: true,
+        formatter: ResponseFormatter,
+      },
+      {
+        name: "Count",
+        key: "count",
+        resizable: true,
+        formatter: CountFormatter,
+      },
+      {
+        name: "Author",
+        key: "author",
+        resizable: true,
+        formatter: AuthorFormatter,
+      },
+    ];
+
+    const CommandMenu = connectMenu("auto-response-grid-context-menu")(
+      ({ trigger }: { trigger: { canDelete: boolean } | null }) => {
+        return (
+          <Styled.ContextMenu id="auto-response-grid-context-menu">
+            <MenuItem onClick={this.onCopy}>
+              <Icon name="copy" marginRight="nano" />
+              Copy to clipboard
+            </MenuItem>
+            {trigger && trigger.canDelete ? (
+              <>
+                <MenuItem onClick={this.onDelete}>
+                  <Icon name="trash" marginRight="nano" />
+                  Delete
+                </MenuItem>
+              </>
+            ) : (
+              <></>
+            )}
+          </Styled.ContextMenu>
+        );
+      }
+    );
 
     return (
       <Styled.PageOuter>
@@ -277,7 +404,7 @@ class AutoResponses extends React.Component<
             onChangeShowFilters={this.onChangeShowFilters}
             filterSelfAuthored={filterSelfAuthored}
             onChangeFilterSelfAuthored={this.onChangeFilterSelfAuthored}
-            deleteSelectedEnable={filterSelfAuthored}
+            deleteSelectedEnable={selectedRows.size > 0}
             onDeleteSelected={this.onDeleteSelected}
             addNewRowEnable={addNewRowEnable}
             onAddNewRow={this.onAddNewRow}
@@ -292,19 +419,23 @@ class AutoResponses extends React.Component<
                 width: number;
               }): React.ReactNode => (
                 <>
-                  <DataGrid
+                  <DataGrid<TransformedAutoResponse, "id", {}>
                     rows={commands}
                     height={height}
                     width={width}
                     headerRowHeight={36}
                     headerFiltersHeight={36}
-                    columns={this.columns}
+                    columns={columns}
                     rowKey="id"
                     rowHeight={viewModes[viewMode].height}
+                    selectedRows={selectedRows}
+                    onSelectedRowsChange={this.setSelectedRows}
+                    rowRenderer={RowRenderer(currentUser, isArchitusAdmin)}
                   />
                 </>
               )}
             </AutoSizer>
+            {createPortal(<CommandMenu />, document.body)}
           </Styled.DataGridWrapper>
         </Styled.GridWrapper>
       </Styled.PageOuter>
@@ -495,7 +626,7 @@ const GridHeader: React.FC<GridHeaderProps> = ({
     >
       <Icon name="trash" />
       <Box ml="nano" display="inline">
-        Delete
+        Delete all
       </Box>
     </Styled.GridHeaderButton>
     <Styled.ViewModeButtonGroup>

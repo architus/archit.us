@@ -213,6 +213,17 @@ export function randomItem<T>(arr: T[]): T | null {
 }
 
 /**
+ * Calculates the intersection of two sets
+ * @param setA - set A
+ * @param setB - Set B
+ */
+export function intersection<T>(setA: Set<T>, setB: Set<T>): Set<T> {
+  const smaller = setA.size > setB.size ? setB : setA;
+  const larger = setA.size > setB.size ? setA : setB;
+  return new Set([...smaller].filter((x) => larger.has(x)));
+}
+
+/**
  * Performs a binary search on the pre-sorted array to find the given element's index, or
  * -1 if it could not be found. Guaranteed to run in O(lg(n)) time for input size of n
  * @param sortedArr - Pre-sorted array to perform binary search on
