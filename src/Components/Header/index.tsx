@@ -182,7 +182,7 @@ const BuildTooltip: React.FC<BuildTooltipProps> = ({ children }) => {
     "Build time": `${buildTime.toLocaleDateString(
       undefined,
       dateOptions
-    )} at ${buildTime.toLocaleTimeString()}`
+    )} at ${buildTime.toLocaleTimeString()}`,
   };
   if (process.env.NETLIFY === "true") {
     values = {
@@ -191,10 +191,23 @@ const BuildTooltip: React.FC<BuildTooltipProps> = ({ children }) => {
       Context: process.env.CONTEXT,
       "GitHub repository": <AutoLink>{process.env.REPOSITORY_URL}</AutoLink>,
       "Commit SHA": process.env.COMMIT_REF,
+      "Commit URL": (
+        <AutoLink>{`${process.env.REPOSITORY_URL}/commit/${process.env.COMMIT_REF}`}</AutoLink>
+      ),
       Branch: process.env.BRANCH,
       Head: process.env.HEAD,
       "Deploy URL": <AutoLink>{process.env.DEPLOY_PRIME_URL}</AutoLink>,
       "Deploy Id": process.env.DEPLOY_ID,
+    };
+  }
+  if (process.env.PULL_REQUEST === "true") {
+    const prId = process.env.REVIEW_ID;
+    values = {
+      ...values,
+      "Pull request": `#${prId}`,
+      "Pull request URL": (
+        <AutoLink>{`${process.env.REPOSITORY_URL}/pull/${prId}`}</AutoLink>
+      ),
     };
   }
 
@@ -220,7 +233,7 @@ const AutoLink: React.FC<{ children: string | undefined }> = ({ children }) =>
   isNil(children) ? (
     <>~</>
   ) : (
-    <Link to={children} space="femto" target="_blank" rel="noopener">
+    <Link to={children} space="femto" target="_blank" rel="noopener" external>
       {children}
     </Link>
   );
