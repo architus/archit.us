@@ -1,5 +1,7 @@
+import { shallowEqualObjects, shallowEqualArrays } from "shallow-equal";
 import { randomInt } from "./primitives";
 import { Nil, Predicate, RecordKey, Comparator } from "./types";
+import { Option, Some, None } from "./option";
 
 /**
  * Determines whether a value is defined (non-undefined or null). Returns true if the value
@@ -264,4 +266,49 @@ export function binarySearch<T>(
     }
   }
   return -1;
+}
+
+/**
+ * Performs a shallow equal of two javascript values, using object or
+ * array shallow comparison if applicable
+ * @param a - first element to compare
+ * @param b - second object to compare
+ */
+export function shallowEqual<T>(a: T, b: T): boolean {
+  if (typeof a === "object" && typeof b === "object") {
+    // Determine if array
+    if (isArray(a) && isArray(b)) {
+      return shallowEqualArrays(a, b);
+    }
+    return shallowEqualObjects(a, b);
+  }
+  // eslint-disable-next-line eqeqeq
+  return a == b;
+}
+
+/**
+ * Performs an memoized expensive calculation
+ * @param calculate - Function to calculate fresh value of the memoized operation
+ * @param getDeps - Gets all dependencies needed to perform comparison of result
+ */
+export function memoize<T, Q>(
+  calculate: (args: T) => Q,
+  getDeps: () => T
+): () => Q {
+  let cachedDeps: Option<T> = None;
+  let cachedResult: Option<Q> = None;
+  return (): Q => {
+    const freshDeps = getDeps();
+    if (
+      cachedDeps.isDefined() &&
+      cachedResult.isDefined() &&
+      shallowEqual(cachedDeps.get, freshDeps)
+    ) {
+      return cachedResult.get;
+    }
+    const result = calculate(freshDeps);
+    cachedDeps = Some(freshDeps);
+    cachedResult = Some(result);
+    return result;
+  };
 }

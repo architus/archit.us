@@ -1,6 +1,6 @@
 import React, { useContext, useMemo, MutableRefObject } from "react";
 import styled, { css, up, Box } from "@xstyled/emotion";
-import DataGrid, { Column } from "react-data-grid";
+import DataGrid, { Column, SortDirection } from "react-data-grid";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { ContextMenu, MenuItem, connectMenu } from "react-contextmenu";
 import { createPortal } from "react-dom";
@@ -11,10 +11,11 @@ import {
   randomInt,
   useMemoOnce,
   intersection,
+  memoize,
 } from "Utility";
 import { User, Snowflake, HoarFrost } from "Utility/types";
 import { useCurrentUser } from "Store/actions";
-import { Option, None } from "Utility/option";
+import { Option, None, Some } from "Utility/option";
 import { ScrollContext } from "Dynamic/AppRoot/context";
 import { Tooltip, Icon, Switch, HelpTooltip } from "Components";
 import { AnyIconName } from "Components/Icon/loader";
@@ -57,6 +58,8 @@ type AutoResponsesState = {
   addNewRowEnable: boolean;
   selectedRows: Set<HoarFrost>;
   columns: Column<TransformedAutoResponse, {}>[];
+  sortColumn: Option<keyof TransformedAutoResponse>;
+  sortDirection: Option<SortDirection>;
 };
 
 const Styled = {
@@ -237,6 +240,8 @@ class AutoResponses extends React.Component<
     showFilters: false,
     addNewRowEnable: true,
     selectedRows: new Set<HoarFrost>(),
+    sortColumn: None,
+    sortDirection: None,
     columns: [],
   };
 
@@ -283,6 +288,53 @@ class AutoResponses extends React.Component<
     // TODO implement
   };
 
+  getSortedRows = memoize<
+    [
+      TransformedAutoResponse[],
+      Option<keyof TransformedAutoResponse>,
+      Option<SortDirection>
+    ],
+    TransformedAutoResponse[]
+  >(
+    ([commands, sortColumn, sortDirection]) => {
+      if (
+        sortDirection.isDefined() &&
+        sortColumn.isDefined() &&
+        sortDirection.get !== "NONE"
+      ) {
+        let sortedRows: TransformedAutoResponse[] = [...commands];
+        const column = sortColumn.get;
+        switch (column) {
+          case "response":
+          case "trigger":
+            sortedRows = sortedRows.sort((a, b) =>
+              a[column].localeCompare(b[column])
+            );
+            break;
+          case "authorData":
+            sortedRows = sortedRows.sort((a, b) =>
+              a.authorData.author.localeCompare(b.authorData.author)
+            );
+            break;
+          case "count":
+            sortedRows = sortedRows.sort((a, b) => a[column] - b[column]);
+            break;
+          default:
+        }
+        return sortDirection.get === "DESC" ? sortedRows.reverse() : sortedRows;
+      }
+      return commands;
+    },
+    () => [this.props.commands, this.state.sortColumn, this.state.sortDirection]
+  );
+
+  onSort = (column: string, direction: SortDirection): void => {
+    this.setState({
+      sortColumn: Some(column as keyof TransformedAutoResponse),
+      sortDirection: Some(direction),
+    });
+  };
+
   setSelectedRows = (newSet: Set<HoarFrost>): void => {
     const { isArchitusAdmin } = this.props;
     let newSelectedRows: Set<HoarFrost>;
@@ -318,13 +370,15 @@ class AutoResponses extends React.Component<
   }
 
   render(): React.ReactNode {
-    const { isArchitusAdmin, commands, currentUser } = this.props;
+    const { isArchitusAdmin, currentUser } = this.props;
     const {
       viewMode,
       showFilters,
       filterSelfAuthored,
       selectedRows,
       addNewRowEnable,
+      sortColumn,
+      sortDirection,
     } = this.state;
 
     const columns: Column<TransformedAutoResponse, {}>[] = [
@@ -341,24 +395,28 @@ class AutoResponses extends React.Component<
         name: "Trigger",
         key: "trigger",
         resizable: true,
+        sortable: true,
         formatter: TriggerFormatter,
       },
       {
         name: "Response",
         key: "response",
         resizable: true,
+        sortable: true,
         formatter: ResponseFormatter,
       },
       {
         name: "Count",
         key: "count",
         resizable: true,
+        sortable: true,
         formatter: CountFormatter,
       },
       {
         name: "Author",
-        key: "author",
+        key: "authorData",
         resizable: true,
+        sortable: true,
         formatter: AuthorFormatter,
       },
     ];
@@ -420,7 +478,7 @@ class AutoResponses extends React.Component<
               }): React.ReactNode => (
                 <>
                   <DataGrid<TransformedAutoResponse, "id", {}>
-                    rows={commands}
+                    rows={this.getSortedRows()}
                     height={height}
                     width={width}
                     headerRowHeight={36}
@@ -430,6 +488,9 @@ class AutoResponses extends React.Component<
                     rowHeight={viewModes[viewMode].height}
                     selectedRows={selectedRows}
                     onSelectedRowsChange={this.setSelectedRows}
+                    sortColumn={sortColumn.getOrElse(undefined)}
+                    sortDirection={sortDirection.getOrElse(undefined)}
+                    onSort={this.onSort}
                     rowRenderer={RowRenderer(currentUser, isArchitusAdmin)}
                   />
                 </>

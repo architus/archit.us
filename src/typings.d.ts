@@ -8,6 +8,16 @@ declare module "*.inline.svg" {
   export default content;
 }
 
+declare module "shallow-equal" {
+  export function shallowEqualArrays<T extends unknown[] = unknown[]>(
+    a: T,
+    b: T
+  ): boolean;
+  export function shallowEqualObjects<
+    T extends Record<unknown, unknown> = Record<unknown, unknown>
+  >(a: T, b: T): boolean;
+}
+
 declare module "@xstyled/emotion" {
   import React from "react";
   import _styled, { CreateStyled } from "@emotion/styled";
