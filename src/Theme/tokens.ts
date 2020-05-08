@@ -76,8 +76,10 @@ const theme = {
   ),
   shadows: {
     0: `0 3px 6px var(--xstyled-colors-shadow_light), 0 3px 6px var(--xstyled-colors-shadow_medium)`,
-    1: `0 10px 20px var(--xstyled-colors-shadow_medium), 0 6px 6px var(--xstyled-colors-shadow_medium)`,
-    2: `0 14px 28px var(--xstyled-colors-shadow_heavy), 0 10px 10px var(--xstyled-colors-shadow_medium)`,
+    1: `0 6px 12px var(--xstyled-colors-shadow_light), 0 4px 5px var(--xstyled-colors-shadow_light)`,
+    2: `0 10px 20px var(--xstyled-colors-shadow_medium), 0 6px 6px var(--xstyled-colors-shadow_medium)`,
+    3: `0 14px 28px var(--xstyled-colors-shadow_heavy), 0 10px 10px var(--xstyled-colors-shadow_medium)`,
+    inner: `inset 0 0 16px var(--xstyled-colors-shadow_heavy)`,
   },
   colors: {
     text: "rgba(33, 33, 33, 0.85)",
@@ -85,6 +87,7 @@ const theme = {
     text_fade: "rgba(33, 33, 33, 0.7)",
     foreground_fade: "rgba(33, 33, 33, 0.4)",
     light: "rgb(246, 248, 249)",
+    b_000: "hsl(200, 20%, 75%)",
     b_100: "hsl(200, 20%, 80%)",
     b_200: "hsl(200, 20%, 85%)",
     b_300: "hsl(200, 20%, 93%)",
@@ -98,21 +101,25 @@ const theme = {
     warning: "#e3c75b",
     success: "#5da161",
     danger: "#e6584d",
-    border: "rgba(33, 33, 33, 0.7)",
+    border: "rgba(194, 207, 214, 1)",
+    border_light: "rgba(194, 207, 214, 0.45)",
     contrast_border: "rgba(194, 207, 214, 0.6)",
     shadow_light: "rgba(0, 0, 0, 0.06)",
     shadow_medium: "rgba(0, 0, 0, 0.08)",
     shadow_heavy: "rgba(0, 0, 0, 0.11)",
-    light_overlay: "rgba(255, 255, 255, 0.25)",
-    light_overlay_slight: "rgba(255, 255, 255, 0.125)",
+    shadow_extraheavy: "rgba(0, 0, 0, 0.3)",
+    light_overlay: "rgba(255, 255, 255, 0.45)",
+    light_overlay_slight: "rgba(255, 255, 255, 0.3)",
     dark_overlay: "rgba(0, 0, 0, 0.1)",
     dark_overlay_slight: "rgba(0, 0, 0, 0.05)",
+    contrast_overlay: "rgba(0, 0, 0, 0.04)",
     modes: {
       [ColorMode.Dark]: {
         text: "rgba(246, 248, 249, 0.85)",
         text_strong: "rgb(246, 248, 249)",
         text_fade: "rgba(246, 248, 249, 0.7)",
         foreground_fade: "rgba(246, 248, 249, 0.4)",
+        b_000: "hsl(0, 0%, 2%)",
         b_100: "hsl(0, 0%, 5%)",
         b_200: "hsl(0, 0%, 10%)",
         b_300: "hsl(0, 0%, 14%)",
@@ -121,19 +128,26 @@ const theme = {
         b_600: "hsl(0, 0%, 28%)",
         primary: "hsl(209, 45%, 65%)",
         secondary: "hsl(38, 52%, 62%)",
-        border: "rgba(246, 248, 249, 0.7)",
+        border: "rgba(246, 248, 249, 0.15)",
+        border_light: "rgba(246, 248, 249, 0.075)",
         contrast_border: "transparent",
         shadow_light: "rgba(0, 0, 0, 0.07)",
         shadow_medium: "rgba(0, 0, 0, 0.12)",
-        shadow_heavy: "rgba(0, 0, 0, 0.16)",
-        light_overlay: "rgba(255, 255, 255, 0.1)",
-        light_overlay_slight: "rgba(255, 255, 255, 0.05)",
+        shadow_heavy: "rgba(0, 0, 0, 0.18)",
+        shadow_extraheavy: "rgba(0, 0, 0, 0.5)",
+        light_overlay: "rgba(255, 255, 255, 0.08)",
+        light_overlay_slight: "rgba(255, 255, 255, 0.02)",
         dark_overlay: "rgba(0, 0, 0, 0.25)",
         dark_overlay_slight: "rgba(0, 0, 0, 0.125)",
+        contrast_overlay: "rgba(255, 255, 255, 0.025)",
       },
     },
   },
 };
+
+export function color(colorKey: string): string {
+  return `var(--xstyled-colors-${colorKey})`;
+}
 
 export type Theme = typeof theme;
 export type Space = number | Exclude<keyof Theme["space"], keyof never[]>;

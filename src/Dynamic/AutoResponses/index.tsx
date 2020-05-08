@@ -21,6 +21,7 @@ import { Tooltip, Icon, Switch, HelpTooltip } from "Components";
 import { AnyIconName } from "Components/Icon/loader";
 import { getAvatarUrl } from "Components/UserDisplay";
 import { opacity } from "Theme/getters";
+import { color } from "Theme/tokens";
 import {
   TriggerFormatter,
   ResponseFormatter,
@@ -37,14 +38,13 @@ import {
   NumericFilter,
 } from "./NumericFilter";
 import { AutoResponse, TransformedAutoResponse, AuthorData } from "./types";
-import "react-data-grid/dist/react-data-grid.css";
 
 type ViewMode = keyof typeof viewModes;
 const viewModeOrder: ViewMode[] = ["Sparse", "Comfy", "Compact"];
 const viewModes = {
-  Compact: { icon: "compact" as AnyIconName, label: "Compact", height: 24 },
-  Comfy: { icon: "comfy" as AnyIconName, label: "Comfy", height: 32 },
-  Sparse: { icon: "sparse" as AnyIconName, label: "Sparse", height: 40 },
+  Compact: { icon: "compact" as AnyIconName, label: "Compact", height: 28 },
+  Comfy: { icon: "comfy" as AnyIconName, label: "Comfy", height: 36 },
+  Sparse: { icon: "sparse" as AnyIconName, label: "Sparse", height: 44 },
 };
 
 type AutoResponsesProps = {
@@ -117,9 +117,9 @@ const Styled = {
     align-items: center;
     justify-content: flex-end;
     flex-wrap: wrap;
+    z-index: 4;
 
-    border-top: 1px solid border;
-    box-shadow: 1;
+    box-shadow: 0;
     background-color: b_500;
 
     ${up(
@@ -215,17 +215,311 @@ const Styled = {
     justify-content: stretch;
     flex-grow: 1;
 
-    & .rdg-cell-mask {
-      display: none !important;
+    .rdg-cell {
+      display: inline-block;
+      position: absolute;
+      height: inherit;
+      padding: 0 8px;
+      background-color: inherit;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .rdg-cell-frozen {
+      position: -webkit-sticky;
+      position: sticky;
+      z-index: 1;
+
+      &::after {
+        content: "";
+        position: absolute;
+        height: 100%;
+        width: 1px;
+        top: 0;
+        left: -6px;
+        z-index: -1;
+        box-shadow: 0px 0px 7px 8px ${color("shadow_heavy")};
+      }
+    }
+
+    .rdg-cell-frozen-last + .rdg-cell {
+      padding-left: nano;
+    }
+
+    .rdg-row {
+      .rdg-cell-frozen {
+        &::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          right: 0;
+          background-color: b_600;
+          z-index: -1;
+          opacity: 0.3;
+          border-bottom: 1px solid;
+          border-bottom-color: border;
+        }
+      }
+
+      .rdg-cell-frozen-last + .rdg-cell {
+        padding-left: nano;
+
+        &::after {
+          content: "";
+          position: absolute;
+          height: 100%;
+          width: 1px;
+          top: 0;
+          left: -2px;
+          z-index: -1;
+          box-shadow: 0px 0px 10px 1px ${color("shadow_extraheavy")};
+        }
+      }
+    }
+
+    .rdg-cell-mask {
+      display: none;
+    }
+
+    .rdg-checkbox-label {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    }
+
+    .rdg-checkbox-label-disabled {
+      cursor: default;
+    }
+
+    .rdg-checkbox-label-disabled .rdg-checkbox {
+      border-color: contrast_border;
+      background-color: b_300;
+    }
+
+    .rdg-checkbox-input {
+      all: unset;
+      width: 0;
+      margin: 0;
+    }
+
+    .rdg-checkbox {
+      content: "";
+      width: 20px;
+      height: 20px;
+      border: 2px solid ${color("border")};
+      background-color: b_600;
+      margin-top: 7px;
+      margin-left: 3px;
+    }
+
+    .rdg-checkbox-input:checked + .rdg-checkbox {
+      background-color: primary;
+      box-shadow: inset 0 0 0 3px ${color("b_400")};
+    }
+
+    .rdg-checkbox-input:focus + .rdg-checkbox {
+      border-color: secondary;
+      border-width: 3px;
+    }
+
+    .rdg {
+      position: relative;
+      z-index: 0;
+      box-sizing: border-box;
+      overflow-x: auto;
+      overflow-y: scroll;
+      -webkit-user-select: none;
+      user-select: none;
+      background-color: b_300;
+      font-size: 14px;
+    }
+
+    .rdg *,
+    .rdg ::after,
+    .rdg ::before {
+      box-sizing: inherit;
+    }
+
+    .rdg-editor-container {
+      position: absolute;
+    }
+
+    .rdg-select-editor,
+    .rdg-text-editor {
+      -moz-appearance: none;
+      -webkit-appearance: none;
+      appearance: none;
+      box-sizing: border-box;
+      width: calc(100% + 1px);
+      height: calc(100% + 1px);
+      padding: 1px 7px 0;
+      margin: -1px 0 0 -1px;
+      border: 2px solid #ccc;
+      background-color: #fff;
+      font-size: 14px;
+      line-height: 1.2;
+    }
+
+    .rdg-select-editor::placeholder,
+    .rdg-text-editor::placeholder {
+      color: #999;
+      opacity: 1;
+    }
+
+    .rdg-select-editor:focus,
+    .rdg-text-editor:focus {
+      border-color: #66afe9;
+    }
+
+    .rdg-filter-row,
+    .rdg-header-row {
+      width: var(--row-width);
+      position: -webkit-sticky;
+      position: sticky;
+      background-color: b_400;
+      font-weight: 700;
+      -webkit-user-select: none;
+      user-select: none;
+      z-index: 3;
+      box-shadow: 1;
+    }
+
+    .rdg-header-row {
+      height: var(--header-row-height);
+      line-height: var(--header-row-height);
+      top: 0;
+      border-bottom: 4px solid ${color("b_400")};
+      margin-bottom: -4px;
+    }
+
+    .rdg-filter-row {
+      height: var(--filter-row-height);
+      line-height: var(--filter-row-height);
+      top: var(--header-row-height);
+    }
+
+    .rdg-header-cell-resizer {
+      cursor: col-resize;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 10px;
+    }
+
+    .rdg-cell .Select {
+      max-height: 30px;
+      font-size: 12px;
+      font-weight: 400;
+    }
+
+    .rdg-header-sort-cell {
+      cursor: pointer;
+      display: flex;
+    }
+
+    .rdg-header-sort-name {
+      flex-grow: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .rdg-selected {
+      border: 2px solid #66afe9;
+    }
+
+    .rdg-selected .drag-handle {
+      pointer-events: auto;
+      position: absolute;
+      bottom: -5px;
+      right: -4px;
+      background: #66afe9;
+      width: 8px;
+      height: 8px;
+      border: 1px solid #fff;
+      border-right: 0;
+      border-bottom: 0;
+      cursor: crosshair;
+      cursor: -moz-grab;
+      cursor: -webkit-grab;
+      cursor: grab;
+    }
+
+    .rdg-selected:hover .drag-handle {
+      bottom: -8px;
+      right: -7px;
+      background: #fff;
+      width: 16px;
+      height: 16px;
+      border: 1px solid #66afe9;
+    }
+
+    .react-grid-cell-dragged-over-down,
+    .react-grid-cell-dragged-over-up {
+      border: 1px dashed #000;
+      background: rgba(0, 0, 255, 0.2) !important;
+    }
+
+    .react-grid-cell-dragged-over-up {
+      border-bottom-width: 0;
+    }
+
+    .react-grid-cell-dragged-over-down {
+      border-top-width: 0;
+    }
+
+    .rdg-cell-copied {
+      background: rgba(0, 0, 255, 0.2) !important;
+    }
+
+    .rdg-row {
+      width: var(--row-width);
+      height: var(--row-height);
+      line-height: var(--row-height);
+
+      &:hover {
+        background-color: ${opacity("primary", 0.075)};
+      }
+
+      &.rdg-row-even {
+        & .rdg-cell:not(.rdg-cell-frozen) {
+          background-color: contrast_overlay;
+        }
+      }
+
+      &.rdg-row-selected {
+        & .rdg-cell {
+          background-color: ${opacity("primary", 0.25)} !important;
+        }
+      }
+    }
+
+    .rdg-summary-row {
+      position: -webkit-sticky;
+      position: sticky;
+      z-index: 3;
+    }
+
+    .rdg-summary-row > .rdg-cell {
+      border-top: 2px solid #aaa;
     }
   `,
   ContextMenu: styled(ContextMenu)`
     &.react-contextmenu {
-      background-color: b_600;
+      background-color: b_500;
       border-radius: 8px;
       border: 1px solid;
       border-color: contrast_border;
-      box-shadow: 1;
+      box-shadow: 2;
       color: text;
       padding: pico 0;
       user-select: none;
@@ -237,11 +531,11 @@ const Styled = {
       outline: none;
 
       &:hover {
-        background-color: ${opacity("primary", 0.2)};
+        background-color: ${opacity("primary", 0.1)};
       }
 
       &:active {
-        background-color: ${opacity("primary", 0.4)};
+        background-color: ${opacity("primary", 0.2)};
       }
     }
   `,
@@ -308,11 +602,6 @@ class AutoResponses extends React.Component<
 
   allRowsSelectedRef: MutableRefObject<boolean> = { current: false };
 
-  constructor(props: AutoResponsesProps) {
-    super(props);
-    this.updateSelfAuthored();
-  }
-
   setViewMode = (newMode: ViewMode): void => {
     this.setState({ viewMode: newMode });
   };
@@ -332,9 +621,6 @@ class AutoResponses extends React.Component<
           ? Some({ column: column as ColumnKey, direction })
           : None,
     });
-
-  onFiltersChange = (newFilters: Record<string, unknown>): void =>
-    this.setState({ filters: (newFilters as unknown) as Filters });
 
   onDeleteSelected = (): void => {
     // TODO implement
@@ -412,42 +698,92 @@ class AutoResponses extends React.Component<
     return filtered;
   });
 
+  findSelfAuthored = memoize<[TransformedAutoResponse[], User], Set<HoarFrost>>(
+    ([commands, currentUser]) => {
+      return new Set<HoarFrost>(
+        commands
+          .filter((command) => command.authorId === currentUser.id)
+          .map((command) => command.id)
+      );
+    }
+  );
+
+  getVisibleIds = memoize<TransformedAutoResponse[], Set<HoarFrost>>(
+    (commands) => {
+      return new Set<HoarFrost>(commands.map((command) => command.id));
+    }
+  );
+
+  onFiltersChange = (newFilters: Record<string, unknown>): void => {
+    const { isArchitusAdmin, currentUser } = this.props;
+    const { selectedRows } = this.state;
+    let newSelectedRows = selectedRows;
+    const typedFilters = (newFilters as unknown) as Filters;
+    if (selectedRows.size > 0) {
+      // Cull now-invisible selected rows on filter change, and update the
+      // inner mutable ref for allSelected
+      const rows = this.getRows(typedFilters);
+      const visibleRows = this.getVisibleIds(rows);
+      let maxRowCount: number;
+      if (isArchitusAdmin) {
+        maxRowCount = visibleRows.size;
+      } else {
+        const selfAuthored = this.findSelfAuthored([rows, currentUser]);
+        const visibleSelfAuthored = intersection(visibleRows, selfAuthored);
+        maxRowCount = visibleSelfAuthored.size;
+      }
+      newSelectedRows = intersection(selectedRows, visibleRows);
+      this.allRowsSelectedRef.current =
+        newSelectedRows.size > 0 && newSelectedRows.size >= maxRowCount;
+    }
+    this.setState({ filters: typedFilters, selectedRows: newSelectedRows });
+  };
+
   setSelectedRows = (newSet: Set<HoarFrost>): void => {
-    const { isArchitusAdmin } = this.props;
+    const { isArchitusAdmin, currentUser } = this.props;
+    const rows = this.getRows();
+    const visibleRows = this.getVisibleIds(rows);
+
     let newSelectedRows: Set<HoarFrost>;
     let maxRowCount: number;
     if (isArchitusAdmin) {
-      newSelectedRows = newSet;
-      maxRowCount = this.props.commands.length;
+      newSelectedRows = intersection(newSet, visibleRows);
+      maxRowCount = visibleRows.size;
     } else {
-      newSelectedRows = intersection(newSet, this.selfAuthored);
-      maxRowCount = this.selfAuthored.size;
+      const selfAuthored = this.findSelfAuthored([rows, currentUser]);
+      const visibleSelfAuthored = intersection(visibleRows, selfAuthored);
+      newSelectedRows = intersection(newSet, visibleSelfAuthored);
+      maxRowCount = visibleSelfAuthored.size;
     }
+
     // We use a ref here to pass internal changes to our all row selection logic
     // to the header renderer without recreating the component function. The header
     // will get re-rendered anyways when the row selection changes, causing it
     // to read the most up-to-date value from the ref.
-    this.allRowsSelectedRef.current = newSelectedRows.size === maxRowCount;
+    this.allRowsSelectedRef.current =
+      newSelectedRows.size > 0 && newSelectedRows.size >= maxRowCount;
     this.setState({ selectedRows: newSelectedRows });
   };
 
-  updateSelfAuthored = (): void => {
-    const { commands, currentUser } = this.props;
-    this.selfAuthored = new Set<HoarFrost>(
-      commands
-        .filter((command) => command.authorId === currentUser.id)
-        .map((command) => command.id)
-    );
+  getRows = (
+    filterOverride: Filters | undefined = undefined
+  ): TransformedAutoResponse[] => {
+    const { commands } = this.props;
+    const { showFilters, filterSelfAuthored, sort, filters } = this.state;
+    // Skip filter application if filter row is hidden
+    const filtered = showFilters
+      ? this.getFilteredRows([
+          commands,
+          filterOverride || filters,
+          filterSelfAuthored,
+        ])
+      : commands;
+    const sorted = this.getSortedRows([filtered, sort]);
+    return sorted;
   };
 
-  componentDidUpdate(prevProps: AutoResponsesProps): void {
-    if (prevProps.commands !== this.props.commands) {
-      this.updateSelfAuthored();
-    }
-  }
-
   render(): React.ReactNode {
-    const { isArchitusAdmin, currentUser, commands } = this.props;
+    const { isArchitusAdmin, currentUser } = this.props;
     const {
       viewMode,
       showFilters,
@@ -463,7 +799,7 @@ class AutoResponses extends React.Component<
       {
         key: "selection",
         name: "",
-        width: 35,
+        width: 38,
         maxWidth: 35,
         frozen: true,
         headerRenderer: SelectionHeader(this.allRowsSelectedRef),
@@ -492,6 +828,7 @@ class AutoResponses extends React.Component<
         sortable: true,
         formatter: CountFormatter,
         filterRenderer: NumericFilter,
+        width: 120,
       },
       {
         name: "Author",
@@ -525,13 +862,6 @@ class AutoResponses extends React.Component<
         );
       }
     );
-
-    const filtered = this.getFilteredRows([
-      commands,
-      filters,
-      filterSelfAuthored,
-    ]);
-    const sorted = this.getSortedRows([filtered, sort]);
 
     return (
       <Styled.PageOuter>
@@ -567,7 +897,7 @@ class AutoResponses extends React.Component<
               }): React.ReactNode => (
                 <>
                   <DataGrid<TransformedAutoResponse, "id", {}>
-                    rows={sorted}
+                    rows={this.getRows()}
                     height={height}
                     width={width}
                     headerRowHeight={36}

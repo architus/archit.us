@@ -39,9 +39,9 @@ export const SelectionHeader: (
   const renderer: React.FC<HeaderRendererProps<
     TransformedAutoResponse,
     {}
-  >> = ({ allRowsSelected, onAllRowsSelectionChange }) => (
+  >> = ({ onAllRowsSelectionChange }) => (
     <SelectCellFormatter
-      value={allRowsSelected || allRowsSelectedRef.current}
+      value={allRowsSelectedRef.current}
       onChange={onAllRowsSelectionChange}
     />
   );
