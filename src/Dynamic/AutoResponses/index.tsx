@@ -15,7 +15,7 @@ import {
 } from "Utility";
 import { User, Snowflake, HoarFrost } from "Utility/types";
 import { useCurrentUser } from "Store/actions";
-import { Option, None, Some } from "Utility/option";
+import { Option, None, Some, Unwrap } from "Utility/option";
 import { ScrollContext } from "Dynamic/AppRoot/context";
 import { Tooltip, Icon, Switch, HelpTooltip } from "Components";
 import { AnyIconName } from "Components/Icon/loader";
@@ -30,6 +30,12 @@ import {
   SelectionFormatter,
   RowRenderer,
 } from "./formatters";
+import { StringFilter } from "./StringFilter";
+import {
+  NumericFilterValue,
+  applyNumericFilter,
+  NumericFilter,
+} from "./NumericFilter";
 import { AutoResponse, TransformedAutoResponse, AuthorData } from "./types";
 import "react-data-grid/dist/react-data-grid.css";
 
@@ -57,10 +63,21 @@ type AutoResponsesState = {
   showFilters: boolean;
   addNewRowEnable: boolean;
   selectedRows: Set<HoarFrost>;
-  columns: Column<TransformedAutoResponse, {}>[];
-  sortColumn: Option<keyof TransformedAutoResponse>;
-  sortDirection: Option<SortDirection>;
+  sort: Option<Sort>;
+  filters: Filters;
 };
+
+interface Sort {
+  column: ColumnKey;
+  direction: SortDirection;
+}
+type ColumnKey = "trigger" | "response" | "count" | "author" | "selection";
+interface Filters {
+  trigger: Option<string>;
+  response: Option<string>;
+  author: Option<string>;
+  count: NumericFilterValue;
+}
 
 const Styled = {
   PageOuter: styled.div`
@@ -230,6 +247,44 @@ const Styled = {
   `,
 };
 
+function filterAuthors(
+  commands: TransformedAutoResponse[],
+  filter: Filters["author"],
+  filterSelfAuthored: boolean,
+  currentUser: User
+): TransformedAutoResponse[] {
+  const selfAuthorFilter = filterSelfAuthored
+    ? (c: TransformedAutoResponse): boolean => c.authorId === currentUser.id
+    : (): boolean => true;
+  const includeFilter = filter.isDefined()
+    ? (c: TransformedAutoResponse): boolean =>
+        c.authorData.author.includes(filter.get)
+    : (): boolean => true;
+  return commands.filter((c) => selfAuthorFilter(c) && includeFilter(c));
+}
+
+function applyFilter(
+  commands: TransformedAutoResponse[],
+  column: keyof Filters,
+  filter: Unwrap<Filters[keyof Filters]>
+): TransformedAutoResponse[] {
+  switch (column) {
+    case "trigger":
+    case "response": {
+      const filterBase = (filter as string).toLowerCase();
+      return commands.filter((c) =>
+        c[column as "trigger" | "response"].toLowerCase().includes(filterBase)
+      );
+    }
+    case "count":
+      return commands.filter((c) =>
+        applyNumericFilter(c.count, filter as Unwrap<NumericFilterValue>)
+      );
+    default:
+      return commands;
+  }
+}
+
 class AutoResponses extends React.Component<
   AutoResponsesProps,
   AutoResponsesState
@@ -237,12 +292,16 @@ class AutoResponses extends React.Component<
   state: AutoResponsesState = {
     filterSelfAuthored: false,
     viewMode: "Comfy",
-    showFilters: false,
+    showFilters: true,
     addNewRowEnable: true,
     selectedRows: new Set<HoarFrost>(),
-    sortColumn: None,
-    sortDirection: None,
-    columns: [],
+    sort: None,
+    filters: {
+      trigger: None,
+      response: None,
+      count: None,
+      author: None,
+    },
   };
 
   selfAuthored: Set<HoarFrost> = new Set<HoarFrost>();
@@ -265,6 +324,17 @@ class AutoResponses extends React.Component<
   onChangeFilterSelfAuthored = (newFilter: boolean): void => {
     this.setState({ filterSelfAuthored: newFilter });
   };
+
+  onSort = (column: string, direction: SortDirection): void =>
+    this.setState({
+      sort:
+        direction !== "NONE"
+          ? Some({ column: column as ColumnKey, direction })
+          : None,
+    });
+
+  onFiltersChange = (newFilters: Record<string, unknown>): void =>
+    this.setState({ filters: (newFilters as unknown) as Filters });
 
   onDeleteSelected = (): void => {
     // TODO implement
@@ -289,51 +359,58 @@ class AutoResponses extends React.Component<
   };
 
   getSortedRows = memoize<
-    [
-      TransformedAutoResponse[],
-      Option<keyof TransformedAutoResponse>,
-      Option<SortDirection>
-    ],
+    [TransformedAutoResponse[], Option<Sort>],
     TransformedAutoResponse[]
-  >(
-    ([commands, sortColumn, sortDirection]) => {
-      if (
-        sortDirection.isDefined() &&
-        sortColumn.isDefined() &&
-        sortDirection.get !== "NONE"
-      ) {
-        let sortedRows: TransformedAutoResponse[] = [...commands];
-        const column = sortColumn.get;
-        switch (column) {
-          case "response":
-          case "trigger":
-            sortedRows = sortedRows.sort((a, b) =>
-              a[column].localeCompare(b[column])
-            );
-            break;
-          case "authorData":
-            sortedRows = sortedRows.sort((a, b) =>
-              a.authorData.author.localeCompare(b.authorData.author)
-            );
-            break;
-          case "count":
-            sortedRows = sortedRows.sort((a, b) => a[column] - b[column]);
-            break;
-          default:
-        }
-        return sortDirection.get === "DESC" ? sortedRows.reverse() : sortedRows;
+  >(([commands, sort]) => {
+    if (sort.isDefined() && sort.get.direction !== "NONE") {
+      let sortedRows: TransformedAutoResponse[] = [...commands];
+      const { column } = sort.get;
+      switch (column) {
+        case "response":
+        case "trigger":
+          sortedRows = sortedRows.sort((a, b) =>
+            a[column].localeCompare(b[column])
+          );
+          break;
+        case "author":
+          sortedRows = sortedRows.sort((a, b) =>
+            a.authorData.author.localeCompare(b.authorData.author)
+          );
+          break;
+        case "count":
+          sortedRows = sortedRows.sort((a, b) => a[column] - b[column]);
+          break;
+        default:
       }
-      return commands;
-    },
-    () => [this.props.commands, this.state.sortColumn, this.state.sortDirection]
-  );
+      return sort.get.direction === "DESC" ? sortedRows.reverse() : sortedRows;
+    }
+    return commands;
+  });
 
-  onSort = (column: string, direction: SortDirection): void => {
-    this.setState({
-      sortColumn: Some(column as keyof TransformedAutoResponse),
-      sortDirection: Some(direction),
-    });
-  };
+  getFilteredRows = memoize<
+    [TransformedAutoResponse[], Filters, boolean],
+    TransformedAutoResponse[]
+  >(([commands, filters, filterSelfAuthored]) => {
+    const { currentUser } = this.props;
+    let filtered = commands;
+    for (const [filterKey, untypedFilter] of Object.entries(filters)) {
+      const filterOption = untypedFilter as Filters[keyof Filters];
+      if (filterKey === "author") {
+        // Use special filtering rules for authors to prevent second traversal to perform
+        // self-authored filter
+        filtered = filterAuthors(
+          filtered,
+          filterOption as Option<string>,
+          filterSelfAuthored,
+          currentUser
+        );
+      } else if (filterOption.isDefined()) {
+        const filter = filterOption.get;
+        filtered = applyFilter(filtered, filterKey as keyof Filters, filter);
+      }
+    }
+    return filtered;
+  });
 
   setSelectedRows = (newSet: Set<HoarFrost>): void => {
     const { isArchitusAdmin } = this.props;
@@ -370,18 +447,19 @@ class AutoResponses extends React.Component<
   }
 
   render(): React.ReactNode {
-    const { isArchitusAdmin, currentUser } = this.props;
+    const { isArchitusAdmin, currentUser, commands } = this.props;
     const {
       viewMode,
       showFilters,
       filterSelfAuthored,
       selectedRows,
       addNewRowEnable,
-      sortColumn,
-      sortDirection,
+      sort,
+      filters,
     } = this.state;
 
-    const columns: Column<TransformedAutoResponse, {}>[] = [
+    const columns: Column<TransformedAutoResponse, {}>[] &
+      { key: ColumnKey; [key: string]: unknown }[] = [
       {
         key: "selection",
         name: "",
@@ -397,6 +475,7 @@ class AutoResponses extends React.Component<
         resizable: true,
         sortable: true,
         formatter: TriggerFormatter,
+        filterRenderer: StringFilter,
       },
       {
         name: "Response",
@@ -404,6 +483,7 @@ class AutoResponses extends React.Component<
         resizable: true,
         sortable: true,
         formatter: ResponseFormatter,
+        filterRenderer: StringFilter,
       },
       {
         name: "Count",
@@ -411,13 +491,15 @@ class AutoResponses extends React.Component<
         resizable: true,
         sortable: true,
         formatter: CountFormatter,
+        filterRenderer: NumericFilter,
       },
       {
         name: "Author",
-        key: "authorData",
+        key: "author",
         resizable: true,
         sortable: true,
         formatter: AuthorFormatter,
+        filterRenderer: StringFilter,
       },
     ];
 
@@ -443,6 +525,13 @@ class AutoResponses extends React.Component<
         );
       }
     );
+
+    const filtered = this.getFilteredRows([
+      commands,
+      filters,
+      filterSelfAuthored,
+    ]);
+    const sorted = this.getSortedRows([filtered, sort]);
 
     return (
       <Styled.PageOuter>
@@ -478,7 +567,7 @@ class AutoResponses extends React.Component<
               }): React.ReactNode => (
                 <>
                   <DataGrid<TransformedAutoResponse, "id", {}>
-                    rows={this.getSortedRows()}
+                    rows={sorted}
                     height={height}
                     width={width}
                     headerRowHeight={36}
@@ -488,10 +577,13 @@ class AutoResponses extends React.Component<
                     rowHeight={viewModes[viewMode].height}
                     selectedRows={selectedRows}
                     onSelectedRowsChange={this.setSelectedRows}
-                    sortColumn={sortColumn.getOrElse(undefined)}
-                    sortDirection={sortDirection.getOrElse(undefined)}
+                    sortColumn={sort.getOrElse(undefined)?.column}
+                    sortDirection={sort.getOrElse(undefined)?.direction}
                     onSort={this.onSort}
                     rowRenderer={RowRenderer(currentUser, isArchitusAdmin)}
+                    enableFilters={showFilters}
+                    filters={filters}
+                    onFiltersChange={this.onFiltersChange}
                   />
                 </>
               )}

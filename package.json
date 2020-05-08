@@ -61,6 +61,7 @@
     "classnames": "^2.2.6",
     "emotion": "^10.0.27",
     "emotion-theming": "^10.0.27",
+    "fast-deep-equal": "^3.1.1",
     "fp-ts": "^2.5.4",
     "fuse.js": "^5.2.3",
     "io-ts": "^2.2.1",

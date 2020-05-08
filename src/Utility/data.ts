@@ -289,16 +289,11 @@ export function shallowEqual<T>(a: T, b: T): boolean {
 /**
  * Performs an memoized expensive calculation
  * @param calculate - Function to calculate fresh value of the memoized operation
- * @param getDeps - Gets all dependencies needed to perform comparison of result
  */
-export function memoize<T, Q>(
-  calculate: (args: T) => Q,
-  getDeps: () => T
-): () => Q {
+export function memoize<T, Q>(calculate: (args: T) => Q): (freshDeps: T) => Q {
   let cachedDeps: Option<T> = None;
   let cachedResult: Option<Q> = None;
-  return (): Q => {
-    const freshDeps = getDeps();
+  return (freshDeps: T): Q => {
     if (
       cachedDeps.isDefined() &&
       cachedResult.isDefined() &&

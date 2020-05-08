@@ -25,6 +25,10 @@ const Styled = {
   `,
 };
 
+// ? =========
+// ? Selection
+// ? =========
+
 // Use a ref here to allow for external mutability to the internal all rows
 // selected state (allowing for custom values)
 export const SelectionHeader: (
@@ -66,6 +70,11 @@ export const SelectionFormatter: (
   return null;
 };
 
+// ? =========================
+// ? Context menu row renderer
+// ? =========================
+
+// ? =========================
 export const RowRenderer: (
   selfAuthor: User,
   canDeleteAny: boolean
@@ -83,6 +92,10 @@ export const RowRenderer: (
     <GridRow {...props} />
   </ContextMenuTrigger>
 );
+
+// ? ==============
+// ? Row formatters
+// ? ==============
 
 export const TriggerFormatter: React.FC<FormatterProps<
   TransformedAutoResponse,
