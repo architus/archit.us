@@ -256,9 +256,9 @@ const Styled = {
           left: 0;
           bottom: 0;
           right: 0;
-          background-color: b_600;
+          background-color: b_400;
           z-index: -1;
-          opacity: 0.3;
+          opacity: 0.65;
           border-bottom: 1px solid;
           border-bottom-color: border;
         }
@@ -397,14 +397,44 @@ const Styled = {
       height: var(--header-row-height);
       line-height: var(--header-row-height);
       top: 0;
-      border-bottom: 4px solid ${color("b_400")};
-      margin-bottom: -4px;
+    }
+
+    .rdg-filter-container {
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+
+      input {
+        flex-grow: 1;
+        outline: none;
+        padding: 6px 6px 6px 10px;
+        border: 1px solid;
+        border-radius: 8px;
+        transition: box-shadow 0.25s ease;
+        box-shadow: none;
+        background-color: b_500;
+        color: text;
+        border-color: contrast_border;
+        width: 100%;
+
+        &::placeholder {
+          color: text_fade;
+        }
+
+        &:focus {
+          border-color: input_focus_border;
+          box-shadow: 0 0 0 0.2rem ${opacity("primary", 0.3)};
+        }
+      }
     }
 
     .rdg-filter-row {
       height: var(--filter-row-height);
-      line-height: var(--filter-row-height);
       top: var(--header-row-height);
+
+      .rdg-cell {
+        overflow: visible;
+      }
     }
 
     .rdg-header-cell-resizer {
@@ -425,6 +455,47 @@ const Styled = {
     .rdg-header-sort-cell {
       cursor: pointer;
       display: flex;
+
+      & > span:nth-of-type(2) {
+        opacity: 0.5;
+        margin-right: femto;
+      }
+
+      &::after {
+        --sort-header-indicator-height: 3px;
+        width: 100%;
+        top: 0;
+        height: var(--sort-header-indicator-height);
+        content: "";
+        position: absolute;
+        background-color: primary;
+        left: 0;
+        transform: translateY(calc(var(--sort-header-indicator-height) * -1));
+        border-bottom-left-radius: 1000em;
+        border-bottom-right-radius: 1000em;
+        transition: 0.1s linear transform;
+      }
+
+      &::before {
+        position: absolute;
+        content: "";
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: transparent;
+      }
+
+      &:hover {
+        &::before {
+          background-color: contrast_overlay;
+        }
+
+        &::after {
+          top: 0;
+          transform: none;
+        }
+      }
     }
 
     .rdg-header-sort-name {
@@ -579,6 +650,13 @@ function applyFilter(
   }
 }
 
+const defaultFilters: Filters = {
+  trigger: None,
+  response: None,
+  count: None,
+  author: None,
+};
+
 class AutoResponses extends React.Component<
   AutoResponsesProps,
   AutoResponsesState
@@ -590,12 +668,7 @@ class AutoResponses extends React.Component<
     addNewRowEnable: true,
     selectedRows: new Set<HoarFrost>(),
     sort: None,
-    filters: {
-      trigger: None,
-      response: None,
-      count: None,
-      author: None,
-    },
+    filters: defaultFilters,
   };
 
   selfAuthored: Set<HoarFrost> = new Set<HoarFrost>();
@@ -777,7 +850,7 @@ class AutoResponses extends React.Component<
           filterOverride || filters,
           filterSelfAuthored,
         ])
-      : commands;
+      : this.getFilteredRows([commands, defaultFilters, filterSelfAuthored]);
     const sorted = this.getSortedRows([filtered, sort]);
     return sorted;
   };
@@ -828,7 +901,7 @@ class AutoResponses extends React.Component<
         sortable: true,
         formatter: CountFormatter,
         filterRenderer: NumericFilter,
-        width: 120,
+        width: 150,
       },
       {
         name: "Author",
@@ -900,8 +973,8 @@ class AutoResponses extends React.Component<
                     rows={this.getRows()}
                     height={height}
                     width={width}
-                    headerRowHeight={36}
-                    headerFiltersHeight={36}
+                    headerRowHeight={44}
+                    headerFiltersHeight={48}
                     columns={columns}
                     rowKey="id"
                     rowHeight={viewModes[viewMode].height}
@@ -1109,7 +1182,7 @@ const GridHeader: React.FC<GridHeaderProps> = ({
     >
       <Icon name="trash" />
       <Box ml="nano" display="inline">
-        Delete all
+        Delete selected
       </Box>
     </Styled.GridHeaderButton>
     <Styled.ViewModeButtonGroup>

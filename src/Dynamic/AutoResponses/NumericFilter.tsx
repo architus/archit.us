@@ -1,8 +1,15 @@
 import React from "react";
 import { FilterRendererProps } from "react-data-grid";
+import styled from "@xstyled/emotion";
+import deepEqual from "fast-deep-equal";
 import { Option, Some, None } from "Utility/option";
 import { HelpTooltip } from "Components";
-import deepEqual from "fast-deep-equal";
+
+const Styled = {
+  HelpTooltip: styled(HelpTooltip)`
+    top: 2px;
+  `,
+};
 
 enum RuleType {
   Number = 1,
@@ -50,7 +57,11 @@ export function NumericFilter<R, SR>({
         className="rdg-filter"
         placeholder="e.g. 3,10-15,>20"
       />
-      <HelpTooltip content={tooltipText} marginLeft="nano" top="-8px" />
+      <Styled.HelpTooltip
+        content={tooltipText}
+        marginLeft="pico"
+        fontSize="1.4em"
+      />
     </div>
   );
 }

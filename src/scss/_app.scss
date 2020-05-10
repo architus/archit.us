@@ -5,7 +5,7 @@ $guild-list-hr-dark-fg: rgba($-light, 0.1);
 $guild-list-hr-light-fg: rgba($dark-000, 0.15);
 
 // GuildSidebar
-$guild-sidebar-dark-bg: hsl(0, 0%, 10%);
+$guild-sidebar-dark-bg: hsl(220, 18%, 10%);
 $guild-sidebar-light-bg: hsl(200, 20%, 85%);
 
 %guild-sidebar {
@@ -14,13 +14,13 @@ $guild-sidebar-light-bg: hsl(200, 20%, 85%);
 }
 
 // AppContent
-$app-content-dark-bg: hsl(0, 0%, 18%);
+$app-content-dark-bg: hsl(220, 13%, 18%);
 $app-content-light-bg: hsl(200, 20%, 97%);
 $app-content-dark-fg: rgba(246, 248, 249, 0.85);
 $app-content-light-fg: rgba(33, 33, 33, 0.85);
 
 // SideNavbar
-$side-navbar-dark-bg: hsl(0, 0%, 14%);
+$side-navbar-dark-bg: hsl(220, 15%, 13%);
 $side-navbar-light-bg: hsl(200, 20%, 93%);
 $side-navbar-tab-border-radius: 8px;
 $side-navbar-tab-hover-dark-bg: $side-navbar-dark-bg;
