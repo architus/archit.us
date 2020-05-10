@@ -1,14 +1,16 @@
-import { Guild, User, MakeRequired } from "Utility/types";
+import { Guild, User, MakeRequired,Emoji } from "Utility/types";
 import { Option, None, Some } from "Utility/option";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "Store/hooks";
 import { useEffect, useMemo } from "react";
 import { isDefined, isNil, entries } from "Utility";
 
-export const poolKeys = ["guilds", "users"] as const;
+
+export const poolKeys = ["guilds", "users", "emojis"] as const;
 export type PoolBacking = {
   guilds: Guild;
   users: User;
+  emojis: Emoji;
 };
 
 export type PoolType = keyof PoolBacking & typeof poolKeys[number];

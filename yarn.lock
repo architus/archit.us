@@ -13065,14 +13065,12 @@ react-data-grid-addons@^6.1.0:
     reselect "^2.5.1"
     ron-react-autocomplete "^4.0.9"
 
-react-data-grid@^6.1.0:
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/react-data-grid/-/react-data-grid-6.1.0.tgz#04f5a3032fd097c54cd494b000a366d5bad6b39d"
-  integrity sha512-N1UtiHvsowEPzhx0VPqQKvGgSza/YNljczbisFDGMjawiGApS2taMv7h+EDXDx49CdaA6ur4eYS0z10x63IUpw==
+react-data-grid@^7.0.0-canary.16:
+  version "7.0.0-canary.16"
+  resolved "https://registry.yarnpkg.com/react-data-grid/-/react-data-grid-7.0.0-canary.16.tgz#bc7e76c8d0dea41c1e019089a376d5f5dca0be83"
+  integrity sha512-xH0lJBwrusMJaW1HqJ5q0WKy/ePYNPN+fnKwB0TTg+tQ2xbW3loRF5RfPkOxSZnS61rUGAnatAQyrMVrsmpNMg==
   dependencies:
-    object-assign "^4.1.1"
-    react-is-deprecated "^0.1.2"
-    shallowequal "^1.1.0"
+    classnames "^2.2.6"
 
 react-dev-utils@^9.0.0:
   version "9.1.0"
@@ -13267,11 +13265,6 @@ react-inspector@^4.0.0:
     "@babel/runtime" "^7.6.3"
     is-dom "^1.0.9"
     prop-types "^15.6.1"
-
-react-is-deprecated@^0.1.2:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/react-is-deprecated/-/react-is-deprecated-0.1.2.tgz#301148f86ea428fe8e673eca7a372160b7579dbd"
-  integrity sha1-MBFI+G6kKP6OZz7KejchYLdXnb0=
 
 react-is@^16.3.2, react-is@^16.7.0, react-is@^16.8.1, react-is@^16.9.0:
   version "16.12.0"

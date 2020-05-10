@@ -72,7 +72,7 @@
     "react": "^16.13.1",
     "react-autosuggest": "^10.0.2",
     "react-bootstrap": "^1.0.1",
-    "react-data-grid": "^6.1.0",
+    "react-data-grid": "^7.0.0-canary.16",
     "react-data-grid-addons": "^6.1.0",
     "react-dom": "^16.13.1",
     "react-hot-loader": "^4.12.21",

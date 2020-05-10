@@ -507,6 +507,20 @@ export type ErrorContents = {
   readonly message: string;
 };
 
+const TEmoji = t.type({
+  id: THoarFrost,
+  name: t.string,
+  authorId: option(TSnowflake),
+  loaded: t.boolean,
+  numUses: t.number,
+  discordId: TSnowflake,
+  url: t.string
+
+});
+export interface Emoji extends t.TypeOf<typeof TEmoji> {}
+export const Emoji = alias(TEmoji)<Emoji>();
+
+
 export enum LogEvents {
   GuildUpdate = 1,
   ChannelCreate = 10,
