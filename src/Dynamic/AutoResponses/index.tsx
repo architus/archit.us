@@ -50,7 +50,6 @@ const viewModes = {
 type AutoResponsesProps = {
   commands: TransformedAutoResponse[];
   authors: Map<Snowflake, User>;
-  authenticated: boolean;
   hasLoaded: boolean;
   isArchitusAdmin: boolean;
   currentUser: User;
@@ -1107,7 +1106,6 @@ const AutoResponsesProvider: React.FC<AppPageProps> = (pageProps) => {
         commands={formattedCommands}
         hasLoaded={false}
         currentUser={currentUser.get}
-        authenticated={true}
         isArchitusAdmin={false}
         scrollHandler={scrollHandler}
         {...pageProps}
