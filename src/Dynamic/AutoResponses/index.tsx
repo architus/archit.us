@@ -16,6 +16,7 @@ import {
 import { User, Snowflake, HoarFrost } from "Utility/types";
 import { useCurrentUser } from "Store/actions";
 import { Option, None, Some, Unwrap } from "Utility/option";
+import { Container, Badge } from "react-bootstrap";
 import { ScrollContext } from "Dynamic/AppRoot/context";
 import { Tooltip, Icon, Switch, HelpTooltip } from "Components";
 import { AnyIconName } from "Components/Icon/loader";
@@ -656,7 +657,7 @@ const defaultFilters: Filters = {
   author: None,
 };
 
-class AutoResponses extends React.Component<
+export class AutoResponses extends React.Component<
   AutoResponsesProps,
   AutoResponsesState
 > {
@@ -1089,7 +1090,19 @@ function mockData(
   return responses;
 }
 
-const AutoResponsesProvider: React.FC<AppPageProps> = (pageProps) => {
+const AutoResponsesProvider: React.FC<AppPageProps> = () => {
+  return (
+    <Container className="py-5">
+      <h2>
+        Auto Responses <Badge variant="primary">Coming Soon</Badge>
+      </h2>
+    </Container>
+  );
+};
+
+export const AutoResponsesImplementation: React.FC<AppPageProps> = (
+  pageProps
+) => {
   const currentUser: Option<User> = useCurrentUser();
   const authors = useMemoOnce(() => mockAuthors(currentUser, 5));
   const commands = useMemoOnce(() => mockData(authors, 100));
