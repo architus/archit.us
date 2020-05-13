@@ -1,5 +1,7 @@
+import { shallowEqualObjects, shallowEqualArrays } from "shallow-equal";
 import { randomInt } from "./primitives";
 import { Nil, Predicate, RecordKey, Comparator } from "./types";
+import { Option, Some, None } from "./option";
 
 /**
  * Determines whether a value is defined (non-undefined or null). Returns true if the value
@@ -213,6 +215,17 @@ export function randomItem<T>(arr: T[]): T | null {
 }
 
 /**
+ * Calculates the intersection of two sets
+ * @param setA - set A
+ * @param setB - Set B
+ */
+export function intersection<T>(setA: Set<T>, setB: Set<T>): Set<T> {
+  const smaller = setA.size > setB.size ? setB : setA;
+  const larger = setA.size > setB.size ? setA : setB;
+  return new Set([...smaller].filter((x) => larger.has(x)));
+}
+
+/**
  * Performs a binary search on the pre-sorted array to find the given element's index, or
  * -1 if it could not be found. Guaranteed to run in O(lg(n)) time for input size of n
  * @param sortedArr - Pre-sorted array to perform binary search on
@@ -253,4 +266,44 @@ export function binarySearch<T>(
     }
   }
   return -1;
+}
+
+/**
+ * Performs a shallow equal of two javascript values, using object or
+ * array shallow comparison if applicable
+ * @param a - first element to compare
+ * @param b - second object to compare
+ */
+export function shallowEqual<T>(a: T, b: T): boolean {
+  if (typeof a === "object" && typeof b === "object") {
+    // Determine if array
+    if (isArray(a) && isArray(b)) {
+      return shallowEqualArrays(a, b);
+    }
+    return shallowEqualObjects(a, b);
+  }
+  // eslint-disable-next-line eqeqeq
+  return a == b;
+}
+
+/**
+ * Performs an memoized expensive calculation
+ * @param calculate - Function to calculate fresh value of the memoized operation
+ */
+export function memoize<T, Q>(calculate: (args: T) => Q): (freshDeps: T) => Q {
+  let cachedDeps: Option<T> = None;
+  let cachedResult: Option<Q> = None;
+  return (freshDeps: T): Q => {
+    if (
+      cachedDeps.isDefined() &&
+      cachedResult.isDefined() &&
+      shallowEqual(cachedDeps.get, freshDeps)
+    ) {
+      return cachedResult.get;
+    }
+    const result = calculate(freshDeps);
+    cachedDeps = Some(freshDeps);
+    cachedResult = Some(result);
+    return result;
+  };
 }

@@ -3,12 +3,12 @@ import classNames from "classnames";
 import { useInitialRender } from "Utility";
 import { TabPath } from "Dynamic/AppRoot/tabs";
 import { useAppLocation } from "Dynamic/AppRoot/content";
-import { AppTab, AppPageProps } from "Dynamic/AppRoot/types";
+import { AppTab } from "Dynamic/AppRoot/types";
 import Tooltip from "Components/Tooltip";
 import "./style.scss";
 
 type SideNavbarProps = {
-  tabs: Record<TabPath, AppTab<AppPageProps>>;
+  tabs: Record<TabPath, AppTab>;
   onClickTab: (path: TabPath) => void;
 };
 
@@ -42,7 +42,7 @@ type NavbarIconProps = {
   onClickTab: (path: TabPath) => void;
   isActive: boolean;
   path: TabPath;
-} & AppTab<AppPageProps>;
+} & AppTab;
 
 const NavbarIcon: React.FC<NavbarIconProps> = ({
   name,

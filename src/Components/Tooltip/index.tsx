@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState, createRef } from "react";
 import { parseDimension, formatDimension } from "Utility";
 import {
   OverlayTrigger,
   Tooltip as BootstrapTooltip,
   OverlayProps,
+  Overlay,
 } from "react-bootstrap";
 import * as Popper from "@popperjs/core";
 import { UsePopperOptions } from "react-overlays/esm/usePopper";
@@ -39,6 +40,7 @@ type TooltipProps = {
   delay?: number;
   toggle?: TooltipMode;
   popperConfig?: OverlayProps["popperConfig"];
+  rootClose?: boolean;
 };
 
 function toModifierArray(
@@ -80,37 +82,53 @@ const Tooltip: React.FC<TooltipProps> = ({
     },
   });
 
+  const overlay = (
+    <BootstrapTooltip
+      id={id}
+      bsPrefix={hide ? "hide-tooltip" : undefined}
+      {...rest}
+    >
+      <div className="tooltip-content">
+        <div
+          style={{
+            padding: parseDimension(padding)
+              .map(formatDimension)
+              .getOrElse(undefined),
+            maxWidth: parseDimension(maxWidth)
+              .map(formatDimension)
+              .getOrElse(undefined),
+          }}
+        >
+          {text}
+        </div>
+      </div>
+    </BootstrapTooltip>
+  );
+
+  if (toggle === "click") {
+    return (
+      <ToggleOverlay
+        placement={resolvePlacement({ top, bottom, left })}
+        popperConfig={{
+          ...popperConfig,
+          modifiers,
+        }}
+        overlay={overlay}
+      >
+        {children}
+      </ToggleOverlay>
+    );
+  }
+
   return (
     <OverlayTrigger
-      trigger={toggle === "click" ? "click" : undefined}
       placement={resolvePlacement({ top, bottom, left })}
       popperConfig={{
         ...popperConfig,
         modifiers,
       }}
       delay={delay}
-      overlay={
-        <BootstrapTooltip
-          id={id}
-          bsPrefix={hide ? "hide-tooltip" : undefined}
-          {...rest}
-        >
-          <div className="tooltip-content">
-            <div
-              style={{
-                padding: parseDimension(padding)
-                  .map(formatDimension)
-                  .getOrElse(undefined),
-                maxWidth: parseDimension(maxWidth)
-                  .map(formatDimension)
-                  .getOrElse(undefined),
-              }}
-            >
-              {text}
-            </div>
-          </div>
-        </BootstrapTooltip>
-      }
+      overlay={overlay}
     >
       {children}
     </OverlayTrigger>
@@ -120,3 +138,46 @@ const Tooltip: React.FC<TooltipProps> = ({
 Tooltip.displayName = "Tooltip";
 
 export default Tooltip;
+
+// ? ==============
+// ? Sub-components
+// ? ==============
+
+type ToggleOverlayProps = {
+  overlay: React.ComponentProps<typeof Overlay>["children"];
+  placement: React.ComponentProps<typeof Overlay>["placement"];
+  popperConfig: React.ComponentProps<typeof Overlay>["popperConfig"];
+  children: React.ReactNode;
+};
+
+const ToggleOverlay: React.FC<ToggleOverlayProps> = ({
+  overlay,
+  placement,
+  popperConfig,
+  children,
+}) => {
+  const targetRef = createRef<HTMLDivElement>();
+  const [show, setShow] = useState(false);
+  return (
+    <>
+      <div
+        ref={targetRef}
+        onClick={(): void => {
+          setShow(!show);
+        }}
+      >
+        {children}
+      </div>
+      <Overlay
+        show={show}
+        target={targetRef}
+        placement={placement}
+        popperConfig={popperConfig}
+        onHide={(): void => setShow(false)}
+        rootClose
+      >
+        {overlay}
+      </Overlay>
+    </>
+  );
+};

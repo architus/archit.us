@@ -12,3 +12,4 @@ export { default as HelpTooltip } from "./HelpTooltip";
 export { default as AddRowModal } from "./AddRowModal";
 export { default as Placeholder } from "./Placeholder";
 export { default as DiscordMock } from "./DiscordMock";
+export { default as UserDisplay } from "./UserDisplay";
