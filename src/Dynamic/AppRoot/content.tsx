@@ -1,4 +1,4 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { useSessionStatus } from "Store/slices/session";
 import Login from "Pages/Login";
 import { Redirect, Router, PageProps } from "Components/Router";
@@ -85,6 +85,7 @@ const AppContent: React.ComponentType<AppContentProps> = withClientSide(
         <Router>
           <Redirect
             path=":guildId"
+            from=":guildId"
             to={`${APP_PATH_ROOT}/:guildId/${DEFAULT_TAB}`}
             noThrow
           />
@@ -100,6 +101,8 @@ const AppContent: React.ComponentType<AppContentProps> = withClientSide(
   }
 );
 
+const LazyPageRenderer = lazy(() => import("Dynamic/AppRoot/lazy"));
+
 type PageRendererProps = {
   tabOption: Option<TabPath>;
   guildOption: Option<Guild>;
@@ -108,15 +111,14 @@ type PageRendererProps = {
 const PageRenderer: React.FC<PageRendererProps> = React.memo(
   ({ tabOption, guildOption }) => {
     return Option.merge(tabOption, guildOption)
-      .map(([tab, guild]) => {
-        const Component = tabs[tab].component;
-        return (
-          // eslint-disable-next-line react/jsx-key
+      .map(([tab, guild]) => (
+        // eslint-disable-next-line react/jsx-key
+        <Suspense fallback={<AppPlaceholder />}>
           <ErrorBoundary onError={(e: Error): void => error(e)}>
-            <Component guild={guild} />
+            <LazyPageRenderer tab={tab} guild={guild} />
           </ErrorBoundary>
-        );
-      })
+        </Suspense>
+      ))
       .getOrElse(<AppPlaceholder />);
   }
 );

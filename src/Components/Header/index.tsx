@@ -10,7 +10,7 @@ import Icon from "Components/Icon";
 import { LinkProps } from "Components/Router";
 import { AnyIconName } from "Components/Icon/loader";
 import LogoSvg from "Assets/logo.inline.svg";
-import { attach, isEmptyOrNil } from "Utility";
+import { attach, isEmptyOrNil, isNil } from "Utility";
 import { opacity } from "Theme/getters";
 import "./style.scss";
 
@@ -158,7 +158,8 @@ const BuildMarker: React.FC<BuildMarkerProps> = ({ top = false }) => {
       bottom={!top}
       top={top}
       padding={6}
-      maxWidth={320}
+      maxWidth={360}
+      toggle="click"
     >
       {inner}
     </Tooltip>
@@ -177,7 +178,7 @@ const BuildTooltip: React.FC<BuildTooltipProps> = ({ children }) => {
     day: "numeric",
   };
 
-  let values: Record<string, string | undefined> = {
+  let values: Record<string, React.ReactNode | undefined> = {
     "Build time": `${buildTime.toLocaleDateString(
       undefined,
       dateOptions
@@ -188,12 +189,25 @@ const BuildTooltip: React.FC<BuildTooltipProps> = ({ children }) => {
       ...values,
       "Build id": process.env.BUILD_ID,
       Context: process.env.CONTEXT,
-      "GitHub repository": process.env.REPOSITORY_URL,
+      "GitHub repository": <AutoLink>{process.env.REPOSITORY_URL}</AutoLink>,
       "Commit SHA": process.env.COMMIT_REF,
+      "Commit URL": (
+        <AutoLink>{`${process.env.REPOSITORY_URL}/commit/${process.env.COMMIT_REF}`}</AutoLink>
+      ),
       Branch: process.env.BRANCH,
       Head: process.env.HEAD,
-      "Deploy URL": process.env.DEPLOY_PRIME_URL,
+      "Deploy URL": <AutoLink>{process.env.DEPLOY_PRIME_URL}</AutoLink>,
       "Deploy Id": process.env.DEPLOY_ID,
+    };
+  }
+  if (process.env.PULL_REQUEST === "true") {
+    const prId = process.env.REVIEW_ID;
+    values = {
+      ...values,
+      "Pull request": `#${prId}`,
+      "Pull request URL": (
+        <AutoLink>{`${process.env.REPOSITORY_URL}/pull/${prId}`}</AutoLink>
+      ),
     };
   }
 
@@ -204,12 +218,24 @@ const BuildTooltip: React.FC<BuildTooltipProps> = ({ children }) => {
       <Styled.BuildInfoList>
         {Object.entries(values).map(([label, value]) => (
           <li key={label}>
-            <strong>{label}:</strong> {isEmptyOrNil(value) ? "~" : value}
+            <strong>{label}:</strong>{" "}
+            {isNil(value) || (typeof value === "string" && isEmptyOrNil(value))
+              ? "~"
+              : value}
           </li>
         ))}
       </Styled.BuildInfoList>
     </Box>
   );
 };
+
+const AutoLink: React.FC<{ children: string | undefined }> = ({ children }) =>
+  isNil(children) ? (
+    <>~</>
+  ) : (
+    <Link to={children} space="femto" target="_blank" rel="noopener" external>
+      {children}
+    </Link>
+  );
 
 export default attach(Header, { Brand });
