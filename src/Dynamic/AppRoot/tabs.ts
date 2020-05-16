@@ -17,6 +17,7 @@ const tabs = {
   emoji: tab({
     icon: emojiSvg,
     name: "Emoji Manager",
+    contentClass: "no-scroll",
   }),
   queue: tab({
     icon: musicSvg,
