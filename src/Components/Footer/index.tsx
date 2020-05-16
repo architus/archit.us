@@ -27,6 +27,7 @@ const Footer: React.FC = () => (
             <a href="https://status.archit.us/">Status</a>
             <a href="https://docs.archit.us/">Docs</a>
             <a href="https://discord.gg/svrRrSe">Discord Server</a>
+            <a href="https://forms.gle/MRnXUa5VAAXezitc8">Data Removal Request Form</a>
           </FooterPanel>
         </Col>
         <Col sm={6} lg={4} xl={3}>
