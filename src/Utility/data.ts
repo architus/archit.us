@@ -226,6 +226,15 @@ export function intersection<T>(setA: Set<T>, setB: Set<T>): Set<T> {
 }
 
 /**
+ * Calculates the difference of two sets
+ * @param setA - set A
+ * @param setB - Set B
+ */
+export function difference<T>(setA: Set<T>, setB: Set<T>): Set<T> {
+  return new Set([...setA].filter((x) => !setB.has(x)));
+}
+
+/**
  * Performs a binary search on the pre-sorted array to find the given element's index, or
  * -1 if it could not be found. Guaranteed to run in O(lg(n)) time for input size of n
  * @param sortedArr - Pre-sorted array to perform binary search on
@@ -269,8 +278,8 @@ export function binarySearch<T>(
 }
 
 /**
- * Performs a shallow equal of two javascript values, using object or
- * array shallow comparison if applicable
+ * Performs a shallow equal of two javascript values, using object,
+ * array, or Set shallow comparison where applicable
  * @param a - first element to compare
  * @param b - second object to compare
  */
@@ -280,10 +289,49 @@ export function shallowEqual<T>(a: T, b: T): boolean {
     if (isArray(a) && isArray(b)) {
       return shallowEqualArrays(a, b);
     }
+
+    // If set, then apply set shallow comparison
+    if (a instanceof Set && b instanceof Set) {
+      return a.size === b.size && [...a].every((item) => b.has(item));
+    }
+
     return shallowEqualObjects(a, b);
   }
-  // eslint-disable-next-line eqeqeq
-  return a == b;
+
+  return Object.is(a, b) || a === b;
+}
+
+/**
+ * Performs a doubly deep shallow equal of two javascript values, using object,
+ * array, or Set shallow comparison for each element in the given objects/arrays
+ * where applicable
+ * @param a - first element to compare
+ * @param b - second object to compare
+ */
+export function doublyShallowEqual<T>(a: T, b: T): boolean {
+  if (typeof a === "object" && typeof b === "object") {
+    // Determine if array
+    if (isArray(a) && isArray(b)) {
+      if (a.length !== b.length) {
+        return false;
+      }
+
+      return a.every((aItem, index) => {
+        const bItem = b[index];
+        return shallowEqual(aItem, bItem);
+      });
+    }
+
+    return Object.entries(a).every(([key, value]) => {
+      if (!(key in b)) {
+        return false;
+      }
+
+      return shallowEqual(value, (b as Record<string, unknown>)[key]);
+    });
+  }
+
+  return Object.is(a, b) || a === b;
 }
 
 /**

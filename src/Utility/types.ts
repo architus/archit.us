@@ -558,3 +558,8 @@ export enum LogEvents {
   EmojiManagerDelete = 3402,
   EmojiManagerExchange = 3403,
 }
+
+export type BaseGatewayPacket = t.TypeOf<typeof BaseGatewayPacket>;
+export const BaseGatewayPacket = t.type({
+  _id: t.number,
+});

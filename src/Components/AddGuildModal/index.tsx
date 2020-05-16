@@ -21,7 +21,8 @@ const AddGuildModal: React.FC<AddGuildModalProps> = ({
   as,
   ...rest
 }) => {
-  const { all: guilds } = usePool("guilds", {
+  const { all: guilds } = usePool({
+    type: "guild",
     filter: isDiscordAdminWithoutArchitus,
   });
   const returnQuery = useReturnQuery();

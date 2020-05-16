@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import classNames from "classnames";
 import { splitPath, isDefined } from "Utility";
 import { Snowflake, isSnowflake, Guild } from "Utility/types";
@@ -27,12 +27,12 @@ const otherGuildsFilter = (guild: Guild): boolean =>
   guild.has_architus && !guild.architus_admin;
 
 const GuildList: React.FC<GuildListProps> = ({ onClickGuild, onClickAdd }) => {
-  const { all: architusAdminGuilds, isLoaded: hasLoaded } = usePool("guilds", {
-    filter: architusAdminGuildsFilter,
-  });
-  const { all: otherGuilds } = usePool("guilds", {
-    filter: otherGuildsFilter,
-  });
+  const { all, isLoaded: hasLoaded } = usePool({ type: "guild" });
+  const architusAdminGuilds = useMemo(
+    () => all.filter(architusAdminGuildsFilter),
+    [all]
+  );
+  const otherGuilds = useMemo(() => all.filter(otherGuildsFilter), [all]);
   const squareStyle = { width: `${ICON_WIDTH}px`, height: `${ICON_WIDTH}px` };
 
   // Parse active guild ID from location
