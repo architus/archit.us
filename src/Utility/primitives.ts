@@ -41,7 +41,7 @@ const RANDOM_STRING_SPLIT_LENGTH =
  */
 export function randomNumericString(length: number): string {
   if (length <= 0) return "";
-  const numSplits = (length - 1) / RANDOM_STRING_SPLIT_LENGTH + 1;
+  const numSplits = Math.floor((length - 1) / RANDOM_STRING_SPLIT_LENGTH + 1);
   let generated = "";
   for (let i = 0; i < numSplits; ++i) {
     const isLast = i === numSplits - 1;

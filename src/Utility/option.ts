@@ -36,6 +36,8 @@ export function option<T extends t.Mixed>(
   );
 }
 
+export type Unwrap<T> = T extends Option<infer K> ? K : T;
+
 export interface OptionLike<A> {
   /**
    * Whether the option is `None`

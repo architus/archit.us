@@ -17,7 +17,7 @@ const Begin: React.FC<BeginProps> = () => {
           className="begin--hero-img"
           dangerouslySetInnerHTML={{ __html: HeroImage }}
         />
-        <h2>Web Dashboard</h2>
+        <h1>Web Dashboard</h1>
         <p>Select a server on the left or add architus to a server to begin</p>
         <button onClick={openAddGuild}>
           Add <strong> architus </strong> to a server

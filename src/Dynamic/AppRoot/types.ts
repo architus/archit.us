@@ -2,10 +2,9 @@ import { PageProps } from "Components/Router";
 import { Guild } from "Utility/types";
 import { AnyAction } from "redux";
 
-export interface AppTab<P> {
+export interface AppTab {
   icon: string;
   name: string;
-  component: React.ComponentType<P>;
   contentClass?: string;
 }
 
