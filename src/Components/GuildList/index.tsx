@@ -27,12 +27,14 @@ const otherGuildsFilter = (guild: Guild): boolean =>
   guild.has_architus && !guild.architus_admin;
 
 const GuildList: React.FC<GuildListProps> = ({ onClickGuild, onClickAdd }) => {
-  const { all, isLoaded: hasLoaded } = usePool({ type: "guild" });
+  const { all: guilds, isLoaded: hasLoaded } = usePool({
+    type: "guild",
+  });
   const architusAdminGuilds = useMemo(
-    () => all.filter(architusAdminGuildsFilter),
-    [all]
+    () => guilds.filter(architusAdminGuildsFilter),
+    [guilds]
   );
-  const otherGuilds = useMemo(() => all.filter(otherGuildsFilter), [all]);
+  const otherGuilds = useMemo(() => guilds.filter(otherGuildsFilter), [guilds]);
   const squareStyle = { width: `${ICON_WIDTH}px`, height: `${ICON_WIDTH}px` };
 
   // Parse active guild ID from location
@@ -83,7 +85,7 @@ const GuildList: React.FC<GuildListProps> = ({ onClickGuild, onClickAdd }) => {
   );
 };
 
-export default GuildList;
+export default React.memo(GuildList);
 
 // ? =================
 // ? Helper components

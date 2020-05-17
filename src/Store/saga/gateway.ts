@@ -101,8 +101,6 @@ function* dispatchHandler(socket: Socket): SagaIterator {
         "A route marked as elevated was dispatched without elevation! Skipping."
       );
     } else {
-      console.log("emitting data :)");
-      console.log({ event, data });
       socket.emit(event, data);
       yield put(
         gatewaySend({ event, data, timestamp: performance.now(), elevated })
