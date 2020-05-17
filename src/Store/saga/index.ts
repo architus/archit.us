@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import { takeEvery, put, fork } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/core";
 import { delay } from "@redux-saga/core/effects";
@@ -11,17 +10,10 @@ import {
   signOut,
   showNotification,
 } from "Store/actions";
+import interpret from "Store/saga/interpret";
 import sessionFlow from "Store/saga/session";
 import gatewayFlow from "Store/saga/gateway";
 import pools from "Store/saga/pools";
-import {
-  interpretInvisible,
-  interpretMessage,
-  interpretReact,
-  interpretUnreact,
-} from "Store/slices/interpret";
-import { mockUserEvent } from "Store/routes";
-import { LogEvents } from "Utility/types";
 
 /**
  * Root saga
@@ -60,71 +52,4 @@ function* handleSignOut(action: ReturnType<typeof signOut>): SagaIterator {
   if (!action.payload.silent) {
     yield put(showToast({ message: "Signed out" }));
   }
-}
-
-function* interpret(): SagaIterator {
-  yield takeEvery(interpretMessage.type, handleInterpretMessage);
-  yield takeEvery(interpretInvisible.type, handleInterpretInvisble);
-  yield takeEvery(interpretReact.type, handleInterpretReact);
-  yield takeEvery(interpretUnreact.type, handleInterpretUnreact);
-}
-
-function* handleInterpretMessage(
-  action: ReturnType<typeof interpretMessage>
-): SagaIterator {
-  const { context, message, id } = action.payload;
-  yield put(
-    mockUserEvent({
-      action: LogEvents.MessageSend,
-      guildId: context.guildId,
-      content: message,
-      messageId: id,
-      allowedCommands: context.allowedCommands || [],
-      silent: false,
-    })
-  );
-}
-
-function* handleInterpretInvisble(
-  action: ReturnType<typeof interpretInvisible>
-): SagaIterator {
-  const { context, message, id } = action.payload;
-  yield put(
-    mockUserEvent({
-      action: LogEvents.MessageSend,
-      guildId: context.guildId,
-      messageId: id,
-      content: message,
-      allowedCommands: context.allowedCommands || [],
-      silent: true,
-    })
-  );
-}
-
-function* handleInterpretReact(
-  action: ReturnType<typeof interpretReact>
-): SagaIterator {
-  const { context, reaction } = action.payload;
-  yield put(
-    mockUserEvent({
-      action: LogEvents.ReactionAdd,
-      guildId: context.guildId,
-      messageId: reaction.id,
-      emoji: reaction.reaction.rawEmoji,
-    })
-  );
-}
-
-function* handleInterpretUnreact(
-  action: ReturnType<typeof interpretUnreact>
-): SagaIterator {
-  const { context, reaction } = action.payload;
-  yield put(
-    mockUserEvent({
-      action: LogEvents.ReactionRemove,
-      guildId: context.guildId,
-      messageId: reaction.id,
-      emoji: reaction.reaction.rawEmoji,
-    })
-  );
 }

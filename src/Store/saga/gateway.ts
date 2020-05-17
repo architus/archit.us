@@ -19,8 +19,9 @@ import { AnyAction } from "redux";
 import io from "socket.io-client";
 import * as events from "Store/routes/events";
 import { failure } from "io-ts/lib/PathReporter";
-import { isRight } from "fp-ts/lib/Either";
+import { isRight, Either } from "fp-ts/lib/Either";
 import { PayloadAction } from "@reduxjs/toolkit";
+import { Errors } from "io-ts";
 
 type LoadSessionAction = ReturnType<typeof loadSession>;
 type Socket = SocketIOClient.Socket;
@@ -100,7 +101,6 @@ function* dispatchHandler(socket: Socket): SagaIterator {
         "A route marked as elevated was dispatched without elevation! Skipping."
       );
     } else {
-      // TODO implement callback
       socket.emit(event, data);
       yield put(
         gatewaySend({ event, data, timestamp: performance.now(), elevated })
@@ -134,7 +134,7 @@ function createGatewayEventChannel(socket: Socket): EventChannel<AnyAction> {
       if (isGatewayEvent(eventExport)) {
         const { event, decode } = eventExport;
         socket.on(event, (data: unknown) => {
-          const decodeResult = decode(data as object);
+          const decodeResult = decode(data) as Either<Errors, unknown>;
           if (isRight(decodeResult)) {
             emitter(
               gatewayEvent({

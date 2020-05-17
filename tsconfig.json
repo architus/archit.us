@@ -15,7 +15,6 @@
     "strict": true,
     "esModuleInterop": true,
     "noImplicitReturns": true,
-    "noUnusedLocals": true,
     "baseUrl": "src"
   }
 }

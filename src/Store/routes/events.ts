@@ -2,7 +2,12 @@
 import * as t from "io-ts";
 import { Either, either } from "fp-ts/lib/Either";
 import { makeGatewayEvent } from "Store/api/gateway";
-import { LogEvents } from "Utility/types";
+import {
+  LogEvents,
+  BaseGatewayPacket,
+  TSnowflake,
+  THoarFrost,
+} from "Utility/types";
 
 export type MockBotEventAction = t.TypeOf<typeof MockBotEventAction>;
 export const MockBotEventAction = t.taggedUnion(
@@ -42,9 +47,31 @@ export const MockBotEvent = t.type({
   guildId: t.number,
   actions: t.array(MockBotEventAction),
 });
-
 export const mockBotEvent = makeGatewayEvent({
   event: "mock_bot_event",
   decode: (response: unknown): Either<t.Errors, MockBotEvent> =>
     either.chain(t.object.decode(response), MockBotEvent.decode),
+});
+
+export type PoolResponse = t.TypeOf<typeof PoolResponse>;
+export const PoolResponse = t.intersection(
+  [
+    BaseGatewayPacket,
+    t.type({
+      finished: t.boolean,
+      // The type union to make this work is impossible without knowing the original "type",
+      // and would be annoying to type here and in the pools file (additional elements to the
+      // tagged union would need to be added for each new pool type and therefore violate DRY),
+      // so we loosely type the following two entries so that we can decode them later in the
+      // pools saga
+      data: t.array(t.object),
+      nonexistant: t.array(t.union([TSnowflake, THoarFrost], "SomeId")),
+    }),
+  ],
+  "PoolResponse"
+);
+export const poolResponse = makeGatewayEvent({
+  event: "pool_response",
+  decode: (response: unknown): Either<t.Errors, PoolResponse> =>
+    either.chain(t.object.decode(response), PoolResponse.decode),
 });

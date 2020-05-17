@@ -14,15 +14,15 @@ import {
   error,
 } from "Utility";
 import { Snowflake, isSnowflake, Guild } from "Utility/types";
-import { Option } from "Utility/option";
 import classNames from "classnames";
-import { usePool, usePoolEntity } from "Store/slices/pools";
+import { usePool } from "Store/slices/pools";
 import { APP_PATH_ROOT } from "Dynamic/AppRoot/config.json";
 import { DEFAULT_TAB, tabs, tabPaths, TabPath } from "Dynamic/AppRoot/tabs";
 import { NavigationContext } from "Dynamic/AppRoot/context";
 import ErrorBoundary from "Components/ErrorBoundary";
 import Placeholder from "Components/Placeholder";
 import Begin from "Dynamic/Begin";
+import { Option, Some, None } from "Utility/option";
 
 interface AppLocation {
   currentTab: TabPath | null;
@@ -36,7 +36,8 @@ function isValidTab(tab: string): tab is TabPath {
 const hasArchitusFilter = (guild: Guild): boolean => guild.has_architus;
 
 export function useAppLocation(): AppLocation {
-  const { all: guildList } = usePool("guilds", {
+  const { all: guildList } = usePool({
+    type: "guild",
     filter: hasArchitusFilter,
   });
 
@@ -69,9 +70,13 @@ const AppContent: React.ComponentType<AppContentProps> = withClientSide(
     const isInitial = useInitialRender();
 
     // Load guild from store
-    const { entity: guildOption } = usePoolEntity("guilds", {
+    // **Note**: even though we only want one entity, we still must retrieve
+    // the entire pool since we're not able to reference by primary id
+    const { all: guilds } = usePool({
+      type: "guild",
       filter: (g) => isDefined(currentGuild) && g.id === currentGuild,
     });
+    const guildOption = guilds.length > 0 ? Some(guilds[0]) : None;
 
     // Render app placeholder on server/first render
     if (isInitial) return <AppPlaceholder />;
