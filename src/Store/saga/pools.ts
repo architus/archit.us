@@ -44,6 +44,7 @@ import {
 } from "Store/routes";
 import { select } from "Store/saga/utility";
 import { isRight } from "fp-ts/lib/Either";
+import { Errors } from "io-ts";
 
 // The delay (in ms) for clustering single/multiple Id requests from the hook API
 const PRESSURE_TIMEOUT = 200;
@@ -447,11 +448,11 @@ function* loadLoop(
 
       // Filter the data by successful decodes
       const runtimeType = AllPoolTypes[key];
-      const entities: AllPoolTypes[typeof key][] = [];
+      const entities: AllPoolTypes[PoolType][] = [];
       for (const entity of data) {
         const decodeResult = runtimeType.decode(entity);
-        if (isRight(decodeResult)) {
-          entities.push(entity as AllPoolTypes[typeof key]);
+        if (isRight<Errors, AllPoolTypes[PoolType]>(decodeResult)) {
+          entities.push(entity as AllPoolTypes[PoolType]);
         } else {
           yield put(
             gatewayMalformed({

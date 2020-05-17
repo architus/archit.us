@@ -2,24 +2,31 @@ import { useEffect, useMemo, useRef } from "react";
 import { createSlice, PayloadAction, createAction } from "@reduxjs/toolkit";
 import { isDefined, shallowEqual, doublyShallowEqual } from "Utility";
 import { useDispatch, useSelector } from "Store/hooks";
-import { Guild, User, Snowflake, Nil } from "Utility/types";
+import {
+  Guild,
+  User,
+  Snowflake,
+  Nil,
+  AutoResponse,
+  HoarFrost,
+} from "Utility/types";
 import { Option, None, Some } from "Utility/option";
-import * as t from "io-ts";
 
 export type AllPoolTypes = {
   guild: Guild;
   user: User;
-  never: { id: string };
+  autoResponse: AutoResponse;
 };
 
+// Runtime io-ts types
 export const AllPoolTypes = {
   guild: Guild,
   user: User,
-  never: t.type({ id: t.string }),
+  autoResponse: AutoResponse,
 };
 
 export const guildAgnosticPools = ["user", "guild"] as const;
-export const guildSpecificPools = ["never"] as const;
+export const guildSpecificPools = ["autoResponse"] as const;
 export const allPools: PoolType[] = [
   ...guildAgnosticPools,
   ...guildSpecificPools,
@@ -140,7 +147,7 @@ const slice = createSlice({
           );
       pool.pressuredIdsSet = {};
       pool.loadingSets[requestId] = ids;
-      ids.forEach((id) => {
+      ids.forEach((id: Snowflake | HoarFrost) => {
         pool.loadingSetsReverse[id] = requestId;
       });
     },
@@ -181,7 +188,7 @@ const slice = createSlice({
             (action.payload as { guildId: Snowflake }).guildId
           );
 
-      entities.forEach((entity) => {
+      entities.forEach((entity: AllPoolTypes[PoolType]) => {
         pool.pool[entity.id] = entity;
         if (isPartial && entity.id in pool.loadingSetsReverse) {
           delete pool.loadingSetsReverse[entity.id];
