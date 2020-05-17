@@ -563,3 +563,27 @@ export type BaseGatewayPacket = t.TypeOf<typeof BaseGatewayPacket>;
 export const BaseGatewayPacket = t.type({
   _id: t.number,
 });
+
+export enum AutoResponseTriggerMode {
+  Punctuated = "punctuated",
+  Naive = "naive",
+  Regex = "regex",
+}
+export const TAutoResponseTriggerMode = new EnumType<AutoResponseTriggerMode>(
+  AutoResponseTriggerMode,
+  "AutoResponseTriggerMode"
+);
+
+export type AutoResponse = t.TypeOf<typeof AutoResponse>;
+export const AutoResponse = t.type({
+  id: THoarFrost,
+  trigger: t.string,
+  response: t.string,
+  authorId: option(TSnowflake),
+  guildId: TSnowflake,
+  triggerRegex: t.string,
+  triggerPunctuation: t.array(t.string),
+  responseTokens: t.array(t.tuple([t.string, t.string])),
+  count: t.number,
+  mode: TAutoResponseTriggerMode,
+});
