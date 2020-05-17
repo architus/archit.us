@@ -59,7 +59,10 @@ export const SelectionFormatter: (
   isRowSelected,
   onRowSelectionChange,
 }): React.ReactElement | null => {
-  if (canDeleteAny || selfAuthor.id === row.authorId) {
+  if (
+    canDeleteAny ||
+    (row.authorId.isDefined() && selfAuthor.id === row.authorId.get)
+  ) {
     return (
       <SelectCellFormatter
         value={isRowSelected}
@@ -86,7 +89,10 @@ export const RowRenderer: (
     id="auto-response-grid-context-menu"
     collect={(): { rowIdx: number; canDelete: boolean } => ({
       rowIdx: props.rowIdx,
-      canDelete: canDeleteAny || selfAuthor.id === props.row.authorId,
+      canDelete:
+        canDeleteAny ||
+        (props.row.authorId.isDefined() &&
+          selfAuthor.id === props.row.authorId.get),
     })}
   >
     <GridRow {...props} />
