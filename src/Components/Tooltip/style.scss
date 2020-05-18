@@ -20,19 +20,23 @@
         border-right-color: $dark-000 !important;
     }
 
+    &.show {
+        opacity: 0.95 !important;
+    }
+
     @include light {
         .arrow {
-            opacity: 0.6;
+            opacity: 0.9;
         }
     }
 
     .tooltip-inner {
         padding: 0.1rem 0.35rem;
-        max-width: 240px;
+        max-width: none;
         background-color: $dark-000;
 
         @include light {
-            background-color: rgba($dark-000, 0.6);
+            background-color: rgba($dark-150, 1);
         }
 
         h6 {

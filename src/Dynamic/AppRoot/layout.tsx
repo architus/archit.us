@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useCallback } from "react";
 import useDarkMode from "use-dark-mode";
 import classNames from "classnames";
 import tinycolor from "tinycolor2";
+import { useColorMode } from "@xstyled/emotion";
+import { ColorMode } from "Theme/tokens";
 import { Switch, Icon, Layout } from "Components";
 import "./style.scss";
 import { lightColor, primaryColor } from "global.json";
@@ -17,6 +19,14 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   ...rest
 }) => {
   const { value, toggle } = useDarkMode(true);
+  const setColorMode = useColorMode()[1];
+  const toggleWrapper = useCallback(
+    (checked: boolean) => {
+      setColorMode(checked ? ColorMode.Dark : ColorMode.Light);
+      toggle();
+    },
+    [setColorMode, toggle]
+  );
   return (
     <Layout
       title="Web Dashboard"
@@ -27,7 +37,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       headerChildren={
         typeof window === "undefined" ? null : (
           <Switch
-            onChange={toggle}
+            onChange={toggleWrapper}
             checked={value}
             className="ml-3 ml-md-0 mr-md-3"
             aria-label="Dark mode switch"

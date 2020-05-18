@@ -6,7 +6,7 @@ import { lightColor, primaryColor } from "global.json";
 import "./style.scss";
 
 type SwitchProps = {
-  label?: string;
+  label?: React.ReactNode;
   className?: string;
   onChange: (checked: boolean) => void;
   checked: boolean;
@@ -29,7 +29,7 @@ const Switch: React.FC<SwitchProps> = ({
       onColor={primaryColor}
       uncheckedIcon={false}
       checkedIcon={false}
-      aria-label={label}
+      aria-label={isDefined(label) ? label.toString() : undefined}
       height={24}
       width={48}
       onChange={onChange}

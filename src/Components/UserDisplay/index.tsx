@@ -77,7 +77,7 @@ const UserDisplay: React.FC<UserDisplayProps> = ({
           .map((d) => `#${d}`)
           .getOrElse("")}
         className="discriminator"
-        size="0.95em"
+        size="0.75em"
         width={40}
         light
       />

@@ -1,9 +1,20 @@
 import React from "react";
-import classNames from "classnames";
+import styled, { BoxProps } from "@xstyled/emotion";
 import Icon from "Components/Icon";
 import Tooltip from "Components/Tooltip";
-import "./style.scss";
 import { StyleObject } from "Utility/types";
+
+const Styled = {
+  HelpIcon: styled.spanBox`
+    width: 1.5em;
+    display: inline-block;
+    position: relative;
+    cursor: help;
+    opacity: 0.55;
+    font-size: 1.2em;
+    transform: translateY(1px);
+  `,
+};
 
 type HelpTooltipProps = {
   content: string;
@@ -13,10 +24,7 @@ type HelpTooltipProps = {
   left?: boolean;
   className?: string;
   style?: StyleObject;
-} & Omit<
-  Partial<React.ComponentProps<typeof Tooltip>>,
-  "text" | "top" | "left" | "bottom"
->;
+} & BoxProps;
 
 const HelpTooltip: React.FC<HelpTooltipProps> = ({
   content,
@@ -34,11 +42,10 @@ const HelpTooltip: React.FC<HelpTooltipProps> = ({
     top={top}
     left={left}
     bottom={!top && !right && !left}
-    {...rest}
   >
-    <span className={classNames("help-tooltip", className)} style={style}>
-      <Icon name="question-circle" size="lg" />
-    </span>
+    <Styled.HelpIcon className={className} style={style} {...rest}>
+      <Icon name="question-circle" />
+    </Styled.HelpIcon>
   </Tooltip>
 );
 

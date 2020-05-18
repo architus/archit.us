@@ -4,6 +4,7 @@ import axios from "axios";
 import path from "path";
 import fs from "fs";
 import SoureMapSupport from "source-map-support";
+import { getColorModeInitScriptElement } from "@xstyled/emotion";
 
 const TypeScript = require("ts-node");
 
@@ -74,7 +75,10 @@ const config = {
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
-      <Body className="dark-mode">{children}</Body>
+      <Body className="dark-mode">
+        {getColorModeInitScriptElement()}
+        {children}
+      </Body>
       <script
         // Dark mode anti-flash script
         dangerouslySetInnerHTML={{
