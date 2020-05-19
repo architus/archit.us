@@ -9,10 +9,10 @@ import Tooltip from "Components/Tooltip";
 import Icon from "Components/Icon";
 import { LinkProps } from "Components/Router";
 import { AnyIconName } from "Components/Icon/loader";
-import LogoSvg from "Assets/logo.inline.svg";
 import { attach, isEmptyOrNil, isNil } from "Utility";
 import { opacity } from "Theme/getters";
 import "./style.scss";
+import Logo from "Components/Logo";
 
 type HeaderProps = {
   children?: React.ReactNode;
@@ -54,7 +54,7 @@ type BrandProps = Partial<LinkProps> & BuildMarkerProps;
 const Brand: React.FC<BrandProps> = ({ top, ...props }) => (
   <Box display="flex" alignItems="center" mr="micro">
     <Link {...props} className="nav-link brand" to="/">
-      <div dangerouslySetInnerHTML={{ __html: LogoSvg }} />
+      <Logo />
     </Link>
     <BuildMarker top={top} />
   </Box>
@@ -157,8 +157,8 @@ const BuildMarker: React.FC<BuildMarkerProps> = ({ top = false }) => {
       text={tooltip}
       bottom={!top}
       top={top}
-      padding={6}
-      maxWidth={360}
+      padding="pico"
+      maxWidth="tera"
       toggle="click"
     >
       {inner}

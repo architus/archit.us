@@ -55,6 +55,7 @@
     "@xstyled/system": "^1.17.1",
     "axios": "^0.19.2",
     "babel-loader": "^8.1.0",
+    "babel-plugin-add-react-displayname": "^0.0.5",
     "babel-plugin-emotion": "^10.0.33",
     "babel-plugin-macros": "^2.8.0",
     "bootstrap": "^4.4.1",

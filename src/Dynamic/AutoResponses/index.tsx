@@ -1090,19 +1090,7 @@ function mockData(
   return responses;
 }
 
-const AutoResponsesProvider: React.FC<AppPageProps> = () => {
-  return (
-    <Container className="py-5">
-      <h2>
-        Auto Responses <Badge variant="primary">Coming Soon</Badge>
-      </h2>
-    </Container>
-  );
-};
-
-export const AutoResponsesImplementation: React.FC<AppPageProps> = (
-  pageProps
-) => {
+const AutoResponsesProvider: React.FC<AppPageProps> = (pageProps) => {
   const currentUser: Option<User> = useCurrentUser();
   const authors = useMemoOnce(() => mockAuthors(currentUser, 5));
   const commands = useMemoOnce(() => mockData(authors, 100));
@@ -1176,7 +1164,7 @@ const GridHeader: React.FC<GridHeaderProps> = ({
           <HelpTooltip
             top
             id="self-authored-auto-response-help"
-            content="When selected, only show auto responses you have authored"
+            text="When selected, only show auto responses you have authored"
           ></HelpTooltip>
         </>
       }

@@ -1,27 +1,49 @@
 import React from "react";
-import classNames from "classnames";
+import styled, { Box } from "@xstyled/emotion";
 import { isDefined } from "Utility";
 import ReactSwitch from "react-switch";
 import { lightColor, primaryColor } from "global.json";
-import "./style.scss";
+import { StyleObject } from "Utility/types";
+
+const Styled = {
+  Switch: styled(ReactSwitch)`
+    // Needs nudge
+    vertical-align: -6px;
+    line-height: 24px;
+
+    .icon {
+      position: relative;
+      color: white;
+
+      // Nudges
+      top: 2px;
+      left: 6px;
+    }
+  `,
+  SwitchLabel: styled.span`
+    margin-left: nano;
+  `,
+};
 
 type SwitchProps = {
-  label?: React.ReactNode;
-  className?: string;
   onChange: (checked: boolean) => void;
   checked: boolean;
+  label?: React.ReactNode;
+  // Common style props
+  className?: string;
+  style?: StyleObject;
 } & Partial<React.ComponentProps<typeof ReactSwitch>>;
 
 const Switch: React.FC<SwitchProps> = ({
-  label,
-  className,
   onChange,
   checked,
+  label,
+  className,
+  style,
   ...rest
 }) => (
-  <span className={classNames("switch", className)}>
-    <ReactSwitch
-      className="react-switch"
+  <Box className={className} style={style} lineHeight={0}>
+    <Styled.Switch
       activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
       boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
       offHandleColor={lightColor}
@@ -36,10 +58,10 @@ const Switch: React.FC<SwitchProps> = ({
       checked={checked}
       {...rest}
     />
-    {isDefined(label) ? <span className="label">{label}</span> : null}
-  </span>
+    {isDefined(label) ? (
+      <Styled.SwitchLabel className="label">{label}</Styled.SwitchLabel>
+    ) : null}
+  </Box>
 );
-
-Switch.displayName = "Switch";
 
 export default Switch;

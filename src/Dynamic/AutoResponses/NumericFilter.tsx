@@ -58,7 +58,8 @@ export function NumericFilter<R, SR>({
         placeholder="e.g. 3,10-15,>20"
       />
       <Styled.HelpTooltip
-        content={tooltipText}
+        text={tooltipText}
+        id="numeric-filter-help-tooltip"
         marginLeft="pico"
         fontSize="1.4em"
       />

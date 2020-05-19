@@ -41,7 +41,7 @@ const config = {
     return [
       {
         path: "/",
-        template: "src/Pages/Index",
+        template: "src/Pages/Index/Index",
         getData: async () => ({
           guildCount,
           userCount,

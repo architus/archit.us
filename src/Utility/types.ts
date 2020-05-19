@@ -3,6 +3,7 @@
 /* eslint-disable max-classes-per-file */
 import * as t from "io-ts";
 import { either } from "fp-ts/lib/Either";
+import { BoxProps } from "@xstyled/emotion";
 import { isDefined } from "./data";
 import { TransformerStep } from "./transform";
 import { option } from "./option";
@@ -587,3 +588,5 @@ export const AutoResponse = t.type({
   count: t.number,
   mode: TAutoResponseTriggerMode,
 });
+
+export type WithBoxProps<P> = P & Omit<BoxProps, keyof P>;
