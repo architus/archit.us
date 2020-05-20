@@ -1,9 +1,9 @@
 import React from "react";
 import styled, { BoxProps, Box } from "@xstyled/emotion";
-import { attach } from "Utility";
-import { renderResponsiveProp } from "Theme/getters";
-import LogoSvg from "Assets/logo.inline.svg";
-import LogoTextSvg from "Assets/logo-text.inline.svg";
+import { renderResponsiveProp } from "Theme";
+import CombinedSvg from "Assets/logo/logo.inline.svg";
+import LogotypeSvg from "Assets/logo/logo-text.inline.svg";
+import SymbolSvg from "Assets/logo/logo-symbol.inline.svg";
 
 const Styled = {
   LogoBox: styled(Box, {
@@ -27,18 +27,25 @@ const defaultBoxProps = {
   width: "auto",
 };
 
-const Logo: React.FC<BoxProps> = (props) => (
+const Combined: React.FC<BoxProps> = (props) => (
   <Styled.LogoBox
     {...{ ...defaultBoxProps, ...props }}
-    dangerouslySetInnerHTML={{ __html: LogoSvg }}
+    dangerouslySetInnerHTML={{ __html: CombinedSvg }}
   />
 );
 
-const LogoType: React.FC<BoxProps> = (props) => (
+const Logotype: React.FC<BoxProps> = (props) => (
   <Styled.LogoBox
     {...{ ...defaultBoxProps, ...props }}
-    dangerouslySetInnerHTML={{ __html: LogoTextSvg }}
+    dangerouslySetInnerHTML={{ __html: LogotypeSvg }}
   />
 );
 
-export default attach(Logo, { LogoType });
+const Symbol: React.FC<BoxProps> = (props) => (
+  <Styled.LogoBox
+    {...{ ...defaultBoxProps, ...props }}
+    dangerouslySetInnerHTML={{ __html: SymbolSvg }}
+  />
+);
+
+export default { Combined, Logotype, Symbol };

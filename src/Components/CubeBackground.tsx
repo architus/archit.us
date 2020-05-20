@@ -1,12 +1,11 @@
 import React, { useMemo } from "react";
 import styled from "@xstyled/emotion";
-import { useThemeColor, Color, color } from "Theme";
-import tinycolor from "tinycolor2";
+import { useThemeColor, Color, ColorKey, ColorMode, color } from "Theme";
 import { WithBoxProps } from "Utility/types";
 
 const Styled = {
   CubeBackground: styled.divBox<{
-    overlayBackground: Color;
+    overlayBackground: ColorKey;
     resolvedForeground: string;
   }>`
     position: relative;
@@ -17,19 +16,26 @@ const Styled = {
 };
 
 type CubeBackgroundProps = WithBoxProps<{
-  background?: Color;
+  background?: ColorKey;
   overlayOpacity?: number;
 }>;
 
+/**
+ * Display component used to render a `divBox` with a tiling cube background, useful
+ * for jumbotrons, one of the accent materials used
+ */
 const CubeBackground: React.FC<CubeBackgroundProps> = ({
   overlayOpacity = 0.05,
   background = "b_300",
   ...boxProps
 }) => {
-  const textFade = useThemeColor("text_fade");
+  const [textFade, colorMode] = useThemeColor("text_fade");
   const resolvedForeground = useMemo(
-    () => tinycolor(textFade).setAlpha(overlayOpacity).toString(),
-    [textFade, overlayOpacity]
+    () =>
+      Color(textFade)
+        .setAlpha(overlayOpacity * (colorMode === ColorMode.Light ? 1.25 : 1))
+        .toString(),
+    [textFade, colorMode, overlayOpacity]
   );
   return (
     <Styled.CubeBackground
@@ -46,6 +52,10 @@ export default CubeBackground;
 // ? Helper functions
 // ? ================
 
+/**
+ * Constructs the SVG data URI to use in `background-image` for the tiling cube background
+ * @param foreground - Foreground CSS **resolved** color string
+ */
 function cubeSvg(foreground: string): string {
   const style = `%3Cstyle type='text/css'%3E .st0%7Bfill:${encodeURIComponent(
     foreground

@@ -4,6 +4,7 @@
 @import "scss/util";
 
 .navbar {
+    height: 56px;
     padding: {
         top: 0 !important;
         bottom: 0 !important;
@@ -46,6 +47,11 @@
         &.brand {
             padding-left: 0.25rem !important;
         }
+
+        @include respond-below(md) {
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+        }
     }
 
     .header-children {
@@ -53,10 +59,6 @@
         flex-direction: row;
         align-items: center;
         justify-content: flex-end;
-
-        @include respond-below(sm) {
-            flex-direction: row-reverse;
-        }
     }
 
     .container-fluid {

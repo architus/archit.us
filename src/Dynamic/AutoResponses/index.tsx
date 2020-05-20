@@ -16,13 +16,11 @@ import {
 import { User, Snowflake, HoarFrost } from "Utility/types";
 import { useCurrentUser } from "Store/actions";
 import { Option, None, Some, Unwrap } from "Utility/option";
-import { Container, Badge } from "react-bootstrap";
 import { ScrollContext } from "Dynamic/AppRoot/context";
 import { Tooltip, Icon, Switch, HelpTooltip } from "Components";
 import { AnyIconName } from "Components/Icon/loader";
 import { getAvatarUrl } from "Components/UserDisplay";
-import { opacity } from "Theme/getters";
-import { color } from "Theme/tokens";
+import { opacity, color } from "Theme";
 import {
   TriggerFormatter,
   ResponseFormatter,
@@ -458,7 +456,7 @@ const Styled = {
 
       & > span:nth-of-type(2) {
         opacity: 0.5;
-        margin-right: femto;
+        margin-right: atto;
       }
 
       &::after {
@@ -592,7 +590,7 @@ const Styled = {
       border-color: contrast_border;
       box-shadow: 2;
       color: text;
-      padding: pico 0;
+      padding: femto 0;
       user-select: none;
     }
 

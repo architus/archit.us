@@ -12,21 +12,21 @@ import {
 import "./style.scss";
 import { RawDimension, StyleObject, Nil } from "Utility/types";
 
-type BasePlaceholderProps = {
+type BaseSkeletonProps = {
   width: RawDimension;
   height?: RawDimension;
   light?: boolean;
 };
 
-type PlaceholderProps = {
+type SkeletonProps = {
   circle?: boolean;
   block?: boolean;
   className?: string;
   style?: StyleObject;
-} & BasePlaceholderProps &
+} & BaseSkeletonProps &
   Partial<React.HTMLAttributes<HTMLSpanElement>>;
 
-const Placeholder: React.FC<PlaceholderProps> = ({
+const Skeleton: React.FC<SkeletonProps> = ({
   width,
   circle = false,
   block = false,
@@ -38,7 +38,7 @@ const Placeholder: React.FC<PlaceholderProps> = ({
 }) => (
   <span
     className={classNames(
-      "placeholder",
+      "skeleton",
       { inline: !block, light, circle },
       className
     )}
@@ -57,7 +57,7 @@ const Placeholder: React.FC<PlaceholderProps> = ({
 // ? Sub-components
 // ? ==============
 
-function shouldUsePlaceholder(
+function shouldUseSkeleton(
   control: string | Nil,
   displayBlank: boolean
 ): boolean {
@@ -95,7 +95,7 @@ type TextProps = {
 } & ContentRestProps;
 
 /**
- * Single-line placeholder
+ * Single-line skeleton
  */
 const Text: React.FC<TextProps> = ({
   text,
@@ -107,8 +107,8 @@ const Text: React.FC<TextProps> = ({
   displayBlank = false,
   ...rest
 }) =>
-  shouldUsePlaceholder(text, displayBlank) ? (
-    <Placeholder
+  shouldUseSkeleton(text, displayBlank) ? (
+    <Skeleton
       style={style}
       height={multiplyDimension(addMissingUnit(size), 1.1)}
       width={width}
@@ -136,10 +136,10 @@ type CustomProps = {
   circle?: boolean;
   block?: boolean;
   displayBlank?: boolean;
-} & BasePlaceholderProps &
+} & BaseSkeletonProps &
   ContentRestProps;
 
-// Custom placeholder container controlled by the 'value' prop
+// Custom skeleton container controlled by the 'value' prop
 const Custom: React.FC<CustomProps> = ({
   value,
   width,
@@ -151,8 +151,8 @@ const Custom: React.FC<CustomProps> = ({
   displayBlank = false,
   ...rest
 }) =>
-  shouldUsePlaceholder(value, displayBlank) ? (
-    <Placeholder
+  shouldUseSkeleton(value, displayBlank) ? (
+    <Skeleton
       circle={circle}
       block={block}
       light={light}
@@ -180,7 +180,7 @@ type MultilineProps = {
 } & ContentRestProps;
 
 /**
- * Placeholder text that spans multiple lines
+ * Skeleton text that spans multiple lines
  */
 const Multiline: React.FC<MultilineProps> = ({
   text,
@@ -193,7 +193,7 @@ const Multiline: React.FC<MultilineProps> = ({
   displayBlank = false,
   ...rest
 }) => {
-  if (shouldUsePlaceholder(text, displayBlank)) {
+  if (shouldUseSkeleton(text, displayBlank)) {
     const lines = Math.floor(amount / lineAmount);
     const remainder = Math.floor(amount % lineAmount);
     const lineElements: React.ReactNode[] = [];
@@ -205,7 +205,7 @@ const Multiline: React.FC<MultilineProps> = ({
       .getOrElse("1.32em");
     for (let i = 0; i < lines; ++i) {
       lineElements.push(
-        <Placeholder
+        <Skeleton
           style={{ ...style, marginBottom: lineSpacing }}
           height={lineHeight}
           width="100%"
@@ -218,7 +218,7 @@ const Multiline: React.FC<MultilineProps> = ({
     }
     if (remainder > 0) {
       lineElements.push(
-        <Placeholder
+        <Skeleton
           style={{ ...style, marginBottom: lineSpacing }}
           height={lineHeight}
           width={`${remainder}%`}
@@ -249,13 +249,13 @@ const Multiline: React.FC<MultilineProps> = ({
 };
 
 /**
- * Placeholder that automatically switches colors according to the theme
+ * Skeleton that automatically switches colors according to the theme
  */
-const Auto: React.FC<PlaceholderProps> = ({ className = "", ...rest }) => (
-  <Placeholder
-    className={classNames("placeholder-auto", className)}
+const Auto: React.FC<SkeletonProps> = ({ className = "", ...rest }) => (
+  <Skeleton
+    className={classNames("skeleton-auto", className)}
     {...rest}
   />
 );
 
-export default attach(Placeholder, { Text, Custom, Multiline, Auto });
+export default attach(Skeleton, { Text, Custom, Multiline, Auto });

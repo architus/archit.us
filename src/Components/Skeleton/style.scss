@@ -7,7 +7,7 @@ $dark-highlight-color: rgba($-dark, 0.2);
 $light-color: rgba($-light, 0.15);
 $light-highlight-color: rgba($-light, 0.3);
 
-.placeholder {
+.skeleton {
     display: block;
     animation: shimmer 3s linear infinite;
     background-image: linear-gradient(
@@ -35,7 +35,7 @@ $light-highlight-color: rgba($-light, 0.3);
         );
     }
 
-    &.placeholder-auto {
+    &.skeleton-auto {
         @include theme-property(
             background-image,
             linear-gradient(

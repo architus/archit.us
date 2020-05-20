@@ -1,14 +1,21 @@
 import React, { useCallback, useEffect } from "react";
 import { Head } from "react-static";
-import tinycolor from "tinycolor2";
-import styled, { css, useColorMode, useTheme } from "@xstyled/emotion";
-import { ColorMode } from "Theme/tokens";
+import styled, { css, useColorMode } from "@xstyled/emotion";
+import {
+  Color,
+  ColorMode,
+  useThemeColor,
+  safariTabColor,
+  applicationThemeColor,
+  windowsTileColor,
+} from "Theme";
 import useDarkMode from "use-dark-mode";
-import { isNil, isDefined } from "Utility";
+import { isNil } from "Utility";
 import { StyleObject } from "Utility/types";
-import { siteName, description } from "global.json";
-import { Switch, Icon, Header } from "Components";
-import { Option, Some, None } from "Utility/option";
+import Header from "Components/Header";
+import Switch from "Components/Switch";
+import Icon from "Components/Icon";
+import { siteName, description } from "meta.json";
 
 const Styled = {
   Layout: styled.div<{ noHeader: boolean }>`
@@ -31,8 +38,6 @@ const Styled = {
   `,
 };
 
-const CSS_VARIABLE_REGEX = /^var\(--[a-zA-Z0-9-]+,\s*(.*)\s*\)$/g;
-
 type LayoutProps = {
   title?: string;
   children?: React.ReactNode;
@@ -43,6 +48,9 @@ type LayoutProps = {
   sticky?: boolean;
 } & Partial<React.ComponentProps<typeof Header>>;
 
+/**
+ * Root layout component, handling site title and rendering the header/dark mode switch
+ */
 const Layout: React.FC<LayoutProps> = ({
   title = null,
   children = null,
@@ -56,7 +64,7 @@ const Layout: React.FC<LayoutProps> = ({
   const builtTitle = isNil(title) ? siteName : `${siteName} | ${title}`;
 
   // Dark mode control hooks
-  const { value, toggle } = useDarkMode(true);
+  const { value, toggle } = useDarkMode(false);
   const [colorMode, setColorMode] = useColorMode();
   const toggleWrapper = useCallback(
     (checked: boolean) => {
@@ -75,14 +83,9 @@ const Layout: React.FC<LayoutProps> = ({
     }
   });
 
-  const theme = useTheme();
-  const { primary, light } = theme.colors;
-  const primaryColor = tinycolor(
-    parseThemeColor(primary).getOrElse("aliceblue")
-  );
-  const lightHex = tinycolor(
-    parseThemeColor(light).getOrElse("white")
-  ).toString("hex");
+  // Get the string representations of the current colors
+  const primaryColor = Color(useThemeColor("primary")[0]);
+  const lightHex = Color(useThemeColor("light")[0]).toString("hex");
 
   return (
     <Styled.Layout noHeader={noHeader} className={className} style={style}>
@@ -91,9 +94,9 @@ const Layout: React.FC<LayoutProps> = ({
           {headerChildren}
           {typeof window === "undefined" ? null : (
             <Switch
+              boxProps={{ mr: { xs: "nano", md: "micro" } }}
               onChange={toggleWrapper}
               checked={value}
-              className="ml-3 ml-md-0 mr-md-3"
               aria-label="Dark mode switch"
               uncheckedIcon={<Icon name="sun" color="dark" />}
               checkedIcon={<Icon name="moon" color="light" />}
@@ -118,6 +121,9 @@ const Layout: React.FC<LayoutProps> = ({
 
 export default Layout;
 
+/**
+ * SEO component that adds all relevant meta tags to the page via `react-helmet`
+ */
 export const SEO: React.FC = () => (
   <Head>
     {/* Web crawler tags */}
@@ -132,9 +138,13 @@ export const SEO: React.FC = () => (
     <meta name="twitter:card" content="summary" />
     <meta name="description" content={description} />
     {/* Misc. display meta */}
-    <meta name="theme-color" content="#6496C4" />
-    <link rel="mask-icon" color="#6192be" href="/safari-pinned-tab.svg" />
-    <meta name="msapplication-TileColor" content="#ffc40d" />
+    <meta name="theme-color" content={applicationThemeColor} />
+    <link
+      rel="mask-icon"
+      color={safariTabColor}
+      href="/safari-pinned-tab.svg"
+    />
+    <meta name="msapplication-TileColor" content={windowsTileColor} />
     <meta name="msapplication-config" content="/browserconfig.xml" />
     {/* Favicons */}
     <link
@@ -158,12 +168,3 @@ export const SEO: React.FC = () => (
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
   </Head>
 );
-
-function parseThemeColor(themeColor: string): Option<string> {
-  const matches = CSS_VARIABLE_REGEX.exec(themeColor);
-  if (isDefined(matches)) {
-    return Some(matches[0]);
-  }
-
-  return None;
-}

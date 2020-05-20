@@ -16,6 +16,7 @@ import { Container, Button, Badge } from "react-bootstrap";
 import {
   Icon,
   Logo,
+  Card,
   Window,
   Footer,
   Layout,
@@ -23,17 +24,10 @@ import {
   CubeBackground,
 } from "Components";
 import { Link } from "Components/Router";
-import styled, {
-  Box,
-  down,
-  css,
-  useColorMode,
-  up,
-  BoxProps,
-} from "@xstyled/emotion";
+import styled, { Box, down, css, up, BoxProps } from "@xstyled/emotion";
 import { CustomEmojiExtension } from "Components/DiscordMock/CustomEmojiExtension";
 import { Extension } from "Components/DiscordMock/util";
-import { Space, ColorMode, color, opacity } from "Theme";
+import { Space, ColorMode, mode, color, opacity } from "Theme";
 import LogsSvg from "./svg/logs.svg";
 import MusicSvg from "./svg/music.svg";
 import StatisticsSvg from "./svg/statistics.svg";
@@ -52,34 +46,6 @@ const Content = styled.divBox`
     // Specific values to match font
     padding: 0.1em 0.35em 0.05em;
     font-size: 87.5%;
-  }
-`;
-
-const Card = styled.asideBox`
-  position: relative;
-  color: text;
-  padding: milli;
-  box-shadow: 1;
-  border-radius: 6px;
-  border: 1px solid ${color("contrast_border")};
-
-  &:before {
-    content: " ";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: b_600;
-    opacity: 0.4;
-    border-radius: 6px;
-  }
-
-  backdrop-filter: blur(2px);
-
-  & > * {
-    position: relative;
-    z-index: 1;
   }
 `;
 
@@ -148,7 +114,13 @@ const Styled = {
     }
   `,
   RaisedWindow: styled(Window)`
-    box-shadow: 1;
+    box-shadow: 3;
+    ${mode(
+      ColorMode.Dark,
+      css`
+        box-shadow: 2;
+      `
+    )};
   `,
   TryCta: styled.pBox`
     color: text_strong;
@@ -189,7 +161,7 @@ const Styled = {
       color: text_strong;
       font-size: 20px;
       font-weight: 400;
-      margin-bottom: pico;
+      margin-bottom: femto;
     }
 
     & p {
@@ -209,6 +181,15 @@ const Styled = {
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center;
+
+    // Lighten/desaturate the icon in dark mode to make it appear correctly
+    ${mode(
+      ColorMode.Dark,
+      css`
+        filter: brightness(2) saturate(0%);
+        opacity: 0.7;
+      `
+    )};
   `,
   BottomCta: styled(CubeBackground)`
     // Add inner shadows to the top and bottom
@@ -233,13 +214,13 @@ const Styled = {
       margin-bottom: 0;
 
       // Move hr on large screen sizes so it aligns with the shift on the card above
-      ${(props): string =>
+      ${(props): string[] =>
         up(
           "lg",
           css`
             margin-top: -${props.theme.space.milli};
           `
-        )}
+        )(props)}
     }
   `,
   BottomCtaCard: styled(Card)`
@@ -263,7 +244,7 @@ const Styled = {
       color: text_fade;
     }
 
-    ${(props): string =>
+    ${(props): string[] =>
       up(
         "lg",
         css`
@@ -277,7 +258,7 @@ const Styled = {
             opacity: 0.8;
           }
         `
-      )}
+      )(props)}
 
     // Add margins on the bottom on small screen sizes
     ${down(
@@ -346,7 +327,7 @@ const Index: React.FC<{}> = () => {
                   // card
                   mb={{ xs: "milli", lg: "zero" }}
                 >
-                  <Logo.LogoType
+                  <Logo.Logotype
                     height={{ xs: "milli", lg: "centi" }}
                     mb={{ xs: "micro", lg: "milli" }}
                     color="text"
@@ -623,14 +604,14 @@ const Feature: React.FC<FeatureProps> = ({
 }) => (
   <>
     {/* Use the -margin/padding pattern to add gutters to the columns */}
-    <SectionBox {...boxProps} px={{ xs: "zero", lg: "micro" }}>
+    <SectionBox {...boxProps} px={{ xs: "zero", lg: "milli" }}>
       <Box
         row
         mx={{ xs: "zero", lg: "-milli" as Space }}
         flexDirection={right ? "row-reverse" : "row"}
       >
         <Box
-          px={{ xs: "micro", lg: "milli" }}
+          px={{ xs: "micro", lg: "micro" }}
           col={{ xs: 1, lg: 1 / 2 }}
           // Add bottom margin on small screen sizes to add spaces between collapsed
           // columns
@@ -639,10 +620,10 @@ const Feature: React.FC<FeatureProps> = ({
           {children}
         </Box>
         <Styled.FeatureContent
-          px={{ xs: "micro", lg: "milli" }}
+          px={{ xs: "micro", lg: "micro" }}
           col={{ xs: 1, lg: 1 / 2 }}
         >
-          <Styled.SmallCaps fontSize="0.9rem" color="text_fade" mb="pico">
+          <Styled.SmallCaps fontSize="0.9rem" color="text_fade" mb="femto">
             {lead}
           </Styled.SmallCaps>
           <h3>{header}</h3>
@@ -667,24 +648,19 @@ const MinorFeature: React.FC<MinorFeatureProps> = ({
   text,
   icon,
   ...boxProps
-}) => {
-  const isDark = useColorMode()[0] === ColorMode.Dark;
-  return (
-    <Styled.MinorFeature {...boxProps} px="micro" mt="milli" mb="micro">
-      {icon && (
-        <Styled.MinorFeatureIcon
-          style={{
-            backgroundImage: `url("${icon}")`,
-            // Lighten/desaturate the icon in dark mode to make it appear correctly
-            filter: isDark ? "brightness(1.7) saturate(20%)" : undefined,
-          }}
-        />
-      )}
-      <h3>{header}</h3>
-      <div>{text}</div>
-    </Styled.MinorFeature>
-  );
-};
+}) => (
+  <Styled.MinorFeature {...boxProps} px="micro" mt="milli" mb="micro">
+    {icon && (
+      <Styled.MinorFeatureIcon
+        style={{
+          backgroundImage: `url("${icon}")`,
+        }}
+      />
+    )}
+    <h3>{header}</h3>
+    <div>{text}</div>
+  </Styled.MinorFeature>
+);
 
 /**
  * Bottom call-to-action button placed inside of a card

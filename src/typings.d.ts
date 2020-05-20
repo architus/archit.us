@@ -25,19 +25,27 @@ declare module "@xstyled/emotion" {
     StyledComponent,
     CreateStyledComponentBase,
   } from "@emotion/styled";
-  import { Theme, Space, Color, WithBreakpointArgs } from "Theme/tokens";
+  import { Theme, Space, ColorKey, WithBreakpointArgs } from "Theme";
   import { StyleObject } from "Utility/types";
 
   export * from "emotion";
 
   export const useTheme: () => Theme;
-  export const up: (breakpoint: string, css: string) => string;
-  export const down: (breakpoint: string, css: string) => string;
+  export const useDown: (breakpoint: Breakpoint) => boolean;
+  export const useUp: (breakpoint: Breakpoint) => boolean;
+  export const up: (
+    breakpoint: string,
+    css: string
+  ) => (props: unknown) => string[];
+  export const down: (
+    breakpoint: string,
+    css: string
+  ) => (props: unknown) => string[];
   export const ThemeProvider: React.ComponentType<{ theme: object }>;
   export const ColorModeProvider: React.ComponentType<{}>;
   export const useColorMode: () => [string, (newMode: str) => void];
 
-  interface BoxPropsBase {
+  export interface SpaceProps {
     // Spacing props
     margin?: Space;
     m?: Space;
@@ -63,7 +71,9 @@ declare module "@xstyled/emotion" {
     pl?: Space;
     px?: Space;
     py?: Space;
-    space?: Space;
+  }
+
+  type BoxPropsBase = SpaceProps & {
     display?:
       | "block"
       | "inline-block"
@@ -122,7 +132,7 @@ declare module "@xstyled/emotion" {
     boxShadow?: number | string;
     textShadow?: number | string;
     background?: number | string;
-    backgroundColor?: Color;
+    backgroundColor?: ColorKey;
     backgroundImage?: number | string;
     backgroundSize?: number | string;
     backgroundPosition?: number | string;
@@ -132,14 +142,14 @@ declare module "@xstyled/emotion" {
     transition?: number | string;
     border?: number | string;
     borderTop?: number | string;
-    borderTopColor?: Color;
+    borderTopColor?: ColorKey;
     borderRight?: number | string;
-    borderRightColor?: Color;
+    borderRightColor?: ColorKey;
     borderBottom?: number | string;
-    borderBottomColor?: Color;
+    borderBottomColor?: ColorKey;
     borderLeft?: number | string;
-    borderLeftColor?: Color;
-    borderColor?: Color;
+    borderLeftColor?: ColorKey;
+    borderColor?: ColorKey;
     borderWidth?: number | string;
     borderStyle?: number | string;
     borderRadius?: number | string;
@@ -148,11 +158,11 @@ declare module "@xstyled/emotion" {
     lineHeight?: number | string;
     fontWeight?: number | string;
     letterSpacing?: number | string;
-    color?: Color;
+    color?: ColorKey;
     textTransform?: number | string;
     row?: boolean;
     col?: number | string;
-  }
+  };
 
   type BoxPropsInner = WithBreakpointArgs<BoxPropsBase> & {
     children?: React.ReactNode;

@@ -1,5 +1,5 @@
 import React from "react";
-import Card from "./index";
+import Card from "./Card";
 import { boolean, text } from "@storybook/addon-knobs";
 import MaxWidthDecorator from "MaxWidthDecorator";
 

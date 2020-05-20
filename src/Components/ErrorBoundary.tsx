@@ -11,6 +11,10 @@ type ErrorBoundaryState = {
   hasError: boolean;
 };
 
+/**
+ * Wraps errors in the component tree, hiding their effects so the rest of the application
+ * can continue running
+ */
 class ErrorBoundary extends React.Component<
   ErrorBoundaryProps,
   ErrorBoundaryState

@@ -1,7 +1,7 @@
 import React from "react";
 import classNames from "classnames";
 import ReactionList from "Components/DiscordMock/ReactionList";
-import Placeholder from "Components/Placeholder";
+import Skeleton from "Components/Skeleton";
 import { MockReaction, StyleObject } from "Utility/types";
 import "./style.scss";
 
@@ -12,7 +12,7 @@ type MessageProps = {
   edited: boolean;
   reactions: MockReaction[];
   mentionsUser: boolean;
-  placeholderAmount?: number;
+  skeletonAmount?: number;
   style?: StyleObject;
   className?: string;
 };
@@ -24,7 +24,7 @@ const Message: React.FC<MessageProps> = ({
   mentionsUser,
   onReact,
   onUnreact,
-  placeholderAmount = 80,
+  skeletonAmount = 80,
   style,
   className,
 }) => (
@@ -34,10 +34,10 @@ const Message: React.FC<MessageProps> = ({
         "mentions-user": mentionsUser,
       })}
     >
-      <Placeholder.Multiline
+      <Skeleton.Multiline
         text={content}
         displayBlank={true}
-        amount={placeholderAmount}
+        amount={skeletonAmount}
         size="0.9em"
         light
       >
@@ -47,7 +47,7 @@ const Message: React.FC<MessageProps> = ({
           }}
         />
         {edited && <span className="edited">(edited)</span>}
-      </Placeholder.Multiline>
+      </Skeleton.Multiline>
     </div>
     <ReactionList
       reactions={reactions}

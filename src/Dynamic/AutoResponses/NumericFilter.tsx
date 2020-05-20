@@ -60,7 +60,7 @@ export function NumericFilter<R, SR>({
       <Styled.HelpTooltip
         text={tooltipText}
         id="numeric-filter-help-tooltip"
-        marginLeft="pico"
+        marginLeft="femto"
         fontSize="1.4em"
       />
     </div>

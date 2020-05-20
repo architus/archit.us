@@ -1,38 +1,56 @@
-import tinycolor from "tinycolor2";
 import { th, ThemeGetterFunc, breakpoints } from "@xstyled/system";
 import { isNil } from "Utility";
 import { css } from "@xstyled/emotion";
-import { WithBreakpointArgs } from "./tokens";
+import { Color } from "./color";
+import { WithBreakpointArgs, ColorMode, ColorKey } from "./tokens";
 
-export function opacity(key: string, amount: number): ThemeGetterFunc {
+/**
+ * Adds opacity to a color from the theme.
+ *
+ * **Note**: this adjustment is only possible for **static** theme colors (ones that
+ * don't change depending on the current color mode (i.e. light/dark theme)). To create
+ * custom colors dependent on the current color theme, see `useThemeColor`
+ * @param key - Color key from the theme
+ * @param amount - Amount of opacity to have in the final color (alpha level)
+ */
+export function opacity(key: ColorKey, amount: number): ThemeGetterFunc {
   const inner = th.color(key);
   return (props: unknown): string => {
     const resolvedColor = inner(props);
-    const color = tinycolor(resolvedColor);
+    const color = Color(resolvedColor);
     color.setAlpha(color.getAlpha() * amount);
     return color.toString();
   };
 }
 
-export function blendColors(
-  keyA: string,
-  keyB: string,
-  mu: number
-): (props: unknown) => tinycolor.Instance {
-  const aGetter = th.color(keyA);
-  const bGetter = th.color(keyB);
-  return (props: unknown): tinycolor.Instance => {
-    const colorA = tinycolor(aGetter(props)).toRgb();
-    const colorB = tinycolor(bGetter(props)).toRgb();
-    const oneMinusMu = 1 - mu;
-    const r = colorA.r * mu + colorB.r * oneMinusMu;
-    const g = colorA.g * mu + colorB.g * oneMinusMu;
-    const b = colorA.b * mu + colorB.b * oneMinusMu;
-    const a = colorA.a * mu + colorB.a * oneMinusMu;
-    return tinycolor({ r, g, b, a });
-  };
-}
-
+/**
+ * Spreads an optionally responsive prop (`WithBreakpointArgs<T>`) to a call to
+ * Xstyled's `breakpoints` function, allowing custom props to have box-like optionally
+ * responsive behavior.
+ *
+ * @example
+ * ```tsx
+ * const StyledBox = styled.divBox`
+ *   & > span {
+ *     ${renderResponsiveProps("innerOpacity", "opacity")};
+ *   }
+ * `
+ *
+ * type FancyBoxProps = {
+ *   // Standard styled system prop
+ *   opacity?: number | BreakpointObject<number>;
+ *   // Custom prop
+ *   innerOpacity?: number | BreakpointObject<number>;
+ * }
+ *
+ * const FancyBox: React.FC<BoxLikeProps> = ({
+ *   opacity = 1.0,
+ *   innerOpacity = 0.5,
+ * }) => <StyledBox opacity={opacity} innerOpacity={innerOpacity} />;
+ * ```
+ * @param sourceProp - Source prop key (to be extracted)
+ * @param cssAttribute - Target css attribute to render to
+ */
 export function renderResponsiveProp<P extends string, C extends string>(
   sourceProp: P,
   cssAttribute: C
@@ -55,4 +73,21 @@ export function renderResponsiveProp<P extends string, C extends string>(
 
     return `${cssAttribute}: ${String(sourcePropValue)}`;
   };
+}
+
+/**
+ * Scopes a block of attributes/selectors to be active only during a given color mode.
+ * Useful for manual adjustments based on dark/light color modes in the app.
+ *
+ * **Note**: if the adjustment is related to color and could be used in more than one
+ * place, consider adding the colors to `theme.colors` instead.
+ * @param colorMode - Color mode for the inner styles to be active in
+ * @param innerCss - Inner css (requires `css` wrapper and to use complete attributes)
+ */
+export function mode(
+  colorMode: ColorMode,
+  innerCss: string
+): (props: unknown) => string[] {
+  const bodyClass = `xstyled-color-mode-${colorMode}`;
+  return (): string[] => [`body.${bodyClass} & {`, innerCss, `}`];
 }

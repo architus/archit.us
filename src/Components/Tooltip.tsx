@@ -10,14 +10,14 @@ import {
 import { UsePopperOptions } from "react-overlays/esm/usePopper";
 import { isDefined, isNil } from "Utility";
 import { StyleObject } from "Utility/types";
-import { Space } from "Theme/tokens";
+import { Space } from "Theme";
 
 const Styled = {
   Tooltip: styled<typeof BootstrapTooltip, { id: string }>(BootstrapTooltip)`
     z-index: 1090;
 
     .tooltip-inner {
-      padding: femto pico;
+      padding: atto femto;
       max-width: none;
       background-color: tooltip;
       border-radius: 4px;

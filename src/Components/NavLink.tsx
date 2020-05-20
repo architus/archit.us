@@ -1,8 +1,8 @@
 import React from "react";
-import { AutoLink } from "Components";
+import AutoLink from "Components/AutoLink";
 import classNames from "classnames";
 
-// this link will be active when itself or deeper routes are current
+// This link will be active when itself or deeper routes are current
 export const isPartiallyActive = ({
   baseClassName,
   activeClassName,
@@ -17,6 +17,10 @@ export const isPartiallyActive = ({
 
 type NavLinkProps = React.ComponentProps<typeof AutoLink>;
 
+/**
+ * Router link that is used at the top of the page, which automatically changes class on
+ * active state
+ */
 const NavLink: React.FC<NavLinkProps> = ({ to, children, ...rest }) => {
   return (
     <li className="nav-item">

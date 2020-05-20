@@ -15,7 +15,7 @@ import { TransformedAutoResponse } from "./types";
 
 const Styled = {
   Name: styled.span`
-    margin-left: pico;
+    margin-left: femto;
     color: text;
     font-weight: 600;
   `,

@@ -1,9 +1,9 @@
 import React from "react";
-import styled, { Box } from "@xstyled/emotion";
-import { isDefined } from "Utility";
+import styled, { Box, BoxProps } from "@xstyled/emotion";
 import ReactSwitch from "react-switch";
-import { lightColor, primaryColor } from "global.json";
+import { isDefined } from "Utility";
 import { StyleObject } from "Utility/types";
+import { Color, useThemeColor } from "Theme";
 
 const Styled = {
   Switch: styled(ReactSwitch)`
@@ -32,36 +32,49 @@ type SwitchProps = {
   // Common style props
   className?: string;
   style?: StyleObject;
+  boxProps?: BoxProps;
 } & Partial<React.ComponentProps<typeof ReactSwitch>>;
 
 const Switch: React.FC<SwitchProps> = ({
   onChange,
   checked,
   label,
+  boxProps,
+  // Style props
   className,
   style,
   ...rest
-}) => (
-  <Box className={className} style={style} lineHeight={0}>
-    <Styled.Switch
-      activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-      boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-      offHandleColor={lightColor}
-      onHandleColor={lightColor}
-      onColor={primaryColor}
-      uncheckedIcon={false}
-      checkedIcon={false}
-      aria-label={isDefined(label) ? label.toString() : undefined}
-      height={24}
-      width={48}
-      onChange={onChange}
-      checked={checked}
-      {...rest}
-    />
-    {isDefined(label) ? (
-      <Styled.SwitchLabel className="label">{label}</Styled.SwitchLabel>
-    ) : null}
-  </Box>
-);
+}) => {
+  // react-switch expects colors to be hex strings
+  const primaryColor = Color(useThemeColor("primary")[0]).toString("hex");
+  const lightColor = Color(useThemeColor("light")[0]).toString("hex");
+  return (
+    <Box
+      className={className}
+      style={style}
+      lineHeight={0}
+      {...(boxProps ?? {})}
+    >
+      <Styled.Switch
+        activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+        boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+        offHandleColor={lightColor}
+        onHandleColor={lightColor}
+        onColor={primaryColor}
+        uncheckedIcon={false}
+        checkedIcon={false}
+        aria-label={isDefined(label) ? label.toString() : undefined}
+        height={24}
+        width={48}
+        onChange={onChange}
+        checked={checked}
+        {...rest}
+      />
+      {isDefined(label) ? (
+        <Styled.SwitchLabel className="label">{label}</Styled.SwitchLabel>
+      ) : null}
+    </Box>
+  );
+};
 
 export default Switch;

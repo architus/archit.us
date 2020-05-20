@@ -4,7 +4,7 @@ import { splitPath, isDefined } from "Utility";
 import { Snowflake, isSnowflake, Guild } from "Utility/types";
 import { usePool } from "Store/slices/pools";
 
-import Placeholder from "Components/Placeholder";
+import Skeleton from "Components/Skeleton";
 import GuildIcon from "Components/GuildIcon";
 import Tooltip from "Components/Tooltip";
 import Icon from "Components/Icon";
@@ -13,7 +13,7 @@ import "./style.scss";
 import { useLocation } from "react-static";
 import { Option, None, Some } from "Utility/option";
 
-const PLACEHOLDER_COUNT = 5;
+const SKELETON_COUNT = 5;
 const ICON_WIDTH = 52;
 
 type GuildListProps = {
@@ -77,8 +77,8 @@ const GuildList: React.FC<GuildListProps> = ({ onClickGuild, onClickAdd }) => {
           </Tooltip>
         </>
       ) : (
-        [...Array(PLACEHOLDER_COUNT)].map((_e, i) => (
-          <Placeholder.Auto circle width={`${ICON_WIDTH}px`} key={i} />
+        [...Array(SKELETON_COUNT)].map((_e, i) => (
+          <Skeleton.Auto circle width={`${ICON_WIDTH}px`} key={i} />
         ))
       )}
     </div>

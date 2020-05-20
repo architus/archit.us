@@ -5,7 +5,7 @@ import { OverlayProps } from "react-overlays/esm/Overlay";
 import Icon from "Components/Icon";
 import Tooltip, { TooltipMode } from "Components/Tooltip";
 import { StyleObject, WithBoxProps } from "Utility/types";
-import { Space } from "Theme/tokens";
+import { Space } from "Theme";
 
 const Styled = {
   HelpIcon: styled.spanBox`

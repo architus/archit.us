@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import tinycolor from "tinycolor2";
 
 /**
  * Creates named properties on an array to add string aliases to array values
@@ -60,9 +59,10 @@ const theme = {
     ]
   ),
   sizes: withAliases(
-    [0, 2, 5, 13, 21, 34, 55, 89, 144, 233, 377, 610],
+    [0, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610],
     [
       "zero",
+      "atto",
       "femto",
       "pico",
       "nano",
@@ -83,6 +83,14 @@ const theme = {
     3: `0 14px 28px var(--xstyled-colors-shadow_heavy), 0 10px 10px var(--xstyled-colors-shadow_medium)`,
     inner: `inset 0 0 16px var(--xstyled-colors-shadow_heavy)`,
   },
+  breakpoints: {
+    xs: 0,
+    vs: 400,
+    sm: 576,
+    md: 768,
+    lg: 992,
+    xl: 1200,
+  },
   colors: {
     // Global colors
     tertiary: "#453e3e",
@@ -101,7 +109,7 @@ const theme = {
     b_000: "hsl(220, 19%, 2%)",
     b_100: "hsl(220, 17%, 5%)",
     b_200: "hsl(220, 18%, 10%)",
-    b_300: "hsl(220, 13%, 13%)",
+    b_300: "hsl(220, 15%, 13%)",
     b_400: "hsl(220, 13%, 18%)",
     b_500: "hsl(220, 13%, 22%)",
     b_600: "hsl(220, 13%, 28%)",
@@ -122,8 +130,8 @@ const theme = {
     input_focus_border: "transparent",
     // Same as `dark.b_100`
     tooltip: "rgba(11, 12, 15, 0.9)",
-    // Same as `dark.b_200`
-    footer: "hsl(220, 18%, 10%)",
+    // Same as `dark.b_400`
+    footer: "hsl(220, 13%, 18%)",
 
     modes: {
       [ColorMode.Light]: {
@@ -162,28 +170,41 @@ const theme = {
   },
 };
 
+// Additional colors used in SEO:
+export const applicationThemeColor = "#6496C4";
+export const safariTabColor = "#6192be";
+export const windowsTileColor = "#ffc40d";
+
 export function color(colorKey: string): string {
   return `var(--xstyled-colors-${colorKey})`;
 }
 
 export type Theme = typeof theme;
 export type Space = number | Exclude<keyof Theme["space"], keyof never[]>;
-export type Color = Exclude<keyof Theme["colors"], "modes">;
+export type ColorKey = Exclude<keyof Theme["colors"], "modes">;
 export default theme;
 
-export interface Breakpoints {
-  xs: void;
-  sm: void;
-  md: void;
-  lg: void;
-  xl: void;
+export enum Breakpoint {
+  // Extra small
+  XS = "xs",
+  // Very small
+  VS = "vs",
+  // Small
+  SM = "sm",
+  // Medium
+  MD = "md",
+  // Large
+  LG = "lg",
+  // Extra large
+  XL = "xl",
 }
 
 export type BreakpointObject<ArgType> = {
-  [Key in keyof Breakpoints]?: ArgType;
+  [Key in Breakpoint]?: ArgType;
 };
 
-/* Augments a type to be Type | BreakpointObject<Type>,
+/**
+ * Augments a type to be Type | BreakpointObject<Type>,
  * in other words, allow a property to be `1` or `{ xs: 1, sm: 2 }`
  */
 export type WithBreakpointArgs<Props> = {
