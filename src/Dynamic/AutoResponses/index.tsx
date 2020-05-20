@@ -2,6 +2,7 @@ import React, { useContext, useMemo, MutableRefObject } from "react";
 import styled, { css, up, Box } from "@xstyled/emotion";
 import DataGrid, { Column, SortDirection } from "react-data-grid";
 import AutoSizer from "react-virtualized-auto-sizer";
+import { Badge, Container } from "react-bootstrap";
 import { ContextMenu, MenuItem, connectMenu } from "react-contextmenu";
 import { createPortal } from "react-dom";
 import { AppPageProps } from "Dynamic/AppRoot/types";
@@ -1088,7 +1089,19 @@ function mockData(
   return responses;
 }
 
-const AutoResponsesProvider: React.FC<AppPageProps> = (pageProps) => {
+const AutoResponsesProvider: React.FC<AppPageProps> = () => {
+  return (
+    <Container className="py-5">
+      <h2>
+        Auto Responses <Badge variant="primary">Coming Soon</Badge>
+      </h2>
+    </Container>
+  );
+};
+
+const AutoResponsesProviderImplementation: React.FC<AppPageProps> = (
+  pageProps
+) => {
   const currentUser: Option<User> = useCurrentUser();
   const authors = useMemoOnce(() => mockAuthors(currentUser, 5));
   const commands = useMemoOnce(() => mockData(authors, 100));

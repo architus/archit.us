@@ -44,10 +44,6 @@
             @include highlight-shadow($-light, 0.4);
         }
 
-        &.brand {
-            padding-left: 0.25rem !important;
-        }
-
         @include respond-below(md) {
             padding-left: 0.5rem;
             padding-right: 0.5rem;
@@ -72,7 +68,7 @@
     padding: {
         top: 0 !important;
         bottom: 3px !important;
-        left: 12px !important;
+        left: 6px !important;
         right: 10px !important;
     }
     outline: none !important;

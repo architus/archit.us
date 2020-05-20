@@ -1,17 +1,14 @@
 import React, { useMemo } from "react";
 import classNames from "classnames";
-import { splitPath, isDefined } from "Utility";
+import { splitPath, isDefined, useLocation } from "Utility";
 import { Snowflake, isSnowflake, Guild } from "Utility/types";
 import { usePool } from "Store/slices/pools";
-
 import Skeleton from "Components/Skeleton";
 import GuildIcon from "Components/GuildIcon";
 import Tooltip from "Components/Tooltip";
 import Icon from "Components/Icon";
-
-import "./style.scss";
-import { useLocation } from "react-static";
 import { Option, None, Some } from "Utility/option";
+import "./style.scss";
 
 const SKELETON_COUNT = 5;
 const ICON_WIDTH = 52;
@@ -38,7 +35,7 @@ const GuildList: React.FC<GuildListProps> = ({ onClickGuild, onClickAdd }) => {
   const squareStyle = { width: `${ICON_WIDTH}px`, height: `${ICON_WIDTH}px` };
 
   // Parse active guild ID from location
-  const location = useLocation();
+  const { location } = useLocation();
   let activeGuildId: Option<Snowflake> = None;
   if (isDefined(location)) {
     const fragments = splitPath(location.pathname);

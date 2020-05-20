@@ -82,7 +82,6 @@ const Styled = {
     background-color: b_400;
     border-top: 1px solid ${color("contrast_border")};
     position: relative;
-    z-index: -2;
     overflow: hidden;
 
     // Add inner shadow to the bottom

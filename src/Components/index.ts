@@ -18,5 +18,6 @@ export { default as AddRowModal } from "./AddRowModal";
 export { default as Skeleton } from "./Skeleton";
 export { default as DiscordMock } from "./DiscordMock";
 export { default as UserDisplay } from "./UserDisplay";
+export { default as LoginButton } from "./LoginButton";
 export { default as SwipeHandler } from "./SwipeHandler";
 export { default as CubeBackground } from "./CubeBackground";

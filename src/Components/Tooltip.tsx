@@ -75,7 +75,7 @@ const TooltipController: React.FC<TooltipControllerProps> = ({
   bottom,
   hide,
   placement,
-  padding = "zero",
+  padding = "atto",
   toggle = "hover",
   delay = 0,
   maxWidth = "giga",

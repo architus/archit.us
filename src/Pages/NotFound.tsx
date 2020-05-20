@@ -6,6 +6,7 @@ const Styled = {
   Layout: styled.divBox`
     background-color: b_400;
     color: text;
+    overflow: hidden;
 
     display: flex;
     flex-direction: row;
@@ -84,7 +85,7 @@ const NotFound: React.FC<NotFoundProps> = ({ fromApp = false }) => (
           The page you&apos;re looking for doesn&apos;t exist or was removed.
         </p>
         <p>
-          If you feel this is in error, please file a new issue{" "}
+          If you feel this is an error, please file a new issue{" "}
           <AutoLink to="https://github.com/architus/archit.us/issues/new">
             on GitHub
           </AutoLink>
