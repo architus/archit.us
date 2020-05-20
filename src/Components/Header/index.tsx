@@ -1,6 +1,6 @@
 import React from "react";
 import { Navbar } from "react-bootstrap";
-import styled, { Box, useDown } from "@xstyled/emotion";
+import styled, { Box, useUp } from "@xstyled/emotion";
 import Links from "Components/Header/Links";
 import preval from "preval.macro";
 import SessionControl from "Components/Header/SessionControl";
@@ -104,7 +104,7 @@ const Brand: React.FC<BrandProps> = ({ top, className, style, ...props }) => (
   >
     <Link {...props} className="nav-link brand" to="/">
       {/* Use just the logotype on very small screen sizes */}
-      {useDown(Breakpoint.VS) ? <Logo.Symbol /> : <Logo.Combined />}
+      {useUp(Breakpoint.VS) ? <Logo.Combined /> : <Logo.Symbol />}
     </Link>
     {/* Hide the build marker in the header on small screen sizes */}
     <BuildMarker top={top} display={{ xs: "none", lg: "inline-block" }} />

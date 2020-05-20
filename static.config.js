@@ -25,6 +25,7 @@ const noFlashPath = path.resolve(__dirname, "./src/Build/no-flash.js");
 const noFlashScript = fs.readFileSync(noFlashPath);
 const config = {
   entry: path.join(__dirname, "src", "index.tsx"),
+  minLoadTime: 500,
   getRoutes: async () => {
     // Load usage count from API
     let guildCount = 0;
@@ -97,6 +98,7 @@ if (process.env.PRODUCTION_URL) {
 const args = process.argv.slice(3);
 let typeCheck = true;
 if (args.includes("--no-type-check")) {
+  console.log("Skipping type check");
   typeCheck = false;
 }
 config.plugins.push([
