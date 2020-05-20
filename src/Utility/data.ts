@@ -4,8 +4,8 @@ import { Nil, Predicate, RecordKey, Comparator } from "./types";
 import { Option, Some, None } from "./option";
 
 /**
- * Determines whether a value is defined (non-undefined or null). Returns true if the value
- * is non-nil, false otherwise
+ * Determines whether a value is defined (non-undefined or null). Returns true if the
+ * value is non-nil, false otherwise
  * @param value - The value to check for nil-ness
  */
 export function isDefined<T>(value: Nil | T): value is T {
@@ -26,8 +26,8 @@ export function isNil<T>(value: Nil | T): value is Nil {
 // ? ========================
 
 /**
- * Creates a new object with a null prototype (no attached methods). This means
- * that toString() will not work (among other methods defined in Object.prototype)!
+ * Creates a new object with a null prototype (no attached methods). This means that
+ * toString() will not work (among other methods defined in Object.prototype)!
  */
 export function createObject(): object {
   return Object.create(null) as object;
@@ -56,9 +56,9 @@ export function* entries<K extends RecordKey, V>(
  * the nextKey function wrapped around to the initial key
  * @param state - Current record set, where each value could be null
  * @param initial - The key to try first
- * @param nextKey - A function used to get the next key in a circular sequence, starting at
- *  the initial key. Note: this function MUST wrap back to the initial key eventually to
- *  prevent an infinite loop
+ * @param nextKey - A function used to get the next key in a circular sequence, starting
+ *  at the initial key. Note: this function MUST wrap back to the initial key eventually
+ *  to prevent an infinite loop
  */
 function tryTake<K extends RecordKey, V>(
   state: Record<K, V | null>,
@@ -79,14 +79,15 @@ function tryTake<K extends RecordKey, V>(
 
 /**
  * Takes a value from the current record set, starting at the initial key and proceeding
- * until either a value is found or the record set needs to be replenished from the template.
+ * until either a value is found or the record set needs to be replenished from the
+ * template.
  * @param state - The current record set, where each value could be null
  * @param key - The key to try to take from first
- * @param nextKey - A function used to get the next key in a circular sequence, starting at
- *  the initial key. Note: this function MUST wrap back to the initial key eventually to
- *  prevent an infinite loop
- * @param template - A template record set to replenish the current one when a non-null value
- *  can't be found
+ * @param nextKey - A function used to get the next key in a circular sequence, starting
+ *  at the initial key. Note: this function MUST wrap back to the initial key eventually
+ *  to prevent an infinite loop
+ * @param template - A template record set to replenish the current one when a non-null
+ *  value can't be found
  */
 export function takeOrReplenish<K extends RecordKey, V>(
   state: Record<K, V | null>,
@@ -278,8 +279,8 @@ export function binarySearch<T>(
 }
 
 /**
- * Performs a shallow equal of two javascript values, using object,
- * array, or Set shallow comparison where applicable
+ * Performs a shallow equal of two javascript values, using object, array, or Set shallow
+ * comparison where applicable
  * @param a - first element to compare
  * @param b - second object to compare
  */
@@ -302,9 +303,8 @@ export function shallowEqual<T>(a: T, b: T): boolean {
 }
 
 /**
- * Performs a doubly deep shallow equal of two javascript values, using object,
- * array, or Set shallow comparison for each element in the given objects/arrays
- * where applicable
+ * Performs a doubly deep shallow equal of two javascript values, using object, array, or
+ * Set shallow comparison for each element in the given objects/arrays where applicable
  * @param a - first element to compare
  * @param b - second object to compare
  */

@@ -1,12 +1,6 @@
-import React, { useCallback } from "react";
-import useDarkMode from "use-dark-mode";
+import React from "react";
 import classNames from "classnames";
-import tinycolor from "tinycolor2";
-import { useColorMode } from "@xstyled/emotion";
-import { ColorMode } from "Theme/tokens";
-import { Switch, Icon, Layout } from "Components";
-import "./style.scss";
-import { lightColor, primaryColor } from "global.json";
+import { Layout } from "Components";
 
 type AppLayoutProps = {
   children: React.ReactNode;
@@ -18,15 +12,6 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   className,
   ...rest
 }) => {
-  const { value, toggle } = useDarkMode(true);
-  const setColorMode = useColorMode()[1];
-  const toggleWrapper = useCallback(
-    (checked: boolean) => {
-      setColorMode(checked ? ColorMode.Dark : ColorMode.Light);
-      toggle();
-    },
-    [setColorMode, toggle]
-  );
   return (
     <Layout
       title="Web Dashboard"
@@ -34,24 +19,6 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       noContainer
       noLinks
       sticky={false}
-      headerChildren={
-        typeof window === "undefined" ? null : (
-          <Switch
-            onChange={toggleWrapper}
-            checked={value}
-            className="ml-3 ml-md-0 mr-md-3"
-            aria-label="Dark mode switch"
-            uncheckedIcon={<Icon name="sun" className="switch-icon light" />}
-            checkedIcon={<Icon name="moon" className="switch-icon dark" />}
-            offHandleColor={lightColor}
-            onHandleColor={lightColor}
-            offColor={tinycolor(primaryColor).lighten(35).toString()}
-            onColor={tinycolor(primaryColor).darken(30).toString()}
-            height={28}
-            width={56}
-          />
-        )
-      }
     >
       <div className={classNames(className, "content-container")} {...rest}>
         {children}

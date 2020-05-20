@@ -20,28 +20,32 @@ declare module "shallow-equal" {
 
 declare module "@xstyled/emotion" {
   import React from "react";
-  import _styled, { CreateStyled } from "@emotion/styled";
-  import { Theme, Space } from "Theme/tokens";
+  import _styled, {
+    CreateStyled,
+    StyledComponent,
+    CreateStyledComponentBase,
+  } from "@emotion/styled";
+  import { Theme, Space, ColorKey, WithBreakpointArgs } from "Theme";
+  import { StyleObject } from "Utility/types";
 
   export * from "emotion";
 
-  interface Breakpoints {
-    xs: void;
-    sm: void;
-    md: void;
-    lg: void;
-    xl: void;
-  }
-  type BreakpointObject<ArgType> = {
-    [Key in keyof Breakpoints]?: ArgType;
-  };
-
-  export const up: (breakpoint: string, css: string) => string;
-  export const down: (breakpoint: string, css: string) => string;
+  export const useTheme: () => Theme;
+  export const useDown: (breakpoint: Breakpoint) => boolean;
+  export const useUp: (breakpoint: Breakpoint) => boolean;
+  export const up: (
+    breakpoint: string,
+    css: string
+  ) => (props: unknown) => string[];
+  export const down: (
+    breakpoint: string,
+    css: string
+  ) => (props: unknown) => string[];
   export const ThemeProvider: React.ComponentType<{ theme: object }>;
   export const ColorModeProvider: React.ComponentType<{}>;
   export const useColorMode: () => [string, (newMode: str) => void];
-  interface BoxPropsBase extends JSX.IntrinsicElements {
+
+  export interface SpaceProps {
     // Spacing props
     margin?: Space;
     m?: Space;
@@ -67,8 +71,9 @@ declare module "@xstyled/emotion" {
     pl?: Space;
     px?: Space;
     py?: Space;
-    space?: Space;
-    children?: React.ReactNode;
+  }
+
+  type BoxPropsBase = SpaceProps & {
     display?:
       | "block"
       | "inline-block"
@@ -79,7 +84,6 @@ declare module "@xstyled/emotion" {
       | "inherit"
       | "initial";
     textAlign?: "left" | "right" | "center" | "justify" | "initial" | "inherit";
-    height?: string | number;
     alignItems?:
       | "stretch"
       | "center"
@@ -88,257 +92,242 @@ declare module "@xstyled/emotion" {
       | "baseline"
       | "initial"
       | "inherit";
-  }
+    // TODO a lot of these could be typed much more tightly
+    alignContent?: number | string;
+    justifyContent?: number | string;
+    justifyItems?: number | string;
+    flexWrap?: number | string;
+    flexBasis?: number | string;
+    flexDirection?: number | string;
+    flex?: number | string;
+    justifySelf?: number | string;
+    alignSelf?: number | string;
+    order?: number | string;
+    gridGap?: number | string;
+    gridColumnGap?: number | string;
+    gridRowGap?: number | string;
+    gridColumn?: number | string;
+    gridRow?: number | string;
+    gridAutoFlow?: number | string;
+    gridAutoColumns?: number | string;
+    gridAutoRows?: number | string;
+    gridTemplateColumns?: number | string;
+    gridTemplateRows?: number | string;
+    gridTemplateAreas?: number | string;
+    gridArea?: number | string;
+    width?: number | string;
+    height?: number | string;
+    maxWidth?: number | string;
+    maxHeight?: number | string;
+    minWidth?: number | string;
+    minHeight?: number | string;
+    size?: number | string;
+    verticalAlign?: number | string;
+    position?: number | string;
+    zIndex?: number | string;
+    top?: number | string;
+    right?: number | string;
+    bottom?: number | string;
+    left?: number | string;
+    boxShadow?: number | string;
+    textShadow?: number | string;
+    background?: number | string;
+    backgroundColor?: ColorKey;
+    backgroundImage?: number | string;
+    backgroundSize?: number | string;
+    backgroundPosition?: number | string;
+    backgroundRepeat?: number | string;
+    opacity?: number | string;
+    overflow?: number | string;
+    transition?: number | string;
+    border?: number | string;
+    borderTop?: number | string;
+    borderTopColor?: ColorKey;
+    borderRight?: number | string;
+    borderRightColor?: ColorKey;
+    borderBottom?: number | string;
+    borderBottomColor?: ColorKey;
+    borderLeft?: number | string;
+    borderLeftColor?: ColorKey;
+    borderColor?: ColorKey;
+    borderWidth?: number | string;
+    borderStyle?: number | string;
+    borderRadius?: number | string;
+    fontFamily?: number | string;
+    fontSize?: number | string;
+    lineHeight?: number | string;
+    fontWeight?: number | string;
+    letterSpacing?: number | string;
+    color?: ColorKey;
+    textTransform?: number | string;
+    row?: boolean;
+    col?: number | string;
+  };
 
-  export type BoxProps = WithBreakpointArgs<BoxPropsBase>;
-  export const Box: CreateStyledComponentIntrinsic<
-    "div",
-    BoxProps,
-    DefaultTheme
+  type BoxPropsInner = WithBreakpointArgs<BoxPropsBase> & {
+    children?: React.ReactNode;
+    dangerouslySetInnerHTML?: { __html: string };
+    className?: string;
+    style?: StyleObject;
+  };
+
+  type MakeBoxStyled<
+    T extends keyof JSX.IntrinsicElements
+  > = CreateStyledComponentBase<
+    // Omit the BoxProps keys so that more specific types don't conflict with the expected
+    // intrinsic HTML prop types (such as `color`)
+    Omit<JSX.IntrinsicElements[T], keyof BoxPropsBase>,
+    BoxPropsInner,
+    Theme
   >;
 
-  type DefaultTheme = {};
+  export const Box: StyledComponent<
+    JSX.IntrinsicElements["div"],
+    BoxPropsInner,
+    Theme
+  >;
+  export type BoxProps = Omit<React.ComponentProps<typeof Box>, "ref"> & {
+    ref?: React.Ref<HTMLDivElement>;
+  };
+
   const styled: typeof _styled & {
-    aBox: CreateStyledComponentIntrinsic<"a", BoxProps, DefaultTheme>;
-    abbrBox: CreateStyledComponentIntrinsic<"abbr", BoxProps, DefaultTheme>;
-    addressBox: CreateStyledComponentIntrinsic<
-      "address",
-      BoxProps,
-      DefaultTheme
-    >;
-    areaBox: CreateStyledComponentIntrinsic<"area", BoxProps, DefaultTheme>;
-    articleBox: CreateStyledComponentIntrinsic<
-      "article",
-      BoxProps,
-      DefaultTheme
-    >;
-    asideBox: CreateStyledComponentIntrinsic<"aside", BoxProps, DefaultTheme>;
-    audioBox: CreateStyledComponentIntrinsic<"audio", BoxProps, DefaultTheme>;
-    bBox: CreateStyledComponentIntrinsic<"b", BoxProps, DefaultTheme>;
-    baseBox: CreateStyledComponentIntrinsic<"base", BoxProps, DefaultTheme>;
-    bdiBox: CreateStyledComponentIntrinsic<"bdi", BoxProps, DefaultTheme>;
-    bdoBox: CreateStyledComponentIntrinsic<"bdo", BoxProps, DefaultTheme>;
-    bigBox: CreateStyledComponentIntrinsic<"big", BoxProps, DefaultTheme>;
-    blockquoteBox: CreateStyledComponentIntrinsic<
-      "blockquote",
-      BoxProps,
-      DefaultTheme
-    >;
-    bodyBox: CreateStyledComponentIntrinsic<"body", BoxProps, DefaultTheme>;
-    brBox: CreateStyledComponentIntrinsic<"br", BoxProps, DefaultTheme>;
-    buttonBox: CreateStyledComponentIntrinsic<"button", BoxProps, DefaultTheme>;
-    canvasBox: CreateStyledComponentIntrinsic<"canvas", BoxProps, DefaultTheme>;
-    captionBox: CreateStyledComponentIntrinsic<
-      "caption",
-      BoxProps,
-      DefaultTheme
-    >;
-    citeBox: CreateStyledComponentIntrinsic<"cite", BoxProps, DefaultTheme>;
-    codeBox: CreateStyledComponentIntrinsic<"code", BoxProps, DefaultTheme>;
-    colBox: CreateStyledComponentIntrinsic<"col", BoxProps, DefaultTheme>;
-    colgroupBox: CreateStyledComponentIntrinsic<
-      "colgroup",
-      BoxProps,
-      DefaultTheme
-    >;
-    dataBox: CreateStyledComponentIntrinsic<"data", BoxProps, DefaultTheme>;
-    datalistBox: CreateStyledComponentIntrinsic<
-      "datalist",
-      BoxProps,
-      DefaultTheme
-    >;
-    ddBox: CreateStyledComponentIntrinsic<"dd", BoxProps, DefaultTheme>;
-    delBox: CreateStyledComponentIntrinsic<"del", BoxProps, DefaultTheme>;
-    detailsBox: CreateStyledComponentIntrinsic<
-      "details",
-      BoxProps,
-      DefaultTheme
-    >;
-    dfnBox: CreateStyledComponentIntrinsic<"dfn", BoxProps, DefaultTheme>;
-    dialogBox: CreateStyledComponentIntrinsic<"dialog", BoxProps, DefaultTheme>;
-    divBox: CreateStyledComponentIntrinsic<"div", BoxProps, DefaultTheme>;
-    dlBox: CreateStyledComponentIntrinsic<"dl", BoxProps, DefaultTheme>;
-    dtBox: CreateStyledComponentIntrinsic<"dt", BoxProps, DefaultTheme>;
-    emBox: CreateStyledComponentIntrinsic<"em", BoxProps, DefaultTheme>;
-    embedBox: CreateStyledComponentIntrinsic<"embed", BoxProps, DefaultTheme>;
-    fieldsetBox: CreateStyledComponentIntrinsic<
-      "fieldset",
-      BoxProps,
-      DefaultTheme
-    >;
-    figcaptionBox: CreateStyledComponentIntrinsic<
-      "figcaption",
-      BoxProps,
-      DefaultTheme
-    >;
-    figureBox: CreateStyledComponentIntrinsic<"figure", BoxProps, DefaultTheme>;
-    footerBox: CreateStyledComponentIntrinsic<"footer", BoxProps, DefaultTheme>;
-    formBox: CreateStyledComponentIntrinsic<"form", BoxProps, DefaultTheme>;
-    h1Box: CreateStyledComponentIntrinsic<"h1", BoxProps, DefaultTheme>;
-    h2Box: CreateStyledComponentIntrinsic<"h2", BoxProps, DefaultTheme>;
-    h3Box: CreateStyledComponentIntrinsic<"h3", BoxProps, DefaultTheme>;
-    h4Box: CreateStyledComponentIntrinsic<"h4", BoxProps, DefaultTheme>;
-    h5Box: CreateStyledComponentIntrinsic<"h5", BoxProps, DefaultTheme>;
-    h6Box: CreateStyledComponentIntrinsic<"h6", BoxProps, DefaultTheme>;
-    headBox: CreateStyledComponentIntrinsic<"head", BoxProps, DefaultTheme>;
-    headerBox: CreateStyledComponentIntrinsic<"header", BoxProps, DefaultTheme>;
-    hgroupBox: CreateStyledComponentIntrinsic<"hgroup", BoxProps, DefaultTheme>;
-    hrBox: CreateStyledComponentIntrinsic<"hr", BoxProps, DefaultTheme>;
-    htmlBox: CreateStyledComponentIntrinsic<"html", BoxProps, DefaultTheme>;
-    iBox: CreateStyledComponentIntrinsic<"i", BoxProps, DefaultTheme>;
-    iframeBox: CreateStyledComponentIntrinsic<"iframe", BoxProps, DefaultTheme>;
-    imgBox: CreateStyledComponentIntrinsic<"img", BoxProps, DefaultTheme>;
-    inputBox: CreateStyledComponentIntrinsic<"input", BoxProps, DefaultTheme>;
-    insBox: CreateStyledComponentIntrinsic<"ins", BoxProps, DefaultTheme>;
-    kbdBox: CreateStyledComponentIntrinsic<"kbd", BoxProps, DefaultTheme>;
-    keygenBox: CreateStyledComponentIntrinsic<"keygen", BoxProps, DefaultTheme>;
-    labelBox: CreateStyledComponentIntrinsic<"label", BoxProps, DefaultTheme>;
-    legendBox: CreateStyledComponentIntrinsic<"legend", BoxProps, DefaultTheme>;
-    liBox: CreateStyledComponentIntrinsic<"li", BoxProps, DefaultTheme>;
-    linkBox: CreateStyledComponentIntrinsic<"link", BoxProps, DefaultTheme>;
-    mainBox: CreateStyledComponentIntrinsic<"main", BoxProps, DefaultTheme>;
-    mapBox: CreateStyledComponentIntrinsic<"map", BoxProps, DefaultTheme>;
-    markBox: CreateStyledComponentIntrinsic<"mark", BoxProps, DefaultTheme>;
+    aBox: MakeBoxStyled<"a">;
+    abbrBox: MakeBoxStyled<"abbr">;
+    addressBox: MakeBoxStyled<"address">;
+    areaBox: MakeBoxStyled<"area">;
+    articleBox: MakeBoxStyled<"article">;
+    asideBox: MakeBoxStyled<"aside">;
+    audioBox: MakeBoxStyled<"audio">;
+    bBox: MakeBoxStyled<"b">;
+    baseBox: MakeBoxStyled<"base">;
+    bdiBox: MakeBoxStyled<"bdi">;
+    bdoBox: MakeBoxStyled<"bdo">;
+    bigBox: MakeBoxStyled<"big">;
+    blockquoteBox: MakeBoxStyled<"blockquote">;
+    bodyBox: MakeBoxStyled<"body">;
+    brBox: MakeBoxStyled<"br">;
+    buttonBox: MakeBoxStyled<"button">;
+    canvasBox: MakeBoxStyled<"canvas">;
+    captionBox: MakeBoxStyled<"caption">;
+    citeBox: MakeBoxStyled<"cite">;
+    codeBox: MakeBoxStyled<"code">;
+    colBox: MakeBoxStyled<"col">;
+    colgroupBox: MakeBoxStyled<"colgroup">;
+    dataBox: MakeBoxStyled<"data">;
+    datalistBox: MakeBoxStyled<"datalist">;
+    ddBox: MakeBoxStyled<"dd">;
+    delBox: MakeBoxStyled<"del">;
+    detailsBox: MakeBoxStyled<"details">;
+    dfnBox: MakeBoxStyled<"dfn">;
+    dialogBox: MakeBoxStyled<"dialog">;
+    divBox: MakeBoxStyled<"div">;
+    dlBox: MakeBoxStyled<"dl">;
+    dtBox: MakeBoxStyled<"dt">;
+    emBox: MakeBoxStyled<"em">;
+    embedBox: MakeBoxStyled<"embed">;
+    fieldsetBox: MakeBoxStyled<"fieldset">;
+    figcaptionBox: MakeBoxStyled<"figcaption">;
+    figureBox: MakeBoxStyled<"figure">;
+    footerBox: MakeBoxStyled<"footer">;
+    formBox: MakeBoxStyled<"form">;
+    h1Box: MakeBoxStyled<"h1">;
+    h2Box: MakeBoxStyled<"h2">;
+    h3Box: MakeBoxStyled<"h3">;
+    h4Box: MakeBoxStyled<"h4">;
+    h5Box: MakeBoxStyled<"h5">;
+    h6Box: MakeBoxStyled<"h6">;
+    headBox: MakeBoxStyled<"head">;
+    headerBox: MakeBoxStyled<"header">;
+    hgroupBox: MakeBoxStyled<"hgroup">;
+    hrBox: MakeBoxStyled<"hr">;
+    htmlBox: MakeBoxStyled<"html">;
+    iBox: MakeBoxStyled<"i">;
+    iframeBox: MakeBoxStyled<"iframe">;
+    imgBox: MakeBoxStyled<"img">;
+    inputBox: MakeBoxStyled<"input">;
+    insBox: MakeBoxStyled<"ins">;
+    kbdBox: MakeBoxStyled<"kbd">;
+    keygenBox: MakeBoxStyled<"keygen">;
+    labelBox: MakeBoxStyled<"label">;
+    legendBox: MakeBoxStyled<"legend">;
+    liBox: MakeBoxStyled<"li">;
+    linkBox: MakeBoxStyled<"link">;
+    mainBox: MakeBoxStyled<"main">;
+    mapBox: MakeBoxStyled<"map">;
+    markBox: MakeBoxStyled<"mark">;
 
-    /* This one breaks, it looks like marquee is not supported in JSX.IntrinsicElements */
-    // marqueeBox: CreateStyledComponentIntrinsic<'marquee', BoxProps, DefaultTheme>
-
-    menuBox: CreateStyledComponentIntrinsic<"menu", BoxProps, DefaultTheme>;
-    menuitemBox: CreateStyledComponentIntrinsic<
-      "menuitem",
-      BoxProps,
-      DefaultTheme
-    >;
-    metaBox: CreateStyledComponentIntrinsic<"meta", BoxProps, DefaultTheme>;
-    meterBox: CreateStyledComponentIntrinsic<"meter", BoxProps, DefaultTheme>;
-    navBox: CreateStyledComponentIntrinsic<"nav", BoxProps, DefaultTheme>;
-    noscriptBox: CreateStyledComponentIntrinsic<
-      "noscript",
-      BoxProps,
-      DefaultTheme
-    >;
-    objectBox: CreateStyledComponentIntrinsic<"object", BoxProps, DefaultTheme>;
-    olBox: CreateStyledComponentIntrinsic<"ol", BoxProps, DefaultTheme>;
-    optgroupBox: CreateStyledComponentIntrinsic<
-      "optgroup",
-      BoxProps,
-      DefaultTheme
-    >;
-    optionBox: CreateStyledComponentIntrinsic<"option", BoxProps, DefaultTheme>;
-    outputBox: CreateStyledComponentIntrinsic<"output", BoxProps, DefaultTheme>;
-    pBox: CreateStyledComponentIntrinsic<"p", BoxProps, DefaultTheme>;
-    paramBox: CreateStyledComponentIntrinsic<"param", BoxProps, DefaultTheme>;
-    pictureBox: CreateStyledComponentIntrinsic<
-      "picture",
-      BoxProps,
-      DefaultTheme
-    >;
-    preBox: CreateStyledComponentIntrinsic<"pre", BoxProps, DefaultTheme>;
-    progressBox: CreateStyledComponentIntrinsic<
-      "progress",
-      BoxProps,
-      DefaultTheme
-    >;
-    qBox: CreateStyledComponentIntrinsic<"q", BoxProps, DefaultTheme>;
-    rpBox: CreateStyledComponentIntrinsic<"rp", BoxProps, DefaultTheme>;
-    rtBox: CreateStyledComponentIntrinsic<"rt", BoxProps, DefaultTheme>;
-    rubyBox: CreateStyledComponentIntrinsic<"ruby", BoxProps, DefaultTheme>;
-    sBox: CreateStyledComponentIntrinsic<"s", BoxProps, DefaultTheme>;
-    sampBox: CreateStyledComponentIntrinsic<"samp", BoxProps, DefaultTheme>;
-    scriptBox: CreateStyledComponentIntrinsic<"script", BoxProps, DefaultTheme>;
-    sectionBox: CreateStyledComponentIntrinsic<
-      "section",
-      BoxProps,
-      DefaultTheme
-    >;
-    selectBox: CreateStyledComponentIntrinsic<"select", BoxProps, DefaultTheme>;
-    smallBox: CreateStyledComponentIntrinsic<"small", BoxProps, DefaultTheme>;
-    sourceBox: CreateStyledComponentIntrinsic<"source", BoxProps, DefaultTheme>;
-    spanBox: CreateStyledComponentIntrinsic<"span", BoxProps, DefaultTheme>;
-    strongBox: CreateStyledComponentIntrinsic<"strong", BoxProps, DefaultTheme>;
-    styleBox: CreateStyledComponentIntrinsic<"style", BoxProps, DefaultTheme>;
-    subBox: CreateStyledComponentIntrinsic<"sub", BoxProps, DefaultTheme>;
-    summaryBox: CreateStyledComponentIntrinsic<
-      "summary",
-      BoxProps,
-      DefaultTheme
-    >;
-    supBox: CreateStyledComponentIntrinsic<"sup", BoxProps, DefaultTheme>;
-    tableBox: CreateStyledComponentIntrinsic<"table", BoxProps, DefaultTheme>;
-    tbodyBox: CreateStyledComponentIntrinsic<"tbody", BoxProps, DefaultTheme>;
-    tdBox: CreateStyledComponentIntrinsic<"td", BoxProps, DefaultTheme>;
-    textareaBox: CreateStyledComponentIntrinsic<
-      "textarea",
-      BoxProps,
-      DefaultTheme
-    >;
-    tfootBox: CreateStyledComponentIntrinsic<"tfoot", BoxProps, DefaultTheme>;
-    thBox: CreateStyledComponentIntrinsic<"th", BoxProps, DefaultTheme>;
-    theadBox: CreateStyledComponentIntrinsic<"thead", BoxProps, DefaultTheme>;
-    timeBox: CreateStyledComponentIntrinsic<"time", BoxProps, DefaultTheme>;
-    titleBox: CreateStyledComponentIntrinsic<"title", BoxProps, DefaultTheme>;
-    trBox: CreateStyledComponentIntrinsic<"tr", BoxProps, DefaultTheme>;
-    trackBox: CreateStyledComponentIntrinsic<"track", BoxProps, DefaultTheme>;
-    uBox: CreateStyledComponentIntrinsic<"u", BoxProps, DefaultTheme>;
-    ulBox: CreateStyledComponentIntrinsic<"ul", BoxProps, DefaultTheme>;
-    varBox: CreateStyledComponentIntrinsic<"var", BoxProps, DefaultTheme>;
-    videoBox: CreateStyledComponentIntrinsic<"video", BoxProps, DefaultTheme>;
-    wbrBox: CreateStyledComponentIntrinsic<"wbr", BoxProps, DefaultTheme>;
+    menuBox: MakeBoxStyled<"menu">;
+    menuitemBox: MakeBoxStyled<"menuitem">;
+    metaBox: MakeBoxStyled<"meta">;
+    meterBox: MakeBoxStyled<"meter">;
+    navBox: MakeBoxStyled<"nav">;
+    noscriptBox: MakeBoxStyled<"noscript">;
+    objectBox: MakeBoxStyled<"object">;
+    olBox: MakeBoxStyled<"ol">;
+    optgroupBox: MakeBoxStyled<"optgroup">;
+    optionBox: MakeBoxStyled<"option">;
+    outputBox: MakeBoxStyled<"output">;
+    pBox: MakeBoxStyled<"p">;
+    paramBox: MakeBoxStyled<"param">;
+    pictureBox: MakeBoxStyled<"picture">;
+    preBox: MakeBoxStyled<"pre">;
+    progressBox: MakeBoxStyled<"progress">;
+    qBox: MakeBoxStyled<"q">;
+    rpBox: MakeBoxStyled<"rp">;
+    rtBox: MakeBoxStyled<"rt">;
+    rubyBox: MakeBoxStyled<"ruby">;
+    sBox: MakeBoxStyled<"s">;
+    sampBox: MakeBoxStyled<"samp">;
+    scriptBox: MakeBoxStyled<"script">;
+    sectionBox: MakeBoxStyled<"section">;
+    selectBox: MakeBoxStyled<"select">;
+    smallBox: MakeBoxStyled<"small">;
+    sourceBox: MakeBoxStyled<"source">;
+    spanBox: MakeBoxStyled<"span">;
+    strongBox: MakeBoxStyled<"strong">;
+    styleBox: MakeBoxStyled<"style">;
+    subBox: MakeBoxStyled<"sub">;
+    summaryBox: MakeBoxStyled<"summary">;
+    supBox: MakeBoxStyled<"sup">;
+    tableBox: MakeBoxStyled<"table">;
+    tbodyBox: MakeBoxStyled<"tbody">;
+    tdBox: MakeBoxStyled<"td">;
+    textareaBox: MakeBoxStyled<"textarea">;
+    tfootBox: MakeBoxStyled<"tfoot">;
+    thBox: MakeBoxStyled<"th">;
+    theadBox: MakeBoxStyled<"thead">;
+    timeBox: MakeBoxStyled<"time">;
+    titleBox: MakeBoxStyled<"title">;
+    trBox: MakeBoxStyled<"tr">;
+    trackBox: MakeBoxStyled<"track">;
+    uBox: MakeBoxStyled<"u">;
+    ulBox: MakeBoxStyled<"ul">;
+    varBox: MakeBoxStyled<"var">;
+    videoBox: MakeBoxStyled<"video">;
+    wbrBox: MakeBoxStyled<"wbr">;
 
     // SVG
-    circleBox: CreateStyledComponentIntrinsic<"circle", BoxProps, DefaultTheme>;
-    clipPathBox: CreateStyledComponentIntrinsic<
-      "clipPath",
-      BoxProps,
-      DefaultTheme
-    >;
-    defsBox: CreateStyledComponentIntrinsic<"defs", BoxProps, DefaultTheme>;
-    ellipseBox: CreateStyledComponentIntrinsic<
-      "ellipse",
-      BoxProps,
-      DefaultTheme
-    >;
-    foreignObjectBox: CreateStyledComponentIntrinsic<
-      "foreignObject",
-      DefaultTheme,
-      BoxProps
-    >;
-    gBox: CreateStyledComponentIntrinsic<"g", BoxProps, DefaultTheme>;
-    imageBox: CreateStyledComponentIntrinsic<"image", BoxProps, DefaultTheme>;
-    lineBox: CreateStyledComponentIntrinsic<"line", BoxProps, DefaultTheme>;
-    linearGradientBox: CreateStyledComponentIntrinsic<
-      "linearGradient",
-      DefaultTheme,
-      BoxProps
-    >;
-    markerBox: CreateStyledComponentIntrinsic<"marker", BoxProps, DefaultTheme>;
-    maskBox: CreateStyledComponentIntrinsic<"mask", BoxProps, DefaultTheme>;
-    pathBox: CreateStyledComponentIntrinsic<"path", BoxProps, DefaultTheme>;
-    patternBox: CreateStyledComponentIntrinsic<
-      "pattern",
-      BoxProps,
-      DefaultTheme
-    >;
-    polygonBox: CreateStyledComponentIntrinsic<
-      "polygon",
-      BoxProps,
-      DefaultTheme
-    >;
-    polylineBox: CreateStyledComponentIntrinsic<
-      "polyline",
-      BoxProps,
-      DefaultTheme
-    >;
-    radialGradientBox: CreateStyledComponentIntrinsic<
-      "radialGradient",
-      DefaultTheme,
-      BoxProps
-    >;
-    rectBox: CreateStyledComponentIntrinsic<"rect", BoxProps, DefaultTheme>;
-    stopBox: CreateStyledComponentIntrinsic<"stop", BoxProps, DefaultTheme>;
-    svgBox: CreateStyledComponentIntrinsic<"svg", BoxProps, DefaultTheme>;
-    textBox: CreateStyledComponentIntrinsic<"text", BoxProps, DefaultTheme>;
-    tspanBox: CreateStyledComponentIntrinsic<"tspan", BoxProps, DefaultTheme>;
+    circleBox: MakeBoxStyled<"circle">;
+    clipPathBox: MakeBoxStyled<"clipPath">;
+    defsBox: MakeBoxStyled<"defs">;
+    ellipseBox: MakeBoxStyled<"ellipse">;
+    foreignObjectBox: MakeBoxStyled<"foreignObject">;
+    gBox: MakeBoxStyled<"g">;
+    imageBox: MakeBoxStyled<"image">;
+    lineBox: MakeBoxStyled<"line">;
+    linearGradientBox: MakeBoxStyled<"linearGradient">;
+    markerBox: MakeBoxStyled<"marker">;
+    maskBox: MakeBoxStyled<"mask">;
+    pathBox: MakeBoxStyled<"path">;
+    patternBox: MakeBoxStyled<"pattern">;
+    polygonBox: MakeBoxStyled<"polygon">;
+    polylineBox: MakeBoxStyled<"polyline">;
+    radialGradientBox: MakeBoxStyled<"radialGradient">;
+    rectBox: MakeBoxStyled<"rect">;
+    stopBox: MakeBoxStyled<"stop">;
+    svgBox: MakeBoxStyled<"svg">;
+    textBox: MakeBoxStyled<"text">;
+    tspanBox: MakeBoxStyled<"tspan">;
   };
   export default styled;
 }

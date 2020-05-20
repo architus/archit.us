@@ -13,9 +13,8 @@ import { ScrollContext } from "Dynamic/AppRoot/context";
 import { Tooltip, Icon, Switch, HelpTooltip } from "Components";
 import { AnyIconName } from "Components/Icon/loader";
 import { getAvatarUrl } from "Components/UserDisplay";
-import { opacity } from "Theme/getters";
-import { color } from "Theme/tokens";
 import { usePool, usePoolEntities } from "Store/slices/pools";
+import { opacity, color } from "Theme";
 import {
   TriggerFormatter,
   ResponseFormatter,
@@ -418,7 +417,7 @@ const Styled = {
 
       & > span:nth-of-type(2) {
         opacity: 0.5;
-        margin-right: femto;
+        margin-right: atto;
       }
 
       &::after {
@@ -552,7 +551,7 @@ const Styled = {
       border-color: contrast_border;
       box-shadow: 2;
       color: text;
-      padding: pico 0;
+      padding: femto 0;
       user-select: none;
     }
 
@@ -1102,7 +1101,7 @@ const GridHeader: React.FC<GridHeaderProps> = ({
           <HelpTooltip
             top
             id="self-authored-auto-response-help"
-            content="When selected, only show auto responses you have authored"
+            text="When selected, only show auto responses you have authored"
           ></HelpTooltip>
         </>
       }
