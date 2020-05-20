@@ -65,7 +65,7 @@ const AddGuildModal: React.FC<AddGuildModalProps> = ({
             <GuildCard
               id={id}
               name={name}
-              icon={isDefined(icon) ? icon : undefined}
+              icon={icon.getOrElse(undefined)}
               key={id}
               href={inviteUrl(id)}
             />

@@ -33,7 +33,7 @@ const CubeBackground: React.FC<CubeBackgroundProps> = ({
   const resolvedForeground = useMemo(
     () =>
       Color(textFade)
-        .setAlpha(overlayOpacity * (colorMode === ColorMode.Light ? 1.25 : 1))
+        .setAlpha(overlayOpacity * (colorMode === ColorMode.Light ? 1.4 : 1))
         .toString(),
     [textFade, colorMode, overlayOpacity]
   );

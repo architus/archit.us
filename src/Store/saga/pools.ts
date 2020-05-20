@@ -452,7 +452,7 @@ function* loadLoop(
       for (const entity of data) {
         const decodeResult = runtimeType.decode(entity);
         if (isRight<Errors, AllPoolTypes[PoolType]>(decodeResult)) {
-          entities.push(entity as AllPoolTypes[PoolType]);
+          entities.push(decodeResult.right as AllPoolTypes[PoolType]);
         } else {
           yield put(
             gatewayMalformed({
@@ -460,7 +460,7 @@ function* loadLoop(
               timestamp: responseEvent.payload.timestamp,
               error: {
                 message: `Errors ocurred while parsing pool response`,
-                error: decodeResult.toString(),
+                error: JSON.stringify(decodeResult),
                 original: entity,
               },
             })

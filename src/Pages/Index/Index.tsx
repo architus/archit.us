@@ -72,6 +72,8 @@ const Styled = {
     }
   `,
   Container: styled(Container)`
+    position: relative;
+    z-index: 0;
     padding-left: zero;
     padding-right: zero;
   `,
@@ -79,6 +81,9 @@ const Styled = {
     color: text;
     background-color: b_400;
     border-top: 1px solid ${color("contrast_border")};
+    position: relative;
+    z-index: -2;
+    overflow: hidden;
 
     // Add inner shadow to the bottom
     box-shadow: inset 0 -14px 15px -14px ${color("shadow_heavy")};
@@ -96,12 +101,13 @@ const Styled = {
     font-size: 2.5rem;
     font-weight: 300;
   `,
-  FeatureContent: styled(Content)`
+  FeatureContent: styled<typeof Content, { flipDots: boolean }>(Content)`
     // Center contents vertically
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: stretch;
+    position: relative;
 
     & p,
     & ul,
@@ -112,6 +118,57 @@ const Styled = {
     & h3 {
       color: text_strong;
     }
+
+    // Add dots backgrounds
+    &::before,
+    &::after {
+      z-index: -1;
+      position: absolute;
+      content: "";
+      opacity: 0.2;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15'%3E%3Ccircle fill='%23777777' cx='1.5' cy='1.5' r='1.5'/%3E%3Cscript xmlns=''/%3E%3C/svg%3E");
+    }
+
+    ${(props): string =>
+      props.flipDots
+        ? css`
+            &::before {
+              top: 45px;
+              bottom: -32px;
+              left: 0;
+              width: 130%;
+              height: 100%;
+              margin-left: -65%;
+            }
+
+            &::after {
+              top: 100px;
+              right: 0;
+              width: 20%;
+              height: 75%;
+              margin-right: 5%;
+            }
+          `
+        : // Reverse the direction on left-sided feature blocks
+          css`
+            &::before {
+              top: 45px;
+              bottom: -32px;
+              right: 0;
+              width: 130%;
+              height: 100%;
+              margin-right: -65%;
+            }
+
+            &::after {
+              top: 100px;
+              left: 0;
+              width: 20%;
+              height: 75%;
+              margin-left: 5%;
+            }
+          `}
   `,
   RaisedWindow: styled(Window)`
     box-shadow: 3;
@@ -595,7 +652,7 @@ type FeatureProps = WithBoxProps<{
  */
 const Feature: React.FC<FeatureProps> = ({
   left,
-  right,
+  right = false,
   children,
   lead,
   header,
@@ -622,6 +679,7 @@ const Feature: React.FC<FeatureProps> = ({
         <Styled.FeatureContent
           px={{ xs: "micro", lg: "micro" }}
           col={{ xs: 1, lg: 1 / 2 }}
+          flipDots={!right}
         >
           <Styled.SmallCaps fontSize="0.9rem" color="text_fade" mb="femto">
             {lead}

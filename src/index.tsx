@@ -4,9 +4,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { AppContainer } from "react-hot-loader";
+import { addPrefetchExcludes } from "react-static";
 import { isHot } from "Utility/types";
 import { isDefined } from "Utility";
 import App from "./App";
+
+// Any routes in this array will be treated as non-static routes
+addPrefetchExcludes([/\/?app(?:\/.*)?/]);
 
 export default App;
 

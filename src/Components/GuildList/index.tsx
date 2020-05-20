@@ -50,9 +50,12 @@ const GuildList: React.FC<GuildListProps> = ({ onClickGuild, onClickAdd }) => {
     });
   }
 
+  const derivedHasLoaded =
+    hasLoaded || otherGuilds.length > 0 || architusAdminGuilds.length > 0;
+
   return (
     <div className="guild-list vertical">
-      {hasLoaded ? (
+      {derivedHasLoaded ? (
         <>
           {architusAdminGuilds.length > 0 ? (
             <Section
@@ -131,7 +134,7 @@ const Section: React.FC<SectionProps> = ({
     <div className={classNames("guild-list--section", className)}>
       {guilds.map(({ icon, id, name }) => (
         <GuildIcon
-          icon={icon}
+          icon={icon.getOrElse(null)}
           id={id}
           name={name}
           key={id}
