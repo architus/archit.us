@@ -51,6 +51,7 @@ module.exports = (api, { external, node, modules } = {}) => {
     ],
     plugins: [
       ...((modules && [r("@babel/plugin-transform-modules-commonjs")]) || []),
+      ...((!PRODUCTION && [r("babel-plugin-add-react-displayname")]) || []),
       ...((PRODUCTION && [
         r("babel-plugin-universal-import"),
         r("babel-plugin-transform-react-remove-prop-types"),

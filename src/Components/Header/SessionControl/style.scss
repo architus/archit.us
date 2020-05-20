@@ -25,11 +25,4 @@
             @include highlight-shadow($-dark);
         }
     }
-
-    .dropdown-menu {
-        @include respond-below(sm) {
-            left: 0 !important;
-            right: auto !important;
-        }
-    }
 }

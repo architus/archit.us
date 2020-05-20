@@ -36,12 +36,12 @@
             }
         }
 
-        .timestamp:not(.placeholder) {
+        .timestamp:not(.skeleton) {
             color: rgba($discord-fg, 0.4);
             font-size: 0.8rem !important;
         }
 
-        .timestamp.placeholder, .username.placeholder {
+        .timestamp.skeleton, .username.skeleton {
             margin-top: 0.35rem;
             margin-bottom: 0.35rem;
         }

@@ -1,15 +1,15 @@
 import React from "react";
+import { Box } from "@xstyled/emotion";
 import { usePool } from "Store/slices/pools";
 import {
   useReturnQuery,
   API_BASE,
   processIfNotEmptyOrNil,
   isDiscordAdminWithoutArchitus,
-  isDefined,
 } from "Utility";
 import { Snowflake } from "Utility/types";
 import GuildCard from "Components/GuildCard";
-import { Modal, Button, ModalProps } from "react-bootstrap";
+import { Modal, Button, ModalProps, Spinner } from "react-bootstrap";
 import "./style.scss";
 
 type AddGuildModalProps = {
@@ -21,7 +21,7 @@ const AddGuildModal: React.FC<AddGuildModalProps> = ({
   as,
   ...rest
 }) => {
-  const { all: guilds } = usePool({
+  const { all: guilds, isLoaded: guildsLoaded } = usePool({
     type: "guild",
     filter: isDiscordAdminWithoutArchitus,
   });
@@ -54,22 +54,29 @@ const AddGuildModal: React.FC<AddGuildModalProps> = ({
           <p>
             <em>
               Not seeing a server? Make sure you have the &quot;Manage
-              guild&quot; permission in that server.
+              guild&quot; permission.
             </em>
           </p>
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <div className="guild-card-list">
-          {guilds.map(({ id, name, icon }) => (
-            <GuildCard
-              id={id}
-              name={name}
-              icon={isDefined(icon) ? icon : undefined}
-              key={id}
-              href={inviteUrl(id)}
-            />
-          ))}
+          {(guildsLoaded || guilds.length > 0) &&
+            guilds.map(({ id, name, icon }) => (
+              <GuildCard
+                id={id}
+                name={name}
+                icon={icon.getOrElse(undefined)}
+                key={id}
+                href={inviteUrl(id)}
+              />
+            ))}
+          {!guildsLoaded && (
+            // Show a spinner if the pool hasn't been completely loaded
+            <Box py="micro" display="flex" justifyContent="center">
+              <Spinner animation="border" variant="primary" />
+            </Box>
+          )}
         </div>
       </Modal.Body>
       <Modal.Footer>
