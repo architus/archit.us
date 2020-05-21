@@ -100,6 +100,9 @@ const theme = {
     danger: "#e6584d",
     light: "rgb(232, 234, 235)",
     dark: "rgb(22, 24, 30)",
+    // Overlays are mode-agnostic, adjusts depend on theme to lighten/darken
+    light_overlay: "rgba(255, 255, 255, 0.1)",
+    dark_overlay_strong: "rgba(0, 0, 0, 0.5)",
 
     // Theme colors
     text: "rgba(246, 248, 249, 0.85)",
@@ -122,10 +125,10 @@ const theme = {
     shadow_medium: "rgba(0, 0, 0, 0.12)",
     shadow_heavy: "rgba(0, 0, 0, 0.18)",
     shadow_extraheavy: "rgba(0, 0, 0, 0.5)",
-    light_overlay: "rgba(255, 255, 255, 0.08)",
-    light_overlay_slight: "rgba(255, 255, 255, 0.02)",
-    dark_overlay: "rgba(0, 0, 0, 0.25)",
-    dark_overlay_slight: "rgba(0, 0, 0, 0.125)",
+    light_adjust: "rgba(255, 255, 255, 0.08)",
+    light_adjust_slight: "rgba(255, 255, 255, 0.02)",
+    dark_adjust: "rgba(0, 0, 0, 0.25)",
+    dark_adjust_slight: "rgba(0, 0, 0, 0.125)",
     contrast_overlay: "rgba(255, 255, 255, 0.023)",
     input_focus_border: "transparent",
     // Same as `dark.b_100`
@@ -155,10 +158,10 @@ const theme = {
         shadow_medium: "rgba(0, 0, 0, 0.075)",
         shadow_heavy: "rgba(0, 0, 0, 0.09)",
         shadow_extraheavy: "rgba(0, 0, 0, 0.3)",
-        light_overlay: "rgba(255, 255, 255, 0.45)",
-        light_overlay_slight: "rgba(255, 255, 255, 0.3)",
-        dark_overlay: "rgba(0, 0, 0, 0.1)",
-        dark_overlay_slight: "rgba(0, 0, 0, 0.05)",
+        light_adjust: "rgba(255, 255, 255, 0.45)",
+        light_adjust_slight: "rgba(255, 255, 255, 0.3)",
+        dark_adjust: "rgba(0, 0, 0, 0.1)",
+        dark_adjust_slight: "rgba(0, 0, 0, 0.05)",
         contrast_overlay: "rgba(0, 0, 0, 0.04)",
         input_focus_border: "hsl(209, 45%, 55%)",
         // Same as `dark.b_400`

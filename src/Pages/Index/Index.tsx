@@ -22,6 +22,7 @@ import {
   Layout,
   DiscordMock,
   CubeBackground,
+  ErrorBoundary,
 } from "Components";
 import { Link } from "Components/Router";
 import styled, { Box, down, css, up, BoxProps } from "@xstyled/emotion";
@@ -447,13 +448,15 @@ const Index: React.FC<{}> = () => {
               }
             >
               <Styled.RaisedWindow variant="discord">
-                <DiscordMock
-                  height={400}
-                  channelName="auto-response-demo"
-                  messageSets={messageSets.autoResponse}
-                  allowedCommands={allowedCommands.autoResponse}
-                  loop
-                />
+                <ErrorBoundary fallback={<Box height={400} />}>
+                  <DiscordMock
+                    height={400}
+                    channelName="auto-response-demo"
+                    messageSets={messageSets.autoResponse}
+                    allowedCommands={allowedCommands.autoResponse}
+                    loop
+                  />
+                </ErrorBoundary>
               </Styled.RaisedWindow>
             </Feature>
             <Feature
@@ -478,22 +481,28 @@ const Index: React.FC<{}> = () => {
               }
             >
               <Styled.RaisedWindow variant="discord">
-                <DiscordMock
-                  height={400}
-                  channelName="custom-emoji-demo"
-                  messageSets={messageSets.customEmoji}
-                  allowedCommands={allowedCommands.customEmoji}
-                  offline
-                  loop
-                  // Inject custom emotes into custom emoji extension
-                  extensionCreator={useCallbackOnce(
-                    (
-                      context: DiscordMockContext,
-                      commands: DiscordMockCommands
-                    ): Extension =>
-                      new CustomEmojiExtension(customEmotes, context, commands)
-                  )}
-                />
+                <ErrorBoundary fallback={<Box height={400} />}>
+                  <DiscordMock
+                    height={400}
+                    channelName="custom-emoji-demo"
+                    messageSets={messageSets.customEmoji}
+                    allowedCommands={allowedCommands.customEmoji}
+                    offline
+                    loop
+                    // Inject custom emotes into custom emoji extension
+                    extensionCreator={useCallbackOnce(
+                      (
+                        context: DiscordMockContext,
+                        commands: DiscordMockCommands
+                      ): Extension =>
+                        new CustomEmojiExtension(
+                          customEmotes,
+                          context,
+                          commands
+                        )
+                    )}
+                  />
+                </ErrorBoundary>
               </Styled.RaisedWindow>
             </Feature>
             <Feature
@@ -514,13 +523,15 @@ const Index: React.FC<{}> = () => {
               }
             >
               <Styled.RaisedWindow variant="discord">
-                <DiscordMock
-                  height={400}
-                  channelName="polls-schedules-demo"
-                  messageSets={messageSets.pollsSchedules}
-                  allowedCommands={allowedCommands.pollsSchedules}
-                  loop
-                />
+                <ErrorBoundary fallback={<Box height={400} />}>
+                  <DiscordMock
+                    height={400}
+                    channelName="polls-schedules-demo"
+                    messageSets={messageSets.pollsSchedules}
+                    allowedCommands={allowedCommands.pollsSchedules}
+                    loop
+                  />
+                </ErrorBoundary>
               </Styled.RaisedWindow>
             </Feature>
           </Styled.Container>

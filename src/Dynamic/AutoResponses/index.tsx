@@ -144,7 +144,7 @@ const Styled = {
     ${(props): string =>
       props.active
         ? css`
-            background-color: dark_overlay;
+            background-color: dark_adjust;
             color: text;
           `
         : ""}
@@ -185,7 +185,7 @@ const Styled = {
           `
         : css`
             opacity: 1;
-            background-color: light_overlay;
+            background-color: light_adjust;
             box-shadow: none;
 
             &:not(:hover):not(:active) {
@@ -193,10 +193,10 @@ const Styled = {
             }
 
             &:hover {
-              background-color: dark_overlay_slight;
+              background-color: dark_adjust_slight;
             }
             &:active {
-              background-color: dark_overlay;
+              background-color: dark_adjust;
             }
           `}
   `,
@@ -277,7 +277,7 @@ const Styled = {
       border: 2px solid ${color("border")};
       background-color: b_600;
       margin-top: 7px;
-      margin-left: 3px;
+      margin-left: 7px;
     }
 
     .rdg-checkbox-input:checked + .rdg-checkbox {
@@ -837,8 +837,8 @@ export class AutoResponses extends React.Component<
       {
         key: "selection",
         name: "",
-        width: 38,
-        maxWidth: 35,
+        width: 42,
+        maxWidth: 42,
         frozen: true,
         headerRenderer: SelectionHeader(this.allRowsSelectedRef),
         formatter: SelectionFormatter(currentUser, isArchitusAdmin),
