@@ -2,7 +2,7 @@ import React from "react";
 import { useDown, Box } from "@xstyled/emotion";
 import { Dropdown } from "react-bootstrap";
 import { useDispatch } from "Store";
-import { useLocation } from "Utility";
+import { useLocation, withBasePath } from "Utility";
 import { Option } from "Utility/option";
 import { User } from "Utility/types";
 import { signOut } from "Store/actions";
@@ -21,7 +21,7 @@ const SessionControl: React.FC = React.memo(() => {
   const oauthUrl = useOauthUrl();
   const isSmallScreen = useDown(Breakpoint.SM);
   const { location } = useLocation();
-  const isInApp = location.pathname.startsWith("/app");
+  const isInApp = location.pathname.startsWith(withBasePath("/app"));
 
   return isSigningIn ? (
     <Dropdown className="session-dropdown">

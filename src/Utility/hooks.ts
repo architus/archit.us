@@ -10,6 +10,7 @@ import { globalHistory, History } from "@reach/router";
 import { addMissingUnit, collator } from "./primitives";
 import { isClient, isProduction } from "./document";
 import { Option, Some, None } from "./option";
+import { withBasePath } from "./network";
 import { isDefined } from "./data";
 
 /**
@@ -22,7 +23,9 @@ export function useReturnQuery(): string {
   const [returnQuery, setReturnQuery] = useState<string>("");
   useEffectOnce(() => {
     if (!isProduction && returnQuery === "") {
-      const returnUrl = `${window.location.protocol}//${window.location.host}/app`;
+      const returnUrl = `${window.location.protocol}//${
+        window.location.host
+      }${withBasePath("/app")}`;
       const encoded = encodeURIComponent(returnUrl);
       setReturnQuery(`return=${encoded}`);
     }

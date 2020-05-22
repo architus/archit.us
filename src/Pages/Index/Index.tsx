@@ -2,7 +2,12 @@ import React from "react";
 import { shallowEqual } from "react-redux";
 import LoginButton, { useOauthUrl } from "Components/LoginButton";
 import { useRouteData } from "react-static";
-import { useEffectOnce, isDefined, useCallbackOnce } from "Utility";
+import {
+  useEffectOnce,
+  isDefined,
+  useCallbackOnce,
+  withBasePath,
+} from "Utility";
 import { useSelector, useDispatch } from "Store/hooks";
 import {
   Nil,
@@ -737,7 +742,7 @@ const CallToAction: React.FC<Omit<BoxProps, "ref">> = (boxProps) => {
   const { isSignedIn } = useSessionStatus();
   const oauthUrl = useOauthUrl();
   const additionalProps = isSignedIn
-    ? { as: Link, to: "/app" }
+    ? { as: Link, to: withBasePath("/app") }
     : { href: oauthUrl };
   return (
     <Styled.BottomCtaButton

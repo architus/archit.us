@@ -91,10 +91,12 @@ const config = {
 };
 
 if (process.env.SITE_ROOT) {
+  console.log(`Using SITE_ROOT=${process.env.SITE_ROOT}`);
   config.siteRoot = process.env.SITE_ROOT;
 }
 
 if (process.env.BASE_PATH) {
+  console.log(`Using BASE_PATH=${process.env.BASE_PATH}`);
   config.basePath = process.env.BASE_PATH;
 }
 
