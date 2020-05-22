@@ -36,9 +36,8 @@ jobs:
         run: tar -czvf ../dist.tar.gz .
         working-directory: dist
 
-      - name: Upload commit archive to staging API
+      - name: Upload built archive to staging API
         uses: architus/upload-api-action@master
-        if: github.event_name == 'push'
         with:
           archive-path: "./dist.tar.gz"
           event: "commit"
