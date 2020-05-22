@@ -8,7 +8,6 @@ import { SEO } from "Components/Layout";
 import NotificationPane from "Components/NotificationPane";
 import AppRoot from "Dynamic/AppRoot";
 import NotFound from "Pages/NotFound";
-import { withBasePath } from "Utility";
 import theme from "Theme";
 import "scss/main.scss";
 
@@ -25,7 +24,7 @@ const App: React.FunctionComponent<{}> = () => (
           <main>
             <React.Suspense fallback={<NotFound />}>
               <Router>
-                <AppRoot path={withBasePath("/app/*")} />
+                <AppRoot path="/app/*" />
                 <Routes path="*" />
               </Router>
             </React.Suspense>
