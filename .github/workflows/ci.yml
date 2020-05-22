@@ -45,7 +45,7 @@ jobs:
           api-root: "https://staging.archit.us/api"
           token: ${{ secrets.STAGING_UPLOAD_API_TOKEN }}
 
-        # TODO make this use a custom JavaScript action
+        # TODO make this use the comment JavaScript action
       - name: Add comment to PR
         if: github.event_name == 'pull_request'
         run: echo "adding comment"
