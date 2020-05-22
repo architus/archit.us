@@ -1,7 +1,9 @@
 import React from "react";
+import { useUp } from "@xstyled/emotion";
 import classNames from "classnames";
 import { useSessionStatus } from "Store/slices/session";
 import NavLink from "Components/NavLink";
+import { Breakpoint } from "Theme";
 
 const LoggedInLinks: React.FC = () => <NavLink to="/app">Dashboard</NavLink>;
 const LoggedOutLinks: React.FC = () => null;
@@ -13,12 +15,13 @@ type HeaderLinksProps = {
 
 const HeaderLinks: React.FC<HeaderLinksProps> = ({ className, ...rest }) => {
   const { isSigningIn } = useSessionStatus();
-  return (
+  // Hide the navbar links on small screen sizes
+  return useUp(Breakpoint.SM) ? (
     <ul className={classNames("navbar-nav", className)} {...rest}>
       <CommonLinks />
       {isSigningIn ? <LoggedInLinks /> : <LoggedOutLinks />}
     </ul>
-  );
+  ) : null;
 };
 
 export default HeaderLinks;

@@ -1,19 +1,16 @@
-import React from "react";
+import React, { useMemo } from "react";
 import classNames from "classnames";
-import { splitPath, isDefined } from "Utility";
+import { splitPath, isDefined, useLocation } from "Utility";
 import { Snowflake, isSnowflake, Guild } from "Utility/types";
 import { usePool } from "Store/slices/pools";
-
-import Placeholder from "Components/Placeholder";
+import Skeleton from "Components/Skeleton";
 import GuildIcon from "Components/GuildIcon";
 import Tooltip from "Components/Tooltip";
 import Icon from "Components/Icon";
-
-import "./style.scss";
-import { useLocation } from "react-static";
 import { Option, None, Some } from "Utility/option";
+import "./style.scss";
 
-const PLACEHOLDER_COUNT = 5;
+const SKELETON_COUNT = 5;
 const ICON_WIDTH = 52;
 
 type GuildListProps = {
@@ -27,16 +24,18 @@ const otherGuildsFilter = (guild: Guild): boolean =>
   guild.has_architus && !guild.architus_admin;
 
 const GuildList: React.FC<GuildListProps> = ({ onClickGuild, onClickAdd }) => {
-  const { all: architusAdminGuilds, isLoaded: hasLoaded } = usePool("guilds", {
-    filter: architusAdminGuildsFilter,
+  const { all: guilds, isLoaded: hasLoaded } = usePool({
+    type: "guild",
   });
-  const { all: otherGuilds } = usePool("guilds", {
-    filter: otherGuildsFilter,
-  });
+  const architusAdminGuilds = useMemo(
+    () => guilds.filter(architusAdminGuildsFilter),
+    [guilds]
+  );
+  const otherGuilds = useMemo(() => guilds.filter(otherGuildsFilter), [guilds]);
   const squareStyle = { width: `${ICON_WIDTH}px`, height: `${ICON_WIDTH}px` };
 
   // Parse active guild ID from location
-  const location = useLocation();
+  const { location } = useLocation();
   let activeGuildId: Option<Snowflake> = None;
   if (isDefined(location)) {
     const fragments = splitPath(location.pathname);
@@ -48,9 +47,12 @@ const GuildList: React.FC<GuildListProps> = ({ onClickGuild, onClickAdd }) => {
     });
   }
 
+  const derivedHasLoaded =
+    hasLoaded || otherGuilds.length > 0 || architusAdminGuilds.length > 0;
+
   return (
     <div className="guild-list vertical">
-      {hasLoaded ? (
+      {derivedHasLoaded ? (
         <>
           {architusAdminGuilds.length > 0 ? (
             <Section
@@ -75,15 +77,15 @@ const GuildList: React.FC<GuildListProps> = ({ onClickGuild, onClickAdd }) => {
           </Tooltip>
         </>
       ) : (
-        [...Array(PLACEHOLDER_COUNT)].map((_e, i) => (
-          <Placeholder.Auto circle width={`${ICON_WIDTH}px`} key={i} />
+        [...Array(SKELETON_COUNT)].map((_e, i) => (
+          <Skeleton.Auto circle width={`${ICON_WIDTH}px`} key={i} />
         ))
       )}
     </div>
   );
 };
 
-export default GuildList;
+export default React.memo(GuildList);
 
 // ? =================
 // ? Helper components
@@ -129,7 +131,7 @@ const Section: React.FC<SectionProps> = ({
     <div className={classNames("guild-list--section", className)}>
       {guilds.map(({ icon, id, name }) => (
         <GuildIcon
-          icon={icon}
+          icon={icon.getOrElse(null)}
           id={id}
           name={name}
           key={id}

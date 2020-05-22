@@ -6,10 +6,10 @@ import {
   marginLeft,
   createSystemComponent,
 } from "@xstyled/system";
-import { Link, Icon } from "Components";
-import { LinkProps } from "Components/Router";
+import Icon from "Components/Icon";
+import { Link, LinkProps } from "Components/Router";
 import { isDefined, isExternal } from "Utility";
-import { Space } from "Theme/tokens";
+import { Space } from "Theme";
 
 const lrMargin = compose(marginLeft, marginRight);
 const MarginIcon = createSystemComponent(React, Icon, lrMargin);
@@ -27,6 +27,11 @@ type AutoLinkProps = {
   space?: Space;
 } & Partial<LinkProps & React.AnchorHTMLAttributes<HTMLAnchorElement>>;
 
+/**
+ * Link component that automatically determines if the given link href is external or not,
+ * conditionally rendering a Router link or a standard HTML anchor element (including
+ * a small external icon if the url is external)
+ */
 const AutoLink: React.FC<AutoLinkProps> = ({
   children,
   to,
@@ -48,7 +53,5 @@ const AutoLink: React.FC<AutoLinkProps> = ({
     </Link>
   );
 };
-
-AutoLink.displayName = "AutoLink";
 
 export default AutoLink;

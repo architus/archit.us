@@ -124,7 +124,6 @@ export interface GatewayRoute<
 > {
   event: TEvent;
   (args: TPayload): PayloadAction<GatewayDispatch>;
-  // TODO investigate callbacks/saga
 }
 
 export interface GatewayRouteConfig<TEvent extends string = string> {
@@ -149,3 +148,9 @@ export function makeGatewayRoute<
     return dispatch;
   };
 }
+
+let currentId = 1;
+export const generateRequestId: () => number = () => {
+  currentId += 2;
+  return currentId;
+};

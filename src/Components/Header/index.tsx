@@ -1,6 +1,6 @@
 import React from "react";
 import { Navbar } from "react-bootstrap";
-import styled, { Box } from "@xstyled/emotion";
+import styled, { Box, useUp } from "@xstyled/emotion";
 import Links from "Components/Header/Links";
 import preval from "preval.macro";
 import SessionControl from "Components/Header/SessionControl";
@@ -9,67 +9,23 @@ import Tooltip from "Components/Tooltip";
 import Icon from "Components/Icon";
 import { LinkProps } from "Components/Router";
 import { AnyIconName } from "Components/Icon/loader";
-import LogoSvg from "Assets/logo.inline.svg";
+import Logo from "Components/Logo";
 import { attach, isEmptyOrNil, isNil } from "Utility";
-import { opacity } from "Theme/getters";
+import { Option, Some } from "Utility/option";
+import { WithBoxProps } from "Utility/types";
+import { Breakpoint, opacity } from "Theme";
 import "./style.scss";
 
-type HeaderProps = {
-  children?: React.ReactNode;
-  noContainer?: boolean;
-  noLinks?: boolean;
-  sticky?: boolean;
-} & Omit<Partial<React.ComponentProps<typeof Navbar>>, "sticky">;
-
-const Header: React.FC<HeaderProps> = ({
-  children,
-  noContainer = false,
-  noLinks = false,
-  sticky = true,
-  ...rest
-}) => (
-  <Navbar
-    expand="md"
-    variant="dark"
-    collapseOnSelect
-    sticky={sticky ? "top" : undefined}
-    {...rest}
-  >
-    <div className={noContainer ? "container-fluid" : "container"}>
-      <Brand />
-      <Navbar.Toggle aria-controls="collapse-links" />
-      <Navbar.Collapse id="collapse-links">
-        {noLinks ? null : <Links className="mr-auto" />}
-        <div className="header-children">
-          {children}
-          <SessionControl />
-        </div>
-      </Navbar.Collapse>
-    </div>
-  </Navbar>
-);
-
-type BrandProps = Partial<LinkProps> & BuildMarkerProps;
-
-const Brand: React.FC<BrandProps> = ({ top, ...props }) => (
-  <Box display="flex" alignItems="center" mr="micro">
-    <Link {...props} className="nav-link brand" to="/">
-      <div dangerouslySetInnerHTML={{ __html: LogoSvg }} />
-    </Link>
-    <BuildMarker top={top} />
-  </Box>
-);
-
+// TODO file requires full migration to @xstyled/emotion
 const Styled = {
   TooltipDivider: styled.hr`
     border-top: 2px solid;
     border-top-color: ${opacity("light", 0.4)};
     margin: pico 0;
   `,
-  VersionPill: styled.div`
-    display: inline-block;
-    margin-top: femto;
-    margin-left: femto;
+  VersionPill: styled.divBox`
+    margin-top: atto;
+    margin-left: atto;
     padding: atto pico;
     border-radius: 4px;
     border: 2px solid;
@@ -91,9 +47,83 @@ const Styled = {
   `,
 };
 
-type BuildMarkerProps = { top?: boolean };
+type HeaderProps = {
+  children?: React.ReactNode;
+  noContainer?: boolean;
+  noLinks?: boolean;
+  sticky?: boolean;
+} & Omit<Partial<React.ComponentProps<typeof Navbar>>, "sticky">;
 
-const BuildMarker: React.FC<BuildMarkerProps> = ({ top = false }) => {
+/**
+ * Primary header component, including links and the session control dropdown. Additional
+ * children can be passed in via the `children` prop.
+ */
+const Header: React.FC<HeaderProps> = ({
+  children,
+  noContainer = false,
+  noLinks = false,
+  sticky = true,
+  ...rest
+}) => (
+  <Navbar
+    expand="md"
+    variant="dark"
+    collapseOnSelect
+    sticky={sticky ? "top" : undefined}
+    {...rest}
+  >
+    <div className={noContainer ? "container-fluid" : "container"}>
+      <Brand />
+      {noLinks ? null : <Links className="mr-auto" />}
+      <div className="header-children">
+        {children}
+        <SessionControl />
+      </div>
+    </div>
+  </Navbar>
+);
+
+// ? ==============
+// ? Sub-components
+// ? ==============
+
+type BrandProps = Partial<LinkProps> & BuildMarkerPropsBase;
+
+/**
+ * Shows a clickable architus logo that goes to the home page, as well as a build tag
+ * used for displaying the CI/local build status (hidden on production)
+ */
+const Brand: React.FC<BrandProps> = ({ top, className, style, ...props }) => (
+  <Box
+    display="flex"
+    alignItems="center"
+    mr="micro"
+    // Pass style props to the outer component
+    className={className}
+    style={style}
+  >
+    <Link {...props} className="nav-link brand" to="/">
+      {/* Use just the logotype on very small screen sizes */}
+      {useUp(Breakpoint.VS) ? <Logo.Combined /> : <Logo.Symbol />}
+    </Link>
+    {/* Hide the build marker in the header on small screen sizes */}
+    <BuildMarker top={top} display={{ xs: "none", lg: "inline-block" }} />
+  </Box>
+);
+
+type BuildMarkerPropsBase = { top?: boolean };
+type BuildMarkerProps = WithBoxProps<BuildMarkerPropsBase>;
+
+/**
+ * Build marker to use in non-production environments to display the CI/local build status
+ *
+ * **Note**: implementation is specific on *Netlify*, and will need to be changed if we
+ * ever migrate CI providers
+ */
+const BuildMarker: React.FC<BuildMarkerProps> = ({
+  top = false,
+  ...boxProps
+}) => {
   // See https://docs.netlify.com/configure-builds/environment-variables/#build-metadata
   const isLocal = process.env.BUILD_LOCATION !== "remote";
   const isProduction = process.env.BUILD_TAG === "prod";
@@ -145,7 +175,7 @@ const BuildMarker: React.FC<BuildMarkerProps> = ({ top = false }) => {
 
   if (text === null) return null;
   const inner = (
-    <Styled.VersionPill>
+    <Styled.VersionPill {...boxProps}>
       {icon && <Styled.VersionIcon name={icon} />}
       {text}
     </Styled.VersionPill>
@@ -157,8 +187,8 @@ const BuildMarker: React.FC<BuildMarkerProps> = ({ top = false }) => {
       text={tooltip}
       bottom={!top}
       top={top}
-      padding={6}
-      maxWidth={360}
+      padding="pico"
+      maxWidth="tera"
       toggle="click"
     >
       {inner}
@@ -168,6 +198,13 @@ const BuildMarker: React.FC<BuildMarkerProps> = ({ top = false }) => {
 
 type BuildTooltipProps = { children: React.ReactNode };
 
+/**
+ * Clickable tooltip that displays additional detailed build information as well as
+ * clickable links to relevant commits/PRs/deployment URLs
+ *
+ * **Note**: implementation is specific on *Netlify*, and will need to be changed if we
+ * ever migrate CI providers
+ */
 const BuildTooltip: React.FC<BuildTooltipProps> = ({ children }) => {
   const buildTimeString: string = preval`module.exports = (new Date()).toISOString()`;
   const buildTime = new Date(buildTimeString);
@@ -189,14 +226,22 @@ const BuildTooltip: React.FC<BuildTooltipProps> = ({ children }) => {
       ...values,
       "Build id": process.env.BUILD_ID,
       Context: process.env.CONTEXT,
-      "GitHub repository": <AutoLink>{process.env.REPOSITORY_URL}</AutoLink>,
+      "GitHub repository": (
+        <OptionLink>{Option.from(process.env.REPOSITORY_URL)}</OptionLink>
+      ),
       "Commit SHA": process.env.COMMIT_REF,
       "Commit URL": (
-        <AutoLink>{`${process.env.REPOSITORY_URL}/commit/${process.env.COMMIT_REF}`}</AutoLink>
+        <OptionLink>
+          {Some(
+            `${process.env.REPOSITORY_URL}/commit/${process.env.COMMIT_REF}`
+          )}
+        </OptionLink>
       ),
       Branch: process.env.BRANCH,
       Head: process.env.HEAD,
-      "Deploy URL": <AutoLink>{process.env.DEPLOY_PRIME_URL}</AutoLink>,
+      "Deploy URL": (
+        <OptionLink>{Option.from(process.env.DEPLOY_PRIME_URL)}</OptionLink>
+      ),
       "Deploy Id": process.env.DEPLOY_ID,
     };
   }
@@ -206,7 +251,9 @@ const BuildTooltip: React.FC<BuildTooltipProps> = ({ children }) => {
       ...values,
       "Pull request": `#${prId}`,
       "Pull request URL": (
-        <AutoLink>{`${process.env.REPOSITORY_URL}/pull/${prId}`}</AutoLink>
+        <OptionLink>
+          {Some(`${process.env.REPOSITORY_URL}/pull/${prId}`)}
+        </OptionLink>
       ),
     };
   }
@@ -229,13 +276,22 @@ const BuildTooltip: React.FC<BuildTooltipProps> = ({ children }) => {
   );
 };
 
-const AutoLink: React.FC<{ children: string | undefined }> = ({ children }) =>
-  isNil(children) ? (
-    <>~</>
-  ) : (
-    <Link to={children} space="femto" target="_blank" rel="noopener" external>
-      {children}
-    </Link>
-  );
+type OptionLink = {
+  children: Option<string>;
+};
+
+/**
+ * External link that wraps an effective `Option<string>`, displaying only `"~"` if the
+ * given option is undefined. Uses the same URL for the link text
+ */
+const OptionLink: React.FC<OptionLink> = ({ children }) =>
+  children
+    .map((link) => (
+      // eslint-disable-next-line react/jsx-key
+      <Link to={link} space="atto" target="_blank" rel="noopener" external>
+        {link}
+      </Link>
+    ))
+    .getOrElse(<>~</>);
 
 export default attach(Header, { Brand });
