@@ -1,0 +1,47 @@
+on: [push, pull_request]
+
+# Workflow to run build checks/tests/lints for each commit/PR,
+# and then upload the artifacts to our staging server
+name: build/test
+
+jobs:
+  build:
+    name: Build
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
+    runs-on: ubuntu-latest
+    env:
+      # Share cache with other compatible jobs
+      cache-id: yarn-ubuntu
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - uses: actions/cache@v1
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install dependencies
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: yarn install
+
+      - name: Build website
+        run: yarn build --no-type-check
+
+      - name: Create archive
+        run: tar -czvf ../dist.tar.gz .
+        working-directory: dist
+
+        # TODO make this use a custom JavaScript action
+      - name: Upload archive to staging API
+        run: stat dist.tar.gz
+
+        # TODO make this use a custom JavaScript action
+      - name: Add comment to PR
+        if: github.event_name == 'release'
+        run: echo "adding comment"
