@@ -1,0 +1,59 @@
+on: [push, pull_request]
+
+# Workflow to run build checks/tests/lints for each commit/PR,
+# and then upload the artifacts to our staging server
+name: build/test
+
+jobs:
+  build:
+    name: Build
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - uses: actions/cache@v1
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Resolve staging URL
+        id: resolve-staging
+        shell: bash
+        run: >-
+          if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
+              echo "::set-output name=path::pr/$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')"
+          else
+              echo "::set-output name=path::commit/$(echo $GITHUB_SHA | cut -c1-7)"
+          fi
+
+      - name: Build website
+        run: yarn build --no-type-check
+        env:
+          SITE_ROOT: https://staging.archit.us
+          BASE_PATH: ${{ steps.resolve-staging.outputs.path }}
+
+      - name: Create archive
+        run: tar -czvf ../dist.tar.gz .
+        working-directory: dist
+
+      - name: Upload built archive to staging API
+        uses: architus/upload-api-action@master
+        with:
+          archive-path: "./dist.tar.gz"
+          api-root: "https://staging.archit.us/api"
+          token: ${{ secrets.STAGING_UPLOAD_API_TOKEN }}
+
+        # TODO make this use a custom JavaScript action
+      - name: Add comment to PR
+        if: github.event_name == 'pull_request'
+        run: echo "adding comment"

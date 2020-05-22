@@ -1,8 +1,10 @@
 import { createAction, AnyAction, PayloadAction } from "@reduxjs/toolkit";
 import { ErrorContents, Omitted } from "Utility/types";
+import * as t from "io-ts";
 import { Errors } from "io-ts";
 import { Either } from "fp-ts/lib/Either";
 import { isDefined } from "Utility";
+import { option } from "Utility/option";
 
 // ? ==================
 // ? Actions
@@ -35,6 +37,20 @@ export interface GatewayDispatch {
   data: unknown;
 }
 
+export type GatewayErrorEvent = t.TypeOf<typeof GatewayErrorEvent>;
+export const GatewayErrorEvent = t.interface({
+  message: t.string,
+  human: option(t.string),
+  details: option(t.string),
+  context: option(t.unknown),
+  _id: option(t.number),
+  code: t.number,
+});
+
+export interface GatewayError extends GatewayErrorEvent {
+  timestamp: number;
+}
+
 export interface GatewaySend extends GatewayDispatch {
   timestamp: number;
 }
@@ -46,6 +62,7 @@ export const gatewayConnect = createAction("gateway/connect");
 export const gatewayDisconnect = createAction("gateway/disconnect");
 export const gatewayReconnect = createAction("gateway/reconnect");
 export const gatewayEvent = createAction<GatewayEventAction>("gateway/event");
+export const gatewayError = createAction<GatewayError>("gateway/error");
 export const gatewayMalformed = createAction<GatewayMalformed>(
   "gateway/malformed"
 );

@@ -1,7 +1,7 @@
 import React from "react";
 import classNames from "classnames";
 import { constructAvatarUrl, attach, isDefined } from "Utility";
-import { User } from "Utility/types";
+import { UserLike, normalizeUserLike } from "Utility/types";
 import { Option } from "Utility/option";
 import Skeleton from "Components/Skeleton";
 import "./style.scss";
@@ -12,7 +12,7 @@ type UserDisplayProps = {
   className?: string;
   avatarUrl?: string;
   username?: string;
-  user?: User;
+  user?: UserLike;
   discriminator?: string;
   avatar?: boolean;
 } & Partial<React.HTMLAttributes<HTMLElement>>;
@@ -31,7 +31,9 @@ const UserDisplay: React.FC<UserDisplayProps> = ({
     {!avatar && (
       <div>
         <Skeleton.Text
-          text={Option.from(user?.username).getOrElse("")}
+          text={
+            isDefined(user) ? normalizeUserLike(user).username : username ?? ""
+          }
           className="username"
           width={90}
           size="0.95em"
@@ -58,7 +60,7 @@ const UserDisplay: React.FC<UserDisplayProps> = ({
 type AvatarProps = {
   avatarUrl?: string;
   discriminator?: string;
-  user?: User;
+  user?: UserLike;
   className?: string;
   circle?: boolean;
   size?: number;
@@ -119,7 +121,7 @@ export function getAvatarUrl({
   size,
 }: {
   avatarUrl?: string;
-  user?: User;
+  user?: UserLike;
   discriminator?: string;
   size?: number;
 }): string {

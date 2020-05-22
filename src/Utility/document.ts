@@ -130,7 +130,7 @@ export const isRemote = !isClient;
 /**
  * True if the current execution context is the production app
  */
-export const isProduction = !(process.env.PRODUCTION_URL == null);
+export const isProduction = !(process.env.PRODUCTION == null);
 
 /**
  * Executes the given function if the current execution context is the browser

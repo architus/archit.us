@@ -3,14 +3,14 @@
 /**
  * Gets the RESTful API base URL to use
  */
-const API_BASE: string = process.env.PRODUCTION_URL
+const API_BASE: string = process.env.PRODUCTION
   ? "https://api.archit.us"
   : "https://api.develop.archit.us";
 
 /**
  * Gets the Gateway API base URL to use
  */
-const GATEWAY_API_BASE: string = process.env.PRODUCTION_URL
+const GATEWAY_API_BASE: string = process.env.PRODUCTION
   ? "https://gateway.archit.us"
   : "https://gateway.develop.archit.us";
 
