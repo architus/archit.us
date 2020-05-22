@@ -29,10 +29,8 @@ jobs:
       - name: Resolve staging URL
         id: resolve-staging
         shell: bash
-        env:
-          EVENT: ${{ github.event }}
         run: >-
-          if [[ "$EVENT" == "pull_request" ]]; then
+          if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
               echo "::set-output name=path::pr/$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')"
           else
               echo "::set-output name=path::commit/$(echo $GITHUB_SHA | cut -c1-7)"
@@ -52,7 +50,6 @@ jobs:
         uses: architus/upload-api-action@master
         with:
           archive-path: "./dist.tar.gz"
-          event: "commit"
           api-root: "https://staging.archit.us/api"
           token: ${{ secrets.STAGING_UPLOAD_API_TOKEN }}
 
