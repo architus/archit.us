@@ -27,7 +27,6 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Install dependencies
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: yarn install
 
       - name: Build website
@@ -39,7 +38,7 @@ jobs:
 
         # TODO make this use a custom JavaScript action
       - name: Upload PR archive to staging API
-        uses: architus/upload-api-action@8c62c35679e2ccb781f109a40d68e2a9cb4295fb
+        uses: architus/upload-api-action@master
         if: github.event_name == 'pull_request'
         with:
           archive-path: "./dist.tar.gz"
@@ -48,7 +47,7 @@ jobs:
           api-url: "https://staging.archit.us/api"
           token: ""
       - name: Upload commit archive to staging API
-        uses: architus/upload-api-action@8c62c35679e2ccb781f109a40d68e2a9cb4295fb
+        uses: architus/upload-api-action@master
         if: github.event_name == 'push'
         with:
           archive-path: "./dist.tar.gz"
