@@ -38,10 +38,30 @@ jobs:
         working-directory: dist
 
         # TODO make this use a custom JavaScript action
-      - name: Upload archive to staging API
+      - name: Upload PR archive to staging API
+        uses: architus/upload-api-action@8c62c35679e2ccb781f109a40d68e2a9cb4295fb
         run: stat dist.tar.gz
+        if: github.event_name == 'pull_request'
+        with:
+          archive-path: "./dist.tar.gz"
+          event: "pr"
+          event_id: ${{ env.GITHUB_REF }}
+          api-url: "https://staging.archit.us/api"
+          token: ""
+      - name: Upload commit archive to staging API
+        uses: architus/upload-api-action@8c62c35679e2ccb781f109a40d68e2a9cb4295fb
+        run: stat dist.tar.gz
+        if: github.event_name == 'push'
+        with:
+          archive-path: "./dist.tar.gz"
+          event: "commit"
+          event_id: ${{ github.sha }}
+          api-url: "https://staging.archit.us/api"
+          token: ""
+
+
 
         # TODO make this use a custom JavaScript action
       - name: Add comment to PR
-        if: github.event_name == 'release'
+        if: github.event_name == 'pull_request'
         run: echo "adding comment"
