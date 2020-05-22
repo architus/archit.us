@@ -43,8 +43,8 @@ jobs:
         with:
           archive-path: "./dist.tar.gz"
           event: "pr"
-          event_id: ${{ env.GITHUB_REF }}
-          api-url: "https://staging.archit.us/api"
+          event-id: ${{ env.GITHUB_REF }}
+          api-root: "https://staging.archit.us/api"
           token: ""
       - name: Upload commit archive to staging API
         uses: architus/upload-api-action@master
@@ -52,8 +52,8 @@ jobs:
         with:
           archive-path: "./dist.tar.gz"
           event: "commit"
-          event_id: ${{ github.sha }}
-          api-url: "https://staging.archit.us/api"
+          event-id: ${{ github.sha }}
+          api-root: "https://staging.archit.us/api"
           token: ""
 
 
