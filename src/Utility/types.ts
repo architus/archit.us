@@ -8,6 +8,7 @@ import { isDefined } from "./data";
 import { TransformerStep } from "./transform";
 import { option } from "./option";
 
+
 export class EnumType<A> extends t.Type<A> {
   public readonly _tag: "EnumType" = "EnumType";
 
@@ -487,19 +488,17 @@ export type ErrorContents = {
   readonly message: string;
 };
 
-const TEmoji = t.type({
+const TCustomEmoji = t.type({
   id: THoarFrost,
   name: t.string,
   authorId: option(TSnowflake),
-  loaded: t.boolean,
   numUses: t.number,
-  discordId: TSnowflake,
-  url: t.string
-
+  discordId: option(TSnowflake),
+  priority: t.number,
+  url: t.string,
 });
-export interface Emoji extends t.TypeOf<typeof TEmoji> {}
-export const Emoji = alias(TEmoji)<Emoji>();
-
+export interface CustomEmoji extends t.TypeOf<typeof TCustomEmoji> {}
+export const CustomEmoji = alias(TCustomEmoji)<CustomEmoji>();
 
 export enum LogEvents {
   GuildUpdate = 1,
