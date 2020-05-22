@@ -17,7 +17,7 @@ import {
 import { Snowflake, isSnowflake, Guild } from "Utility/types";
 import classNames from "classnames";
 import { usePool } from "Store/slices/pools";
-import { APP_PATH_ROOT } from "Dynamic/AppRoot/config.json";
+import { APP_PATH_ROOT } from "Dynamic/AppRoot/config";
 import { DEFAULT_TAB, tabs, tabPaths, TabPath } from "Dynamic/AppRoot/tabs";
 import { NavigationContext } from "Dynamic/AppRoot/context";
 import ErrorBoundary from "Components/ErrorBoundary";

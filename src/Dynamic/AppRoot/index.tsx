@@ -22,7 +22,7 @@ import { ScrollContext, AppContext } from "Dynamic/AppRoot/context";
 import { tabs, TabPath, DEFAULT_TAB } from "Dynamic/AppRoot/tabs";
 import AppContent, { useAppLocation } from "Dynamic/AppRoot/content";
 import AppLayout from "Dynamic/AppRoot/layout";
-import { APP_HTML_CLASS, APP_PATH_ROOT } from "Dynamic/AppRoot/config.json";
+import { APP_HTML_CLASS, APP_PATH_ROOT } from "Dynamic/AppRoot/config";
 import { AppDispatch } from "Dynamic/AppRoot/types";
 import {
   focusGuild,
@@ -127,6 +127,11 @@ type AppRootProps = {} & PageProps;
 
 const architusGuildFilter = (guild: Guild): boolean => guild.has_architus;
 
+function getFragments(): string[] {
+  const withoutPrefix = window.location.pathname.replace(APP_PATH_ROOT, "");
+  return splitPath(withoutPrefix);
+}
+
 const AppRoot: React.FC<AppRootProps> = () => {
   // Root class adding/removing
   useLayoutEffect(() => {
@@ -162,11 +167,11 @@ const AppRoot: React.FC<AppRootProps> = () => {
 
       if (focusTab.match(action)) {
         const path = action.payload;
-        const fragments = splitPath(window.location.pathname);
         let navigateTo: string | null = null;
+        const fragments = getFragments();
 
-        if (fragments.length >= 2) {
-          navigateTo = `${APP_PATH_ROOT}/${fragments[1]}/${path}`;
+        if (fragments.length >= 1) {
+          navigateTo = `${APP_PATH_ROOT}/${fragments[0]}/${path}`;
         } else {
           const { isLoaded, guilds } = guildStore.current;
           if (!isLoaded) return prev;
@@ -188,9 +193,9 @@ const AppRoot: React.FC<AppRootProps> = () => {
 
       if (focusGuild.match(action)) {
         const id = action.payload;
-        const fragments = splitPath(window.location.pathname);
-        if (fragments.length >= 3) {
-          navigate(`${APP_PATH_ROOT}/${id}/${fragments[2]}`);
+        const fragments = getFragments();
+        if (fragments.length >= 2) {
+          navigate(`${APP_PATH_ROOT}/${id}/${fragments[1]}`);
         } else {
           navigate(`${APP_PATH_ROOT}/${id}/${DEFAULT_TAB}`);
         }
