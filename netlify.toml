@@ -30,5 +30,5 @@
 
 [context.production]
   command = "yarn build"
-  environment = { PRODUCTION_URL = "https://archit.us", BUILD_TAG = "prod" }
+  environment = { PRODUCTION = "true", SITE_ROOT = "https://archit.us", BUILD_TAG = "prod" }
 

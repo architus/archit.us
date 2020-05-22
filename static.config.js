@@ -90,8 +90,12 @@ const config = {
   ),
 };
 
-if (process.env.PRODUCTION_URL) {
-  config.siteRoot = process.env.PRODUCTION_URL;
+if (process.env.SITE_ROOT) {
+  config.siteRoot = process.env.SITE_ROOT;
+}
+
+if (process.env.BASE_PATH) {
+  config.basePath = process.env.BASE_PATH;
 }
 
 // Configure typescript based on args

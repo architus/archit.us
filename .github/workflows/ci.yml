@@ -9,9 +9,6 @@ jobs:
     name: Build
     if: "!contains(github.event.head_commit.message, 'skip ci')"
     runs-on: ubuntu-latest
-    env:
-      # Share cache with other compatible jobs
-      cache-id: yarn-ubuntu
     steps:
       - uses: actions/checkout@v2
       - name: Get yarn cache directory path
@@ -19,7 +16,7 @@ jobs:
         run: echo "::set-output name=dir::$(yarn cache dir)"
 
       - uses: actions/cache@v1
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
@@ -29,8 +26,23 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
+      - name: Resolve staging URL
+        id: resolve-staging
+        shell: bash
+        env:
+          EVENT: ${{ github.event }}
+        run: >-
+          if [[ "$EVENT" == "pull_request" ]]; then
+              echo "::set-output name=path::pr/$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')"
+          else
+              echo "::set-output name=path::commit/$(echo $GITHUB_SHA | cut -c1-7)"
+          fi
+
       - name: Build website
         run: yarn build --no-type-check
+        env:
+          SITE_ROOT: https://staging.archit.us
+          BASE_PATH: ${{ steps.resolve-staging.outputs.path }}
 
       - name: Create archive
         run: tar -czvf ../dist.tar.gz .
