@@ -2,25 +2,24 @@ import React, { useContext, useMemo, MutableRefObject } from "react";
 import styled, { css, up, Box } from "@xstyled/emotion";
 import DataGrid, { Column, SortDirection } from "react-data-grid";
 import AutoSizer from "react-virtualized-auto-sizer";
-import { Badge, Container } from "react-bootstrap";
 import { ContextMenu, MenuItem, connectMenu } from "react-contextmenu";
 import { createPortal } from "react-dom";
 import { AppPageProps } from "Dynamic/AppRoot/types";
+import { intersection, memoize } from "Utility";
 import {
-  generateName,
-  randomNumericString,
-  randomInt,
-  useMemoOnce,
-  intersection,
-  memoize,
-} from "Utility";
-import { User, Snowflake, HoarFrost } from "Utility/types";
+  User,
+  Member,
+  Snowflake,
+  HoarFrost,
+  AutoResponse,
+} from "Utility/types";
 import { useCurrentUser } from "Store/actions";
 import { Option, None, Some, Unwrap } from "Utility/option";
 import { ScrollContext } from "Dynamic/AppRoot/context";
 import { Tooltip, Icon, Switch, HelpTooltip } from "Components";
 import { AnyIconName } from "Components/Icon/loader";
 import { getAvatarUrl } from "Components/UserDisplay";
+import { usePool, usePoolEntities } from "Store/slices/pools";
 import { opacity, color } from "Theme";
 import {
   TriggerFormatter,
@@ -37,46 +36,7 @@ import {
   applyNumericFilter,
   NumericFilter,
 } from "./NumericFilter";
-import { AutoResponse, TransformedAutoResponse, AuthorData } from "./types";
-
-type ViewMode = keyof typeof viewModes;
-const viewModeOrder: ViewMode[] = ["Sparse", "Comfy", "Compact"];
-const viewModes = {
-  Compact: { icon: "compact" as AnyIconName, label: "Compact", height: 28 },
-  Comfy: { icon: "comfy" as AnyIconName, label: "Comfy", height: 36 },
-  Sparse: { icon: "sparse" as AnyIconName, label: "Sparse", height: 44 },
-};
-
-type AutoResponsesProps = {
-  commands: TransformedAutoResponse[];
-  authors: Map<Snowflake, User>;
-  hasLoaded: boolean;
-  isArchitusAdmin: boolean;
-  currentUser: User;
-  scrollHandler: () => void;
-} & AppPageProps;
-
-type AutoResponsesState = {
-  filterSelfAuthored: boolean;
-  viewMode: ViewMode;
-  showFilters: boolean;
-  addNewRowEnable: boolean;
-  selectedRows: Set<HoarFrost>;
-  sort: Option<Sort>;
-  filters: Filters;
-};
-
-interface Sort {
-  column: ColumnKey;
-  direction: SortDirection;
-}
-type ColumnKey = "trigger" | "response" | "count" | "author" | "selection";
-interface Filters {
-  trigger: Option<string>;
-  response: Option<string>;
-  author: Option<string>;
-  count: NumericFilterValue;
-}
+import { TransformedAutoResponse, AuthorData } from "./types";
 
 const Styled = {
   PageOuter: styled.div`
@@ -151,7 +111,7 @@ const Styled = {
     ${(props): string =>
       props.active
         ? css`
-            background-color: dark_overlay;
+            background-color: dark_adjust;
             color: text;
           `
         : ""}
@@ -192,7 +152,7 @@ const Styled = {
           `
         : css`
             opacity: 1;
-            background-color: light_overlay;
+            background-color: light_adjust;
             box-shadow: none;
 
             &:not(:hover):not(:active) {
@@ -200,10 +160,10 @@ const Styled = {
             }
 
             &:hover {
-              background-color: dark_overlay_slight;
+              background-color: dark_adjust_slight;
             }
             &:active {
-              background-color: dark_overlay;
+              background-color: dark_adjust;
             }
           `}
   `,
@@ -243,40 +203,7 @@ const Styled = {
     }
 
     .rdg-cell-frozen-last + .rdg-cell {
-      padding-left: nano;
-    }
-
-    .rdg-row {
-      .rdg-cell-frozen {
-        &::before {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          bottom: 0;
-          right: 0;
-          background-color: b_400;
-          z-index: -1;
-          opacity: 0.65;
-          border-bottom: 1px solid;
-          border-bottom-color: border;
-        }
-      }
-
-      .rdg-cell-frozen-last + .rdg-cell {
-        padding-left: nano;
-
-        &::after {
-          content: "";
-          position: absolute;
-          height: 100%;
-          width: 1px;
-          top: 0;
-          left: -2px;
-          z-index: -1;
-          box-shadow: 0px 0px 10px 1px ${color("shadow_extraheavy")};
-        }
-      }
+      padding-left: pico;
     }
 
     .rdg-cell-mask {
@@ -317,7 +244,7 @@ const Styled = {
       border: 2px solid ${color("border")};
       background-color: b_600;
       margin-top: 7px;
-      margin-left: 3px;
+      margin-left: 7px;
     }
 
     .rdg-checkbox-input:checked + .rdg-checkbox {
@@ -561,7 +488,7 @@ const Styled = {
       }
 
       &.rdg-row-even {
-        & .rdg-cell:not(.rdg-cell-frozen) {
+        & .rdg-cell {
           background-color: contrast_overlay;
         }
       }
@@ -611,6 +538,47 @@ const Styled = {
   `,
 };
 
+type ViewMode = keyof typeof viewModes;
+const viewModeOrder: ViewMode[] = ["Sparse", "Comfy", "Compact"];
+const viewModes = {
+  Compact: { icon: "compact" as AnyIconName, label: "Compact", height: 28 },
+  Comfy: { icon: "comfy" as AnyIconName, label: "Comfy", height: 36 },
+  Sparse: { icon: "sparse" as AnyIconName, label: "Sparse", height: 44 },
+};
+
+type Author = Member;
+
+type AutoResponsesProps = {
+  commands: TransformedAutoResponse[];
+  authors: Map<Snowflake, Author>;
+  hasLoaded: boolean;
+  isArchitusAdmin: boolean;
+  currentUser: User;
+  scrollHandler: () => void;
+} & AppPageProps;
+
+type AutoResponsesState = {
+  filterSelfAuthored: boolean;
+  viewMode: ViewMode;
+  showFilters: boolean;
+  addNewRowEnable: boolean;
+  selectedRows: Set<HoarFrost>;
+  sort: Option<Sort>;
+  filters: Filters;
+};
+
+interface Sort {
+  column: ColumnKey;
+  direction: SortDirection;
+}
+type ColumnKey = "trigger" | "response" | "count" | "author" | "selection";
+interface Filters {
+  trigger: Option<string>;
+  response: Option<string>;
+  author: Option<string>;
+  count: NumericFilterValue;
+}
+
 function filterAuthors(
   commands: TransformedAutoResponse[],
   filter: Filters["author"],
@@ -618,7 +586,8 @@ function filterAuthors(
   currentUser: User
 ): TransformedAutoResponse[] {
   const selfAuthorFilter = filterSelfAuthored
-    ? (c: TransformedAutoResponse): boolean => c.authorId === currentUser.id
+    ? (c: TransformedAutoResponse): boolean =>
+        c.authorId.map((id) => id === currentUser.id).getOrElse(false)
     : (): boolean => true;
   const includeFilter = filter.isDefined()
     ? (c: TransformedAutoResponse): boolean =>
@@ -772,11 +741,16 @@ export class AutoResponses extends React.Component<
 
   findSelfAuthored = memoize<[TransformedAutoResponse[], User], Set<HoarFrost>>(
     ([commands, currentUser]) => {
-      return new Set<HoarFrost>(
-        commands
-          .filter((command) => command.authorId === currentUser.id)
-          .map((command) => command.id)
-      );
+      const ids: Set<HoarFrost> = new Set();
+      for (const command of commands) {
+        if (
+          command.authorId.isDefined() &&
+          command.authorId.get === currentUser.id
+        ) {
+          ids.add(command.id);
+        }
+      }
+      return ids;
     }
   );
 
@@ -871,8 +845,8 @@ export class AutoResponses extends React.Component<
       {
         key: "selection",
         name: "",
-        width: 38,
-        maxWidth: 35,
+        width: 42,
+        maxWidth: 42,
         frozen: true,
         headerRenderer: SelectionHeader(this.allRowsSelectedRef),
         formatter: SelectionFormatter(currentUser, isArchitusAdmin),
@@ -1006,16 +980,16 @@ export class AutoResponses extends React.Component<
  */
 function foldAuthorData(
   autoResponse: AutoResponse,
-  authors: Map<Snowflake, User>
+  authors: Map<Snowflake, Author>
 ): AuthorData {
   const id = autoResponse.authorId;
-  const userOption = Option.from(authors.get(id));
-  if (userOption.isDefined()) {
-    const { username, discriminator } = userOption.get;
+  const authorOption = id.flatMapNil((i) => authors.get(i));
+  if (authorOption.isDefined()) {
+    const { name, discriminator } = authorOption.get;
     return {
-      author: `${username}#${discriminator}|${id}`,
-      avatarUrl: getAvatarUrl({ user: userOption.get }),
-      username,
+      author: `${name}#${discriminator}|${id}`,
+      avatarUrl: getAvatarUrl({ user: authorOption.get }),
+      username: name,
       discriminator,
     };
   }
@@ -1028,93 +1002,54 @@ function foldAuthorData(
   };
 }
 
-function mockAuthors(
-  currentUser: Option<User>,
-  count: number
-): Map<Snowflake, User> {
-  const authors = new Map<Snowflake, User>();
-  for (let i = 0; i < count; ++i) {
-    const id = i.toString() as Snowflake;
-    authors.set(id, {
-      id,
-      username: generateName(),
-      discriminator: randomNumericString(4),
-      avatar: None,
-      bot: None,
-      system: None,
-      // eslint-disable-next-line @typescript-eslint/camelcase
-      mfa_enabled: None,
-      locale: None,
-      verified: None,
-      email: None,
-      flags: None,
-      // eslint-disable-next-line @typescript-eslint/camelcase
-      premium_type: None,
-    });
-  }
-  if (currentUser.isDefined()) {
-    authors.set(currentUser.get.id, currentUser.get);
-  }
-  return authors;
-}
-
-const baseCommands: [string, string][] = [
-  ["hello*", "[:JUST:]"],
-  ["YEP", ":thumbsup:"],
-  ["*night", "[:night:]"],
-  ["*get on", ":Pepega: :mega: [capture] get on"],
-  ["no", "[:JUST:"],
-];
-
-function mockData(
-  authors: Map<Snowflake, User>,
-  count: number
-): AutoResponse[] {
-  const responses: AutoResponse[] = [];
-  const authorArray = Array.from(authors.keys());
-  // Add unknown user
-  authorArray.push("-1" as Snowflake);
-  for (let i = 0; i < count; ++i) {
-    const authorIndex = randomInt(authorArray.length);
-    const commandIndex = randomInt(baseCommands.length);
-    const authorId = authorArray[authorIndex];
-    responses.push({
-      id: i.toString() as HoarFrost,
-      authorId,
-      trigger: baseCommands[commandIndex][0],
-      response: baseCommands[commandIndex][1],
-      count: randomInt(1000000),
-    });
-  }
-  return responses;
-}
-
-const AutoResponsesProvider: React.FC<AppPageProps> = () => {
-  return (
-    <Container className="py-5">
-      <h2>
-        Auto Responses <Badge variant="primary">Coming Soon</Badge>
-      </h2>
-    </Container>
-  );
-};
-
-const AutoResponsesProviderImplementation: React.FC<AppPageProps> = (
-  pageProps
-) => {
+const AutoResponsesProvider: React.FC<AppPageProps> = (pageProps) => {
+  const { guild } = pageProps;
   const currentUser: Option<User> = useCurrentUser();
-  const authors = useMemoOnce(() => mockAuthors(currentUser, 5));
-  const commands = useMemoOnce(() => mockData(authors, 100));
+  const { all: commands } = usePool({
+    type: "autoResponse",
+    guildId: guild.id,
+  });
+
+  // Load the authors from the commands (call the pool in a staggered manner)
+  const allAuthorIds = useMemo(() => {
+    const ids: Set<Snowflake> = new Set();
+    for (const command of commands) {
+      if (command.authorId.isDefined()) {
+        ids.add(command.authorId.get);
+      }
+    }
+    return Array.from(ids);
+  }, [commands]);
+  const authorEntries = usePoolEntities({
+    type: "member",
+    guildId: guild.id,
+    ids: allAuthorIds,
+  });
+  const authorsMap = useMemo(() => {
+    const authors: Map<Snowflake, Author> = new Map();
+    for (const authorEntry of authorEntries) {
+      if (authorEntry.isLoaded && authorEntry.entity.isDefined()) {
+        authors.set(authorEntry.entity.get.id, authorEntry.entity.get);
+      }
+    }
+    return authors;
+  }, [authorEntries]);
+
+  // Transform the commands to include the authors
   const { scrollHandler } = useContext(ScrollContext);
   const formattedCommands = useMemo(
     () =>
-      commands.map((c) => ({ ...c, authorData: foldAuthorData(c, authors) })),
-    [commands, authors]
+      commands.map((c) => ({
+        ...c,
+        authorData: foldAuthorData(c, authorsMap),
+      })),
+    [commands, authorsMap]
   );
+
   if (currentUser.isDefined())
     return (
       <AutoResponses
-        authors={authors}
+        authors={authorsMap}
         commands={formattedCommands}
         hasLoaded={false}
         currentUser={currentUser.get}

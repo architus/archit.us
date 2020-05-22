@@ -1,5 +1,6 @@
 import React, { lazy, Suspense } from "react";
 import { useSessionStatus } from "Store/slices/session";
+import { Box } from "@xstyled/emotion";
 import Login from "Pages/Login";
 import { Redirect, Router, PageProps } from "Components/Router";
 import {
@@ -149,7 +150,7 @@ const Wrapper: React.FC<WrapperProps> = () => {
 type AppSkeletonProps = {};
 
 const AppSkeleton: React.FC<AppSkeletonProps> = () => (
-  <div className="settings">
+  <Box padding="milli">
     <Skeleton.Auto
       block
       width={170}
@@ -157,7 +158,7 @@ const AppSkeleton: React.FC<AppSkeletonProps> = () => (
       style={{ marginBottom: "1rem" }}
     />
     <Skeleton.Auto block width={300} height={20} />
-  </div>
+  </Box>
 );
 
 export default attach(AppContent, { Wrapper, Skeleton: AppSkeleton });

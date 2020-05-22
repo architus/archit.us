@@ -1,7 +1,7 @@
 import React from "react";
 
 import Settings from "Dynamic/Settings";
-import AutoResponses from "Dynamic/AutoResponses";
+import AutoResponses from "Dynamic/AutoResponses/AutoResponses";
 import EmojiManager from "Dynamic/EmojiManager";
 import Logs from "Dynamic/Logs";
 import MusicQueue from "Dynamic/MusicQueue";

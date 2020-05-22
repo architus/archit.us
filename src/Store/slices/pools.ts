@@ -9,6 +9,7 @@ import {
   Nil,
   AutoResponse,
   HoarFrost,
+  Member,
 } from "Utility/types";
 import { Option, None, Some } from "Utility/option";
 
@@ -16,6 +17,7 @@ export type AllPoolTypes = {
   guild: Guild;
   user: User;
   autoResponse: AutoResponse;
+  member: Member;
 };
 
 // Runtime io-ts types
@@ -23,10 +25,11 @@ export const AllPoolTypes = {
   guild: Guild,
   user: User,
   autoResponse: AutoResponse,
+  member: Member,
 };
 
 export const guildAgnosticPools = ["user", "guild"] as const;
-export const guildSpecificPools = ["autoResponse"] as const;
+export const guildSpecificPools = ["autoResponse", "member"] as const;
 export const allPools: PoolType[] = [
   ...guildAgnosticPools,
   ...guildSpecificPools,
