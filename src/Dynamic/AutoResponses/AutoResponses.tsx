@@ -6,7 +6,13 @@ import { ContextMenu, MenuItem, connectMenu } from "react-contextmenu";
 import { createPortal } from "react-dom";
 import { AppPageProps } from "Dynamic/AppRoot/types";
 import { intersection, memoize } from "Utility";
-import { User, Snowflake, HoarFrost, AutoResponse } from "Utility/types";
+import {
+  User,
+  Member,
+  Snowflake,
+  HoarFrost,
+  AutoResponse,
+} from "Utility/types";
 import { useCurrentUser } from "Store/actions";
 import { Option, None, Some, Unwrap } from "Utility/option";
 import { ScrollContext } from "Dynamic/AppRoot/context";
@@ -31,45 +37,6 @@ import {
   NumericFilter,
 } from "./NumericFilter";
 import { TransformedAutoResponse, AuthorData } from "./types";
-
-type ViewMode = keyof typeof viewModes;
-const viewModeOrder: ViewMode[] = ["Sparse", "Comfy", "Compact"];
-const viewModes = {
-  Compact: { icon: "compact" as AnyIconName, label: "Compact", height: 28 },
-  Comfy: { icon: "comfy" as AnyIconName, label: "Comfy", height: 36 },
-  Sparse: { icon: "sparse" as AnyIconName, label: "Sparse", height: 44 },
-};
-
-type AutoResponsesProps = {
-  commands: TransformedAutoResponse[];
-  authors: Map<Snowflake, User>;
-  hasLoaded: boolean;
-  isArchitusAdmin: boolean;
-  currentUser: User;
-  scrollHandler: () => void;
-} & AppPageProps;
-
-type AutoResponsesState = {
-  filterSelfAuthored: boolean;
-  viewMode: ViewMode;
-  showFilters: boolean;
-  addNewRowEnable: boolean;
-  selectedRows: Set<HoarFrost>;
-  sort: Option<Sort>;
-  filters: Filters;
-};
-
-interface Sort {
-  column: ColumnKey;
-  direction: SortDirection;
-}
-type ColumnKey = "trigger" | "response" | "count" | "author" | "selection";
-interface Filters {
-  trigger: Option<string>;
-  response: Option<string>;
-  author: Option<string>;
-  count: NumericFilterValue;
-}
 
 const Styled = {
   PageOuter: styled.div`
@@ -571,6 +538,47 @@ const Styled = {
   `,
 };
 
+type ViewMode = keyof typeof viewModes;
+const viewModeOrder: ViewMode[] = ["Sparse", "Comfy", "Compact"];
+const viewModes = {
+  Compact: { icon: "compact" as AnyIconName, label: "Compact", height: 28 },
+  Comfy: { icon: "comfy" as AnyIconName, label: "Comfy", height: 36 },
+  Sparse: { icon: "sparse" as AnyIconName, label: "Sparse", height: 44 },
+};
+
+type Author = Member;
+
+type AutoResponsesProps = {
+  commands: TransformedAutoResponse[];
+  authors: Map<Snowflake, Author>;
+  hasLoaded: boolean;
+  isArchitusAdmin: boolean;
+  currentUser: User;
+  scrollHandler: () => void;
+} & AppPageProps;
+
+type AutoResponsesState = {
+  filterSelfAuthored: boolean;
+  viewMode: ViewMode;
+  showFilters: boolean;
+  addNewRowEnable: boolean;
+  selectedRows: Set<HoarFrost>;
+  sort: Option<Sort>;
+  filters: Filters;
+};
+
+interface Sort {
+  column: ColumnKey;
+  direction: SortDirection;
+}
+type ColumnKey = "trigger" | "response" | "count" | "author" | "selection";
+interface Filters {
+  trigger: Option<string>;
+  response: Option<string>;
+  author: Option<string>;
+  count: NumericFilterValue;
+}
+
 function filterAuthors(
   commands: TransformedAutoResponse[],
   filter: Filters["author"],
@@ -972,16 +980,16 @@ export class AutoResponses extends React.Component<
  */
 function foldAuthorData(
   autoResponse: AutoResponse,
-  authors: Map<Snowflake, User>
+  authors: Map<Snowflake, Author>
 ): AuthorData {
   const id = autoResponse.authorId;
-  const userOption = id.flatMapNil((i) => authors.get(i));
-  if (userOption.isDefined()) {
-    const { username, discriminator } = userOption.get;
+  const authorOption = id.flatMapNil((i) => authors.get(i));
+  if (authorOption.isDefined()) {
+    const { name, discriminator } = authorOption.get;
     return {
-      author: `${username}#${discriminator}|${id}`,
-      avatarUrl: getAvatarUrl({ user: userOption.get }),
-      username,
+      author: `${name}#${discriminator}|${id}`,
+      avatarUrl: getAvatarUrl({ user: authorOption.get }),
+      username: name,
       discriminator,
     };
   }
@@ -1013,11 +1021,12 @@ const AutoResponsesProvider: React.FC<AppPageProps> = (pageProps) => {
     return Array.from(ids);
   }, [commands]);
   const authorEntries = usePoolEntities({
-    type: "user",
+    type: "member",
+    guildId: guild.id,
     ids: allAuthorIds,
   });
   const authorsMap = useMemo(() => {
-    const authors: Map<Snowflake, User> = new Map();
+    const authors: Map<Snowflake, Author> = new Map();
     for (const authorEntry of authorEntries) {
       if (authorEntry.isLoaded && authorEntry.entity.isDefined()) {
         authors.set(authorEntry.entity.get.id, authorEntry.entity.get);

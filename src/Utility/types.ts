@@ -568,4 +568,49 @@ export const AutoResponse = t.type({
   mode: TAutoResponseTriggerMode,
 });
 
+/**
+ * Contains the common properties between `Member` and `User`, additionally
+ * used to type methods that can accept both.
+ */
+export type UserLike = {
+  [K in keyof User & keyof Member]: User[K] | Member[K];
+} &
+  // One of username or name must be defined
+  // Username: from User
+  // Name: from Member
+  ({ username: string } | { name: string });
+
+export type NormalizedUserLike = {
+  [K in keyof User & keyof Member]: User[K] | Member[K];
+} & {
+  username: string;
+};
+
+/**
+ * Normalizes a UserLike (Member or User) to have a predictable shape
+ * @param userLike - Source user like (member or user)
+ */
+export function normalizeUserLike(userLike: UserLike): NormalizedUserLike {
+  return {
+    id: userLike.id,
+    discriminator: userLike.discriminator,
+    avatar: userLike.avatar,
+    username: isDefined((userLike as { username: string | Nil }).username)
+      ? (userLike as { username: string }).username
+      : (userLike as { name: string }).name,
+  };
+}
+
 export type WithBoxProps<P> = P & Omit<BoxProps, keyof P>;
+
+export type Member = t.TypeOf<typeof Member>;
+export const Member = t.type({
+  id: TSnowflake,
+  name: t.string,
+  discriminator: t.string,
+  joined_at: TimeFromString, // ISO 8601
+  avatar: option(t.string),
+  color: option(t.string), // hex color
+  nick: option(t.string),
+  roles: t.array(TSnowflake), // foreign key references
+});
