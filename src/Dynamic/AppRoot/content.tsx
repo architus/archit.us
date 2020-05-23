@@ -86,6 +86,8 @@ const AppContent: React.ComponentType<AppContentProps> = withClientSide(
     // Render skeleton screen if loading
     if (!isSignedIn) return <AppSkeleton />;
 
+    console.log({ guildOption, currentTab });
+
     return (
       <NavigationContext.Provider value={navigationCtx}>
         <Router>
