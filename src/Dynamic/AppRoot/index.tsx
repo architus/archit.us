@@ -169,6 +169,7 @@ const AppRoot: React.FC<AppRootProps> = () => {
         const path = action.payload;
         let navigateTo: string | null = null;
         const fragments = getFragments();
+        console.log(fragments);
 
         if (fragments.length >= 1) {
           navigateTo = `${APP_PATH_ROOT}/${fragments[0]}/${path}`;
@@ -194,6 +195,7 @@ const AppRoot: React.FC<AppRootProps> = () => {
       if (focusGuild.match(action)) {
         const id = action.payload;
         const fragments = getFragments();
+        console.log(fragments);
         if (fragments.length >= 2) {
           navigate(`${APP_PATH_ROOT}/${id}/${fragments[1]}`);
         } else {
