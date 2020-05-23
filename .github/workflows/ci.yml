@@ -11,6 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
+      - name: Add pre comment to PR
+        uses: architus/staging-comment-action@master
+        if: github.event_name == 'pull_request'
+        with:
+          mode: pre
+
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
@@ -53,7 +60,8 @@ jobs:
           api-root: "https://staging.archit.us/api"
           token: ${{ secrets.STAGING_UPLOAD_API_TOKEN }}
 
-        # TODO make this use a custom JavaScript action
-      - name: Add comment to PR
+      - name: Add post comment to PR
+        uses: architus/staging-comment-action@master
         if: github.event_name == 'pull_request'
-        run: echo "adding comment"
+        with:
+          mode: post

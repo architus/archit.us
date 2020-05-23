@@ -1,6 +1,5 @@
 import React, { useMemo } from "react";
 import classNames from "classnames";
-import { splitPath, isDefined, useLocation } from "Utility";
 import { Snowflake, isSnowflake, Guild } from "Utility/types";
 import { usePool } from "Store/slices/pools";
 import Skeleton from "Components/Skeleton";

@@ -20,7 +20,8 @@ const Styled = {
     z-index: 1090;
 
     .tooltip-inner {
-      padding: atto femto;
+      box-shadow: 3;
+      padding: femto pico;
       max-width: none;
       background-color: tooltip;
       border-radius: 4px;
