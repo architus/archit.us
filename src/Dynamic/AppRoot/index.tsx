@@ -129,7 +129,9 @@ const architusGuildFilter = (guild: Guild): boolean => guild.has_architus;
 
 function getFragments(): string[] {
   const withoutPrefix = window.location.pathname.replace(APP_PATH_ROOT, "");
-  return splitPath(withoutPrefix);
+  return splitPath(withoutPrefix).filter(
+    (fragment) => fragment.trim().length > 0
+  );
 }
 
 const AppRoot: React.FC<AppRootProps> = () => {
