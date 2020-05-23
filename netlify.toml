@@ -26,9 +26,9 @@
 [build]
   # Disable type checking on building to save time on Netlify
   command = "yarn build --no-type-check"
-  environment = { NODE_ENV = "production", BUILD_LOCATION = "remote" }
+  environment = { NODE_ENV = "production", SITE_ROOT = "https://develop.archit.us", BUILD_LOCATION = "remote", APP_NAME = "Architus Canary" }
 
 [context.production]
   command = "yarn build"
-  environment = { PRODUCTION = "true", SITE_ROOT = "https://archit.us", BUILD_TAG = "prod" }
+  environment = { PRODUCTION = "true", SITE_ROOT = "https://archit.us", BUILD_TAG = "prod", APP_NAME = "Architus" }
 

@@ -196,9 +196,6 @@ export function usePrevious<T>(
  */
 export function useRefWrapper<T>(value: T): MutableRefObject<T> {
   const ref = useRef(value);
-
-  useEffect(() => {
-    ref.current = value;
-  }, [value]);
+  ref.current = value;
   return ref;
 }
