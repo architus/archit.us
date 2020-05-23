@@ -5,8 +5,6 @@ import Login from "Pages/Login";
 import { Redirect, Router, PageProps } from "Components/Router";
 import {
   withClientSide,
-  useLocation,
-  splitPath,
   attach,
   useInitialRender,
   isNil,
@@ -24,6 +22,7 @@ import ErrorBoundary from "Components/ErrorBoundary";
 import Skeleton from "Components/Skeleton";
 import Begin from "Dynamic/Begin";
 import { Option, Some, None } from "Utility/option";
+import { useFragments } from "./types";
 
 interface AppLocation {
   currentTab: TabPath | null;
@@ -42,10 +41,9 @@ export function useAppLocation(): AppLocation {
     filter: hasArchitusFilter,
   });
 
-  const { location } = useLocation();
-  const fragments = splitPath(location.pathname);
-  const tabFragment = fragments.length >= 3 ? fragments[2] : "";
-  const guildFragment = fragments.length >= 2 ? fragments[1] : "";
+  const fragments = useFragments();
+  const tabFragment = fragments.length >= 2 ? fragments[1] : "";
+  const guildFragment = fragments.length >= 1 ? fragments[0] : "";
 
   const currentTab: TabPath | null = isValidTab(tabFragment)
     ? tabFragment
@@ -86,7 +84,7 @@ const AppContent: React.ComponentType<AppContentProps> = withClientSide(
     // Render skeleton screen if loading
     if (!isSignedIn) return <AppSkeleton />;
 
-    console.log({ guildOption, currentTab });
+    console.log({ currentGuild, guildOption, currentTab });
 
     return (
       <NavigationContext.Provider value={navigationCtx}>

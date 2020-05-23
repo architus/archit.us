@@ -11,7 +11,6 @@ import classNames from "classnames";
 import { navigate } from "@reach/router";
 import {
   useCallbackOnce,
-  splitPath,
   isDefined,
   usePrevious,
   useRefWrapper,
@@ -29,7 +28,7 @@ import { tabs, TabPath, DEFAULT_TAB } from "Dynamic/AppRoot/tabs";
 import AppContent, { useAppLocation } from "Dynamic/AppRoot/content";
 import AppLayout from "Dynamic/AppRoot/layout";
 import { APP_HTML_CLASS, APP_PATH_ROOT } from "Dynamic/AppRoot/config";
-import { AppDispatch } from "Dynamic/AppRoot/types";
+import { AppDispatch, getFragments } from "Dynamic/AppRoot/types";
 import {
   focusGuild,
   showGuildAddModal,
@@ -132,13 +131,6 @@ interface LocalGuildStore {
 type AppRootProps = {} & PageProps;
 
 const architusGuildFilter = (guild: Guild): boolean => guild.has_architus;
-
-function getFragments(): string[] {
-  const withoutPrefix = window.location.pathname.replace(APP_PATH_ROOT, "");
-  return splitPath(withoutPrefix).filter(
-    (fragment) => fragment.trim().length > 0
-  );
-}
 
 const AppRoot: React.FC<AppRootProps> = () => {
   // Root class adding/removing
