@@ -13,7 +13,10 @@ import { StyleObject } from "Utility/types";
 import { Space } from "Theme";
 
 const Styled = {
-  Tooltip: styled<typeof BootstrapTooltip, { id: string }>(BootstrapTooltip)`
+  Tooltip: styled<
+    typeof BootstrapTooltip,
+    { id: string; className?: string; style?: StyleObject }
+  >(BootstrapTooltip)`
     z-index: 1090;
 
     .tooltip-inner {
@@ -79,7 +82,8 @@ const TooltipController: React.FC<TooltipControllerProps> = ({
   toggle = "hover",
   delay = 0,
   maxWidth = "giga",
-  ...styleProps
+  className,
+  style,
 }) => {
   // Normalize modifiers
   const baseModifiers = popperConfig?.modifiers;
@@ -91,11 +95,13 @@ const TooltipController: React.FC<TooltipControllerProps> = ({
     },
   });
 
-  if (hide) return <>{children}</>;
-
   // Inner tooltip display component (use hidden div if `hide` is true)
   const tooltip = (
-    <Styled.Tooltip id={id} {...styleProps}>
+    <Styled.Tooltip
+      id={id}
+      className={className}
+      style={{ ...(style ?? {}), display: hide ? "none" : undefined }}
+    >
       <Box padding={padding} maxWidth={maxWidth}>
         {text}
       </Box>
