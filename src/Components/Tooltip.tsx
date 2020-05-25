@@ -19,6 +19,10 @@ const Styled = {
   >(BootstrapTooltip)`
     z-index: 1090;
 
+    &.show {
+      opacity: 0.95 !important;
+    }
+
     .tooltip-inner {
       box-shadow: 3;
       padding: femto pico;
