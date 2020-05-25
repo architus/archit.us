@@ -105,6 +105,19 @@ export default () => ({
       );
     }
 
+    // Packtracker CI uploading
+    if (args.includes("--pt-enable")) {
+      const PacktrackerPlugin = require("@packtracker/webpack-plugin");
+      console.log("Uploading packtracker stats during CI");
+      config.plugins.push(
+        new PacktrackerPlugin({
+          project_token: process.env.PT_PROJECT_TOKEN,
+          upload: true,
+          fail_build: true,
+        })
+      );
+    }
+
     // Add React devtools profiling on non-production site builds
     if (!process.env.PRODUCTION_URL && process.env.NODE_ENV === "production") {
       if (args.includes("--no-profiling")) {
