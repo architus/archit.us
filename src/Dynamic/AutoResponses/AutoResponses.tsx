@@ -523,7 +523,7 @@ const Styled = {
     }
 
     & .react-contextmenu-item {
-      padding: 2px nano;
+      padding: femto micro;
       cursor: pointer;
       outline: none;
 
