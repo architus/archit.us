@@ -62,19 +62,15 @@ jobs:
           SITE_ROOT: ${{ env.BASE_STAGING_URL }}
           BASE_PATH: ${{ steps.resolve-staging.outputs.path }}
         run: >-
-          # Store the pre-build time
-          T="$(date +%s)"
+          T="$(date +%s)";
 
-          yarn build --no-type-check
-          exit_code=$?
+          yarn build --no-type-check;
+          exit_code=$?;
 
-          # Calculate the build duration
-          T="$(($(date +%s)-T))"
-          echo "::set-output name=duration::${T}"
-
-          echo "Build finished in $T seconds with exit code $exit_code"
-          # Re-raise exit code
-          exit $exit_code
+          T="$(($(date +%s)-T))";
+          echo "::set-output name=duration::${T}";
+          echo "Build finished in $T seconds with exit code $exit_code";
+          exit $exit_code;
 
       - name: Create archive
         run: tar -czvf ../${{ env.ARCHIVE_NAME }} .
