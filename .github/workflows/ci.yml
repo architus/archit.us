@@ -19,7 +19,7 @@ jobs:
         id: build-time
         shell: bash
         run: >-
-          echo "::set-output name=time::$(date --iso-8601=ns)"
+          echo "::set-output name=time::$(date --iso-8601=seconds)"
 
       - name: Add pre comment to PR
         uses: architus/staging-comment-action@master
