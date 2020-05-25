@@ -27,7 +27,7 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Install dependencies
-        run: yarn Install
+        run: yarn install
 
       - name: Run eslint
         run: yarn lint
