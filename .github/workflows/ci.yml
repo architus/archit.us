@@ -1,38 +1,18 @@
 on:
-  push:
   pull_request:
     types: [opened, synchronize, reopened]
 
-# Workflow to run build checks/tests/lints for each commit/PR,
-# and then upload the artifacts to our staging server
-name: build/test
-env:
-  BASE_STAGING_URL: https://staging.archit.us
-  ARCHIVE_NAME: dist.tar.gz
+# Workflow to run build checks/lints/tests for each open PR, for which
+# the tests passing is a required condition for merging
+name: ci
 
 jobs:
-  build:
-    name: Build
+  lint:
+    name: Lint
     if: "!contains(github.event.head_commit.message, 'skip ci')"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
-      - name: Store build time
-        id: build-time
-        shell: bash
-        run: >-
-          echo "::set-output name=time::$(date --iso-8601=seconds)"
-
-      - name: Add pre comment to PR
-        uses: architus/staging-comment-action@master
-        if: github.event_name == 'pull_request'
-        with:
-          mode: pre
-          job-name: ${{ github.job }}
-          build-time: ${{ steps.build-time.outputs.time }}
-          base-staging-url: ${{ env.BASE_STAGING_URL }}
-          GITHUB_TOKEN: ${{ secrets.ARCHITUS_BOT_TOKEN }}
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
@@ -47,55 +27,7 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Install dependencies
-        run: yarn install
+        run: yarn Install
 
-      - name: Resolve staging URL
-        id: resolve-staging
-        shell: bash
-        run: >-
-          if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
-              echo "::set-output name=path::pr/$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')"
-          else
-              echo "::set-output name=path::commit/$(echo $GITHUB_SHA | cut -c1-7)"
-          fi
-
-      - name: Build website
-        id: build
-        shell: bash
-        env:
-          SITE_ROOT: ${{ env.BASE_STAGING_URL }}
-          BASE_PATH: ${{ steps.resolve-staging.outputs.path }}
-        # Build the website from a bash script, tracking the build duration
-        # and re-raising the resultant exit code from the build command
-        run: >-
-          T="$(date +%s)";
-
-          yarn build --no-type-check;
-          exit_code=$?;
-
-          T="$(($(date +%s)-T))";
-          echo "::set-output name=duration::${T}";
-          echo "Build finished in $T seconds with exit code $exit_code";
-          exit $exit_code;
-
-      - name: Create archive
-        run: tar -czvf ../${{ env.ARCHIVE_NAME }} .
-        working-directory: dist
-
-      - name: Upload built archive to staging API
-        uses: architus/upload-api-action@master
-        with:
-          archive-path: ./${{ env.ARCHIVE_NAME }}
-          api-root: ${{ env.BASE_STAGING_URL }}/api
-          token: ${{ secrets.STAGING_UPLOAD_API_TOKEN }}
-
-      - name: Add post comment to PR
-        uses: architus/staging-comment-action@master
-        if: github.event_name == 'pull_request'
-        with:
-          mode: post
-          job-name: ${{ github.job }}
-          build-time: ${{ steps.build-time.outputs.time }}
-          build-duration: ${{ steps.build.outputs.duration }}
-          base-staging-url: ${{ env.BASE_STAGING_URL }}
-          GITHUB_TOKEN: ${{ secrets.ARCHITUS_BOT_TOKEN }}
+      - name: Run eslint
+        run: yarn lint
