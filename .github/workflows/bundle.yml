@@ -31,7 +31,7 @@ jobs:
         id: identify-git-sha
         shell: bash
         run: >-
-          commit=$(git rev-parse HEAD)
+          commit=$(git rev-parse HEAD);
           echo "::set-output name=commit::${commit}";
           echo "::set-output name=prior_commit::$(git log --format="%H" -n 1 ${commit}~)";
 

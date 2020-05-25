@@ -114,6 +114,8 @@ export default () => ({
           project_token: process.env.PT_PROJECT_TOKEN,
           upload: true,
           fail_build: true,
+          commit: process.env.PT_COMMIT,
+          prior_commit: process.env.PT_PRIOR_COMMIT,
         })
       );
     }
