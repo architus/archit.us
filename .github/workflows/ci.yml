@@ -66,15 +66,15 @@ jobs:
           T="$(date +%s)"
 
           yarn build --no-type-check
-          # Check the status code, and re-raise if error
-          if [ $? -ne 0 ]
-          then
-            exit 1
-          fi
+          exit_code=$?
 
           # Calculate the build duration
           T="$(($(date +%s)-T))"
           echo "::set-output name=duration::${T}"
+
+          echo "Build finished in $T seconds with exit code $exit_code"
+          # Re-raise exit code
+          exit $exit_code
 
       - name: Create archive
         run: tar -czvf ../${{ env.ARCHIVE_NAME }} .
