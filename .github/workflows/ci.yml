@@ -28,7 +28,7 @@ jobs:
           mode: pre
           build-time: ${{ steps.build-time.outputs.time }}
           base-staging-url: ${{ env.BASE_STAGING_URL }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ARCHITUS_BOT_TOKEN }}
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
@@ -95,4 +95,4 @@ jobs:
           build-time: ${{ steps.build-time.outputs.time }}
           build-duration: ${{ steps.build.outputs.duration }}
           base-staging-url: ${{ env.BASE_STAGING_URL }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ARCHITUS_BOT_TOKEN }}
