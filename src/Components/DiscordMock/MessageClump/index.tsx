@@ -113,13 +113,7 @@ type RenderedMessageProps = {
  * Memoized message which transforms its content via `useMemo`
  */
 const RenderedMessage: React.FC<RenderedMessageProps> = React.memo(
-  ({
-    message,
-    sender,
-    genericOnReact,
-    genericOnUnreact,
-    skeletonAmount,
-  }) => {
+  ({ message, sender, genericOnReact, genericOnUnreact, skeletonAmount }) => {
     const { transform, context } = useContext(TransformMessageContext);
     const { result, mentions } = useMemo(
       () => transform(message, sender, context),

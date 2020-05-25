@@ -116,7 +116,8 @@ const Styled = {
 
 /**
  * Primary footer component used at the bottom of content (non-dashboard) pages
- * @todo Examine de-duplicating logic/styles in this and `docs.archit.us`
+ *
+ * TODO: Examine de-duplicating logic/styles in this and `docs.archit.us`
  */
 const Footer: React.FC<BoxProps> = (boxProps) => (
   <Styled.Footer {...boxProps}>
