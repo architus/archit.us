@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
@@ -27,17 +29,7 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Identify git SHA's
-        id: identify-git-sha
-        shell: bash
-        run: >-
-          commit=$(git rev-parse HEAD);
-          echo "::set-output name=commit::${commit}";
-          echo "::set-output name=prior_commit::$(git log --format="%H" -n 1 ${commit}~)";
-
       - name: Run build with packtracker plugin enabled
         run: yarn bundlesize
         env:
           PT_PROJECT_TOKEN: ${{ secrets.PT_PROJECT_TOKEN }}
-          PT_COMMIT: ${{ steps.identify-guild-sha.outputs.commit }}
-          PT_PRIOR_COMMIT: ${{ steps.identify-guild-sha.outputs.prior_commit }}
