@@ -3,6 +3,9 @@ on: [push, pull_request]
 # Workflow to run build checks/tests/lints for each commit/PR,
 # and then upload the artifacts to our staging server
 name: build/test
+env:
+  BASE_STAGING_URL: https://staging.archit.us
+  ARCHIVE_NAME: dist.tar.gz
 
 jobs:
   build:
@@ -12,11 +15,20 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Store build time
+        id: build-time
+        shell: bash
+        run: >-
+          echo "::set-output name=time::$(date --iso-8601=ns)"
+
       - name: Add pre comment to PR
         uses: architus/staging-comment-action@master
         if: github.event_name == 'pull_request'
         with:
           mode: pre
+          build-time: ${{ steps.build-time.outputs.time }}
+          base-staging-url: ${{ env.BASE_STAGING_URL }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
@@ -44,20 +56,35 @@ jobs:
           fi
 
       - name: Build website
-        run: yarn build --no-type-check
+        id: build
+        shell: bash
         env:
-          SITE_ROOT: https://staging.archit.us
+          SITE_ROOT: ${{ env.BASE_STAGING_URL }}
           BASE_PATH: ${{ steps.resolve-staging.outputs.path }}
+        run: >-
+          # Store the pre-build time
+          T="$(date +%s)"
+
+          yarn build --no-type-check
+          # Check the status code, and re-raise if error
+          if [ $? -ne 0 ]
+          then
+            exit 1
+          fi
+
+          # Calculate the build duration
+          T="$(($(date +%s)-T))"
+          echo "::set-output name=duration::${T}"
 
       - name: Create archive
-        run: tar -czvf ../dist.tar.gz .
+        run: tar -czvf ../${{ env.ARCHIVE_NAME }} .
         working-directory: dist
 
       - name: Upload built archive to staging API
         uses: architus/upload-api-action@master
         with:
-          archive-path: "./dist.tar.gz"
-          api-root: "https://staging.archit.us/api"
+          archive-path: ./${{ env.ARCHIVE_NAME }}
+          api-root: ${{ env.BASE_STAGING_URL }}/api
           token: ${{ secrets.STAGING_UPLOAD_API_TOKEN }}
 
       - name: Add post comment to PR
@@ -65,3 +92,7 @@ jobs:
         if: github.event_name == 'pull_request'
         with:
           mode: post
+          build-time: ${{ steps.build-time.outputs.time }}
+          build-duration: ${{ steps.build.outputs.duration }}
+          base-staging-url: ${{ env.BASE_STAGING_URL }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
