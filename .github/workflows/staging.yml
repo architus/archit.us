@@ -60,7 +60,7 @@ jobs:
           else
               ref=$(echo $GITHUB_SHA | cut -c1-7);
               event="commit";
-          fi
+          fi;
           echo "::set-output name=path::${event}/${ref}";
 
       - name: Build website
