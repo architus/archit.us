@@ -9,7 +9,12 @@ import React, {
 } from "react";
 import classNames from "classnames";
 import { navigate } from "@reach/router";
-import { useCallbackOnce, splitPath, isDefined, usePrevious } from "Utility";
+import {
+  useCallbackOnce,
+  isDefined,
+  usePrevious,
+  useRefWrapper,
+} from "Utility";
 import { AnyAction } from "redux";
 import SwipeHandler from "Components/SwipeHandler";
 import GuildList from "Components/GuildList";
@@ -22,8 +27,8 @@ import { ScrollContext, AppContext } from "Dynamic/AppRoot/context";
 import { tabs, TabPath, DEFAULT_TAB } from "Dynamic/AppRoot/tabs";
 import AppContent, { useAppLocation } from "Dynamic/AppRoot/content";
 import AppLayout from "Dynamic/AppRoot/layout";
-import { APP_HTML_CLASS, APP_PATH_ROOT } from "Dynamic/AppRoot/config.json";
-import { AppDispatch } from "Dynamic/AppRoot/types";
+import { APP_HTML_CLASS, APP_PATH_ROOT } from "Dynamic/AppRoot/config";
+import { AppDispatch, getFragments } from "Dynamic/AppRoot/types";
 import {
   focusGuild,
   showGuildAddModal,
@@ -147,10 +152,9 @@ const AppRoot: React.FC<AppRootProps> = () => {
   });
   guildStore.current = { guilds: guildList, isLoaded: guildsLoaded };
 
-  // TODO wrap the dispatch function with a side-effect inducing version
-  // to avoid the "optimizations" around useReducer invoking its reducer
-  // function side of component renders instead of upon dispatch invocations... :)
-  const [state, dispatch] = useReducer(
+  // App state dispatcher function
+  // (Can only contain pure reducer cases: see note below)
+  const [state, pureDispatch] = useReducer(
     (prev: AppRootState, action: AnyAction) => {
       if (showGuildAddModal.match(action)) {
         return { ...prev, showAddGuildModal: true };
@@ -161,38 +165,13 @@ const AppRoot: React.FC<AppRootProps> = () => {
       }
 
       if (focusTab.match(action)) {
-        const path = action.payload;
-        const fragments = splitPath(window.location.pathname);
-        let navigateTo: string | null = null;
-
-        if (fragments.length >= 2) {
-          navigateTo = `${APP_PATH_ROOT}/${fragments[1]}/${path}`;
-        } else {
+        const fragments = getFragments();
+        if (fragments.length < 1) {
           const { isLoaded, guilds } = guildStore.current;
           if (!isLoaded) return prev;
           if (guilds.length === 0) {
             return { ...prev, showAddGuildModal: true };
           }
-
-          let defaultGuild = guilds[0];
-          const adminGuilds = guilds.filter((g) => g.architus_admin);
-          if (adminGuilds.length > 0) [defaultGuild] = adminGuilds;
-          navigateTo = `${APP_PATH_ROOT}/${defaultGuild.id}/${path}`;
-        }
-
-        if (isDefined(navigateTo)) {
-          // Navigation will also cause app nav to close
-          navigate(navigateTo);
-        }
-      }
-
-      if (focusGuild.match(action)) {
-        const id = action.payload;
-        const fragments = splitPath(window.location.pathname);
-        if (fragments.length >= 3) {
-          navigate(`${APP_PATH_ROOT}/${id}/${fragments[2]}`);
-        } else {
-          navigate(`${APP_PATH_ROOT}/${id}/${DEFAULT_TAB}`);
         }
       }
 
@@ -200,14 +179,82 @@ const AppRoot: React.FC<AppRootProps> = () => {
     },
     { showAddGuildModal: false }
   );
+
+  // The following section of code wraps the above reducer in its own "reducer" wrapper
+  // that also performs pure functions. This is necessary to still have the benefits of
+  // a stable reducer function in passing callbacks deep down the state (namely, stability
+  // and convenience), while also being able to perform side effects such as invoking
+  // `navigate` that will cause state updates on other components.
+  // In a recent update, React added a batching optimization to `dispatch` that invokes it
+  // immediately during the render phase of this component to get the most up-to-date
+  // state before rendering.
+  // However, React will emit errors when this causes state updates on other components.
+  // Because of this, we need separate action handlers that won't be subjected to these
+  // optimization behaviors. These are handled by the inner function value of
+  // `sideEffectHandlerRef`, which behaves functionally equivalent to the reducer used
+  // in `useReducer`.
+
+  // Use stable ref to the state
+  const appStateRef = useRefWrapper(state);
+  // Use a ref to the side effect handler (emulating dispatch, allowing the useCallback
+  // result to be stable)
+  type SideEffectReducer = (prev: AppRootState, action: AnyAction) => void;
+  const sideEffectHandlerRef = useRef<SideEffectReducer | null>(null);
+  // This is the primary dispatch function that also performs the side effect dispatch
+  const dispatch: AppDispatch = useCallback(
+    (action: AnyAction) => {
+      pureDispatch(action);
+      if (isDefined(sideEffectHandlerRef.current)) {
+        sideEffectHandlerRef.current(appStateRef.current, action);
+      }
+    },
+    [sideEffectHandlerRef, pureDispatch, appStateRef]
+  );
+  // Memoize the context creation so it is completely stable
+  const memoizedContext = useMemo(() => ({ dispatch }), [dispatch]);
+
+  // Set up the side effect handler with the current render function's closure available
+  sideEffectHandlerRef.current = (
+    prev: AppRootState,
+    action: AnyAction
+  ): void => {
+    if (focusTab.match(action)) {
+      const path = action.payload;
+      let navigateTo: string | null = null;
+      const fragments = getFragments();
+
+      if (fragments.length >= 1) {
+        navigateTo = `${APP_PATH_ROOT}/${fragments[0]}/${path}`;
+      } else {
+        const { isLoaded, guilds } = guildStore.current;
+        if (!isLoaded || guilds.length === 0) return;
+        let defaultGuild = guilds[0];
+        const adminGuilds = guilds.filter((g) => g.architus_admin);
+        if (adminGuilds.length > 0) [defaultGuild] = adminGuilds;
+        navigateTo = `${APP_PATH_ROOT}/${defaultGuild.id}/${path}`;
+      }
+
+      if (isDefined(navigateTo)) {
+        // Navigation will also cause app nav to close
+        navigate(navigateTo);
+      }
+    }
+
+    if (focusGuild.match(action)) {
+      const id = action.payload;
+      const fragments = getFragments();
+      if (fragments.length >= 2) {
+        navigate(`${APP_PATH_ROOT}/${id}/${fragments[1]}`);
+      } else {
+        navigate(`${APP_PATH_ROOT}/${id}/${DEFAULT_TAB}`);
+      }
+    }
+  };
+
   const { showAddGuildModal } = state;
   const hideModal = useCallback((): void => dispatch(hideGuildAddModal()), [
     dispatch,
   ]);
-  const memoizedContext = useMemo(
-    () => ({ dispatch: dispatch as AppDispatch }),
-    [dispatch]
-  );
 
   return (
     <AppContext.Provider value={memoizedContext}>

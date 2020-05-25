@@ -1,7 +1,7 @@
 import React, { useCallback, Suspense, lazy, useState } from "react";
 import { shallowEqual } from "react-redux";
 import { hideNotification } from "Store/actions";
-import { isDefined, withClientSide, useCallbackOnce, error } from "Utility";
+import { isDefined, withClientSide } from "Utility";
 import { Dispatch, useSelector, useDispatch } from "Store";
 import {
   selectAllNotifications,

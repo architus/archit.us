@@ -5,8 +5,6 @@ import Login from "Pages/Login";
 import { Redirect, Router, PageProps } from "Components/Router";
 import {
   withClientSide,
-  useLocation,
-  splitPath,
   attach,
   useInitialRender,
   isNil,
@@ -17,13 +15,14 @@ import {
 import { Snowflake, isSnowflake, Guild } from "Utility/types";
 import classNames from "classnames";
 import { usePool } from "Store/slices/pools";
-import { APP_PATH_ROOT } from "Dynamic/AppRoot/config.json";
+import { APP_PATH_ROOT } from "Dynamic/AppRoot/config";
 import { DEFAULT_TAB, tabs, tabPaths, TabPath } from "Dynamic/AppRoot/tabs";
 import { NavigationContext } from "Dynamic/AppRoot/context";
 import ErrorBoundary from "Components/ErrorBoundary";
 import Skeleton from "Components/Skeleton";
 import Begin from "Dynamic/Begin";
 import { Option, Some, None } from "Utility/option";
+import { useFragments } from "./types";
 
 interface AppLocation {
   currentTab: TabPath | null;
@@ -42,10 +41,9 @@ export function useAppLocation(): AppLocation {
     filter: hasArchitusFilter,
   });
 
-  const { location } = useLocation();
-  const fragments = splitPath(location.pathname);
-  const tabFragment = fragments.length >= 3 ? fragments[2] : "";
-  const guildFragment = fragments.length >= 2 ? fragments[1] : "";
+  const fragments = useFragments();
+  const tabFragment = fragments.length >= 2 ? fragments[1] : "";
+  const guildFragment = fragments.length >= 1 ? fragments[0] : "";
 
   const currentTab: TabPath | null = isValidTab(tabFragment)
     ? tabFragment

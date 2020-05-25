@@ -132,7 +132,7 @@ const theme = {
     contrast_overlay: "rgba(255, 255, 255, 0.023)",
     input_focus_border: "transparent",
     // Same as `dark.b_100`
-    tooltip: "rgba(11, 12, 15, 0.95)",
+    tooltip: "rgb(11, 12, 15)",
     // Same as `dark.b_400`
     footer: "hsl(220, 13%, 18%)",
 
@@ -165,7 +165,7 @@ const theme = {
         contrast_overlay: "rgba(0, 0, 0, 0.04)",
         input_focus_border: "hsl(209, 45%, 55%)",
         // Same as `dark.b_400`
-        tooltip: "rgba(40, 44, 52, 0.95)",
+        tooltip: "rgb(40, 44, 52)",
         // Same as `dark.b_600`
         footer: "hsl(220, 13%, 28%)",
       },

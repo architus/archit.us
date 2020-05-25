@@ -1,16 +1,20 @@
-on: [push, pull_request]
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
 
-# Workflow to run build checks/tests/lints for each commit/PR,
-# and then upload the artifacts to our staging server
-name: build/test
+# Workflow to run build checks/lints/tests for each open PR, for which
+# the tests passing is a required condition for merging
+name: ci
 
 jobs:
-  build:
-    name: Build
+  # Run ESLint
+  lint:
+    name: Lint
     if: "!contains(github.event.head_commit.message, 'skip ci')"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
@@ -26,34 +30,31 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Resolve staging URL
-        id: resolve-staging
-        shell: bash
-        run: >-
-          if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
-              echo "::set-output name=path::pr/$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')"
-          else
-              echo "::set-output name=path::commit/$(echo $GITHUB_SHA | cut -c1-7)"
-          fi
+      - name: Run eslint
+        run: yarn lint
 
-      - name: Build website
-        run: yarn build --no-type-check
-        env:
-          SITE_ROOT: https://staging.archit.us
-          BASE_PATH: ${{ steps.resolve-staging.outputs.path }}
+  # Run TSC (TypeScript compiler/typechecker)
+  typecheck:
+    name: Type check
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
 
-      - name: Create archive
-        run: tar -czvf ../dist.tar.gz .
-        working-directory: dist
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
 
-      - name: Upload built archive to staging API
-        uses: architus/upload-api-action@master
+      - uses: actions/cache@v1
+        id: yarn-cache
         with:
-          archive-path: "./dist.tar.gz"
-          api-root: "https://staging.archit.us/api"
-          token: ${{ secrets.STAGING_UPLOAD_API_TOKEN }}
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
 
-        # TODO make this use a custom JavaScript action
-      - name: Add comment to PR
-        if: github.event_name == 'pull_request'
-        run: echo "adding comment"
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Run tsc
+        run: yarn typecheck

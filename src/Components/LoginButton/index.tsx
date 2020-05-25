@@ -4,6 +4,7 @@ import {
   API_BASE,
   processIfNotEmptyOrNil,
   isDefined,
+  withBasePath,
 } from "Utility";
 import { useSessionStatus } from "Store/slices/session";
 import { Link as RouterLink } from "Components/Router";
@@ -37,7 +38,7 @@ const LoginButton: React.FC<LoginButtonProps> = ({
       {loggedInProp ? (
         <>
           {showLabel ? <p className="mb-3">You are already logged in</p> : null}
-          <Button to="/app" as={RouterLink}>
+          <Button to={withBasePath("/app")} as={RouterLink}>
             Go to dashboard
           </Button>
         </>

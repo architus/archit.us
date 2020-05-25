@@ -10,7 +10,7 @@ import Icon from "Components/Icon";
 import { LinkProps } from "Components/Router";
 import { AnyIconName } from "Components/Icon/loader";
 import Logo from "Components/Logo";
-import { attach, isEmptyOrNil, isNil } from "Utility";
+import { attach, isEmptyOrNil, isNil, withBasePath } from "Utility";
 import { Option, Some } from "Utility/option";
 import { WithBoxProps } from "Utility/types";
 import { Breakpoint, opacity } from "Theme";
@@ -102,9 +102,13 @@ const Brand: React.FC<BrandProps> = ({ top, className, style, ...props }) => (
     className={className}
     style={style}
   >
-    <Link {...props} className="nav-link brand" to="/">
+    <Link {...props} className="nav-link brand" to={withBasePath("/")}>
       {/* Use just the logotype on very small screen sizes */}
-      {useUp(Breakpoint.VS) ? <Logo.Combined /> : <Logo.Symbol />}
+      {useUp(Breakpoint.VS) || typeof window === "undefined" ? (
+        <Logo.Combined />
+      ) : (
+        <Logo.Symbol />
+      )}
     </Link>
     {/* Hide the build marker in the header on small screen sizes */}
     <BuildMarker top={top} display={{ xs: "none", lg: "inline-block" }} />

@@ -1,6 +1,5 @@
 import React, { useMemo } from "react";
 import classNames from "classnames";
-import { splitPath, isDefined, useLocation } from "Utility";
 import { Snowflake, isSnowflake, Guild } from "Utility/types";
 import { usePool } from "Store/slices/pools";
 import Skeleton from "Components/Skeleton";
@@ -8,6 +7,7 @@ import GuildIcon from "Components/GuildIcon";
 import Tooltip from "Components/Tooltip";
 import Icon from "Components/Icon";
 import { Option, None, Some } from "Utility/option";
+import { useFragments } from "Dynamic/AppRoot/types";
 import "./style.scss";
 
 const SKELETON_COUNT = 5;
@@ -35,17 +35,13 @@ const GuildList: React.FC<GuildListProps> = ({ onClickGuild, onClickAdd }) => {
   const squareStyle = { width: `${ICON_WIDTH}px`, height: `${ICON_WIDTH}px` };
 
   // Parse active guild ID from location
-  const { location } = useLocation();
-  let activeGuildId: Option<Snowflake> = None;
-  if (isDefined(location)) {
-    const fragments = splitPath(location.pathname);
-    activeGuildId = Option.from(
-      fragments.length >= 2 ? fragments[1] : null
-    ).flatMap((str) => {
-      if (isSnowflake(str)) return Some(str);
-      return None;
-    });
-  }
+  const fragments = useFragments();
+  const activeGuildId: Option<Snowflake> = Option.from(
+    fragments.length >= 1 ? fragments[0] : null
+  ).flatMap((str) => {
+    if (isSnowflake(str)) return Some(str);
+    return None;
+  });
 
   const derivedHasLoaded =
     hasLoaded || otherGuilds.length > 0 || architusAdminGuilds.length > 0;

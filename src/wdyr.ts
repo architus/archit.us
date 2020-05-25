@@ -3,8 +3,11 @@ import { useSelector } from "react-redux";
 
 // Implements whyDidYouRender when the environment variable is specified
 
-if (process.env.ENABLE_PROFILING === "true") {
-  // eslint-disable-next-line global-require, @typescript-eslint/no-var-requires
+if (
+  process.env.ENABLE_PROFILING === "true" ||
+  process.env.NODE_ENV === "development"
+) {
+  // eslint-disable-next-line global-require, @typescript-eslint/no-var-requires, import/no-extraneous-dependencies
   const whyDidYouRender = require("@welldone-software/why-did-you-render");
   const customHookWrapper = { useSelector };
   whyDidYouRender(React, {

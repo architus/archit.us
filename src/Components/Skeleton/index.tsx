@@ -252,10 +252,7 @@ const Multiline: React.FC<MultilineProps> = ({
  * Skeleton that automatically switches colors according to the theme
  */
 const Auto: React.FC<SkeletonProps> = ({ className = "", ...rest }) => (
-  <Skeleton
-    className={classNames("skeleton-auto", className)}
-    {...rest}
-  />
+  <Skeleton className={classNames("skeleton-auto", className)} {...rest} />
 );
 
 export default attach(Skeleton, { Text, Custom, Multiline, Auto });

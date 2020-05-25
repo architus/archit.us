@@ -3,7 +3,7 @@ import { Snowflake } from "./types";
 import { Option } from "./option";
 import { parseInteger } from "./primitives";
 
-export { API_BASE, GATEWAY_API_BASE } from "./api.node";
+export { API_BASE, GATEWAY_API_BASE, withBasePath } from "./api.node";
 
 const avatarSizes = [16, 32, 40, 64, 128, 256, 512, 1024];
 function getNextLargerSize(size: number): number {
