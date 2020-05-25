@@ -1,4 +1,7 @@
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 # Workflow to run build checks/tests/lints for each commit/PR,
 # and then upload the artifacts to our staging server
@@ -26,6 +29,7 @@ jobs:
         if: github.event_name == 'pull_request'
         with:
           mode: pre
+          job-name: ${{ github.job }}
           build-time: ${{ steps.build-time.outputs.time }}
           base-staging-url: ${{ env.BASE_STAGING_URL }}
           GITHUB_TOKEN: ${{ secrets.ARCHITUS_BOT_TOKEN }}
@@ -90,6 +94,7 @@ jobs:
         if: github.event_name == 'pull_request'
         with:
           mode: post
+          job-name: ${{ github.job }}
           build-time: ${{ steps.build-time.outputs.time }}
           build-duration: ${{ steps.build.outputs.duration }}
           base-staging-url: ${{ env.BASE_STAGING_URL }}
