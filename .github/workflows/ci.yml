@@ -56,33 +56,5 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Run eslint
+      - name: Run tsc
         run: yarn typecheck
-
-  # Use packtracker to monitor bundle sizes
-  report:
-    name: Report bundle size
-    if: "!contains(github.event.head_commit.message, 'skip ci')"
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - uses: actions/cache@v1
-        id: yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-
-      - name: Install dependencies
-        run: yarn install
-
-      - name: Run eslint
-        run: yarn bundlesize
-        env:
-          PT_PROJECT_TOKEN: ${{ secrets.PT_PROJECT_TOKEN }}
