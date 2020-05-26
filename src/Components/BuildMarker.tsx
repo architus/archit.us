@@ -311,7 +311,7 @@ function getBuildMetadata(
       ),
       "Job ID": (
         <OptionLink text={jobIdOption.getOrElse("~")}>
-          {jobIdOption.map((jobId) => `${repoUrl}/actions/${jobId}`)}
+          {jobIdOption.map((jobId) => `${repoUrl}/runs/${jobId}`)}
         </OptionLink>
       ),
       "GitHub repository": (
