@@ -8,7 +8,7 @@ import { AnyIconName } from "Components/Icon/loader";
 import { isEmptyOrNil, isNil } from "Utility";
 import { Option, Some, None } from "Utility/option";
 import { WithBoxProps, Nil } from "Utility/types";
-import { opacity } from "Theme";
+import { opacity, adjust } from "Theme";
 
 const Styled = {
   TooltipDivider: styled.hr`
@@ -36,7 +36,26 @@ const Styled = {
   `,
   BuildInfoList: styled.ul`
     margin-bottom: 0;
-    padding-left: 1rem;
+    list-style: none;
+    padding-left: 0;
+
+    a {
+      color: ${adjust("primary", (c) => c.brighten(10))};
+    }
+
+    & h5 {
+      font-size: 0.95em;
+      margin-top: nano;
+      margin-bottom: 0;
+      opacity: 0.65;
+    }
+
+    & span {
+      font-size: 1em;
+      margin-top: atto;
+      margin-bottom: 0;
+      display: block;
+    }
   `,
 };
 
@@ -85,51 +104,42 @@ const BuildMarker: React.FC<BuildMarkerProps> = ({
             the &lsquo;develop&rsquo; branch on GitHub
           </BuildTooltip>
         );
-      } else if (isPullRequest) {
-        const prId = process.env.REVIEW_ID;
-        icon = "pull-request";
-        text = `#${prId}`;
-        tooltip = (
-          <BuildTooltip context="netlify">
-            Built automatically from PR #{prId}
-          </BuildTooltip>
-        );
-      } else if (isBranch) {
-        const branch = process.env.BRANCH;
-        icon = "branch";
-        text = branch;
-        tooltip = (
-          <BuildTooltip context="netlify">
-            Built automatically from branch &lsquo;{branch}&rsquo;
-          </BuildTooltip>
-        );
       } else {
-        // Must be a commit
-        const commitRef = process.env.COMMIT_REF;
-        icon = "commit";
-        text = commitRef?.substring(0, 7);
-        tooltip = <BuildTooltip context="netlify">{null}</BuildTooltip>;
+        // Use empty tooltip with only build metadata
+        tooltip = <BuildTooltip context="netlify" />;
+
+        if (isPullRequest) {
+          const prId = process.env.REVIEW_ID;
+          icon = "pull-request";
+          text = `#${prId}`;
+        } else if (isBranch) {
+          const branch = process.env.BRANCH;
+          icon = "branch";
+          text = branch;
+        } else {
+          // Must be a commit
+          const commitRef = process.env.COMMIT_REF;
+          icon = "commit";
+          text = commitRef?.substring(0, 7);
+        }
       }
     } else if (isGitHubActions) {
       // GitHub actions either deploys a PR or a commit
       const prIdOption = optionFromString(process.env.BUILD_PR_ID);
+      // Use empty tooltip with only build metadata
+      tooltip = <BuildTooltip context="github-actions" />;
+
       if (prIdOption.isDefined()) {
         // Build is a PR
         icon = "pull-request";
         text = `#${prIdOption.get}`;
-        tooltip = (
-          <BuildTooltip context="github-actions">
-            Built automatically from PR #{prIdOption.get}
-          </BuildTooltip>
-        );
       } else {
         // Build is a commit
         const sha = process.env.BUILD_SHA;
         icon = "commit";
         text = sha?.substring(0, 7);
-        tooltip = <BuildTooltip context="github-actions">{null}</BuildTooltip>;
       }
-    } else return null;
+    }
 
     // Create the main pill component to hold the version
     if (text === null) return null;
@@ -167,7 +177,7 @@ export default BuildMarker;
 // ? ==============
 
 type BuildContext = "netlify" | "local" | "github-actions";
-type BuildTooltipProps = { children: React.ReactNode; context: BuildContext };
+type BuildTooltipProps = { children?: React.ReactNode; context: BuildContext };
 
 /**
  * Clickable tooltip that displays additional detailed build information as well as
@@ -187,11 +197,13 @@ const BuildTooltip: React.FC<BuildTooltipProps> = ({ children, context }) => {
         <Styled.BuildInfoList>
           {Object.entries(values).map(([label, value]) => (
             <li key={label}>
-              <strong>{label}:</strong>{" "}
-              {isNil(value) ||
-              (typeof value === "string" && isEmptyOrNil(value))
-                ? "~"
-                : value}
+              <h5>{label}</h5>
+              <span>
+                {isNil(value) ||
+                (typeof value === "string" && isEmptyOrNil(value))
+                  ? "~"
+                  : value}
+              </span>
             </li>
           ))}
         </Styled.BuildInfoList>
@@ -242,7 +254,7 @@ function getBuildMetadata(
       "Build ID": process.env.BUILD_ID,
       "Netlify context": process.env.CONTEXT,
       "GitHub repository": (
-        <OptionLink>{Option.from(process.env.REPOSITORY_URL)}</OptionLink>
+        <OptionLink>{optionFromString(process.env.REPOSITORY_URL)}</OptionLink>
       ),
       "Commit SHA": process.env.COMMIT_REF,
       "Commit URL": (
@@ -255,7 +267,9 @@ function getBuildMetadata(
       Branch: process.env.BRANCH,
       Head: process.env.HEAD,
       "Deploy URL": (
-        <OptionLink>{Option.from(process.env.DEPLOY_PRIME_URL)}</OptionLink>
+        <OptionLink>
+          {optionFromString(process.env.DEPLOY_PRIME_URL)}
+        </OptionLink>
       ),
       "Deploy ID": process.env.DEPLOY_ID,
     });
@@ -297,7 +311,11 @@ function getBuildMetadata(
       ),
       "GitHub event": process.env.GITHUB_EVENT_NAME,
       "Staging event": process.env.BUILD_PATH,
-      "Deploy URL": process.env.BUILD_DEPLOY_URL,
+      "Deploy URL": (
+        <OptionLink>
+          {optionFromString(process.env.BUILD_DEPLOY_URL)}
+        </OptionLink>
+      ),
       Branch: process.env.BUILD_BRANCH,
       "Commit SHA": process.env.BUILD_SHA,
       "Commit URL": (
@@ -305,7 +323,11 @@ function getBuildMetadata(
           {Some(`${repoUrl}/commit/${process.env.BUILD_SHA}`)}
         </OptionLink>
       ),
-      "Commit deploy URL": process.env.BUILD_COMMIT_URL,
+      "Commit deploy URL": (
+        <OptionLink>
+          {optionFromString(process.env.BUILD_COMMIT_URL)}
+        </OptionLink>
+      ),
     });
 
     // Add additional metadata for PRs

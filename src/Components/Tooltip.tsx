@@ -20,7 +20,7 @@ const Styled = {
     z-index: 1090;
 
     &.show {
-      opacity: 0.95 !important;
+      opacity: 1 !important;
     }
 
     .tooltip-inner {

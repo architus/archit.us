@@ -5,7 +5,7 @@ import Links from "Components/Header/Links";
 import SessionControl from "Components/Header/SessionControl";
 import Link from "Components/AutoLink";
 import { LinkProps } from "Components/Router";
-import BuildMarker, { BuildMarkerPropsBase } from "Components/BrandMarker";
+import BuildMarker, { BuildMarkerPropsBase } from "Components/BuildMarker";
 import Logo from "Components/Logo";
 import { attach, withBasePath } from "Utility";
 import { Breakpoint } from "Theme";
