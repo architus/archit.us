@@ -38,7 +38,7 @@ const Styled = {
     margin-bottom: 0;
     list-style: none;
     padding-left: 0;
-    padding-bottom: atto;
+    padding-top: femto;
 
     a {
       color: ${adjust("primary", (c) => c.brighten(10))};
@@ -47,7 +47,7 @@ const Styled = {
     li {
       & > h5 {
         font-size: 0.95em;
-        margin-top: nano;
+        margin-top: 0;
         margin-bottom: 0;
         opacity: 0.65;
       }
@@ -57,6 +57,12 @@ const Styled = {
         margin-top: atto;
         margin-bottom: 0;
         display: block;
+      }
+
+      &:not(:first-of-type) {
+        & > h5 {
+          margin-top: nano;
+        }
       }
     }
   `,
@@ -97,6 +103,7 @@ const BuildMarker: React.FC<BuildMarkerProps> = ({
           &lsquo;BUILD_LOCATION&rsquo; to &lsquo;remote&rsquo;
         </BuildTooltip>
       );
+      tooltip = <BuildTooltip context="local" />;
     } else if (isNetlify) {
       if (isDevelop) {
         // Building on Netlify develop
@@ -231,7 +238,7 @@ const OptionLink: React.FC<OptionLink> = ({ children, text }) =>
   children
     .map((link) => (
       // eslint-disable-next-line react/jsx-key
-      <Link to={link} space="atto" target="_blank" rel="noopener" external>
+      <Link to={link} space="femto" target="_blank" rel="noopener" external>
         {text ?? link}
       </Link>
     ))

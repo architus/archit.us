@@ -76,7 +76,7 @@ jobs:
           # Inject the following environment variables from the output of the
           # staging comments action
           BUILD_RUN_ID: ${{ steps.staging-comment.outputs.runId }}
-          BUILD_JOB_ID: ${{ steps.staging-comment.outputs.runId }}
+          BUILD_JOB_ID: ${{ steps.staging-comment.outputs.jobId }}
           BUILD_DEPLOY_URL: ${{ steps.staging-comment.outputs.deployUrl }}
           BUILD_BRANCH: ${{ steps.staging-comment.outputs.branch }}
           BUILD_SHA: ${{ steps.staging-comment.outputs.sha }}
