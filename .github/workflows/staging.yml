@@ -109,11 +109,21 @@ jobs:
 
       - name: Add post comment to PR
         uses: architus/staging-comment-action@master
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && success()
         with:
           mode: post
           job-name: Build
           build-time: ${{ steps.build-time.outputs.time }}
           build-duration: ${{ steps.build.outputs.duration }}
+          base-staging-url: ${{ env.BASE_STAGING_URL }}
+          GITHUB_TOKEN: ${{ secrets.ARCHITUS_BOT_TOKEN }}
+
+      - name: Add failure comment to PR
+        uses: architus/staging-comment-action@master
+        if: github.event_name == 'pull_request' && failure()
+        with:
+          mode: failure
+          job-name: Build
+          build-time: ${{ steps.build-time.outputs.time }}
           base-staging-url: ${{ env.BASE_STAGING_URL }}
           GITHUB_TOKEN: ${{ secrets.ARCHITUS_BOT_TOKEN }}
