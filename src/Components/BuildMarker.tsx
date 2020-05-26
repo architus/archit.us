@@ -38,23 +38,26 @@ const Styled = {
     margin-bottom: 0;
     list-style: none;
     padding-left: 0;
+    padding-bottom: atto;
 
     a {
       color: ${adjust("primary", (c) => c.brighten(10))};
     }
 
-    & h5 {
-      font-size: 0.95em;
-      margin-top: nano;
-      margin-bottom: 0;
-      opacity: 0.65;
-    }
+    li {
+      & > h5 {
+        font-size: 0.95em;
+        margin-top: nano;
+        margin-bottom: 0;
+        opacity: 0.65;
+      }
 
-    & span {
-      font-size: 1em;
-      margin-top: atto;
-      margin-bottom: 0;
-      display: block;
+      & > span {
+        font-size: 1em;
+        margin-top: atto;
+        margin-bottom: 0;
+        display: block;
+      }
     }
   `,
 };
