@@ -42,6 +42,10 @@ const Styled = {
 
     a {
       color: ${adjust("primary", (c) => c.brighten(10))};
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
 
     li {

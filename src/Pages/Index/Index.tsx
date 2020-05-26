@@ -541,7 +541,7 @@ const Index: React.FC<{}> = () => {
             </Feature>
           </Styled.Container>
         </Styled.Features>
-        <Styled.MinorFeatures pt="centi" pb={{ xs: "centi", xl: "mega" }}>
+        <Styled.MinorFeatures pt="centi" pb={{ xs: "centi", lg: "mega" }}>
           <Styled.Container>
             <Box px={{ xs: "zero", md: "milli" }}>
               <Box row mx={{ xs: "zero", md: "-milli" as Space }}>
