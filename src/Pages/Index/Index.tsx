@@ -40,6 +40,8 @@ import StatisticsSvg from "./svg/statistics.svg";
 import UserControlSvg from "./svg/user_control.svg";
 import { messageSets, allowedCommands, customEmotes } from "./data.json";
 
+const a = {
+
 const Content = styled.divBox`
   & :not(pre) > code,
   :not(pre) > code {
