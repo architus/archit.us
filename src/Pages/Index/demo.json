@@ -13,13 +13,13 @@
       {
         "messages": [
           "!set hi::hey",
-          "hiya",
-          "!set hiya::hello :wave:",
-          "!remove hiya",
-          "!set hiya::hello :wave:",
-          "hiya"
+          "hi",
+          "!set hi::hello :wave:",
+          "!remove hi",
+          "!set hi::hello :wave:",
+          "hi"
         ],
-        "cleanup": ["!remove hiya"]
+        "cleanup": ["!remove hi"]
       }
     ],
     "customEmoji": [
