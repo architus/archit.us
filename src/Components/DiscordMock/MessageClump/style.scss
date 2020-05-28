@@ -1,4 +1,5 @@
 @import "scss/colors";
+@import "scss/fonts";
 
 .message-clump {
     display: flex;
@@ -52,12 +53,13 @@
             text-transform: uppercase;
             margin-left: 0.5rem;
             border-radius: 4px;
-            font-weight: 400;
-            font-size: 65%;
-            padding: 0.25em 0.3em;
+            font-size: 68%;
+            padding: 0.3em 0.45em 0.25em 0.4em;
             vertical-align: middle;
             position: relative;
             top: -2px;
+            font-family: $headings-font-family;
+            font-weight: 700;
         }
     }
 

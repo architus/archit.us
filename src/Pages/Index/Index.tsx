@@ -38,7 +38,7 @@ import LogsSvg from "./svg/logs.svg";
 import MusicSvg from "./svg/music.svg";
 import StatisticsSvg from "./svg/statistics.svg";
 import UserControlSvg from "./svg/user_control.svg";
-import { messageSets, allowedCommands, customEmotes } from "./data.json";
+import { messageSets, allowedCommands, customEmotes } from "./demo.json";
 
 const Content = styled.divBox`
   & :not(pre) > code,
@@ -541,7 +541,7 @@ const Index: React.FC<{}> = () => {
             </Feature>
           </Styled.Container>
         </Styled.Features>
-        <Styled.MinorFeatures pt="centi" pb={{ xs: "centi", xl: "mega" }}>
+        <Styled.MinorFeatures pt="centi" pb={{ xs: "centi", lg: "mega" }}>
           <Styled.Container>
             <Box px={{ xs: "zero", md: "milli" }}>
               <Box row mx={{ xs: "zero", md: "-milli" as Space }}>

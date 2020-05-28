@@ -25,8 +25,9 @@ jobs:
           echo "::set-output name=time::$(date --iso-8601=seconds)"
 
       - name: Add pre comment to PR
+        # Run even on push so we can access outputs for build markers
+        id: staging-comment
         uses: architus/staging-comment-action@master
-        if: github.event_name == 'pull_request'
         with:
           mode: pre
           job-name: Build
@@ -54,10 +55,13 @@ jobs:
         shell: bash
         run: >-
           if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
-              echo "::set-output name=path::pr/$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')"
+              ref=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }');
+              event="pr";
           else
-              echo "::set-output name=path::commit/$(echo $GITHUB_SHA | cut -c1-7)"
-          fi
+              ref=$(echo $GITHUB_SHA | cut -c1-7);
+              event="commit";
+          fi;
+          echo "::set-output name=path::${event}/${ref}";
 
       - name: Build website
         id: build
@@ -65,8 +69,24 @@ jobs:
         env:
           SITE_ROOT: ${{ env.BASE_STAGING_URL }}
           BASE_PATH: ${{ steps.resolve-staging.outputs.path }}
+          BUILD_LOCATION: remote
+          NODE_ENV: production
+          APP_NAME: Architus Staging
+          BUILD_PATH: ${{ steps.resolve-staging.outputs.path }}
+          # Inject the following environment variables from the output of the
+          # staging comments action
+          BUILD_RUN_ID: ${{ steps.staging-comment.outputs.runId }}
+          BUILD_JOB_ID: ${{ steps.staging-comment.outputs.jobId }}
+          BUILD_DEPLOY_URL: ${{ steps.staging-comment.outputs.deployUrl }}
+          BUILD_BRANCH: ${{ steps.staging-comment.outputs.branch }}
+          BUILD_SHA: ${{ steps.staging-comment.outputs.sha }}
+          BUILD_COMMIT_URL: ${{ steps.staging-comment.outputs.commitUrl }}
+          BUILD_PR_ID: ${{ steps.staging-comment.outputs.prId }}
+          BUILD_BASE_BRANCH: ${{ steps.staging-comment.outputs.baseBranch }}
         # Build the website from a bash script, tracking the build duration
         # and re-raising the resultant exit code from the build command
+        # TODO: it seems like react-static build doesn't return non-zero exit
+        #       codes, even for failed builds
         run: >-
           T="$(date +%s)";
 
@@ -91,11 +111,21 @@ jobs:
 
       - name: Add post comment to PR
         uses: architus/staging-comment-action@master
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && success()
         with:
           mode: post
           job-name: Build
           build-time: ${{ steps.build-time.outputs.time }}
           build-duration: ${{ steps.build.outputs.duration }}
+          base-staging-url: ${{ env.BASE_STAGING_URL }}
+          GITHUB_TOKEN: ${{ secrets.ARCHITUS_BOT_TOKEN }}
+
+      - name: Add failure comment to PR
+        uses: architus/staging-comment-action@master
+        if: github.event_name == 'pull_request' && failure()
+        with:
+          mode: failure
+          job-name: Build
+          build-time: ${{ steps.build-time.outputs.time }}
           base-staging-url: ${{ env.BASE_STAGING_URL }}
           GITHUB_TOKEN: ${{ secrets.ARCHITUS_BOT_TOKEN }}

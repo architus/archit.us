@@ -4,7 +4,7 @@
       {
         "messages": [
           "!help",
-          "!set thanks::[you're welcome!, no problem!]",
+          "!set thanks::[you're welcome!,no problem!]",
           "thanks",
           "thanks",
           "!remove thanks"

@@ -10,6 +10,7 @@ import {
 } from "Utility/types";
 import { Badge, BadgeProps } from "react-bootstrap";
 import UserDisplay from "Components/UserDisplay";
+import Icon from "Components/Icon";
 import Skeleton from "Components/Skeleton";
 import Message from "Components/DiscordMock/Message";
 import { TransformMessageContext } from "Components/DiscordMock/transform";
@@ -43,7 +44,14 @@ const MessageClump: React.FC<MessageClumpProps> = React.forwardRef(
     },
     ref: React.Ref<HTMLDivElement>
   ) => {
-    const { discriminator, avatarUrl, username, nameColor, bot } = sender;
+    const {
+      discriminator,
+      avatarUrl,
+      username,
+      nameColor,
+      verified,
+      bot,
+    } = sender;
     return (
       <div
         ref={ref}
@@ -73,7 +81,10 @@ const MessageClump: React.FC<MessageClumpProps> = React.forwardRef(
             >
               {username}
               {bot && (
-                <Badge variant={"bot" as BadgeProps["variant"]}>bot</Badge>
+                <Badge variant={"bot" as BadgeProps["variant"]}>
+                  {verified && <Icon name="check" mr="femto" />}
+                  bot
+                </Badge>
               )}
             </Skeleton.Custom>
             <Skeleton.Text

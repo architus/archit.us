@@ -17,6 +17,7 @@ export const architusUser: MockUser = {
   discriminator: "7145",
   username: "architus",
   nameColor: "#d34c4f",
+  verified: true,
   bot: true,
 };
 
@@ -25,7 +26,7 @@ const MANAGE_SERVERS = 32; // 0x20
 /**
  * Determines whether the given guild doesn't have architus, but the current
  * user is a Discord admin (candidate for adding architus to)
- * @param guild - Guild to eamine
+ * @param guild - Guild to examine
  */
 export function isDiscordAdminWithoutArchitus(guild: Guild): boolean {
   return (

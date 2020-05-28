@@ -1,7 +1,7 @@
 import { th, ThemeGetterFunc, breakpoints } from "@xstyled/system";
-import { isNil } from "Utility";
+import { isNil, isDefined } from "Utility";
 import { css } from "@xstyled/emotion";
-import { Color } from "./color";
+import { Color, ColorInstance } from "./color";
 import { WithBreakpointArgs, ColorMode, ColorKey } from "./tokens";
 
 /**
@@ -20,6 +20,30 @@ export function opacity(key: ColorKey, amount: number): ThemeGetterFunc {
     const color = Color(resolvedColor);
     color.setAlpha(color.getAlpha() * amount);
     return color.toString();
+  };
+}
+
+/**
+ * Adjusts a static color from the theme
+ *
+ * **Note**: this adjustment is only possible for **static** theme colors (ones that
+ * don't change depending on the current color mode (i.e. light/dark theme)). To create
+ * custom colors dependent on the current color theme, see `useThemeColor`
+ * @param key - Color key from the theme
+ * @param amount - Adjustment function to apply to the Color
+ */
+export function adjust(
+  key: ColorKey,
+  adjustment: (color: ColorInstance) => ColorInstance | void
+): ThemeGetterFunc {
+  const inner = th.color(key);
+  return (props: unknown): string => {
+    const resolvedColor = inner(props);
+    const color = Color(resolvedColor);
+    const result = adjustment(color);
+    return isDefined(result)
+      ? (result as ColorInstance).toString()
+      : color.toString();
   };
 }
 
