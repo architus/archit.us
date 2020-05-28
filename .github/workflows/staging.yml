@@ -85,6 +85,8 @@ jobs:
           BUILD_BASE_BRANCH: ${{ steps.staging-comment.outputs.baseBranch }}
         # Build the website from a bash script, tracking the build duration
         # and re-raising the resultant exit code from the build command
+        # TODO: it seems like react-static build doesn't return non-zero exit
+        #       codes, even for failed builds
         run: >-
           T="$(date +%s)";
 
