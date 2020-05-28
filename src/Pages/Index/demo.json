@@ -4,7 +4,7 @@
       {
         "messages": [
           "!help",
-          "!set thanks::[you're welcome!, no problem!]",
+          "!set thanks::[you're welcome!,no problem!]",
           "thanks",
           "thanks",
           "!remove thanks"
@@ -13,13 +13,13 @@
       {
         "messages": [
           "!set hi::hey",
-          "hi",
-          "!set hi::hello :wave:",
-          "!remove hi",
-          "!set hi::hello :wave:",
-          "hi"
+          "hiya",
+          "!set hiya::hello :wave:",
+          "!remove hiya",
+          "!set hiya::hello :wave:",
+          "hiya"
         ],
-        "cleanup": ["!remove hi"]
+        "cleanup": ["!remove hiya"]
       }
     ],
     "customEmoji": [

@@ -38,7 +38,7 @@ import LogsSvg from "./svg/logs.svg";
 import MusicSvg from "./svg/music.svg";
 import StatisticsSvg from "./svg/statistics.svg";
 import UserControlSvg from "./svg/user_control.svg";
-import { messageSets, allowedCommands, customEmotes } from "./data.json";
+import { messageSets, allowedCommands, customEmotes } from "./demo.json";
 
 const Content = styled.divBox`
   & :not(pre) > code,
