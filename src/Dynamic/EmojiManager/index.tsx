@@ -11,7 +11,7 @@ import { Emoji } from "Utility/types";
 
 const columns = [
   { key: "id", name: "ID" },
-  { key: "name", name: "EMOJI NAME" },
+  { key: "name", name: "NAME" },
   {
     key: "url",
     name: "IMAGE",
