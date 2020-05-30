@@ -1,5 +1,6 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { useSessionStatus } from "Store/slices/session";
+import { Box } from "@xstyled/emotion";
 import Login from "Pages/Login";
 import { Redirect, Router, PageProps } from "Components/Router";
 import {
@@ -14,15 +15,15 @@ import {
   error,
 } from "Utility";
 import { Snowflake, isSnowflake, Guild } from "Utility/types";
-import { Option } from "Utility/option";
 import classNames from "classnames";
-import { usePool, usePoolEntity } from "Store/slices/pools";
+import { usePool } from "Store/slices/pools";
 import { APP_PATH_ROOT } from "Dynamic/AppRoot/config.json";
 import { DEFAULT_TAB, tabs, tabPaths, TabPath } from "Dynamic/AppRoot/tabs";
 import { NavigationContext } from "Dynamic/AppRoot/context";
 import ErrorBoundary from "Components/ErrorBoundary";
-import Placeholder from "Components/Placeholder";
+import Skeleton from "Components/Skeleton";
 import Begin from "Dynamic/Begin";
+import { Option, Some, None } from "Utility/option";
 
 interface AppLocation {
   currentTab: TabPath | null;
@@ -36,7 +37,8 @@ function isValidTab(tab: string): tab is TabPath {
 const hasArchitusFilter = (guild: Guild): boolean => guild.has_architus;
 
 export function useAppLocation(): AppLocation {
-  const { all: guildList } = usePool("guilds", {
+  const { all: guildList } = usePool({
+    type: "guild",
     filter: hasArchitusFilter,
   });
 
@@ -69,22 +71,27 @@ const AppContent: React.ComponentType<AppContentProps> = withClientSide(
     const isInitial = useInitialRender();
 
     // Load guild from store
-    const { entity: guildOption } = usePoolEntity("guilds", {
+    // **Note**: even though we only want one entity, we still must retrieve
+    // the entire pool since we're not able to reference by primary id
+    const { all: guilds } = usePool({
+      type: "guild",
       filter: (g) => isDefined(currentGuild) && g.id === currentGuild,
     });
+    const guildOption = guilds.length > 0 ? Some(guilds[0]) : None;
 
-    // Render app placeholder on server/first render
-    if (isInitial) return <AppPlaceholder />;
+    // Render app skeleton on server/first render
+    if (isInitial) return <AppSkeleton />;
     // Render restricted view if not logged in
     if (!isSigningIn) return <Login fromRestricted={true} />;
-    // Render placeholder screen if loading
-    if (!isSignedIn) return <AppPlaceholder />;
+    // Render skeleton screen if loading
+    if (!isSignedIn) return <AppSkeleton />;
 
     return (
       <NavigationContext.Provider value={navigationCtx}>
         <Router>
           <Redirect
             path=":guildId"
+            from=":guildId"
             to={`${APP_PATH_ROOT}/:guildId/${DEFAULT_TAB}`}
             noThrow
           />
@@ -100,6 +107,8 @@ const AppContent: React.ComponentType<AppContentProps> = withClientSide(
   }
 );
 
+const LazyPageRenderer = lazy(() => import("Dynamic/AppRoot/lazy"));
+
 type PageRendererProps = {
   tabOption: Option<TabPath>;
   guildOption: Option<Guild>;
@@ -108,16 +117,15 @@ type PageRendererProps = {
 const PageRenderer: React.FC<PageRendererProps> = React.memo(
   ({ tabOption, guildOption }) => {
     return Option.merge(tabOption, guildOption)
-      .map(([tab, guild]) => {
-        const Component = tabs[tab].component;
-        return (
-          // eslint-disable-next-line react/jsx-key
+      .map(([tab, guild]) => (
+        // eslint-disable-next-line react/jsx-key
+        <Suspense fallback={<AppSkeleton />}>
           <ErrorBoundary onError={(e: Error): void => error(e)}>
-            <Component guild={guild} />
+            <LazyPageRenderer tab={tab} guild={guild} />
           </ErrorBoundary>
-        );
-      })
-      .getOrElse(<AppPlaceholder />);
+        </Suspense>
+      ))
+      .getOrElse(<AppSkeleton />);
   }
 );
 
@@ -139,18 +147,18 @@ const Wrapper: React.FC<WrapperProps> = () => {
   );
 };
 
-type AppPlaceholderProps = {};
+type AppSkeletonProps = {};
 
-const AppPlaceholder: React.FC<AppPlaceholderProps> = () => (
-  <div className="settings">
-    <Placeholder.Auto
+const AppSkeleton: React.FC<AppSkeletonProps> = () => (
+  <Box padding="milli">
+    <Skeleton.Auto
       block
       width={170}
       height={40}
       style={{ marginBottom: "1rem" }}
     />
-    <Placeholder.Auto block width={300} height={20} />
-  </div>
+    <Skeleton.Auto block width={300} height={20} />
+  </Box>
 );
 
-export default attach(AppContent, { Wrapper, Placeholder: AppPlaceholder });
+export default attach(AppContent, { Wrapper, Skeleton: AppSkeleton });

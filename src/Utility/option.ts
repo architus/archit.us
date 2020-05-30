@@ -36,18 +36,14 @@ export function option<T extends t.Mixed>(
   );
 }
 
+export type Unwrap<T> = T extends Option<infer K> ? K : T;
+
 export interface OptionLike<A> {
   /**
    * Whether the option is `None`
    * **Note: does not act as a type guard**
    */
-  fastIsEmpty: boolean;
-
-  /**
-   * Whether the option is `Some(...)`
-   * **Note: does not act as a type guard**
-   */
-  fastIsDefined: boolean;
+  _: boolean;
 
   /**
    * Whether the option is `None`
@@ -143,9 +139,7 @@ export abstract class Option<A> implements OptionLike<A> {
 
   abstract isDefined(): this is SomeType<A>;
 
-  abstract fastIsEmpty: boolean;
-
-  abstract fastIsDefined: boolean;
+  abstract _: boolean;
 
   abstract orNull(): A | null;
 
@@ -216,15 +210,13 @@ export interface Matcher<A, B> {
 }
 
 export class SomeType<A> extends Option<A> implements ValuedOption<A> {
-  fastIsDefined = true;
+  _ = false;
 
-  fastIsEmpty = false;
-
-  _value: A;
+  v: A;
 
   constructor(value: A) {
     super();
-    this._value = value;
+    this.v = value;
   }
 
   isDefined(): this is SomeType<A> {
@@ -236,53 +228,53 @@ export class SomeType<A> extends Option<A> implements ValuedOption<A> {
   }
 
   get get(): A {
-    return this._value;
+    return this.v;
   }
 
   orNull(): A | null {
-    return this._value;
+    return this.v;
   }
 
   orUndefined(): A | undefined {
-    return this._value;
+    return this.v;
   }
 
   getOrElse<B>(_: B): A | B {
-    return this._value;
+    return this.v;
   }
 
   map<B>(_: (_: A) => B): Option<B> {
-    return Some(_(this._value));
+    return Some(_(this.v));
   }
 
   filter(_: Predicate<A>): Option<A> {
-    const result = _(this._value);
+    const result = _(this.v);
     return result ? this : None;
   }
 
   flatMap<B>(_: (_: A) => Option<B>): Option<B> {
-    return _(this._value);
+    return _(this.v);
   }
 
   flatMapNil<B>(_: (_: A) => B | Nil): Option<B> {
-    const result: B | Nil = _(this._value);
+    const result: B | Nil = _(this.v);
     if (isNil(result)) return None;
     return Some(result);
   }
 
   match<B>(m: Matcher<A, B>): B {
-    return m.Some(this._value);
+    return m.Some(this.v);
   }
 
   forEach(_: (_: A) => void): Option<A> {
-    _(this._value);
+    _(this.v);
     return this;
   }
 
   equals(other: Option<A>, compare?: (left: A, right: A) => boolean): boolean {
     if (!other.isDefined()) return false;
-    if (isDefined(compare)) return compare(this._value, other._value);
-    return this._value === other._value;
+    if (isDefined(compare)) return compare(this.v, other.v);
+    return this.v === other.v;
   }
 }
 
@@ -300,9 +292,7 @@ export class NoneType extends Option<never> {
     return NoneType._instance;
   }
 
-  fastIsDefined = false;
-
-  fastIsEmpty = true;
+  _ = true;
 
   isDefined(): this is SomeType<never> {
     return false;
@@ -349,7 +339,7 @@ export class NoneType extends Option<never> {
   }
 
   equals(other: Option<never>): boolean {
-    return other.fastIsEmpty;
+    return other._;
   }
 }
 

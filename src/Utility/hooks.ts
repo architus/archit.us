@@ -123,9 +123,7 @@ export function useLocation(): {
       const newState = { ...initialState, location };
       setState(newState);
     });
-    return (): void => {
-      removeListener();
-    };
+    return removeListener;
   });
 
   return state;
@@ -136,6 +134,7 @@ export function useLocation(): {
  * @param effectFunc - Effect function to run
  */
 export function useEffectOnce(effectFunc: React.EffectCallback): void {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(effectFunc, []);
 }
 
@@ -146,6 +145,7 @@ export function useEffectOnce(effectFunc: React.EffectCallback): void {
 export function useCallbackOnce<T extends (...args: never[]) => unknown>(
   callback: T
 ): T {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   return useCallback(callback, []);
 }
 
@@ -154,6 +154,7 @@ export function useCallbackOnce<T extends (...args: never[]) => unknown>(
  * @param callback - the memo calculation function
  */
 export function useMemoOnce<A>(calculate: () => A): A {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   return useMemo(calculate, []);
 }
 

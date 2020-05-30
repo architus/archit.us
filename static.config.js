@@ -4,6 +4,7 @@ import axios from "axios";
 import path from "path";
 import fs from "fs";
 import SoureMapSupport from "source-map-support";
+import { getColorModeInitScriptElement } from "@xstyled/emotion";
 
 const TypeScript = require("ts-node");
 
@@ -24,6 +25,7 @@ const noFlashPath = path.resolve(__dirname, "./src/Build/no-flash.js");
 const noFlashScript = fs.readFileSync(noFlashPath);
 const config = {
   entry: path.join(__dirname, "src", "index.tsx"),
+  minLoadTime: 500,
   getRoutes: async () => {
     // Load usage count from API
     let guildCount = 0;
@@ -40,7 +42,7 @@ const config = {
     return [
       {
         path: "/",
-        template: "src/Pages/Index",
+        template: "src/Pages/Index/Index",
         getData: async () => ({
           guildCount,
           userCount,
@@ -74,7 +76,10 @@ const config = {
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
-      <Body className="dark-mode">{children}</Body>
+      <Body className="dark-mode">
+        {getColorModeInitScriptElement()}
+        {children}
+      </Body>
       <script
         // Dark mode anti-flash script
         dangerouslySetInnerHTML={{
@@ -85,14 +90,19 @@ const config = {
   ),
 };
 
-if (process.env.PRODUCTION_URL) {
-  config.siteRoot = process.env.PRODUCTION_URL;
+if (process.env.SITE_ROOT) {
+  config.siteRoot = process.env.SITE_ROOT;
+}
+
+if (process.env.BASE_PATH) {
+  config.basePath = process.env.BASE_PATH;
 }
 
 // Configure typescript based on args
 const args = process.argv.slice(3);
 let typeCheck = true;
 if (args.includes("--no-type-check")) {
+  console.log("Skipping type check");
   typeCheck = false;
 }
 config.plugins.push([

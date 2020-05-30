@@ -1,4 +1,4 @@
-import { User, Access, Guild, Snowflake, Emoji } from "Utility/types";
+import { User, Access, Guild, Snowflake } from "Utility/types";
 import * as t from "io-ts";
 import { makeRoute } from "Store/api/rest";
 import { Errors } from "Store/api/rest/types";
@@ -101,21 +101,4 @@ export const guilds = makeRoute()({
   auth: true,
   decode: (response: unknown): Either<Errors, GuildsListResponse> =>
     either.chain(t.object.decode(response), GuildsListResponse.decode),
-});
-
-export type EmojiListResponse = t.TypeOf<typeof EmojiListResponse>;
-export const EmojiListResponse = t.interface({
-  emojis: t.array(Emoji),
-});
-
-/**
- * GET / emojis
- */
-export const emojis = makeRoute()({
-  label: "emoji/manager",
-  route: (discordID: Snowflake) => `/emojis/${discordID}`,
-  method: HttpVerbs.GET,
-  auth: true,
-  decode: (response: unknown): Either<Errors, EmojiListResponse> =>
-    either.chain(t.object.decode(response), EmojiListResponse.decode),
 });

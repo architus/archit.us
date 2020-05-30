@@ -1,20 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { guildCount } from "Store/routes";
 import { restSuccess } from "Store/api/rest";
+import { Nil } from "Utility/types";
 
 /**
  * Stores static guild count metadata about the bot
  */
 export interface GuildCount {
-  guildCount: number;
-  userCount: number;
+  guildCount: number | Nil;
+  userCount: number | Nil;
 }
 
 // ? ====================
 // ? Reducer exports
 // ? ====================
 
-const initialState: GuildCount = { guildCount: 0, userCount: 0 };
+const initialState: GuildCount = { guildCount: null, userCount: null };
 const slice = createSlice({
   name: "guildCount",
   initialState,

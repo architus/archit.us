@@ -4,9 +4,10 @@
 @import "scss/util";
 
 .navbar {
+    height: 56px;
     padding: {
-        top: 0.75rem;
-        bottom: 0.85rem;
+        top: 0 !important;
+        bottom: 0 !important;
     }
     box-shadow: $drop-shadow;
     background-image: linear-gradient($-primary, $-primary);
@@ -16,8 +17,14 @@
         dark
     );
 
+    z-index: 1031;
+
     @include respond-above(sm) {
-        height: 68px;
+        height: 64px;
+        padding: {
+            left: 0 !important;
+            right: 0 !important;
+        }
     }
 
     .nav-link {
@@ -36,6 +43,11 @@
         &:focus {
             @include highlight-shadow($-light, 0.4);
         }
+
+        @include respond-below(md) {
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+        }
     }
 
     .header-children {
@@ -43,10 +55,6 @@
         flex-direction: row;
         align-items: center;
         justify-content: flex-end;
-
-        @include respond-below(sm) {
-            flex-direction: row-reverse;
-        }
     }
 
     .container-fluid {
@@ -60,7 +68,7 @@
     padding: {
         top: 0 !important;
         bottom: 3px !important;
-        left: 10px !important;
+        left: 6px !important;
         right: 10px !important;
     }
     outline: none !important;

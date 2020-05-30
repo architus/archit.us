@@ -38,7 +38,7 @@ const LoginButton: React.FC<LoginButtonProps> = ({
         <>
           {showLabel ? <p className="mb-3">You are already logged in</p> : null}
           <Button to="/app" as={RouterLink}>
-            Get started
+            Go to dashboard
           </Button>
         </>
       ) : (

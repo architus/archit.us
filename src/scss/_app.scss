@@ -5,8 +5,8 @@ $guild-list-hr-dark-fg: rgba($-light, 0.1);
 $guild-list-hr-light-fg: rgba($dark-000, 0.15);
 
 // GuildSidebar
-$guild-sidebar-dark-bg: $dark-100;
-$guild-sidebar-light-bg: $light-200;
+$guild-sidebar-dark-bg: hsl(220, 18%, 10%); // b_200
+$guild-sidebar-light-bg: hsl(200, 20%, 85%);
 
 %guild-sidebar {
     @include dark-bg($guild-sidebar-dark-bg);
@@ -14,14 +14,14 @@ $guild-sidebar-light-bg: $light-200;
 }
 
 // AppContent
-$app-content-dark-bg: $dark-300;
-$app-content-light-bg: $-light;
-$app-content-dark-fg: $-light;
-$app-content-light-fg: $-dark;
+$app-content-dark-bg: hsl(220, 13%, 18%); // b_400
+$app-content-light-bg: hsl(200, 20%, 97%);
+$app-content-dark-fg: rgba(246, 248, 249, 0.85);
+$app-content-light-fg: rgba(33, 33, 33, 0.85);
 
 // SideNavbar
-$side-navbar-dark-bg: $dark-200;
-$side-navbar-light-bg: $light-300;
+$side-navbar-dark-bg: hsl(220, 15%, 13%);  // b_300
+$side-navbar-light-bg: hsl(200, 20%, 93%);
 $side-navbar-tab-border-radius: 8px;
 $side-navbar-tab-hover-dark-bg: $side-navbar-dark-bg;
 $side-navbar-tab-hover-light-bg: $side-navbar-light-bg;
@@ -53,8 +53,8 @@ $data-grid-header-dark-bg: $dark-200;
 $data-grid-header-light-bg: $light-300;
 $data-grid-header-hover-dark-bg: $dark-250;
 $data-grid-header-hover-light-bg: $light-250;
-$data-grid-placeholder-dark-bg: $dark-200;
-$data-grid-placeholder-light-bg: $light-500;
+$data-grid-skeleton-dark-bg: $dark-200;
+$data-grid-skeleton-light-bg: $light-500;
 
 // Card
 $card-dark-bg: $dark-400;

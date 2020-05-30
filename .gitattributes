@@ -1,2 +1,11 @@
 # never EVER use CRLF, Windows
-* text eol=lf
+* eol=lf
+
+# configure binary formats
+*.png binary
+*.jpg binary
+*.ai binary
+*.psd binary
+*.ico binary
+*.woff binary
+*.woff2 binary

@@ -23,9 +23,12 @@
   status = 301
   force = true
 
-[context.production]
-  environment = { PRODUCTION_URL = "https://archit.us", BUILD_TAG = "prod" }
-
 [build]
+  # Disable type checking on building to save time on Netlify
+  command = "yarn build --no-type-check"
   environment = { NODE_ENV = "production", BUILD_LOCATION = "remote" }
+
+[context.production]
+  command = "yarn build"
+  environment = { PRODUCTION = "true", SITE_ROOT = "https://archit.us", BUILD_TAG = "prod" }
 

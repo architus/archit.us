@@ -141,7 +141,8 @@ const AppRoot: React.FC<AppRootProps> = () => {
     guilds: [],
     isLoaded: false,
   });
-  const { all: guildList, isLoaded: guildsLoaded } = usePool("guilds", {
+  const { all: guildList, isLoaded: guildsLoaded } = usePool({
+    type: "guild",
     filter: architusGuildFilter,
   });
   guildStore.current = { guilds: guildList, isLoaded: guildsLoaded };

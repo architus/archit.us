@@ -40,7 +40,7 @@ const NotificationPane: React.FC = () => {
 
   return (
     <div className="notification-pane">
-      <ErrorBoundary onError={useCallbackOnce((e) => error(e))}>
+      <ErrorBoundary>
         <Suspense fallback={<div />}>
           <LazyLoadingWrapper
             toast={toast}
