@@ -355,7 +355,8 @@ const Styled = {
 };
 
 const columns = [
-  { key: "name", name: "EMOJI NAME" },
+  { key: "id", name: "ID" },
+  { key: "name", name: "NAME" },
   {
     key: "url",
     name: "IMAGE",
