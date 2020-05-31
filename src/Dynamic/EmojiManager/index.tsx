@@ -355,7 +355,6 @@ const Styled = {
 };
 
 const columns = [
-  { key: "id", name: "ID" },
   { key: "name", name: "EMOJI NAME" },
   {
     key: "url",
@@ -375,18 +374,35 @@ const columns = [
     formatter: ({ row }: { row: CustomEmoji }) => <> {loadedYN(row.discordId.isDefined())}</>,
   },
   { key: "numUses", name: "USES" },
+  {
+    key: "btns", name: "CHANGE",
+    formatter: ({ row }: { row: CustomEmoji }) => <> {creatBtn(row.discordId.isDefined())}</>,
+  }
+
+
 ];
+
+function creatBtn(x: boolean) {
+  if (x == true) {
+    return <button > Cache </button>
+  } else {
+    return <button> Load </button>
+  }
+
+}
+
 
 function loadedYN(x: boolean) {
   if (x == true) {
-    return "Yes";
-  } else {
-    return "false";
+    return "Loaded";
+  }
+  else {
+    return "Cached";
   }
 }
 
 const EmojiManager: React.FC<AppPageProps> = ({ guild }) => {
- const { all: emojiList} = usePool({type: "customEmoji",guildId: guild.id})
+  const { all: emojiList } = usePool({ type: "customEmoji", guildId: guild.id })
 
   return (
     <>
@@ -406,21 +422,19 @@ const EmojiManager: React.FC<AppPageProps> = ({ guild }) => {
               height: number;
               width: number;
             }): React.ReactNode => (
-              <>
-                <ReactDataGrid
-                  columns={columns}
-                  rows={emojiList || []}
-                  rowKey={"id"}
-                  height={height}
-                  width={width}
-                />
-              </>
-            )}
+                <>
+                  <ReactDataGrid
+                    columns={columns}
+                    rows={emojiList || []}
+                    rowKey={"id"}
+                    height={height}
+                    width={width}
+                  />
+                </>
+              )}
           </AutoSizer>
         </Styled.DataGridWrapper>
       </Styled.PageOuter>
-
-      {/* <ReactDataGrid columns={columns} rows={emojiList || []} rowKey={"id"} /> */}
     </>
   );
 };
