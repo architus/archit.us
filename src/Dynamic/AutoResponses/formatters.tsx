@@ -28,7 +28,7 @@ const Styled = {
     margin-left: 1px;
     color: text_fade;
   `,
-  EmojiContainer: styled.div`
+  EmojiContainer: styled.divBox`
     & .emoji {
       width: 24px;
       height: auto;
@@ -141,6 +141,7 @@ const transformRegex = makeTransformer([escapeHtml, convertUnicodeEmoji]);
  */
 const RegexRenderer: React.FC<RegexRendererProps> = ({ content }) => (
   <Styled.EmojiContainer
+    fontFamily="code"
     dangerouslySetInnerHTML={{
       __html: useMemo(() => transformRegex(content), [content]),
     }}
@@ -204,7 +205,7 @@ export const ResponseFormatter: React.FC<FormatterProps<
   TransformedAutoResponse,
   {}
 >> = ({ row }) => {
-  const content = <ResponseRenderer content={row.trigger} />;
+  const content = <ResponseRenderer content={row.response} />;
   return (
     <Tooltip
       id={`response-tooltip-${row.id}`}

@@ -37,7 +37,7 @@ const AutoLink: React.FC<AutoLinkProps> = ({
   to,
   left = false,
   external = null,
-  space = "nano",
+  space = "pico",
   ...rest
 }) => {
   const derivedExternal = isDefined(external) ? external : isExternal(to);

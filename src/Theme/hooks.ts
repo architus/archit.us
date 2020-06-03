@@ -1,9 +1,7 @@
 import { useColorMode, useTheme } from "@xstyled/emotion";
 import { isDefined, isNil } from "Utility";
 import { Option, Some, None } from "Utility/option";
-import { ColorKey, ColorMode } from "./tokens";
-
-const CSS_VARIABLE_REGEX = /^var\(--[a-zA-Z0-9_-]+,\s*(.*)\s*\)$/;
+import { ColorKey, ColorMode, parseThemeColor } from "./tokens";
 
 /**
  * Obtains the resolved color corresponding to the key for the current color mode (i.e.
@@ -34,17 +32,4 @@ export function useThemeColor(key: ColorKey): [string, ColorMode] {
   }
 
   return [colorOption.getOrElse("#000000"), colorMode];
-}
-
-/**
- * Parses a CSS variable string with a default returned by all `useTheme` calls
- * @param themeColor - Theme color CSS variable string
- */
-function parseThemeColor(themeColor: string): Option<string> {
-  const matches = CSS_VARIABLE_REGEX.exec(themeColor);
-  if (isDefined(matches)) {
-    return Some(matches[1]);
-  }
-
-  return None;
 }
