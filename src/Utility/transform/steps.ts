@@ -67,7 +67,7 @@ const blacklistedFragments = ["``"];
 
 /**
  * Tokenizes code and text fragments, returning an array of tagged fragments
- * @param source - Oiriginal text
+ * @param source - Original text
  */
 export function tokenizeFragments(source: string): TaggedFragment[] {
   const fragments = splitFragments(source, codeRegexGlobal);

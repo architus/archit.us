@@ -1,5 +1,5 @@
 import React, { useState, createRef } from "react";
-import styled, { Box } from "@xstyled/emotion";
+import styled, { Box, BoxProps } from "@xstyled/emotion";
 import * as Popper from "@popperjs/core";
 import {
   OverlayTrigger,
@@ -22,7 +22,7 @@ const Styled = {
     .tooltip-inner {
       box-shadow: 3;
       padding: femto pico;
-      max-width: none;
+      max-width: calc(100vw - 1rem);
       background-color: tooltip;
       border-radius: 4px;
     }
@@ -53,12 +53,13 @@ type TooltipControllerProps = {
   hide?: boolean;
   padding?: Space;
   maxWidth?: Space;
-  delay?: number;
+  delay?: number | { show: number; hide: number };
   toggle?: TooltipMode;
   popperConfig?: OverlayProps["popperConfig"];
   // Common style Props
   className?: string;
   style?: StyleObject;
+  boxProps?: BoxProps;
 };
 
 /**
@@ -85,6 +86,7 @@ const TooltipController: React.FC<TooltipControllerProps> = ({
   maxWidth = "giga",
   className,
   style,
+  boxProps,
 }) => {
   // Normalize modifiers
   const baseModifiers = popperConfig?.modifiers;
@@ -103,7 +105,7 @@ const TooltipController: React.FC<TooltipControllerProps> = ({
       className={className}
       style={{ ...(style ?? {}), display: hide ? "none" : undefined }}
     >
-      <Box padding={padding} maxWidth={maxWidth}>
+      <Box padding={padding} maxWidth={maxWidth} {...boxProps}>
         {text}
       </Box>
     </Styled.Tooltip>
@@ -126,7 +128,7 @@ const TooltipController: React.FC<TooltipControllerProps> = ({
     case "hover":
       return (
         <OverlayTrigger
-          placement={resolvePlacement({ top, bottom, left })}
+          placement={resolvePlacement({ top, bottom, left, placement })}
           overlay={tooltip}
           delay={delay}
           popperConfig={{
