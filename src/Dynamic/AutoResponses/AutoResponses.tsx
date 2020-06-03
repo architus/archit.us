@@ -38,6 +38,7 @@ import {
 } from "./NumericFilter";
 import { TransformedAutoResponse, AuthorData } from "./types";
 
+// TODO minify CSS to save on byte size
 const Styled = {
   PageOuter: styled.div`
     position: relative;
