@@ -10,6 +10,7 @@ import DataGrid, { Column, SortDirection } from "react-data-grid";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { ContextMenu, MenuItem, connectMenu } from "react-contextmenu";
 import { createPortal } from "react-dom";
+import copy from "copy-to-clipboard";
 import { AppPageProps } from "Dynamic/AppRoot/types";
 import { intersection, memoize } from "Utility";
 import {
@@ -20,7 +21,8 @@ import {
   AutoResponse,
 } from "Utility/types";
 import { Alert } from "react-bootstrap";
-import { useCurrentUser } from "Store/actions";
+import { Dispatch, useDispatch } from "Store";
+import { useCurrentUser, showToast } from "Store/actions";
 import { Option, None, Some, Unwrap } from "Utility/option";
 import { ScrollContext } from "Dynamic/AppRoot/context";
 import { Tooltip, Icon, Switch, HelpTooltip, AutoLink } from "Components";
@@ -97,14 +99,20 @@ const Styled = {
   `,
   GridHeader: styled.div`
     display: flex;
-    height: centi;
+    min-height: centi;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: flex-start;
     flex-wrap: wrap;
     z-index: 4;
 
     box-shadow: 0;
     background-color: b_500;
+    padding: femto 0;
+
+    & > * {
+      margin-top: femto;
+      margin-bottom: femto;
+    }
 
     ${up(
       "md",
@@ -580,6 +588,7 @@ type AutoResponsesProps = {
   hasLoaded: boolean;
   isArchitusAdmin: boolean;
   currentUser: User;
+  dispatch: Dispatch;
   scrollHandler: () => void;
 } & AppPageProps;
 
@@ -701,10 +710,19 @@ export class AutoResponses extends React.Component<
   };
 
   onCopy = (
-    e: React.MouseEvent<HTMLDivElement>,
+    _: React.MouseEvent<HTMLDivElement>,
     { rowIdx }: { rowIdx: number }
   ): void => {
-    // TODO implement
+    const { dispatch } = this.props;
+    const row = this.getRows()[rowIdx];
+    const copyCommand = `${row.trigger}::${row.response}`;
+    copy(copyCommand);
+    dispatch(
+      showToast({
+        message: "Copied to clipboard",
+        variant: "success",
+      })
+    );
   };
 
   onAddNewRow = (): void => {
@@ -873,7 +891,6 @@ export class AutoResponses extends React.Component<
         name: "",
         width: 42,
         maxWidth: 42,
-        frozen: true,
         headerRenderer: SelectionHeader(this.allRowsSelectedRef),
         formatter: SelectionFormatter(currentUser, isArchitusAdmin),
       },
@@ -882,6 +899,8 @@ export class AutoResponses extends React.Component<
         key: "trigger",
         resizable: true,
         sortable: true,
+        minWidth: 200,
+        width: "auto",
         formatter: TriggerFormatter,
         filterRenderer: StringFilter,
       },
@@ -890,6 +909,8 @@ export class AutoResponses extends React.Component<
         key: "response",
         resizable: true,
         sortable: true,
+        minWidth: 200,
+        width: "auto",
         formatter: ResponseFormatter,
         filterRenderer: StringFilter,
       },
@@ -900,13 +921,16 @@ export class AutoResponses extends React.Component<
         sortable: true,
         formatter: CountFormatter,
         filterRenderer: NumericFilter,
-        width: 150,
+        minWidth: 130,
+        width: 160,
       },
       {
         name: "Author",
         key: "author",
         resizable: true,
         sortable: true,
+        minWidth: 160,
+        width: "auto",
         formatter: AuthorFormatter,
         filterRenderer: StringFilter,
       },
@@ -1066,6 +1090,7 @@ const MigrationAlert: React.FC<{}> = () => {
 };
 
 const AutoResponsesProvider: React.FC<AppPageProps> = (pageProps) => {
+  const dispatch = useDispatch();
   const { guild } = pageProps;
   const currentUser: Option<User> = useCurrentUser();
   const { all: commands } = usePool({
@@ -1118,6 +1143,7 @@ const AutoResponsesProvider: React.FC<AppPageProps> = (pageProps) => {
         currentUser={currentUser.get}
         isArchitusAdmin={false}
         scrollHandler={scrollHandler}
+        dispatch={dispatch}
         {...pageProps}
       />
     );

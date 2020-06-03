@@ -2,7 +2,12 @@ import { th, ThemeGetterFunc, breakpoints } from "@xstyled/system";
 import { isNil } from "Utility";
 import { css } from "@xstyled/emotion";
 import { Color } from "./color";
-import { WithBreakpointArgs, ColorMode, ColorKey, parseThemeColor } from "./tokens";
+import {
+  WithBreakpointArgs,
+  ColorMode,
+  ColorKey,
+  parseThemeColor,
+} from "./tokens";
 
 /**
  * Adds opacity to a color from the theme.

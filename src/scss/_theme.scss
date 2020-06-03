@@ -31,18 +31,21 @@ $ease: cubic-bezier(0.25, 0.1, 0.25, 1);
         height: $width;
     }
     &::-webkit-scrollbar-track {
-        background-color: transparent;
+        background-color: rgba($color, 0.08);
+    }
+    &::-webkit-scrollbar-corner {
+        background-color: rgba($color, 0.08);
     }
     &::-webkit-scrollbar-thumb {
-        background-color: rgba($color, 0.25);
+        background-color: rgba($color, 0.15);
         border-radius: 1000px;
 
         &:hover {
-            background-color: rgba($color, 0.4);
+            background-color: rgba($color, 0.3);
         }
 
         &:active {
-            background-color: rgba($color, 0.6);
+            background-color: rgba($color, 0.5);
         }
     }
 }
@@ -55,6 +58,11 @@ $scrollbar-width: 12px;
     @include light {
         @include scrollbar($-dark, $scrollbar-width);
     }
+}
+
+// TODO convert to emotion
+.rdg {
+    @extend %custom-scrollbar;
 }
 
 @mixin discord-scrollbar($bg, $thumb, $track, $invert: false) {
