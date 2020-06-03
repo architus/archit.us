@@ -7,7 +7,7 @@
     "typecheck": "tsc --listFiles --noEmit",
     "analyze": "react-static build --analyze",
     "serve": "serve dist -p 3000",
-    "bundlesize": "react-static build --skip-type-check --pt-enable --no-profiling",
+    "bundlesize": "react-static build --no-type-check --pt-enable --no-profiling",
     "lint-all": "eslint -f unix \"src/**/*.{js,jsx,ts,tsx}\"",
     "lint": "eslint -f unix \"src/**/*.{ts,tsx}\"",
     "fix": "prettier --write \"src/**/*.{ts,tsx}\"",

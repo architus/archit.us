@@ -118,8 +118,9 @@ const Styled = {
     position: relative;
     margin-left: 46px;
     margin-top: -5px;
-    opacity: 0.7;
+    opacity: 0.5;
     text-align: left;
+    color: light;
   `,
 };
 
