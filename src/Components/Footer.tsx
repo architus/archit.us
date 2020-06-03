@@ -6,6 +6,7 @@ import Icon from "Components/Icon";
 import Card from "Components/Card";
 import { Space, ColorMode, Breakpoint, mode } from "Theme";
 import { WithBoxProps } from "Utility/types";
+import { version } from "meta.json";
 
 const Styled = {
   Footer: styled.asideBox`
@@ -112,6 +113,14 @@ const Styled = {
     align-items: stretch;
     justify-content: space-around;
   `,
+  // Align version string with brand icon
+  VersionString: styled.div`
+    position: relative;
+    margin-left: 46px;
+    margin-top: -5px;
+    opacity: 0.7;
+    text-align: left;
+  `,
 };
 
 /**
@@ -161,7 +170,10 @@ const Footer: React.FC<BoxProps> = (boxProps) => (
               // Make sure the build tag doesn't cause the page to expand
               overflow="hidden"
             >
-              <Styled.Brand top />
+              <div>
+                <Styled.Brand top />
+                <Styled.VersionString>{version}</Styled.VersionString>
+              </div>
             </Styled.Card>
           </Styled.BrandColumn>
         </Box>
