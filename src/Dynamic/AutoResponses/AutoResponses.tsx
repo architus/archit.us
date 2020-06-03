@@ -715,7 +715,9 @@ export class AutoResponses extends React.Component<
   ): void => {
     const { dispatch } = this.props;
     const row = this.getRows()[rowIdx];
-    const copyCommand = `${row.trigger}::${row.response}`;
+    const escapedTrigger = row.trigger.replace(`\\`, `\\\\`);
+    const escapedResponse = row.trigger.replace(`\\`, `\\\\`);
+    const copyCommand = `${escapedTrigger}::${escapedResponse}`;
     copy(copyCommand);
     dispatch(
       showToast({
