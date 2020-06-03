@@ -1,3 +1,6 @@
+import { isDefined } from "Utility";
+import { Some, Option, None } from "Utility/option";
+
 /* eslint-disable @typescript-eslint/camelcase */
 
 /**
@@ -164,8 +167,8 @@ const theme = {
         dark_adjust_slight: "rgba(0, 0, 0, 0.05)",
         contrast_overlay: "rgba(0, 0, 0, 0.04)",
         input_focus_border: "hsl(209, 45%, 55%)",
-        // Same as `dark.b_400`
-        tooltip: "rgb(40, 44, 52)",
+        // Same as `dark.b_600`
+        tooltip: "hsl(220, 13%, 28%)",
         // Same as `dark.b_600`
         footer: "hsl(220, 13%, 28%)",
       },
@@ -213,3 +216,18 @@ export type BreakpointObject<ArgType> = {
 export type WithBreakpointArgs<Props> = {
   [Key in keyof Props]?: Props[Key] | BreakpointObject<Props[Key]>;
 };
+
+const CSS_VARIABLE_REGEX = /^var\(--[a-zA-Z0-9_-]+,\s*(.*)\s*\)$/;
+
+/**
+ * Parses a CSS variable string with a default returned by all `useTheme` calls
+ * @param themeColor - Theme color CSS variable string
+ */
+export function parseThemeColor(themeColor: string): Option<string> {
+  const matches = CSS_VARIABLE_REGEX.exec(themeColor);
+  if (isDefined(matches)) {
+    return Some(matches[1]);
+  }
+
+  return None;
+}

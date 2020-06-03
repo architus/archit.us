@@ -1,9 +1,16 @@
-import React, { useContext, useMemo, MutableRefObject } from "react";
+import React, {
+  useContext,
+  useMemo,
+  MutableRefObject,
+  useState,
+  useCallback,
+} from "react";
 import styled, { css, up, Box } from "@xstyled/emotion";
 import DataGrid, { Column, SortDirection } from "react-data-grid";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { ContextMenu, MenuItem, connectMenu } from "react-contextmenu";
 import { createPortal } from "react-dom";
+import copy from "copy-to-clipboard";
 import { AppPageProps } from "Dynamic/AppRoot/types";
 import { intersection, memoize } from "Utility";
 import {
@@ -13,14 +20,16 @@ import {
   HoarFrost,
   AutoResponse,
 } from "Utility/types";
-import { useCurrentUser } from "Store/actions";
+import { Alert } from "react-bootstrap";
+import { Dispatch, useDispatch } from "Store";
+import { useCurrentUser, showToast } from "Store/actions";
 import { Option, None, Some, Unwrap } from "Utility/option";
 import { ScrollContext } from "Dynamic/AppRoot/context";
-import { Tooltip, Icon, Switch, HelpTooltip } from "Components";
+import { Tooltip, Icon, Switch, HelpTooltip, AutoLink } from "Components";
 import { AnyIconName } from "Components/Icon/loader";
 import { getAvatarUrl } from "Components/UserDisplay";
 import { usePool, usePoolEntities } from "Store/slices/pools";
-import { opacity, color } from "Theme";
+import { ColorMode, opacity, color, mode } from "Theme";
 import {
   TriggerFormatter,
   ResponseFormatter,
@@ -39,6 +48,24 @@ import {
 import { TransformedAutoResponse, AuthorData } from "./types";
 
 const Styled = {
+  Alert: styled(Alert)`
+    margin-top: -pico;
+    font-size: 0.95em;
+    padding-top: nano;
+    padding-bottom: nano;
+    padding-left: micro;
+    padding-right: milli;
+    color: text_fade;
+
+    ${(props): string[] =>
+      mode(
+        ColorMode.Dark,
+        css`
+          border: none;
+          background-color: ${opacity("info", 0.15)(props)};
+        `
+      )(props)}
+  `,
   PageOuter: styled.div`
     position: relative;
     display: flex;
@@ -72,14 +99,20 @@ const Styled = {
   `,
   GridHeader: styled.div`
     display: flex;
-    height: centi;
+    min-height: centi;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: flex-start;
     flex-wrap: wrap;
     z-index: 4;
 
     box-shadow: 0;
     background-color: b_500;
+    padding: femto 0;
+
+    & > * {
+      margin-top: femto;
+      margin-bottom: femto;
+    }
 
     ${up(
       "md",
@@ -520,6 +553,7 @@ const Styled = {
       color: text;
       padding: femto 0;
       user-select: none;
+      z-index: 1091;
     }
 
     & .react-contextmenu-item {
@@ -554,6 +588,7 @@ type AutoResponsesProps = {
   hasLoaded: boolean;
   isArchitusAdmin: boolean;
   currentUser: User;
+  dispatch: Dispatch;
   scrollHandler: () => void;
 } & AppPageProps;
 
@@ -675,10 +710,19 @@ export class AutoResponses extends React.Component<
   };
 
   onCopy = (
-    e: React.MouseEvent<HTMLDivElement>,
+    _: React.MouseEvent<HTMLDivElement>,
     { rowIdx }: { rowIdx: number }
   ): void => {
-    // TODO implement
+    const { dispatch } = this.props;
+    const row = this.getRows()[rowIdx];
+    const copyCommand = `${row.trigger}::${row.response}`;
+    copy(copyCommand);
+    dispatch(
+      showToast({
+        message: "Copied to clipboard",
+        variant: "success",
+      })
+    );
   };
 
   onAddNewRow = (): void => {
@@ -847,7 +891,6 @@ export class AutoResponses extends React.Component<
         name: "",
         width: 42,
         maxWidth: 42,
-        frozen: true,
         headerRenderer: SelectionHeader(this.allRowsSelectedRef),
         formatter: SelectionFormatter(currentUser, isArchitusAdmin),
       },
@@ -856,6 +899,8 @@ export class AutoResponses extends React.Component<
         key: "trigger",
         resizable: true,
         sortable: true,
+        minWidth: 200,
+        width: "auto",
         formatter: TriggerFormatter,
         filterRenderer: StringFilter,
       },
@@ -864,6 +909,8 @@ export class AutoResponses extends React.Component<
         key: "response",
         resizable: true,
         sortable: true,
+        minWidth: 200,
+        width: "auto",
         formatter: ResponseFormatter,
         filterRenderer: StringFilter,
       },
@@ -874,13 +921,16 @@ export class AutoResponses extends React.Component<
         sortable: true,
         formatter: CountFormatter,
         filterRenderer: NumericFilter,
-        width: 150,
+        minWidth: 130,
+        width: 160,
       },
       {
         name: "Author",
         key: "author",
         resizable: true,
         sortable: true,
+        minWidth: 160,
+        width: "auto",
         formatter: AuthorFormatter,
         filterRenderer: StringFilter,
       },
@@ -894,7 +944,7 @@ export class AutoResponses extends React.Component<
               <Icon name="copy" marginRight="nano" />
               Copy to clipboard
             </MenuItem>
-            {trigger && trigger.canDelete ? (
+            {/* {trigger && trigger.canDelete ? (
               <>
                 <MenuItem onClick={this.onDelete}>
                   <Icon name="trash" marginRight="nano" />
@@ -903,7 +953,7 @@ export class AutoResponses extends React.Component<
               </>
             ) : (
               <></>
-            )}
+            )} */}
           </Styled.ContextMenu>
         );
       }
@@ -913,6 +963,7 @@ export class AutoResponses extends React.Component<
       <Styled.PageOuter>
         <Styled.Header>
           <h2>Automatic Responses</h2>
+          <MigrationAlert />
           <p className="hide-mobile">
             Manage the triggers and automatic responses for{" "}
             {isArchitusAdmin ? "all entries" : "self-authored entries"} on the
@@ -1002,7 +1053,44 @@ function foldAuthorData(
   };
 }
 
+/**
+ * Shows a migration alert to users upon their first visit until they dismiss the alert
+ */
+const MigrationAlert: React.FC<{}> = () => {
+  const storageKey = "autoResponseMigration";
+  const initialValue = window.localStorage.getItem(storageKey) !== "true";
+  const [show, setShow] = useState(initialValue);
+  const hide = useCallback((): void => {
+    setShow(false);
+    window.localStorage.setItem(storageKey, "true");
+  }, [setShow]);
+
+  return (
+    <>
+      {show && (
+        <Styled.Alert variant="info" onClose={hide} dismissible>
+          <strong>Notice</strong>: Old auto response triggers have been turned
+          into their equivalent regular expression triggers on servers with{" "}
+          <em>regular expression auto responses</em> enabled in order to
+          preserve old whitespace behavior. For more information on auto
+          responses check out{" "}
+          <AutoLink to="https://docs.archit.us/features/auto-responses">
+            the docs
+          </AutoLink>
+          , and to learn more about all of the new features that arrived in
+          v0.2.0, check out{" "}
+          <AutoLink to="https://docs.archit.us/changelog/v0.2.0/">
+            the changelog
+          </AutoLink>
+          .
+        </Styled.Alert>
+      )}
+    </>
+  );
+};
+
 const AutoResponsesProvider: React.FC<AppPageProps> = (pageProps) => {
+  const dispatch = useDispatch();
   const { guild } = pageProps;
   const currentUser: Option<User> = useCurrentUser();
   const { all: commands } = usePool({
@@ -1055,6 +1143,7 @@ const AutoResponsesProvider: React.FC<AppPageProps> = (pageProps) => {
         currentUser={currentUser.get}
         isArchitusAdmin={false}
         scrollHandler={scrollHandler}
+        dispatch={dispatch}
         {...pageProps}
       />
     );
@@ -1115,7 +1204,7 @@ const GridHeader: React.FC<GridHeaderProps> = ({
         </>
       }
     />
-    <Styled.GridHeaderButton disabled={!addNewRowEnable} onClick={onAddNewRow}>
+    {/* <Styled.GridHeaderButton disabled={!addNewRowEnable} onClick={onAddNewRow}>
       <Icon name="plus" />
       <Box ml="nano" display="inline">
         New
@@ -1129,7 +1218,7 @@ const GridHeader: React.FC<GridHeaderProps> = ({
       <Box ml="nano" display="inline">
         Delete selected
       </Box>
-    </Styled.GridHeaderButton>
+    </Styled.GridHeaderButton> */}
     <Styled.ViewModeButtonGroup>
       {viewModeOrder.map((key) => (
         <Tooltip

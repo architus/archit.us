@@ -2,7 +2,12 @@ import { th, ThemeGetterFunc, breakpoints } from "@xstyled/system";
 import { isNil, isDefined } from "Utility";
 import { css } from "@xstyled/emotion";
 import { Color, ColorInstance } from "./color";
-import { WithBreakpointArgs, ColorMode, ColorKey } from "./tokens";
+import {
+  WithBreakpointArgs,
+  ColorMode,
+  ColorKey,
+  parseThemeColor,
+} from "./tokens";
 
 /**
  * Adds opacity to a color from the theme.
@@ -17,7 +22,7 @@ export function opacity(key: ColorKey, amount: number): ThemeGetterFunc {
   const inner = th.color(key);
   return (props: unknown): string => {
     const resolvedColor = inner(props);
-    const color = Color(resolvedColor);
+    const color = Color(parseThemeColor(resolvedColor).getOrElse("#000000"));
     color.setAlpha(color.getAlpha() * amount);
     return color.toString();
   };

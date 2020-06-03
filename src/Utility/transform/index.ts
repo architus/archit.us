@@ -11,7 +11,7 @@ export type TransformerStep<TContext = Omitted> = (
  * Composes multiple steps into a single step
  * @param steps - Array of transformer steps
  */
-export function makeTransformer<T = {}>(
+export function makeTransformer<T = Omitted>(
   steps: TransformerStep<T>[]
 ): (original: string, context: T) => string {
   return (original: string, context: T): string => {
