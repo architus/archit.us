@@ -1,4 +1,7 @@
-on: [push, pull_request]
+on
+  push:
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 # Workflow to run continuous integration builds for each commit/PR,
 # and then upload the artifacts to our staging server
