@@ -15,7 +15,7 @@ import { StyleObject } from "Utility/types";
 import Header from "Components/Header";
 import Switch from "Components/Switch";
 import Icon from "Components/Icon";
-import { siteName, description } from "meta.json";
+import { description } from "meta.json";
 
 const Styled = {
   Layout: styled.div<{ noHeader: boolean }>`
@@ -61,6 +61,7 @@ const Layout: React.FC<LayoutProps> = ({
   sticky = true,
   ...rest
 }) => {
+  const siteName = process.env.APP_NAME ?? "Architus";
   const builtTitle = isNil(title) ? siteName : `${siteName} | ${title}`;
 
   // Dark mode control hooks

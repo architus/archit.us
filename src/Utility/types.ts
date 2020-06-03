@@ -438,6 +438,7 @@ export interface MockUser {
   nameColor: string;
   bot: boolean;
   avatarUrl?: string;
+  verified: boolean;
 }
 
 export interface MockMessageClump {

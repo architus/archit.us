@@ -15,6 +15,7 @@ export { faQuestionCircle } from "@fortawesome/free-solid-svg-icons/faQuestionCi
 export { faMinus } from "@fortawesome/free-solid-svg-icons/faMinus";
 export { faTrash } from "@fortawesome/free-solid-svg-icons/faTrash";
 export { faCopy } from "@fortawesome/free-solid-svg-icons/faCopy";
+export { faCheck } from "@fortawesome/free-solid-svg-icons/faCheck";
 
 // Brand icons
 export { faDiscord } from "@fortawesome/free-brands-svg-icons/faDiscord";
