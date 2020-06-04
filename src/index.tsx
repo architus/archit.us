@@ -1,9 +1,16 @@
+// Uncomment to enable render profiling
+// import "./wdyr";
+
 import React from "react";
 import ReactDOM from "react-dom";
 import { AppContainer } from "react-hot-loader";
+import { addPrefetchExcludes } from "react-static";
 import { isHot } from "Utility/types";
 import { isDefined } from "Utility";
 import App from "./App";
+
+// Any routes in this array will be treated as non-static routes
+addPrefetchExcludes([/\/?app(?:\/.*)?/]);
 
 export default App;
 
@@ -37,7 +44,7 @@ if (typeof document !== "undefined") {
   // Register service worker
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
-      if (process.env.PRODUCTION_URL) {
+      if (process.env.PRODUCTION) {
         navigator.serviceWorker.register("/service-worker.js");
       } else {
         navigator.serviceWorker.getRegistrations().then((registrations) => {

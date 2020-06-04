@@ -95,6 +95,7 @@ export function createMockUser(guildId: number): MockUser {
     username: mockUsername,
     nameColor: mockNameColor,
     discriminator: mockDiscriminator.toString(),
+    verified: false,
     bot: false,
   };
 }
@@ -113,6 +114,7 @@ export function makeMockUser(base: User): MockUser {
     username: base.username,
     avatarUrl: getAvatarUrl({ user: base }),
     nameColor: userColor,
+    verified: false,
     bot: false,
   };
 }

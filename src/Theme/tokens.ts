@@ -1,3 +1,6 @@
+import { isDefined } from "Utility";
+import { Some, Option, None } from "Utility/option";
+
 /* eslint-disable @typescript-eslint/camelcase */
 
 /**
@@ -31,7 +34,8 @@ export enum ColorMode {
 }
 
 const theme = {
-  initialColorModeName: ColorMode.Light,
+  initialColorModeName: ColorMode.Dark,
+  defaultColorModeName: ColorMode.Dark,
   useColorSchemeMediaQuery: false,
   fonts: {
     body: sansSerif,
@@ -42,7 +46,7 @@ const theme = {
   space: withAliases(
     [0, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610],
     [
-      "none",
+      "zero",
       "atto",
       "femto",
       "pico",
@@ -58,9 +62,10 @@ const theme = {
     ]
   ),
   sizes: withAliases(
-    [0, 2, 5, 13, 21, 34, 55, 89, 144, 233, 377, 610],
+    [0, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610],
     [
-      "none",
+      "zero",
+      "atto",
       "femto",
       "pico",
       "nano",
@@ -81,71 +86,100 @@ const theme = {
     3: `0 14px 28px var(--xstyled-colors-shadow_heavy), 0 10px 10px var(--xstyled-colors-shadow_medium)`,
     inner: `inset 0 0 16px var(--xstyled-colors-shadow_heavy)`,
   },
+  breakpoints: {
+    xs: 0,
+    vs: 400,
+    sm: 576,
+    md: 768,
+    lg: 992,
+    xl: 1200,
+  },
   colors: {
-    text: "rgba(33, 33, 33, 0.85)",
-    text_strong: "rgb(33, 33, 33)",
-    text_fade: "rgba(33, 33, 33, 0.7)",
-    foreground_fade: "rgba(33, 33, 33, 0.4)",
-    light: "rgb(246, 248, 249)",
-    b_000: "hsl(200, 20%, 75%)",
-    b_100: "hsl(200, 20%, 80%)",
-    b_200: "hsl(200, 20%, 85%)",
-    b_300: "hsl(200, 20%, 93%)",
-    b_400: "hsl(200, 20%, 97%)",
-    b_500: "hsl(200, 20%, 100%)",
-    b_600: "hsl(200, 20%, 100%)",
-    primary: "hsl(209, 45%, 55%)",
-    secondary: "hsl(38, 52%, 58%)",
+    // Global colors
     tertiary: "#453e3e",
     info: "#73a3ba",
     warning: "#e3c75b",
     success: "#5da161",
     danger: "#e6584d",
-    border: "rgba(194, 207, 214, 0.8)",
-    border_light: "rgba(194, 207, 214, 0.45)",
-    contrast_border: "rgba(194, 207, 214, 0.9)",
-    shadow_light: "rgba(0, 0, 0, 0.06)",
-    shadow_medium: "rgba(0, 0, 0, 0.08)",
-    shadow_heavy: "rgba(0, 0, 0, 0.11)",
-    shadow_extraheavy: "rgba(0, 0, 0, 0.3)",
-    light_overlay: "rgba(255, 255, 255, 0.45)",
-    light_overlay_slight: "rgba(255, 255, 255, 0.3)",
-    dark_overlay: "rgba(0, 0, 0, 0.1)",
-    dark_overlay_slight: "rgba(0, 0, 0, 0.05)",
-    contrast_overlay: "rgba(0, 0, 0, 0.04)",
-    input_focus_border: "hsl(209, 45%, 55%)",
+    light: "rgb(232, 234, 235)",
+    dark: "rgb(22, 24, 30)",
+    // Overlays are mode-agnostic, adjusts depend on theme to lighten/darken
+    light_overlay: "rgba(255, 255, 255, 0.1)",
+    dark_overlay_strong: "rgba(0, 0, 0, 0.5)",
+
+    // Theme colors
+    text: "rgba(246, 248, 249, 0.85)",
+    text_strong: "rgb(246, 248, 249)",
+    text_fade: "rgba(246, 248, 249, 0.7)",
+    foreground_fade: "rgba(246, 248, 249, 0.4)",
+    b_000: "hsl(220, 19%, 2%)",
+    b_100: "hsl(220, 17%, 5%)",
+    b_200: "hsl(220, 18%, 10%)",
+    b_300: "hsl(220, 15%, 13%)",
+    b_400: "hsl(220, 13%, 18%)",
+    b_500: "hsl(220, 13%, 22%)",
+    b_600: "hsl(220, 13%, 28%)",
+    primary: "hsl(209, 45%, 65%)",
+    secondary: "hsl(38, 52%, 62%)",
+    border: "rgba(246, 248, 249, 0.09)",
+    border_light: "rgba(246, 248, 249, 0.075)",
+    contrast_border: "transparent",
+    shadow_light: "rgba(0, 0, 0, 0.07)",
+    shadow_medium: "rgba(0, 0, 0, 0.12)",
+    shadow_heavy: "rgba(0, 0, 0, 0.18)",
+    shadow_extraheavy: "rgba(0, 0, 0, 0.5)",
+    light_adjust: "rgba(255, 255, 255, 0.08)",
+    light_adjust_slight: "rgba(255, 255, 255, 0.02)",
+    dark_adjust: "rgba(0, 0, 0, 0.25)",
+    dark_adjust_slight: "rgba(0, 0, 0, 0.125)",
+    contrast_overlay: "rgba(255, 255, 255, 0.023)",
+    input_focus_border: "transparent",
+    // Same as `dark.b_100`
+    tooltip: "rgb(11, 12, 15)",
+    // Same as `dark.b_400`
+    footer: "hsl(220, 13%, 18%)",
+
     modes: {
-      [ColorMode.Dark]: {
-        text: "rgba(246, 248, 249, 0.85)",
-        text_strong: "rgb(246, 248, 249)",
-        text_fade: "rgba(246, 248, 249, 0.7)",
-        foreground_fade: "rgba(246, 248, 249, 0.4)",
-        b_000: "hsl(220, 19%, 2%)",
-        b_100: "hsl(220, 17%, 5%)",
-        b_200: "hsl(220, 13%, 10%)",
-        b_300: "hsl(220, 13%, 13%)",
-        b_400: "hsl(220, 13%, 18%)",
-        b_500: "hsl(220, 13%, 24%)",
-        b_600: "hsl(220, 13%, 28%)",
-        primary: "hsl(209, 45%, 65%)",
-        secondary: "hsl(38, 52%, 62%)",
-        border: "rgba(246, 248, 249, 0.09)",
-        border_light: "rgba(246, 248, 249, 0.075)",
-        contrast_border: "transparent",
-        shadow_light: "rgba(0, 0, 0, 0.07)",
-        shadow_medium: "rgba(0, 0, 0, 0.12)",
-        shadow_heavy: "rgba(0, 0, 0, 0.18)",
-        shadow_extraheavy: "rgba(0, 0, 0, 0.5)",
-        light_overlay: "rgba(255, 255, 255, 0.08)",
-        light_overlay_slight: "rgba(255, 255, 255, 0.02)",
-        dark_overlay: "rgba(0, 0, 0, 0.25)",
-        dark_overlay_slight: "rgba(0, 0, 0, 0.125)",
-        contrast_overlay: "rgba(255, 255, 255, 0.023)",
-        input_focus_border: "transparent",
+      [ColorMode.Light]: {
+        text: "rgba(33, 33, 33, 0.85)",
+        text_strong: "rgb(33, 33, 33)",
+        text_fade: "rgba(33, 33, 33, 0.7)",
+        foreground_fade: "rgba(33, 33, 33, 0.4)",
+        b_000: "hsl(200, 20%, 75%)",
+        b_100: "hsl(200, 20%, 80%)",
+        b_200: "hsl(200, 20%, 85%)",
+        b_300: "hsl(200, 20%, 93%)",
+        b_400: "hsl(200, 20%, 97%)",
+        b_500: "hsl(200, 20%, 100%)",
+        b_600: "hsl(200, 20%, 100%)",
+        primary: "hsl(209, 45%, 55%)",
+        secondary: "hsl(38, 52%, 58%)",
+        border: "rgba(194, 207, 214, 0.8)",
+        border_light: "rgba(194, 207, 214, 0.45)",
+        contrast_border: "rgba(194, 207, 214, 0.9)",
+        shadow_light: "rgba(0, 0, 0, 0.06)",
+        shadow_medium: "rgba(0, 0, 0, 0.075)",
+        shadow_heavy: "rgba(0, 0, 0, 0.09)",
+        shadow_extraheavy: "rgba(0, 0, 0, 0.3)",
+        light_adjust: "rgba(255, 255, 255, 0.45)",
+        light_adjust_slight: "rgba(255, 255, 255, 0.3)",
+        dark_adjust: "rgba(0, 0, 0, 0.1)",
+        dark_adjust_slight: "rgba(0, 0, 0, 0.05)",
+        contrast_overlay: "rgba(0, 0, 0, 0.04)",
+        input_focus_border: "hsl(209, 45%, 55%)",
+        // Same as `dark.b_600`
+        tooltip: "hsl(220, 13%, 28%)",
+        // Same as `dark.b_600`
+        footer: "hsl(220, 13%, 28%)",
       },
     },
   },
 };
+
+// Additional colors used in SEO:
+export const applicationThemeColor = "#6496C4";
+export const safariTabColor = "#6192be";
+export const windowsTileColor = "#ffc40d";
 
 export function color(colorKey: string): string {
   return `var(--xstyled-colors-${colorKey})`;
@@ -153,4 +187,47 @@ export function color(colorKey: string): string {
 
 export type Theme = typeof theme;
 export type Space = number | Exclude<keyof Theme["space"], keyof never[]>;
+export type ColorKey = Exclude<keyof Theme["colors"], "modes">;
 export default theme;
+
+export enum Breakpoint {
+  // Extra small
+  XS = "xs",
+  // Very small
+  VS = "vs",
+  // Small
+  SM = "sm",
+  // Medium
+  MD = "md",
+  // Large
+  LG = "lg",
+  // Extra large
+  XL = "xl",
+}
+
+export type BreakpointObject<ArgType> = {
+  [Key in Breakpoint]?: ArgType;
+};
+
+/**
+ * Augments a type to be Type | BreakpointObject<Type>,
+ * in other words, allow a property to be `1` or `{ xs: 1, sm: 2 }`
+ */
+export type WithBreakpointArgs<Props> = {
+  [Key in keyof Props]?: Props[Key] | BreakpointObject<Props[Key]>;
+};
+
+const CSS_VARIABLE_REGEX = /^var\(--[a-zA-Z0-9_-]+,\s*(.*)\s*\)$/;
+
+/**
+ * Parses a CSS variable string with a default returned by all `useTheme` calls
+ * @param themeColor - Theme color CSS variable string
+ */
+export function parseThemeColor(themeColor: string): Option<string> {
+  const matches = CSS_VARIABLE_REGEX.exec(themeColor);
+  if (isDefined(matches)) {
+    return Some(matches[1]);
+  }
+
+  return None;
+}

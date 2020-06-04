@@ -7,6 +7,7 @@ import {
   setLocalStorage,
   warn,
   isNil,
+  withBasePath,
 } from "Utility";
 import {
   User,
@@ -82,7 +83,7 @@ export type SessionLoad = IdentifyLoad | TokenExchangeLoad;
 // ? State initialization
 // ? ====================
 
-const authPathNames = ["/app", "/app/"];
+const authPathNames = [withBasePath("/app"), withBasePath("/app/")];
 export const LOCAL_STORAGE_KEY = "session";
 
 /**

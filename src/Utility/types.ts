@@ -3,6 +3,7 @@
 /* eslint-disable max-classes-per-file */
 import * as t from "io-ts";
 import { either } from "fp-ts/lib/Either";
+import { BoxProps } from "@xstyled/emotion";
 import { isDefined } from "./data";
 import { TransformerStep } from "./transform";
 import { option } from "./option";
@@ -387,48 +388,27 @@ export const TGuildFeature = new EnumType<GuildFeature>(
   "GuildFeature"
 );
 
-const TGuild = t.intersection([
-  t.type({
-    id: TSnowflake,
-    name: t.string,
-    // owner_id: TSnowflake,
-    // region: t.string,
-    // afk_timeout: t.Integer,
-    // verification_level: TVerificationLevel,
-    // default_message_notifications: TDefaultMessageNotificationLevel,
-    // explicit_content_filter: TExplicitContentFilter,
-    // // foreign key reference
-    // roles: t.array(TSnowflake),
-    // // foreign key reference
-    // emojis: t.array(TSnowflake),
-    features: t.array(t.union([TGuildFeature, t.string])),
-    // mfa_level: TMfaLevel,
-    // premium_tier: TPremiumTier,
-    // preferred_locale: t.string,
-    // added fields
-    architus_admin: t.boolean,
-    has_architus: t.boolean,
-  }),
-  t.partial({
-    icon: t.union([t.string, t.null]),
-    splash: t.string,
-    owner: t.boolean,
-    permissions: t.number,
-    afk_channel_id: TSnowflake,
-    embed_enabled: t.boolean,
-    embed_channel_id: TSnowflake,
-    application_id: TSnowflake,
-    widget_enabled: t.boolean,
-    widget_channel_id: TSnowflake,
-    system_channel_id: TSnowflake,
-    max_presences: t.Integer,
-    max_members: t.Integer,
-    vanity_url_code: t.string,
-    description: t.string,
-    banner: t.string,
-    premium_subscription_count: t.Integer,
-  }),
-]);
+const TGuild = t.interface({
+  id: TSnowflake,
+  name: t.string,
+  architus_admin: t.boolean,
+  owner: t.boolean,
+  permissions: t.number,
+  features: t.array(t.union([TGuildFeature, t.string])),
+  has_architus: t.boolean,
+  icon: option(t.string),
+  splash: option(t.string),
+  region: option(t.array(t.string)),
+  afk_timeout: option(t.number),
+  max_members: option(t.number),
+  banner: option(t.string),
+  description: option(t.string),
+  mfa_level: option(TMfaLevel),
+  premium_tier: option(TPremiumTier),
+  premium_subscription_count: option(t.number),
+  preferred_locale: option(t.string),
+  member_count: option(t.number),
+});
 export interface Guild extends t.TypeOf<typeof TGuild> {}
 export const Guild = alias(TGuild)<Guild>();
 
@@ -458,6 +438,7 @@ export interface MockUser {
   nameColor: string;
   bot: boolean;
   avatarUrl?: string;
+  verified: boolean;
 }
 
 export interface MockMessageClump {
@@ -558,3 +539,79 @@ export enum LogEvents {
   EmojiManagerDelete = 3402,
   EmojiManagerExchange = 3403,
 }
+
+export type BaseGatewayPacket = t.TypeOf<typeof BaseGatewayPacket>;
+export const BaseGatewayPacket = t.type({
+  _id: t.number,
+});
+
+export enum AutoResponseTriggerMode {
+  Punctuated = "punctuated",
+  Naive = "naive",
+  Regex = "regex",
+}
+export const TAutoResponseTriggerMode = new EnumType<AutoResponseTriggerMode>(
+  AutoResponseTriggerMode,
+  "AutoResponseTriggerMode"
+);
+
+export type AutoResponse = t.TypeOf<typeof AutoResponse>;
+export const AutoResponse = t.type({
+  id: THoarFrost,
+  trigger: t.string,
+  response: t.string,
+  authorId: option(TSnowflake),
+  guildId: TSnowflake,
+  triggerRegex: t.string,
+  triggerPunctuation: t.array(t.string),
+  responseTokens: t.array(t.tuple([t.string, t.string])),
+  count: t.number,
+  mode: TAutoResponseTriggerMode,
+});
+
+/**
+ * Contains the common properties between `Member` and `User`, additionally
+ * used to type methods that can accept both.
+ */
+export type UserLike = {
+  [K in keyof User & keyof Member]: User[K] | Member[K];
+} &
+  // One of username or name must be defined
+  // Username: from User
+  // Name: from Member
+  ({ username: string } | { name: string });
+
+export type NormalizedUserLike = {
+  [K in keyof User & keyof Member]: User[K] | Member[K];
+} & {
+  username: string;
+};
+
+/**
+ * Normalizes a UserLike (Member or User) to have a predictable shape
+ * @param userLike - Source user like (member or user)
+ */
+export function normalizeUserLike(userLike: UserLike): NormalizedUserLike {
+  return {
+    id: userLike.id,
+    discriminator: userLike.discriminator,
+    avatar: userLike.avatar,
+    username: isDefined((userLike as { username: string | Nil }).username)
+      ? (userLike as { username: string }).username
+      : (userLike as { name: string }).name,
+  };
+}
+
+export type WithBoxProps<P> = P & Omit<BoxProps, keyof P>;
+
+export type Member = t.TypeOf<typeof Member>;
+export const Member = t.type({
+  id: TSnowflake,
+  name: t.string,
+  discriminator: t.string,
+  joined_at: TimeFromString, // ISO 8601
+  avatar: option(t.string),
+  color: option(t.string), // hex color
+  nick: option(t.string),
+  roles: t.array(TSnowflake), // foreign key references
+});

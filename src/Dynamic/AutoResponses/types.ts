@@ -1,19 +1,6 @@
-import { HoarFrost, Snowflake } from "Utility/types";
+import { AutoResponse } from "Utility/types";
 
-export type AutoResponse = {
-  id: HoarFrost;
-  authorId: Snowflake;
-  trigger: string;
-  response: string;
-  count: number;
-};
-
-export type TransformedAutoResponse = {
-  id: HoarFrost;
-  authorId: Snowflake;
-  trigger: string;
-  response: string;
-  count: number;
+export type TransformedAutoResponse = AutoResponse & {
   authorData: AuthorData;
 };
 

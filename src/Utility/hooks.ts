@@ -10,6 +10,7 @@ import { globalHistory, History } from "@reach/router";
 import { addMissingUnit, collator } from "./primitives";
 import { isClient, isProduction } from "./document";
 import { Option, Some, None } from "./option";
+import { withBasePath } from "./network";
 import { isDefined } from "./data";
 
 /**
@@ -22,7 +23,9 @@ export function useReturnQuery(): string {
   const [returnQuery, setReturnQuery] = useState<string>("");
   useEffectOnce(() => {
     if (!isProduction && returnQuery === "") {
-      const returnUrl = `${window.location.protocol}//${window.location.host}/app`;
+      const returnUrl = `${window.location.protocol}//${
+        window.location.host
+      }${withBasePath("/app")}`;
       const encoded = encodeURIComponent(returnUrl);
       setReturnQuery(`return=${encoded}`);
     }
@@ -123,9 +126,7 @@ export function useLocation(): {
       const newState = { ...initialState, location };
       setState(newState);
     });
-    return (): void => {
-      removeListener();
-    };
+    return removeListener;
   });
 
   return state;
@@ -136,6 +137,7 @@ export function useLocation(): {
  * @param effectFunc - Effect function to run
  */
 export function useEffectOnce(effectFunc: React.EffectCallback): void {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(effectFunc, []);
 }
 
@@ -146,6 +148,7 @@ export function useEffectOnce(effectFunc: React.EffectCallback): void {
 export function useCallbackOnce<T extends (...args: never[]) => unknown>(
   callback: T
 ): T {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   return useCallback(callback, []);
 }
 
@@ -154,6 +157,7 @@ export function useCallbackOnce<T extends (...args: never[]) => unknown>(
  * @param callback - the memo calculation function
  */
 export function useMemoOnce<A>(calculate: () => A): A {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   return useMemo(calculate, []);
 }
 
@@ -192,9 +196,6 @@ export function usePrevious<T>(
  */
 export function useRefWrapper<T>(value: T): MutableRefObject<T> {
   const ref = useRef(value);
-
-  useEffect(() => {
-    ref.current = value;
-  }, [value]);
+  ref.current = value;
   return ref;
 }

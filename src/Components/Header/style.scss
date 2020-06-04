@@ -4,6 +4,7 @@
 @import "scss/util";
 
 .navbar {
+    height: 56px;
     padding: {
         top: 0 !important;
         bottom: 0 !important;
@@ -43,8 +44,9 @@
             @include highlight-shadow($-light, 0.4);
         }
 
-        &.brand {
-            padding-left: 0.25rem !important;
+        @include respond-below(md) {
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
         }
     }
 
@@ -53,10 +55,6 @@
         flex-direction: row;
         align-items: center;
         justify-content: flex-end;
-
-        @include respond-below(sm) {
-            flex-direction: row-reverse;
-        }
     }
 
     .container-fluid {
@@ -70,7 +68,7 @@
     padding: {
         top: 0 !important;
         bottom: 3px !important;
-        left: 12px !important;
+        left: 6px !important;
         right: 10px !important;
     }
     outline: none !important;

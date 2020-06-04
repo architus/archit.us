@@ -1,0 +1,70 @@
+{
+  "messageSets": {
+    "autoResponse": [
+      {
+        "messages": [
+          "!help",
+          "!set thanks::[you're welcome!,no problem!]",
+          "thanks",
+          "thanks",
+          "!remove thanks"
+        ]
+      },
+      {
+        "messages": [
+          "!set hi::hey",
+          "hi",
+          "!set hi::hello :wave:",
+          "!remove hi",
+          "!set hi::hello :wave:",
+          "hi"
+        ],
+        "cleanup": ["!remove hi"]
+      }
+    ],
+    "customEmoji": [
+      {
+        "messages": [
+          ":HeyGuys: welcome",
+          "wait what",
+          ":Smile: no i made it :smileW:"
+        ]
+      },
+      {
+        "messages": [
+          ":Jebaited: KAPPA OUTDATED",
+          ":Jebaited: POGCHAMP OVERRATED",
+          ":Jebaited: LONG HAVE WE WAITED",
+          ":Jebaited: NOW WE JEBAITED"
+        ]
+      }
+    ],
+    "pollsSchedules": [
+      {
+        "messages": [
+          "!schedule cool event 12pm",
+          "!xpoll \"a hot dog is a:\" sandwich, not a sandwich"
+        ]
+      },
+      {
+        "messages": [
+          "!help",
+          "!schedule Overwatch scrims 8pm Wednesday",
+          "Vote in the poll above @everyone"
+        ]
+      }
+    ]
+  },
+  "allowedCommands": {
+    "autoResponse": ["set", "remove"],
+    "customEmoji": ["emotes"],
+    "pollsSchedules": ["poll", "xpoll", "schedule"]
+  },
+  "customEmotes": {
+    "PepeLaugh": "https://cdn.frankerfacez.com/emoticon/263833/2",
+    "Jebaited": "https://static-cdn.jtvnw.net/emoticons/v1/114836/2.0",
+    "HeyGuys": "https://static-cdn.jtvnw.net/emoticons/v1/30259/2.0",
+    "Smile": "https://static-cdn.jtvnw.net/jtv_user_pictures/chansub-global-emoticon-ebf60cd72f7aa600-24x18.png",
+    "smileW": "https://cdn.frankerfacez.com/emoticon/179088/2"
+  }
+}

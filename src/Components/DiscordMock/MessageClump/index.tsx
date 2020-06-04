@@ -10,13 +10,14 @@ import {
 } from "Utility/types";
 import { Badge, BadgeProps } from "react-bootstrap";
 import UserDisplay from "Components/UserDisplay";
-import Placeholder from "Components/Placeholder";
+import Icon from "Components/Icon";
+import Skeleton from "Components/Skeleton";
 import Message from "Components/DiscordMock/Message";
 import { TransformMessageContext } from "Components/DiscordMock/transform";
 import "./style.scss";
 
-// pseudorandom yet determinate placeholder amount
-const placeholderMessageWidth = (index: number): number =>
+// pseudorandom yet determinate skeleton amount
+const skeletonMessageWidth = (index: number): number =>
   100 - ((index * 37) % 10) * 6;
 
 type MessageClumpProps = {
@@ -43,7 +44,14 @@ const MessageClump: React.FC<MessageClumpProps> = React.forwardRef(
     },
     ref: React.Ref<HTMLDivElement>
   ) => {
-    const { discriminator, avatarUrl, username, nameColor, bot } = sender;
+    const {
+      discriminator,
+      avatarUrl,
+      username,
+      nameColor,
+      verified,
+      bot,
+    } = sender;
     return (
       <div
         ref={ref}
@@ -63,7 +71,7 @@ const MessageClump: React.FC<MessageClumpProps> = React.forwardRef(
         </div>
         <div>
           <div className="message-header">
-            <Placeholder.Custom
+            <Skeleton.Custom
               value={username}
               height="1.1em"
               width={100}
@@ -73,10 +81,13 @@ const MessageClump: React.FC<MessageClumpProps> = React.forwardRef(
             >
               {username}
               {bot && (
-                <Badge variant={"bot" as BadgeProps["variant"]}>bot</Badge>
+                <Badge variant={"bot" as BadgeProps["variant"]}>
+                  {verified && <Icon name="check" mr="femto" />}
+                  bot
+                </Badge>
               )}
-            </Placeholder.Custom>
-            <Placeholder.Text
+            </Skeleton.Custom>
+            <Skeleton.Text
               text={toHumanTime(new Date(timestamp))}
               size="0.7em"
               width={90}
@@ -91,7 +102,7 @@ const MessageClump: React.FC<MessageClumpProps> = React.forwardRef(
               sender={sender}
               genericOnReact={onReact}
               genericOnUnreact={onUnreact}
-              placeholderAmount={placeholderMessageWidth(index)}
+              skeletonAmount={skeletonMessageWidth(index)}
               message={message}
             />
           ))}
@@ -107,19 +118,13 @@ type RenderedMessageProps = {
   sender: MockUser;
   genericOnReact: MessageClumpProps["onReact"];
   genericOnUnreact: MessageClumpProps["onUnreact"];
-} & Pick<MessageProps, "placeholderAmount">;
+} & Pick<MessageProps, "skeletonAmount">;
 
 /**
  * Memoized message which transforms its content via `useMemo`
  */
 const RenderedMessage: React.FC<RenderedMessageProps> = React.memo(
-  ({
-    message,
-    sender,
-    genericOnReact,
-    genericOnUnreact,
-    placeholderAmount,
-  }) => {
+  ({ message, sender, genericOnReact, genericOnUnreact, skeletonAmount }) => {
     const { transform, context } = useContext(TransformMessageContext);
     const { result, mentions } = useMemo(
       () => transform(message, sender, context),
@@ -140,7 +145,7 @@ const RenderedMessage: React.FC<RenderedMessageProps> = React.memo(
           (r: MockReaction): void => genericOnUnreact(message.id, r),
           [genericOnUnreact, message.id]
         )}
-        placeholderAmount={placeholderAmount}
+        skeletonAmount={skeletonAmount}
       />
     );
   }

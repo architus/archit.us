@@ -1,10 +1,113 @@
 import React from "react";
 import classNames from "classnames";
 import { constructAvatarUrl, attach, isDefined } from "Utility";
-import { User } from "Utility/types";
+import { UserLike, normalizeUserLike } from "Utility/types";
 import { Option } from "Utility/option";
-import Placeholder from "Components/Placeholder";
+import Skeleton from "Components/Skeleton";
 import "./style.scss";
+
+const avatarSize = 40;
+
+type UserDisplayProps = {
+  className?: string;
+  avatarUrl?: string;
+  username?: string;
+  user?: UserLike;
+  discriminator?: string;
+  avatar?: boolean;
+} & Partial<React.HTMLAttributes<HTMLElement>>;
+
+const UserDisplay: React.FC<UserDisplayProps> = ({
+  className,
+  avatarUrl,
+  user,
+  username,
+  discriminator,
+  avatar = false,
+  ...rest
+}) => (
+  <div className={classNames("user-display", className)} {...rest}>
+    <Avatar avatarUrl={avatarUrl} user={user} />
+    {!avatar && (
+      <div>
+        <Skeleton.Text
+          text={
+            isDefined(user) ? normalizeUserLike(user).username : username ?? ""
+          }
+          className="username"
+          width={90}
+          size="0.95em"
+          light
+        />
+        <Skeleton.Text
+          text={Option.from(user?.discriminator || discriminator)
+            .map((d) => `#${d}`)
+            .getOrElse("")}
+          className="discriminator"
+          size="0.75em"
+          width={40}
+          light
+        />
+      </div>
+    )}
+  </div>
+);
+
+// ? ==============
+// ? Sub components
+// ? ==============
+
+type AvatarProps = {
+  avatarUrl?: string;
+  discriminator?: string;
+  user?: UserLike;
+  className?: string;
+  circle?: boolean;
+  size?: number;
+} & Partial<React.HTMLAttributes<HTMLElement>>;
+
+const Avatar: React.FC<AvatarProps> = ({
+  avatarUrl,
+  discriminator,
+  user,
+  className,
+  circle,
+  size = avatarSize,
+  ...rest
+}) => {
+  const effectiveAvatarUrl = getAvatarUrl({
+    avatarUrl,
+    discriminator,
+    user,
+    size,
+  });
+  return (
+    <Skeleton.Custom
+      value={effectiveAvatarUrl}
+      className={classNames("avatar", className)}
+      width={size}
+      height={size}
+      circle={circle}
+      light
+    >
+      <div
+        className={classNames("avatar-image", className, { circle })}
+        style={{
+          backgroundImage: `url(${effectiveAvatarUrl})`,
+          width: `${size}px`,
+          height: `${size}px`,
+        }}
+        {...rest}
+      />
+    </Skeleton.Custom>
+  );
+};
+
+export default attach(UserDisplay, { Avatar });
+
+// ? ================
+// ? Helper functions
+// ? ================
 
 /**
  * Constructs an avatar URL for a user from either a pre-made avatar URL,
@@ -18,7 +121,7 @@ export function getAvatarUrl({
   size,
 }: {
   avatarUrl?: string;
-  user?: User;
+  user?: UserLike;
   discriminator?: string;
   size?: number;
 }): string {
@@ -43,96 +146,3 @@ export function getAvatarUrl({
     size,
   });
 }
-
-const avatarSize = 40;
-
-type UserDisplayProps = {
-  className?: string;
-  avatarUrl?: string;
-  username?: string;
-  user?: User;
-  discriminator?: string;
-} & Partial<React.HTMLAttributes<HTMLElement>>;
-
-const UserDisplay: React.FC<UserDisplayProps> = ({
-  className,
-  avatarUrl,
-  user,
-  username,
-  discriminator,
-  ...rest
-}) => (
-  <div className={classNames("user-display", className)} {...rest}>
-    <Avatar avatarUrl={avatarUrl} user={user} />
-    <div>
-      <Placeholder.Text
-        text={Option.from(user?.username).getOrElse("")}
-        className="username"
-        width={90}
-        size="0.95em"
-        light
-      />
-      <Placeholder.Text
-        text={Option.from(user?.discriminator || discriminator)
-          .map((d) => `#${d}`)
-          .getOrElse("")}
-        className="discriminator"
-        size="0.75em"
-        width={40}
-        light
-      />
-    </div>
-  </div>
-);
-
-// ? =================
-// ? Helper components
-// ? =================
-
-type AvatarProps = {
-  avatarUrl?: string;
-  discriminator?: string;
-  user?: User;
-  className?: string;
-  circle?: boolean;
-  size?: number;
-} & Partial<React.HTMLAttributes<HTMLElement>>;
-
-const Avatar: React.FC<AvatarProps> = ({
-  avatarUrl,
-  discriminator,
-  user,
-  className,
-  circle,
-  size = avatarSize,
-  ...rest
-}) => {
-  const effectiveAvatarUrl = getAvatarUrl({
-    avatarUrl,
-    discriminator,
-    user,
-    size,
-  });
-  return (
-    <Placeholder.Custom
-      value={effectiveAvatarUrl}
-      className={classNames("avatar", className)}
-      width={size}
-      height={size}
-      circle={circle}
-      light
-    >
-      <div
-        className={classNames("avatar-image", className, { circle })}
-        style={{
-          backgroundImage: `url(${effectiveAvatarUrl})`,
-          width: `${size}px`,
-          height: `${size}px`,
-        }}
-        {...rest}
-      />
-    </Placeholder.Custom>
-  );
-};
-
-export default attach(UserDisplay, { Avatar });

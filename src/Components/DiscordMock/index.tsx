@@ -104,7 +104,7 @@ const DiscordMock: React.FC<DiscordMockProps> = ({
     if (user.isDefined()) return makeMockUser(user.get);
     return createMockUser(guildId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [guildId, user.fastIsDefined]);
+  }, [guildId, user.getOrElse(null)]);
   const users = useMemo(() => buildUserMap(thisUser, architusUser), [thisUser]);
   // Needed to remain stable if specified via literal
   const allowedCommandsSnapshot = useMemoOnce(() => allowedCommands);
