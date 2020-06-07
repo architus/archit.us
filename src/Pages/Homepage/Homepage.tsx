@@ -350,7 +350,7 @@ const Styled = {
 
 const SectionBox = Box.withComponent("section");
 
-const Index: React.FC<{}> = () => {
+const Homepage: React.FC<{}> = () => {
   // Get the cached guild/user counts from the route data (cached upon site build)
   const {
     guildCount: cachedGuildCount,
@@ -625,7 +625,7 @@ const Index: React.FC<{}> = () => {
   );
 };
 
-export default Index;
+export default Homepage;
 
 // ? ================
 // ? Helper functions
