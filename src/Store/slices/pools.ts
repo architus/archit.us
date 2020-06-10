@@ -10,6 +10,7 @@ import {
   AutoResponse,
   HoarFrost,
   Member,
+  CustomEmoji,
 } from "Utility/types";
 import { Option, None, Some } from "Utility/option";
 
@@ -18,6 +19,7 @@ export type AllPoolTypes = {
   user: User;
   autoResponse: AutoResponse;
   member: Member;
+  customEmoji: CustomEmoji;
 };
 
 // Runtime io-ts types
@@ -26,10 +28,15 @@ export const AllPoolTypes = {
   user: User,
   autoResponse: AutoResponse,
   member: Member,
+  customEmoji: CustomEmoji,
 };
 
 export const guildAgnosticPools = ["user", "guild"] as const;
-export const guildSpecificPools = ["autoResponse", "member"] as const;
+export const guildSpecificPools = [
+  "autoResponse",
+  "member",
+  "customEmoji",
+] as const;
 export const allPools: PoolType[] = [
   ...guildAgnosticPools,
   ...guildSpecificPools,
