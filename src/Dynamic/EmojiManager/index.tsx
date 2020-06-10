@@ -4,13 +4,15 @@ import { AppPageProps } from "Dynamic/AppRoot/types";
 import ReactDataGrid from "react-data-grid";
 import styled from "@xstyled/emotion";
 import "react-data-grid/dist/react-data-grid.css";
-import { useDispatch, useSelector } from "Store";
+import { useDispatch, useSelector, Dispatch } from "Store";
 import { color } from "Theme/tokens";
 import { opacity } from "Theme/getters";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { usePool } from "Store/slices/pools";
 import { object } from "prop-types";
-import { CustomEmoji } from "Utility/types";
+import { CustomEmoji, HoarFrost, Snowflake } from "Utility/types";
+import { Button } from "react-bootstrap";
+import { cacheCustomEmoji, loadCustomEmoji } from "Store/routes";
 
 
 const Styled = {
@@ -354,43 +356,17 @@ const Styled = {
   `,
 };
 
-const columns = [
-  { key: "id", name: "ID" },
-  { key: "name", name: "NAME" },
-  {
-    key: "url",
-    name: "IMAGE",
-    formatter: ({ row }: { row: CustomEmoji }) => <img src={row.url} width="32" />,
-  },
-  {
-    key: "authorId",
-    name: "AUTHOR",
-    formatter: ({ row }: { row: CustomEmoji }) => (
-      <>{row.authorId.getOrElse(" None ")}</>
-    ),
-  },
-  {
-    key: "loaded ",
-    name: "LOADED",
-    formatter: ({ row }: { row: CustomEmoji }) => <> {loadedYN(row.discordId.isDefined())}</>,
-  },
-  { key: "numUses", name: "USES" },
-  {
-    key: "btns", name: "CHANGE",
-    formatter: ({ row }: { row: CustomEmoji }) => <> {creatBtn(row.discordId.isDefined())}</>,
-  }
 
 
-];
 
-function creatBtn(x: boolean) {
+function creatBtn(x: boolean, dispatch: Dispatch, emojiID: HoarFrost, guildID: Snowflake) {
   if (x == true) {
-    return <button > Cache </button>
+    return <Button variant="primary" onClick={() => dispatch(cacheCustomEmoji({ routeData: { guildID, emojiID } }))}>Cache</Button>
   } else {
-    return <button> Load </button>
+    return <Button variant="primary" onClick={() => dispatch(loadCustomEmoji({ routeData: { guildID, emojiID } }))}>Load</Button>
   }
-
 }
+
 
 
 function loadedYN(x: boolean) {
@@ -403,6 +379,38 @@ function loadedYN(x: boolean) {
 }
 
 const EmojiManager: React.FC<AppPageProps> = ({ guild }) => {
+
+  const columns = [
+    { key: "id", name: "ID" },
+    { key: "name", name: "NAME" },
+    {
+      key: "url",
+      name: "IMAGE",
+      formatter: ({ row }: { row: CustomEmoji }) => <img src={row.url} width="32" />,
+    },
+    {
+      key: "authorId",
+      name: "AUTHOR",
+      formatter: ({ row }: { row: CustomEmoji }) => (
+        <>{row.authorId.getOrElse(" None ")}</>
+      ),
+    },
+    {
+      key: "loaded ",
+      name: "LOADED",
+      formatter: ({ row }: { row: CustomEmoji }) => <> {loadedYN(row.discordId.isDefined())}</>,
+    },
+    { key: "numUses", name: "USES" },
+    {
+      key: "btns", name: "CHANGE",
+      formatter: ({ row }: { row: CustomEmoji }) => <> {creatBtn(row.discordId.isDefined(), useDispatch(), row.id, guild.id)}</>,
+    }
+
+
+  ];
+
+
+
   const { all: emojiList } = usePool({ type: "customEmoji", guildId: guild.id })
 
   return (
