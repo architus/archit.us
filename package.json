@@ -2,7 +2,7 @@
   "name": "archit.us",
   "private": true,
   "scripts": {
-    "start": "react-static start",
+    "start": "react-static start --open",
     "build": "react-static build",
     "typecheck": "tsc --listFiles --noEmit",
     "analyze": "react-static build --analyze",
@@ -82,6 +82,7 @@
     "react-autosuggest": "^10.0.2",
     "react-bootstrap": "^1.0.1",
     "react-contextmenu": "^2.13.0",
+    "react-countup": "^4.3.3",
     "react-data-grid": "^7.0.0-canary.16",
     "react-dom": "^16.13.1",
     "react-hot-loader": "^4.12.21",

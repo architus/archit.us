@@ -67,7 +67,7 @@ const Styled = {
     justify-content: center;
     align-items: stretch;
   `,
-  Card,
+  Card: styled(Card.base)``,
   LeadText: styled(Content.withComponent("p"))`
     color: text;
     font-size: 1.1em;
@@ -285,7 +285,7 @@ const Styled = {
         )(props)}
     }
   `,
-  BottomCtaCard: styled(Card)`
+  BottomCtaCard: styled(Card.base)`
     position: relative;
     box-shadow: 2;
     max-width: 800px;

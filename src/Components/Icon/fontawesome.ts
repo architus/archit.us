@@ -16,6 +16,11 @@ export { faMinus } from "@fortawesome/free-solid-svg-icons/faMinus";
 export { faTrash } from "@fortawesome/free-solid-svg-icons/faTrash";
 export { faCopy } from "@fortawesome/free-solid-svg-icons/faCopy";
 export { faCheck } from "@fortawesome/free-solid-svg-icons/faCheck";
+export { faUsers } from "@fortawesome/free-solid-svg-icons/faUsers";
+export { faComments } from "@fortawesome/free-solid-svg-icons/faComments";
+export { faCircle } from "@fortawesome/free-solid-svg-icons/faCircle";
+export { faHistory } from "@fortawesome/free-solid-svg-icons/faHistory";
+
 
 // Brand icons
 export { faDiscord } from "@fortawesome/free-brands-svg-icons/faDiscord";

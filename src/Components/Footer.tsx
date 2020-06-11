@@ -35,7 +35,7 @@ const Styled = {
     padding-left: 0;
     padding-right: 0;
   `,
-  Card: styled(Card)`
+  Card: styled(Card.base)`
     // Eliminate the contrast border normally applied against light surfaces
     border: none;
 

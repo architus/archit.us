@@ -103,6 +103,10 @@ const theme = {
     danger: "#e6584d",
     light: "rgb(232, 234, 235)",
     dark: "rgb(22, 24, 30)",
+
+    linh_purple: "#844EA3",
+    linh_pink: "#BA5095",
+    linh_dark_blue: "#5850BA",
     // Overlays are mode-agnostic, adjusts depend on theme to lighten/darken
     light_overlay: "rgba(255, 255, 255, 0.1)",
     dark_overlay_strong: "rgba(0, 0, 0, 0.5)",

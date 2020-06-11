@@ -1,6 +1,7 @@
 import React from "react";
 import styled, { css } from "@xstyled/emotion";
 import { ColorKey, color } from "Theme";
+import { attach } from "Utility";
 import { WithBoxProps } from "Utility/types";
 
 const Styled = {
@@ -65,4 +66,18 @@ const Card: React.FC<CardProps> = ({
   />
 );
 
-export default Card;
+const Plain: React.FC<CardProps> = ({
+  glassColor = "b_600",
+  glassOpacity = 0.1,
+  glassBlur = "2px",
+  ...props
+}) => (
+  <Styled.Card
+    glassColor={glassColor}
+    glassOpacity={glassOpacity}
+    glassBlur={glassBlur}
+    {...props}
+  />
+);
+
+export default attach(Card, { base: Card, Plain });
