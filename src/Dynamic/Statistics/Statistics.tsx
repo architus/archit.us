@@ -68,11 +68,14 @@ const Styled = {
     flex-direction: row;
   `,
   CardContainer: styled.div`
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    display: grid;
     height: 100%;
+    width: 100%;
+    grid-template-columns: repeat( auto-fit, minmax(250px, 1fr) );
+    grid-auto-rows: 200px;
+    grid-auto-flow: dense;
+    gap: 10px;
+    justify-items: stretch;
   `,
   ContentContainer: styled.div`
     position: relative;
@@ -121,6 +124,17 @@ const Styled = {
   `,
   Card: styled(Card.base)`
     margin: 5px;
+    grid-column: span auto;
+    grid-row: span auto;
+  `,
+  BigCard: styled(Card.base)`
+    margin: 5px;
+    grid-column: span 2;
+    grid-row: span 2;
+  `,
+  Image: styled(Image)`
+    max-height: 100%;
+    max-width: 100%;
   `,
   CountUp: styled(CountUp)`
     font-size: 2.5em;
@@ -188,7 +202,7 @@ const Statistics: React.FC<AppPageProps> = () => (
       <Styled.Card>
         <Styled.CountUp end={1289123} duration={5} />
       </Styled.Card>
-      <Styled.Card>
+      <Styled.BigCard>
         <AreaChart
           width={500}
           height={400}
@@ -203,13 +217,13 @@ const Statistics: React.FC<AppPageProps> = () => (
           <Tooltip />
           <Area type="monotone" dataKey="uv" stroke="#8884d8" fill="#8884d8" />
         </AreaChart>
-      </Styled.Card>
-      <Styled.Card>
-        <Image
+      </Styled.BigCard>
+      <Styled.BigCard>
+        <Styled.Image
           src="https://cdn.archit.us/assets/695011369632403465.png"
           rounded
         />
-      </Styled.Card>
+      </Styled.BigCard>
       <Styled.Card>
         <Styled.CountUp end={2} duration={5} />
       </Styled.Card>
