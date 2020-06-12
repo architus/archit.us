@@ -54,6 +54,11 @@ export interface Route<
    * Resolves the correct final relative route string
    */
   route: (routeData: TRouteData) => string;
+  matchDispatch: (
+    action: AnyAction
+  ) => action is PayloadAction<
+    RestDispatch<OrEmpty<TData>, TRouteData, TRequestMetadata>
+  >;
   match: (
     action: AnyAction
   ) => action is PayloadAction<
@@ -404,12 +409,21 @@ export function makeRoute<
       return restFailure.match(action) && action.payload.label === label;
     }
 
+    function matchDispatch(
+      action: AnyAction
+    ): action is PayloadAction<
+      RestDispatch<OrEmpty<TData>, TRouteData, TRequestMetadata>
+    > {
+      return restDispatch.match(action) && action.payload.label === label;
+    }
+
     dispatch.label = label;
     dispatch.fetch = fetch;
     dispatch.route = route;
     dispatch.match = match;
     dispatch.decode = decode;
     dispatch.matchError = matchError;
+    dispatch.matchDispatch = matchDispatch;
     return dispatch;
   };
 }
