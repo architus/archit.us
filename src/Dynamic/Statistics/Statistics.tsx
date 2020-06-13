@@ -9,11 +9,11 @@ import { useDispatch, useSelector } from "Store/hooks";
 import CountUp from "react-countup";
 import { AppPageProps } from "Dynamic/AppRoot/types";
 import {
-  AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
+  AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, BarChart, Bar, Legend,
 } from 'recharts';
 import { useEffectOnce, isDefined, useInitialRender, useLocation } from "Utility";
 
-const data = [
+const olddata = [
   {
     name: "Page A",
     uv: 4000,
@@ -91,7 +91,7 @@ const Styled = {
     align-items: stretch;
     flex-direction: row;
     ${down(
-      Breakpoint.SM,
+      Breakpoint.MD,
       css`
         flex-wrap: wrap;
       `
@@ -199,6 +199,30 @@ const Statistics: React.FC<AppPageProps> = (props) => {
     return 0;
   }
 
+  const getChannelData = (): any => {
+    if (isDefined(storeStatistics) && guild.id in storeStatistics) {
+      const data = [];
+      const channels = storeStatistics[guild.id as string].messages.channels
+      for (const ch in channels) {
+        data.push( {name: ch, count: channels[ch as string] })
+      }
+      return data;
+    }
+    return [];
+  };
+
+  const getMemberData = (): any => {
+    if (isDefined(storeStatistics) && guild.id in storeStatistics) {
+      const data = [];
+      const members = storeStatistics[guild.id as string].messages.members
+      for (const m in members) {
+        data.push( {name: m, count: members[m as string] })
+      }
+      return data;
+    }
+    return [];
+  };
+
   return (
     <Styled.PageOuter>
       <h2>Statistics</h2>
@@ -262,7 +286,7 @@ const Statistics: React.FC<AppPageProps> = (props) => {
           <AreaChart
             width={500}
             height={350}
-            data={data}
+            data={getChannelData()}
             margin={{
               top: 10, right: 30, left: 0, bottom: 0,
             }}
@@ -271,7 +295,7 @@ const Statistics: React.FC<AppPageProps> = (props) => {
             <XAxis dataKey="name" />
             <YAxis />
             <Tooltip />
-            <Area type="monotone" dataKey="uv" stroke="#8884d8" fill="#8884d8" />
+            <Area type="monotone" dataKey="count" stroke="#5850ba" fill="#5850ba" />
           </AreaChart>
         </Styled.BigCard>
         <Styled.BigCard>
@@ -279,6 +303,39 @@ const Statistics: React.FC<AppPageProps> = (props) => {
             src="https://cdn.archit.us/assets/695011369632403465.png"
             rounded
           />
+        </Styled.BigCard>
+        <Styled.BigCard>
+          <AreaChart
+            width={500}
+            height={350}
+            data={getMemberData()}
+            margin={{
+              top: 10, right: 30, left: 0, bottom: 0,
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Area type="monotone" dataKey="count" stroke="#ba5095" fill="#ba5095" />
+          </AreaChart>
+        </Styled.BigCard>
+        <Styled.BigCard>
+          <BarChart
+            width={500}
+            height={300}
+            data={getMemberData()}
+            margin={{
+              top: 5, right: 30, left: 20, bottom: 5,
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="count" fill="#844ea3" />
+          </BarChart>
         </Styled.BigCard>
         <Styled.Card>
           <Styled.CountUp end={2} duration={5} />

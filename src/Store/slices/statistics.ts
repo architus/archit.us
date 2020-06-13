@@ -12,8 +12,8 @@ interface MemberCount {
 }
 interface MessageCount {
   count: number;
-  channels: Record<Snowflake, number>;
-  members: Record<Snowflake, number>;
+  channels: Record<string, number>;
+  members: Record<string, number>;
   times: Record<number, number>;
 }
 
