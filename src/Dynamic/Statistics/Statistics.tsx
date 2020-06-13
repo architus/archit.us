@@ -137,15 +137,17 @@ const Styled = {
     margin: pico;
     width: 100%;
     border: none;
+    flex: 1 1 0px;
     background-color: #5850ba;
     background-image: linear-gradient(62deg, #5850ba 0%, #844ea3 100%);
-    padding: 16px 34px;
+    padding: 16px;
   `,
   HeaderCard: styled(Card.Plain)`
     margin: pico;
     width: 100%;
     border: none;
     padding: 16px;
+    flex: 1 1 0px;
     background-color: #ba5095;
     background-image: linear-gradient(62deg, #ba5095 0%, #ffbfa7 100%);
   `,
@@ -154,6 +156,7 @@ const Styled = {
     width: 100%;
     border: none;
     padding: 16px;
+    flex: 1 1 0px;
     background-color: #844ea3;
     background-image: linear-gradient(62deg, #844ea3 0%, #ba5095 100%);
   `,
