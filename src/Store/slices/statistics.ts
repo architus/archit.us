@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { stats } from "Store/routes";
 import { restSuccess, statsSuccess } from "Store/api/rest";
 import { Nil, Snowflake } from "Utility/types";
+import { isDefined } from "Utility";
 
 /**
  * Stores statistics for the guilds
@@ -38,7 +39,11 @@ const slice = createSlice({
     [statsSuccess.type]: (state, action): Statistics => {
       if (statsSuccess.match(action)) {
         const { guildId, response } = action.payload;
-        return { statistics: { [guildId]: response } };
+        if (isDefined(state.statistics)) {
+          state.statistics[guildId as string] = response;
+        } else {
+          return { statistics: { [guildId]: response } };
+        }
       }
       return state;
     },
