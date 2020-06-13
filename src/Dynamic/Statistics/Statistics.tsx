@@ -9,9 +9,11 @@ import { useDispatch, useSelector } from "Store/hooks";
 import CountUp from "react-countup";
 import { AppPageProps } from "Dynamic/AppRoot/types";
 import {
-  AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, BarChart, Bar, Legend,
+  AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, BarChart, Bar, Legend, ResponsiveContainer, PieChart, Pie, Cell,
 } from 'recharts';
 import { useEffectOnce, isDefined, useInitialRender, useLocation } from "Utility";
+import { User } from "Utility/types";
+import { useCurrentUser } from "Store/actions";
 
 const olddata = [
   {
@@ -57,6 +59,10 @@ const olddata = [
     amt: 2100,
   },
 ];
+
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+
+const RADIAN = Math.PI / 180;
 
 const Styled = {
   PageOuter: styled.div`
@@ -172,9 +178,9 @@ const Styled = {
 
 const Statistics: React.FC<AppPageProps> = (props) => {
   const { guild } = props;
-  const {
-    statistics: storeStatistics
-  } = useSelector((state) => {
+  const currentUser = useCurrentUser();
+
+  const { statistics: storeStatistics } = useSelector((state) => {
     return state.statistics;
   }, shallowEqual);
 
@@ -197,7 +203,7 @@ const Statistics: React.FC<AppPageProps> = (props) => {
       return storeStatistics[guild.id as string].messages.count;
     }
     return 0;
-  }
+  };
 
   const getChannelData = (): any[] => {
     if (isDefined(storeStatistics) && guild.id in storeStatistics) {
@@ -222,6 +228,32 @@ const Statistics: React.FC<AppPageProps> = (props) => {
     }
     return [];
   };
+
+  const getPersonalMessageData = (): any[] => {
+    if (
+      isDefined(storeStatistics) &&
+      guild.id in storeStatistics &&
+      currentUser.isDefined()
+    ) {
+      const total = getMessageCount();
+      const userCount =
+        storeStatistics[guild.id as string].messages.members[
+          currentUser.get.id as string
+        ];
+      return [
+        { name: "me", value: userCount },
+        { name: "not me", value: total - userCount },
+      ];
+    }
+    return [];
+  };
+
+  console.log(getPersonalMessageData().map((entry, index) => (
+    <Cell
+      key={`cell-${index}`}
+      fill={COLORS[index % COLORS.length]}
+    />
+  )));
 
   return (
     <Styled.PageOuter>
@@ -267,35 +299,46 @@ const Statistics: React.FC<AppPageProps> = (props) => {
             roundedCircle
           />
         </Styled.Card>
-        <Styled.BigCard>
-          <Styled.Image
-            src="https://cdn.archit.us/assets/695011369632403465.png"
-            rounded
-          />
-        </Styled.BigCard>
         <Styled.Card>
           <Styled.CountUp end={7} duration={5} />
         </Styled.Card>
         <Styled.Card>
-          <Styled.CountUp end={1289123} duration={5} />
+          <h5>Your Messages</h5>
+          <ResponsiveContainer>
+            <PieChart>
+              <Pie
+                data={getPersonalMessageData()}
+                cx={"50%"}
+                cy={"42%"}
+                innerRadius={"70%"}
+                outerRadius={"90%"}
+                fill="#844EA3"
+                paddingAngle={5}
+                dataKey="value"
+              >
+                <Cell key="cell-0" fill="#ba5095" />
+                <Cell key="cell-1" fill="#844EA3" />
+              </Pie>
+            </PieChart>
+          </ResponsiveContainer>
         </Styled.Card>
         <Styled.BigCard>
-          <h3>Channels</h3>
-          <BarChart
-            width={500}
-            height={300}
-            data={getChannelData()}
-            margin={{
-              top: 5, right: 30, left: 20, bottom: 5,
-            }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="count" fill="#ba5095" />
-          </BarChart>
+          <h4>Messages by Channel</h4>
+          <ResponsiveContainer>
+            <BarChart
+              data={getChannelData()}
+              margin={{
+                top: 5, right: 30, left: 20, bottom: 5,
+              }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="count" fill="#ba5095" />
+            </BarChart>
+          </ResponsiveContainer>
         </Styled.BigCard>
         <Styled.Card>
           <Image
@@ -307,27 +350,33 @@ const Statistics: React.FC<AppPageProps> = (props) => {
           <Styled.CountUp end={206} duration={5} />
         </Styled.Card>
         <Styled.BigCard>
-          <h3>Members</h3>
-          <BarChart
-            width={500}
-            height={300}
-            data={getMemberData()}
-            margin={{
-              top: 5, right: 30, left: 20, bottom: 5,
-            }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="count" fill="#844ea3" />
-          </BarChart>
+          <h4>Messages by Member</h4>
+          <ResponsiveContainer>
+            <BarChart
+              data={getMemberData()}
+              margin={{
+                top: 5, right: 30, left: 20, bottom: 5,
+              }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="count" fill="#844ea3" />
+            </BarChart>
+          </ResponsiveContainer>
         </Styled.BigCard>
         <Styled.Card>
           <Styled.CountUp end={2} duration={5} />
         </Styled.Card>
       </Styled.CardContainer>
+      <Styled.BigCard>
+        <Styled.Image
+          src="https://cdn.archit.us/assets/695011369632403465.png"
+          rounded
+        />
+      </Styled.BigCard>
     </Styled.PageOuter>
   );
 }
