@@ -199,25 +199,25 @@ const Statistics: React.FC<AppPageProps> = (props) => {
     return 0;
   }
 
-  const getChannelData = (): any => {
+  const getChannelData = (): any[] => {
     if (isDefined(storeStatistics) && guild.id in storeStatistics) {
-      const data = [];
-      const channels = storeStatistics[guild.id as string].messages.channels
-      for (const ch in channels) {
-        data.push( {name: ch, count: channels[ch as string] })
-      }
+      const data: any[] = [];
+      const { channels } = storeStatistics[guild.id as string].messages;
+      Object.entries(channels).forEach(([key, value]) => {
+        data.push({ name: key, count: value });
+      });
       return data;
     }
     return [];
   };
 
-  const getMemberData = (): any => {
+  const getMemberData = (): any[] => {
     if (isDefined(storeStatistics) && guild.id in storeStatistics) {
-      const data = [];
-      const members = storeStatistics[guild.id as string].messages.members
-      for (const m in members) {
-        data.push( {name: m, count: members[m as string] })
-      }
+      const data: any[] = [];
+      const { members } = storeStatistics[guild.id as string].messages;
+      Object.entries(members).forEach(([key, value]) => {
+        data.push({ name: key, count: value });
+      });
       return data;
     }
     return [];
@@ -267,6 +267,36 @@ const Statistics: React.FC<AppPageProps> = (props) => {
             roundedCircle
           />
         </Styled.Card>
+        <Styled.BigCard>
+          <Styled.Image
+            src="https://cdn.archit.us/assets/695011369632403465.png"
+            rounded
+          />
+        </Styled.BigCard>
+        <Styled.Card>
+          <Styled.CountUp end={7} duration={5} />
+        </Styled.Card>
+        <Styled.Card>
+          <Styled.CountUp end={1289123} duration={5} />
+        </Styled.Card>
+        <Styled.BigCard>
+          <h3>Channels</h3>
+          <BarChart
+            width={500}
+            height={300}
+            data={getChannelData()}
+            margin={{
+              top: 5, right: 30, left: 20, bottom: 5,
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="count" fill="#ba5095" />
+          </BarChart>
+        </Styled.BigCard>
         <Styled.Card>
           <Image
             src="https://cdn.discordapp.com/emojis/671530198352789524.png"
@@ -276,51 +306,8 @@ const Statistics: React.FC<AppPageProps> = (props) => {
         <Styled.Card>
           <Styled.CountUp end={206} duration={5} />
         </Styled.Card>
-        <Styled.Card>
-          <Styled.CountUp end={7} duration={5} />
-        </Styled.Card>
-        <Styled.Card>
-          <Styled.CountUp end={1289123} duration={5} />
-        </Styled.Card>
         <Styled.BigCard>
-          <AreaChart
-            width={500}
-            height={350}
-            data={getChannelData()}
-            margin={{
-              top: 10, right: 30, left: 0, bottom: 0,
-            }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Area type="monotone" dataKey="count" stroke="#5850ba" fill="#5850ba" />
-          </AreaChart>
-        </Styled.BigCard>
-        <Styled.BigCard>
-          <Styled.Image
-            src="https://cdn.archit.us/assets/695011369632403465.png"
-            rounded
-          />
-        </Styled.BigCard>
-        <Styled.BigCard>
-          <AreaChart
-            width={500}
-            height={350}
-            data={getMemberData()}
-            margin={{
-              top: 10, right: 30, left: 0, bottom: 0,
-            }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Area type="monotone" dataKey="count" stroke="#ba5095" fill="#ba5095" />
-          </AreaChart>
-        </Styled.BigCard>
-        <Styled.BigCard>
+          <h3>Members</h3>
           <BarChart
             width={500}
             height={300}
