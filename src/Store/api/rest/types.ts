@@ -1,6 +1,7 @@
-import { ConditionalWrap, Omitted, ErrorContents } from "Utility/types";
+import { ConditionalWrap, Omitted, ErrorContents, Snowflake } from "Utility/types";
 import { HttpVerbs } from "Utility";
 import * as t from "io-ts";
+import { TokenExchangeResponse, StatisticsResponse } from "Store/routes";
 
 export type Errors = t.Errors;
 
@@ -138,7 +139,15 @@ export interface RestSuccess<
 }
 
 /**
- * Rest success action payload
+ * Stats response with guildId
+ */
+export interface StatsSuccess {
+  guildId: Snowflake;
+  response: StatisticsResponse;
+}
+
+/**
+ * Rest failure action payload
  */
 export interface RestFailure<
   TData extends Record<string, unknown> = Record<string, unknown>,

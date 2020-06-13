@@ -1,4 +1,11 @@
-import { User, Access, Guild } from "Utility/types";
+import {
+  User,
+  Access,
+  Guild,
+  Snowflake,
+  TSnowflake,
+  TimeFromString,
+} from "Utility/types";
 import * as t from "io-ts";
 import { makeRoute } from "Store/api/rest";
 import { Errors } from "Store/api/rest/types";
@@ -101,4 +108,32 @@ export const guilds = makeRoute()({
   auth: true,
   decode: (response: unknown): Either<Errors, GuildsListResponse> =>
     either.chain(t.object.decode(response), GuildsListResponse.decode),
+});
+
+export type StatisticsResponse = t.TypeOf<typeof StatisticsResponse>;
+export const MemberCount = t.interface({
+  count: t.number,
+});
+export const MessageCount = t.interface({
+  count: t.number,
+  channels: t.record(TSnowflake, t.number),
+  members: t.record(TSnowflake, t.number),
+  times: t.record(TimeFromString, t.number),
+});
+
+export const StatisticsResponse = t.interface({
+  members: MemberCount,
+  messages: MessageCount,
+});
+
+/**
+ * GET /stats/<guildId>
+ */
+export const stats = makeRoute()({
+  label: "stats",
+  route: ({ guildId }: { guildId: Snowflake }) => `/stats/${guildId}`,
+  method: HttpVerbs.GET,
+  auth: true,
+  decode: (response: unknown): Either<Errors, StatisticsResponse> =>
+    either.chain(t.object.decode(response), StatisticsResponse.decode),
 });

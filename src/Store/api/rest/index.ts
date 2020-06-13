@@ -17,12 +17,14 @@ import {
   RestFailure,
   RestStart,
   ApiRequest,
+  StatsSuccess,
 } from "Store/api/rest/types";
 import { Errors } from "io-ts";
 
 export const restDispatch = createAction<RestDispatch>("api/restDispatch");
 export const restStart = createAction<RestStart>("api/restStart");
 export const restSuccess = createAction<RestSuccess>("api/restSuccess");
+export const statsSuccess = createAction<StatsSuccess>("api/statsSuccess");
 export const restFailure = createAction<RestFailure>("api/restFailure");
 
 /**

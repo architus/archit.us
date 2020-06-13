@@ -2,6 +2,7 @@ import { combineReducers } from "@reduxjs/toolkit";
 
 import Session from "Store/slices/session";
 import GuildCount from "Store/slices/guildCount";
+import Statistics from "Store/slices/statistics";
 import Interpret from "Store/slices/interpret";
 import Loading from "Store/slices/loading";
 import Notifications from "Store/slices/notifications";
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
   interpret: Interpret,
   gateway: Gateway,
   pools: Pools,
+  statistics: Statistics,
 });
 
 export default rootReducer;
