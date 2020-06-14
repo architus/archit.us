@@ -615,3 +615,9 @@ export const Member = t.type({
   nick: option(t.string),
   roles: t.array(TSnowflake), // foreign key references
 });
+
+export type Channel = t.TypeOf<typeof Channel>;
+export const Channel = t.type({
+  id: TSnowflake,
+  name: t.string,
+});

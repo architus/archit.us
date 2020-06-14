@@ -14,7 +14,7 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, BarChart, Bar, Legend, ResponsiveContainer, PieChart, Pie, Cell,
 } from 'recharts';
 import { useEffectOnce, isDefined, useInitialRender, useLocation } from "Utility";
-import { User, Snowflake, Member } from "Utility/types";
+import { User, Snowflake, Member, Channel } from "Utility/types";
 import { useCurrentUser } from "Store/actions";
 import { usePoolEntities, usePool } from "Store/slices/pools";
 import { GuildStatistics } from "Store/slices/statistics";
@@ -185,6 +185,7 @@ const Styled = {
 
 type StatisticsProps = {
   members: Map<Snowflake, Member>;
+  channels: Map<string, Channel>;
   isArchitusAdmin: boolean;
   currentUser: User;
   dispatch: Dispatch;
@@ -208,6 +209,11 @@ const StatisticsProvider: React.FC<AppPageProps> = (pageProps) => {
     isDefined(storeStatistics) ? storeStatistics[guild.id as string] : null
   );
 
+  const { all: channels } = usePool({
+    type: "channel",
+    guildId: guild.id,
+  });
+
   // Load all the members into the pool
   const allMemberIds = useMemo(() => {
     const ids = [];
@@ -218,6 +224,7 @@ const StatisticsProvider: React.FC<AppPageProps> = (pageProps) => {
     }
     return ids;
   }, [guildStats]);
+
   const memberEntries = usePoolEntities({
     type: "member",
     guildId: guild.id,
@@ -233,10 +240,19 @@ const StatisticsProvider: React.FC<AppPageProps> = (pageProps) => {
     return members;
   }, [memberEntries]);
 
+  const channelsMap = useMemo(() => {
+    const map: Map<string, Channel> = new Map();
+    for (const channel of channels) {
+      map.set(channel.id as string, channel);
+    }
+    return map;
+  }, [channels]);
+
   if (currentUser.isDefined())
     return (
       <Statistics
         members={membersMap}
+        channels={channelsMap}
         currentUser={currentUser.get}
         isArchitusAdmin={false}
         dispatch={dispatch}
@@ -251,7 +267,7 @@ const StatisticsProvider: React.FC<AppPageProps> = (pageProps) => {
 export default StatisticsProvider;
 
 const Statistics: React.FC<StatisticsProps> = (props) => {
-  const { guild, stats, currentUser, members } = props;
+  const { guild, stats, currentUser, members, channels } = props;
 
   const getMemberCount = (): number => {
     return stats.isDefined() ? stats.get.members.count : 0;
@@ -264,11 +280,15 @@ const Statistics: React.FC<StatisticsProps> = (props) => {
   const getChannelData = (): any[] => {
     const data: any[] = [];
     if (stats.isDefined()) {
-      const { channels } = stats.get.messages;
-      Object.entries(channels).forEach(([key, value]) => {
-        data.push({ name: key, count: value });
+      const channelIds = stats.get.messages.channels;
+      Object.entries(channelIds).forEach(([key, value]) => {
+        const channel = channels.get(key)
+        if (isDefined(channel)) {
+          data.push({ name: channel.name, count: value });
+        }
       });
     }
+    console.log(data);
     return data;
   };
 
