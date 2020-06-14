@@ -17,7 +17,7 @@ interface MessageCount {
   times: Record<number, number>;
 }
 
-interface GuildStatistics {
+export interface GuildStatistics {
   members: MemberCount;
   messages: MessageCount;
 }

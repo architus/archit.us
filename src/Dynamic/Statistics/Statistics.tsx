@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import styled, { css, down, up, Box } from "@xstyled/emotion";
 import { ColorMode, opacity, color, mode, Breakpoint } from "Theme";
 import { shallowEqual } from "react-redux";
@@ -6,14 +6,18 @@ import { Card, Icon } from "Components";
 import { Badge, Image } from "react-bootstrap";
 import { stats } from "Store/routes";
 import { useDispatch, useSelector } from "Store/hooks";
+import { Dispatch } from "Store";
 import CountUp from "react-countup";
 import { AppPageProps } from "Dynamic/AppRoot/types";
+import { Option, None, Some, Unwrap } from "Utility/option";
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, BarChart, Bar, Legend, ResponsiveContainer, PieChart, Pie, Cell,
 } from 'recharts';
 import { useEffectOnce, isDefined, useInitialRender, useLocation } from "Utility";
-import { User } from "Utility/types";
+import { User, Snowflake, Member } from "Utility/types";
 import { useCurrentUser } from "Store/actions";
+import { usePoolEntities, usePool } from "Store/slices/pools";
+import { GuildStatistics } from "Store/slices/statistics";
 
 const olddata = [
   {
@@ -179,70 +183,113 @@ const Styled = {
   `,
 };
 
-const Statistics: React.FC<AppPageProps> = (props) => {
-  const { guild } = props;
-  const currentUser = useCurrentUser();
+type StatisticsProps = {
+  members: Map<Snowflake, Member>;
+  isArchitusAdmin: boolean;
+  currentUser: User;
+  dispatch: Dispatch;
+  stats: Option<GuildStatistics>;
+} & AppPageProps;
+
+const StatisticsProvider: React.FC<AppPageProps> = (pageProps) => {
+  const dispatch = useDispatch();
+  const { guild } = pageProps;
+  const currentUser: Option<User> = useCurrentUser();
 
   const { statistics: storeStatistics } = useSelector((state) => {
     return state.statistics;
   }, shallowEqual);
 
-  const initialRender = useInitialRender();
-
-  const dispatch = useDispatch();
   useEffect(() => {
     dispatch(stats({ routeData: { guildId: guild.id } }));
   }, [dispatch, guild.id]);
 
-  const getMemberCount = (): number => {
-    if (isDefined(storeStatistics) && guild.id in storeStatistics) {
-      return storeStatistics[guild.id as string].members.count;
+  const guildStats = Option.from(
+    isDefined(storeStatistics) ? storeStatistics[guild.id as string] : null
+  );
+
+  // Load all the members into the pool
+  const allMemberIds = useMemo(() => {
+    const ids = [];
+    if (guildStats.isDefined()) {
+      for (const id in guildStats.get.messages.members) {
+        ids.push(id as Snowflake);
+      }
     }
-    return 0;
+    return ids;
+  }, [guildStats]);
+  const memberEntries = usePoolEntities({
+    type: "member",
+    guildId: guild.id,
+    ids: allMemberIds,
+  });
+  const membersMap = useMemo(() => {
+    const members: Map<Snowflake, Member> = new Map();
+    for (const memberEntry of memberEntries) {
+      if (memberEntry.isLoaded && memberEntry.entity.isDefined()) {
+        members.set(memberEntry.entity.get.id, memberEntry.entity.get);
+      }
+    }
+    return members;
+  }, [memberEntries]);
+
+  if (currentUser.isDefined())
+    return (
+      <Statistics
+        members={membersMap}
+        currentUser={currentUser.get}
+        isArchitusAdmin={false}
+        dispatch={dispatch}
+        stats={guildStats}
+        {...pageProps}
+      />
+    );
+
+  return null;
+};
+
+export default StatisticsProvider;
+
+const Statistics: React.FC<StatisticsProps> = (props) => {
+  const { guild, stats, currentUser, members } = props;
+
+  const getMemberCount = (): number => {
+    return stats.isDefined() ? stats.get.members.count : 0;
   };
 
   const getMessageCount = (): number => {
-    if (isDefined(storeStatistics) && guild.id in storeStatistics) {
-      return storeStatistics[guild.id as string].messages.count;
-    }
-    return 0;
+    return stats.isDefined() ? stats.get.messages.count : 0;
   };
 
   const getChannelData = (): any[] => {
-    if (isDefined(storeStatistics) && guild.id in storeStatistics) {
-      const data: any[] = [];
-      const { channels } = storeStatistics[guild.id as string].messages;
+    const data: any[] = [];
+    if (stats.isDefined()) {
+      const { channels } = stats.get.messages;
       Object.entries(channels).forEach(([key, value]) => {
         data.push({ name: key, count: value });
       });
-      return data;
     }
-    return [];
+    return data;
   };
 
   const getMemberData = (): any[] => {
-    if (isDefined(storeStatistics) && guild.id in storeStatistics) {
-      const data: any[] = [];
-      const { members } = storeStatistics[guild.id as string].messages;
-      Object.entries(members).forEach(([key, value]) => {
-        data.push({ name: key, count: value });
+    const data: any[] = [];
+    if (stats.isDefined()) {
+      const memberIds = stats.get.messages.members;
+      Object.entries(memberIds).forEach(([key, value]) => {
+        const member = members.get(key as Snowflake);
+        if (isDefined(member)) {
+          data.push({ name: member.name, count: value });
+        }
       });
-      return data;
     }
-    return [];
+    return data;
   };
 
   const getPersonalMessageData = (): any[] => {
-    if (
-      isDefined(storeStatistics) &&
-      guild.id in storeStatistics &&
-      currentUser.isDefined()
-    ) {
-      const total = getMessageCount();
-      const userCount =
-        storeStatistics[guild.id as string].messages.members[
-          currentUser.get.id as string
-        ];
+    const total = getMessageCount();
+    if (stats.isDefined()) {
+      const userCount = stats.get.messages.members[currentUser.id as string];
       return [
         { name: "me", value: userCount },
         { name: "not me", value: total - userCount },
@@ -250,13 +297,6 @@ const Statistics: React.FC<AppPageProps> = (props) => {
     }
     return [];
   };
-
-  console.log(getPersonalMessageData().map((entry, index) => (
-    <Cell
-      key={`cell-${index}`}
-      fill={COLORS[index % COLORS.length]}
-    />
-  )));
 
   return (
     <Styled.PageOuter>
@@ -312,7 +352,7 @@ const Statistics: React.FC<AppPageProps> = (props) => {
               <Pie
                 data={getPersonalMessageData()}
                 cx={"50%"}
-                cy={"42%"}
+                cy={"41%"}
                 innerRadius={"70%"}
                 outerRadius={"90%"}
                 fill="#844EA3"
@@ -331,7 +371,10 @@ const Statistics: React.FC<AppPageProps> = (props) => {
             <BarChart
               data={getChannelData()}
               margin={{
-                top: 5, right: 30, left: 20, bottom: 5,
+                top: 5,
+                right: 30,
+                left: 20,
+                bottom: 5,
               }}
             >
               <CartesianGrid strokeDasharray="3 3" />
@@ -358,7 +401,10 @@ const Statistics: React.FC<AppPageProps> = (props) => {
             <BarChart
               data={getMemberData()}
               margin={{
-                top: 5, right: 30, left: 20, bottom: 5,
+                top: 5,
+                right: 30,
+                left: 20,
+                bottom: 5,
               }}
             >
               <CartesianGrid strokeDasharray="3 3" />
@@ -382,6 +428,4 @@ const Statistics: React.FC<AppPageProps> = (props) => {
       </Styled.BigCard>
     </Styled.PageOuter>
   );
-}
-
-export default Statistics;
+};
