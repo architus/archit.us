@@ -78,7 +78,12 @@ const Styled = {
     height: 100%;
 
     padding-top: milli;
-    padding-left: micro;
+    ${up(
+      Breakpoint.MD,
+      css`
+        padding-left: micro;
+      `
+    )}
   `,
   CircledIcon: styled(Icon)`
     background: white;
