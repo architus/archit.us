@@ -288,7 +288,7 @@ const Statistics: React.FC<StatisticsProps> = (props) => {
         }
       });
     }
-    console.log(data);
+    data.sort((a, b) => (a.count < b.count ? 1 : -1));
     return data;
   };
 
@@ -303,6 +303,7 @@ const Statistics: React.FC<StatisticsProps> = (props) => {
         }
       });
     }
+    data.sort((a, b) => (a.count < b.count ? 1 : -1));
     return data;
   };
 
