@@ -10,6 +10,7 @@ import { Dispatch } from "Store";
 import CountUp from "react-countup";
 import { AppPageProps } from "Dynamic/AppRoot/types";
 import { Option, None, Some, Unwrap } from "Utility/option";
+import Logo from "Components/Logo";
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, BarChart, Bar, Legend, ResponsiveContainer, PieChart, Pie, Cell,
 } from 'recharts';
@@ -90,6 +91,13 @@ const Styled = {
     color: light;
     padding: 0px 20px;
   `,
+  Logo: styled(Logo.Symbol)`
+    font-size: 2em;
+    color: light;
+    padding: 0px 20px;
+    display: flex;
+    align-items: center;
+  `,
   HeaderCards: styled.div`
     display: flex;
     justify-content: space-around;
@@ -101,13 +109,6 @@ const Styled = {
         flex-wrap: wrap;
       `
     )}
-
-    & > p {
-      margin-bottom: 0;
-      font-size: 0.9em;
-      margin-top: -pico;
-      color: light !important;
-    }
   `,
   CardContainer: styled.div`
     display: grid;
@@ -133,6 +134,12 @@ const Styled = {
     margin-bottom: nano;
     color: light;
   `,
+  Description: styled.p`
+    margin-bottom: 0;
+    font-size: 0.9em;
+    margin-top: -pico;
+    color: light !important;
+  `,
   MessageCard: styled(Card.Plain)`
     margin: pico;
     width: 100%;
@@ -142,7 +149,7 @@ const Styled = {
     background-image: linear-gradient(62deg, #5850ba 0%, #844ea3 100%);
     padding: 16px;
   `,
-  HeaderCard: styled(Card.Plain)`
+  ArchitusCard: styled(Card.Plain)`
     margin: pico;
     width: 100%;
     border: none;
@@ -304,8 +311,8 @@ const Statistics: React.FC<StatisticsProps> = (props) => {
   };
 
   const getPersonalMessageData = (): any[] => {
-    const total = getMessageCount();
     if (stats.isDefined()) {
+      const total = stats.get.messages.count;
       const userCount = stats.get.messages.members[currentUser.id as string];
       return [
         { name: "me", value: userCount },
@@ -313,6 +320,13 @@ const Statistics: React.FC<StatisticsProps> = (props) => {
       ];
     }
     return [];
+  };
+
+  const getArchitusMessageCount = (): number => {
+    if (stats.isDefined()) {
+      return stats.get.messages.members["448940980218101795"];
+    }
+    return 0;
   };
 
   return (
@@ -324,7 +338,7 @@ const Statistics: React.FC<StatisticsProps> = (props) => {
             <Styled.Icon name="comments" noAutoWidth />
             <Styled.LabelContainer>
               <Styled.CountUp end={getMessageCount()} duration={5} />
-              <p>Messages Sent</p>
+              <Styled.Description>Messages Sent</Styled.Description>
             </Styled.LabelContainer>
           </Styled.ContentContainer>
         </Styled.MessageCard>
@@ -333,21 +347,21 @@ const Statistics: React.FC<StatisticsProps> = (props) => {
             <Styled.Icon name="users" noAutoWidth />
             <Styled.LabelContainer>
               <Styled.CountUp end={getMemberCount()} duration={5} />
-              <p>Members</p>
+              <Styled.Description>Members</Styled.Description>
             </Styled.LabelContainer>
           </Styled.ContentContainer>
         </Styled.MemberCard>
-        <Styled.HeaderCard>
+        <Styled.ArchitusCard>
           <Styled.ContentContainer>
-            <Styled.Icon name="history" noAutoWidth />
+            <Styled.Logo />
             <Styled.LabelContainer>
               <div>
-                <Styled.CountUp end={2} duration={5} /> <sub>min</sub>
+                <Styled.CountUp end={getArchitusMessageCount()} duration={5} />
               </div>
-              <p>Last Activity</p>
+              <Styled.Description>Commands Executed</Styled.Description>
             </Styled.LabelContainer>
           </Styled.ContentContainer>
-        </Styled.HeaderCard>
+        </Styled.ArchitusCard>
       </Styled.HeaderCards>
       <Styled.CardContainer>
         <Styled.Card>
