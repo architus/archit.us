@@ -19,54 +19,15 @@ import { useCurrentUser } from "Store/actions";
 import { usePoolEntities, usePool } from "Store/slices/pools";
 import { GuildStatistics } from "Store/slices/statistics";
 
-const olddata = [
-  {
-    name: "Page A",
-    uv: 4000,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    name: "Page B",
-    uv: 3000,
-    pv: 1398,
-    amt: 2210,
-  },
-  {
-    name: "Page C",
-    uv: 2000,
-    pv: 9800,
-    amt: 2290,
-  },
-  {
-    name: "Page D",
-    uv: 2780,
-    pv: 3908,
-    amt: 2000,
-  },
-  {
-    name: "Page E",
-    uv: 1890,
-    pv: 4800,
-    amt: 2181,
-  },
-  {
-    name: "Page F",
-    uv: 2390,
-    pv: 3800,
-    amt: 2500,
-  },
-  {
-    name: "Page G",
-    uv: 3490,
-    pv: 4300,
-    amt: 2100,
-  },
-];
+const HeaderCardBase = styled(Card.Plain)`
+  margin: pico;
+  width: 100%;
+  border: none;
+  padding: 16px;
+  flex: 1 1 0px;
+`;
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
-
-const RADIAN = Math.PI / 180;
+const BaseCard = Card.base;
 
 const Styled = {
   PageOuter: styled.div`
@@ -84,21 +45,10 @@ const Styled = {
         padding-left: micro;
       `
     )}
-  `,
-  CircledIcon: styled(Icon)`
-    background: white;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    text-align: center;
-    line-height: 20px;
-    vertical-align: middle;
-    padding: 0px;
-  `,
-  Icon: styled(Icon)`
-    font-size: 2em;
-    color: light;
-    padding: 0px 20px;
+
+    & > CountUp {
+      font-size: 2.5em;
+    }
   `,
   HeaderCards: styled.div`
     display: flex;
@@ -111,6 +61,19 @@ const Styled = {
         flex-wrap: wrap;
       `
     )}
+
+    & > p {
+      margin-bottom: 0;
+      font-size: 0.9em;
+      margin-top: -pico;
+      color: light !important;
+    }
+
+    & > Icon {
+      font-size: 2em;
+      color: light;
+      padding: 0px 20px;
+    }
   `,
   CardContainer: styled.div`
     display: grid;
@@ -121,6 +84,12 @@ const Styled = {
     grid-auto-flow: dense;
     gap: pico;
     justify-items: stretch;
+
+    & > BaseCard {
+      margin: 5px;
+      grid-column: span auto;
+      grid-row: span auto;
+    }
   `,
   ContentContainer: styled.div`
     position: relative;
@@ -136,55 +105,27 @@ const Styled = {
     margin-bottom: nano;
     color: light;
   `,
-  Description: styled.p`
-    margin-bottom: 0;
-    font-size: 0.9em;
-    margin-top: -pico;
-    color: light !important;
-  `,
-  MessageCard: styled(Card.Plain)`
-    margin: pico;
-    width: 100%;
-    border: none;
-    flex: 1 1 0px;
+  MessageCard: styled(HeaderCardBase)`
     background-color: #5850ba;
     background-image: linear-gradient(62deg, #5850ba 0%, #844ea3 100%);
-    padding: 16px;
   `,
-  HeaderCard: styled(Card.Plain)`
-    margin: pico;
-    width: 100%;
-    border: none;
-    padding: 16px;
-    flex: 1 1 0px;
+  LastActivityCard: styled(HeaderCardBase)`
     background-color: #ba5095;
     background-image: linear-gradient(62deg, #ba5095 0%, #ffbfa7 100%);
   `,
-  MemberCard: styled(Card.Plain)`
-    margin: pico;
-    width: 100%;
-    border: none;
-    padding: 16px;
-    flex: 1 1 0px;
+  MemberCard: styled(HeaderCardBase)`
     background-color: #844ea3;
     background-image: linear-gradient(62deg, #844ea3 0%, #ba5095 100%);
-  `,
-  Card: styled(Card.base)`
-    margin: 5px;
-    grid-column: span auto;
-    grid-row: span auto;
   `,
   BigCard: styled(Card.base)`
     margin: 5px;
     grid-column: span 2;
     grid-row: span 2;
-  `,
-  Image: styled(Image)`
-    max-height: 100%;
-    max-width: 100%;
-  `,
-  CountUp: styled(CountUp)`
-    font-size: 2.5em;
+
+    & > Image {
+      max-height: 100%;
+      max-width: 100%;
+    }
   `,
 };
 
@@ -330,48 +271,48 @@ const Statistics: React.FC<StatisticsProps> = (props) => {
       <Styled.HeaderCards>
         <Styled.MessageCard>
           <Styled.ContentContainer>
-            <Styled.Icon name="comments" noAutoWidth />
+            <Icon name="comments" noAutoWidth />
             <Styled.LabelContainer>
-              <Styled.CountUp end={getMessageCount()} duration={5} />
-              <Styled.Description>Messages Sent</Styled.Description>
+              <CountUp end={getMessageCount()} duration={5} />
+              <p>Messages Sent</p>
             </Styled.LabelContainer>
           </Styled.ContentContainer>
         </Styled.MessageCard>
         <Styled.MemberCard>
           <Styled.ContentContainer>
-            <Styled.Icon name="users" noAutoWidth />
+            <Icon name="users" noAutoWidth />
             <Styled.LabelContainer>
-              <Styled.CountUp end={getMemberCount()} duration={5} />
-              <Styled.Description>Members</Styled.Description>
+              <CountUp end={getMemberCount()} duration={5} />
+              <p>Members</p>
             </Styled.LabelContainer>
           </Styled.ContentContainer>
         </Styled.MemberCard>
-        <Styled.HeaderCard>
+        <Styled.LastActivityCard>
           <Styled.ContentContainer>
-            <Styled.Icon name="history" noAutoWidth />
+            <Icon name="history" noAutoWidth />
             <Styled.LabelContainer>
               <div>
-                <Styled.CountUp end={2} duration={5} /> <sub>min</sub>
+                <CountUp end={2} duration={5} /> <sub>min</sub>
               </div>
-              <Styled.Description>Last Activity</Styled.Description>
+              <p>Last Activity</p>
             </Styled.LabelContainer>
           </Styled.ContentContainer>
-        </Styled.HeaderCard>
+        </Styled.LastActivityCard>
       </Styled.HeaderCards>
       <Styled.CardContainer>
-        <Styled.Card>
+        <BaseCard>
           <Image src="https://cdn.discordapp.com/emojis/482104551902806016.png?v=1" />
-        </Styled.Card>
-        <Styled.Card>
+        </BaseCard>
+        <BaseCard>
           <Image
             src="https://cdn.discordapp.com/emojis/671530198352789524.png"
             roundedCircle
           />
-        </Styled.Card>
-        <Styled.Card>
-          <Styled.CountUp end={7} duration={5} />
-        </Styled.Card>
-        <Styled.Card>
+        </BaseCard>
+        <BaseCard>
+          <CountUp end={7} duration={5} />
+        </BaseCard>
+        <BaseCard>
           <h5>Your Messages</h5>
           <ResponsiveContainer>
             <PieChart>
@@ -390,7 +331,7 @@ const Statistics: React.FC<StatisticsProps> = (props) => {
               </Pie>
             </PieChart>
           </ResponsiveContainer>
-        </Styled.Card>
+        </BaseCard>
         <Styled.BigCard>
           <h4>Messages by Channel</h4>
           <ResponsiveContainer>
@@ -412,15 +353,15 @@ const Statistics: React.FC<StatisticsProps> = (props) => {
             </BarChart>
           </ResponsiveContainer>
         </Styled.BigCard>
-        <Styled.Card>
+        <BaseCard>
           <Image
             src="https://cdn.discordapp.com/emojis/671530198352789524.png"
             rounded
           />
-        </Styled.Card>
-        <Styled.Card>
-          <Styled.CountUp end={206} duration={5} />
-        </Styled.Card>
+        </BaseCard>
+        <BaseCard>
+          <CountUp end={206} duration={5} />
+        </BaseCard>
         <Styled.BigCard>
           <h4>Messages by Member</h4>
           <ResponsiveContainer>
@@ -442,12 +383,12 @@ const Statistics: React.FC<StatisticsProps> = (props) => {
             </BarChart>
           </ResponsiveContainer>
         </Styled.BigCard>
-        <Styled.Card>
-          <Styled.CountUp end={2} duration={5} />
-        </Styled.Card>
+        <BaseCard>
+          <CountUp end={2} duration={5} />
+        </BaseCard>
       </Styled.CardContainer>
       <Styled.BigCard>
-        <Styled.Image
+        <Image
           src="https://cdn.archit.us/assets/695011369632403465.png"
           rounded
         />
