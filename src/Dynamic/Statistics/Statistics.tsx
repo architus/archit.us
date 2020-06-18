@@ -171,6 +171,10 @@ const Styled = {
     margin: 5px;
     grid-column: span auto;
     grid-row: span auto;
+
+    & > h5 {
+      margin: 0px;
+    }
   `,
   BigCard: styled(Card.base)`
     margin: 5px;
@@ -365,37 +369,61 @@ const Statistics: React.FC<StatisticsProps> = (props) => {
       </Styled.HeaderCards>
       <Styled.CardContainer>
         <Styled.Card>
-          <Image src="https://cdn.discordapp.com/emojis/482104551902806016.png?v=1" />
-        </Styled.Card>
-        <Styled.Card>
-          <Image
-            src="https://cdn.discordapp.com/emojis/671530198352789524.png"
-            roundedCircle
-          />
-        </Styled.Card>
-        <Styled.Card>
-          <Styled.CountUp end={7} duration={5} />
-        </Styled.Card>
-        <Styled.Card>
           <h5>Your Messages</h5>
           <ResponsiveContainer>
             <PieChart>
               <Pie
                 data={getPersonalMessageData()}
                 cx={"50%"}
-                cy={"41%"}
-                innerRadius={"70%"}
+                cy={"50%"}
+                innerRadius={"65%"}
                 outerRadius={"90%"}
                 fill="#844EA3"
                 paddingAngle={5}
                 dataKey="value"
               >
-                <Cell key="cell-0" fill="#ba5095" />
-                <Cell key="cell-1" fill="#844EA3" />
+                <Cell key="cell-0" fill="#ba5095" strokeWidth={0} />
+                <Cell key="cell-1" fill="#844EA3" strokeWidth={0} />
               </Pie>
             </PieChart>
           </ResponsiveContainer>
         </Styled.Card>
+        <Styled.Card>
+          <h5>Popular Emoji</h5>
+          <div>
+            <Styled.Image src="https://cdn.discordapp.com/emojis/482104551902806016.png?v=1" />
+          </div>
+        </Styled.Card>
+        <Styled.Card>
+          <h5>Mentions</h5>
+        </Styled.Card>
+        <Styled.Card>
+          <h5>Last Activity</h5>
+        </Styled.Card>
+        <Styled.BigCard>
+          <h4>Messages over Time</h4>
+        </Styled.BigCard>
+        <Styled.BigCard>
+          <h4>Messages by Member</h4>
+          <ResponsiveContainer>
+            <BarChart
+              data={getMemberData()}
+              margin={{
+                top: 5,
+                right: 30,
+                left: 20,
+                bottom: 5,
+              }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="count" fill="#844ea3" />
+            </BarChart>
+          </ResponsiveContainer>
+        </Styled.BigCard>
         <Styled.BigCard>
           <h4>Messages by Channel</h4>
           <ResponsiveContainer>
@@ -418,45 +446,12 @@ const Statistics: React.FC<StatisticsProps> = (props) => {
           </ResponsiveContainer>
         </Styled.BigCard>
         <Styled.Card>
-          <Image
-            src="https://cdn.discordapp.com/emojis/671530198352789524.png"
-            rounded
-          />
-        </Styled.Card>
-        <Styled.Card>
-          <Styled.CountUp end={206} duration={5} />
+          <h5>Member Since</h5>
         </Styled.Card>
         <Styled.BigCard>
-          <h4>Messages by Member</h4>
-          <ResponsiveContainer>
-            <BarChart
-              data={getMemberData()}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="count" fill="#844ea3" />
-            </BarChart>
-          </ResponsiveContainer>
+          <h4>Popular Words</h4>
         </Styled.BigCard>
-        <Styled.Card>
-          <Styled.CountUp end={2} duration={5} />
-        </Styled.Card>
       </Styled.CardContainer>
-      <Styled.BigCard>
-        <Styled.Image
-          src="https://cdn.archit.us/assets/695011369632403465.png"
-          rounded
-        />
-      </Styled.BigCard>
     </Styled.PageOuter>
   );
 };
