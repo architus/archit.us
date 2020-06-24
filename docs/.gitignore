@@ -3,3 +3,6 @@
 # gatsby files
 .cache/
 public
+
+# Linaria
+.linaria-cache

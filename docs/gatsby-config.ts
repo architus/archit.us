@@ -7,6 +7,8 @@ export const siteMetadata = {
 };
 
 export const plugins = [
+  'gatsby-plugin-typescript',
+  'gatsby-plugin-linaria',
   `gatsby-plugin-react-helmet`,
   {
     resolve: `gatsby-source-filesystem`,
