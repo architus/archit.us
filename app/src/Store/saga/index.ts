@@ -14,18 +14,32 @@ import interpret from "Store/saga/interpret";
 import sessionFlow from "Store/saga/session";
 import gatewayFlow from "Store/saga/gateway";
 import pools from "Store/saga/pools";
+import { Action } from "redux";
+import { restDispatch } from "Store/api/rest";
 
 /**
  * Root saga
  */
 export default function* saga(): SagaIterator {
-  yield fork(gatewayFlow);
-  yield fork(sessionFlow);
-  yield fork(interpret);
-  yield fork(pools);
+  // other sagas ...
+  yield takeEvery(myStatisticsRoute.matchDispatch, handleFetchStatistics);
+}
 
-  yield takeEvery(signOut.type, handleSignOut);
-  yield takeEvery(showNotification.type, autoHideNotification);
+function* handleFetchStatistics(action: ReturnType<typeof restDispatch>): SagaIterator {
+  if (myStatisticsRoute.matchDispatch(action)) {
+    const { guildId } = action.payload.routeData;
+    const { success, failure } = yield race({
+      success: take(myStatisticsRoute.match),
+      failure: take(myStatisticsRoute.matchError),
+      timeout: delay(10000),
+    });
+
+    if (isDefined(success) && myStatisticsRoute.match(success)) {
+      const { response } = success.payload;
+      // ^ this has the response data
+      yield put(makeMyCustomFinalAction({ guildId, response }));
+    }
+  }
 }
 
 /**

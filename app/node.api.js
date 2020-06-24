@@ -79,12 +79,12 @@ export default () => ({
           },
           {
             urlPattern: new RegExp(
-              "^https://fonts.(?:googleapis|gstatic).com/(.*)"
+              "https://fonts.(?:googleapis|gstatic).com/(.*)"
             ),
             handler: "CacheFirst",
           },
           {
-            urlPattern: /.*/,
+            urlPattern: /\/.*(css|js|woff2)/,
             handler: "NetworkFirst",
           },
         ],
