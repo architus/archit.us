@@ -1,8 +1,10 @@
 import React from "react";
+import { PageProps } from "gatsby";
 import { styled } from "linaria/react";
 
-import Layout from "../components/layout";
-import SEO from "../components/seo";
+import { DocsContext } from "./frontmatter";
+import Layout from "../../components/layout";
+import SEO from "../../components/seo";
 
 // Write your styles in `styled` tag
 const Title = styled.h1`
@@ -23,15 +25,15 @@ const Container = styled.div`
   }
 `;
 
-const NotFoundPage = () => (
+const Docs: React.FC<PageProps<{}, DocsContext>> = (props) => (
   <Layout>
     <Container color="#333">
-      <Title>Hello world</Title>
+      <Title>real route</Title>
+      <h4></h4>
     </Container>
-    <SEO title="404: Not found" />
-    <h1>NOT FOUND</h1>
-    <p>You just hit a route that doesn&#39;t exist... the sadness.</p>
+    <SEO title="docs page" />
+    <p>hello this is a docs page good job</p>
   </Layout>
 );
 
-export default NotFoundPage;
+export default Docs;

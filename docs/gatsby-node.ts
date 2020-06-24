@@ -9,19 +9,27 @@ import {
 } from "../lib/utility";
 import { Option, Some, None } from "../lib/option";
 import {
+  DocsPage,
+  DocsContext,
   DocsFrontmatter,
+  DocsPassthroughProps,
+  DocsNavtreeConstructionProps,
+  BreadcrumbSegment,
+  NavTree,
   frontmatterFragment,
   frontmatterType,
-  NavtreeConstructionProps,
-  BreadcrumbSegment,
-  DocsPassthroughProps,
-  NavTree,
-  History,
-  DocProps,
-} from "./src/templates/types";
+  historyType,
+  breadcrumbType,
+  docsPageType,
+} from "./src/templates/Docs/frontmatter";
+import {
+  load as loadGithubMetadata,
+  attachAuthorship,
+  githubUserType,
+} from "./src/build/github-integration";
 
 const path = require("path");
-const DocsPageTemplate = path.resolve("./src/templates/Docs.tsx");
+const DocsPageTemplate = path.resolve("./src/templates/Docs/index.tsx");
 
 // Define custom graphql schema to enforce rigid type structures
 export const sourceNodes: GatsbyNode["sourceNodes"] = ({
@@ -32,6 +40,11 @@ export const sourceNodes: GatsbyNode["sourceNodes"] = ({
   activity.start();
   // To add new keys to the frontmatter, see /src/templates/types.ts
   actions.createTypes(`
+    ${githubUserType}
+    ${historyType}
+    ${githubUserType}
+    ${breadcrumbType}
+    ${docsPageType}
     ${frontmatterType}
 
     type Mdx implements Node {
@@ -52,7 +65,7 @@ export const sourceNodes: GatsbyNode["sourceNodes"] = ({
 /**
  * Inner MDX docs node query object
  */
-type DocsNode = {
+type OriginalDocsNode = {
   relativePath: string;
   childMdx?: {
     id: string;
@@ -62,7 +75,7 @@ type DocsNode = {
 };
 
 // To add new keys to the frontmatter, see /src/templates/types.ts
-const docsNodeFragment = `
+const originalDocsNodeFragment = `
   relativePath
   childMdx {
     id
@@ -72,189 +85,13 @@ const docsNodeFragment = `
   }
 `;
 
-/**
- * Page authorship information extracted from GitHub
- */
-type PageAuthorship = Array<{
-  committedDate: string;
-  author: {
-    user: {
-      name?: string;
-      avatarUrl?: string;
-      login: string;
-      url: string;
-    };
-  };
-}>;
-
-/**
- * Attempts to load the page authorship information using the GitHub API,
- * returning `None` if the data couldn't be loaded for any reason
- * @param paths - List of `relativePath` fields extracted from the docs query
- * @param reporter - Gatsby plugin API reporter instance
- * @param graphql - Gatsby graphql query hook
- */
-async function loadGithubMetadata(
-  paths: string[],
-  reporter: Reporter,
-  graphql: CreatePagesArgs["graphql"]
-): Promise<Option<Map<string, PageAuthorship>>> {
-  // Make sure token was passed in
-  if (process.env.GITHUB_TOKEN == null) {
-    [
-      "Could not find Github token. Skipping authorship metadata sourcing.",
-      "To enable author metadata, set the GITHUB_TOKEN environment variable",
-    ].forEach((line) => reporter.warn(line));
-    return None;
-  }
-
-  // Re-use activity variable
-  const activity = reporter.activityTimer(
-    `loading page authorship metadata via GitHub integration`
-  );
-  activity.start();
-
-  type GithubMetadataQueryResult = {
-    site: {
-      siteMetadata: {
-        github?: {
-          owner?: string;
-          name?: string;
-          docsRoot?: string;
-          branch?: string;
-        };
-      };
-    };
-  };
-
-  const githubMetadataQuery = `
-    site {
-      siteMetadata {
-        github {
-          owner
-          name
-          docsRoot
-          branch
-        }
-      }
-    }
-  `;
-
-  const { data: siteData, errors: siteErrors } = await graphql<
-    GithubMetadataQueryResult
-  >(githubMetadataQuery);
-
-  // Make sure no errors ocurred
-  if (isDefined(siteErrors)) {
-    reporter.warn(
-      "An error ocurred while querying 'siteMetadata.github' for page authorship sourcing"
-    );
-    reporter.warn(siteErrors);
-    activity.end();
-    return None;
-  }
-
-  // Make sure github object was given
-  const { github } = siteData.site.siteMetadata;
-  if (isNil(github)) {
-    [
-      "'github' is a required field in 'siteMetadata' to enable GitHub integration.",
-      "Add it in 'gatsby-config.ts'",
-    ].forEach((line) => reporter.warn(line));
-    activity.end();
-    return None;
-  }
-
-  // Make sure all fields were given
-  const { owner, name, docsRoot, branch } = github;
-  if (isNil(owner) || isNil(name) || isNil(docsRoot) || isNil(branch)) {
-    [
-      "One or more required fields for GitHub integration were missing from 'siteMetadata.github'.",
-      "Add them in 'gatsby-config.ts'",
-    ].forEach((line) => reporter.warn(line));
-    activity.end();
-    return None;
-  }
-
-  type GithubApiResults = {
-    github: {
-      repository: {
-        object: {
-          [key: string]: {
-            nodes: PageAuthorship;
-          };
-        };
-      };
-    };
-  };
-
-  // Here, we use multiple GitHub commits for each docs file,
-  // making the name of their query aliases 'f<index>'
-  // (the 'f' is needed to make sure the key is not coerced to a number and rejected)
-  const { data: githubData, errors: githubErrors } = await graphql<
-    GithubApiResults
-  >(
-    `
-      query githubMetadataQuery($owner: String!, $name: String!, $limit: Int!) {
-        github {
-          repository(owner: $owner, name: $name) {
-            object(expression: "master") {
-              ... on GitHub_Commit {
-                ${paths.map(
-                  (p, i) => `f${i.toString()}: history(
-                  first: $limit,
-                  path: "${docsRoot + p}"
-                ) {
-                  nodes {
-                    committedDate
-                    author {
-                      user {
-                        name
-                        avatarUrl
-                        login
-                        url
-                      }
-                    }
-                  }
-                }`
-                )}
-              }
-            }
-          }
-        }
-      }
-    `
-  );
-
-  // Make sure no errors ocurred
-  if (isDefined(githubErrors)) {
-    reporter.warn(
-      "An error ocurred while querying the GitHub API for page authorship sourcing"
-    );
-    reporter.warn(githubErrors);
-    activity.end();
-    return None;
-  }
-
-  // Map object to array with indices
-  const pathMap: Map<string, PageAuthorship> = new Map();
-  Object.entries(githubData.github.repository.object).forEach(
-    ([key, value]) => {
-      const idx = parseInt(key.slice(1));
-      const path = paths[idx];
-      pathMap.set(path, value.nodes);
-    }
-  );
-
-  activity.end();
-  return Some(pathMap);
-}
-
-// Dynamically create documentation pages
+// Dynamically create documentation page GraphQL nodes & corresponding pages
 export const createPages: GatsbyNode["createPages"] = async ({
   graphql,
   actions,
   reporter,
+  createNodeId,
+  createContentDigest,
 }: CreatePagesArgs) => {
   // Re-use activity variable
   let activity = reporter.activityTimer(`loading docs pages via graphql`);
@@ -263,7 +100,7 @@ export const createPages: GatsbyNode["createPages"] = async ({
   type DocsQueryResult = {
     allFile: {
       edges: Array<{
-        node: DocsNode;
+        node: OriginalDocsNode;
       }>;
     };
   };
@@ -279,7 +116,7 @@ export const createPages: GatsbyNode["createPages"] = async ({
       ) {
         edges {
           node {
-            ${docsNodeFragment}
+            ${originalDocsNodeFragment}
           }
         }
       }
@@ -345,7 +182,7 @@ export const createPages: GatsbyNode["createPages"] = async ({
   activity = reporter.activityTimer(`dynamically generating docs pages`);
   activity.start();
 
-  function createSubtreePages(subtree, root) {
+  function createSubtreePages(subtree: NavTree, root: NavTree) {
     if (!subtree.invisible) {
       const {
         breadcrumb,
@@ -356,8 +193,7 @@ export const createPages: GatsbyNode["createPages"] = async ({
         children,
         history,
       } = subtree;
-
-      const context: DocProps= {
+      const nodeContent: DocsPage = {
         breadcrumb,
         title,
         shortTitle,
@@ -367,19 +203,35 @@ export const createPages: GatsbyNode["createPages"] = async ({
         noBreadcrumb: passthrough?.noBreadcrumb ?? false,
         badge: passthrough?.badge ?? null,
         originalPath,
-        children,
-        history
+        navChildren: children,
+        history,
       };
 
+      const idSeed = `docs-page--${subtree.originalPath}#${subtree.slug}`;
+      const id = createNodeId(idSeed);
+      actions.createNode({
+        id,
+        parent: subtree.id,
+        children: [],
+        internal: {
+          type: `DocsPage`,
+          content: JSON.stringify(nodeContent),
+          contentDigest: createContentDigest(nodeContent),
+        },
+        ...nodeContent,
+      });
+
+      // Pass in ID to page so it can perform query
+      const docsContext: DocsContext = { id };
       actions.createPage({
         path: subtree.path,
         component: DocsPageTemplate,
-        context,
+        context: docsContext,
       });
 
       let suffix;
       if (!subtree.invisible) {
-        if (subtree.isOrphan) {
+        if (isNil(subtree.id)) {
           suffix = "(orphan)";
         } else {
           suffix = `=> ${subtree.id}`;
@@ -407,8 +259,15 @@ function addTrailingSlash(path: string): string {
   return path.slice(-1) === "/" ? path : `${path}/`;
 }
 
+/**
+ * Slightly-normalized node directly passed in from the GraphQL query result
+ */
 type NormalizedGatsbyNode = { path: string; id: string } & DocsFrontmatter;
 
+/**
+ * Base navigation tree constructed directly from MDX file nodes
+ * (before transformation/ordering).
+ */
 type BaseNavTree = {
   id: Option<string>;
   slug: string;
@@ -418,7 +277,7 @@ type BaseNavTree = {
   invisible: boolean;
   children: BaseNavTree[];
   originalPath: Option<string>;
-  construction: Option<NavtreeConstructionProps>;
+  construction: Option<DocsNavtreeConstructionProps>;
   passthrough: Option<DocsPassthroughProps>;
 };
 
@@ -448,7 +307,7 @@ function initialBaseNavTree(): BaseNavTree {
 function splitFrontmatter(
   node: NormalizedGatsbyNode
 ): {
-  construction: NavtreeConstructionProps;
+  construction: DocsNavtreeConstructionProps;
   passthrough: DocsPassthroughProps;
 } {
   const {
@@ -587,46 +446,6 @@ function addDefaults(subtree: BaseNavTree): NavTree {
 }
 
 /**
- * Attaches authorship data from GitHub
- * @param subtree - navigation tree (mutated in place)
- * @param metadataMap - authorship data retrieved from the GitHub API
- */
-function attachAuthorship(
-  subtree: NavTree,
-  metadataMap: Map<string, PageAuthorship>
-) {
-  if (
-    isDefined(subtree.originalPath) &&
-    metadataMap.has(subtree.originalPath)
-  ) {
-    const metadata = metadataMap.get(subtree.originalPath);
-    const lastModified =
-      metadata.length >= 0 && metadata[0] != null
-        ? new Date(metadata[0].committedDate)
-        : new Date();
-
-    // Build authors list (drop non-unique authors)
-    let authors: History["authors"] = [];
-    let logins: Set<string> = new Set();
-    metadata.forEach(({ author: { user } }) => {
-      if (user != null) {
-        if (!logins.has(user.login)) {
-          logins.add(user.login);
-          authors.push(user);
-        }
-      }
-    });
-
-    subtree.history = {
-      lastModified: lastModified.toString(),
-      authors,
-    };
-  }
-
-  subtree.children.forEach((s) => attachAuthorship(s, metadataMap));
-}
-
-/**
  * Splits a navigation tree into each subtree
  * @param navTree - Base full navigation tree
  */
@@ -676,7 +495,7 @@ function assembleBreadcrumbs(
     ...currentBreadcrumb,
     {
       text: subtree.breadcrumbTitle,
-      path: subtree.path == null ? null : subtree.path,
+      path: subtree.path,
     },
   ];
 
