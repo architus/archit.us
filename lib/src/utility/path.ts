@@ -7,14 +7,11 @@ export function splitPath(path: string): string[] {
 }
 
 export function trimMarkdownPath(path: string): string {
-  return (
-    "/" +
-    path
-      .replace(".mdx", "")
-      .replace(".md", "")
-      .replace("index", "")
-      .replace(/\/$/, "")
-  );
+  return `/${path
+    .replace(".mdx", "")
+    .replace(".md", "")
+    .replace("index", "")
+    .replace(/\/$/, "")}`;
 }
 
 export function capitalize(str: string): string {

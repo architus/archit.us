@@ -13,7 +13,8 @@
     "url": "https://github.com/architus/archit.us/issues"
   },
   "scripts": {
-    "format": "prettier --write \"**/*.{ts,tsx,json}\"",
+    "format": "prettier --write \"src/**/*.{ts,tsx,json}\"",
+    "lint": "eslint -f unix \"src/**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit"
   }
 }

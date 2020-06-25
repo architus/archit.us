@@ -1,4 +1,4 @@
-import { Nil } from "../../types";
+import { Nil } from "@lib/types";
 
 /**
  * Determines whether a value is defined (non-undefined or null). Returns true if the
