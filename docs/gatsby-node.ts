@@ -27,6 +27,7 @@ import {
   attachAuthorship,
   githubUserType,
 } from "./src/build/github-integration";
+import { createSideNavNodes, sideNavRootType } from "./src/build/side-nav";
 
 const path = require("path");
 const DocsPageTemplate = path.resolve("./src/templates/Docs/index.tsx");
@@ -40,6 +41,7 @@ export const sourceNodes: GatsbyNode["sourceNodes"] = ({
   activity.start();
   // To add new keys to the frontmatter, see /src/templates/types.ts
   actions.createTypes(`
+    ${sideNavRootType}
     ${githubUserType}
     ${historyType}
     ${githubUserType}
@@ -179,10 +181,19 @@ export const createPages: GatsbyNode["createPages"] = async ({
   roots.forEach((root) => orderChildren(root, 0));
 
   activity.end();
+  activity = reporter.activityTimer(`creating side nav nodes from nav tree`);
+  activity.start();
+  const ids = createSideNavNodes(roots, {
+    actions,
+    createNodeId,
+    createContentDigest,
+  });
+
+  activity.end();
   activity = reporter.activityTimer(`dynamically generating docs pages`);
   activity.start();
 
-  function createSubtreePages(subtree: NavTree, root: NavTree) {
+  function createSubtreePages(subtree: NavTree, sideNavId: string) {
     if (!subtree.invisible) {
       const {
         breadcrumb,
@@ -190,20 +201,16 @@ export const createPages: GatsbyNode["createPages"] = async ({
         shortTitle,
         originalPath,
         passthrough,
-        children,
         history,
       } = subtree;
       const nodeContent: DocsPage = {
-        breadcrumb,
+        breadcrumb: breadcrumb,
         title,
         shortTitle,
         isOrphan: isNil(originalPath),
-        navRoot: root,
         noTOC: passthrough?.noTOC ?? false,
-        noBreadcrumb: passthrough?.noBreadcrumb ?? false,
         badge: passthrough?.badge ?? null,
         originalPath,
-        navChildren: children,
         history,
       };
 
@@ -218,6 +225,7 @@ export const createPages: GatsbyNode["createPages"] = async ({
           content: JSON.stringify(nodeContent),
           contentDigest: createContentDigest(nodeContent),
         },
+        sideNav: sideNavId,
         ...nodeContent,
       });
 
@@ -240,9 +248,9 @@ export const createPages: GatsbyNode["createPages"] = async ({
       reporter.info(`docs page @ '${subtree.path}' ${suffix}`);
     }
 
-    subtree.children.forEach((child) => createSubtreePages(child, root));
+    subtree.children.forEach((child) => createSubtreePages(child, sideNavId));
   }
-  roots.forEach((root) => createSubtreePages(root, root));
+  roots.forEach((root, i) => createSubtreePages(root, ids[i]));
 
   activity.end();
 };
@@ -319,6 +327,7 @@ function splitFrontmatter(
     overrideNav,
     isRoot,
     childrenOrder,
+    noBreadcrumb,
     ...passthrough
   } = node;
   return {
@@ -329,6 +338,7 @@ function splitFrontmatter(
       overrideBreadcrumb,
       overrideNav,
       isRoot,
+      noBreadcrumb,
       childrenOrder,
     },
   };
@@ -441,7 +451,10 @@ function addDefaults(subtree: BaseNavTree): NavTree {
       .orNull(),
     history: null,
     passthrough: subtree.passthrough.orNull(),
-    breadcrumb: [],
+    breadcrumb: null,
+    noBreadcrumb: subtree.construction
+      .map(({ noBreadcrumb }) => noBreadcrumb)
+      .getOrElse(false),
   };
 }
 
@@ -499,7 +512,7 @@ function assembleBreadcrumbs(
     },
   ];
 
-  if (!subtree.invisible) {
+  if (!subtree.invisible && !subtree.noBreadcrumb) {
     const length = withNext.length;
     subtree.breadcrumb = withNext.map(({ text, path }, i) =>
       i === length - 1 ? { text, path: null } : { text, path }

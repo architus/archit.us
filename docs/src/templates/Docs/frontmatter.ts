@@ -11,10 +11,10 @@ export const frontmatterType = `
     overrideNav: String
     isRoot: Boolean
     childrenOrder: [String]
+    noBreadcrumb: Boolean
 
     # Passthrough props (add additional fields here)
     noTOC: Boolean
-    noBreadcrumb: Boolean
     badge: String
   }
 `;
@@ -29,10 +29,10 @@ export const frontmatterFragment = `
   overrideNav
   isRoot
   childrenOrder
+  noBreadcrumb
 
   # Passthrough props (add additional fields here)
   noTOC
-  noBreadcrumb
   badge
 `;
 
@@ -52,6 +52,7 @@ export type DocsNavtreeConstructionProps = {
   overrideNav?: string;
   isRoot?: boolean;
   childrenOrder?: string[];
+  noBreadcrumb?: boolean;
 };
 
 /**
@@ -59,9 +60,7 @@ export type DocsNavtreeConstructionProps = {
  */
 export type DocsPassthroughProps = {
   noTOC?: boolean;
-  noBreadcrumb?: boolean;
   badge?: string;
-  hello?: boolean;
 };
 
 /**
@@ -97,7 +96,8 @@ export type NavTree = {
   childrenOrder: string[] | null;
   history: History | null;
   passthrough: DocsPassthroughProps | null;
-  breadcrumb: BreadcrumbSegment[];
+  breadcrumb: BreadcrumbSegment[] | null;
+  noBreadcrumb: boolean;
 };
 
 /**
@@ -118,33 +118,28 @@ export const historyType = `
  * Gatsby GraphQL node created for each docs page
  */
 export type DocsPage = {
-  breadcrumb: BreadcrumbSegment[];
+  breadcrumb: BreadcrumbSegment[] | null;
   title: string;
   shortTitle: string;
   isOrphan: boolean;
-  navRoot: NavTree;
   noTOC: boolean;
-  noBreadcrumb: boolean;
   badge: string | null;
   originalPath: string | null;
-  navChildren: NavTree[];
   history: History | null;
 };
 export const docsPageType = `
-  type DocsPage implements Node @childOf(types: ["Mdx"], many: false) @dontInfer {
-    breadcrumb: [BreadcrumbSegment!]!
+  type DocsPage implements Node @childOf(types: ["Mdx"], many: false) {
+    breadcrumb: [BreadcrumbSegment!]
     title: String!
     shortTitle: String!
     isOrphan: Boolean!
-    navRoot: JSON!
     noTOC: Boolean!
-    noBreadcrumb: Boolean!
     badge: String
     originalPath: String
-    navChildren: [JSON!]!
     history: History
+    sideNav: SideNavRoot! @link
   }
-`
+`;
 
 /**
  * Context object passed into page component
