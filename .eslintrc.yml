@@ -29,7 +29,8 @@ rules:
   no-underscore-dangle: off
   import/default: off
   import/no-extraneous-dependencies: error
-  import/no-unresolved: error
+  # these don't seem to work with the monorepo setup
+  import/no-unresolved: off
   react/prop-types: off
   no-plusplus:
     - error
@@ -68,12 +69,6 @@ settings:
     typescript:
       alwaysTryTypes: true
       directory": ./*/tsconfig.json
-    node:
-      paths:
-        - src
-      extensions:
-        - ".ts"
-        - ".tsx"
 env:
   es6: true
   node: true
