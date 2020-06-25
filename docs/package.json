@@ -16,6 +16,7 @@
     "build": "gatsby build",
     "develop": "gatsby develop",
     "format": "prettier --write \"**/*.{ts,tsx,json}\"",
+    "lint": "eslint -f unix \"**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit",
     "serve": "gatsby serve",
     "clean": "gatsby clean"
@@ -26,7 +27,8 @@
     "@types/node": "^14.0.14",
     "@types/react-helmet": "^6.0.0",
     "core-js": "^3.6.5",
-    "gatsby": "^2.23.10",
+    "gatsby": "^2.23.11",
+    "gatsby-plugin-alias-imports": "^1.0.5",
     "gatsby-plugin-linaria": "^2.0.0",
     "gatsby-plugin-mdx": "^1.2.18",
     "gatsby-plugin-offline": "^3.2.12",

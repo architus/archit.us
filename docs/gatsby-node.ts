@@ -18,19 +18,19 @@ import {
   NavTree,
   frontmatterFragment,
   frontmatterType,
-  historyType,
   breadcrumbType,
   docsPageType,
 } from "@docs/templates/Docs/frontmatter";
 import {
   load as loadGithubMetadata,
   attachAuthorship,
-  githubUserType,
 } from "@docs/build/github-integration";
+import { historyType, githubUserType } from "@docs/build/github-types";
 import { createSideNavNodes, sideNavRootType } from "@docs/build/side-nav";
 
-const path = require("path");
-const DocsPageTemplate = path.resolve("./src/templates/Docs/index.tsx");
+const DocsPageTemplate = require("path").resolve(
+  "./src/templates/Docs/index.tsx"
+);
 
 // Define custom graphql schema to enforce rigid type structures
 export const sourceNodes: GatsbyNode["sourceNodes"] = ({
@@ -195,7 +195,7 @@ export const createPages: GatsbyNode["createPages"] = async ({
   activity = reporter.activityTimer(`dynamically generating docs pages`);
   activity.start();
 
-  function createSubtreePages(subtree: NavTree, sideNavId: string) {
+  function createSubtreePages(subtree: NavTree, sideNavId: string): void {
     if (!subtree.invisible) {
       const {
         breadcrumb,
@@ -206,7 +206,7 @@ export const createPages: GatsbyNode["createPages"] = async ({
         history,
       } = subtree;
       const nodeContent: DocsPage = {
-        breadcrumb: breadcrumb,
+        breadcrumb,
         title,
         shortTitle,
         isOrphan: isNil(originalPath),
@@ -263,10 +263,10 @@ export const createPages: GatsbyNode["createPages"] = async ({
 
 /**
  * Adds a trailing slash to the given path
- * @param path - Base path
+ * @param basePath - Base path
  */
-function addTrailingSlash(path: string): string {
-  return path.slice(-1) === "/" ? path : `${path}/`;
+function addTrailingSlash(basePath: string): string {
+  return basePath.slice(-1) === "/" ? basePath : `${basePath}/`;
 }
 
 /**
@@ -322,7 +322,7 @@ function splitFrontmatter(
 } {
   const {
     id,
-    path,
+    path: nodePath,
     title,
     shortTitle,
     overrideBreadcrumb,
@@ -351,11 +351,11 @@ function splitFrontmatter(
  * @param node - List of normalized nodes from the graphql query
  * @param navTree - Mutable tree object that is constructed in-place
  */
-function walkTree(node: NormalizedGatsbyNode, navTree: BaseNavTree) {
-  const path = trimMarkdownPath(node.path);
+function walkTree(node: NormalizedGatsbyNode, navTree: BaseNavTree): void {
+  const nodePath = trimMarkdownPath(node.path);
 
   // If root, replace default root node with this one
-  if (path === "/") {
+  if (nodePath === "/") {
     const frontmatter = splitFrontmatter(node);
     // Don't replace children
     const newNode: Omit<BaseNavTree, "children"> = {
@@ -372,7 +372,7 @@ function walkTree(node: NormalizedGatsbyNode, navTree: BaseNavTree) {
     Object.assign(navTree, newNode);
   } else {
     // Walk tree as normal
-    const fragments = splitPath(path);
+    const fragments = splitPath(nodePath);
     let subtree = navTree;
     for (let i = 0; i < fragments.length; ++i) {
       const previousNode = subtree.children.find(
@@ -407,7 +407,7 @@ function walkTree(node: NormalizedGatsbyNode, navTree: BaseNavTree) {
         const newNode: Omit<BaseNavTree, "children"> = {
           id: Some(node.id),
           slug: fragments[i],
-          path: addTrailingSlash(path),
+          path: addTrailingSlash(nodePath),
           root: node.isRoot ?? false,
           title: node.title,
           invisible: false,
@@ -426,7 +426,7 @@ function walkTree(node: NormalizedGatsbyNode, navTree: BaseNavTree) {
  * @param subtree - Base nav tree
  */
 function addDefaults(subtree: BaseNavTree): NavTree {
-  let { title } = subtree;
+  const { title } = subtree;
   let shortTitle = title;
   let breadcrumbTitle = title;
   let navTitle = title;
@@ -466,14 +466,14 @@ function addDefaults(subtree: BaseNavTree): NavTree {
  */
 function collectRoots(navTree: NavTree): NavTree[] {
   const roots = [navTree];
-  function separateRootNodes(subtree: NavTree) {
+  function separateRootNodes(subtree: NavTree): void {
     for (let i = 0; i < subtree.children.length; ++i) {
       const child = subtree.children[i];
       if (child.root) {
         roots.push(child);
         // Remove and rewind iteration
         subtree.children.splice(i, 1);
-        --i;
+        i -= 1;
       } else {
         separateRootNodes(child);
       }
@@ -490,7 +490,7 @@ function collectRoots(navTree: NavTree): NavTree[] {
     if (roots[i].children.length === 0) {
       // Remove and rewind iteration
       roots.splice(i, 1);
-      --i;
+      i -= 1;
     }
   }
 
@@ -505,8 +505,8 @@ function collectRoots(navTree: NavTree): NavTree[] {
 function assembleBreadcrumbs(
   subtree: NavTree,
   currentBreadcrumb: BreadcrumbSegment[]
-) {
-  let withNext = [
+): void {
+  const withNext = [
     ...currentBreadcrumb,
     {
       text: subtree.breadcrumbTitle,
@@ -515,7 +515,8 @@ function assembleBreadcrumbs(
   ];
 
   if (!subtree.invisible && !subtree.noBreadcrumb) {
-    const length = withNext.length;
+    const { length } = withNext;
+    // eslint-disable-next-line no-param-reassign
     subtree.breadcrumb = withNext.map(({ text, path }, i) =>
       i === length - 1 ? { text, path: null } : { text, path }
     );
@@ -529,7 +530,7 @@ function assembleBreadcrumbs(
  * @param a - LHS node
  * @param b - RHS node
  */
-function compareNodes(a: NavTree, b: NavTree) {
+function compareNodes(a: NavTree, b: NavTree): number {
   return a.navTitle
     .toLocaleLowerCase()
     .localeCompare(b.navTitle.toLocaleLowerCase());
@@ -540,8 +541,8 @@ function compareNodes(a: NavTree, b: NavTree) {
  * @param subtree - the current nav subtree
  * @param depth - the current tree depth
  */
-function orderChildren(subtree: NavTree, depth: number) {
-  function defaultSort(nodes: NavTree[]) {
+function orderChildren(subtree: NavTree, depth: number): void {
+  function defaultSort(nodes: NavTree[]): NavTree[] {
     const childless = nodes.filter((node) => node.children.length === 0);
     const parent = nodes.filter((node) => node.children.length !== 0);
     childless.sort(compareNodes);
@@ -550,19 +551,21 @@ function orderChildren(subtree: NavTree, depth: number) {
   }
 
   if (isDefined(subtree.childrenOrder)) {
-    let order = subtree.childrenOrder;
+    const order = subtree.childrenOrder;
 
     // Custom sort order
-    let custom: NavTree[] = [];
+    const custom: NavTree[] = [];
     order.forEach((slug) => {
-      const node = subtree.children.find((node) => node.slug === slug);
+      const node = subtree.children.find((n) => n.slug === slug);
       if (node != null) custom.push(node);
     });
     const fallback = subtree.children.filter(
       (node) => !order.includes(node.slug)
     );
+    // eslint-disable-next-line no-param-reassign
     subtree.children = [...custom, ...fallback];
   } else {
+    // eslint-disable-next-line no-param-reassign
     subtree.children = defaultSort(subtree.children);
   }
   subtree.children.forEach((node) => orderChildren(node, depth + 1));

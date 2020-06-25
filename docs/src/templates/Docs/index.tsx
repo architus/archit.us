@@ -2,9 +2,9 @@ import React from "react";
 import { PageProps } from "gatsby";
 import { styled } from "linaria/react";
 
-import { DocsContext } from "./frontmatter";
 import Layout from "@docs/components/layout";
 import SEO from "@docs/components/seo";
+import { DocsContext } from "./frontmatter";
 
 // Write your styles in `styled` tag
 const Title = styled.h1`
@@ -29,10 +29,10 @@ const Docs: React.FC<PageProps<{}, DocsContext>> = () => (
   <Layout>
     <Container color="#333">
       <Title>real route</Title>
-      <h4></h4>
+      <h4>yep</h4>
     </Container>
     <SEO title="docs page" />
-    <p>hello this is a docs page good job</p>
+    <p>hello this is a docs page good job (smile)</p>
   </Layout>
 );
 

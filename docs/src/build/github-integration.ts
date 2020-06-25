@@ -2,25 +2,8 @@ import { CreatePagesArgs, Reporter } from "gatsby";
 
 import { isDefined, isNil } from "@lib/utility";
 import { Option, Some, None } from "@lib/option";
-import { NavTree, History } from "@docs/templates/Docs/frontmatter";
-
-/**
- * GitHub user passed via page authorship history
- */
-export type GithubUser = {
-  name?: string;
-  avatarUrl?: string;
-  login: string;
-  url: string;
-};
-export const githubUserType = `
-  type GithubUser @dontInfer {
-    name: String
-    avatarUrl: String
-    login: String!
-    url: String!
-  }
-`;
+import { NavTree } from "@docs/templates/Docs/frontmatter";
+import { GithubUser, History } from "@docs/build/github-types";
 
 /**
  * Page authorship information extracted from GitHub
@@ -185,7 +168,7 @@ export async function load(
   const pathMap: Map<string, PageAuthorship> = new Map();
   Object.entries(githubData.github.repository.object).forEach(
     ([key, value]) => {
-      const idx = parseInt(key.slice(1));
+      const idx = parseInt(key.slice(1), 10);
       const path = paths[idx];
       pathMap.set(path, value.nodes);
     }
@@ -203,7 +186,7 @@ export async function load(
 export function attachAuthorship(
   subtree: NavTree,
   metadataMap: Map<string, PageAuthorship>
-) {
+): void {
   if (isDefined(subtree.originalPath)) {
     const metadata = metadataMap.get(subtree.originalPath);
     if (isDefined(metadata)) {
@@ -213,8 +196,8 @@ export function attachAuthorship(
           : new Date();
 
       // Build authors list (drop non-unique authors)
-      let authors: History["authors"] = [];
-      let logins: Set<string> = new Set();
+      const authors: History["authors"] = [];
+      const logins: Set<string> = new Set();
       metadata.forEach(({ author: { user } }) => {
         if (user != null) {
           if (!logins.has(user.login)) {
@@ -224,6 +207,7 @@ export function attachAuthorship(
         }
       });
 
+      // eslint-disable-next-line no-param-reassign
       subtree.history = {
         lastModified: lastModified.toString(),
         authors,

@@ -1,4 +1,4 @@
-import { GithubUser } from "../../build/github-integration";
+import { History } from "@docs/build/github-types";
 
 /**
  * Gatsby GraphQL type used to define frontmatter fields/types
@@ -99,20 +99,6 @@ export type NavTree = {
   breadcrumb: BreadcrumbSegment[] | null;
   noBreadcrumb: boolean;
 };
-
-/**
- * Optional GitHub History retrieved from the GitHub API integration
- */
-export type History = {
-  lastModified: string;
-  authors: Array<GithubUser>;
-};
-export const historyType = `
-  type History @dontInfer {
-    lastModified: String!
-    authors: [GithubUser!]!
-  }
-`;
 
 /**
  * Gatsby GraphQL node created for each docs page

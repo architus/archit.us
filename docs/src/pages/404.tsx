@@ -23,7 +23,7 @@ const Container = styled.div`
   }
 `;
 
-const NotFoundPage = () => (
+const NotFoundPage: React.FC = () => (
   <Layout>
     <Container color="#333">
       <Title>Hello world</Title>
