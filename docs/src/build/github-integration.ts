@@ -1,8 +1,8 @@
 import { CreatePagesArgs, Reporter } from "gatsby";
 
-import { isDefined, isNil } from "../../../lib/utility";
-import { Option, Some, None } from "../../../lib/option";
-import { NavTree, History } from "../templates/Docs/frontmatter";
+import { isDefined, isNil } from "@lib/utility";
+import { Option, Some, None } from "@lib/option";
+import { NavTree, History } from "@docs/templates/Docs/frontmatter";
 
 /**
  * GitHub user passed via page authorship history
@@ -100,7 +100,7 @@ export async function load(
   }
 
   // Make sure github object was given
-  const { github } = siteData.site.siteMetadata;
+  const github = siteData?.site.siteMetadata.github;
   if (isNil(github)) {
     [
       "'github' is a required field in 'siteMetadata' to enable GitHub integration.",
@@ -172,7 +172,7 @@ export async function load(
   );
 
   // Make sure no errors ocurred
-  if (isDefined(githubErrors)) {
+  if (isDefined(githubErrors) || isNil(githubData)) {
     reporter.warn(
       "An error ocurred while querying the GitHub API for page authorship sourcing"
     );
@@ -204,32 +204,31 @@ export function attachAuthorship(
   subtree: NavTree,
   metadataMap: Map<string, PageAuthorship>
 ) {
-  if (
-    isDefined(subtree.originalPath) &&
-    metadataMap.has(subtree.originalPath)
-  ) {
+  if (isDefined(subtree.originalPath)) {
     const metadata = metadataMap.get(subtree.originalPath);
-    const lastModified =
-      metadata.length >= 0 && metadata[0] != null
-        ? new Date(metadata[0].committedDate)
-        : new Date();
+    if (isDefined(metadata)) {
+      const lastModified =
+        metadata.length >= 0 && metadata[0] != null
+          ? new Date(metadata[0].committedDate)
+          : new Date();
 
-    // Build authors list (drop non-unique authors)
-    let authors: History["authors"] = [];
-    let logins: Set<string> = new Set();
-    metadata.forEach(({ author: { user } }) => {
-      if (user != null) {
-        if (!logins.has(user.login)) {
-          logins.add(user.login);
-          authors.push(user);
+      // Build authors list (drop non-unique authors)
+      let authors: History["authors"] = [];
+      let logins: Set<string> = new Set();
+      metadata.forEach(({ author: { user } }) => {
+        if (user != null) {
+          if (!logins.has(user.login)) {
+            logins.add(user.login);
+            authors.push(user);
+          }
         }
-      }
-    });
+      });
 
-    subtree.history = {
-      lastModified: lastModified.toString(),
-      authors,
-    };
+      subtree.history = {
+        lastModified: lastModified.toString(),
+        authors,
+      };
+    }
   }
 
   subtree.children.forEach((s) => attachAuthorship(s, metadataMap));

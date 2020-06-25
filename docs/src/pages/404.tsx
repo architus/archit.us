@@ -1,8 +1,8 @@
 import React from "react";
 import { styled } from "linaria/react";
 
-import Layout from "../components/layout";
-import SEO from "../components/seo";
+import Layout from "@docs/components/layout";
+import SEO from "@docs/components/seo";
 
 // Write your styles in `styled` tag
 const Title = styled.h1`

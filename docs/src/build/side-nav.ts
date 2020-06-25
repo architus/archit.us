@@ -1,5 +1,6 @@
-import { NavTree } from "../templates/Docs/frontmatter";
 import { CreatePageArgs } from "gatsby";
+
+import { NavTree } from "@docs/templates/Docs/frontmatter";
 
 export type SideNavNode = {
   path: string;
@@ -28,7 +29,7 @@ function transformTree(source: NavTree): SideNavNode {
   return {
     path: source.path,
     label: source.navTitle,
-    badge: source.passthrough.badge ?? null,
+    badge: source.passthrough?.badge ?? null,
     children: source.children.map(transformTree),
   };
 }

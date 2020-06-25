@@ -1,5 +1,5 @@
 import { isDefined, isNil } from "./utility/primitive";
-import { Nil, Predicate } from "./types";
+import { Nil, Predicate } from "../types";
 
 export type Unwrap<T> = T extends Option<infer K> ? K : T;
 

@@ -1,4 +1,4 @@
-import { GatsbyNode, SourceNodesArgs, CreatePagesArgs, Reporter } from "gatsby";
+import { GatsbyNode, SourceNodesArgs, CreatePagesArgs } from "gatsby";
 
 import {
   isDefined,
@@ -6,8 +6,8 @@ import {
   trimMarkdownPath,
   splitPath,
   capitalize,
-} from "../lib/utility";
-import { Option, Some, None } from "../lib/option";
+} from "@lib/utility";
+import { Option, Some, None } from "@lib/option";
 import {
   DocsPage,
   DocsContext,
@@ -21,13 +21,13 @@ import {
   historyType,
   breadcrumbType,
   docsPageType,
-} from "./src/templates/Docs/frontmatter";
+} from "@docs/templates/Docs/frontmatter";
 import {
   load as loadGithubMetadata,
   attachAuthorship,
   githubUserType,
-} from "./src/build/github-integration";
-import { createSideNavNodes, sideNavRootType } from "./src/build/side-nav";
+} from "@docs/build/github-integration";
+import { createSideNavNodes, sideNavRootType } from "@docs/build/side-nav";
 
 const path = require("path");
 const DocsPageTemplate = path.resolve("./src/templates/Docs/index.tsx");
@@ -36,7 +36,7 @@ const DocsPageTemplate = path.resolve("./src/templates/Docs/index.tsx");
 export const sourceNodes: GatsbyNode["sourceNodes"] = ({
   actions,
   reporter,
-}: SourceNodesArgs) => {
+}: SourceNodesArgs): Promise<null> => {
   const activity = reporter.activityTimer("implementing custom graphql schema");
   activity.start();
   // To add new keys to the frontmatter, see /src/templates/types.ts
@@ -61,7 +61,7 @@ export const sourceNodes: GatsbyNode["sourceNodes"] = ({
 
   // Some value needed for type
   // See https://github.com/gatsbyjs/gatsby/issues/23296
-  return null;
+  return Promise.resolve<null>(null);
 };
 
 /**
@@ -130,7 +130,7 @@ export const createPages: GatsbyNode["createPages"] = async ({
   });
 
   activity.end();
-  if (errors) {
+  if (errors || isNil(data)) {
     throw errors;
   }
 
@@ -142,16 +142,18 @@ export const createPages: GatsbyNode["createPages"] = async ({
 
   // Walk the navigation tree and add each docs page node
   const baseNavTree: BaseNavTree = initialBaseNavTree();
-  data.allFile.edges.forEach(({ node }) =>
-    walkTree(
-      {
-        path: node.relativePath,
-        id: node.childMdx.id,
-        ...node.childMdx.frontmatter,
-      },
-      baseNavTree
-    )
-  );
+  data.allFile.edges.forEach(({ node }) => {
+    if (isDefined(node.childMdx)) {
+      walkTree(
+        {
+          path: node.relativePath,
+          id: node.childMdx.id,
+          ...node.childMdx.frontmatter,
+        },
+        baseNavTree
+      );
+    }
+  });
 
   activity.end();
   activity = reporter.activityTimer(`adding defaults to nav tree nodes`);
@@ -218,7 +220,7 @@ export const createPages: GatsbyNode["createPages"] = async ({
       const id = createNodeId(idSeed);
       actions.createNode({
         id,
-        parent: subtree.id,
+        parent: subtree.id ?? undefined,
         children: [],
         internal: {
           type: `DocsPage`,
@@ -406,7 +408,7 @@ function walkTree(node: NormalizedGatsbyNode, navTree: BaseNavTree) {
           id: Some(node.id),
           slug: fragments[i],
           path: addTrailingSlash(path),
-          root: false || node.isRoot,
+          root: node.isRoot ?? false,
           title: node.title,
           invisible: false,
           originalPath: Some(node.path),
@@ -447,13 +449,13 @@ function addDefaults(subtree: BaseNavTree): NavTree {
     children: subtree.children.map(addDefaults),
     originalPath: subtree.originalPath.orNull(),
     childrenOrder: subtree.construction
-      .map(({ childrenOrder }) => childrenOrder)
+      .flatMap(({ childrenOrder }) => Option.from(childrenOrder))
       .orNull(),
     history: null,
     passthrough: subtree.passthrough.orNull(),
     breadcrumb: null,
     noBreadcrumb: subtree.construction
-      .map(({ noBreadcrumb }) => noBreadcrumb)
+      .flatMap(({ noBreadcrumb }) => Option.from(noBreadcrumb))
       .getOrElse(false),
   };
 }
@@ -527,7 +529,7 @@ function assembleBreadcrumbs(
  * @param a - LHS node
  * @param b - RHS node
  */
-function compareNodes(a, b) {
+function compareNodes(a: NavTree, b: NavTree) {
   return a.navTitle
     .toLocaleLowerCase()
     .localeCompare(b.navTitle.toLocaleLowerCase());

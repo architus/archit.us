@@ -1,0 +1,19 @@
+{
+  "name": "architus-lib",
+  "private": true,
+  "description": "Common library between frontend applications",
+  "version": "0.1.0",
+  "author": "architus",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/architus/archit.us"
+  },
+  "bugs": {
+    "url": "https://github.com/architus/archit.us/issues"
+  },
+  "scripts": {
+    "format": "prettier --write \"**/*.{ts,tsx,json}\"",
+    "typecheck": "tsc --noEmit"
+  }
+}

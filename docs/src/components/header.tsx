@@ -1,7 +1,7 @@
 import { Link } from "gatsby";
 import React from "react";
 
-const Header = ({ siteTitle }) => (
+const Header = ({ siteTitle }: { siteTitle: string }) => (
   <header
     style={{
       background: `rebeccapurple`,

@@ -3,8 +3,8 @@ import { PageProps } from "gatsby";
 import { styled } from "linaria/react";
 
 import { DocsContext } from "./frontmatter";
-import Layout from "../../components/layout";
-import SEO from "../../components/seo";
+import Layout from "@docs/components/layout";
+import SEO from "@docs/components/seo";
 
 // Write your styles in `styled` tag
 const Title = styled.h1`
@@ -25,7 +25,7 @@ const Container = styled.div`
   }
 `;
 
-const Docs: React.FC<PageProps<{}, DocsContext>> = (props) => (
+const Docs: React.FC<PageProps<{}, DocsContext>> = () => (
   <Layout>
     <Container color="#333">
       <Title>real route</Title>

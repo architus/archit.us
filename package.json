@@ -1,0 +1,23 @@
+{
+  "private": true,
+  "name": "architus",
+  "author": "architus",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/architus/archit.us"
+  },
+  "bugs": {
+    "url": "https://github.com/architus/archit.us/issues"
+  },
+  "workspaces": [
+    "docs",
+    "lib"
+  ],
+  "dependencies": {
+    "typescript": "^3.9.5"
+  },
+  "devDependencies": {
+    "prettier": "2.0.5"
+  }
+}
