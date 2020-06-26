@@ -1,7 +1,7 @@
 {
-  "name": "architus-lib",
+  "name": "architus-design",
   "private": true,
-  "description": "Common library between frontend applications",
+  "description": "Architus Design system",
   "version": "0.1.0",
   "author": "architus",
   "license": "MIT",
@@ -16,5 +16,8 @@
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json}\"",
     "lint": "eslint -f unix \"src/**/*.{js,jsx,ts,tsx,json}\"",
     "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "^16.13.1"
   }
 }

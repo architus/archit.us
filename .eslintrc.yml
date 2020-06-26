@@ -41,6 +41,8 @@ rules:
       ts: never
       json: always
       scss: always
+      css: always
+      svg: always
 
   # Prettier config
   prettier/prettier:

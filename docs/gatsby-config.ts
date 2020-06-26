@@ -10,19 +10,28 @@ export const siteMetadata = {
 };
 
 export const plugins = [
-  "gatsby-plugin-typescript",
-  "gatsby-plugin-linaria",
-  `gatsby-plugin-react-helmet`,
   {
     resolve: `gatsby-plugin-alias-imports`,
     options: {
       alias: {
         "@lib": path.resolve(__dirname, "../lib/src"),
         "@docs": path.resolve(__dirname, "../docs/src"),
+        "@design": path.resolve(__dirname, "../design/src"),
       },
       extensions: [],
     },
   },
+  {
+    resolve: "gatsby-plugin-react-svg",
+    options: {
+      rule: {
+        include: /\.inline\.svg$/,
+      },
+    },
+  },
+  "gatsby-plugin-typescript",
+  "gatsby-plugin-linaria",
+  `gatsby-plugin-react-helmet`,
   {
     resolve: `gatsby-source-filesystem`,
     options: {

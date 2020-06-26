@@ -2,30 +2,30 @@ import { CreatePageArgs } from "gatsby";
 
 import { NavTree } from "@docs/templates/Docs/frontmatter";
 
-export type SideNavNode = {
+export type NavigationTreeNode = {
   path: string;
   label: string;
   badge: string | null;
-  children: SideNavNode[];
+  children: NavigationTreeNode[];
 };
 
 /**
  * Gatsby GraphQL node created for each side nav root
  */
-export type SideNavRoot = {
-  root: SideNavNode;
+export type NavigationTree = {
+  root: NavigationTreeNode;
 };
-export const sideNavRootType = `
-  type SideNavRoot implements Node @dontInfer {
+export const navigationTreeType = `
+  type NavigationTree implements Node @dontInfer {
     root: JSON!
   }
 `;
 
 /**
- * Transforms the original source navtree into a side nav tree
+ * Transforms the original source navtree into a navigation tree Gatsby node
  * @param source - Source nav tree node
  */
-function transformTree(source: NavTree): SideNavNode {
+function transformTree(source: NavTree): NavigationTreeNode {
   return {
     path: source.path,
     label: source.navTitle,
@@ -37,9 +37,9 @@ function transformTree(source: NavTree): SideNavNode {
 /**
  * Creates GraphQL side nav nodes
  * @param roots - Original source nav tree root nodes
- * @returns each Id of the SideNavRoot nodes, in order
+ * @returns each Id of the navigationTree nodes, in order
  */
-export function createSideNavNodes(
+export function createNavigationTrees(
   roots: NavTree[],
   {
     actions,
@@ -48,13 +48,13 @@ export function createSideNavNodes(
   }: Pick<CreatePageArgs, "actions" | "createNodeId" | "createContentDigest">
 ): string[] {
   return roots.map((sourceRoot, index) => {
-    const root: SideNavRoot = { root: transformTree(sourceRoot) };
-    const id = createNodeId(`side-nav-root--${index}`);
+    const root: NavigationTree = { root: transformTree(sourceRoot) };
+    const id = createNodeId(`navigation-tree--${index}`);
     actions.createNode({
       id,
       children: [],
       internal: {
-        type: `SideNavRoot`,
+        type: `NavigationTree`,
         content: JSON.stringify(root),
         contentDigest: createContentDigest(root),
       },

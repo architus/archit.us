@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
-    "target": "es5",
+    "target": "es6",
     "module": "commonjs",
     "jsx": "preserve",
 
@@ -24,8 +24,9 @@
     /* Module Resolution Options */
     "baseUrl": "src",
     "paths": {
-        "@lib/*": [ "../../lib/src/*" ],
-        "@docs/*": [ "../../docs/src/*" ],
+      "@lib/*": [ "../../lib/src/*" ],
+      "@docs/*": [ "../../docs/src/*" ],
+      "@design/*": ["../../design/src/*"]
     },
     "esModuleInterop": true,
 

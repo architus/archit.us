@@ -1,4 +1,9 @@
-import { GatsbyNode, SourceNodesArgs, CreatePagesArgs } from "gatsby";
+import {
+  GatsbyNode,
+  SourceNodesArgs,
+  CreatePagesArgs,
+  CreateWebpackConfigArgs,
+} from "gatsby";
 
 import {
   isDefined,
@@ -26,11 +31,27 @@ import {
   attachAuthorship,
 } from "@docs/build/github-integration";
 import { historyType, githubUserType } from "@docs/build/github-types";
-import { createSideNavNodes, sideNavRootType } from "@docs/build/side-nav";
+import { createNavigationTrees, navigationTreeType } from "build/nav";
 
 const DocsPageTemplate = require("path").resolve(
   "./src/templates/Docs/index.tsx"
 );
+
+// Apply fix to make Gatsby `Link`'s able to be wrapped with `styled`
+// @see https://github.com/silvenon/gatsby-plugin-linaria/issues/19
+//      https://github.com/callstack/linaria/issues/601
+export const onCreateWebpackConfig: GatsbyNode["onCreateWebpackConfig"] = ({
+  actions,
+  getConfig,
+}: CreateWebpackConfigArgs) => {
+  const config = getConfig();
+  const routerAlias = config.resolve.alias["@reach/router"];
+  if (routerAlias) {
+    delete config.resolve.alias["@reach/router"];
+    config.resolve.alias["@reach/router$"] = routerAlias;
+  }
+  actions.replaceWebpackConfig(config);
+};
 
 // Define custom graphql schema to enforce rigid type structures
 export const sourceNodes: GatsbyNode["sourceNodes"] = ({
@@ -41,7 +62,7 @@ export const sourceNodes: GatsbyNode["sourceNodes"] = ({
   activity.start();
   // To add new keys to the frontmatter, see /src/templates/types.ts
   actions.createTypes(`
-    ${sideNavRootType}
+    ${navigationTreeType}
     ${githubUserType}
     ${historyType}
     ${githubUserType}
@@ -183,9 +204,9 @@ export const createPages: GatsbyNode["createPages"] = async ({
   roots.forEach((root) => orderChildren(root, 0));
 
   activity.end();
-  activity = reporter.activityTimer(`creating side nav nodes from nav tree`);
+  activity = reporter.activityTimer(`creating navigation tree nodes`);
   activity.start();
-  const ids = createSideNavNodes(roots, {
+  const ids = createNavigationTrees(roots, {
     actions,
     createNodeId,
     createContentDigest,

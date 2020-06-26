@@ -123,7 +123,7 @@ export const docsPageType = `
     badge: String
     originalPath: String
     history: History
-    sideNav: SideNavRoot! @link
+    sideNav: NavigationTree! @link
   }
 `;
 
