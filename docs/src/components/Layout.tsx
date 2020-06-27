@@ -2,14 +2,21 @@ import React from "react";
 import { useStaticQuery, graphql } from "gatsby";
 
 import Header from "@docs/components/Header";
-import "@design/theme/globals";
 
 const Layout: React.FC = ({ children }) => {
-  const data = useStaticQuery(graphql`
+  type HeaderQueryResult = {
+    site: {
+      siteMetadata: {
+        headerTitle: string;
+      };
+    };
+  };
+
+  const data = useStaticQuery<HeaderQueryResult>(graphql`
     query SiteTitleQuery {
       site {
         siteMetadata {
-          title
+          headerTitle
         }
       }
     }
@@ -17,7 +24,7 @@ const Layout: React.FC = ({ children }) => {
 
   return (
     <>
-      <Header siteTitle={data.site.siteMetadata.title} />
+      <Header siteTitle={data.site.siteMetadata.headerTitle} />
       <div
         style={{
           margin: `0 auto`,

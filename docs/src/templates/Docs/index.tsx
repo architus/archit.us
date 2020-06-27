@@ -4,6 +4,7 @@ import { styled } from "linaria/react";
 
 import Layout from "@docs/components/Layout";
 import SEO from "@docs/components/seo";
+import { gap } from "@design/theme";
 import { DocsContext } from "./frontmatter";
 
 // Write your styles in `styled` tag
@@ -14,6 +15,7 @@ const Title = styled.h1`
 const Container = styled.div`
   font-size: 1.5em;
   border: 1px solid red;
+  margin-top: ${gap.kilo};
 
   &:hover {
     border-color: blue;

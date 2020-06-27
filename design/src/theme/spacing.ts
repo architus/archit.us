@@ -1,17 +1,17 @@
 // Fibonacci-based spacing values
 const spacing = {
-  atto: 3,
-  femto: 5,
-  pico: 8,
-  nano: 13,
-  micro: 21,
-  milli: 34,
-  centi: 55,
-  kilo: 89,
-  mega: 144,
-  giga: 233,
-  tera: 377,
-  peta: 610,
+  atto: "3px",
+  femto: "5px",
+  pico: "8px",
+  nano: "13px",
+  micro: "21px",
+  milli: "34px",
+  centi: "55px",
+  kilo: "89px",
+  mega: "144px",
+  giga: "233px",
+  tera: "377px",
+  peta: "610px",
   flow: "1rem",
 } as const;
 
@@ -22,7 +22,20 @@ export type SpacingKey = keyof typeof spacing;
  * for use in margin/padding
  * @param key - spacing key string
  */
-export function gap(key: SpacingKey): string {
-  const value = spacing[key];
-  return typeof value === "number" ? `${value}px` : value;
+function gapBase(key: SpacingKey): string {
+  return spacing[key];
 }
+
+/**
+ * Attaches getters for each spacing value so that they can be used more ergonomically
+ * @param obj - base object to attach
+ */
+function attachGetters<T>(obj: T): T & typeof spacing {
+  const build = (obj as unknown) as Record<keyof typeof spacing, unknown>;
+  Object.entries(spacing).forEach(([key, value]) => {
+    build[key as keyof typeof spacing] = value;
+  });
+  return build as T & typeof spacing;
+}
+
+export const gap = attachGetters(gapBase);

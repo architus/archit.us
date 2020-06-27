@@ -3,10 +3,11 @@ import { styled } from "linaria/react";
 
 import Badge from "@docs/components/Badge";
 import { isDefined } from "@lib/utility";
+import { gap } from "@design/theme";
 
 const Styled = {
   Badge: styled(Badge)`
-    margin-left: 8px;
+    margin-left: ${gap.pico};
   `,
 };
 
@@ -22,7 +23,7 @@ const NavLabel: React.FC<NavLabelProps> = ({ text, badge }) => {
   return (
     <>
       {text}
-      {isDefined(badge) && <Badge>{badge}</Badge>}
+      {isDefined(badge) && <Styled.Badge>{badge}</Styled.Badge>}
     </>
   );
 };

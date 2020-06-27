@@ -51,7 +51,6 @@ rules:
     - error
     - semi: true
       endOfLine: auto
-      quoteProps: consistent
 
 overrides:
   # Disable warning `require`/console-log on Node-js files

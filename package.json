@@ -12,6 +12,7 @@
   },
   "workspaces": [
     "docs",
+    "design",
     "lib"
   ],
   "dependencies": {

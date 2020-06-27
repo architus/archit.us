@@ -1,7 +1,7 @@
 import { css } from "linaria";
 
-import { injectGlobals as injectColorGlobals, color } from "./color";
-import { injectGlobals as injectTypographyGlobals } from "./typography";
+import { injectColorGlobals, color } from "./color";
+import { injectTypographyGlobals } from "./typography";
 
 // From https://hankchizljaw.com/wrote/a-modern-css-reset/
 export const globals = css`

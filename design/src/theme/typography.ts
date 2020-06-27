@@ -44,7 +44,7 @@ export function font(key: FontKey): string {
 /**
  * Gets the css for use in the global CSS root
  */
-export function injectGlobals(): string {
+export function injectTypographyGlobals(): string {
   const rennerBase = {
     name: "Renner*",
     display: "swap",

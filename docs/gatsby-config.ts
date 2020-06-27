@@ -5,8 +5,13 @@ const path = require("path");
 
 export const siteMetadata = {
   title: `Architus Docs`,
+  headerTitle: `Documentation`,
   description: `Architus docs re-write.`,
   author: `architus`,
+  socials: {
+    github: `https://github.com/architus`,
+    discord: `https://discord.gg/svrRrSe`,
+  },
 };
 
 export const plugins = [
@@ -31,6 +36,7 @@ export const plugins = [
   },
   "gatsby-plugin-typescript",
   "gatsby-plugin-linaria",
+  "gatsby-plugin-dark-mode",
   `gatsby-plugin-react-helmet`,
   {
     resolve: `gatsby-source-filesystem`,
