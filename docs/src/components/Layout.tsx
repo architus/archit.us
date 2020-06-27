@@ -2,7 +2,7 @@ import React from "react";
 import { useStaticQuery, graphql } from "gatsby";
 
 import Header from "@docs/components/Header";
-import "@docs/components/layout.css";
+import "@design/theme/globals";
 
 const Layout: React.FC = ({ children }) => {
   const data = useStaticQuery(graphql`

@@ -4,6 +4,7 @@ import { css } from "linaria";
 import { styled } from "linaria/react";
 
 import Logo from "@design/components/Logo";
+import { color, gap, transition } from "@design/theme";
 import HeaderLinks from "@docs/components/HeaderLinks";
 import HeaderActionBar from "@docs/components/HeaderActionBar";
 

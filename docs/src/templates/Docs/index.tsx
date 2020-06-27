@@ -2,7 +2,7 @@ import React from "react";
 import { PageProps } from "gatsby";
 import { styled } from "linaria/react";
 
-import Layout from "@docs/components/layout";
+import Layout from "@docs/components/Layout";
 import SEO from "@docs/components/seo";
 import { DocsContext } from "./frontmatter";
 
@@ -13,7 +13,6 @@ const Title = styled.h1`
 
 const Container = styled.div`
   font-size: 1.5em;
-  color: #333333;
   border: 1px solid red;
 
   &:hover {

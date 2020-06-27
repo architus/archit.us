@@ -43,6 +43,8 @@ rules:
       scss: always
       css: always
       svg: always
+      woff: always
+      woff2: always
 
   # Prettier config
   prettier/prettier:
