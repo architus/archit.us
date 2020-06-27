@@ -4,15 +4,17 @@ import { css } from "linaria";
 import { IoMdSunny } from "react-icons/io";
 import { BsMoon } from "react-icons/bs";
 import { FaGithub, FaDiscord } from "react-icons/fa";
+import { useStaticQuery, graphql } from "gatsby";
 
 import { ColorMode, gap, transition, color } from "@design/theme";
 import { ColorModeContext } from "@docs/components/ColorModeProvider";
-import { useStaticQuery, graphql } from "gatsby";
 import { isDefined } from "@lib/utility";
+
+export const actionBarSpacing = gap.pico;
 
 // Share styles between anchor and button elements
 const button = css`
-  padding: ${gap.pico} ${gap.pico};
+  padding: ${actionBarSpacing} ${actionBarSpacing};
   color: ${color("light")};
   background-color: transparent;
   border: none;

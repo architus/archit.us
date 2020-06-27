@@ -16,24 +16,28 @@ import {
   dynamicColor,
   ColorMode,
   mode,
+  down,
 } from "@design/theme";
 import { splitPath } from "@lib/utility";
 
 const link = css`
-  color: ${transparentize(0.3, staticColor("light"))};
+  color: ${transparentize(0.2, staticColor("light"))};
   text-decoration: none;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  padding: 0 ${gap.micro};
   position: relative;
   font-family: ${font("headings")};
   font-size: 1.1rem;
   z-index: 1;
+  white-space: nowrap;
 
   ${transition(["background-color"])}
   background-color: transparent;
+
+  padding: 0 ${gap.micro};
+  ${down("lg", `padding: 0 ${gap.nano}`)}
 
   /* Active/hover gradient overlay */
   &::before {

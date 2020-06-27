@@ -1,5 +1,5 @@
-import { Link } from "gatsby";
 import React from "react";
+import { Link, useStaticQuery, graphql } from "gatsby";
 import { css } from "linaria";
 import { styled } from "linaria/react";
 import { mix, transparentize } from "polished";
@@ -12,21 +12,26 @@ import {
   ColorMode,
   dynamicColor,
   ZIndex,
-  Elevation,
   shadow,
+  down,
+  up,
+  scrollBar,
 } from "@design/theme";
 import { headerHeight } from "@docs/layout";
 import HeaderLinks from "@docs/components/HeaderLinks";
-import HeaderActionBar from "@docs/components/HeaderActionBar";
+import HeaderActionBar, {
+  actionBarSpacing,
+} from "@docs/components/HeaderActionBar";
 import { useColorMode } from "@docs/hooks";
 
 const HEADER_TRANSPARENCY = 0.06;
 
+const logoLeftSpace = gap.nano;
 const logoLink = css`
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: ${gap.atto} ${gap.micro} ${gap.femto};
+  padding: ${gap.atto} ${gap.nano} ${gap.femto} ${logoLeftSpace};
   background-color: transparent;
   text-decoration: none;
   color: ${color("light")};
@@ -37,6 +42,9 @@ const logoLink = css`
   &:hover {
     opacity: 0.8;
   }
+
+  /* Increase gap between logo and links on very large screens */
+  ${up("lg", `margin-right: ${gap.nano};`)}
 `;
 
 const logo = css`
@@ -44,6 +52,23 @@ const logo = css`
 `;
 
 const Styled = {
+  HeaderLinksWrapper: styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: flex-start;
+
+    flex-shrink: 1;
+    min-width: 0;
+    margin-right: ${gap.pico};
+
+    /* Scroll horizontally when the screen isn't wide enough */
+    overflow-x: overlay;
+    ${scrollBar(ColorMode.Light)}
+
+    /* Hide the header links on small screen sizes */
+    ${down("md", `display: none;`)}
+  `,
   Header: styled.nav<{ mode: ColorMode; ssr: boolean }>`
     color: ${color("light")};
     height: ${headerHeight};
@@ -52,9 +77,13 @@ const Styled = {
     align-items: stretch;
     justify-content: flex-start;
     z-index: ${ZIndex.Header};
-    box-shadow: ${shadow(Elevation.Z1)};
-    /* There should be 'gap.milli' worth of padding on each side */
-    padding: 0 calc(${gap.micro} + ${gap.femto}) 0 ${gap.nano};
+    box-shadow: ${shadow("z1")};
+    padding-left: calc(var(--site-padding) - ${logoLeftSpace});
+    /* This has to be a function
+    to have linaria not eagerly evaluate 'actionBarSpacing' at build time */
+    padding-right: calc(
+      var(--site-padding) - ${(): string => actionBarSpacing}
+    );
 
     /* Set the background-color to be primary on SSR
     and try to reverse-blend it with the background while adding opacity,
@@ -78,6 +107,9 @@ const Styled = {
     margin-left: ${gap.pico};
     top: 2px;
     position: relative;
+
+    /* The font size needs to be slightly smaller on very small devices */
+    ${down("vs", `font-size: 1.1rem`)}
   `,
   RightComponents: styled.div`
     display: flex;
@@ -90,18 +122,39 @@ const Styled = {
 /**
  * Site header, including navigation links and an action bar on the right side
  */
-const Header: React.FC<{ siteTitle: string }> = ({
-  siteTitle = "Documentation",
-}) => {
+const Header: React.FC = () => {
+  type HeaderQueryResult = {
+    site: {
+      siteMetadata: {
+        headerTitle: string;
+      };
+    };
+  };
+
+  const data = useStaticQuery<HeaderQueryResult>(graphql`
+    query SiteTitleQuery {
+      site {
+        siteMetadata {
+          headerTitle
+        }
+      }
+    }
+  `);
+
   const mode = useColorMode();
   const ssr = typeof window === "undefined";
+
   return (
     <Styled.Header mode={mode} ssr={ssr}>
       <Link to="/" className={logoLink}>
         <Logo.Symbol height={36} className={logo} />
-        <Styled.SiteTitle>{siteTitle}</Styled.SiteTitle>
+        <Styled.SiteTitle>
+          {data.site.siteMetadata.headerTitle}
+        </Styled.SiteTitle>
       </Link>
-      <HeaderLinks />
+      <Styled.HeaderLinksWrapper>
+        <HeaderLinks />
+      </Styled.HeaderLinksWrapper>
       <Styled.RightComponents>
         <HeaderActionBar />
       </Styled.RightComponents>
