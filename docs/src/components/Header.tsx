@@ -44,7 +44,9 @@ const logoLink = css`
   }
 
   /* Increase gap between logo and links on very large screens */
-  ${up("lg", `margin-right: ${gap.nano};`)}
+  ${up("lg")} {
+    margin-right: ${gap.nano};
+  }
 `;
 
 const logo = css`
@@ -67,7 +69,9 @@ const Styled = {
     ${scrollBar(ColorMode.Light)}
 
     /* Hide the header links on small screen sizes */
-    ${down("md", `display: none;`)}
+    ${down("md")} {
+      display: none;
+    }
   `,
   Header: styled.nav<{ mode: ColorMode; ssr: boolean }>`
     color: ${color("light")};
@@ -109,7 +113,9 @@ const Styled = {
     position: relative;
 
     /* The font size needs to be slightly smaller on very small devices */
-    ${down("vs", `font-size: 1.1rem`)}
+    ${down("vs")} {
+      font-size: 1.1rem;
+    }
   `,
   RightComponents: styled.div`
     display: flex;

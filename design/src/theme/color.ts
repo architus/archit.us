@@ -46,6 +46,7 @@ const colors = {
     "secondary+30": "#ebdabe",
     "secondary+40": "#f5edde",
     // Semantic component colors
+    contrastBorder: "rgba(194, 207, 214, 0.9)",
     shadowLight: "rgba(0, 0, 0, 0.06)",
     shadowMedium: "rgba(0, 0, 0, 0.075)",
     shadowBold: "rgba(0, 0, 0, 0.09)",
@@ -91,6 +92,7 @@ const colors = {
     "secondary+30": "#ecdec4",
     "secondary+40": "#f6eee2",
     // Semantic component colors
+    contrastBorder: "transparent",
     shadowLight: "rgba(0, 0, 0, 0.08)",
     shadowMedium: "rgba(0, 0, 0, 0.12)",
     shadowBold: "rgba(0, 0, 0, 0.18)",
@@ -223,10 +225,9 @@ export function dynamicColor(
 }
 
 /**
- * Scopes the given CSS content to the given color mode
+ * Creates a selector for the given color mode
  * @param colorMode - desired color mode
- * @param css - inner CSS content (wrapped with selector)
  */
-export function mode(colorMode: ColorMode, css: string): string {
-  return `body.${colorMode} & { ${css} }`;
+export function mode(colorMode: ColorMode): string {
+  return `body.${colorMode} &`;
 }

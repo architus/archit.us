@@ -7,3 +7,4 @@ export * from "./shadow";
 export * from "./order";
 export * from "./media";
 export * from "./scroll";
+export * from "./mixins";

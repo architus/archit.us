@@ -37,7 +37,9 @@ const link = css`
   background-color: transparent;
 
   padding: 0 ${gap.micro};
-  ${down("lg", `padding: 0 ${gap.nano}`)}
+  ${down("lg")} {
+    padding: 0 ${gap.nano};
+  }
 
   /* Active/hover gradient overlay */
   &::before {
@@ -64,11 +66,13 @@ const link = css`
     left: 0;
     right: 0;
     content: " ";
-    height: 3px;
+    height: 4px;
     display: none;
 
     background-color: ${color("primary+30")};
-    ${mode(ColorMode.Light, `background-color: ${color("primary-20")};`)}
+    ${mode(ColorMode.Light)} {
+      background-color: ${color("primary-20")};
+    }
   }
 
   &:hover {
