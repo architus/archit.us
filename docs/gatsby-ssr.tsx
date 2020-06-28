@@ -6,6 +6,7 @@ import Root from "@docs/components/Root";
 // Adds our custom root component to the page
 export const wrapRootElement: GatsbySSR["wrapRootElement"] = ({
   element,
-}: WrapRootElementNodeArgs) => {
-  return Promise.resolve(<Root>{element}</Root>);
+}: // eslint-disable-next-line @typescript-eslint/no-explicit-any
+WrapRootElementNodeArgs): any => {
+  return <Root>{element}</Root>;
 };

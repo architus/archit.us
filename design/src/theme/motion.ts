@@ -18,11 +18,15 @@ export enum TransitionSpeed {
  */
 export function transition(
   properties: string[],
-  speed: TransitionSpeed = TransitionSpeed.Normal
+  {
+    speed = TransitionSpeed.Normal,
+    important = false,
+  }: { speed?: TransitionSpeed; important?: boolean } = {}
 ): string {
+  const suffix = important ? " !important" : "";
   return `
-    transition-property: ${properties.join(",")};
-    transition-timing-function: ${ease};
-    transition-duration: ${speed};
+    transition-property: ${properties.join(",")}${suffix};
+    transition-timing-function: ${ease}${suffix};
+    transition-duration: ${speed}${suffix};
   `;
 }

@@ -23,6 +23,7 @@ import HeaderActionBar, {
   actionBarSpacing,
 } from "@docs/components/HeaderActionBar";
 import { useColorMode } from "@docs/hooks";
+import { useInitialRender } from "@lib/hooks";
 
 const headerTransparency = 0.06;
 
@@ -155,7 +156,8 @@ const Header: React.FC<HeaderProps> = ({ className, style }) => {
   `);
 
   const mode = useColorMode();
-  const ssr = typeof window === "undefined";
+  const initialRender = useInitialRender();
+  const ssr = typeof window === "undefined" || initialRender;
 
   return (
     <Styled.Header mode={mode} ssr={ssr} className={className} style={style}>

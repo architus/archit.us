@@ -16,5 +16,8 @@
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json}\"",
     "lint": "eslint -f unix \"src/**/*.{js,jsx,ts,tsx,json}\"",
     "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "^16.13.1"
   }
 }
