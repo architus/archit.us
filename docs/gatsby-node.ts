@@ -237,6 +237,7 @@ export const createPages: GatsbyNode["createPages"] = async ({
         shortTitle,
         isOrphan: isNil(originalPath),
         noTOC: passthrough?.noTOC ?? false,
+        noSequenceLinks: passthrough?.noSequenceLinks ?? false,
         badge: passthrough?.badge ?? null,
         originalPath,
         history,

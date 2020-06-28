@@ -6,6 +6,7 @@ import { css } from "linaria";
 import Header from "@docs/components/Header";
 import SideNav from "@docs/components/SideNav";
 import Footer from "@docs/components/Footer";
+import SEO from "@docs/components/SEO";
 import {
   headerHeight,
   minimizeBreakpoint,
@@ -201,19 +202,35 @@ const Styled = {
 };
 
 type LayoutProps = {
+  /**
+   * ID of the currently active NavigationTree root node to use to display on
+   * the left side
+   */
+  activeNavRoot?: string;
+  lead?: string;
+  title?: string;
+  description?: string;
   className?: string;
   style?: React.CSSProperties;
 };
 
-const Layout: React.FC<LayoutProps> = ({ className, style, children }) => {
+const Layout: React.FC<LayoutProps> = ({
+  activeNavRoot,
+  title,
+  description,
+  className,
+  style,
+  children,
+}) => {
   // Ignored on large screens (always visible)
   const [drawerVisible, setDrawerVisible] = useState(false);
   return (
     <>
+      <SEO title={title} description={description} />
       <Header />
       <Styled.Layout drawerVisible={drawerVisible}>
         <Styled.Drawer>
-          <SideNav />
+          <SideNav activeNavRoot={activeNavRoot} />
         </Styled.Drawer>
         <Styled.DrawerExpander>
           <button onClick={(): void => setDrawerVisible(!drawerVisible)}>

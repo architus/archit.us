@@ -3,11 +3,27 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const path = require("path");
 
+const title = process.env.APP_NAME ?? "Architus Docs";
+const description = `General purpose Discord bot supporting advanced role management, custom emotes for non-nitro users, configurable response commands, and more.`;
+const themeColor = "#6496c4";
+const bgColor = "#496D8F";
+
+export const pathPrefix = process.env.BASE_PATH ?? "/";
+
 export const siteMetadata = {
-  title: `Architus Docs`,
+  title,
   headerTitle: `Documentation`,
-  description: `Architus docs re-write.`,
+  description,
   author: `architus`,
+  siteUrl: process.env.SITE_ROOT ?? "https://docs.archit.us",
+  themeColor,
+  msTileColor: "#2b5797",
+  github: {
+    owner: "architus",
+    name: "archit.us",
+    docsRoot: "docs/content/",
+    branch: process.env.GITHUB_BRANCH ?? "master",
+  },
   socials: {
     github: `https://github.com/architus`,
     discord: `https://discord.gg/svrRrSe`,
@@ -38,6 +54,42 @@ export const plugins = [
   "gatsby-plugin-linaria",
   "gatsby-plugin-dark-mode",
   `gatsby-plugin-react-helmet`,
+  {
+    resolve: `gatsby-plugin-manifest`,
+    options: {
+      name: title,
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      short_name: title,
+      description,
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      homepage_url: "https://docs.archit.us",
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      start_url: pathPrefix,
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      background_color: bgColor,
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      theme_color: themeColor,
+      display: `minimal-ui`,
+      icons: [
+        {
+          // Path prefixes are automatically added to these paths
+          src: "/img/android-chrome-192x192.png",
+          sizes: "192x192",
+          type: "image/png",
+        },
+        {
+          src: "/img/android-chrome-256x256.png",
+          sizes: "256x256",
+          type: "image/png",
+        },
+        {
+          src: "/img/android-chrome-512x512.png",
+          sizes: "512x512",
+          type: "image/png",
+        },
+      ],
+    },
+  },
   {
     resolve: `gatsby-source-filesystem`,
     options: {

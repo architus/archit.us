@@ -35,6 +35,7 @@
     "gatsby-plugin-alias-imports": "^1.0.5",
     "gatsby-plugin-dark-mode": "^1.1.2",
     "gatsby-plugin-linaria": "^2.0.0",
+    "gatsby-plugin-manifest": "^2.4.14",
     "gatsby-plugin-mdx": "^1.2.18",
     "gatsby-plugin-offline": "^3.2.12",
     "gatsby-plugin-react-helmet": "^3.3.5",

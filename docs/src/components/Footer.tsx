@@ -1,6 +1,12 @@
 import React from "react";
 
-const Footer: React.FC = () => {
+type FooterProps = {
+  className?: string;
+  style?: React.CSSProperties;
+};
+
+const Footer: React.FC<FooterProps> = ({ className, style }) => {
+  // TODO implement
   return null;
 };
 

@@ -16,6 +16,7 @@ export const frontmatterType = `
     # Passthrough props (add additional fields here)
     noTOC: Boolean
     badge: String
+    noSequenceLinks: Boolean
   }
 `;
 
@@ -34,6 +35,7 @@ export const frontmatterFragment = `
   # Passthrough props (add additional fields here)
   noTOC
   badge
+  noSequenceLinks
 `;
 
 /**
@@ -60,6 +62,7 @@ export type DocsNavtreeConstructionProps = {
  */
 export type DocsPassthroughProps = {
   noTOC?: boolean;
+  noSequenceLinks?: boolean;
   badge?: string;
 };
 
@@ -109,6 +112,7 @@ export type DocsPage = {
   shortTitle: string;
   isOrphan: boolean;
   noTOC: boolean;
+  noSequenceLinks: boolean;
   badge: string | null;
   originalPath: string | null;
   history: History | null;
@@ -122,6 +126,7 @@ export const docsPageType = `
     shortTitle: String!
     isOrphan: Boolean!
     noTOC: Boolean!
+    noSequenceLinks: Boolean!
     badge: String
     originalPath: String
     history: History

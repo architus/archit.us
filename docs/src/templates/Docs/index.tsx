@@ -1,20 +1,78 @@
 import React from "react";
 import { PageProps, graphql } from "gatsby";
 import { styled } from "linaria/react";
+import { css, cx } from "linaria";
 
 import Layout from "@docs/components/Layout";
 import Mdx from "@docs/components/Mdx";
 import Article from "@docs/components/Article";
+import Breadcrumb from "@docs/components/Breadcrumb";
+import PageMetadata from "@docs/components/PageMetadata";
+import Overview, { OverviewContext } from "@docs/components/Overview";
+import NavLabel from "@docs/components/NavLabel";
+import TableOfContents, {
+  TableOfContentsNode,
+} from "@docs/components/TableOfContents";
+import SequenceLinks, {
+  SequenceLinkData,
+} from "@docs/components/SequenceLinks";
+import { History } from "@docs/build/github-types";
 import { collapseBreakpoint } from "@docs/layout";
 import { down, gap, color, ColorMode, mode, dynamicColor } from "@design/theme";
-import {
-  DocsContext,
-  BreadcrumbSegment,
-} from "@docs/templates/Docs/frontmatter";
 import { transparentize } from "polished";
+import { isDefined } from "@lib/utility";
+import { DocsContext, BreadcrumbSegment } from "./frontmatter";
+
+const StyledArticle = styled(Article)`
+  & > p:first-of-type {
+    --lead-color: ${color("primary-30")};
+
+    ${mode(ColorMode.Dark)} {
+      --lead-color: ${color("primary+30")};
+    }
+
+    ${mode(ColorMode.Light)} {
+      --link-color: ${color("primary-10")};
+      --link-color-fade: ${transparentize(
+        0.6,
+        dynamicColor("primary-10", ColorMode.Light)
+      )};
+    }
+
+    font-size: 20px;
+    line-height: 28px;
+    font-weight: 300;
+    color: var(--lead-color);
+    margin-bottom: 2rem;
+    opacity: 0.95;
+  }
+`;
+
+const TableOfContentsWrapper = styled.aside``;
+const StyledTableOfContents = styled(TableOfContents)`
+  position: sticky !important;
+  top: 5.5rem;
+  padding-left: 2.65em;
+  padding-top: 0.35em !important;
+  z-index: 10;
+  max-height: calc(100vh - 11rem);
+`;
+
+const contentWithToc = css`
+  display: flex;
+  flex-direction: row;
+
+  ${StyledArticle} {
+    max-width: 49rem;
+    min-width: 0;
+  }
+`;
 
 const Styled = {
   Outer: styled.div`
+    max-width: 1080px;
+    margin: 0 auto;
+
     padding-top: 3rem;
     padding-bottom: 4rem;
     padding-left: ${gap.nano};
@@ -32,28 +90,24 @@ const Styled = {
       font-size: 2.2rem;
     }
   `,
-  Article: styled(Article)`
-    & > p:first-of-type {
-      --lead-color: ${color("primary-30")};
-
-      ${mode(ColorMode.Dark)} {
-        --lead-color: ${color("primary+30")};
+  Content: styled.div`
+    ${TableOfContentsWrapper} {
+      flex-grow: 1;
+      ${down("lg")} {
+        display: none;
       }
-
-      ${mode(ColorMode.Light)} {
-        --link-color: ${color("primary-10")};
-        --link-color-fade: ${transparentize(
-          0.6,
-          dynamicColor("primary-10", ColorMode.Light)
-        )};
-      }
-
-      font-size: 20px;
-      line-height: 28px;
-      font-weight: 300;
-      color: var(--lead-color);
-      margin-bottom: 2rem;
-      opacity: 0.95;
+    }
+  `,
+  Article: StyledArticle,
+  TableOfContentsWrapper,
+  TableOfContents: StyledTableOfContents,
+  SequenceLinks: styled(SequenceLinks)``,
+  PageMetadata: styled(PageMetadata)``,
+  BottomDivider: styled.hr`
+    margin-top: calc(2.5 * ${gap.flow});
+    opacity: 0.25;
+    ${mode(ColorMode.Dark)} {
+      opacity: 0.1;
     }
   `,
 };
@@ -68,41 +122,74 @@ const Docs: React.FC<PageProps<DocsData, DocsContext>> = ({
   const { id } = pageContext;
   const { edges } = data.allDocsPage;
 
-  let content: React.ReactNode = null;
   if (edges.length === 0) {
-    content = (
-      <>
-        <Styled.Title>Failed During Build</Styled.Title>
-        <Styled.Article>
-          An error ocurred while constructing this page during the build
-          process. No page with ID {id}
-        </Styled.Article>
-      </>
-    );
-  } else {
-    const { node } = edges[0];
-    const { title, parent } = node;
-    content = (
-      <>
-        <Styled.Title>{title}</Styled.Title>
-        <Styled.Article>
-          <Mdx content={parent.body} />
-        </Styled.Article>
-      </>
+    const description =
+      `An error ocurred while constructing this page during the build process. ` +
+      `No page with ID ${id}`;
+    return (
+      <Layout title="Build Error" description={description}>
+        <Styled.Outer>
+          <Styled.Title>Failed During Build</Styled.Title>
+          <Article>{description}</Article>
+        </Styled.Outer>
+      </Layout>
     );
   }
 
+  const { node, previous, next } = edges[0];
+  const {
+    title,
+    shortTitle,
+    badge,
+    isOrphan,
+    noTOC,
+    noSequenceLinks,
+    originalPath,
+    lead,
+    parent,
+    sideNav,
+    breadcrumb,
+    history,
+    children,
+  } = node;
+  const showOverview = isOrphan && children.length > 0;
   return (
-    <Layout>
-      <Styled.Outer>{content}</Styled.Outer>
+    <Layout
+      activeNavRoot={sideNav.id}
+      title={shortTitle}
+      description={lead ?? undefined}
+    >
+      <Styled.Outer>
+        {isDefined(breadcrumb) && <Breadcrumb segments={breadcrumb} />}
+        <Styled.Title>
+          {<NavLabel text={title} badge={badge} gap="nano" />}
+        </Styled.Title>
+        <OverviewContext.Provider value={children}>
+          <Styled.Content className={cx(!noTOC && contentWithToc)}>
+            <Styled.Article>
+              {!isOrphan && <Mdx content={parent?.body ?? ""} />}
+              {showOverview && <Overview />}
+              {!noSequenceLinks && (
+                <Styled.SequenceLinks previous={previous} next={next} />
+              )}
+              <Styled.BottomDivider />
+              <Styled.PageMetadata
+                history={history}
+                originalPath={originalPath}
+              />
+            </Styled.Article>
+            {!noTOC && (parent?.tableOfContents.items ?? []).length > 0 && (
+              <Styled.TableOfContentsWrapper>
+                <Styled.TableOfContents
+                  items={parent?.tableOfContents.items ?? []}
+                />
+              </Styled.TableOfContentsWrapper>
+            )}
+          </Styled.Content>
+        </OverviewContext.Provider>
+      </Styled.Outer>
     </Layout>
   );
-};
-
-type TableOfContentsNode = {
-  url: string;
-  title: string;
-  items?: TableOfContentsNode[];
 };
 
 type DocsData = {
@@ -114,12 +201,14 @@ type DocsData = {
         badge: string | null;
         isOrphan: boolean;
         noTOC: boolean;
+        noSequenceLinks: boolean;
+        originalPath: string | null;
         lead: string | null;
-        parent: {
+        parent: null | {
+          body: string;
           tableOfContents: {
             items: TableOfContentsNode[];
           };
-          body: string;
         };
         sideNav: {
           id: string;
@@ -129,27 +218,18 @@ type DocsData = {
         children: Array<{
           title: string;
           path: string;
+          badge: string | null;
         }>;
       };
-      previous: null | {
-        title: string;
-        badge: string | null;
-        path: string;
-        lead: string | null;
-      };
-      next: null | {
-        title: string;
-        badge: string | null;
-        path: string;
-        lead: string | null;
-      };
+      previous: null | SequenceLinkData;
+      next: null | SequenceLinkData;
     }>;
   };
 };
 
 export const query = graphql`
   query DocsPageTemplateQuery($id: String = "") {
-    allDocsPage(filter: { id: { eq: $id } }) {
+    allDocsPage(filter: { id: { eq: $id } }, sort: { fields: preorder }) {
       edges {
         node {
           title
@@ -157,6 +237,8 @@ export const query = graphql`
           badge
           isOrphan
           noTOC
+          noSequenceLinks
+          originalPath
           lead
           parent {
             ... on Mdx {
@@ -184,6 +266,7 @@ export const query = graphql`
             ... on DocsPage {
               title
               path
+              badge
             }
           }
         }

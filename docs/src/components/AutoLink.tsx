@@ -5,6 +5,11 @@ import { Link } from "gatsby";
 
 import { isDefined, isExternal } from "@lib/utility";
 import { SpacingKey, gap } from "@design/theme";
+import { css, cx } from "linaria";
+
+const noStyleClassName = css`
+  border-bottom: none !important;
+`;
 
 const Styled = {
   ExternalIcon: styled.span<{ mr?: SpacingKey; ml?: SpacingKey }>`
@@ -46,23 +51,24 @@ const AutoLink: React.FC<AutoLinkProps> = ({
   ref,
   ...rest
 }) => {
+  // Hide the icon if an image tag is inside (for use in Mdx shields)
+  const noStyle = noIcon || isImageChild(children);
+  const classNames = cx(className, noStyle ? noStyleClassName : undefined);
+
   if (isDefined(external) ? external : isExternal(href)) {
     const props = { ...rest };
     if (newTab) {
       Object.assign(props, { target: "_blank", rel: "noreferrer noopener" });
     }
-
-    // Hide the icon if an image tag is inside (for use in Mdx shields)
-    const derivedNoIcon = noIcon || isImageChild(children);
     return (
-      <a href={href} className={className} style={style} {...props}>
-        {left && !derivedNoIcon && (
+      <a href={href} className={classNames} style={style} {...props}>
+        {left && !noStyle && (
           <Styled.ExternalIcon mr={space}>
             <FaExternalLinkAlt />
           </Styled.ExternalIcon>
         )}
         {children}
-        {!left && !derivedNoIcon && (
+        {!left && !noStyle && (
           <Styled.ExternalIcon ml={space}>
             <FaExternalLinkAlt />
           </Styled.ExternalIcon>
@@ -72,7 +78,7 @@ const AutoLink: React.FC<AutoLinkProps> = ({
   }
 
   return (
-    <Link to={href} className={className} style={style} {...rest}>
+    <Link to={href} className={classNames} style={style} {...rest}>
       {children}
     </Link>
   );
