@@ -92,10 +92,6 @@ const SEO: React.FC<SEOProps> = ({ description, meta, title, lang = `en` }) => {
           content: pathPrefix("/img/logo_hex.png"),
         },
         {
-          property: `og:description`,
-          content: metaDescription,
-        },
-        {
           property: `og:site_name`,
           content: siteTitle,
         },

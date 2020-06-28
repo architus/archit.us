@@ -2,7 +2,7 @@ import React from "react";
 import { PageProps, graphql } from "gatsby";
 import { styled } from "linaria/react";
 import { css, cx } from "linaria";
-
+import { transparentize } from "polished";
 import Layout from "@docs/components/Layout";
 import Mdx from "@docs/components/Mdx";
 import Article from "@docs/components/Article";
@@ -17,11 +17,11 @@ import SequenceLinks, {
   SequenceLinkData,
 } from "@docs/components/SequenceLinks";
 import { History } from "@docs/build/github-types";
-import { collapseBreakpoint } from "@docs/layout";
+import { collapseBreakpoint, minimizeBreakpoint } from "@docs/layout";
 import { down, gap, color, ColorMode, mode, dynamicColor } from "@design/theme";
-import { transparentize } from "polished";
 import { isDefined } from "@lib/utility";
 import { DocsContext, BreadcrumbSegment } from "./frontmatter";
+import "@docs/one-universal";
 
 const StyledArticle = styled(Article)`
   & > p:first-of-type {
@@ -93,7 +93,7 @@ const Styled = {
   Content: styled.div`
     ${TableOfContentsWrapper} {
       flex-grow: 1;
-      ${down("lg")} {
+      ${down(minimizeBreakpoint)} {
         display: none;
       }
     }

@@ -17,8 +17,6 @@ import rennerMedium2 from "../assets/renner/renner-medium-webfont.woff2";
 import rennerMediumItalic from "../assets/renner/renner-mediumitalic-webfont.woff";
 import rennerMediumItalic2 from "../assets/renner/renner-mediumitalic-webfont.woff2";
 
-import { color } from "./color";
-
 // Based off Bootstrap 4's body font stack
 const baseFontStack =
   `-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, ` +
@@ -84,6 +82,10 @@ export function injectTypographyGlobals(): string {
       woffItalic: rennerBoldItalic,
       woff2Italic: rennerBoldItalic2,
     })}
+
+    :root {
+      font-size: 100%;
+    }
 
     body {
       font-family: ${font("body")};

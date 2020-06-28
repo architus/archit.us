@@ -34,6 +34,9 @@ export const global = css`
     body {
       --site-padding: ${gap.milli};
       ${down("md")} {
+        --site-padding: ${gap.micro};
+      }
+      ${down("sm")} {
         --site-padding: ${gap.nano};
       }
     }
@@ -118,6 +121,7 @@ const Styled = {
     bottom: 0;
     left: 0;
     right: 0;
+    pointer-events: none;
 
     ${up(collapseBreakpoint)} {
       display: none;

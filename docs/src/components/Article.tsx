@@ -9,6 +9,8 @@ import {
   mode,
   down,
   staticColor,
+  scrollBarAuto,
+  shadow,
 } from "@design/theme";
 import { transparentize } from "polished";
 
@@ -112,6 +114,83 @@ const Article = styled.article`
       margin-bottom: 0;
     }
   }
+  .gatsby-highlight {
+    background-color: var(--code-bg);
+
+    ${mode(ColorMode.Dark)} {
+      box-shadow: ${shadow("z0")};
+    }
+
+    ${mode(ColorMode.Light)} {
+      box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+    }
+
+    overflow: auto;
+    border-radius: 8px;
+    padding: 0 ${gap.pico};
+    white-space: pre-line;
+
+    pre {
+      ${scrollBarAuto()}
+      padding: ${gap.micro};
+
+      & > code {
+        font-size: 0.875rem;
+      }
+    }
+  }
+
+  *:not(pre) > code {
+    font-size: 1rem;
+    padding: 0.1em 0.2em;
+    border: none;
+    border-radius: 0;
+    background-color: var(--code-bg);
+    color: ${color("primary-10")};
+    ${mode(ColorMode.Dark)} {
+      color: ${color("primary+20")};
+    }
+
+    text-align: left;
+    word-spacing: normal;
+    word-break: normal;
+    line-height: 1.5;
+    tab-size: 4;
+    hyphens: none;
+    white-space: normal;
+  }
 `;
 
 export default Article;
+
+// .gatsby-highlight {
+//   @extend %custom-scrollbar;
+//   @extend %code-bg;
+
+//   @include dark {
+//     box-shadow: $drop-shadow;
+//   }
+
+//   @include light {
+//     box-shadow: inset 0 0 6px rgba(black, 0.1);
+//   }
+
+//   overflow: auto;
+//   margin: 0 0 1rem;
+//   border-radius: 8px;
+//   padding: 0 0.5rem;
+//   white-space: pre-line;
+
+//   pre {
+//     @extend %custom-scrollbar;
+//     padding: 1.25rem;
+//   }
+// }
+
+// .gatsby-resp-image-wrapper {
+//   margin-top: 1.75rem;
+//   margin-bottom: 2rem;
+//   box-shadow: $drop-shadow;
+//   border-radius: 8px;
+//   overflow: hidden;
+// }

@@ -117,8 +117,46 @@ export const plugins = [
     resolve: `gatsby-plugin-mdx`,
     options: {
       extensions: [`.md`],
-      gatsbyRemarkPlugins: [],
-      plugins: [],
+      gatsbyRemarkPlugins: [
+        `gatsby-remark-smartypants`,
+        `gatsby-remark-slug`,
+        `gatsby-remark-copy-linked-files`,
+        {
+          resolve: "gatsby-remark-embed-snippet",
+          options: {
+            directory: `${__dirname}/content/`,
+          },
+        },
+        {
+          resolve: `gatsby-remark-prismjs`,
+          options: {
+            classPrefix: "language-",
+            inlineCodeMarker: null,
+            aliases: {},
+          },
+        },
+        // {
+        //   resolve: "gatsby-remark-images",
+        //   options: {
+        //     maxWidth: 1500,
+        //     withWebp: true,
+        //     backgroundColor: bgColor,
+        //     linkImagesToOriginal: true,
+        //   },
+        // },
+      ],
+      // ! remove plugins when https://github.com/gatsbyjs/gatsby/issues/16242 gets merged
+      plugins: [
+        // {
+        //   resolve: `gatsby-remark-images`,
+        //   options: {
+        //     maxWidth: 1500,
+        //     withWebp: true,
+        //     backgroundColor: bgColor,
+        //     linkImagesToOriginal: true,
+        //   },
+        // },
+      ],
     },
   },
 ];
