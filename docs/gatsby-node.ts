@@ -2,7 +2,8 @@ import {
   GatsbyNode,
   SourceNodesArgs,
   CreatePagesArgs,
-  CreateWebpackConfigArgs,
+  CreateResolversArgs,
+  Node,
 } from "gatsby";
 
 import {
@@ -32,6 +33,7 @@ import {
 } from "@docs/build/github-integration";
 import { historyType, githubUserType } from "@docs/build/github-types";
 import { createNavigationTrees, navigationTreeType } from "build/nav";
+import { getLead } from "build/lead";
 
 const DocsPageTemplate = require("path").resolve(
   "./src/templates/Docs/index.tsx"
@@ -200,7 +202,25 @@ export const createPages: GatsbyNode["createPages"] = async ({
   activity = reporter.activityTimer(`dynamically generating docs pages`);
   activity.start();
 
-  function createSubtreePages(subtree: NavTree, sideNavId: string): void {
+  // Recursively make a map of order indices using a pre-order traversal
+  const preorder: Map<string, number> = new Map();
+  let current = 0;
+  const traverse = (node: NavTree): void => {
+    preorder.set(node.path, current);
+    current += 1;
+    node.children.forEach(traverse);
+  };
+  roots.forEach(traverse);
+
+  function createSubtreePages(
+    subtree: NavTree,
+    sideNavId: string
+  ): string | null {
+    // Perform post-order traversal of nav tree
+    const children = subtree.children
+      .map((child) => createSubtreePages(child, sideNavId))
+      .filter(isDefined);
+
     if (!subtree.invisible) {
       const {
         breadcrumb,
@@ -209,6 +229,7 @@ export const createPages: GatsbyNode["createPages"] = async ({
         originalPath,
         passthrough,
         history,
+        path,
       } = subtree;
       const nodeContent: DocsPage = {
         breadcrumb,
@@ -219,6 +240,8 @@ export const createPages: GatsbyNode["createPages"] = async ({
         badge: passthrough?.badge ?? null,
         originalPath,
         history,
+        path,
+        preorder: preorder.get(subtree.path) ?? 0,
       };
 
       const idSeed = `docs-page--${subtree.originalPath}#${subtree.slug}`;
@@ -226,7 +249,7 @@ export const createPages: GatsbyNode["createPages"] = async ({
       actions.createNode({
         id,
         parent: subtree.id ?? undefined,
-        children: [],
+        children,
         internal: {
           type: `DocsPage`,
           content: JSON.stringify(nodeContent),
@@ -252,14 +275,51 @@ export const createPages: GatsbyNode["createPages"] = async ({
           suffix = `=> ${subtree.id}`;
         }
       }
+
       reporter.info(`docs page @ '${subtree.path}' ${suffix}`);
+      return id;
     }
 
-    subtree.children.forEach((child) => createSubtreePages(child, sideNavId));
+    return null;
   }
   roots.forEach((root, i) => createSubtreePages(root, ids[i]));
 
   activity.end();
+};
+
+// Make a resolver for the lead text for each docs page
+export const createResolvers: GatsbyNode["createResolvers"] = (
+  args: CreateResolversArgs
+) => {
+  args.createResolvers({
+    DocsPage: {
+      lead: {
+        async resolve(
+          source: Node & DocsPage,
+          { maxLength }: { maxLength?: number },
+          context: {
+            nodeModel: {
+              getNodeById: (arg: {
+                id: string;
+                type?: string;
+              }) => Promise<Node | null>;
+            };
+          }
+        ): Promise<string | null> {
+          if (isNil(source.parent)) return null;
+          const mdxNode = await context.nodeModel.getNodeById({
+            id: source.parent,
+            type: "Mdx",
+          });
+
+          if (isNil(mdxNode)) return null;
+          return getLead(args, mdxNode, maxLength);
+        },
+      },
+    },
+  });
+
+  return Promise.resolve(null);
 };
 
 // ? ==========================

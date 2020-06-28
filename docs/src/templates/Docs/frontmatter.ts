@@ -112,6 +112,8 @@ export type DocsPage = {
   badge: string | null;
   originalPath: string | null;
   history: History | null;
+  path: string;
+  preorder: number;
 };
 export const docsPageType = `
   type DocsPage implements Node @childOf(types: ["Mdx"], many: false) {
@@ -124,6 +126,9 @@ export const docsPageType = `
     originalPath: String
     history: History
     sideNav: NavigationTree! @link
+    path: String!
+    preorder: Int!
+    lead(maxLength: Int): String
   }
 `;
 

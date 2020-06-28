@@ -80,7 +80,7 @@ const Docs: React.FC<PageProps<DocsData, DocsContext>> = ({
       </>
     );
   } else {
-    const { node, previous, next } = edges[0];
+    const { node } = edges[0];
     const { title, parent } = node;
     content = (
       <>
@@ -99,39 +99,49 @@ const Docs: React.FC<PageProps<DocsData, DocsContext>> = ({
   );
 };
 
+type TableOfContentsNode = {
+  url: string;
+  title: string;
+  items?: TableOfContentsNode[];
+};
+
 type DocsData = {
   allDocsPage: {
     edges: Array<{
       node: {
-        breadcrumb: BreadcrumbSegment[] | null;
         title: string;
         shortTitle: string;
+        badge: string | null;
         isOrphan: boolean;
         noTOC: boolean;
-        badge: string | null;
-        originalPath: string | null;
-        history: History | null;
+        lead: string | null;
         parent: {
-          // TODO type
-          tableOfContents: object;
-          mdxAST: object;
+          tableOfContents: {
+            items: TableOfContentsNode[];
+          };
           body: string;
         };
         sideNav: {
           id: string;
         };
+        breadcrumb: BreadcrumbSegment[] | null;
+        history: History | null;
+        children: Array<{
+          title: string;
+          path: string;
+        }>;
       };
       previous: null | {
         title: string;
-        parent: {
-          excerpt: string;
-        };
+        badge: string | null;
+        path: string;
+        lead: string | null;
       };
       next: null | {
         title: string;
-        parent: {
-          excerpt: string;
-        };
+        badge: string | null;
+        path: string;
+        lead: string | null;
       };
     }>;
   };
@@ -146,13 +156,12 @@ export const query = graphql`
           shortTitle
           badge
           isOrphan
-          originalPath
           noTOC
+          lead
           parent {
             ... on Mdx {
-              tableOfContents(maxDepth: 4)
               body
-              mdxAST
+              tableOfContents(maxDepth: 4)
             }
           }
           sideNav {
@@ -171,22 +180,24 @@ export const query = graphql`
               avatarUrl
             }
           }
+          children {
+            ... on DocsPage {
+              title
+              path
+            }
+          }
         }
         next {
           title
-          parent {
-            ... on Mdx {
-              excerpt(pruneLength: 250)
-            }
-          }
+          badge
+          path
+          lead
         }
         previous {
           title
-          parent {
-            ... on Mdx {
-              excerpt(pruneLength: 250)
-            }
-          }
+          badge
+          path
+          lead
         }
       }
     }

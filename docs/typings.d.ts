@@ -9,6 +9,10 @@ declare module "gatsby-plugin-dark-mode" {
   }>;
 }
 
-declare module "react-svg-morph" {
-  export const MorphReplace: React.FC<{ width: number; height: number }>;
+declare module "unist-util-find" {
+  // eslint-disable-next-line import/no-extraneous-dependencies
+  import { Node } from "unist";
+
+  const find: (node: Node, pattern: string) => Node | undefined;
+  export default find;
 }
