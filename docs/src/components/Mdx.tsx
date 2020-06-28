@@ -4,6 +4,7 @@ import { MDXProvider } from "@mdx-js/react";
 
 import AutoLink from "@docs/components/AutoLink";
 import Overview from "@docs/components/Overview";
+import { createHeading } from "@docs/components/Heading";
 
 type MdxProps = {
   content: string;
@@ -20,6 +21,12 @@ export const shortcodes = {
 // React components that replace HTML components in the markdown
 export const overrides = {
   a: AutoLink,
+  h1: createHeading({ component: "h1" }),
+  h2: createHeading({ component: "h2" }),
+  h3: createHeading({ component: "h3" }),
+  h4: createHeading({ component: "h4" }),
+  h5: createHeading({ component: "h5" }),
+  h6: createHeading({ component: "h6", right: true }),
 } as const;
 
 /**
