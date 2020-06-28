@@ -17,3 +17,29 @@ export function isDefined<T>(value: Nil | T): value is T {
 export function isNil(value: unknown): value is Nil {
   return value == null;
 }
+
+const cachedExternalRegex = /^(?:(?:http|https):\/\/(?!(?:www\.)?archit.us)[\w./=?#-_]+)|(?:mailto:.+)$/;
+let externalRegex: RegExp | null = null;
+
+/**
+ * Lazily gets the regular expression used to determine if a link is external, using
+ * `window.location.host` if available and caching the created regex
+ */
+export function getExternalRegex(): RegExp {
+  if (isDefined(externalRegex)) return externalRegex;
+  if (typeof window !== "undefined") {
+    const regexStr = `^(?:(?:http|https):\\/\\/(?!(?:www\\.)?${window.location.host})[\\w./=?#-_]+)|(?:mailto:.+)$`;
+    const regex = new RegExp(regexStr);
+    externalRegex = regex;
+    return externalRegex;
+  }
+  return cachedExternalRegex;
+}
+
+/**
+ * Determines whether a link is an external link or not
+ * @param href - Href to test
+ */
+export function isExternal(href: string): boolean {
+  return getExternalRegex().test(href);
+}

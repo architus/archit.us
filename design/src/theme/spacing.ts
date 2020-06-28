@@ -12,7 +12,7 @@ const spacing = {
   giga: "233px",
   tera: "377px",
   peta: "610px",
-  flow: "1rem",
+  flow: "1.5rem",
 } as const;
 
 export type SpacingKey = keyof typeof spacing;

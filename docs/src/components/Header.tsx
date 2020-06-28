@@ -24,7 +24,7 @@ import HeaderActionBar, {
 } from "@docs/components/HeaderActionBar";
 import { useColorMode } from "@docs/hooks";
 
-const HEADER_TRANSPARENCY = 0.06;
+const headerTransparency = 0.06;
 
 const logoLeftSpace = gap.nano;
 const logoLink = css`
@@ -74,6 +74,8 @@ const Styled = {
     }
   `,
   Header: styled.nav<{ mode: ColorMode; ssr: boolean }>`
+    position: fixed;
+    width: 100%;
     color: ${color("light")};
     height: ${headerHeight};
     display: flex;
@@ -97,9 +99,9 @@ const Styled = {
       ssr
         ? color("primary")
         : transparentize(
-            HEADER_TRANSPARENCY,
+            headerTransparency,
             mix(
-              -HEADER_TRANSPARENCY,
+              -headerTransparency,
               dynamicColor("bg", mode),
               dynamicColor("primary", mode)
             )
@@ -125,10 +127,15 @@ const Styled = {
   `,
 };
 
+type HeaderProps = {
+  className?: string;
+  style?: React.CSSProperties;
+};
+
 /**
  * Site header, including navigation links and an action bar on the right side
  */
-const Header: React.FC = () => {
+const Header: React.FC<HeaderProps> = ({ className, style }) => {
   type HeaderQueryResult = {
     site: {
       siteMetadata: {
@@ -151,7 +158,7 @@ const Header: React.FC = () => {
   const ssr = typeof window === "undefined";
 
   return (
-    <Styled.Header mode={mode} ssr={ssr}>
+    <Styled.Header mode={mode} ssr={ssr} className={className} style={style}>
       <Link to="/" className={logoLink}>
         <Logo.Symbol height={36} className={logo} />
         <Styled.SiteTitle>

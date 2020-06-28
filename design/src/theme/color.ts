@@ -12,9 +12,9 @@ export const defaultMode: ColorMode = ColorMode.Dark;
 const colors = {
   [ColorMode.Light]: {
     // Foreground colors
-    text: "rgba(33, 33, 33, 0.85)",
-    textStrong: "rgb(33, 33, 33)",
-    textFade: "rgba(33, 33, 33, 0.7)",
+    text: "rgba(33, 33, 33, 0.7)",
+    textStrong: "rgba(33, 33, 33, 0.85)",
+    textFade: "rgba(33, 33, 33, 0.6)",
     textLight: "rgba(33, 33, 33, 0.4)",
     // Background colors
     "bg-40": "hsl(200, 20%, 75%)",
@@ -58,10 +58,10 @@ const colors = {
   },
   [ColorMode.Dark]: {
     // Foreground colors
-    text: "rgba(246, 248, 249, 0.85)",
-    textStrong: "rgb(246, 248, 249)",
-    textFade: "rgba(246, 248, 249, 0.7)",
-    textLight: "rgba(246, 248, 249, 0.4)",
+    text: "rgba(201, 213, 219, 0.85)",
+    textStrong: "rgba(244, 246, 249, 0.9)",
+    textFade: "rgba(201, 213, 219, 0.7)",
+    textLight: "rgba(201, 213, 219, 0.4)",
     // Background colors
     "bg-40": "hsl(220, 19%, 2%)",
     "bg-30": "hsl(220, 17%, 5%)",

@@ -38,10 +38,12 @@ const scrollBase = `
 /**
  * Utility mixin to add a nice-looking custom scroll-bar
  * that overlays well onto content.
- * @param mode - Color scheme for the scrollbar
+ * @param colorMode - Color scheme for the scrollbar
  */
-export function scrollBar(mode: ColorMode): string {
-  const oppositeFg = staticColor(mode === ColorMode.Light ? "dark" : "light");
+export function scrollBar(colorMode: ColorMode): string {
+  const oppositeFg = staticColor(
+    colorMode === ColorMode.Light ? "dark" : "light"
+  );
   return `
     --scroll-thumb: ${transparentize(0.75, oppositeFg)};
     --scroll-thumb-hover: ${transparentize(0.65, oppositeFg)};

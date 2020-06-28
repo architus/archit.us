@@ -37,22 +37,6 @@ const DocsPageTemplate = require("path").resolve(
   "./src/templates/Docs/index.tsx"
 );
 
-// Apply fix to make Gatsby `Link`'s able to be wrapped with `styled`
-// @see https://github.com/silvenon/gatsby-plugin-linaria/issues/19
-//      https://github.com/callstack/linaria/issues/601
-export const onCreateWebpackConfig: GatsbyNode["onCreateWebpackConfig"] = ({
-  actions,
-  getConfig,
-}: CreateWebpackConfigArgs) => {
-  const config = getConfig();
-  const routerAlias = config.resolve.alias["@reach/router"];
-  if (routerAlias) {
-    delete config.resolve.alias["@reach/router"];
-    config.resolve.alias["@reach/router$"] = routerAlias;
-  }
-  actions.replaceWebpackConfig(config);
-};
-
 // Define custom graphql schema to enforce rigid type structures
 export const sourceNodes: GatsbyNode["sourceNodes"] = ({
   actions,

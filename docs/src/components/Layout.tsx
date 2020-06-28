@@ -7,15 +7,18 @@ import Header from "@docs/components/Header";
 import SideNav from "@docs/components/SideNav";
 import Footer from "@docs/components/Footer";
 import {
+  headerHeight,
+  minimizeBreakpoint,
+  collapseBreakpoint,
+} from "@docs/layout";
+import {
   gap,
   blankButton,
   down,
   transition,
   ZIndex,
-  breakpoint,
   shadow,
   color,
-  BreakpointKey,
   up,
   mediaMaxWidth,
   scrollBarAuto,
@@ -29,7 +32,6 @@ export const global = css`
     /* Set global site padding */
     body {
       --site-padding: ${gap.milli};
-      --collapse-breakpoint: ${breakpoint("md")};
       ${down("md")} {
         --site-padding: ${gap.nano};
       }
@@ -43,8 +45,6 @@ export const global = css`
   }
 `;
 
-const collapseBreakpoint: BreakpointKey = "md";
-const minimizeBreakpoint: BreakpointKey = "lg";
 const fullWidth = "325px";
 const minimizedWidth = "285px";
 
@@ -55,9 +55,9 @@ const Drawer = styled.div`
   width: ${fullWidth};
   position: fixed;
   z-index: ${ZIndex.Drawer};
+  padding-top: ${headerHeight};
   top: 0;
   left: 0;
-  padding-top: 60px;
 
   border-right: 1px solid ${color("contrastBorder")};
   ${mode(ColorMode.Light)} {
@@ -169,6 +169,7 @@ const Styled = {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    padding-top: ${headerHeight};
 
     & > *:not(${StyledFooter}) {
       flex-grow: 1;
@@ -199,7 +200,12 @@ const Styled = {
   `,
 };
 
-const Layout: React.FC = ({ children }) => {
+type LayoutProps = {
+  className?: string;
+  style?: React.CSSProperties;
+};
+
+const Layout: React.FC<LayoutProps> = ({ className, style, children }) => {
   // Ignored on large screens (always visible)
   const [drawerVisible, setDrawerVisible] = useState(false);
   return (
@@ -216,7 +222,9 @@ const Layout: React.FC = ({ children }) => {
         </Styled.DrawerExpander>
         <Styled.DrawerOverlay onClick={(): void => setDrawerVisible(false)} />
         <Styled.Content>
-          <div>{children}</div>
+          <div className={className} style={style}>
+            {children}
+          </div>
           <Styled.Footer />
         </Styled.Content>
       </Styled.Layout>
