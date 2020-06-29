@@ -57,19 +57,20 @@ export function scrollBar(colorMode: ColorMode): string {
  * that overlays well onto content.
  * Automatically displays depending on the current color mode.
  */
-export function scrollBarAuto(): string {
+export function scrollBarAuto(opacity = 0.25): string {
   const lightFg = staticColor("dark");
   const darkFg = staticColor("light");
+  const transparency = 1 - opacity;
   return `
     ${mode(ColorMode.Light)} {
-      --scroll-thumb: ${transparentize(0.75, lightFg)};
-      --scroll-thumb-hover: ${transparentize(0.65, lightFg)};
-      --scroll-thumb-active ${transparentize(0.5, lightFg)};
+      --scroll-thumb: ${transparentize(transparency, lightFg)};
+      --scroll-thumb-hover: ${transparentize(transparency * 0.75, lightFg)};
+      --scroll-thumb-active ${transparentize(transparency * 0.5, lightFg)};
     }
     ${mode(ColorMode.Dark)} {
-      --scroll-thumb: ${transparentize(0.75, darkFg)};
-      --scroll-thumb-hover: ${transparentize(0.65, darkFg)};
-      --scroll-thumb-active ${transparentize(0.5, darkFg)};
+      --scroll-thumb: ${transparentize(transparency, darkFg)};
+      --scroll-thumb-hover: ${transparentize(transparency * 0.75, darkFg)};
+      --scroll-thumb-active ${transparentize(transparency * 0.5, darkFg)};
     }
     ${scrollBase}
   `;

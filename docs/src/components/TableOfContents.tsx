@@ -4,7 +4,7 @@ import { transparentize } from "polished";
 
 import { isDefined } from "@lib/utility";
 import { font, color, staticColor, ColorMode, mode } from "@design/theme";
-import Article from "@docs/components/Article";
+import Article from "@design/components/Article";
 
 const Styled = {
   TableOfContents: styled.div`

@@ -18,7 +18,7 @@ const Badge = styled.span<{ variant?: Variant }>`
   margin-top: 0.1em;
   top: -0.1em;
 
-  font-size: 55%;
+  font-size: 70%;
   line-height: 1;
   text-align: center;
   white-space: nowrap;

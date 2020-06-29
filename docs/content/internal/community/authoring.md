@@ -83,10 +83,10 @@ Then, there would be **three generated docs pages**: `/`, `/pathA/`, and `/pathA
 > Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent elementum egestas pretium.
 > Proin laoreet arcu et scelerisque facilisis. In hac habitasse platea dictumst. Curabitur ut
 > eleifend dui. Morbi eu congue ipsum. Proin fermentum dui hendrerit, mattis ligula id,
-> pharetra lacus. Pellentesque sodales nibh et auctor maximus. Donec sed mauris odio. 
+> pharetra lacus. Pellentesque sodales nibh et auctor maximus. Donec sed mauris odio.
 ```
 
-> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent elementum egestas pretium. Proin laoreet arcu et scelerisque facilisis. In hac habitasse platea dictumst. Curabitur ut eleifend dui. Morbi eu congue ipsum. Proin fermentum dui hendrerit, mattis ligula id, pharetra lacus. Pellentesque sodales nibh et auctor maximus. Donec sed mauris odio. 
+> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent elementum egestas pretium. Proin laoreet arcu et scelerisque facilisis. In hac habitasse platea dictumst. Curabitur ut eleifend dui. Morbi eu congue ipsum. Proin fermentum dui hendrerit, mattis ligula id, pharetra lacus. Pellentesque sodales nibh et auctor maximus. Donec sed mauris odio.
 
 </Demo>
 
@@ -216,14 +216,13 @@ The `<Overview>` component can be used to provide an overview of a page's childr
 <Overview />
 ```
 
-<div className="seamless-image">
-
-<h2>In This Section</h2>
+<Article>
+<h2 style={{ marginTop: 0 }}>In This Section</h2>
 
 - [Auto Responses](/internal/modules/auto-responses/)
 - [Settings](/internal/modules/settings/)
 
-</div>
+</Article>
 </Demo>
 
 ### Demo
@@ -268,15 +267,15 @@ vehicula. Maecenas ultricies erat id nunc tempus, malesuada accumsan justo
 dignissim. Nam interdum vitae arcu et pharetra. Integer eget faucibus arcu.
 ~~~
 
-<div>
-<h2 style={{marginTop: 0}}>Lorem ipsum</h2>
+<Article>
+<h2 style={{ marginTop: 0 }}>Lorem ipsum</h2>
 
 Etiam blandit diam sit amet pharetra pellentesque. Integer auctor nisl et sodales
 imperdiet. Integer vitae tincidunt augue. Duis condimentum lectus at tincidunt
 vehicula. Maecenas ultricies erat id nunc tempus, malesuada accumsan justo
 dignissim. Nam interdum vitae arcu et pharetra. Integer eget faucibus arcu.
 
-</div>
+</Article>
 </Demo>
 </Demo>
 
@@ -321,7 +320,7 @@ Alerts are a block-level wrapper element that can be used to give emphasis or se
 <Demo>
 
 ```jsx
-<Alert type="error">
+<Alert type="danger">
 
 **Error** content here, such as important scenarios to avoid or errors that might occur in the
 process
@@ -329,7 +328,7 @@ process
 </Alert>
 ```
 
-<Alert type="error">
+<Alert type="danger">
 
 **Error** content here, such as important scenarios to avoid or errors that might occur in the process
 
@@ -372,11 +371,13 @@ Nam interdum vitae arcu et pharetra. Integer eget faucibus arcu.
 </Collapse>
 ~~~
 <Collapse>
+<Article>
 
 <h1>Lorem ipsum</h1>
 
 Etiam blandit diam sit amet pharetra pellentesque. Integer auctor nisl et sodales imperdiet. Integer vitae tincidunt augue. Duis condimentum lectus at tincidunt vehicula. Maecenas ultricies erat id nunc tempus, malesuada accumsan justo dignissim. Nam interdum vitae arcu et pharetra. Integer eget faucibus arcu.
 
+</Article>
 </Collapse>
 </Demo>
 
@@ -419,7 +420,7 @@ Snippets from the local repository can be embedded on the site (either inside a 
 
 #### External Snippet
 
-Snippets from online sources can be asynchronously loaded onto the page upon render. This means that they can be updated independently of the module build. 
+Snippets from online sources can be asynchronously loaded onto the page upon render. This means that they can be updated independently of the module build.
 
 <Alert type="warning">
 

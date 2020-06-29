@@ -1,3 +1,5 @@
+import { parseToRgb } from "polished";
+
 /**
  * Page-wide color mode (light/dark)
  */
@@ -230,4 +232,33 @@ export function dynamicColor(
  */
 export function mode(colorMode: ColorMode): string {
   return `body.${colorMode} &`;
+}
+
+/**
+ * Splits a color into a "r, g, b" string for use in opacity-enabled variables.
+ * See https://blog.jim-nielsen.com/2019/generating-shades-of-color-using-css-variables/
+ * @param baseColor - base color string
+ */
+export function splitColor(baseColor: string): string {
+  const { red, green, blue } = parseToRgb(baseColor);
+  return `${red}, ${green}, ${blue}`;
+}
+
+/**
+ * Gets the (unchanging) string value of the given color key
+ * under the given color mode (uses `defaultMode` as a fallback).
+ * **Will not be reactive to the app's theme**.
+ * To use a reactive version, see `color` for CSS
+ * and `useThemeColor` (implementation specific) for JavaScript
+ * @param key - dynamic color key to get the color for
+ * @param colorMode - color mode to use when looking up actual value
+ */
+export function hybridColor(
+  key: ColorKey,
+  colorMode: ColorMode = defaultMode
+): string {
+  if (key in staticColors) {
+    return staticColors[key as StaticColorKey];
+  }
+  return colors[colorMode][key as DynamicColorKey];
 }

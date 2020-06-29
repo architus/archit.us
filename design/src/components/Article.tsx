@@ -11,8 +11,9 @@ import {
   staticColor,
   scrollBarAuto,
   shadow,
+  ZIndex,
 } from "@design/theme";
-import { transparentize } from "polished";
+import { transparentize, darken } from "polished";
 
 /**
  * HTML styled article component as a wrapper for long-form Markdown-like content
@@ -57,7 +58,7 @@ const Article = styled.article`
   ol {
     opacity: 0.95;
 
-    li > p::last-child {
+    li > p:last-child {
       margin-bottom: 0;
     }
 
@@ -81,7 +82,12 @@ const Article = styled.article`
   }
 
   h1 {
-    margin-top: 2rem;
+    font-weight: 600;
+    font-size: 2.5rem;
+    color: ${color("textStrong")};
+    ${down("sm")} {
+      font-size: 2.2rem;
+    }
   }
 
   h2 {
@@ -102,6 +108,39 @@ const Article = styled.article`
     margin-top: 1.6rem;
   }
 
+  h5 {
+    font-size: 0.95rem;
+    margin-top: 1.75rem;
+    margin-bottom: 1.25rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: ${color("textFade")};
+  }
+
+  h6 {
+    display: flex;
+    align-items: center;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    z-index: ${ZIndex.TableHeader};
+    margin: ${gap.micro} 0 0;
+    padding-left: ${gap.nano};
+    font-size: 1.125rem;
+    font-weight: 600;
+    height: 44px;
+
+    color: ${color("text")};
+    border: 1px solid ${color("contrastBorder")};
+    border-bottom: none !important;
+    ${mode(ColorMode.Dark)} {
+      background-color: ${darken(0.02, dynamicColor("bg+20", ColorMode.Dark))};
+    }
+    ${mode(ColorMode.Light)} {
+      background-color: ${darken(0.03, dynamicColor("bg-10", ColorMode.Light))};
+    }
+  }
+
   blockquote {
     --line-color: ${transparentize(0.9, staticColor("dark"))};
     ${mode(ColorMode.Dark)} {
@@ -114,6 +153,7 @@ const Article = styled.article`
       margin-bottom: 0;
     }
   }
+
   .gatsby-highlight {
     background-color: var(--code-bg);
 
@@ -131,7 +171,7 @@ const Article = styled.article`
     white-space: pre-line;
 
     pre {
-      ${scrollBarAuto()}
+      ${scrollBarAuto(0.125)}
       padding: ${gap.micro};
 
       & > code {
@@ -162,35 +202,3 @@ const Article = styled.article`
 `;
 
 export default Article;
-
-// .gatsby-highlight {
-//   @extend %custom-scrollbar;
-//   @extend %code-bg;
-
-//   @include dark {
-//     box-shadow: $drop-shadow;
-//   }
-
-//   @include light {
-//     box-shadow: inset 0 0 6px rgba(black, 0.1);
-//   }
-
-//   overflow: auto;
-//   margin: 0 0 1rem;
-//   border-radius: 8px;
-//   padding: 0 0.5rem;
-//   white-space: pre-line;
-
-//   pre {
-//     @extend %custom-scrollbar;
-//     padding: 1.25rem;
-//   }
-// }
-
-// .gatsby-resp-image-wrapper {
-//   margin-top: 1.75rem;
-//   margin-bottom: 2rem;
-//   box-shadow: $drop-shadow;
-//   border-radius: 8px;
-//   overflow: hidden;
-// }

@@ -175,7 +175,7 @@ Generally speaking, if you are not interested in learning the intricacies of the
 
 In the event that architus is unable to parse your trigger regex, it will give an error message along with a number indicating the position (after the `^` and starting at 0) of the error.
 
-<Alert type="error">
+<Alert type="danger">
 
 Non-admin users will not be able to set regex triggers unless they are allowed in `settings`
 </Alert>

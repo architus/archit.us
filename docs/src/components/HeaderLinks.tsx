@@ -29,7 +29,7 @@ const link = css`
   justify-content: center;
   position: relative;
   font-family: ${font("headings")};
-  font-size: 1.1rem;
+  font-size: 1rem;
   z-index: 1;
   white-space: nowrap;
 
@@ -102,7 +102,7 @@ const link = css`
     background-color: ${color("light")};
     color: ${color("primary-20")};
     font-weight: 600;
-    font-size: 70%;
+    font-size: 80%;
   }
 `;
 

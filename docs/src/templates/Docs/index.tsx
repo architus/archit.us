@@ -3,9 +3,10 @@ import { PageProps, graphql } from "gatsby";
 import { styled } from "linaria/react";
 import { css, cx } from "linaria";
 import { transparentize } from "polished";
+
 import Layout from "@docs/components/Layout";
 import Mdx from "@docs/components/Mdx";
-import Article from "@docs/components/Article";
+import Article from "@design/components/Article";
 import Breadcrumb from "@docs/components/Breadcrumb";
 import PageMetadata from "@docs/components/PageMetadata";
 import Overview, { OverviewContext } from "@docs/components/Overview";
@@ -16,12 +17,13 @@ import TableOfContents, {
 import SequenceLinks, {
   SequenceLinkData,
 } from "@docs/components/SequenceLinks";
+import { CollapseContent } from "@docs/components/Collapse";
 import { History } from "@docs/build/github-types";
 import { collapseBreakpoint, minimizeBreakpoint } from "@docs/layout";
 import { down, gap, color, ColorMode, mode, dynamicColor } from "@design/theme";
 import { isDefined } from "@lib/utility";
-import { DocsContext, BreadcrumbSegment } from "./frontmatter";
 import "@docs/one-universal";
+import { DocsContext, BreadcrumbSegment } from "./frontmatter";
 
 const StyledArticle = styled(Article)`
   & > p:first-of-type {
@@ -45,6 +47,12 @@ const StyledArticle = styled(Article)`
     color: var(--lead-color);
     margin-bottom: 2rem;
     opacity: 0.95;
+  }
+
+  ${CollapseContent} .gatsby-highlight {
+    margin-top: calc(${gap.flow} * -0.5);
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
   }
 `;
 

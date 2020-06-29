@@ -4,7 +4,7 @@ import { styled } from "linaria/react";
 import Layout from "@docs/components/Layout";
 import { gap, down, color } from "@design/theme";
 import { collapseBreakpoint } from "@docs/layout";
-import Article from "@docs/components/Article";
+import Article from "@design/components/Article";
 
 const Styled = {
   Outer: styled.div`
