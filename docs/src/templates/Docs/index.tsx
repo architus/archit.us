@@ -25,6 +25,13 @@ import { isDefined } from "@lib/utility";
 import "@docs/one-universal";
 import { DocsContext, BreadcrumbSegment } from "./frontmatter";
 
+// ? Note: this is done because Breadcrumb can't be styled
+// ?       due to a bug in gatsby-plugin-linaria
+// ? See https://github.com/cometkim/gatsby-plugin-linaria/issues/19
+const breadcrumbClass = css`
+  margin-bottom: ${gap.flow};
+`;
+
 const StyledArticle = styled(Article)`
   & > p:first-of-type {
     --lead-color: ${color("primary-30")};
@@ -168,7 +175,9 @@ const Docs: React.FC<PageProps<DocsData, DocsContext>> = ({
       description={lead ?? undefined}
     >
       <Styled.Outer>
-        {isDefined(breadcrumb) && <Breadcrumb segments={breadcrumb} />}
+        {isDefined(breadcrumb) && (
+          <Breadcrumb segments={breadcrumb} className={breadcrumbClass} />
+        )}
         <Styled.Title>
           {<NavLabel text={title} badge={badge} gap="nano" />}
         </Styled.Title>

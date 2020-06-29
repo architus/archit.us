@@ -1,5 +1,24 @@
-import React from "react";
-import { BreadcrumbSegment } from "templates/Docs/frontmatter";
+import React, { Fragment } from "react";
+import { css } from "linaria";
+import { styled } from "linaria/react";
+import { FaChevronRight } from "react-icons/fa";
+
+import { BreadcrumbSegment } from "@docs/templates/Docs/frontmatter";
+import { isDefined } from "@lib/utility";
+import { color, gap, primaryLink } from "@design/theme";
+import AutoLink from "./AutoLink";
+
+const primaryLinkClassName = css`
+  ${primaryLink}
+`;
+
+const Styled = {
+  BreadcrumbIcon: styled(FaChevronRight)`
+    color: ${color("textFade")};
+    font-size: 70%;
+    margin: 0 ${gap.pico};
+  `,
+};
 
 type BreadcrumbProps = {
   segments: BreadcrumbSegment[];
@@ -15,9 +34,28 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
   segments,
   className,
   style,
-}) => {
-  // TODO implement
-  return null;
-};
+}) => (
+  <div className={className} style={style}>
+    {segments.map(({ path, text }, index) => (
+      <Fragment key={path ?? text}>
+        <BreadcrumbEntry path={path} text={text} />
+        {index !== segments.length - 1 ? <Styled.BreadcrumbIcon /> : null}
+      </Fragment>
+    ))}
+  </div>
+);
 
 export default Breadcrumb;
+
+// ? =================
+// ? Helper components
+// ? =================
+
+const BreadcrumbEntry: React.FC<BreadcrumbSegment> = ({ text, path }) =>
+  isDefined(path) ? (
+    <AutoLink className={primaryLinkClassName} href={path}>
+      {text}
+    </AutoLink>
+  ) : (
+    <span>{text}</span>
+  );

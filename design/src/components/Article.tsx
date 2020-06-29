@@ -1,8 +1,8 @@
 import { styled } from "linaria/react";
+import { transparentize, darken } from "polished";
 
 import {
   gap,
-  transition,
   dynamicColor,
   ColorMode,
   color,
@@ -12,8 +12,8 @@ import {
   scrollBarAuto,
   shadow,
   ZIndex,
+  primaryLink,
 } from "@design/theme";
-import { transparentize, darken } from "polished";
 
 /**
  * HTML styled article component as a wrapper for long-form Markdown-like content
@@ -29,29 +29,8 @@ const Article = styled.article`
     margin-top: calc(0.7 * ${gap.flow});
   }
 
-  --link-color: ${color("primary")};
-  --link-color-fade: ${transparentize(
-    0.6,
-    dynamicColor("primary", ColorMode.Light)
-  )};
-  ${mode(ColorMode.Dark)} {
-    --link-color: ${color("primary+10")};
-    --link-color-fade: ${transparentize(
-      0.6,
-      dynamicColor("primary+10", ColorMode.Dark)
-    )};
-  }
-
   a {
-    color: var(--link-color);
-    text-decoration: none;
-    ${transition(["border-bottom-color"])};
-    border-bottom: 1px solid var(--link-color-fade);
-
-    &:hover,
-    &:focus {
-      border-bottom-color: var(--link-color);
-    }
+    ${primaryLink}
   }
 
   ul,

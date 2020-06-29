@@ -2,12 +2,14 @@ import { css } from "linaria";
 
 import { injectColorGlobals, color } from "./color";
 import { injectTypographyGlobals } from "./typography";
+import { injectMixinGlobals } from "./mixins";
 
 // From https://hankchizljaw.com/wrote/a-modern-css-reset/
 export const globals = css`
   :global() {
     ${injectColorGlobals()}
     ${injectTypographyGlobals()}
+    ${injectMixinGlobals()}
 
     // Box sizing rules
     *,
