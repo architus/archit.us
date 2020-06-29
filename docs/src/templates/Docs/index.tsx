@@ -21,7 +21,7 @@ import { CollapseContent } from "@docs/components/Collapse";
 import { History } from "@docs/build/github-types";
 import { collapseBreakpoint, minimizeBreakpoint } from "@docs/layout";
 import { down, gap, color, ColorMode, mode, dynamicColor } from "@design/theme";
-import { isDefined } from "@lib/utility";
+import { isDefined, isNil } from "@lib/utility";
 import "@docs/one-universal";
 import { DocsContext, BreadcrumbSegment } from "./frontmatter";
 
@@ -31,6 +31,8 @@ import { DocsContext, BreadcrumbSegment } from "./frontmatter";
 const breadcrumbClass = css`
   margin-bottom: ${gap.flow};
 `;
+
+const sequenceLinksClass = css``;
 
 const StyledArticle = styled(Article)`
   & > p:first-of-type {
@@ -116,7 +118,6 @@ const Styled = {
   Article: StyledArticle,
   TableOfContentsWrapper,
   TableOfContents: StyledTableOfContents,
-  SequenceLinks: styled(SequenceLinks)``,
   PageMetadata: styled(PageMetadata)``,
   BottomDivider: styled.hr`
     margin-top: calc(2.5 * ${gap.flow});
@@ -135,9 +136,9 @@ const Docs: React.FC<PageProps<DocsData, DocsContext>> = ({
   pageContext,
 }) => {
   const { id } = pageContext;
-  const { edges } = data.allDocsPage;
+  const { page, previous, next } = data;
 
-  if (edges.length === 0) {
+  if (isNil(page)) {
     const description =
       `An error ocurred while constructing this page during the build process. ` +
       `No page with ID ${id}`;
@@ -151,7 +152,6 @@ const Docs: React.FC<PageProps<DocsData, DocsContext>> = ({
     );
   }
 
-  const { node, previous, next } = edges[0];
   const {
     title,
     shortTitle,
@@ -166,7 +166,7 @@ const Docs: React.FC<PageProps<DocsData, DocsContext>> = ({
     breadcrumb,
     history,
     children,
-  } = node;
+  } = page;
   const showOverview = isOrphan && children.length > 0;
   return (
     <Layout
@@ -187,7 +187,11 @@ const Docs: React.FC<PageProps<DocsData, DocsContext>> = ({
               {!isOrphan && <Mdx content={parent?.body ?? ""} />}
               {showOverview && <Overview />}
               {!noSequenceLinks && (
-                <Styled.SequenceLinks previous={previous} next={next} />
+                <SequenceLinks
+                  className={sequenceLinksClass}
+                  previous={previous}
+                  next={next}
+                />
               )}
               <Styled.BottomDivider />
               <Styled.PageMetadata
@@ -210,96 +214,92 @@ const Docs: React.FC<PageProps<DocsData, DocsContext>> = ({
 };
 
 type DocsData = {
-  allDocsPage: {
-    edges: Array<{
-      node: {
-        title: string;
-        shortTitle: string;
-        badge: string | null;
-        isOrphan: boolean;
-        noTOC: boolean;
-        noSequenceLinks: boolean;
-        originalPath: string | null;
-        lead: string | null;
-        parent: null | {
-          body: string;
-          tableOfContents: {
-            items: TableOfContentsNode[];
-          };
-        };
-        sideNav: {
-          id: string;
-        };
-        breadcrumb: BreadcrumbSegment[] | null;
-        history: History | null;
-        children: Array<{
-          title: string;
-          path: string;
-          badge: string | null;
-        }>;
+  page: {
+    title: string;
+    shortTitle: string;
+    badge: string | null;
+    isOrphan: boolean;
+    noTOC: boolean;
+    noSequenceLinks: boolean;
+    originalPath: string | null;
+    lead: string | null;
+    parent: null | {
+      body: string;
+      tableOfContents: {
+        items: TableOfContentsNode[];
       };
-      previous: null | SequenceLinkData;
-      next: null | SequenceLinkData;
+    };
+    sideNav: {
+      id: string;
+    };
+    breadcrumb: BreadcrumbSegment[] | null;
+    history: History | null;
+    children: Array<{
+      title: string;
+      path: string;
+      badge: string | null;
     }>;
   };
+  previous: null | SequenceLinkData;
+  next: null | SequenceLinkData;
 };
 
 export const query = graphql`
-  query DocsPageTemplateQuery($id: String = "") {
-    allDocsPage(filter: { id: { eq: $id } }, sort: { fields: preorder }) {
-      edges {
-        node {
-          title
-          shortTitle
-          badge
-          isOrphan
-          noTOC
-          noSequenceLinks
-          originalPath
-          lead
-          parent {
-            ... on Mdx {
-              body
-              tableOfContents(maxDepth: 4)
-            }
-          }
-          sideNav {
-            id
-          }
-          breadcrumb {
-            text
-            path
-          }
-          history {
-            lastModified
-            authors {
-              url
-              name
-              login
-              avatarUrl
-            }
-          }
-          children {
-            ... on DocsPage {
-              title
-              path
-              badge
-            }
-          }
-        }
-        next {
-          title
-          badge
-          path
-          lead
-        }
-        previous {
-          title
-          badge
-          path
-          lead
+  query DocsPageTemplateQuery(
+    $id: String = ""
+    $previous: String = ""
+    $next: String = ""
+  ) {
+    page: docsPage(id: { eq: $id }) {
+      title
+      shortTitle
+      badge
+      isOrphan
+      noTOC
+      noSequenceLinks
+      originalPath
+      lead
+      parent {
+        ... on Mdx {
+          body
+          tableOfContents(maxDepth: 4)
         }
       }
+      sideNav {
+        id
+      }
+      breadcrumb {
+        text
+        path
+      }
+      history {
+        lastModified
+        authors {
+          url
+          name
+          login
+          avatarUrl
+        }
+      }
+      children {
+        ... on DocsPage {
+          title
+          path
+          badge
+        }
+      }
+    }
+    next: docsPage(id: { eq: $next }) {
+      title
+      badge
+      lead
+      path
+    }
+    previous: docsPage(id: { eq: $previous }) {
+      title
+      badge
+      lead
+      path
     }
   }
 `;

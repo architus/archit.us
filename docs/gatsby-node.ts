@@ -199,7 +199,7 @@ export const createPages: GatsbyNode["createPages"] = async ({
   });
 
   activity.end();
-  activity = reporter.activityTimer(`dynamically generating docs pages`);
+  activity = reporter.activityTimer(`dynamically generating docs page nodes`);
   activity.start();
 
   // Recursively make a map of order indices using a pre-order traversal
@@ -259,31 +259,71 @@ export const createPages: GatsbyNode["createPages"] = async ({
         sideNav: sideNavId,
         ...nodeContent,
       });
-
-      // Pass in ID to page so it can perform query
-      const docsContext: DocsContext = { id };
-      actions.createPage({
-        path: subtree.path,
-        component: DocsPageTemplate,
-        context: docsContext,
-      });
-
-      let suffix;
-      if (!subtree.invisible) {
-        if (isNil(subtree.id)) {
-          suffix = "(orphan)";
-        } else {
-          suffix = `=> ${subtree.id}`;
-        }
-      }
-
-      reporter.info(`docs page @ '${subtree.path}' ${suffix}`);
-      return id;
     }
 
     return null;
   }
   roots.forEach((root, i) => createSubtreePages(root, ids[i]));
+
+  activity.end();
+  activity = reporter.activityTimer(`generating all pages`);
+  activity.start();
+
+  type GenerationQueryResult = {
+    pages: {
+      edges: Array<{
+        node: {
+          id: string;
+          path: string;
+        };
+        previous: null | { id: string };
+        next: null | { id: string };
+      }>;
+    };
+  };
+
+  const generationQuery = `
+  query GenerationQuery {
+    pages: allDocsPage(sort: {fields: preorder, order: ASC}) {
+      edges {
+        node {
+          id
+          path
+        }
+        previous {
+          id
+        }
+        next {
+          id
+        }
+      }
+    }
+  }
+
+  `;
+
+  const { data: generationData, errors: generationErrors } = await graphql<
+    GenerationQueryResult
+  >(generationQuery);
+  if (generationErrors || isNil(generationData)) {
+    throw errors;
+  }
+
+  generationData.pages.edges.forEach(({ node, previous, next }) => {
+    // Pass in page/previous/next IDs to page so it can perform query
+    const docsContext: DocsContext = {
+      id: node.id,
+      previous: previous?.id ?? null,
+      next: next?.id ?? null,
+    };
+    actions.createPage({
+      path: node.path,
+      component: DocsPageTemplate,
+      context: docsContext,
+    });
+
+    reporter.info(`docs page @ '${node.path}' => ${node.id}`);
+  });
 
   activity.end();
 };

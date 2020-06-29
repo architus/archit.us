@@ -101,8 +101,8 @@ export default TableOfContents;
 
 const TocItems: React.FC<{ items: TableOfContentsNode[] }> = ({ items }) => (
   <>
-    {items.map((item) => (
-      <li key={item.url}>
+    {items.map((item, i) => (
+      <li key={`${item.url}-${i}`}>
         <a href={item.url}>{item.title}</a>
         {isDefined(item.items) ? (
           <ul>

@@ -142,4 +142,6 @@ export const docsPageType = `
  */
 export type DocsContext = {
   id: string;
+  previous: string | null;
+  next: string | null;
 };

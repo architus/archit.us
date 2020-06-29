@@ -23,6 +23,26 @@ const Article = styled.article`
   & > * + * {
     margin-top: ${gap.flow};
     margin-bottom: 0;
+
+    &h2 {
+      margin-top: 1.75rem;
+    }
+
+    &h3 {
+      margin-top: 1.7rem;
+    }
+
+    &h4 {
+      margin-top: 1.6rem;
+    }
+
+    &h5 {
+      margin-top: 1.75rem;
+    }
+
+    &h6 {
+      margin-top: ${gap.micro};
+    }
   }
 
   & > p + p {
@@ -71,7 +91,6 @@ const Article = styled.article`
 
   h2 {
     font-size: 1.8rem;
-    margin-top: 1.75rem;
     ${down("sm")} {
       font-size: 1.7rem;
     }
@@ -79,18 +98,14 @@ const Article = styled.article`
 
   h3 {
     font-size: 1.4rem;
-    margin-top: 1.7rem;
   }
 
   h4 {
     font-size: 1.15rem;
-    margin-top: 1.6rem;
   }
 
   h5 {
     font-size: 0.95rem;
-    margin-top: 1.75rem;
-    margin-bottom: 1.25rem;
     letter-spacing: 1px;
     text-transform: uppercase;
     font-weight: 700;
@@ -103,7 +118,6 @@ const Article = styled.article`
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
     z-index: ${ZIndex.TableHeader};
-    margin: ${gap.micro} 0 0;
     padding-left: ${gap.nano};
     font-size: 1.125rem;
     font-weight: 600;
