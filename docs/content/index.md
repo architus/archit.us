@@ -2,6 +2,7 @@
 shortTitle: Docs
 title: Documentation
 noBreadcrumb: true
+noSequenceLinks: true
 isRoot: true
 badge: in-progress
 ---

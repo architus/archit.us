@@ -43,3 +43,11 @@ export function getExternalRegex(): RegExp {
 export function isExternal(href: string): boolean {
   return getExternalRegex().test(href);
 }
+
+export function withoutTrailing(pathPrefix: string): string {
+  return pathPrefix.slice(-1) === "/" ? pathPrefix.slice(0, -1) : pathPrefix;
+}
+
+export function withoutLeading(path: string): string {
+  return path.slice(0, 1) === "/" ? path.slice(1) : path;
+}

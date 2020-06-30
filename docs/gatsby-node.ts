@@ -259,6 +259,7 @@ export const createPages: GatsbyNode["createPages"] = async ({
         sideNav: sideNavId,
         ...nodeContent,
       });
+      return id;
     }
 
     return null;

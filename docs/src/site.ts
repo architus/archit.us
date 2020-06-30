@@ -1,10 +1,5 @@
 import { Nil } from "@lib/types";
-import { isDefined } from "@lib/utility";
-
-const withoutTrailing = (pathPrefix: string): string =>
-  pathPrefix.slice(-1) === "/" ? pathPrefix.slice(0, -1) : pathPrefix;
-const withoutLeading = (path: string): string =>
-  path.slice(0, 1) === "/" ? path.slice(1) : path;
+import { isDefined, withoutTrailing, withoutLeading } from "@lib/utility";
 
 /**
  * Adds a path prefix to a base path

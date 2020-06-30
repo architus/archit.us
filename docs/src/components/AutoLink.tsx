@@ -7,7 +7,7 @@ import { isDefined, isExternal } from "@lib/utility";
 import { SpacingKey, gap } from "@design/theme";
 import { css, cx } from "linaria";
 
-const noStyleClassName = css`
+const hideUnderlineClass = css`
   border-bottom: none !important;
 `;
 
@@ -26,6 +26,7 @@ type AutoLinkProps = {
   space?: SpacingKey;
   newTab?: boolean;
   noIcon?: boolean;
+  noUnderline?: boolean;
   className?: string;
   style?: React.CSSProperties;
 } & Partial<
@@ -46,14 +47,19 @@ const AutoLink: React.FC<AutoLinkProps> = ({
   space = "pico",
   newTab = true,
   noIcon = false,
+  noUnderline = false,
   className,
   style,
   ref,
   ...rest
 }) => {
-  // Hide the icon if an image tag is inside (for use in Mdx shields)
-  const noStyle = noIcon || isImageChild(children);
-  const classNames = cx(className, noStyle ? noStyleClassName : undefined);
+  const imageChild = isImageChild(children);
+  const hideIcon = noIcon || imageChild;
+  const hideUnderline = noUnderline || imageChild;
+  const classNames = cx(
+    className,
+    hideUnderline ? hideUnderlineClass : undefined
+  );
 
   if (isDefined(external) ? external : isExternal(href)) {
     const props = { ...rest };
@@ -62,13 +68,13 @@ const AutoLink: React.FC<AutoLinkProps> = ({
     }
     return (
       <a href={href} className={classNames} style={style} {...props}>
-        {left && !noStyle && (
+        {left && !hideIcon && (
           <Styled.ExternalIcon mr={space}>
             <FaExternalLinkAlt />
           </Styled.ExternalIcon>
         )}
         {children}
-        {!left && !noStyle && (
+        {!left && !hideIcon && (
           <Styled.ExternalIcon ml={space}>
             <FaExternalLinkAlt />
           </Styled.ExternalIcon>

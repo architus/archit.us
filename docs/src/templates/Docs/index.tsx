@@ -32,7 +32,7 @@ const breadcrumbClass = css`
   margin-bottom: ${gap.flow};
 `;
 
-const sequenceLinksClass = css``;
+const pageMetadataClass = css``;
 
 const StyledArticle = styled(Article)`
   & > p:first-of-type {
@@ -118,9 +118,11 @@ const Styled = {
   Article: StyledArticle,
   TableOfContentsWrapper,
   TableOfContents: StyledTableOfContents,
-  PageMetadata: styled(PageMetadata)``,
-  BottomDivider: styled.hr`
+  SequenceWrapper: styled.div`
     margin-top: calc(2.5 * ${gap.flow});
+  `,
+  BottomDivider: styled.hr`
+    margin-top: calc(1 * ${gap.flow});
     opacity: 0.25;
     ${mode(ColorMode.Dark)} {
       opacity: 0.1;
@@ -186,17 +188,16 @@ const Docs: React.FC<PageProps<DocsData, DocsContext>> = ({
             <Styled.Article>
               {!isOrphan && <Mdx content={parent?.body ?? ""} />}
               {showOverview && <Overview />}
-              {!noSequenceLinks && (
-                <SequenceLinks
-                  className={sequenceLinksClass}
-                  previous={previous}
-                  next={next}
-                />
-              )}
+              <Styled.SequenceWrapper>
+                {!noSequenceLinks && (
+                  <SequenceLinks previous={previous} next={next} />
+                )}
+              </Styled.SequenceWrapper>
               <Styled.BottomDivider />
-              <Styled.PageMetadata
-                history={history}
+              <PageMetadata
+                className={pageMetadataClass}
                 originalPath={originalPath}
+                history={history}
               />
             </Styled.Article>
             {!noTOC && (parent?.tableOfContents.items ?? []).length > 0 && (
@@ -258,7 +259,7 @@ export const query = graphql`
       noTOC
       noSequenceLinks
       originalPath
-      lead
+      lead(maxLength: 250)
       parent {
         ... on Mdx {
           body
@@ -292,13 +293,11 @@ export const query = graphql`
     next: docsPage(id: { eq: $next }) {
       title
       badge
-      lead
       path
     }
     previous: docsPage(id: { eq: $previous }) {
       title
       badge
-      lead
       path
     }
   }
