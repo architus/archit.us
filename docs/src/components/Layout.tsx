@@ -5,12 +5,16 @@ import { css } from "linaria";
 
 import Header from "@docs/components/Header";
 import SideNav from "@docs/components/SideNav";
-import Footer from "@docs/components/Footer";
+import Footer, { FooterContent } from "@design/components/Footer";
 import SEO from "@docs/components/SEO";
 import {
   headerHeight,
   minimizeBreakpoint,
   collapseBreakpoint,
+  sitePaddingVariable,
+  contentWidthVariable,
+  contentWidth,
+  sitePadding,
 } from "@docs/layout";
 import {
   gap,
@@ -32,13 +36,15 @@ export const global = css`
   :global() {
     /* Set global site padding */
     body {
-      --site-padding: ${gap.milli};
+      ${`${sitePaddingVariable}: ${gap.milli};`}
       ${down("md")} {
-        --site-padding: ${gap.micro};
+        ${`${sitePaddingVariable}: ${gap.micro};`}
       }
       ${down("sm")} {
-        --site-padding: ${gap.nano};
+        ${`${sitePaddingVariable}: ${gap.nano};`}
       }
+
+      ${`${contentWidthVariable}: 1080px;`}
     }
 
     #gatsby-focus-wrapper {
@@ -53,7 +59,14 @@ const fullWidth = "325px";
 const minimizedWidth = "285px";
 
 // Move out of styled to use as selector
-const StyledFooter = styled(Footer)``;
+const StyledFooter = styled(Footer)`
+  padding-left: ${sitePadding};
+
+  ${FooterContent} {
+    max-width: ${contentWidth};
+    padding-right: ${sitePadding};
+  }
+`;
 const Drawer = styled.div`
   height: 100%;
   width: ${fullWidth};
@@ -180,7 +193,7 @@ const Styled = {
       flex-grow: 1;
 
       ${up(collapseBreakpoint)} {
-        padding-left: 1.5rem;
+        padding-left: ${gap.micro};
       }
     }
 

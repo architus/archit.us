@@ -19,7 +19,12 @@ import SequenceLinks, {
 } from "@docs/components/SequenceLinks";
 import { CollapseContent } from "@docs/components/Collapse";
 import { History } from "@docs/build/github-types";
-import { collapseBreakpoint, minimizeBreakpoint } from "@docs/layout";
+import {
+  collapseBreakpoint,
+  minimizeBreakpoint,
+  sitePadding,
+  contentWidth,
+} from "@docs/layout";
 import { down, gap, color, ColorMode, mode, dynamicColor } from "@design/theme";
 import { isDefined, isNil } from "@lib/utility";
 import "@docs/one-universal";
@@ -74,7 +79,7 @@ const StyledTableOfContents = styled(TableOfContents)`
   padding-left: 2.65em;
   padding-top: 0.35em !important;
   z-index: 10;
-  max-height: calc(100vh - 11rem);
+  max-height: calc(100vh - 11.5rem);
 `;
 
 const contentWithToc = css`
@@ -89,15 +94,15 @@ const contentWithToc = css`
 
 const Styled = {
   Outer: styled.div`
-    max-width: 1080px;
+    max-width: ${contentWidth};
     margin: 0 auto;
 
     padding-top: 3rem;
     padding-bottom: 4rem;
     padding-left: ${gap.nano};
-    padding-right: var(--site-padding);
+    padding-right: ${sitePadding};
     ${down(collapseBreakpoint)} {
-      padding-left: var(--site-padding);
+      padding-left: ${sitePadding};
     }
   `,
   Title: styled.h1`

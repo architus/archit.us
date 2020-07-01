@@ -17,7 +17,7 @@ import {
   up,
   scrollBar,
 } from "@design/theme";
-import { headerHeight } from "@docs/layout";
+import { headerHeight, sitePadding } from "@docs/layout";
 import HeaderLinks from "@docs/components/HeaderLinks";
 import HeaderActionBar, {
   actionBarSpacing,
@@ -85,12 +85,10 @@ const Styled = {
     justify-content: flex-start;
     z-index: ${ZIndex.Header};
     box-shadow: ${shadow("z1")};
-    padding-left: calc(var(--site-padding) - ${logoLeftSpace});
+    padding-left: calc(${sitePadding} - ${logoLeftSpace});
     /* This has to be a function
     to have linaria not eagerly evaluate 'actionBarSpacing' at build time */
-    padding-right: calc(
-      var(--site-padding) - ${(): string => actionBarSpacing}
-    );
+    padding-right: calc(${sitePadding} - ${(): string => actionBarSpacing});
 
     /* Set the background-color to be primary on SSR
     and try to reverse-blend it with the background while adding opacity,

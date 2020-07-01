@@ -52,8 +52,8 @@ const Styled = {
       flex-direction: column;
 
       & > :not(:first-child) {
-        align-self: flex-end;
-        margin-top: ${gap.pico};
+        align-self: flex-start;
+        margin-top: ${gap.nano};
       }
     }
   `,

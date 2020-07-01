@@ -17,6 +17,7 @@ const shadows = {
     `0 14px 28px ${color("shadowBold")}`,
     `0 10px 10px ${color("shadowMedium")}`,
   ].join(","),
+  innerTop: `inset 0 11px 8px -10px ${color("shadowMedium")}`,
 } as const;
 
 /**

@@ -3,7 +3,7 @@ import { styled } from "linaria/react";
 
 import Layout from "@docs/components/Layout";
 import { gap, down, color } from "@design/theme";
-import { collapseBreakpoint } from "@docs/layout";
+import { collapseBreakpoint, sitePadding } from "@docs/layout";
 import Article from "@design/components/Article";
 
 const Styled = {
@@ -11,9 +11,9 @@ const Styled = {
     padding-top: 3rem;
     padding-bottom: 4rem;
     padding-left: ${gap.nano};
-    padding-right: var(--site-padding);
+    padding-right: ${sitePadding};
     ${down(collapseBreakpoint)} {
-      padding-left: var(--site-padding);
+      padding-left: ${sitePadding};
     }
   `,
   Title: styled.h1`
