@@ -12,6 +12,8 @@ import {
   up,
   gap,
 } from "@design/theme";
+import { useLocation } from "@reach/router";
+import { cx } from "linaria";
 
 const rightLink = "right";
 const rightMixin = `
@@ -30,6 +32,7 @@ const leftMixin = `
 `;
 const rightActiveMixin = `transform: translateX(0.25em);`;
 const leftActiveMixin = `margin-left: -1.125em !important;`;
+const moveBreakpoint = "xxl";
 
 const Link = styled.a`
   font-style: normal;
@@ -47,10 +50,10 @@ const Link = styled.a`
   opacity: 0;
 
   &:not(.${rightLink}) {
-    @media (max-width: 1599.99px) {
+    ${down(moveBreakpoint)} {
       ${rightMixin}
     }
-    @media (min-width: 1600px) {
+    ${up(moveBreakpoint)} {
       ${leftMixin}
     }
   }
@@ -91,6 +94,7 @@ const makeLinkIconSvg = (color: string): string => {
   return `data:image/svg+xml,${encodeURIComponent(svg)}`;
 };
 
+const activeClass = "active";
 const Styled = {
   LinkIcon: styled.span`
     background-image: url("${makeLinkIconSvg(darkLinkColor)}");
@@ -107,12 +111,16 @@ const Styled = {
   AnchorWrapper: styled.div`
     position: relative;
 
-    &:hover ${Link}, ${Link}:focus {
+    &.${activeClass} ${Link} {
+      opacity: 0.9 !important;
+    }
+
+    &:hover ${Link}, ${Link}:focus, &.${activeClass} ${Link} {
       &:not(.${rightLink}) {
-        ${down("xl")} {
+        ${down(moveBreakpoint)} {
           ${rightActiveMixin}
         }
-        ${up("xl")} {
+        ${up(moveBreakpoint)} {
           ${leftActiveMixin}
         }
       }
@@ -151,9 +159,22 @@ export function createHeading({
   component: BaseComponent;
   right?: boolean;
 }): React.ComponentType<HeadingProps> {
-  const heading: React.FC<HeadingProps> = ({ children, id, ...rest }) => {
+  const heading: React.FC<HeadingProps> = ({
+    children,
+    id,
+    className,
+    style,
+    ...rest
+  }) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const location = useLocation();
+    const active = location.hash === `#${id}`;
     return (
-      <Styled.AnchorWrapper id={isDefined(id) ? makeWrapperId(id) : undefined}>
+      <Styled.AnchorWrapper
+        id={isDefined(id) ? makeWrapperId(id) : undefined}
+        className={cx(className, active && activeClass)}
+        style={style}
+      >
         <Styled.Anchor id={id}> </Styled.Anchor>
         <Component {...rest}>
           {children}

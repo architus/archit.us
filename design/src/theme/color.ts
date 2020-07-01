@@ -117,6 +117,11 @@ const staticColors = {
   dark: "rgb(22, 24, 30)",
 };
 
+// Other colors
+export const themeColor = "#6496c4";
+export const themeBgColor = "#496D8F";
+export const msTileColor = "#2b5797";
+
 /**
  * Bootstrap-like variant, using colors injected from the theme.
  * See https://getbootstrap.com/docs/4.0/content/tables/#contextual-classes

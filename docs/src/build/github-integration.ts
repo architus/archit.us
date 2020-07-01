@@ -1,6 +1,6 @@
 import { CreatePagesArgs, Reporter } from "gatsby";
 
-import { isDefined, isNil } from "@lib/utility";
+import { isDefined, isNil, withoutLeading } from "@lib/utility";
 import { Option, Some, None } from "@lib/option";
 import { NavTree } from "@docs/templates/Docs/frontmatter";
 import { GithubUser, History } from "@docs/build/github-types";
@@ -40,7 +40,7 @@ export async function load(
   const activity = reporter.activityTimer(
     `loading page authorship metadata via GitHub integration`
   );
-  activity.start();
+  // activity.start();
 
   type GithubMetadataQueryResult = {
     site: {
@@ -55,22 +55,22 @@ export async function load(
     };
   };
 
-  const githubMetadataQuery = `
-    site {
-      siteMetadata {
-        github {
-          owner
-          name
-          docsRoot
-          branch
+  const { data: siteData, errors: siteErrors } = await graphql<
+    GithubMetadataQueryResult
+  >(`
+    query GitHubSourceQuery {
+      site {
+        siteMetadata {
+          github {
+            owner
+            name
+            docsRoot
+            branch
+          }
         }
       }
     }
-  `;
-
-  const { data: siteData, errors: siteErrors } = await graphql<
-    GithubMetadataQueryResult
-  >(githubMetadataQuery);
+  `);
 
   // Make sure no errors ocurred
   if (isDefined(siteErrors)) {
@@ -123,15 +123,20 @@ export async function load(
     GithubApiResults
   >(
     `
-      query githubMetadataQuery($owner: String!, $name: String!, $limit: Int!) {
+      query githubMetadataQuery(
+        $owner: String!
+        $name: String!
+        $branch: String!
+        $limit: Int!
+      ) {
         github {
           repository(owner: $owner, name: $name) {
-            object(expression: "master") {
+            object(expression: $branch) {
               ... on GitHub_Commit {
                 ${paths.map(
                   (p, i) => `f${i.toString()}: history(
                   first: $limit,
-                  path: "${docsRoot + p}"
+                  path: "${withoutLeading(docsRoot + p)}"
                 ) {
                   nodes {
                     committedDate
@@ -151,7 +156,8 @@ export async function load(
           }
         }
       }
-    `
+    `,
+    { owner, name, branch, limit: 100 }
   );
 
   // Make sure no errors ocurred
@@ -159,7 +165,7 @@ export async function load(
     reporter.warn(
       "An error ocurred while querying the GitHub API for page authorship sourcing"
     );
-    reporter.warn(githubErrors);
+    reporter.warn(String(githubErrors));
     activity.end();
     return None;
   }
@@ -209,7 +215,7 @@ export function attachAuthorship(
 
       // eslint-disable-next-line no-param-reassign
       subtree.history = {
-        lastModified: lastModified.toString(),
+        lastModified: lastModified.getTime().toString(),
         authors,
       };
     }

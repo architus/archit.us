@@ -6,3 +6,7 @@ public
 
 # Linaria
 .linaria-cache
+
+# Local environment files
+.env
+!.env.example

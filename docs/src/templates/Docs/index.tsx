@@ -32,7 +32,9 @@ const breadcrumbClass = css`
   margin-bottom: ${gap.flow};
 `;
 
-const pageMetadataClass = css``;
+const pageMetadataClass = css`
+  margin-top: calc(${gap.flow} - 0.4rem);
+`;
 
 const StyledArticle = styled(Article)`
   & > p:first-of-type {

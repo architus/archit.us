@@ -10,6 +10,7 @@ const breakpoints = {
   md: 768,
   lg: 992,
   xl: 1200,
+  xxl: 1600,
 } as const;
 
 export type BreakpointKey = keyof typeof breakpoints;

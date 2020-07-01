@@ -21,10 +21,11 @@ export const githubUserType = `
  */
 export type History = {
   lastModified: string;
-  authors: Array<GithubUser>;
+  authors: GithubUser[];
 };
 export const historyType = `
   type History @dontInfer {
+    # This is a number-like, but GraphQL doesn't support 64-bit integers
     lastModified: String!
     authors: [GithubUser!]!
   }

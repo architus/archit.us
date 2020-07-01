@@ -1,12 +1,11 @@
 // Loaded by /gatsby-config.js
+import { themeColor, themeBgColor, msTileColor } from "@design/theme/color";
+import * as dotenv from "dotenv";
+import path from "path";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const path = require("path");
-
+dotenv.config();
 const title = process.env.APP_NAME ?? "Architus Docs";
 const description = `General purpose Discord bot supporting advanced role management, custom emotes for non-nitro users, configurable response commands, and more.`;
-const themeColor = "#6496c4";
-const bgColor = "#496D8F";
 
 export const pathPrefix = process.env.BASE_PATH ?? "/";
 
@@ -17,7 +16,7 @@ export const siteMetadata = {
   author: `architus`,
   siteUrl: process.env.SITE_ROOT ?? "https://docs.archit.us",
   themeColor,
-  msTileColor: "#2b5797",
+  msTileColor,
   github: {
     owner: "architus",
     name: "archit.us",
@@ -66,7 +65,7 @@ export const plugins = [
       // eslint-disable-next-line @typescript-eslint/camelcase
       start_url: pathPrefix,
       // eslint-disable-next-line @typescript-eslint/camelcase
-      background_color: bgColor,
+      background_color: themeBgColor,
       // eslint-disable-next-line @typescript-eslint/camelcase
       theme_color: themeColor,
       display: `minimal-ui`,

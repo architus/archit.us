@@ -168,10 +168,11 @@ export const createPages: GatsbyNode["createPages"] = async ({
   const navTree = addDefaults(baseNavTree);
 
   if (githubMetadata.isDefined()) {
+    activity.end();
     activity = reporter.activityTimer(`attaching github metadata to doc pages`);
     activity.start();
+
     attachAuthorship(navTree, githubMetadata.get);
-    activity.end();
   }
 
   activity.end();
@@ -259,6 +260,7 @@ export const createPages: GatsbyNode["createPages"] = async ({
         sideNav: sideNavId,
         ...nodeContent,
       });
+
       return id;
     }
 
