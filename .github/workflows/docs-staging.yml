@@ -11,9 +11,11 @@ on:
 # and then upload the artifacts to our staging server
 name: docs-staging
 env:
-  BASE_STAGING_URL: https://staging.archit.us/docs
+  BASE_STAGING_URL: https://staging.archit.us
+  STAGING_NAMESPACE: docs
   ARCHIVE_NAME: dist.tar.gz
   WORKING_DIR: ./docs
+  COMMENT_TAG: docs
 defaults:
   run:
     working-directory: ./docs
@@ -39,9 +41,9 @@ jobs:
         with:
           mode: pre
           job-name: Build
-          tag: docs
+          tag: ${{ env.COMMENT_TAG }}
           build-time: ${{ steps.build-time.outputs.time }}
-          base-staging-url: ${{ env.BASE_STAGING_URL }}
+          base-staging-url: ${{ env.BASE_STAGING_URL }}/${{ env.STAGING_NAMESPACE }}
           GITHUB_TOKEN: ${{ secrets.ARCHITUS_BOT_TOKEN }}
 
       - name: Get yarn cache directory path
@@ -115,7 +117,7 @@ jobs:
           archive-path: ${{ env.WORKING_DIR }}/${{ env.ARCHIVE_NAME }}
           api-root: ${{ env.BASE_STAGING_URL }}/api
           token: ${{ secrets.STAGING_UPLOAD_API_TOKEN }}
-          namespace: docs
+          namespace: ${{ env.STAGING_NAMESPACE }}
 
       - name: Add post comment to PR
         uses: architus/staging-comment-action@master
@@ -123,10 +125,10 @@ jobs:
         with:
           mode: post
           job-name: Build
-          tag: docs
+          tag: ${{ env.COMMENT_TAG }}
           build-time: ${{ steps.build-time.outputs.time }}
           build-duration: ${{ steps.build.outputs.duration }}
-          base-staging-url: ${{ env.BASE_STAGING_URL }}
+          base-staging-url: ${{ env.BASE_STAGING_URL }}/${{ env.STAGING_NAMESPACE }}
           GITHUB_TOKEN: ${{ secrets.ARCHITUS_BOT_TOKEN }}
 
       - name: Add failure comment to PR
@@ -135,7 +137,7 @@ jobs:
         with:
           mode: failure
           job-name: Build
-          tag: docs
+          tag: ${{ env.COMMENT_TAG }}
           build-time: ${{ steps.build-time.outputs.time }}
-          base-staging-url: ${{ env.BASE_STAGING_URL }}
+          base-staging-url: ${{ env.BASE_STAGING_URL }}/${{ env.STAGING_NAMESPACE }}
           GITHUB_TOKEN: ${{ secrets.ARCHITUS_BOT_TOKEN }}
