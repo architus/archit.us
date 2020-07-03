@@ -31,7 +31,7 @@ jobs:
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles(join(env.WORKING_DIRECTORY, '/**/yarn.lock')) }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles(join(env.WORKING_DIR, '/**/yarn.lock')) }}
           restore-keys: |
             ${{ runner.os }}-yarn-
 
@@ -58,7 +58,7 @@ jobs:
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles(join(env.WORKING_DIRECTORY, '/**/yarn.lock')) }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles(join(env.WORKING_DIR, '/**/yarn.lock')) }}
           restore-keys: |
             ${{ runner.os }}-yarn-
 
