@@ -78,9 +78,9 @@ jobs:
         shell: bash
         env:
           NODE_ENV: production
-          APP_NAME: Architus Staging
+          SITE_NAME: Architus Staging
           SITE_ROOT: ${{ env.BASE_STAGING_URL }}
-          BASE_PATH: ${{ steps.resolve-staging.outputs.path }}
+          SITE_BASE_PATH: ${{ steps.resolve-staging.outputs.path }}
           # Inject the following environment variables from the output of the
           # staging comments action
           BUILD_LOCATION: remote

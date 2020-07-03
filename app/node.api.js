@@ -15,7 +15,7 @@ function generateManifest(state) {
     config: { siteRoot, basePath },
   } = state;
 
-  const name = process.env.APP_NAME ?? "Architus";
+  const name = process.env.SITE_NAME ?? "Architus";
   const withBasePath = (path) => {
     const derivedBase =
       basePath == null || basePath.trim() === "" ? "" : `/${basePath}`;

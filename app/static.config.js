@@ -95,9 +95,9 @@ if (process.env.SITE_ROOT) {
   config.siteRoot = process.env.SITE_ROOT;
 }
 
-if (process.env.BASE_PATH) {
-  console.log(`Using BASE_PATH=${process.env.BASE_PATH}`);
-  config.basePath = process.env.BASE_PATH;
+if (process.env.SITE_BASE_PATH) {
+  console.log(`Using SITE_BASE_PATH=${process.env.SITE_BASE_PATH}`);
+  config.basePath = process.env.SITE_BASE_PATH;
 }
 
 // Configure typescript based on args

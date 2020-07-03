@@ -19,7 +19,7 @@ const GATEWAY_API_BASE: string = process.env.PRODUCTION
  * @param path - base path with leading /
  */
 function withBasePath(path: string): string {
-  if (process.env.BASE_PATH) return `/${process.env.BASE_PATH}${path}`;
+  if (process.env.SITE_BASE_PATH) return `/${process.env.SITE_BASE_PATH}${path}`;
   return path;
 }
 

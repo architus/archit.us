@@ -11,7 +11,7 @@ on:
 # and then upload the artifacts to our staging server
 name: docs-staging
 env:
-  BASE_STAGING_URL: https://staging.archit.us
+  BASE_STAGING_URL: https://staging.archit.us/docs
   ARCHIVE_NAME: dist.tar.gz
   WORKING_DIR: ./docs
 defaults:
@@ -78,9 +78,9 @@ jobs:
         shell: bash
         env:
           NODE_ENV: production
-          APP_NAME: Architus Docs Staging
+          SITE_NAME: Architus Docs Staging
           SITE_ROOT: ${{ env.BASE_STAGING_URL }}
-          BASE_PATH: docs/${{ steps.resolve-staging.outputs.path }}
+          SITE_BASE_PATH: docs/${{ steps.resolve-staging.outputs.path }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_BRANCH: ${{ steps.staging-comment.outputs.branch }}
           # Build environment variables used in the tag
@@ -97,7 +97,7 @@ jobs:
         run: >-
           T="$(date +%s)";
 
-          yarn build;
+          yarn build --prefix-paths;
           exit_code=$?;
 
           T="$(($(date +%s)-T))";

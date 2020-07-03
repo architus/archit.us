@@ -61,7 +61,7 @@ const Layout: React.FC<LayoutProps> = ({
   sticky = true,
   ...rest
 }) => {
-  const siteName = process.env.APP_NAME ?? "Architus";
+  const siteName = process.env.SITE_NAME ?? "Architus";
   const builtTitle = isNil(title) ? siteName : `${siteName} | ${title}`;
 
   // Dark mode control hooks

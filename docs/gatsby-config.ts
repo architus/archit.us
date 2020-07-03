@@ -4,10 +4,11 @@ import * as dotenv from "dotenv";
 import path from "path";
 
 dotenv.config();
-const title = process.env.APP_NAME ?? "Architus Docs";
+const title = process.env.SITE_NAME ?? "Architus Docs";
 const description = `General purpose Discord bot supporting advanced role management, custom emotes for non-nitro users, configurable response commands, and more.`;
 
-export const pathPrefix = process.env.BASE_PATH ?? "/";
+export const pathPrefix = process.env.SITE_BASE_PATH ?? "/";
+console.log(pathPrefix);
 
 export const siteMetadata = {
   title,
