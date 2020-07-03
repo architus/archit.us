@@ -39,6 +39,7 @@ jobs:
         with:
           mode: pre
           job-name: Build
+          tag: app
           build-time: ${{ steps.build-time.outputs.time }}
           base-staging-url: ${{ env.BASE_STAGING_URL }}
           GITHUB_TOKEN: ${{ secrets.ARCHITUS_BOT_TOKEN }}
