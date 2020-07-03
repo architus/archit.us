@@ -20,7 +20,7 @@ const Styled = {
       background-color: ${dynamicColor("bg+20", ColorMode.Dark)};
     }
   `,
-  FooterContent: styled.div<{ maxContentWidth: string }>`
+  FooterContent: styled.div`
     margin: 0 auto;
   `,
 };
@@ -29,7 +29,6 @@ const Styled = {
 export const { FooterContent } = Styled;
 
 type FooterProps = {
-  maxContentWidth: string;
   className?: string;
   style?: React.CSSProperties;
 };
@@ -37,14 +36,10 @@ type FooterProps = {
 /**
  * Site footer displayed at the bottom of the page
  */
-const Footer: React.FC<FooterProps> = ({
-  className,
-  style,
-  maxContentWidth,
-}) => {
+const Footer: React.FC<FooterProps> = ({ className, style }) => {
   return (
     <Styled.Footer className={className} style={style}>
-      <Styled.FooterContent maxContentWidth={maxContentWidth}>
+      <Styled.FooterContent>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam tincidunt
         ipsum elit, nec consectetur erat mollis aliquet. Vivamus ut euismod
         nibh. Phasellus quis facilisis purus, quis efficitur leo. Proin sed nisi
