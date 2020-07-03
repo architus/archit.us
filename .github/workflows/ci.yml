@@ -1,17 +1,10 @@
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-    paths:
-      - 'app/**'
 
 # Workflow to run build checks/lints/tests for each open PR, for which
 # the tests passing is a required condition for merging
-name: app-ci
-env:
-  WORKING_DIR: ./app
-defaults:
-  run:
-    working-directory: ./app
+name: ci
 
 jobs:
   # Run ESLint
@@ -31,7 +24,7 @@ jobs:
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles(join(env.WORKING_DIR, '/**/yarn.lock')) }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('/**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
 
@@ -58,7 +51,7 @@ jobs:
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles(join(env.WORKING_DIR, '/**/yarn.lock')) }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('/**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
 

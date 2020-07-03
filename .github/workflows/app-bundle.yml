@@ -2,6 +2,8 @@ on:
   push:
     paths:
       - 'app/**'
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 # Workflow to upload bundle information to packtracker
 name: app-bundle

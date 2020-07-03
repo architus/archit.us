@@ -3,6 +3,11 @@
   "name": "architus",
   "author": "architus",
   "license": "MIT",
+  "scripts": {
+    "format": "prettier --write \"*/src/**/*.{js,jsx,ts,tsx,json}\" \"*/gatsby-*.{js,jsx,ts,tsx}\"",
+    "lint": "eslint -f unix --ignore-pattern \"app/**\" \"*/src/**/*.{js,jsx,ts,tsx,json}\" \"*/gatsby-*.{js,jsx,ts,tsx}\" && cd ./app && yarn lint",
+    "typecheck": "cd ./docs && tsc --noEmit && cd ../design && tsc --noEmit && cd ../lib && tsc --noEmit && cd ../app && tsc --noEmit"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/architus/archit.us"
