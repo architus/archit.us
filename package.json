@@ -18,8 +18,7 @@
   "workspaces": [
     "docs",
     "design",
-    "lib",
-    "app"
+    "lib"
   ],
   "dependencies": {
     "typescript": "^3.9.5"
