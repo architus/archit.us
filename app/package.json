@@ -1,6 +1,7 @@
 {
   "name": "archit.us",
   "private": true,
+  "version": "0.1.0",
   "scripts": {
     "start": "react-static start",
     "build": "react-static build",
