@@ -26,6 +26,7 @@
 [build]
   # Disable type checking on building to save time on Netlify
   command = "yarn build --no-type-check"
+  base = "app/"
   # Base environment for canary and production
   [build.environment]
     APP_NAME = "Architus Canary"
