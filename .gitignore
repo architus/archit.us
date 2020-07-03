@@ -15,5 +15,5 @@ yarn-debug.log*
 yarn-error.log*
 stats.json
 
-# Vscode
-/.vscode
+# IDE files
+.vscode
