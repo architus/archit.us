@@ -6,7 +6,7 @@ on:
 
 # Workflow to run build checks/lints/tests for each open PR, for which
 # the tests passing is a required condition for merging
-name: ci
+name: app-ci
 env:
   WORKING_DIR: ./app
 defaults:

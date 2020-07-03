@@ -9,7 +9,7 @@ on:
 
 # Workflow to run continuous integration builds for each commit/PR,
 # and then upload the artifacts to our staging server
-name: staging
+name: app-staging
 env:
   BASE_STAGING_URL: https://staging.archit.us
   ARCHIVE_NAME: dist.tar.gz
@@ -114,7 +114,7 @@ jobs:
       - name: Upload built archive to staging API
         uses: architus/upload-api-action@master
         with:
-          archive-path: ./${{ env.ARCHIVE_NAME }}
+          archive-path: ${{ env.WORKING_DIR }}/${{ env.ARCHIVE_NAME }}
           api-root: ${{ env.BASE_STAGING_URL }}/api
           token: ${{ secrets.STAGING_UPLOAD_API_TOKEN }}
 
