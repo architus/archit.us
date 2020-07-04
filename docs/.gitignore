@@ -10,3 +10,6 @@ public
 # Local environment files
 .env
 !.env.example
+
+# Generated files
+src/__generated__
