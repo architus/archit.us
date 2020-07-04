@@ -20,17 +20,17 @@ plugins:
   - jsx-a11y
 rules:
   tsdoc/syntax: warn
-  react/prop-types: warn
   react/display-name: off
   react-hooks/rules-of-hooks: error
   react-hooks/exhaustive-deps: warn
   import/no-named-as-default: off
   import/no-named-as-default-member: off
   import/prefer-default-export: off
-  no-underscore-dangle: off
+  no-underscore-dangle: 0
   import/default: off
   import/no-extraneous-dependencies: error
   import/no-unresolved: off
+  react/prop-types: off
   no-plusplus:
     - error
     - allowForLoopAfterthoughts: true
@@ -40,51 +40,16 @@ rules:
       ts: never
       json: always
       scss: always
+      css: always
+      svg: always
+      woff: always
+      woff2: always
 
   # Prettier config
   prettier/prettier:
     - error
     - semi: true
       endOfLine: auto
-
-overrides:
-  # Disable warning `require`/console-log on Node-js files
-  - files:
-      - node.api.js
-      - static.config.js
-    rules:
-      "@typescript-eslint/no-var-requires": off
-      "global-require": off
-      "no-console": off
-  # Disable TypeScript specific rules on JS/JSX files
-  - files:
-      - "*.js"
-      - "*.jsx"
-    rules:
-      "@typescript-eslint/explicit-function-return-type": off
-  # Disable requiring proptypes for TSX files
-  - files:
-      - "*.tsx"
-    rules:
-      "react/prop-types": off
-  # Disable extensions on scss files inside scss files
-  - files:
-      - "*.scss"
-    rules:
-      import/extensions:
-        - warn
-        - scss: never
-  # Disable no-cycle warnings in utility files (unavoidable)
-  - files:
-      - "**/src/Utility/**/*.ts"
-      - "**/src/Store/**/*.ts"
-    rules:
-      "import/no-cycle": off
-  # Disable no-param-reassign warnings in store slices (using immer.js)
-  - files:
-      - "**/src/Store/slices/**/*.ts"
-    rules:
-      no-param-reassign: off
 
 # ESLint Project Settings
 settings:
@@ -97,14 +62,7 @@ settings:
   import/resolver:
     typescript:
       alwaysTryTypes: true
-    node:
-      paths:
-        - src
-      extensions:
-        - ".js"
-        - ".jsx"
-        - ".ts"
-        - ".tsx"
+      directory": ./tsconfig.json
 env:
   es6: true
   node: true
@@ -112,7 +70,6 @@ parser: "@typescript-eslint/parser"
 parserOptions:
   ecmaVersion: 2019
   sourceType: module
-  project: "./tsconfig.json"
   ecmaFeatures:
     jsx: true
     experimentalObjectRestSpread: true

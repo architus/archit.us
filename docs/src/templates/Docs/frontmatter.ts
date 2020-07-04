@@ -1,4 +1,5 @@
 import { History } from "@docs/build/github-types";
+import { Nil } from "@lib/types";
 
 /**
  * Gatsby GraphQL type used to define frontmatter fields/types
@@ -71,7 +72,7 @@ export type DocsPassthroughProps = {
  */
 export type BreadcrumbSegment = {
   text: string;
-  path: string | null;
+  path: string | Nil;
 };
 export const breadcrumbType = `
   type BreadcrumbSegment @dontInfer {
@@ -85,7 +86,7 @@ export const breadcrumbType = `
  * All props here need to be JSON-serializable (no `Option<T>`s)
  */
 export type NavTree = {
-  id: string | null;
+  id: string | Nil;
   slug: string;
   path: string;
   root: boolean;
@@ -95,11 +96,11 @@ export type NavTree = {
   breadcrumbTitle: string;
   invisible: boolean;
   children: NavTree[];
-  originalPath: string | null;
-  childrenOrder: string[] | null;
-  history: History | null;
-  passthrough: DocsPassthroughProps | null;
-  breadcrumb: BreadcrumbSegment[] | null;
+  originalPath: string | Nil;
+  childrenOrder: string[] | Nil;
+  history: History | Nil;
+  passthrough: DocsPassthroughProps | Nil;
+  breadcrumb: BreadcrumbSegment[] | Nil;
   noBreadcrumb: boolean;
 };
 
@@ -107,15 +108,15 @@ export type NavTree = {
  * Gatsby GraphQL node created for each docs page
  */
 export type DocsPage = {
-  breadcrumb: BreadcrumbSegment[] | null;
+  breadcrumb: BreadcrumbSegment[] | Nil;
   title: string;
   shortTitle: string;
   isOrphan: boolean;
   noTOC: boolean;
   noSequenceLinks: boolean;
-  badge: string | null;
-  originalPath: string | null;
-  history: History | null;
+  badge: string | Nil;
+  originalPath: string | Nil;
+  history: History | Nil;
   path: string;
   preorder: number;
 };
@@ -142,6 +143,6 @@ export const docsPageType = `
  */
 export type DocsContext = {
   id: string;
-  previous: string | null;
-  next: string | null;
+  previous: string | Nil;
+  next: string | Nil;
 };

@@ -56,18 +56,7 @@ const Styled = {
  * (for example, the dark mode button)
  */
 const HeaderActionBar: React.FC = () => {
-  type GithubMetadataQueryResult = {
-    site: {
-      siteMetadata: {
-        socials: {
-          github?: string;
-          discord?: string;
-        };
-      };
-    };
-  };
-
-  const { socials } = useStaticQuery<GithubMetadataQueryResult>(graphql`
+  const data = useStaticQuery<GatsbyTypes.HeaderActionBarQueryQuery>(graphql`
     query HeaderActionBarQuery {
       site {
         siteMetadata {
@@ -78,12 +67,13 @@ const HeaderActionBar: React.FC = () => {
         }
       }
     }
-  `).site.siteMetadata;
+  `);
 
-  const hasSocial = Object.values(socials).findIndex(isDefined) !== -1;
+  const socials = data?.site?.siteMetadata?.socials;
+  const hasSocial = Object.values(socials ?? {}).findIndex(isDefined) !== -1;
   return (
     <>
-      {hasSocial && (
+      {isDefined(socials) && hasSocial && (
         <>
           {isDefined(socials.discord) && (
             <SocialButton to={socials.discord}>

@@ -8,9 +8,7 @@ import { Nil } from "@lib/types";
 import { isDefined, isNil } from "@lib/utility";
 
 // ! Internal `gatsby-plugin-mdx` API
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const genMdx = require("gatsby-plugin-mdx/utils/gen-mdx");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const mdxDefaultOptions = require("gatsby-plugin-mdx/utils/default-options");
 
 /**

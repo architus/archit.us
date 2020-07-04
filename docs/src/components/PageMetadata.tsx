@@ -117,20 +117,7 @@ const PageMetadata: React.FC<PageMetadataProps> = ({
   className,
   style,
 }) => {
-  type GitHubMetadataQueryResult = {
-    site: {
-      siteMetadata: {
-        github?: {
-          owner?: string;
-          name?: string;
-          docsRoot?: string;
-          branch?: string;
-        };
-      };
-    };
-  };
-
-  const result = useStaticQuery<GitHubMetadataQueryResult>(graphql`
+  const result = useStaticQuery<GatsbyTypes.GitHubMetadataQueryQuery>(graphql`
     query GitHubMetadataQuery {
       site {
         siteMetadata {
@@ -145,7 +132,7 @@ const PageMetadata: React.FC<PageMetadataProps> = ({
     }
   `);
 
-  const { github } = result.site.siteMetadata;
+  const github = result.site?.siteMetadata?.github;
   if (isNil(github)) return null;
 
   const { owner, name, docsRoot, branch } = github;
@@ -197,7 +184,7 @@ const HistoryDisplay: React.FC<{ history: History }> = React.memo(
   }
 );
 
-const Authors: React.FC<{ authors: GithubUser[] }> = ({ authors }) => {
+const Authors: React.FC<{ authors: readonly GithubUser[] }> = ({ authors }) => {
   const first = authors.slice(0, Math.min(authors.length, 3));
   const hasMore = authors.length > 3;
   const additional = authors.length - 3;

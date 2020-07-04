@@ -66,16 +66,7 @@ const CompositeBrand: React.FC<CompositeBrandProps> = ({
   className,
   style,
 }) => {
-  type HeaderQueryResult = {
-    site: {
-      siteMetadata: {
-        headerTitle: string;
-        version: string;
-      };
-    };
-  };
-
-  const data = useStaticQuery<HeaderQueryResult>(graphql`
+  const data = useStaticQuery<GatsbyTypes.SiteTitleQueryQuery>(graphql`
     query SiteTitleQuery {
       site {
         siteMetadata {
@@ -100,7 +91,7 @@ const CompositeBrand: React.FC<CompositeBrandProps> = ({
     <Styled.Brand className={className} style={style} withVersion={showVersion}>
       <Styled.Logo height={36} />
       <Styled.SiteTitle>
-        {data.site.siteMetadata.headerTitle}
+        {data?.site?.siteMetadata?.headerTitle}
         {buildMetadata.isDefined() && showBuildTag && (
           <Styled.BuildTag
             metadata={buildMetadata.get}
@@ -108,7 +99,7 @@ const CompositeBrand: React.FC<CompositeBrandProps> = ({
           />
         )}
         {showVersion && (
-          <Styled.Version>{data.site.siteMetadata.version}</Styled.Version>
+          <Styled.Version>{data?.site?.siteMetadata?.version}</Styled.Version>
         )}
       </Styled.SiteTitle>
     </Styled.Brand>

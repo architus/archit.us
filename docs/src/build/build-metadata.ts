@@ -2,17 +2,7 @@ import { SourceNodesArgs } from "gatsby";
 
 import { Option, Some, None } from "@lib/option";
 import { BuildMetadataEntry } from "@design/components/BuildDetails";
-
-export interface StoredBuildMetadata {
-  label: string;
-  icon: "commit" | "pr" | null;
-  context: {
-    label: string;
-    message: string | null;
-    icon: "github" | null;
-  };
-  details: BuildMetadataEntry[];
-}
+import { NodeInput } from "@docs/build/types";
 
 export const buildMetadataType = `
   type BuildMetadataContext {
@@ -78,18 +68,29 @@ function makeBuildTimeEntry(): BuildMetadataEntry {
   };
 }
 
-function loadBuildMetadata(): Option<StoredBuildMetadata> {
+function flatten(
+  source: BuildMetadataEntry[]
+): GatsbyTypes.BuildMetadata["details"] {
+  return source.map((obj) => ({
+    content: undefined,
+    href: undefined,
+    text: undefined,
+    ...obj,
+  }));
+}
+
+function loadBuildMetadata(): Option<NodeInput<GatsbyTypes.BuildMetadata>> {
   if (process.env.BUILD_LOCATION !== "remote") {
     // Local build environment (no `BUILD_LOCATION` set)
     return Some({
       label: "LOCAL",
-      icon: null,
+      icon: undefined,
       context: {
         label: "local",
         message: `To hide the local tag, set the environment variable "BUILD_LOCATION" to "remote"`,
-        icon: null,
+        icon: undefined,
       },
-      details: [makeBuildTimeEntry()],
+      details: flatten([makeBuildTimeEntry()]),
     });
   }
 

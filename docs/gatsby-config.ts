@@ -51,6 +51,19 @@ export const plugins = [
     },
   },
   "gatsby-plugin-typescript",
+  {
+    resolve: `gatsby-plugin-typegen`,
+    options: {
+      outputPath: `src/__generated__/gatsby-types.d.ts`,
+      emitSchema: {
+        "src/__generated__/gatsby-introspection.json": true,
+        "src/__generated__/gatsby-schema.graphql": true,
+      },
+      emitPluginDocuments: {
+        "src/__generated__/gatsby-plugin-documents.graphql": true,
+      },
+    },
+  },
   "gatsby-plugin-linaria",
   "gatsby-plugin-dark-mode",
   `gatsby-plugin-react-helmet`,

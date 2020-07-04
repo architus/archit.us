@@ -115,7 +115,7 @@ const Styled = {
 
 export type SequenceLinkData = {
   title: string;
-  badge: string | null;
+  badge: string | Nil;
   path: string;
 };
 

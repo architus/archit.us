@@ -31,5 +31,9 @@
     /* Advanced Options */
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
-  }
+  },
+  /* Disable type-checking in ts-node */
+  "ts-node": {
+    "transpileOnly": true
+  },
 }

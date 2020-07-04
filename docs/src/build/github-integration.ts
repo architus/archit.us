@@ -3,7 +3,7 @@ import { CreatePagesArgs, Reporter } from "gatsby";
 import { isDefined, isNil, withoutLeading } from "@lib/utility";
 import { Option, Some, None } from "@lib/option";
 import { NavTree } from "@docs/templates/Docs/frontmatter";
-import { GithubUser, History } from "@docs/build/github-types";
+import { GithubUser } from "@docs/build/github-types";
 
 /**
  * Page authorship information extracted from GitHub
@@ -202,7 +202,7 @@ export function attachAuthorship(
           : new Date();
 
       // Build authors list (drop non-unique authors)
-      const authors: History["authors"] = [];
+      const authors: GithubUser[] = [];
       const logins: Set<string> = new Set();
       metadata.forEach(({ author: { user } }) => {
         if (user != null) {

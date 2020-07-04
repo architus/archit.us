@@ -5,13 +5,14 @@ import { gap } from "@design/theme";
 import AutoLink from "@design/components/AutoLink";
 import NavLabel from "@docs/components/NavLabel";
 import { createHeading } from "@docs/components/Heading";
+import { Nil } from "@lib/types";
 
 type OverviewEntry = {
   title: string;
-  badge: string | null;
+  badge: string | Nil;
   path: string;
 };
-export type OverviewContext = OverviewEntry[];
+export type OverviewContext = readonly OverviewEntry[];
 export const OverviewContext = React.createContext<OverviewContext>([]);
 
 const Styled = {

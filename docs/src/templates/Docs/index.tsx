@@ -27,8 +27,12 @@ import {
 } from "@docs/layout";
 import { down, gap, color, ColorMode, mode, dynamicColor } from "@design/theme";
 import { isDefined, isNil } from "@lib/utility";
+import { MutableArray } from "@lib/types";
 import "@docs/one-universal";
-import { DocsContext, BreadcrumbSegment } from "./frontmatter";
+import {
+  DocsContext,
+  BreadcrumbSegment,
+} from "@docs/templates/Docs/frontmatter";
 
 // ? Note: this is done because Breadcrumb can't be styled
 // ?       due to a bug in gatsby-plugin-linaria
@@ -140,10 +144,10 @@ const Styled = {
 /**
  * Gatsby page template for a documentation page
  */
-const Docs: React.FC<PageProps<DocsData, DocsContext>> = ({
-  data,
-  pageContext,
-}) => {
+const Docs: React.FC<PageProps<
+  GatsbyTypes.DocsPageTemplateQueryQuery,
+  DocsContext
+>> = ({ data, pageContext }) => {
   const { id } = pageContext;
   const { page, previous, next } = data;
 
@@ -177,6 +181,22 @@ const Docs: React.FC<PageProps<DocsData, DocsContext>> = ({
     children,
   } = page;
   const showOverview = isOrphan && children.length > 0;
+
+  // Extract table of contents/body
+  const { tableOfContents: rawTableOfContents, body } =
+    parent?.__typename === "Mdx"
+      ? parent
+      : { tableOfContents: { items: [] }, body: "" };
+  const tableOfContents = rawTableOfContents?.items ?? [];
+
+  // Extract overview children
+  const overviewChildren: MutableArray<OverviewContext> = [];
+  children.forEach((child) => {
+    if (child.__typename === "DocsPage") {
+      overviewChildren.push(child);
+    }
+  });
+
   return (
     <Layout
       activeNavRoot={sideNav.id}
@@ -190,10 +210,10 @@ const Docs: React.FC<PageProps<DocsData, DocsContext>> = ({
         <Styled.Title>
           {<NavLabel text={title} badge={badge} gap="nano" />}
         </Styled.Title>
-        <OverviewContext.Provider value={children}>
+        <OverviewContext.Provider value={overviewChildren}>
           <Styled.Content className={cx(!noTOC && contentWithToc)}>
             <Styled.Article>
-              {!isOrphan && <Mdx content={parent?.body ?? ""} />}
+              {!isOrphan && <Mdx content={body ?? ""} />}
               {showOverview && <Overview />}
               <Styled.SequenceWrapper>
                 {!noSequenceLinks && (
@@ -207,11 +227,9 @@ const Docs: React.FC<PageProps<DocsData, DocsContext>> = ({
                 history={history}
               />
             </Styled.Article>
-            {!noTOC && (parent?.tableOfContents.items ?? []).length > 0 && (
+            {!noTOC && tableOfContents.length > 0 && (
               <Styled.TableOfContentsWrapper>
-                <Styled.TableOfContents
-                  items={parent?.tableOfContents.items ?? []}
-                />
+                <Styled.TableOfContents items={tableOfContents} />
               </Styled.TableOfContentsWrapper>
             )}
           </Styled.Content>

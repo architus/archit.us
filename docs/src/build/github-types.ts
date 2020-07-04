@@ -21,7 +21,7 @@ export const githubUserType = `
  */
 export type History = {
   lastModified: string;
-  authors: GithubUser[];
+  authors: readonly GithubUser[];
 };
 export const historyType = `
   type History @dontInfer {

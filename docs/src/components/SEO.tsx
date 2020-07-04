@@ -13,20 +13,7 @@ type SEOProps = {
 };
 
 const SEO: React.FC<SEOProps> = ({ description, meta, title, lang = `en` }) => {
-  type SEOQueryResult = {
-    site: {
-      pathPrefix: string | null;
-      siteMetadata: {
-        title: string;
-        description: string;
-        author: string;
-        themeColor: string;
-        msTileColor: string;
-      };
-    };
-  };
-
-  const { site } = useStaticQuery<SEOQueryResult>(
+  const { site } = useStaticQuery<GatsbyTypes.SEOQueryQuery>(
     graphql`
       query SEOQuery {
         site {
@@ -43,12 +30,14 @@ const SEO: React.FC<SEOProps> = ({ description, meta, title, lang = `en` }) => {
     `
   );
 
-  const { author, themeColor, msTileColor } = site.siteMetadata;
-  const siteTitle = site.siteMetadata.title;
+  const author = site?.siteMetadata?.author ?? "";
+  const themeColor = site?.siteMetadata?.themeColor ?? "#ff00ff";
+  const msTileColor = site?.siteMetadata?.msTileColor ?? "#ff00fff";
+  const siteTitle = site?.siteMetadata?.title ?? "Documentation";
   const derivedTitle = isDefined(title) ? `${title} | ${siteTitle}` : siteTitle;
-  const metaDescription = description ?? site.siteMetadata.description;
+  const metaDescription = description ?? site?.siteMetadata?.description ?? "";
   const pathPrefix = (base: string): string =>
-    withPathPrefix(site.pathPrefix, base);
+    withPathPrefix(site?.pathPrefix, base);
 
   return (
     <Helmet

@@ -18,6 +18,7 @@ plugins:
   - eslint-plugin-tsdoc
   - import
   - jsx-a11y
+  - graphql
 rules:
   tsdoc/syntax: warn
   react/display-name: off
@@ -26,10 +27,9 @@ rules:
   import/no-named-as-default: off
   import/no-named-as-default-member: off
   import/prefer-default-export: off
-  no-underscore-dangle: off
+  no-underscore-dangle: 0
   import/default: off
   import/no-extraneous-dependencies: error
-  # these don't seem to work with the monorepo setup
   import/no-unresolved: off
   react/prop-types: off
   no-plusplus:
@@ -46,6 +46,14 @@ rules:
       woff: always
       woff2: always
 
+  # GraphQL
+  # From https://github.com/cometkim/gatsby-plugin-typegen#eslint
+  graphql/template-strings:
+    - error
+    - env: relay
+      tagName: graphql
+      schemaJsonFilepath: 'src/__generated__/gatsby-introspection.json'
+
   # Prettier config
   prettier/prettier:
     - error
@@ -53,10 +61,10 @@ rules:
       endOfLine: auto
 
 overrides:
-  # Disable warning `require`/console-log on Node-js files
+  # Disable warning `require`/console-log on build files
   - files:
-      - node.api.js
-      - static.config.js
+      - src/build/*
+      - gatsby-*
     rules:
       "@typescript-eslint/no-var-requires": off
 
@@ -71,7 +79,7 @@ settings:
   import/resolver:
     typescript:
       alwaysTryTypes: true
-      directory": ./*/tsconfig.json
+      directory": ./tsconfig.json
 env:
   es6: true
   node: true
@@ -83,3 +91,5 @@ parserOptions:
     jsx: true
     experimentalObjectRestSpread: true
     modules: true
+ignorePatterns:
+  - "src/__generated__/*"

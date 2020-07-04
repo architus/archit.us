@@ -21,7 +21,7 @@ const Styled = {
 };
 
 type BreadcrumbProps = {
-  segments: BreadcrumbSegment[];
+  segments: readonly BreadcrumbSegment[];
   className?: string;
   style?: React.CSSProperties;
 };

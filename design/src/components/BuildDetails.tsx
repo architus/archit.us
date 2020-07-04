@@ -45,11 +45,18 @@ export type BuildMetadataEntry = OptionLinkEntry | ContentEntry;
 export interface OptionLinkEntry {
   type: "optionLink";
   label: string;
-  href: string | null;
-  text: string | null;
+  href: string | undefined;
+  text: string | undefined;
 }
 export interface ContentEntry {
   type: "content";
+  label: string;
+  content: string;
+}
+
+// Only used internally at runtime
+export interface NodeEntry {
+  type: "node";
   label: string;
   content: React.ReactNode;
 }
@@ -90,10 +97,13 @@ export default BuildDetails;
 /**
  * Renders a single detail entry, including a label and corresponding value
  */
-const Entry: React.FC<{ data: BuildMetadataEntry }> = ({ data }) => {
+const Entry: React.FC<{ data: BuildMetadataEntry | NodeEntry }> = ({
+  data,
+}) => {
   let content: React.ReactNode = null;
   switch (data.type) {
     case "content":
+    case "node":
       content = data.content;
       break;
     case "optionLink":
@@ -122,7 +132,7 @@ const Context: React.FC<{ context: BuildContext }> = ({ context }) => (
   <>
     <Entry
       data={{
-        type: "content",
+        type: "node",
         label: "Context",
         content: (
           <>

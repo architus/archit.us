@@ -4,6 +4,7 @@ import { styled } from "linaria/react";
 import Badge from "@docs/components/Badge";
 import { isDefined } from "@lib/utility";
 import { gap, SpacingKey } from "@design/theme";
+import { Nil } from "@lib/types";
 
 const Styled = {
   Badge: styled(
@@ -20,7 +21,7 @@ const Styled = {
 
 type NavLabelProps = {
   text: string;
-  badge: string | null;
+  badge: string | Nil;
   gap?: SpacingKey;
 };
 

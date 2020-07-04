@@ -4,9 +4,9 @@
   "author": "architus",
   "license": "MIT",
   "scripts": {
-    "format": "prettier --write \"*/src/**/*.{js,jsx,ts,tsx,json}\" \"*/gatsby-*.{js,jsx,ts,tsx}\"",
-    "lint": "eslint -f unix --ignore-pattern \"app/**\" \"*/src/**/*.{js,jsx,ts,tsx,json}\" \"*/gatsby-*.{js,jsx,ts,tsx}\" && cd ./app && yarn lint",
-    "typecheck": "cd ./docs && tsc --noEmit && cd ../design && tsc --noEmit && cd ../lib && tsc --noEmit && cd ../app && tsc --noEmit"
+    "format": "yarn workspaces run format && cd ./app && yarn run format",
+    "lint": "yarn workspaces run lint && cd ./app && yarn run lint",
+    "typecheck": "yarn workspaces run typecheck && cd ./app && yarn run typecheck"
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,7 @@
     "lib"
   ],
   "dependencies": {
+    "eslint-plugin-graphql": "^4.0.0",
     "typescript": "^3.9.5"
   },
   "devDependencies": {

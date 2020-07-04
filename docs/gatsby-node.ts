@@ -298,23 +298,22 @@ export const createPages: GatsbyNode["createPages"] = async ({
   };
 
   const generationQuery = `
-  query GenerationQuery {
-    pages: allDocsPage(sort: {fields: preorder, order: ASC}) {
-      edges {
-        node {
-          id
-          path
-        }
-        previous {
-          id
-        }
-        next {
-          id
+    query GenerationQuery {
+      pages: allDocsPage(sort: {fields: preorder, order: ASC}) {
+        edges {
+          node {
+            id
+            path
+          }
+          previous {
+            id
+          }
+          next {
+            id
+          }
         }
       }
     }
-  }
-
   `;
 
   const { data: generationData, errors: generationErrors } = await graphql<
