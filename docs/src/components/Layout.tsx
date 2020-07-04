@@ -31,6 +31,7 @@ import {
   ColorMode,
   between,
 } from "@design/theme";
+import CompositeBrand from "./CompositeBrand";
 
 export const global = css`
   :global() {
@@ -259,7 +260,11 @@ const Layout: React.FC<LayoutProps> = ({
           <div className={className} style={style}>
             {children}
           </div>
-          <Styled.Footer />
+          <Styled.Footer
+            brand={<CompositeBrand showVersion />}
+            about={null}
+            links={[]}
+          />
         </Styled.Content>
       </Styled.Layout>
     </>

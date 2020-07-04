@@ -12,6 +12,7 @@ export const pathPrefix = process.env.SITE_BASE_PATH ?? "/";
 export const siteMetadata = {
   title,
   headerTitle: `Documentation`,
+  version: "Rolling release",
   description,
   author: `architus`,
   siteUrl: process.env.SITE_ROOT ?? "https://docs.archit.us",

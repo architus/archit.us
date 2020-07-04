@@ -1,10 +1,21 @@
 import { transparentize } from "polished";
 
-import { color, dynamicColor, ColorMode, mode } from "./color";
+import { dynamicColor, ColorMode, mode } from "./color";
 import { transition } from "./motion";
 
 const linkColor = `--link-color`;
 const linkColorFade = `--link-color-fade`;
+
+/**
+ * Sets the link color for a DOM tree by automatically setting the CSS variables
+ * @param resolvedColor - Resolved CSS color (hex/rgba)
+ */
+export function setLinkColor(resolvedColor: string): string {
+  return `
+    ${linkColor}: ${resolvedColor};
+    ${linkColorFade}: ${transparentize(0.6, resolvedColor)}
+  `;
+}
 
 /**
  * Gets the css for use in the global CSS root
@@ -12,19 +23,11 @@ const linkColorFade = `--link-color-fade`;
 export function injectMixinGlobals(): string {
   return `
     body {
-      ${linkColor}: ${color("primary")};
-      ${linkColorFade}: ${transparentize(
-    0.6,
-    dynamicColor("primary", ColorMode.Light)
-  )};
+      ${setLinkColor(dynamicColor("primary", ColorMode.Light))}
     }
 
     ${mode(ColorMode.Dark)} {
-      ${linkColor}: ${color("primary+10")};
-      ${linkColorFade}: ${transparentize(
-    0.6,
-    dynamicColor("primary+10", ColorMode.Dark)
-  )};
+      ${setLinkColor(dynamicColor("primary+10", ColorMode.Dark))}
     }
   `;
 }

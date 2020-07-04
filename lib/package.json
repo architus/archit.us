@@ -18,6 +18,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "react": "^16.13.1"
+    "@types/shallow-equals": "^1.0.0",
+    "react": "^16.13.1",
+    "shallow-equals": "^1.0.0"
   }
 }

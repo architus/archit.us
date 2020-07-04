@@ -3,7 +3,7 @@ import { MDXRenderer } from "gatsby-plugin-mdx";
 import { MDXProvider } from "@mdx-js/react";
 
 import { createHeading } from "@docs/components/Heading";
-import AutoLink from "@docs/components/AutoLink";
+import AutoLink from "@design/components/AutoLink";
 import Overview from "@docs/components/Overview";
 import Iframe from "@docs/components/Iframe";
 import Collapse from "@docs/components/Collapse";

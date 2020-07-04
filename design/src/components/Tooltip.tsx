@@ -3,7 +3,14 @@ import React from "react";
 import TooltipTrigger from "react-popper-tooltip";
 import { css } from "linaria";
 
-import { ZIndex, shadow, transition, color, gap } from "@design/theme";
+import {
+  ZIndex,
+  shadow,
+  transition,
+  color,
+  gap,
+  SpacingKey,
+} from "@design/theme";
 
 const tooltipContainerClass = css`
   --tooltip-color: ${color("tooltip")};
@@ -12,7 +19,7 @@ const tooltipContainerClass = css`
 
   background-color: var(--tooltip-color);
   border: 1px solid var(--tooltip-border);
-  box-shadow: ${shadow("z1")};
+  box-shadow: ${shadow("z3")};
   border-radius: 4px;
   display: flex;
   color: ${color("light")};
@@ -140,9 +147,12 @@ type BaseTooltipProps = {
   children: React.ReactNode;
   tooltip: React.ReactNode;
   hideArrow?: boolean;
+  padding?: SpacingKey;
+  maxWidth?: string | number;
+  onContentClick?: (e: React.MouseEvent) => void;
 };
 
-type TooltipProps = BaseTooltipProps &
+export type TooltipProps = BaseTooltipProps &
   Omit<
     Partial<React.ComponentProps<typeof TooltipTrigger>>,
     keyof BaseTooltipProps
@@ -157,6 +167,9 @@ const Tooltip: React.FC<TooltipProps> = ({
   children,
   tooltip,
   hideArrow = false,
+  padding = "atto",
+  maxWidth = gap.giga,
+  onContentClick,
   ...props
 }) => (
   <TooltipTrigger
@@ -173,6 +186,7 @@ const Tooltip: React.FC<TooltipProps> = ({
           ref: tooltipRef,
           className: tooltipContainerClass,
         })}
+        onClick={onContentClick}
       >
         {!hideArrow && (
           <div
@@ -183,7 +197,7 @@ const Tooltip: React.FC<TooltipProps> = ({
             })}
           />
         )}
-        {tooltip}
+        <div style={{ padding: gap(padding), maxWidth }}>{tooltip}</div>
       </div>
     )}
   >

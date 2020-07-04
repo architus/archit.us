@@ -6,7 +6,7 @@ import { FaChevronRight } from "react-icons/fa";
 import { BreadcrumbSegment } from "@docs/templates/Docs/frontmatter";
 import { isDefined } from "@lib/utility";
 import { color, gap, primaryLink } from "@design/theme";
-import AutoLink from "./AutoLink";
+import AutoLink from "@design/components/AutoLink";
 
 const primaryLinkClassName = css`
   ${primaryLink}

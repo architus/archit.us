@@ -1,10 +1,9 @@
 import React from "react";
-import { Link, useStaticQuery, graphql } from "gatsby";
 import { css } from "linaria";
 import { styled } from "linaria/react";
 import { mix, transparentize } from "polished";
+import { Link } from "gatsby";
 
-import Logo from "@design/components/Logo";
 import {
   color,
   gap,
@@ -24,14 +23,16 @@ import HeaderActionBar, {
 } from "@docs/components/HeaderActionBar";
 import { useColorMode } from "@docs/hooks";
 import { useInitialRender } from "@lib/hooks";
+import CompositeBrand from "@docs/components/CompositeBrand";
 
 const headerTransparency = 0.06;
 
 const logoLeftSpace = gap.nano;
-const logoLink = css`
+const logoLinkClass = css`
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+
   padding: ${gap.atto} ${gap.nano} ${gap.femto} ${logoLeftSpace};
   background-color: transparent;
   text-decoration: none;
@@ -48,10 +49,6 @@ const logoLink = css`
   ${up("lg")} {
     margin-right: ${gap.nano};
   }
-`;
-
-const logo = css`
-  fill: currentColor;
 `;
 
 const Styled = {
@@ -106,18 +103,6 @@ const Styled = {
             )
           )};
   `,
-  SiteTitle: styled.h1`
-    font-size: 1.24rem;
-    margin-bottom: 0;
-    margin-left: ${gap.pico};
-    top: 2px;
-    position: relative;
-
-    /* The font size needs to be slightly smaller on very small devices */
-    ${down("vs")} {
-      font-size: 1.1rem;
-    }
-  `,
   RightComponents: styled.div`
     display: flex;
     flex-direction: row;
@@ -135,35 +120,13 @@ type HeaderProps = {
  * Site header, including navigation links and an action bar on the right side
  */
 const Header: React.FC<HeaderProps> = ({ className, style }) => {
-  type HeaderQueryResult = {
-    site: {
-      siteMetadata: {
-        headerTitle: string;
-      };
-    };
-  };
-
-  const data = useStaticQuery<HeaderQueryResult>(graphql`
-    query SiteTitleQuery {
-      site {
-        siteMetadata {
-          headerTitle
-        }
-      }
-    }
-  `);
-
   const mode = useColorMode();
   const initialRender = useInitialRender();
   const ssr = typeof window === "undefined" || initialRender;
-
   return (
     <Styled.Header mode={mode} ssr={ssr} className={className} style={style}>
-      <Link to="/" className={logoLink}>
-        <Logo.Symbol height={36} className={logo} />
-        <Styled.SiteTitle>
-          {data.site.siteMetadata.headerTitle}
-        </Styled.SiteTitle>
+      <Link to="/" className={logoLinkClass}>
+        <CompositeBrand buildTooltipPlacement="bottom" hideTagBreakpoint="vs" />
       </Link>
       <Styled.HeaderLinksWrapper>
         <HeaderLinks />

@@ -2,9 +2,9 @@ import React, { useContext } from "react";
 import { styled } from "linaria/react";
 
 import { gap } from "@design/theme";
-import AutoLink from "./AutoLink";
-import NavLabel from "./NavLabel";
-import { createHeading } from "./Heading";
+import AutoLink from "@design/components/AutoLink";
+import NavLabel from "@docs/components/NavLabel";
+import { createHeading } from "@docs/components/Heading";
 
 type OverviewEntry = {
   title: string;

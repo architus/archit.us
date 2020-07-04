@@ -32,19 +32,24 @@ import {
   attachAuthorship,
 } from "@docs/build/github-integration";
 import { historyType, githubUserType } from "@docs/build/github-types";
-import { createNavigationTrees, navigationTreeType } from "build/nav";
-import { getLead } from "build/lead";
+import { createNavigationTrees, navigationTreeType } from "@docs/build/nav";
+import { getLead } from "@docs/build/lead";
+import {
+  buildMetadataType,
+  createBuildMetadataNode,
+} from "@docs/build/build-metadata";
 
 const DocsPageTemplate = require("path").resolve(
   "./src/templates/Docs/index.tsx"
 );
 
 // Define custom graphql schema to enforce rigid type structures
-export const sourceNodes: GatsbyNode["sourceNodes"] = ({
-  actions,
-  reporter,
-}: SourceNodesArgs): Promise<null> => {
-  const activity = reporter.activityTimer("implementing custom graphql schema");
+export const sourceNodes: GatsbyNode["sourceNodes"] = async (
+  args: SourceNodesArgs
+): Promise<null> => {
+  const { actions, reporter } = args;
+  // Re-use activity variable
+  let activity = reporter.activityTimer("implementing custom graphql schema");
   activity.start();
   // To add new keys to the frontmatter, see /src/templates/types.ts
   actions.createTypes(`
@@ -55,6 +60,7 @@ export const sourceNodes: GatsbyNode["sourceNodes"] = ({
     ${breadcrumbType}
     ${docsPageType}
     ${frontmatterType}
+    ${buildMetadataType}
 
     type Mdx implements Node {
       frontmatter: Frontmatter!
@@ -64,8 +70,14 @@ export const sourceNodes: GatsbyNode["sourceNodes"] = ({
       childMdx: Mdx
     }
 `);
-  activity.end();
 
+  activity.end();
+  activity = reporter.activityTimer(`creating build metadata info`);
+  activity.start();
+
+  await createBuildMetadataNode(args);
+
+  activity.end();
   // Some value needed for type
   // See https://github.com/gatsbyjs/gatsby/issues/23296
   return Promise.resolve<null>(null);

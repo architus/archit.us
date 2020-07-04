@@ -20,12 +20,17 @@ const breakpointMin = (key: BreakpointKey): number | null =>
 const breakpointMax = (key: BreakpointKey): number | null =>
   breakpoints[key] === 0 ? null : breakpoints[key] - 0.02;
 
+export const minWidth = (value: string): string => `(min-width: ${value})`;
+export const maxWidth = (value: string | Nil): string =>
+  `(max-width: ${value})`;
+export const betweenWidth = (min: string, max: string): string =>
+  `(min-width: ${min}) and (max-width: ${max})`;
 export const mediaMinWidth = (value: string): string =>
-  `@media (min-width: ${value})`;
+  `@media ${minWidth(value)}`;
 export const mediaMaxWidth = (value: string | Nil): string =>
-  `@media (max-width: ${value})`;
+  `@media ${maxWidth(value)}`;
 export const mediaBetweenWidth = (min: string, max: string): string =>
-  `@media (min-width: ${min}) and (max-width: ${max})`;
+  `@media ${betweenWidth(min, max)}`;
 
 /**
  * Extracts a CSS expression for a breakpoint

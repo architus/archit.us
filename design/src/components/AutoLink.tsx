@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import { styled } from "linaria/react";
 import { FaExternalLinkAlt } from "react-icons/fa";
-import { Link } from "gatsby";
 
 import { isDefined, isExternal } from "@lib/utility";
-import { SpacingKey, gap } from "@design/theme";
+import { SpacingKey, gap, primaryLink } from "@design/theme";
 import { css, cx } from "linaria";
+
+const baseLinkClass = css`
+  ${primaryLink}
+`;
 
 const hideUnderlineClass = css`
   border-bottom: none !important;
@@ -29,10 +32,17 @@ type AutoLinkProps = {
   noUnderline?: boolean;
   className?: string;
   style?: React.CSSProperties;
-} & Partial<
-  React.ComponentProps<typeof Link> &
-    React.AnchorHTMLAttributes<HTMLAnchorElement>
->;
+} & Partial<React.AnchorHTMLAttributes<HTMLAnchorElement>>;
+
+export type AutoLinkContext = {
+  link: React.ComponentType<
+    { to: string } & Partial<React.AnchorHTMLAttributes<HTMLAnchorElement>>
+  >;
+};
+
+export const AutoLinkContext = React.createContext<AutoLinkContext>({
+  link: () => null,
+});
 
 /**
  * Link component that automatically determines if the given link href is external or not,
@@ -50,14 +60,15 @@ const AutoLink: React.FC<AutoLinkProps> = ({
   noUnderline = false,
   className,
   style,
-  ref,
   ...rest
 }) => {
+  const { link: InternalLink } = useContext(AutoLinkContext);
   const imageChild = isImageChild(children);
   const hideIcon = noIcon || imageChild;
   const hideUnderline = noUnderline || imageChild;
   const classNames = cx(
     className,
+    baseLinkClass,
     hideUnderline ? hideUnderlineClass : undefined
   );
 
@@ -84,9 +95,9 @@ const AutoLink: React.FC<AutoLinkProps> = ({
   }
 
   return (
-    <Link to={href} className={classNames} style={style} {...rest}>
+    <InternalLink to={href} className={classNames} style={style} {...rest}>
       {children}
-    </Link>
+    </InternalLink>
   );
 };
 

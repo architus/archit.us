@@ -28,7 +28,16 @@ const Styled = {
 // Export for use in styling
 export const { FooterContent } = Styled;
 
+export interface FooterLink {
+  text: string;
+  href: string;
+  icon?: React.ReactNode;
+}
+
 type FooterProps = {
+  brand: React.ReactNode;
+  about: React.ReactNode;
+  links: FooterLink[];
   className?: string;
   style?: React.CSSProperties;
 };
@@ -36,19 +45,17 @@ type FooterProps = {
 /**
  * Site footer displayed at the bottom of the page
  */
-const Footer: React.FC<FooterProps> = ({ className, style }) => {
+const Footer: React.FC<FooterProps> = ({
+  brand,
+  about,
+  links,
+  className,
+  style,
+}) => {
+  // TODO implement
   return (
     <Styled.Footer className={className} style={style}>
-      <Styled.FooterContent>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam tincidunt
-        ipsum elit, nec consectetur erat mollis aliquet. Vivamus ut euismod
-        nibh. Phasellus quis facilisis purus, quis efficitur leo. Proin sed nisi
-        id sapien pulvinar bibendum. Aenean sed gravida justo. Nunc sem enim,
-        faucibus et libero non, pharetra dignissim justo. Nullam eu pharetra
-        libero. Etiam euismod ornare nunc in rhoncus. Integer porta bibendum
-        libero, vel suscipit dolor convallis vel. Aliquam at malesuada ante.
-        Quisque a egestas erat.
-      </Styled.FooterContent>
+      <Styled.FooterContent>{brand}</Styled.FooterContent>
     </Styled.Footer>
   );
 };

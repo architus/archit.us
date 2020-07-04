@@ -14,7 +14,7 @@ import {
   formatDimension,
 } from "@lib/dimension";
 import { color, gap, down } from "@design/theme";
-import AutoLink from "./AutoLink";
+import AutoLink from "@design/components/AutoLink";
 
 const authorsMixin = `
   width: 32px;
