@@ -10,8 +10,8 @@ import SymbolSvg from "@design/assets/logo/logo-symbol.svg";
  * @param props - Partial props passed into logo component
  */
 function foldDefaults(
-  props: React.HTMLProps<SVGElement>
-): React.HTMLProps<SVGElement> {
+  props: React.SVGAttributes<SVGElement>
+): React.SVGAttributes<SVGElement> {
   let base = {};
   if (isNil(props.height) && isNil(props.width)) {
     base = {
@@ -25,21 +25,21 @@ function foldDefaults(
 /**
  * Combined logo with the symbol and logotype text
  */
-const Combined: React.FC<React.HTMLProps<SVGElement>> = (props) => (
+const Combined: React.FC<React.SVGAttributes<SVGElement>> = (props) => (
   <CombinedSvg {...foldDefaults(props)} />
 );
 
 /**
  * Logo with just the Architus text
  */
-const Logotype: React.FC<React.HTMLProps<SVGElement>> = (props) => (
+const Logotype: React.FC<React.SVGAttributes<SVGElement>> = (props) => (
   <LogotypeSvg {...foldDefaults(props)} />
 );
 
 /**
  * Logo with just the Architus symbol/icon
  */
-const Symbol: React.FC<React.HTMLProps<SVGElement>> = (props) => (
+const Symbol: React.FC<React.SVGAttributes<SVGElement>> = (props) => (
   <SymbolSvg {...foldDefaults(props)} />
 );
 

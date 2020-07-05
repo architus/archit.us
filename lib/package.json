@@ -15,7 +15,7 @@
   "scripts": {
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json}\"",
     "lint": "eslint --max-warnings 0 -f unix \"src/**/*.{js,jsx,ts,tsx,json}\"",
-    "typecheck": "tsc --listFiles --noEmit"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@types/shallow-equals": "^1.0.0",

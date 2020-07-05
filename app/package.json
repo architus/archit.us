@@ -5,7 +5,7 @@
   "scripts": {
     "start": "react-static start",
     "build": "react-static build",
-    "typecheck": "tsc --listFiles --noEmit",
+    "typecheck": "tsc --noEmit",
     "analyze": "react-static build --analyze",
     "serve": "serve dist -p 3000",
     "bundlesize": "react-static build --no-type-check --pt-enable --no-profiling",
