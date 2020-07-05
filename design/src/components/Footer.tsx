@@ -1,7 +1,6 @@
 import React from "react";
 import { styled } from "linaria/react";
-import { darken, lighten, transparentize } from "polished";
-import { FaGithub, FaHeart, FaReact, FaAlgolia, FaYarn } from "react-icons/fa";
+import { darken, lighten } from "polished";
 
 import {
   gap,
@@ -12,18 +11,9 @@ import {
   shadow,
   down,
   up,
-  staticColor,
 } from "@design/theme";
 import Card from "@design/components/Card";
 import AutoLink from "@design/components/AutoLink";
-import GatsbyIcon from "@design/icons/gatsby.svg";
-import GraphQlIcon from "@design/icons/graphql.svg";
-import NetlifyIcon from "@design/icons/netlify.svg";
-import LinariaIcon from "@design/icons/linaria.svg";
-import TypeScriptIcon from "@design/icons/typescript.svg";
-import EslintIcon from "@design/icons/eslint.svg";
-import PrettierIcon from "@design/icons/prettier.svg";
-import Tooltip from "./Tooltip";
 
 const FooterDivider = styled.hr`
   margin: ${gap.pico} auto ${gap.pico} 0;
@@ -45,19 +35,6 @@ const Styled = {
     color: ${dynamicColor("text", ColorMode.Dark)};
     ${mode(ColorMode.Light)} {
       background-color: ${dynamicColor("bg+20", ColorMode.Dark)};
-    }
-  `,
-  SecondaryFooter: styled.footer`
-    padding: ${gap.nano} 0;
-    background-color: ${color("bg-20")};
-    box-shadow: ${shadow("innerTop")};
-    color: ${dynamicColor("text", ColorMode.Dark)};
-    ${mode(ColorMode.Light)} {
-      background-color: ${dynamicColor("bg+10", ColorMode.Dark)};
-    }
-
-    ${down("md")} {
-      padding: ${gap.nano} 0;
     }
   `,
   PrimaryContent: styled(FooterContent)`
@@ -106,9 +83,6 @@ const Styled = {
         padding-left: ${gap.micro};
       }
     }
-  `,
-  SecondaryContent: styled(FooterContent)`
-    text-align: center;
   `,
   FooterHeader: styled.h3`
     font-weight: 500;
@@ -161,36 +135,6 @@ const Styled = {
       padding: ${gap.micro};
     }
   `,
-  Technologies: styled.div`
-    display: inline-flex;
-    flex-direction: row;
-    align-items: stretch;
-    flex-wrap: wrap;
-    justify-content: center;
-
-    padding: ${gap.atto} ${gap.pico};
-  `,
-  TechnologyLink: styled(AutoLink)`
-    font-size: 1.3rem;
-    color: ${color("light")};
-    padding: ${gap.femto};
-    border-radius: 4px;
-    border: none !important;
-
-    &:hover {
-      background-color: ${transparentize(0.95, staticColor("light"))};
-    }
-
-    & > svg {
-      vertical-align: -4px;
-    }
-  `,
-  HeartIcon: styled(FaHeart)`
-    color: rgb(255, 100, 100);
-    vertical-align: -2px;
-    margin: 0 2px;
-    display: inline-block;
-  `,
 };
 
 // Export for use in styling
@@ -202,7 +146,7 @@ export interface FooterLink {
   icon?: React.ReactNode;
 }
 
-type FooterProps = {
+export type FooterProps = {
   brand: React.ReactNode;
   about: React.ReactNode;
   links: FooterLink[];
@@ -243,11 +187,6 @@ const Footer: React.FC<FooterProps> = ({
           </div>
         </Styled.PrimaryContent>
       </Styled.Footer>
-      <Styled.SecondaryFooter>
-        <Styled.SecondaryContent>
-          Built with <Styled.HeartIcon /> using <Technologies />
-        </Styled.SecondaryContent>
-      </Styled.SecondaryFooter>
     </>
   );
 };
@@ -265,69 +204,4 @@ const FooterLink: React.FC<{ data: FooterLink }> = ({ data }) => (
       {data.icon && <Styled.LinkIcon>{data.icon}</Styled.LinkIcon>}
     </Styled.LinkText>
   </Styled.FooterLink>
-);
-
-const Technologies: React.FC = () => (
-  <Styled.Technologies>
-    <Technology
-      icon={FaGithub}
-      link="https://github.com/architus/archit.us"
-      tooltip="GitHub"
-    />
-    <Technology icon={FaReact} link="https://reactjs.org/" tooltip="React" />
-    <Technology
-      icon={GatsbyIcon}
-      link="https://www.gatsbyjs.org/"
-      tooltip="Gatsby"
-    />
-    <Technology
-      icon={LinariaIcon}
-      link="https://linaria.now.sh/"
-      tooltip="Linaria"
-    />
-    <Technology
-      icon={GraphQlIcon}
-      link="https://graphql.org/"
-      tooltip="GraphQL"
-    />
-    <Technology
-      icon={NetlifyIcon}
-      link="https://www.netlify.com/"
-      tooltip="Netlify"
-    />
-    <Technology
-      icon={FaAlgolia}
-      link="https://www.algolia.com/"
-      tooltip="Algolia"
-    />
-    <Technology
-      icon={TypeScriptIcon}
-      link="http://typescriptlang.org/"
-      tooltip="TypeScript"
-    />
-    <Technology icon={EslintIcon} link="https://eslint.org/" tooltip="ESLint" />
-    <Technology
-      icon={PrettierIcon}
-      link="https://prettier.io/"
-      tooltip="Prettier"
-    />
-    <Technology icon={FaYarn} link="http://yarnpkg.com/" tooltip="Yarn" />
-  </Styled.Technologies>
-);
-
-type TechnologyProps = {
-  icon: React.ComponentType<React.SVGAttributes<SVGElement>>;
-  link: string;
-  tooltip: string;
-};
-const Technology: React.FC<TechnologyProps> = ({
-  icon: Icon,
-  link,
-  tooltip,
-}) => (
-  <Tooltip placement="top" tooltip={tooltip}>
-    <Styled.TechnologyLink href={link} noIcon>
-      <Icon />
-    </Styled.TechnologyLink>
-  </Tooltip>
 );

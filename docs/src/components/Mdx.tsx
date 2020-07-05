@@ -58,12 +58,6 @@ export const overrides = {
   h5: createHeading({ component: "h5" }),
   h6: createHeading({ component: "h6", right: true }),
   // TODO implement
-  img: () => (
-    <Alert type="danger">
-      Not implemented <strong>(img)</strong>
-    </Alert>
-  ),
-  // TODO implement
   table: (props: React.TableHTMLAttributes<HTMLTableElement>) => (
     <div className="table-responsive-lg table-outer">
       <Alert type="danger">

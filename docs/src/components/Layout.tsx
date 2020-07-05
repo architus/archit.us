@@ -1,12 +1,11 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import { styled } from "linaria/react";
-import { FaBars, FaTimes, FaGithub, FaDiscord } from "react-icons/fa";
+import { FaBars, FaTimes } from "react-icons/fa";
 import { css } from "linaria";
-import { useStaticQuery, graphql } from "gatsby";
 
 import Header from "@docs/components/Header";
 import SideNav from "@docs/components/SideNav";
-import Footer, { FooterContent, FooterLink } from "@design/components/Footer";
+import Footer, { FooterContent } from "@design/components/Footer";
 import SEO from "@docs/components/SEO";
 import {
   headerHeight,
@@ -16,6 +15,8 @@ import {
   contentWidthVariable,
   sitePadding,
   contentWidth,
+  fullDrawerWidth,
+  minimizedDrawerWidth,
 } from "@docs/layout";
 import {
   gap,
@@ -33,7 +34,8 @@ import {
   between,
 } from "@design/theme";
 import CompositeBrand from "@docs/components/CompositeBrand";
-import { isNil } from "@lib/utility";
+import SecondaryFooter from "@docs/components/SecondaryFooter";
+import { useFooterData } from "@docs/data/footer";
 
 export const global = css`
   :global() {
@@ -56,12 +58,9 @@ export const global = css`
   }
 `;
 
-const fullWidth = "325px";
-const minimizedWidth = "285px";
-
 const Drawer = styled.div`
   height: 100%;
-  width: ${fullWidth};
+  width: ${fullDrawerWidth};
   position: fixed;
   z-index: ${ZIndex.Drawer};
   padding-top: ${headerHeight};
@@ -85,15 +84,15 @@ const Drawer = styled.div`
   transform: none;
 
   ${down(minimizeBreakpoint)} {
-    width: ${minimizedWidth};
+    width: ${minimizedDrawerWidth};
   }
 
   ${down(collapseBreakpoint)} {
     height: 100%;
-    width: ${fullWidth};
+    width: ${fullDrawerWidth};
   }
 
-  ${mediaMaxWidth(fullWidth)} {
+  ${mediaMaxWidth(fullDrawerWidth)} {
     width: 100%;
   }
 `;
@@ -194,13 +193,13 @@ const Styled = {
     }
 
     ${up(minimizeBreakpoint)} {
-      margin-left: ${fullWidth};
-      max-width: calc(100% - ${fullWidth});
+      margin-left: ${fullDrawerWidth};
+      max-width: calc(100% - ${fullDrawerWidth});
     }
 
     ${between(collapseBreakpoint, minimizeBreakpoint)} {
-      margin-left: ${minimizedWidth};
-      max-width: calc(100% - ${minimizedWidth});
+      margin-left: ${minimizedDrawerWidth};
+      max-width: calc(100% - ${minimizedDrawerWidth});
     }
 
     ${down(collapseBreakpoint)} {
@@ -231,47 +230,6 @@ const Layout: React.FC<LayoutProps> = ({
   style,
   children,
 }) => {
-  const data = useStaticQuery<GatsbyTypes.SiteLayoutQuery>(graphql`
-    query SiteLayout {
-      site {
-        siteMetadata {
-          footer {
-            about
-            links {
-              text
-              href
-              icon
-            }
-          }
-        }
-      }
-    }
-  `);
-
-  // Transform footer links & resolve icons
-  const footerLinks: FooterLink[] = useMemo(
-    () =>
-      data?.site?.siteMetadata?.footer?.links?.map((link) => {
-        if (isNil(link)) return { text: "", href: "" };
-        const { text, href, icon } = link;
-        let resolvedIcon: React.ReactNode;
-        switch (icon) {
-          case "github":
-            resolvedIcon = <FaGithub />;
-            break;
-          case "discord":
-            resolvedIcon = <FaDiscord />;
-            break;
-        }
-        return {
-          text: text ?? "",
-          href: href ?? "",
-          icon: resolvedIcon,
-        };
-      }) ?? [],
-    [data]
-  );
-
   // Ignored on large screens (always visible)
   const [drawerVisible, setDrawerVisible] = useState(false);
   return (
@@ -292,11 +250,8 @@ const Layout: React.FC<LayoutProps> = ({
           <Styled.ContentExpand className={className} style={style}>
             {children}
           </Styled.ContentExpand>
-          <Footer
-            brand={<CompositeBrand showVersion />}
-            about={data?.site?.siteMetadata?.footer?.about ?? null}
-            links={footerLinks}
-          />
+          <Footer brand={<CompositeBrand showVersion />} {...useFooterData()} />
+          <SecondaryFooter />
         </Styled.Content>
       </Styled.Layout>
     </>

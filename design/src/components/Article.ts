@@ -9,8 +9,6 @@ import {
   mode,
   down,
   staticColor,
-  scrollBarAuto,
-  shadow,
   ZIndex,
   primaryLink,
 } from "@design/theme";
@@ -144,32 +142,6 @@ const Article = styled.article`
     padding: 0 0 0 ${gap.micro};
     p {
       margin-bottom: 0;
-    }
-  }
-
-  .gatsby-highlight {
-    background-color: var(--code-bg);
-
-    ${mode(ColorMode.Dark)} {
-      box-shadow: ${shadow("z0")};
-    }
-
-    ${mode(ColorMode.Light)} {
-      box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
-    }
-
-    overflow: auto;
-    border-radius: 8px;
-    padding: 0 ${gap.pico};
-    white-space: pre-line;
-
-    pre {
-      ${scrollBarAuto(0.125)}
-      padding: ${gap.micro};
-
-      & > code {
-        font-size: 0.875rem;
-      }
     }
   }
 

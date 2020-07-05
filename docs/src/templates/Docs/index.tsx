@@ -7,9 +7,11 @@ import { transparentize } from "polished";
 import Layout from "@docs/components/Layout";
 import Mdx from "@docs/components/Mdx";
 import Article from "@design/components/Article";
+import MdxArticle from "@docs/components/MdxArticle";
 import Breadcrumb from "@docs/components/Breadcrumb";
 import PageMetadata from "@docs/components/PageMetadata";
 import Overview, { OverviewContext } from "@docs/components/Overview";
+import ImageHandler from "@docs/components/ImageHandler";
 import NavLabel from "@docs/components/NavLabel";
 import TableOfContents from "@docs/components/TableOfContents";
 import SequenceLinks from "@docs/components/SequenceLinks";
@@ -32,7 +34,7 @@ const pageMetadataClass = css`
   margin-top: calc(${gap.flow} - 0.4rem);
 `;
 
-const StyledArticle = styled(Article)`
+const StyledArticle = styled(MdxArticle)`
   & > p:first-of-type {
     --lead-color: ${color("primary-30")};
 
@@ -194,21 +196,23 @@ const Docs: React.FC<PageProps<
         </Styled.Title>
         <OverviewContext.Provider value={overviewChildren}>
           <Styled.Content className={cx(!noTOC && contentWithToc)}>
-            <Styled.Article>
-              {!isOrphan && <Mdx content={body ?? ""} />}
-              {showOverview && <Overview />}
-              <Styled.SequenceWrapper>
-                {!noSequenceLinks && (
-                  <SequenceLinks previous={previous} next={next} />
-                )}
-              </Styled.SequenceWrapper>
-              <Styled.BottomDivider />
-              <PageMetadata
-                className={pageMetadataClass}
-                originalPath={originalPath}
-                history={history}
-              />
-            </Styled.Article>
+            <ImageHandler>
+              <Styled.Article>
+                {!isOrphan && <Mdx content={body ?? ""} />}
+                {showOverview && <Overview />}
+                <Styled.SequenceWrapper>
+                  {!noSequenceLinks && (
+                    <SequenceLinks previous={previous} next={next} />
+                  )}
+                </Styled.SequenceWrapper>
+                <Styled.BottomDivider />
+                <PageMetadata
+                  className={pageMetadataClass}
+                  originalPath={originalPath}
+                  history={history}
+                />
+              </Styled.Article>
+            </ImageHandler>
             {!noTOC && tableOfContents.length > 0 && (
               <Styled.TableOfContentsWrapper>
                 <Styled.TableOfContents items={tableOfContents} />

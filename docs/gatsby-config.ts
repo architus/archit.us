@@ -94,6 +94,9 @@ export const plugins = [
   "gatsby-plugin-linaria",
   "gatsby-plugin-dark-mode",
   `gatsby-plugin-react-helmet`,
+  `gatsby-plugin-remove-serviceworker`,
+  `gatsby-transformer-sharp`,
+  `gatsby-plugin-sharp`,
   {
     resolve: `gatsby-plugin-manifest`,
     options: {
@@ -175,27 +178,27 @@ export const plugins = [
             aliases: {},
           },
         },
-        // {
-        //   resolve: "gatsby-remark-images",
-        //   options: {
-        //     maxWidth: 1500,
-        //     withWebp: true,
-        //     backgroundColor: bgColor,
-        //     linkImagesToOriginal: true,
-        //   },
-        // },
+        {
+          resolve: "gatsby-remark-images",
+          options: {
+            maxWidth: 1500,
+            withWebp: true,
+            backgroundColor: themeBgColor,
+            linkImagesToOriginal: true,
+          },
+        },
       ],
       // ! remove plugins when https://github.com/gatsbyjs/gatsby/issues/16242 gets merged
       plugins: [
-        // {
-        //   resolve: `gatsby-remark-images`,
-        //   options: {
-        //     maxWidth: 1500,
-        //     withWebp: true,
-        //     backgroundColor: bgColor,
-        //     linkImagesToOriginal: true,
-        //   },
-        // },
+        {
+          resolve: `gatsby-remark-images`,
+          options: {
+            maxWidth: 1500,
+            withWebp: true,
+            backgroundColor: themeBgColor,
+            linkImagesToOriginal: true,
+          },
+        },
       ],
     },
   },

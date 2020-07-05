@@ -57,6 +57,7 @@ const colors = {
     tooltip: "hsl(220, 15%, 35%)",
     // Same as `dark.bg+20`
     footer: "hsl(220, 13%, 28%)",
+    modalOverlay: "rgba(0, 0, 0, 0.875)",
   },
   [ColorMode.Dark]: {
     // Foreground colors
@@ -103,6 +104,7 @@ const colors = {
     tooltip: "rgb(11, 12, 15)",
     // Same as `dark.bg`
     footer: "hsl(220, 13%, 18%)",
+    modalOverlay: "rgba(0, 0, 0, 0.8)",
   },
 };
 
