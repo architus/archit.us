@@ -15,11 +15,15 @@ const BodyScrollLock: React.FC = () => {
     // When the modal is shown, we want a fixed body
     document.body.style.position = "fixed";
     document.body.style.top = `-${scrollYBefore}px`;
+    document.body.style.left = "0";
+    document.body.style.right = "0";
 
     return (): void => {
       const scrollY = document.body.style.top;
       document.body.style.position = "";
       document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
       window.scrollTo(0, parseInt(scrollY ?? "0", 10) * -1);
     };
   });
