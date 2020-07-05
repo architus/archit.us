@@ -286,6 +286,7 @@ export const query = graphql`
       originalPath
       lead(maxLength: 250)
       parent {
+        __typename
         ... on Mdx {
           body
           tableOfContents(maxDepth: 4)
@@ -308,6 +309,7 @@ export const query = graphql`
         }
       }
       children {
+        __typename
         ... on DocsPage {
           title
           path
