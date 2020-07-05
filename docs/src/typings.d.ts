@@ -18,10 +18,10 @@ declare module "unist-util-find" {
   export default find;
 }
 
-declare module "*.inline.svg" {
+declare module "*.svg" {
   import React from "react";
 
-  const content: React.FC<React.HTMLProps<SVGElement>>;
+  const content: React.FC<React.SVGAttributes<SVGElement>>;
   export default content;
 }
 

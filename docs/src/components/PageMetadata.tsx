@@ -26,7 +26,7 @@ const authorsMixin = `
   position: relative;
   border-radius: 128px;
   border-bottom: none !important;
-  box-shadow: 0 0 0 2px ${color("bg+10")};
+  box-shadow: 0 0 0 2px ${color("bg")};
 
   div {
     width: 32px;

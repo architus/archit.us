@@ -28,6 +28,33 @@ export const siteMetadata = {
     github: `https://github.com/architus`,
     discord: `https://discord.gg/svrRrSe`,
   },
+  footer: {
+    about: `This site contains implementation documentation for the architus ecosystem, including the microservice-based backend application as well as the React-based web dashboard.`,
+    links: [
+      {
+        href: "https://discord.gg/svrRrSe",
+        text: "Discord server",
+        icon: "discord",
+      },
+      {
+        href: "https://github.com/architus",
+        text: "GitHub",
+        icon: "github",
+      },
+      {
+        href: "https://archit.us/",
+        text: "Main site",
+      },
+      {
+        href: "https://develop.archit.us/",
+        text: "Main site (canary)",
+      },
+      {
+        href: "https://status.archit.us/",
+        text: "Status",
+      },
+    ],
+  },
 };
 
 export const plugins = [
@@ -46,7 +73,7 @@ export const plugins = [
     resolve: "gatsby-plugin-react-svg",
     options: {
       rule: {
-        include: /\.inline\.svg$/,
+        include: /\.svg$/,
       },
     },
   },

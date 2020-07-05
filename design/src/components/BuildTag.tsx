@@ -15,7 +15,7 @@ const Styled = {
     padding: ${gap.atto} ${gap.pico};
     border-radius: 4px;
     border: 2px solid ${color("secondary")};
-    color: light;
+    color: ${color("light")};
     background-color: ${transparentize(
       0.7,
       dynamicColor("secondary", ColorMode.Light)
@@ -25,6 +25,7 @@ const Styled = {
     font-weight: 500;
     font-size: 13px;
     letter-spacing: 1px;
+    line-height: 1;
     user-select: none;
   `,
   Icon: styled.span`

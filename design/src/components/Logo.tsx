@@ -1,9 +1,9 @@
 import React from "react";
 
 import { isNil } from "@lib/utility";
-import CombinedSvg from "@design/assets/logo/logo.inline.svg";
-import LogotypeSvg from "@design/assets/logo/logo-text.inline.svg";
-import SymbolSvg from "@design/assets/logo/logo-symbol.inline.svg";
+import CombinedSvg from "@design/assets/logo/logo.svg";
+import LogotypeSvg from "@design/assets/logo/logo-text.svg";
+import SymbolSvg from "@design/assets/logo/logo-symbol.svg";
 
 /**
  * Adds auto sizing if no sizing props have been supplied

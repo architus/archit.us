@@ -95,11 +95,6 @@ const Styled = {
 
     padding-top: 3rem;
     padding-bottom: 4rem;
-    padding-left: ${gap.nano};
-    padding-right: ${sitePadding};
-    ${down(collapseBreakpoint)} {
-      padding-left: ${sitePadding};
-    }
   `,
   Title: styled.h1`
     font-weight: 600;

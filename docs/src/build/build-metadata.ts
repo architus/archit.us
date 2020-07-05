@@ -1,6 +1,6 @@
 import { SourceNodesArgs } from "gatsby";
 
-import { isDefined, isNil } from "@lib/utility";
+import { isNil } from "@lib/utility";
 import { Option, Some, None } from "@lib/option";
 import { BuildMetadataEntry } from "@design/components/BuildDetails";
 import { NodeInput } from "@docs/build/types";

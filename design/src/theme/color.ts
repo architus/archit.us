@@ -53,8 +53,8 @@ const colors = {
     shadowMedium: "rgba(0, 0, 0, 0.075)",
     shadowBold: "rgba(0, 0, 0, 0.09)",
     shadowHeavy: "rgba(0, 0, 0, 0.3)",
-    // Same as `dark.bg+20`
-    tooltip: "hsl(220, 13%, 28%)",
+    // Same as `dark.bg+20` but a shade lighter
+    tooltip: "hsl(220, 15%, 35%)",
     // Same as `dark.bg+20`
     footer: "hsl(220, 13%, 28%)",
   },

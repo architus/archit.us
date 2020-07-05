@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { styled } from "linaria/react";
-import { FaBars, FaTimes } from "react-icons/fa";
+import { FaBars, FaTimes, FaGithub, FaDiscord } from "react-icons/fa";
 import { css } from "linaria";
+import { useStaticQuery, graphql } from "gatsby";
 
 import Header from "@docs/components/Header";
 import SideNav from "@docs/components/SideNav";
-import Footer, { FooterContent } from "@design/components/Footer";
+import Footer, { FooterContent, FooterLink } from "@design/components/Footer";
 import SEO from "@docs/components/SEO";
 import {
   headerHeight,
@@ -13,8 +14,8 @@ import {
   collapseBreakpoint,
   sitePaddingVariable,
   contentWidthVariable,
-  contentWidth,
   sitePadding,
+  contentWidth,
 } from "@docs/layout";
 import {
   gap,
@@ -31,16 +32,14 @@ import {
   ColorMode,
   between,
 } from "@design/theme";
-import CompositeBrand from "./CompositeBrand";
+import CompositeBrand from "@docs/components/CompositeBrand";
+import { isNil } from "@lib/utility";
 
 export const global = css`
   :global() {
     /* Set global site padding */
     body {
       ${`${sitePaddingVariable}: ${gap.milli};`}
-      ${down("md")} {
-        ${`${sitePaddingVariable}: ${gap.micro};`}
-      }
       ${down("sm")} {
         ${`${sitePaddingVariable}: ${gap.nano};`}
       }
@@ -59,15 +58,6 @@ export const global = css`
 const fullWidth = "325px";
 const minimizedWidth = "285px";
 
-// Move out of styled to use as selector
-const StyledFooter = styled(Footer)`
-  padding-left: ${sitePadding};
-
-  ${FooterContent} {
-    max-width: ${contentWidth};
-    padding-right: ${sitePadding};
-  }
-`;
 const Drawer = styled.div`
   height: 100%;
   width: ${fullWidth};
@@ -125,7 +115,9 @@ const DrawerOverlay = styled.div`
 `;
 
 const Styled = {
-  Footer: StyledFooter,
+  ContentExpand: styled.div`
+    flex-grow: 1;
+  `,
   Drawer,
   DrawerOverlay,
   DrawerExpander: styled.div`
@@ -190,16 +182,13 @@ const Styled = {
     flex-direction: column;
     padding-top: ${headerHeight};
 
-    & > *:not(${StyledFooter}) {
-      flex-grow: 1;
-
-      ${up(collapseBreakpoint)} {
-        padding-left: ${gap.micro};
-      }
+    & > * {
+      padding-left: ${sitePadding};
+      padding-right: ${sitePadding};
     }
 
-    & > ${StyledFooter} {
-      flex-grow: 0;
+    ${FooterContent} {
+      max-width: ${contentWidth};
     }
 
     ${up(minimizeBreakpoint)} {
@@ -240,6 +229,47 @@ const Layout: React.FC<LayoutProps> = ({
   style,
   children,
 }) => {
+  const data = useStaticQuery<GatsbyTypes.SiteLayoutQuery>(graphql`
+    query SiteLayout {
+      site {
+        siteMetadata {
+          footer {
+            about
+            links {
+              text
+              href
+              icon
+            }
+          }
+        }
+      }
+    }
+  `);
+
+  // Transform footer links & resolve icons
+  const footerLinks: FooterLink[] = useMemo(
+    () =>
+      data?.site?.siteMetadata?.footer?.links?.map((link) => {
+        if (isNil(link)) return { text: "", href: "" };
+        const { text, href, icon } = link;
+        let resolvedIcon: React.ReactNode;
+        switch (icon) {
+          case "github":
+            resolvedIcon = <FaGithub />;
+            break;
+          case "discord":
+            resolvedIcon = <FaDiscord />;
+            break;
+        }
+        return {
+          text: text ?? "",
+          href: href ?? "",
+          icon: resolvedIcon,
+        };
+      }) ?? [],
+    [data]
+  );
+
   // Ignored on large screens (always visible)
   const [drawerVisible, setDrawerVisible] = useState(false);
   return (
@@ -257,13 +287,13 @@ const Layout: React.FC<LayoutProps> = ({
         </Styled.DrawerExpander>
         <Styled.DrawerOverlay onClick={(): void => setDrawerVisible(false)} />
         <Styled.Content>
-          <div className={className} style={style}>
+          <Styled.ContentExpand className={className} style={style}>
             {children}
-          </div>
-          <Styled.Footer
+          </Styled.ContentExpand>
+          <Footer
             brand={<CompositeBrand showVersion />}
-            about={null}
-            links={[]}
+            about={data?.site?.siteMetadata?.footer?.about ?? null}
+            links={footerLinks}
           />
         </Styled.Content>
       </Styled.Layout>

@@ -7,14 +7,7 @@ import { gap, SpacingKey } from "@design/theme";
 import { Nil } from "@lib/types";
 
 const Styled = {
-  Badge: styled(
-    ({
-      gap: badgeGap,
-      ...rest
-    }: React.ComponentProps<typeof Badge> & { gap: SpacingKey }) => (
-      <Badge {...rest} />
-    )
-  )`
+  Gap: styled.span<{ gap: SpacingKey }>`
     margin-left: ${(p): string => gap(p.gap)};
   `,
 };
@@ -36,7 +29,12 @@ const NavLabel: React.FC<NavLabelProps> = ({
   return (
     <>
       {text}
-      {isDefined(badge) && <Styled.Badge gap={badgeGap}>{badge}</Styled.Badge>}
+      {isDefined(badge) && (
+        <>
+          <Styled.Gap gap={badgeGap} />
+          <Badge>{badge}</Badge>
+        </>
+      )}
     </>
   );
 };
