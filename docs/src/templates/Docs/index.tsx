@@ -11,14 +11,9 @@ import Breadcrumb from "@docs/components/Breadcrumb";
 import PageMetadata from "@docs/components/PageMetadata";
 import Overview, { OverviewContext } from "@docs/components/Overview";
 import NavLabel from "@docs/components/NavLabel";
-import TableOfContents, {
-  TableOfContentsNode,
-} from "@docs/components/TableOfContents";
-import SequenceLinks, {
-  SequenceLinkData,
-} from "@docs/components/SequenceLinks";
+import TableOfContents from "@docs/components/TableOfContents";
+import SequenceLinks from "@docs/components/SequenceLinks";
 import { CollapseContent } from "@docs/components/Collapse";
-import { History } from "@docs/build/github-types";
 import {
   collapseBreakpoint,
   minimizeBreakpoint,
@@ -29,10 +24,7 @@ import { down, gap, color, ColorMode, mode, dynamicColor } from "@design/theme";
 import { isDefined, isNil } from "@lib/utility";
 import { MutableArray } from "@lib/types";
 import "@docs/one-universal";
-import {
-  DocsContext,
-  BreadcrumbSegment,
-} from "@docs/templates/Docs/frontmatter";
+import { DocsContext } from "@docs/templates/Docs/frontmatter";
 
 // ? Note: this is done because Breadcrumb can't be styled
 // ?       due to a bug in gatsby-plugin-linaria
@@ -145,7 +137,7 @@ const Styled = {
  * Gatsby page template for a documentation page
  */
 const Docs: React.FC<PageProps<
-  GatsbyTypes.DocsPageTemplateQueryQuery,
+  GatsbyTypes.DocsPageTemplateQuery,
   DocsContext
 >> = ({ data, pageContext }) => {
   const { id } = pageContext;
@@ -239,39 +231,8 @@ const Docs: React.FC<PageProps<
   );
 };
 
-type DocsData = {
-  page: {
-    title: string;
-    shortTitle: string;
-    badge: string | null;
-    isOrphan: boolean;
-    noTOC: boolean;
-    noSequenceLinks: boolean;
-    originalPath: string | null;
-    lead: string | null;
-    parent: null | {
-      body: string;
-      tableOfContents: {
-        items: TableOfContentsNode[];
-      };
-    };
-    sideNav: {
-      id: string;
-    };
-    breadcrumb: BreadcrumbSegment[] | null;
-    history: History | null;
-    children: Array<{
-      title: string;
-      path: string;
-      badge: string | null;
-    }>;
-  };
-  previous: null | SequenceLinkData;
-  next: null | SequenceLinkData;
-};
-
 export const query = graphql`
-  query DocsPageTemplateQuery(
+  query DocsPageTemplate(
     $id: String = ""
     $previous: String = ""
     $next: String = ""

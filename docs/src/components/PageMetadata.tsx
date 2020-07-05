@@ -117,8 +117,8 @@ const PageMetadata: React.FC<PageMetadataProps> = ({
   className,
   style,
 }) => {
-  const result = useStaticQuery<GatsbyTypes.GitHubMetadataQueryQuery>(graphql`
-    query GitHubMetadataQuery {
+  const result = useStaticQuery<GatsbyTypes.GitHubMetadataQuery>(graphql`
+    query GitHubMetadata {
       site {
         siteMetadata {
           github {

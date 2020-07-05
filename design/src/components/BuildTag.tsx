@@ -2,7 +2,7 @@ import React from "react";
 import { styled } from "linaria/react";
 import { transparentize } from "polished";
 
-import { gap, dynamicColor, ColorMode, font, color } from "@design/theme";
+import { gap, dynamicColor, ColorMode, color } from "@design/theme";
 import Tooltip, { TooltipProps } from "@design/components/Tooltip";
 import BuildDetails, {
   BuildContext,
@@ -22,7 +22,6 @@ const Styled = {
     )};
     cursor: pointer;
 
-    font-family: ${font("body")};
     font-weight: 500;
     font-size: 13px;
     letter-spacing: 1px;
@@ -30,6 +29,8 @@ const Styled = {
   `,
   Icon: styled.span`
     margin-right: ${gap.pico};
+    position: relative;
+    top: 2px;
   `,
 };
 

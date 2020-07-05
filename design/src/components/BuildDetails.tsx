@@ -12,10 +12,12 @@ const Styled = {
   Divider: styled.hr`
     border-top: 2px solid ${transparentize(0.6, staticColor("light"))};
     margin: ${gap.nano} 0 ${gap.micro};
-    opacity: 0.5;
+    opacity: 0.25;
   `,
   ContextIcon: styled.span`
-    margin-right: ${gap.nano};
+    margin-right: ${gap.pico};
+    position: relative;
+    top: 1px;
   `,
   EntryLabel: styled.h4`
     &:not(:first-of-type) {
@@ -45,8 +47,8 @@ export type BuildMetadataEntry = OptionLinkEntry | ContentEntry;
 export interface OptionLinkEntry {
   type: "optionLink";
   label: string;
-  href: string | undefined;
-  text: string | undefined;
+  href?: string | undefined;
+  text?: string | undefined;
 }
 export interface ContentEntry {
   type: "content";

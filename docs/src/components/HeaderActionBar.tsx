@@ -56,8 +56,8 @@ const Styled = {
  * (for example, the dark mode button)
  */
 const HeaderActionBar: React.FC = () => {
-  const data = useStaticQuery<GatsbyTypes.HeaderActionBarQueryQuery>(graphql`
-    query HeaderActionBarQuery {
+  const data = useStaticQuery<GatsbyTypes.HeaderActionBarQuery>(graphql`
+    query HeaderActionBar {
       site {
         siteMetadata {
           socials {

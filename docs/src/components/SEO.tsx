@@ -13,9 +13,9 @@ type SEOProps = {
 };
 
 const SEO: React.FC<SEOProps> = ({ description, meta, title, lang = `en` }) => {
-  const { site } = useStaticQuery<GatsbyTypes.SEOQueryQuery>(
+  const { site } = useStaticQuery<GatsbyTypes.SEOQuery>(
     graphql`
-      query SEOQuery {
+      query SEO {
         site {
           pathPrefix
           siteMetadata {

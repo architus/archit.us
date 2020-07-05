@@ -66,8 +66,8 @@ const CompositeBrand: React.FC<CompositeBrandProps> = ({
   className,
   style,
 }) => {
-  const data = useStaticQuery<GatsbyTypes.SiteTitleQueryQuery>(graphql`
-    query SiteTitleQuery {
+  const data = useStaticQuery<GatsbyTypes.SiteTitleQuery>(graphql`
+    query SiteTitle {
       site {
         siteMetadata {
           headerTitle

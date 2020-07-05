@@ -16,8 +16,8 @@ import { isDefined } from "@lib/utility";
  * in the Gatsby node store
  */
 export function useBuildMetadata(): Option<BuildMetadata> {
-  const data = useStaticQuery<GatsbyTypes.BuildMetadataQueryQuery>(graphql`
-    query BuildMetadataQuery {
+  const data = useStaticQuery<GatsbyTypes.BuildMetadataQuery>(graphql`
+    query BuildMetadata {
       buildMetadata {
         label
         icon
@@ -52,7 +52,7 @@ export function useBuildMetadata(): Option<BuildMetadata> {
         case "commit":
           icon = <FiGitCommit />;
           break;
-        case "pr":
+        case "pull-request":
           icon = <FiGitPullRequest />;
           break;
       }

@@ -36,7 +36,7 @@ const tooltipContainerClass = css`
 const placementFormatters = {
   top: {
     color: (c: string): string => `${c} transparent transparent transparent`,
-    width: `0.4rem 0.5rem 0 0.5rem`,
+    width: `0.4rem 0.4rem 0 0.4rem`,
     arrow: `
       margin-bottom: -1rem;
       bottom: 0;
@@ -50,7 +50,7 @@ const placementFormatters = {
   },
   bottom: {
     color: (c: string): string => `transparent transparent ${c} transparent`,
-    width: `0 0.5rem 0.4rem 0.5rem`,
+    width: `0 0.4rem 0.4rem 0.4rem`,
     arrow: `
       margin-top: -0.4rem;
       left: 0;
@@ -64,7 +64,7 @@ const placementFormatters = {
   },
   left: {
     color: (c: string): string => `transparent transparent transparent ${c}`,
-    width: `0.5rem 0 0.5rem 0.4em`,
+    width: `0.4rem 0 0.4rem 0.4em`,
     arrow: `
       left: 3px;
       top: 0;
@@ -77,7 +77,7 @@ const placementFormatters = {
   },
   right: {
     color: (c: string): string => `transparent ${c} transparent transparent`,
-    width: `0.5rem 0.4rem 0.5rem 0`,
+    width: `0.4rem 0.4rem 0.4rem 0`,
     arrow: `
       margin-left: -0.7rem;
       left: 0;
@@ -127,7 +127,7 @@ const tooltipArrowClass = css`
         border-color: ${placementFormatters[placement].color(
           "var(--tooltip-arrow)"
         )};
-        border-color: ${placementFormatters[placement].width};
+        border-width: ${placementFormatters[placement].width};
         ${placementFormatters[placement].arrowBefore}
       }
 
@@ -135,7 +135,7 @@ const tooltipArrowClass = css`
         border-color: ${placementFormatters[placement].color(
           "var(--tooltip-color)"
         )};
-        border-color: ${placementFormatters[placement].width};
+        border-width: ${placementFormatters[placement].width};
         ${placementFormatters[placement].arrowAfter}
       }
     `
