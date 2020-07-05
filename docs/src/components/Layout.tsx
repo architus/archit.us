@@ -45,6 +45,7 @@ export const global = css`
       }
 
       ${`${contentWidthVariable}: 1080px;`}
+      overflow-x: hidden;
     }
 
     #gatsby-focus-wrapper {
@@ -162,6 +163,7 @@ const Styled = {
     height: auto;
     position: relative;
     flex-grow: 1;
+    overflow-x: auto;
 
     ${down("md")} {
       ${DrawerOverlay} {

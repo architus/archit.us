@@ -14,17 +14,12 @@ import NavLabel from "@docs/components/NavLabel";
 import TableOfContents from "@docs/components/TableOfContents";
 import SequenceLinks from "@docs/components/SequenceLinks";
 import { CollapseContent } from "@docs/components/Collapse";
-import {
-  collapseBreakpoint,
-  minimizeBreakpoint,
-  sitePadding,
-  contentWidth,
-} from "@docs/layout";
+import { DocsContext } from "@docs/templates/Docs/frontmatter";
+import { minimizeBreakpoint, contentWidth } from "@docs/layout";
 import { down, gap, color, ColorMode, mode, dynamicColor } from "@design/theme";
 import { isDefined, isNil } from "@lib/utility";
 import { MutableArray } from "@lib/types";
 import "@docs/one-universal";
-import { DocsContext } from "@docs/templates/Docs/frontmatter";
 
 // ? Note: this is done because Breadcrumb can't be styled
 // ?       due to a bug in gatsby-plugin-linaria
