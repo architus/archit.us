@@ -6,6 +6,7 @@ import { Option } from "@lib/option";
 import { ZIndex, shadow, color, gap, transition, down } from "@design/theme";
 import AutoLink from "@design/components/AutoLink";
 import { isDefined } from "@lib/utility";
+import BodyScrollLock from "./BodyScrollLock";
 
 const showClass = css``;
 
@@ -121,6 +122,7 @@ const Lightbox: React.FC<LightboxProps> = ({
       <Styled.ImageWrapper>
         {src.isDefined() && (
           <>
+            <BodyScrollLock />
             <Styled.Image
               src={src.get}
               onClick={(e: React.MouseEvent): void => e.stopPropagation()}

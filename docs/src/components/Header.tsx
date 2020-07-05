@@ -73,6 +73,7 @@ const Styled = {
   `,
   Header: styled.nav<{ mode: ColorMode; ssr: boolean }>`
     position: fixed;
+    top: 0;
     width: 100%;
     color: ${color("light")};
     height: ${headerHeight};
@@ -83,6 +84,7 @@ const Styled = {
     z-index: ${ZIndex.Header};
     box-shadow: ${shadow("z1")};
     padding-left: calc(${sitePadding} - ${logoLeftSpace});
+
     /* This has to be a function
     to have linaria not eagerly evaluate 'actionBarSpacing' at build time */
     padding-right: calc(${sitePadding} - ${(): string => actionBarSpacing});
