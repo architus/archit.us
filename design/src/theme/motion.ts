@@ -4,12 +4,17 @@
 export const ease = "cubic-bezier(0.25, 0.1, 0.25, 1)";
 
 /**
+ * Easing function go go slightly further at the end and go back
+ */
+export const easeOutBack = "cubic-bezier(0.175, 0.9, 0.3, 1.065)";
+
+/**
  * Speed of a given transition
  */
 export enum TransitionSpeed {
-  Fast = "0.125s",
-  Normal = "0.2s",
-  Slow = "0.4s",
+  Fast = 125,
+  Normal = 200,
+  Slow = 400,
 }
 
 /**
@@ -27,6 +32,6 @@ export function transition(
   return `
     transition-property: ${properties.join(",")}${suffix};
     transition-timing-function: ${ease}${suffix};
-    transition-duration: ${speed}${suffix};
+    transition-duration: ${speed}ms${suffix};
   `;
 }

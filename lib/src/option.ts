@@ -91,6 +91,14 @@ export interface OptionLike<A> {
    * @param compare - Optional custom value equality function
    */
   equals(other: Option<A>, compare?: (left: A, right: A) => boolean): boolean;
+
+  /**
+   * Attempts to fill the current option with the fallback option
+   * @param other - Other option to use if the current one is empty
+   * @returns An option with either the current value, or the fallback
+   * if the current one is empty
+   */
+  or(other: OptionLike<A>): OptionLike<A>;
 }
 
 interface ValuedOption<A> {
@@ -121,6 +129,8 @@ export abstract class Option<A> implements OptionLike<A> {
   abstract match<B>(m: Matcher<A, B>): B;
 
   abstract forEach(_: (_: A) => void): Option<A>;
+
+  abstract or(_: Option<A>): Option<A>;
 
   abstract equals(
     other: Option<A>,
@@ -241,6 +251,10 @@ export class SomeType<A> extends Option<A> implements ValuedOption<A> {
     if (isDefined(compare)) return compare(this.v, other.v);
     return this.v === other.v;
   }
+
+  or(_: Option<A>): Option<A> {
+    return this;
+  }
 }
 
 export class NoneType extends Option<never> {
@@ -297,6 +311,10 @@ export class NoneType extends Option<never> {
 
   equals(other: Option<never>): boolean {
     return other._;
+  }
+
+  or(other: Option<never>): Option<never> {
+    return other;
   }
 }
 
