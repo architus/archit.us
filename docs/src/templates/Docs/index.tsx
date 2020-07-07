@@ -17,28 +17,22 @@ import TableOfContents from "@docs/components/TableOfContents";
 import SequenceLinks from "@docs/components/SequenceLinks";
 import { CollapseContent } from "@docs/components/Collapse";
 import { DocsContext } from "@docs/templates/Docs/frontmatter";
-import { minimizeBreakpoint, contentWidth } from "@docs/layout";
+import {
+  minimizeBreakpoint,
+  contentWidth,
+  contentWidthToc,
+} from "@docs/layout";
 import { down, gap, color, ColorMode, mode, dynamicColor } from "@design/theme";
 import { isDefined, isNil } from "@lib/utility";
 import { MutableArray } from "@lib/types";
 import "@docs/one-universal";
-
-const TableOfContentsWrapper = styled.aside``;
-const StyledTableOfContents = styled(TableOfContents)`
-  position: sticky !important;
-  top: 5.5rem;
-  padding-left: 2.65em;
-  padding-top: 0.35em !important;
-  z-index: 10;
-  max-height: calc(100vh - 11.5rem);
-`;
 
 const contentWithToc = css`
   display: flex;
   flex-direction: row;
 
   ${MdxArticle} {
-    max-width: 49rem;
+    max-width: ${contentWidthToc};
     min-width: 0;
   }
 `;
@@ -96,16 +90,19 @@ const Styled = {
       font-size: 2.2rem;
     }
   `,
-  Content: styled.div`
-    ${TableOfContentsWrapper} {
-      flex-grow: 1;
-      ${down(minimizeBreakpoint)} {
-        display: none;
-      }
+  TableOfContentsWrapper: styled.aside`
+    position: sticky !important;
+    top: 5.5rem;
+    padding-left: 2.65em;
+    padding-top: 0.35em !important;
+    z-index: 10;
+    max-height: calc(100vh - 11.5rem);
+
+    flex-grow: 1;
+    ${down(minimizeBreakpoint)} {
+      display: none;
     }
   `,
-  TableOfContentsWrapper,
-  TableOfContents: StyledTableOfContents,
   SequenceWrapper: styled.div`
     margin-top: calc(2.5 * ${gap.flow});
   `,
@@ -187,7 +184,7 @@ const Docs: React.FC<PageProps<
           {<NavLabel text={title} badge={badge} gap="nano" />}
         </Styled.Title>
         <OverviewContext.Provider value={overviewChildren}>
-          <Styled.Content className={cx(!noTOC && contentWithToc)}>
+          <div className={cx(!noTOC && contentWithToc)}>
             <ImageHandler forwardedRef={contentRef}>
               <Styled.Article ref={contentRef}>
                 {!isOrphan && <Mdx content={body ?? ""} />}
@@ -206,10 +203,10 @@ const Docs: React.FC<PageProps<
             </ImageHandler>
             {!noTOC && tableOfContents.length > 0 && (
               <Styled.TableOfContentsWrapper>
-                <Styled.TableOfContents items={tableOfContents} />
+                <TableOfContents items={tableOfContents} />
               </Styled.TableOfContentsWrapper>
             )}
-          </Styled.Content>
+          </div>
         </OverviewContext.Provider>
       </Styled.Outer>
     </Layout>

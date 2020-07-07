@@ -7,6 +7,7 @@ export const sitePaddingVariable = `--site-padding`;
 export const contentWidthVariable = `--content-width`;
 export const sitePadding = `var(${sitePaddingVariable})`;
 export const contentWidth = `var(${contentWidthVariable})`;
+export const contentWidthToc = "49rem";
 
 export const fullDrawerWidth = "325px";
 export const minimizedDrawerWidth = "285px";

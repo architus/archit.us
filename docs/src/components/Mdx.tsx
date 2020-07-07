@@ -64,18 +64,15 @@ export const overrides = {
     return prefix.match({
       None: () => <AutoLink {...props} href={props.href ?? ""} />,
       Some: (path) => {
-        // Fix `pathPrefix` being applied twice
-        // May be linked to https://github.com/gatsbyjs/gatsby/issues/21462
-        // TODO watch issue
+        // Fix `pathPrefix` being applied twice, first in MDX transformation
+        // and then in the `<Link />` component
         let href = props.href ?? "";
         if (!isExternal(href)) {
           const withoutAround = withoutLeading(withoutTrailing(path));
-          console.log({ path, href, withoutAround });
           if (withoutAround.length !== 0) {
             const base = `/${withoutAround}`;
             const trimmed = trimPrefix(props.href ?? "", base, -1);
-            href = `${base}/${withoutLeading(trimmed)}`;
-            console.log({ base, trimmed, href });
+            href = `/${withoutLeading(trimmed)}`;
           }
         }
         return <AutoLink {...props} href={href} />;

@@ -47,7 +47,6 @@ export const global = css`
       }
 
       ${`${contentWidthVariable}: 1080px;`}
-      overflow-x: hidden;
     }
 
     #gatsby-focus-wrapper {
