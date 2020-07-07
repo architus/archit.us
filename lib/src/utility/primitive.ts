@@ -59,3 +59,12 @@ export function withoutTrailing(path: string): string {
 export function withoutLeading(path: string): string {
   return path.slice(0, 1) === "/" ? path.slice(1) : path;
 }
+
+/**
+ * Escapes special regular expression characters.
+ * From https://stackoverflow.com/a/9310752/13192375
+ * @param raw - raw *unescaped) regex template
+ */
+export function escapeRegex(raw: string): string {
+  return raw.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+}

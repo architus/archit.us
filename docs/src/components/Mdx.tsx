@@ -11,6 +11,8 @@ import Demo from "@docs/components/Demo";
 import Article from "@design/components/Article";
 import Alert from "@design/components/Alert";
 import Table from "@docs/components/Table";
+import { usePathPrefix } from "@docs/data/path";
+import { withoutLeading, escapeRegex, withoutTrailing } from "@lib/utility";
 
 type MdxProps = {
   content: string;
@@ -50,7 +52,22 @@ export const shortcodes = {
 
 // React components that replace HTML components in the markdown
 export const overrides = {
-  a: AutoLink,
+  a: (props: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const prefix = usePathPrefix();
+    return prefix.match({
+      None: () => <AutoLink href="" {...props} />,
+      Some: (path) => {
+        // Fix `pathPrefix` being applied twice
+        // May be linked to https://github.com/gatsbyjs/gatsby/issues/21462
+        // TODO watch issue
+        const withLeading = `/${withoutLeading(withoutTrailing(path))}`;
+        const href = props.href ?? "";
+        const regex = new RegExp(`^(?:${escapeRegex(withLeading)})+`);
+        return <AutoLink {...props} href={href.replace(regex, withLeading)} />;
+      },
+    });
+  },
   table: Table,
   h1: createHeading({ component: "h1" }),
   h2: createHeading({ component: "h2" }),

@@ -17,7 +17,8 @@ import {
   mode,
   down,
 } from "@design/theme";
-import { splitPath } from "@lib/utility";
+import { splitPath, withoutLeading, withoutTrailing } from "@lib/utility";
+import { usePathPrefix } from "@docs/data/path";
 
 const Styled = {
   Link: styled<React.ComponentProps<typeof Link>>(Link)`
@@ -116,14 +117,25 @@ const Styled = {
 const HeaderLinks: React.FC = () => {
   const navTree = useNavigationTree();
   const location = useLocation();
+  const pathPrefix = usePathPrefix();
 
   // Determine the longest partially-matching path to set as
   // the active one
   let longestIndex = -1;
   let longestMatch = -1;
   const roots = [...navTree.values()];
+
+  // Remove the pathPrefix if it exists
+  let { pathname } = location;
+  if (pathPrefix.isDefined()) {
+    const withLeading = `/${withoutLeading(withoutTrailing(pathPrefix.get))}`;
+    if (pathname.startsWith(withLeading)) {
+      pathname = pathname.slice(withLeading.length);
+    }
+  }
+
   roots.forEach((navRoot, i) => {
-    if (location.pathname.startsWith(navRoot.path)) {
+    if (pathname.startsWith(navRoot.path)) {
       const fragments = splitPath(navRoot.path).filter((f) => f !== "");
       if (fragments.length > longestMatch) {
         longestMatch = fragments.length;
