@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback, useState } from "react";
+import React, { useEffect, useCallback, useState } from "react";
 import { styled } from "linaria/react";
 
 import { None, Some, Option } from "@lib/option";
@@ -31,6 +31,7 @@ const Styled = {
 };
 
 export type ImageHandlerProps = {
+  forwardedRef: React.RefObject<HTMLElement | null>;
   targetLinkClass?: string;
 };
 
@@ -44,10 +45,10 @@ export type ImageHandlerProps = {
  */
 const ImageHandler: React.FC<ImageHandlerProps> = ({
   children,
+  forwardedRef,
   targetLinkClass = "gatsby-resp-image-link",
 }) => {
   const [currentImage, setCurrentImage] = useState<Option<string>>(None);
-  const wrapperRef = useRef<HTMLDivElement | null>(null);
   const showFullScreen = useCallback(
     (src: string): void => {
       setCurrentImage(Some(src));
@@ -58,7 +59,7 @@ const ImageHandler: React.FC<ImageHandlerProps> = ({
   // Attach event listeners
   useEffect(() => {
     const attachedHandlers: [Element, string, EventListener][] = [];
-    const parent = wrapperRef.current;
+    const parent = forwardedRef.current;
     if (isDefined(parent)) {
       const linkCollection = parent.getElementsByClassName(targetLinkClass);
       for (let i = 0; i < linkCollection.length; ++i) {
@@ -86,7 +87,7 @@ const ImageHandler: React.FC<ImageHandlerProps> = ({
 
   return (
     <>
-      <div ref={wrapperRef}>{children}</div>
+      {children}
       <Styled.Lightbox
         src={currentImage}
         onClose={(): void => {

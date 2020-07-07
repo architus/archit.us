@@ -17,7 +17,12 @@ import {
   mode,
   down,
 } from "@design/theme";
-import { splitPath, withoutLeading, withoutTrailing, trimPrefix } from "@lib/utility";
+import {
+  splitPath,
+  withoutLeading,
+  withoutTrailing,
+  trimPrefix,
+} from "@lib/utility";
 import { usePathPrefix } from "@docs/data/path";
 
 const Styled = {

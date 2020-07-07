@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { PageProps, graphql } from "gatsby";
 import { styled } from "linaria/react";
 import { css, cx } from "linaria";
@@ -127,6 +127,7 @@ const Docs: React.FC<PageProps<
 >> = ({ data, pageContext }) => {
   const { id } = pageContext;
   const { page, previous, next } = data;
+  const contentRef = useRef<HTMLElement | null>(null);
 
   if (isNil(page)) {
     const description =
@@ -187,8 +188,8 @@ const Docs: React.FC<PageProps<
         </Styled.Title>
         <OverviewContext.Provider value={overviewChildren}>
           <Styled.Content className={cx(!noTOC && contentWithToc)}>
-            <ImageHandler>
-              <Styled.Article>
+            <ImageHandler forwardedRef={contentRef}>
+              <Styled.Article ref={contentRef}>
                 {!isOrphan && <Mdx content={body ?? ""} />}
                 {showOverview && <Overview />}
                 <Styled.SequenceWrapper>

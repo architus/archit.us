@@ -17,6 +17,7 @@ import {
   escapeRegex,
   withoutTrailing,
   trimPrefix,
+  isExternal,
 } from "@lib/utility";
 
 type MdxProps = {
@@ -60,17 +61,23 @@ export const overrides = {
   a: (props: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const prefix = usePathPrefix();
-    console.log({ prefix });
     return prefix.match({
-      None: () => <AutoLink href="" {...props} />,
+      None: () => <AutoLink {...props} href={props.href ?? ""} />,
       Some: (path) => {
         // Fix `pathPrefix` being applied twice
         // May be linked to https://github.com/gatsbyjs/gatsby/issues/21462
         // TODO watch issue
-        const withLeading = `/${withoutLeading(withoutTrailing(path))}`;
-        const trimmed = trimPrefix(props.href ?? "", withLeading, -1);
-        const href = `${withLeading}/${withoutLeading(trimmed)}`;
-        console.log({ path, props, withLeading, trimmed, href });
+        let href = props.href ?? "";
+        if (!isExternal(href)) {
+          const withoutAround = withoutLeading(withoutTrailing(path));
+          console.log({ path, href, withoutAround });
+          if (withoutAround.length !== 0) {
+            const base = `/${withoutAround}`;
+            const trimmed = trimPrefix(props.href ?? "", base, -1);
+            href = `${base}/${withoutLeading(trimmed)}`;
+            console.log({ base, trimmed, href });
+          }
+        }
         return <AutoLink {...props} href={href} />;
       },
     });
