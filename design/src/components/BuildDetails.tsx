@@ -81,8 +81,12 @@ const BuildDetails: React.FC<BuildDetailsProps> = ({
   style,
 }) => (
   <div className={className} style={style}>
-    {context.message && <div>{context.message}</div>}
-    <Styled.Divider />
+    {context.message && (
+      <>
+        <div>{context.message}</div>
+        <Styled.Divider />
+      </>
+    )}
     <Context context={context} />
     {entries.map((entry, i) => (
       <Entry key={i} data={entry} />

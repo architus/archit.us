@@ -210,7 +210,7 @@ function loadBuildMetadata(): Option<NodeInput<GatsbyTypes.BuildMetadata>> {
         icon: "pull-request",
         context: {
           label: "github-actions",
-          message: "",
+          message: undefined,
           icon: "github",
         },
         details: flatten(details),
@@ -218,13 +218,12 @@ function loadBuildMetadata(): Option<NodeInput<GatsbyTypes.BuildMetadata>> {
     }
 
     // Must be a commit
-    const commitRef = process.env.COMMIT_REF;
     return Some({
-      label: commitRef?.substring(0, 7).toUpperCase() ?? "COMMIT",
+      label: process.env.BUILD_SHA?.substring(0, 7).toUpperCase() ?? "COMMIT",
       icon: "commit",
       context: {
         label: "github-actions",
-        message: "",
+        message: undefined,
         icon: "github",
       },
       details: flatten(details),

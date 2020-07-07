@@ -12,7 +12,12 @@ import Article from "@design/components/Article";
 import Alert from "@design/components/Alert";
 import Table from "@docs/components/Table";
 import { usePathPrefix } from "@docs/data/path";
-import { withoutLeading, escapeRegex, withoutTrailing } from "@lib/utility";
+import {
+  withoutLeading,
+  escapeRegex,
+  withoutTrailing,
+  trimPrefix,
+} from "@lib/utility";
 
 type MdxProps = {
   content: string;
@@ -55,6 +60,7 @@ export const overrides = {
   a: (props: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const prefix = usePathPrefix();
+    console.log({ prefix });
     return prefix.match({
       None: () => <AutoLink href="" {...props} />,
       Some: (path) => {
@@ -62,9 +68,10 @@ export const overrides = {
         // May be linked to https://github.com/gatsbyjs/gatsby/issues/21462
         // TODO watch issue
         const withLeading = `/${withoutLeading(withoutTrailing(path))}`;
-        const href = props.href ?? "";
-        const regex = new RegExp(`^(?:${escapeRegex(withLeading)})+`);
-        return <AutoLink {...props} href={href.replace(regex, withLeading)} />;
+        const trimmed = trimPrefix(props.href ?? "", withLeading, -1);
+        const href = `${withLeading}/${withoutLeading(trimmed)}`;
+        console.log({ path, props, withLeading, trimmed, href });
+        return <AutoLink {...props} href={href} />;
       },
     });
   },

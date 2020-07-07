@@ -68,3 +68,21 @@ export function withoutLeading(path: string): string {
 export function escapeRegex(raw: string): string {
   return raw.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 }
+
+/**
+ * Trims prefixes from a string repeatedly
+ * @param base - Base string to process
+ * @param prefix - Prefix substring
+ * @param maxTrims - Maximum number of times to remove prefix; -1 means no limit
+ */
+export function trimPrefix(base: string, prefix: string, maxTrims = 1): string {
+  let processed = base;
+  for (let i = 0; i < maxTrims || maxTrims === -1; ++i) {
+    if (processed.startsWith(prefix)) {
+      processed = processed.slice(prefix.length);
+    } else {
+      break;
+    }
+  }
+  return processed;
+}

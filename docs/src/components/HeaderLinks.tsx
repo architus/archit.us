@@ -17,7 +17,7 @@ import {
   mode,
   down,
 } from "@design/theme";
-import { splitPath, withoutLeading, withoutTrailing } from "@lib/utility";
+import { splitPath, withoutLeading, withoutTrailing, trimPrefix } from "@lib/utility";
 import { usePathPrefix } from "@docs/data/path";
 
 const Styled = {
@@ -129,9 +129,7 @@ const HeaderLinks: React.FC = () => {
   let { pathname } = location;
   if (pathPrefix.isDefined()) {
     const withLeading = `/${withoutLeading(withoutTrailing(pathPrefix.get))}`;
-    if (pathname.startsWith(withLeading)) {
-      pathname = pathname.slice(withLeading.length);
-    }
+    pathname = trimPrefix(pathname, withLeading);
   }
 
   roots.forEach((navRoot, i) => {
