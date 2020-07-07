@@ -1,5 +1,4 @@
 import React, { Fragment } from "react";
-import { css } from "linaria";
 import { styled } from "linaria/react";
 import { FaChevronRight } from "react-icons/fa";
 
@@ -8,11 +7,10 @@ import { isDefined } from "@lib/utility";
 import { color, gap, primaryLink } from "@design/theme";
 import AutoLink from "@design/components/AutoLink";
 
-const primaryLinkClassName = css`
-  ${primaryLink}
-`;
-
 const Styled = {
+  Link: styled(AutoLink)`
+    ${primaryLink}
+  `,
   BreadcrumbIcon: styled(FaChevronRight)`
     color: ${color("textFade")};
     font-size: 70%;
@@ -53,9 +51,7 @@ export default Breadcrumb;
 
 const BreadcrumbEntry: React.FC<BreadcrumbSegment> = ({ text, path }) =>
   isDefined(path) ? (
-    <AutoLink className={primaryLinkClassName} href={path}>
-      {text}
-    </AutoLink>
+    <Styled.Link href={path}>{text}</Styled.Link>
   ) : (
     <span>{text}</span>
   );

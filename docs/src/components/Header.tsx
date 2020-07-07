@@ -1,8 +1,6 @@
 import React from "react";
-import { css } from "linaria";
 import { styled } from "linaria/react";
 import { mix, transparentize } from "polished";
-import { Link } from "gatsby";
 
 import {
   color,
@@ -24,34 +22,34 @@ import HeaderActionBar, {
 import { useColorMode } from "@docs/hooks";
 import { useInitialRender } from "@lib/hooks";
 import CompositeBrand from "@docs/components/CompositeBrand";
+import { Link } from "@docs/components/Router";
 
 const headerTransparency = 0.06;
-
 const logoLeftSpace = gap.nano;
-const logoLinkClass = css`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-
-  padding: ${gap.atto} ${gap.nano} ${gap.femto} ${logoLeftSpace};
-  background-color: transparent;
-  text-decoration: none;
-  color: ${color("light")};
-
-  ${transition(["opacity"])}
-  opacity: 1;
-
-  &:hover {
-    opacity: 0.8;
-  }
-
-  /* Increase gap between logo and links on very large screens */
-  ${up("lg")} {
-    margin-right: ${gap.nano};
-  }
-`;
 
 const Styled = {
+  LogoLink: styled(Link)`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    padding: ${gap.atto} ${gap.nano} ${gap.femto} ${logoLeftSpace};
+    background-color: transparent;
+    text-decoration: none;
+    color: ${color("light")};
+
+    ${transition(["opacity"])}
+    opacity: 1;
+
+    &:hover {
+      opacity: 0.8;
+    }
+
+    /* Increase gap between logo and links on very large screens */
+    ${up("lg")} {
+      margin-right: ${gap.nano};
+    }
+  `,
   HeaderLinksWrapper: styled.div`
     display: flex;
     flex-direction: row;
@@ -127,9 +125,9 @@ const Header: React.FC<HeaderProps> = ({ className, style }) => {
   const ssr = typeof window === "undefined" || initialRender;
   return (
     <Styled.Header mode={mode} ssr={ssr} className={className} style={style}>
-      <Link to="/" className={logoLinkClass}>
+      <Styled.LogoLink to="/">
         <CompositeBrand buildTooltipPlacement="bottom" hideTagBreakpoint="vs" />
-      </Link>
+      </Styled.LogoLink>
       <Styled.HeaderLinksWrapper>
         <HeaderLinks />
       </Styled.HeaderLinksWrapper>

@@ -1,12 +1,13 @@
 import React from "react";
 import { styled } from "linaria/react";
-import { Link } from "gatsby";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { transparentize } from "polished";
 
 import { Nil } from "@lib/types";
 import { isNil } from "@lib/utility";
 import Card from "@design/components/Card";
 import NavLabel from "@docs/components/NavLabel";
+import { Link } from "@docs/components/Router";
 import {
   gap,
   color,
@@ -17,7 +18,6 @@ import {
   dynamicColor,
   ColorMode,
 } from "@design/theme";
-import { transparentize } from "polished";
 
 const Icon = styled.div`
   display: flex;

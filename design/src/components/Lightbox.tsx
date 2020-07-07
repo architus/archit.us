@@ -162,17 +162,12 @@ const Lightbox: React.FC<LightboxProps> = ({
       <Styled.ImageWrapper>
         {latentSource.isDefined() && (
           <>
-            <Styled.Image
-              src={latentSource.get}
-              onClick={(e: React.MouseEvent): void => e.stopPropagation()}
-            />
+            <Styled.Image src={latentSource.get} />
             <Styled.OriginalLink
               href={latentSource.get}
               noUnderline
               noIcon
               external
-              onClick={(e: React.MouseEvent): void => e.stopPropagation()}
-              {...{ autoFocus: true }}
             >
               Open original
             </Styled.OriginalLink>

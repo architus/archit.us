@@ -13,7 +13,7 @@ import { isDefined } from "@lib/utility";
 export const actionBarSpacing = gap.pico;
 
 // Share styles between anchor and button elements
-const button = css`
+const buttonClass = css`
   padding: ${actionBarSpacing} ${actionBarSpacing};
   color: ${color("light")};
   background-color: transparent;
@@ -100,7 +100,7 @@ export default HeaderActionBar;
 // ? ==============
 
 const SocialButton: React.FC<{ to: string }> = ({ to, children }) => (
-  <a rel="noreferrer" target="_blank" href={to} className={button}>
+  <a rel="noreferrer" target="_blank" href={to} className={buttonClass}>
     {children}
   </a>
 );
@@ -116,7 +116,7 @@ const ColorModeToggle: React.FC = () => {
   const isDark = mode === ColorMode.Dark;
   return (
     <button
-      className={button}
+      className={buttonClass}
       onClick={(): void => setMode(isDark ? ColorMode.Light : ColorMode.Dark)}
     >
       {isDark ? <BsMoon /> : <IoMdSunny />}

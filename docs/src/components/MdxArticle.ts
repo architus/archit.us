@@ -2,6 +2,7 @@ import { styled } from "linaria/react";
 
 import Article from "@design/components/Article";
 import { mode, ColorMode, shadow, gap, scrollBarAuto } from "@design/theme";
+import { anchorClass } from "@docs/components/Heading";
 
 /**
  * Contains styling modifications to `<Article />`
@@ -32,6 +33,11 @@ const MdxArticle = styled(Article)`
       & > code {
         font-size: 0.875rem;
       }
+    }
+
+    ${anchorClass("h6")} + & {
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
     }
   }
 

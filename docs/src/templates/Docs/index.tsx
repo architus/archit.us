@@ -23,48 +23,6 @@ import { isDefined, isNil } from "@lib/utility";
 import { MutableArray } from "@lib/types";
 import "@docs/one-universal";
 
-// ? Note: this is done because Breadcrumb can't be styled
-// ?       due to a bug in gatsby-plugin-linaria
-// ? See https://github.com/cometkim/gatsby-plugin-linaria/issues/19
-const breadcrumbClass = css`
-  margin-bottom: ${gap.flow};
-`;
-
-const pageMetadataClass = css`
-  margin-top: calc(${gap.flow} - 0.4rem);
-`;
-
-const StyledArticle = styled(MdxArticle)`
-  & > p:first-of-type {
-    --lead-color: ${color("primary-30")};
-
-    ${mode(ColorMode.Dark)} {
-      --lead-color: ${color("primary+30")};
-    }
-
-    ${mode(ColorMode.Light)} {
-      --link-color: ${color("primary-10")};
-      --link-color-fade: ${transparentize(
-        0.6,
-        dynamicColor("primary-10", ColorMode.Light)
-      )};
-    }
-
-    font-size: 20px;
-    line-height: 28px;
-    font-weight: 300;
-    color: var(--lead-color);
-    margin-bottom: 2rem;
-    opacity: 0.95;
-  }
-
-  ${CollapseContent} .gatsby-highlight {
-    margin-top: calc(${gap.flow} * -0.5);
-    border-top-right-radius: 0;
-    border-top-left-radius: 0;
-  }
-`;
-
 const TableOfContentsWrapper = styled.aside``;
 const StyledTableOfContents = styled(TableOfContents)`
   position: sticky !important;
@@ -79,13 +37,49 @@ const contentWithToc = css`
   display: flex;
   flex-direction: row;
 
-  ${StyledArticle} {
+  ${MdxArticle} {
     max-width: 49rem;
     min-width: 0;
   }
 `;
 
 const Styled = {
+  Breadcrumb: styled(Breadcrumb)`
+    margin-bottom: ${gap.flow};
+  `,
+  PageMetadata: styled(PageMetadata)`
+    margin-top: calc(${gap.flow} - 0.4rem);
+  `,
+  Article: styled(MdxArticle)`
+    & > p:first-of-type {
+      --lead-color: ${color("primary-30")};
+
+      ${mode(ColorMode.Dark)} {
+        --lead-color: ${color("primary+30")};
+      }
+
+      ${mode(ColorMode.Light)} {
+        --link-color: ${color("primary-10")};
+        --link-color-fade: ${transparentize(
+          0.6,
+          dynamicColor("primary-10", ColorMode.Light)
+        )};
+      }
+
+      font-size: 20px;
+      line-height: 28px;
+      font-weight: 300;
+      color: var(--lead-color);
+      margin-bottom: 2rem;
+      opacity: 0.95;
+    }
+
+    ${CollapseContent} .gatsby-highlight {
+      margin-top: calc(${gap.flow} * -0.5);
+      border-top-right-radius: 0;
+      border-top-left-radius: 0;
+    }
+  `,
   Outer: styled.div`
     max-width: ${contentWidth};
     margin: 0 auto;
@@ -110,7 +104,6 @@ const Styled = {
       }
     }
   `,
-  Article: StyledArticle,
   TableOfContentsWrapper,
   TableOfContents: StyledTableOfContents,
   SequenceWrapper: styled.div`
@@ -188,9 +181,7 @@ const Docs: React.FC<PageProps<
       description={lead ?? undefined}
     >
       <Styled.Outer>
-        {isDefined(breadcrumb) && (
-          <Breadcrumb segments={breadcrumb} className={breadcrumbClass} />
-        )}
+        {isDefined(breadcrumb) && <Styled.Breadcrumb segments={breadcrumb} />}
         <Styled.Title>
           {<NavLabel text={title} badge={badge} gap="nano" />}
         </Styled.Title>
@@ -206,8 +197,7 @@ const Docs: React.FC<PageProps<
                   )}
                 </Styled.SequenceWrapper>
                 <Styled.BottomDivider />
-                <PageMetadata
-                  className={pageMetadataClass}
+                <Styled.PageMetadata
                   originalPath={originalPath}
                   history={history}
                 />

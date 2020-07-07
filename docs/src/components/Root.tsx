@@ -1,10 +1,11 @@
 import React from "react";
-import { Link } from "gatsby";
+
+import ColorModeProvider from "@docs/components/ColorModeProvider";
+import { AutoLinkContext } from "@design/components/AutoLink";
+import { Link } from "@docs/components/Router";
 
 // import the global CSS
 import "@design/theme/globals";
-import ColorModeProvider from "@docs/components/ColorModeProvider";
-import { AutoLinkContext } from "@design/components/AutoLink";
 
 // Inject the Gatsby router link to auto links
 const linkContext: AutoLinkContext = { link: Link };

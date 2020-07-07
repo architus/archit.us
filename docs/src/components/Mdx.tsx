@@ -10,7 +10,7 @@ import Collapse from "@docs/components/Collapse";
 import Demo from "@docs/components/Demo";
 import Article from "@design/components/Article";
 import Alert from "@design/components/Alert";
-import { gap } from "@design/theme";
+import Table from "@docs/components/Table";
 
 type MdxProps = {
   content: string;
@@ -51,22 +51,13 @@ export const shortcodes = {
 // React components that replace HTML components in the markdown
 export const overrides = {
   a: AutoLink,
+  table: Table,
   h1: createHeading({ component: "h1" }),
   h2: createHeading({ component: "h2" }),
   h3: createHeading({ component: "h3" }),
   h4: createHeading({ component: "h4" }),
   h5: createHeading({ component: "h5" }),
   h6: createHeading({ component: "h6", right: true }),
-  // TODO implement
-  table: (props: React.TableHTMLAttributes<HTMLTableElement>) => (
-    <div className="table-responsive-lg table-outer">
-      <Alert type="danger">
-        Not implemented <strong>(table)</strong>
-      </Alert>
-      <div style={{ marginTop: gap.flow }} />
-      <table {...props} className="table table-striped" />
-    </div>
-  ),
 } as const;
 
 /**

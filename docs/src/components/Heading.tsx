@@ -1,8 +1,10 @@
 import React from "react";
 import { styled } from "linaria/react";
+import { cx } from "linaria";
 
 import { isDefined } from "@lib/utility";
 import { headerHeight } from "@docs/layout";
+import { useLocation } from "@docs/components/Router";
 import {
   transition,
   dynamicColor,
@@ -12,8 +14,6 @@ import {
   up,
   gap,
 } from "@design/theme";
-import { useLocation } from "@reach/router";
-import { cx } from "linaria";
 
 const rightLink = "right";
 const rightMixin = `
@@ -137,15 +137,9 @@ const Styled = {
   `,
 };
 
-type BaseComponent =
-  | React.ComponentType<HeadingProps>
-  | "h1"
-  | "h2"
-  | "h3"
-  | "h4"
-  | "h5"
-  | "h6";
-type HeadingProps = React.HTMLAttributes<HTMLHeadingElement>;
+export type HeadingType = "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+type BaseComponent = React.ComponentType<HeadingProps> | HeadingType;
+export type HeadingProps = React.HTMLAttributes<HTMLHeadingElement>;
 
 /**
  * Component factory to create a Heading component, which shows a heading
@@ -172,7 +166,11 @@ export function createHeading({
     return (
       <Styled.AnchorWrapper
         id={isDefined(id) ? makeWrapperId(id) : undefined}
-        className={cx(className, active && activeClass)}
+        className={cx(
+          className,
+          active && activeClass,
+          anchorClass(typeof Component === "string" ? Component : "custom")
+        )}
         style={style}
       >
         <Styled.Anchor id={id}> </Styled.Anchor>
@@ -198,4 +196,8 @@ export function createHeading({
 
 export function makeWrapperId(slug: string): string {
   return `__internal-${slug}`;
+}
+
+export function anchorClass(tag: HeadingType | "custom"): string {
+  return `anchor--${tag}`;
 }

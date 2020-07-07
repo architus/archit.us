@@ -12,6 +12,7 @@ import {
   ZIndex,
   primaryLink,
 } from "@design/theme";
+import { tableSidePadding } from "@docs/layout";
 
 /**
  * HTML styled article component as a wrapper for long-form Markdown-like content
@@ -116,7 +117,8 @@ const Article = styled.article`
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
     z-index: ${ZIndex.TableHeader};
-    padding-left: ${gap.nano};
+    padding-left: ${tableSidePadding};
+    padding-right: ${tableSidePadding};
     font-size: 1.125rem;
     font-weight: 600;
     height: 44px;
@@ -128,7 +130,7 @@ const Article = styled.article`
       background-color: ${darken(0.02, dynamicColor("bg+20", ColorMode.Dark))};
     }
     ${mode(ColorMode.Light)} {
-      background-color: ${darken(0.03, dynamicColor("bg-10", ColorMode.Light))};
+      background-color: ${darken(0.06, dynamicColor("bg-10", ColorMode.Light))};
     }
   }
 

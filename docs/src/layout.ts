@@ -1,4 +1,4 @@
-import { BreakpointKey } from "@design/theme";
+import { gap, BreakpointKey } from "@design/theme";
 
 export const headerHeight = "58px" as const;
 export const collapseBreakpoint: BreakpointKey = "md";
@@ -10,3 +10,5 @@ export const contentWidth = `var(${contentWidthVariable})`;
 
 export const fullDrawerWidth = "325px";
 export const minimizedDrawerWidth = "285px";
+
+export const tableSidePadding = gap.nano;
