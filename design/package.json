@@ -25,7 +25,7 @@
     "react": "^16.13.1",
     "react-icons": "^3.10.0",
     "react-overlays": "^3.2.0",
-    "react-popper-tooltip": "^2.11.1",
+    "react-popper-tooltip": "^3.0.0",
     "react-transition-group": "^4.4.1"
   }
 }

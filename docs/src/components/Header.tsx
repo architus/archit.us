@@ -83,6 +83,15 @@ const Styled = {
     box-shadow: ${shadow("z1")};
     padding-left: calc(${sitePadding} - ${logoLeftSpace});
 
+    ${down("md")} {
+      /* Scroll horizontally when the screen isn't wide enough */
+      overflow-x: overlay;
+      ${scrollBar(ColorMode.Light)}
+
+      /* Stop the header from sticking on small screens */
+      position: absolute;
+    }
+
     /* This has to be a function
     to have linaria not eagerly evaluate 'actionBarSpacing' at build time */
     padding-right: calc(${sitePadding} - ${(): string => actionBarSpacing});
