@@ -32,6 +32,7 @@ const tooltipContainerClass = css`
 
   padding: ${gap.femto} ${gap.pico};
   max-width: calc(100vw - (2 * ${globalPadding}px));
+  max-height: calc(100vh - (2 * ${globalPadding}px));
 `;
 
 const placementFormatters = {
@@ -212,7 +213,9 @@ const Tooltip: React.FC<TooltipProps> = ({
             })}
           />
         )}
-        <div style={{ padding: gap(padding), maxWidth }}>{tooltip}</div>
+        <div style={{ padding: gap(padding), maxWidth, overflow: "auto" }}>
+          {tooltip}
+        </div>
       </div>
     )}
   >

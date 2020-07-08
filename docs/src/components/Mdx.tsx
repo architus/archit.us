@@ -14,7 +14,6 @@ import Table from "@docs/components/Table";
 import { usePathPrefix } from "@docs/data/path";
 import {
   withoutLeading,
-  escapeRegex,
   withoutTrailing,
   trimPrefix,
   isExternal,
