@@ -8,11 +8,13 @@ import BuildDetails, {
   BuildContext,
   BuildMetadataEntry,
 } from "@design/components/BuildDetails";
+import { isDefined } from "@lib/utility";
 
 const Styled = {
-  Pill: styled.div`
+  Pill: styled.div<{ hasIcon: boolean }>`
     display: inline-block;
-    padding: ${gap.atto} ${gap.pico};
+    padding: ${(props): string =>
+      props.hasIcon ? `2px ${gap.pico} 3px` : `5px ${gap.pico} 4px`};
     border-radius: 4px;
     border: 2px solid ${color("secondary")};
     color: ${color("light")};
@@ -70,7 +72,11 @@ const BuildTag: React.FC<BuildTagProps> = ({
       <BuildDetails context={metadata.context} entries={metadata.details} />
     }
   >
-    <Styled.Pill className={className} style={style}>
+    <Styled.Pill
+      className={className}
+      style={style}
+      hasIcon={isDefined(metadata.icon)}
+    >
       {metadata.icon && <Styled.Icon>{metadata.icon}</Styled.Icon>}
       {metadata.label}
     </Styled.Pill>
