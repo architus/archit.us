@@ -1,10 +1,61 @@
 import React from "react";
-
 import { styled } from "linaria/react";
+
+import { useNavigationTree } from "@docs/data/nav";
+import { Option } from "@lib/option";
+import NavLabel from "@docs/components/NavLabel";
+import SideNavTree from "@docs/components/SideNavTree";
+import SideNavSelector from "./SideNavSelector";
 
 const Styled = {
   SideNav: styled.nav``,
+  SideNavHeader: styled.h3``,
 };
+
+type SideNavProps = {
+  activeNavRoot?: string;
+  className?: string;
+  style?: React.CSSProperties;
+};
+
+/**
+ * Navigation content displayed in the left navigation drawer at all times
+ * throughout the site
+ */
+const SideNav: React.FC<SideNavProps> = ({
+  activeNavRoot,
+  className,
+  style,
+}) => {
+  const navTree = useNavigationTree();
+  const navRootIdOption = Option.from(activeNavRoot)
+    // fall back to the first navigation tree if none given
+    .orElse(() => Option.from(navTree.keys().next().value));
+  const navRootOption = navRootIdOption.flatMapNil((id) => navTree.get(id));
+
+  // TODO inject id to selector
+  return navRootOption.match({
+    None: () => (
+      <Styled.SideNav style={style} className={className}>
+        <SideNavSelector value="" items={navTree} />
+        <Styled.SideNavHeader>Unknown</Styled.SideNavHeader>
+      </Styled.SideNav>
+    ),
+    Some: (navRoot) => {
+      return (
+        <Styled.SideNav>
+          <Styled.SideNavHeader>
+        <SideNavSelector value="" items={navTree} />
+            <NavLabel text={navRoot.label} badge={navRoot.badge} />
+            <SideNavTree items={navRoot.children} />
+          </Styled.SideNavHeader>
+        </Styled.SideNav>
+      );
+    },
+  });
+};
+
+export default SideNav;
 
 const a = `
 @import "../../scss/colors";
@@ -234,20 +285,3 @@ $light-very-heavy-primary: darken($-primary, 20%);
     }
 }
 `;
-
-type SideNavProps = {
-  activeNavRoot?: string;
-  className?: string;
-  style?: React.CSSProperties;
-};
-
-const SideNav: React.FC<SideNavProps> = ({
-  activeNavRoot,
-  className,
-  style,
-}) => {
-  // TODO implement
-  return null;
-};
-
-export default SideNav;
