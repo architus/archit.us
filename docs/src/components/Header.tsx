@@ -87,6 +87,7 @@ const Styled = {
       /* Scroll horizontally when the screen isn't wide enough */
       overflow-x: overlay;
       ${scrollBar(ColorMode.Light)}
+
       /* Stop the header from sticking on small screens */
       position: absolute;
     }
