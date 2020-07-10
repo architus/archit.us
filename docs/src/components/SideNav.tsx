@@ -4,7 +4,6 @@ import { styled } from "linaria/react";
 
 const Styled = {
   SideNav: styled.nav``,
-
 };
 
 const a = `
