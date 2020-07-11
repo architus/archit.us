@@ -12,7 +12,7 @@ const Styled = {
   SideNavHeader: styled.h3``,
 };
 
-type SideNavProps = {
+export type SideNavProps = {
   activeNavRoot?: string;
   className?: string;
   style?: React.CSSProperties;
@@ -31,28 +31,30 @@ const SideNav: React.FC<SideNavProps> = ({
   const navRootIdOption = Option.from(activeNavRoot)
     // fall back to the first navigation tree if none given
     .orElse(() => Option.from(navTree.keys().next().value));
-  const navRootOption = navRootIdOption.flatMapNil((id) => navTree.get(id));
-
-  // TODO inject id to selector
-  return navRootOption.match({
-    None: () => (
-      <Styled.SideNav style={style} className={className}>
-        <SideNavSelector value="" items={navTree} />
-        <Styled.SideNavHeader>Unknown</Styled.SideNavHeader>
-      </Styled.SideNav>
-    ),
-    Some: (navRoot) => {
-      return (
-        <Styled.SideNav>
-          <Styled.SideNavHeader>
-            <SideNavSelector value="" items={navTree} />
-            <NavLabel text={navRoot.label} badge={navRoot.badge} />
-            <SideNavTree items={navRoot.children} />
-          </Styled.SideNavHeader>
+  return navRootIdOption
+    .zip(navRootIdOption.flatMapNil((id) => navTree.get(id)))
+    .match({
+      None: () => (
+        <Styled.SideNav style={style} className={className}>
+          {navRootIdOption
+            // eslint-disable-next-line react/jsx-key
+            .map((id) => <SideNavSelector value={id} items={navTree} />)
+            .orUndefined()}
+          <Styled.SideNavHeader>Unknown</Styled.SideNavHeader>
         </Styled.SideNav>
-      );
-    },
-  });
+      ),
+      Some: ([id, navRoot]) => {
+        return (
+          <Styled.SideNav>
+            <Styled.SideNavHeader>
+              <SideNavSelector value={id} items={navTree} />
+              <NavLabel text={navRoot.label} badge={navRoot.badge} />
+              <SideNavTree items={navRoot.children} />
+            </Styled.SideNavHeader>
+          </Styled.SideNav>
+        );
+      },
+    });
 };
 
 export default SideNav;

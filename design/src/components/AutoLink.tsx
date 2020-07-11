@@ -22,7 +22,7 @@ const Styled = {
   `,
 };
 
-type AutoLinkProps = {
+export type AutoLinkProps = {
   href: string;
   external?: boolean | null;
   left?: boolean;

@@ -70,7 +70,7 @@ const Styled = {
   `,
 };
 
-type SecondaryFooterProps = {
+export type SecondaryFooterProps = {
   className?: string;
   style?: React.CSSProperties;
 };

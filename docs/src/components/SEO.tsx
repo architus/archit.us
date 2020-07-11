@@ -5,7 +5,7 @@ import { useStaticQuery, graphql } from "gatsby";
 import { isDefined } from "@lib/utility";
 import { withPathPrefix } from "@docs/site";
 
-type SEOProps = {
+export type SEOProps = {
   description?: string;
   title?: string;
   meta?: React.ComponentProps<typeof Helmet>["meta"];

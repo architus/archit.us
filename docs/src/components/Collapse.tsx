@@ -59,7 +59,7 @@ const Styled = {
   CollapseContent,
 };
 
-type CollapseProps = {
+export type CollapseProps = {
   children: React.ReactNode | (() => React.ReactNode);
   unwrap?: boolean;
   className?: string;

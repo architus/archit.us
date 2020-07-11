@@ -1,7 +1,7 @@
 import React from "react";
 import { NavigationTreeNode } from "@docs/build/nav";
 
-type SideNavTreeProps = {
+export type SideNavTreeProps = {
   items: NavigationTreeNode[];
 };
 

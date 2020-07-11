@@ -100,7 +100,7 @@ const Styled = {
   `,
 };
 
-type PageMetadataProps = {
+export type PageMetadataProps = {
   originalPath: string | Nil;
   history: History | Nil;
   className?: string;

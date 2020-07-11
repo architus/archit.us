@@ -120,7 +120,7 @@ const Styled = {
   `,
 };
 
-type HeaderProps = {
+export type HeaderProps = {
   className?: string;
   style?: React.CSSProperties;
 };

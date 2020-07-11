@@ -99,6 +99,23 @@ export interface OptionLike<A> {
    * if the current one is empty
    */
   or(other: OptionLike<A>): OptionLike<A>;
+
+  /**
+   * Attempts to fill the current option with the fallback option producer
+   * @param producer - Callback function that gets invoked if the current
+   * option is empty
+   * @returns An option with either the current value, or the fallback
+   * if the current one is empty
+   */
+  orElse(producer: () => OptionLike<A>): OptionLike<A>;
+
+  /**
+   * Attempts to create a zipped option from two options
+   * @param other - Other option to zip with the current one
+   * @returns An option of a tuple containing both values if both options
+   * are defined, else returning None
+   */
+  zip<B>(other: OptionLike<B>): OptionLike<[A, B]>;
 }
 
 interface ValuedOption<A> {
@@ -106,8 +123,8 @@ interface ValuedOption<A> {
 }
 
 /**
- * Represents a value that either may exist or may not. To determine whether the value exists,
- * use `option.isEmpty`.
+ * Represents a value that either may exist or may not. To determine whether the
+ * value exists, use `option.isEmpty`.
  */
 export abstract class Option<A> implements OptionLike<A> {
   abstract isEmpty(): this is NoneType;
@@ -131,6 +148,8 @@ export abstract class Option<A> implements OptionLike<A> {
   abstract forEach(_: (_: A) => void): Option<A>;
 
   abstract or(_: Option<A>): Option<A>;
+
+  abstract zip<B>(_: Option<B>): Option<[A, B]>;
 
   abstract orElse(_: () => Option<A>): Option<A>;
 
@@ -261,6 +280,10 @@ export class SomeType<A> extends Option<A> implements ValuedOption<A> {
   orElse(_: () => Option<A>): Option<A> {
     return this;
   }
+
+  zip<B>(other: Option<B>): Option<[A, B]> {
+    return other.map((value: B) => [this.get, value]);
+  }
 }
 
 export class NoneType extends Option<never> {
@@ -325,6 +348,10 @@ export class NoneType extends Option<never> {
 
   orElse(producer: () => Option<never>): Option<never> {
     return producer();
+  }
+
+  zip<B>(_: Option<B>): Option<[never, B]> {
+    return None;
   }
 }
 

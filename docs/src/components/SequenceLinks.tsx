@@ -119,7 +119,7 @@ export type SequenceLinkData = {
   path: string;
 };
 
-type SequenceLinksProps = {
+export type SequenceLinksProps = {
   next: SequenceLinkData | Nil;
   previous: SequenceLinkData | Nil;
   className?: string;

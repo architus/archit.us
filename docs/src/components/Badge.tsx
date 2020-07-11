@@ -24,4 +24,6 @@ const Badge = styled.span<{ variant?: Variant }>`
   font-weight: 400;
 `;
 
+export type BadgeProps = React.ComponentProps<typeof Badge>;
+
 export default Badge;

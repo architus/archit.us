@@ -15,4 +15,6 @@ const Card = styled.aside`
   background-color: ${color("bg+10")};
 `;
 
+export type CardProps = React.ComponentProps<typeof Card>;
+
 export default Card;

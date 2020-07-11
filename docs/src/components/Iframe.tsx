@@ -12,7 +12,7 @@ const Styled = {
   `,
 };
 
-type IframeProps = {
+export type IframeProps = {
   className?: string;
   style?: React.CSSProperties;
   height?: string | number;

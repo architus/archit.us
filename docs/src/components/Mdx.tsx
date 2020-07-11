@@ -19,7 +19,7 @@ import {
   isExternal,
 } from "@lib/utility";
 
-type MdxProps = {
+export type MdxProps = {
   content: string;
   components?: Record<string, React.ComponentType<unknown>>;
   className?: string;

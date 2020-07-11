@@ -63,7 +63,7 @@ export interface NodeEntry {
   content: React.ReactNode;
 }
 
-type BuildDetailsProps = {
+export type BuildDetailsProps = {
   context: BuildContext;
   entries: BuildMetadataEntry[];
   className?: string;
