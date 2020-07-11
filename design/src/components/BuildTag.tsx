@@ -44,7 +44,7 @@ export interface BuildMetadata {
   details: BuildMetadataEntry[];
 }
 
-type BuildTagProps = {
+export type BuildTagProps = {
   metadata: BuildMetadata;
   tooltipPlacement?: TooltipProps["placement"];
   className?: string;

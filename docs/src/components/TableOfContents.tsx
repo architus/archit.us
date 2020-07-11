@@ -65,7 +65,7 @@ export type TableOfContentsNode = {
   items?: TableOfContentsNode[];
 };
 
-type TableOfContentsProps = {
+export type TableOfContentsProps = {
   items: TableOfContentsNode[];
   className?: string;
   style?: React.CSSProperties;

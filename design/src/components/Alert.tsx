@@ -52,7 +52,7 @@ const Styled = {
 };
 
 type AlertIcon = Extract<Variant, "info" | "success" | "warning" | "danger">;
-type AlertProps = {
+export type AlertProps = {
   children: React.ReactNode;
   icon?: AlertIcon;
   type?: Variant;

@@ -83,7 +83,7 @@ const ImageHandler: React.FC<ImageHandlerProps> = ({
         element.removeEventListener(event, handler);
       });
     };
-  });
+  }, [showFullScreen, targetLinkClass, forwardedRef]);
 
   return (
     <>

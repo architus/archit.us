@@ -23,7 +23,7 @@ const Styled = {
   `,
 };
 
-type OverviewProps = {
+export type OverviewProps = {
   className?: string;
   style?: React.CSSProperties;
 };

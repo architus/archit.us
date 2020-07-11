@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { styled } from "linaria/react";
 import { FaChevronRight } from "react-icons/fa";
 
@@ -18,7 +18,7 @@ const Styled = {
   `,
 };
 
-type BreadcrumbProps = {
+export type BreadcrumbProps = {
   segments: readonly BreadcrumbSegment[];
   className?: string;
   style?: React.CSSProperties;
@@ -35,10 +35,10 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
 }) => (
   <div className={className} style={style}>
     {segments.map(({ path, text }, index) => (
-      <Fragment key={path ?? text}>
+      <React.Fragment key={path ?? text}>
         <BreadcrumbEntry path={path} text={text} />
         {index !== segments.length - 1 ? <Styled.BreadcrumbIcon /> : null}
-      </Fragment>
+      </React.Fragment>
     ))}
   </div>
 );

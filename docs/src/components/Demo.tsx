@@ -123,7 +123,7 @@ const Styled = {
   `,
 };
 
-type DemoProps = {
+export type DemoProps = {
   className?: string;
   style?: React.CSSProperties;
 };

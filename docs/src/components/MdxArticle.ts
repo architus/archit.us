@@ -48,4 +48,6 @@ const MdxArticle = styled(Article)`
   }
 `;
 
+export type MdxArticleProps = React.ComponentProps<typeof MdxArticle>;
+
 export default MdxArticle;

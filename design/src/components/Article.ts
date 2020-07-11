@@ -168,4 +168,6 @@ const Article = styled.article`
   }
 `;
 
+export type ArticleProps = React.ComponentProps<typeof Article>;
+
 export default Article;

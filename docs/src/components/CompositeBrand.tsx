@@ -47,7 +47,7 @@ const Styled = {
   `,
 };
 
-type CompositeBrandProps = {
+export type CompositeBrandProps = {
   showVersion?: boolean;
   hideTagBreakpoint?: BreakpointKey;
   buildTooltipPlacement?: TooltipProps["placement"];

@@ -12,7 +12,7 @@ const Styled = {
   `,
 };
 
-type NavLabelProps = {
+export type NavLabelProps = {
   text: string;
   badge: string | Nil;
   gap?: SpacingKey;

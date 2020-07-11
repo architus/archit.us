@@ -208,7 +208,7 @@ const Styled = {
   `,
 };
 
-type LayoutProps = {
+export type LayoutProps = {
   /**
    * ID of the currently active NavigationTree root node to use to display on
    * the left side
