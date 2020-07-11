@@ -12,6 +12,8 @@ import {
   SpacingKey,
 } from "@design/theme";
 
+const globalPadding = 18;
+
 const tooltipContainerClass = css`
   --tooltip-color: ${color("tooltip")};
   --tooltip-arrow: ${color("tooltip")};
@@ -28,9 +30,8 @@ const tooltipContainerClass = css`
   font-size: 90%;
   z-index: ${ZIndex.Tooltip};
 
-  margin: 0.4rem;
   padding: ${gap.femto} ${gap.pico};
-  max-width: calc(100vw - 1rem);
+  max-width: calc(100vw - (2 * ${globalPadding}px));
 `;
 
 const placementFormatters = {
@@ -174,6 +175,20 @@ const Tooltip: React.FC<TooltipProps> = ({
 }) => (
   <TooltipTrigger
     {...props}
+    modifiers={[
+      {
+        name: "preventOverflow",
+        options: {
+          padding: globalPadding,
+        },
+      },
+      {
+        name: "offset",
+        options: {
+          offset: [0, 8],
+        },
+      },
+    ]}
     tooltip={({
       arrowRef,
       tooltipRef,
