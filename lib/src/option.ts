@@ -132,6 +132,8 @@ export abstract class Option<A> implements OptionLike<A> {
 
   abstract or(_: Option<A>): Option<A>;
 
+  abstract orElse(_: () => Option<A>): Option<A>;
+
   abstract equals(
     other: Option<A>,
     compare?: (left: A, right: A) => boolean
@@ -255,6 +257,10 @@ export class SomeType<A> extends Option<A> implements ValuedOption<A> {
   or(_: Option<A>): Option<A> {
     return this;
   }
+
+  orElse(_: () => Option<A>): Option<A> {
+    return this;
+  }
 }
 
 export class NoneType extends Option<never> {
@@ -315,6 +321,10 @@ export class NoneType extends Option<never> {
 
   or(other: Option<never>): Option<never> {
     return other;
+  }
+
+  orElse(producer: () => Option<never>): Option<never> {
+    return producer();
   }
 }
 
