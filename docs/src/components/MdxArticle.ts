@@ -1,8 +1,16 @@
 import { styled } from "linaria/react";
 
 import Article from "@design/components/Article";
-import { mode, ColorMode, shadow, gap, scrollBarAuto } from "@design/theme";
+import {
+  mode,
+  ColorMode,
+  shadow,
+  gap,
+  scrollBarAuto,
+  staticColor,
+} from "@design/theme";
 import { anchorClass } from "@docs/components/Heading";
+import { transparentize } from "polished";
 
 /**
  * Contains styling modifications to `<Article />`
@@ -34,10 +42,22 @@ const MdxArticle = styled(Article)`
         font-size: 0.875rem;
       }
     }
+  }
 
-    ${anchorClass("h6")} + & {
-      border-top-left-radius: 0;
-      border-top-right-radius: 0;
+  .${anchorClass("h6")} + .gatsby-highlight {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    margin-top: 0;
+
+    ${mode(ColorMode.Light)} {
+      border-top: 1px solid ${transparentize(0.8, staticColor("dark"))};
+    }
+    ${mode(ColorMode.Dark)} {
+      border-top: 1px solid ${transparentize(0.6, staticColor("dark"))};
+    }
+
+    & > * {
+      margin-top: 0;
     }
   }
 

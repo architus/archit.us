@@ -11,6 +11,7 @@ import Demo from "@docs/components/Demo";
 import Article from "@design/components/Article";
 import Alert from "@design/components/Alert";
 import Table from "@docs/components/Table";
+import CodeBlock from "@docs/components/CodeBlock";
 import { usePathPrefix } from "@docs/data/path";
 import {
   withoutLeading,
@@ -79,6 +80,7 @@ export const overrides = {
     });
   },
   table: Table,
+  pre: CodeBlock,
   h1: createHeading({ component: "h1" }),
   h2: createHeading({ component: "h2" }),
   h3: createHeading({ component: "h3" }),

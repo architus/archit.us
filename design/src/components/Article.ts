@@ -1,5 +1,5 @@
 import { styled } from "linaria/react";
-import { transparentize, darken } from "polished";
+import { darken } from "polished";
 
 import {
   gap,
@@ -8,7 +8,6 @@ import {
   color,
   mode,
   down,
-  staticColor,
   ZIndex,
   primaryLink,
 } from "@design/theme";
@@ -107,7 +106,7 @@ const Article = styled.article`
     border: 1px solid ${color("contrastBorder")};
     border-bottom: none !important;
     ${mode(ColorMode.Dark)} {
-      background-color: ${darken(0.02, dynamicColor("bg+20", ColorMode.Dark))};
+      background-color: ${color("bg+20")};
     }
     ${mode(ColorMode.Light)} {
       background-color: ${darken(0.06, dynamicColor("bg-10", ColorMode.Light))};
@@ -115,11 +114,7 @@ const Article = styled.article`
   }
 
   blockquote {
-    --line-color: ${transparentize(0.9, staticColor("dark"))};
-    ${mode(ColorMode.Dark)} {
-      --line-color: ${transparentize(0.9, staticColor("light"))};
-    }
-
+    --line-color: ${color("textOverlay")};
     border-left: 0.4rem solid var(--line-color);
     padding: 0 0 0 ${gap.micro};
     p {

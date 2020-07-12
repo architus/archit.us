@@ -21,6 +21,7 @@ import {
   minimizeBreakpoint,
   contentWidth,
   contentWidthToc,
+  headerHeight,
 } from "@docs/layout";
 import { down, gap, color, ColorMode, mode, dynamicColor } from "@design/theme";
 import { isDefined, isNil } from "@lib/utility";
@@ -92,7 +93,7 @@ const Styled = {
   `,
   TableOfContentsWrapper: styled.aside`
     position: sticky !important;
-    top: 5.5rem;
+    top: calc(${headerHeight} + 5.5rem);
     padding-left: 2.65em;
     padding-top: 0.35em !important;
     z-index: 10;

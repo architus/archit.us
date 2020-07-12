@@ -30,9 +30,9 @@ const Styled = {
     color: ${color("text")};
 
     ${mode(ColorMode.Dark)} {
-      --row-odd-bg: ${lighten(0.02, dynamicColor("bg+10", ColorMode.Dark))};
+      --row-odd-bg: ${lighten(0.0175, dynamicColor("bg+10", ColorMode.Dark))};
       --row-even-bg: ${lighten(0.04, dynamicColor("bg+10", ColorMode.Dark))};
-      --row-header-bg: ${lighten(0.02, dynamicColor("bg", ColorMode.Dark))};
+      --row-header-bg: ${lighten(0.03, dynamicColor("bg", ColorMode.Dark))};
       --row-border: ${transparentize(0.6, dynamicColor("bg", ColorMode.Dark))};
     }
     ${mode(ColorMode.Light)} {
@@ -105,7 +105,7 @@ export type TableProps = React.TableHTMLAttributes<HTMLTableElement>;
 
 /**
  * Formatted table component.
- * Use the same children as a normal `<table />` element.
+ * Uses the same children as a normal `<table />` element.
  */
 const Table: React.FC<TableProps> = ({
   className,

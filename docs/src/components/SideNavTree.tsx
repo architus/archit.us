@@ -13,7 +13,6 @@ import {
   gap,
   blankButton,
   dynamicColor,
-  staticColor,
   font,
 } from "@design/theme";
 import NavLabel from "@docs/components/NavLabel";
@@ -147,10 +146,10 @@ const StyledCollapsibleItem = styled(StyledItem)`
 
 const rootClass = css`
   --left-padding: ${sitePadding};
+  --border-color: ${color("textOverlay")};
   ${mode(ColorMode.Dark)} {
     --primary-emph: ${color("primary+10")};
     --primary-strong: ${color("primary+10")};
-    --border-color: ${transparentize(0.9, staticColor("light"))};
     --hover-overlay: ${transparentize(
       0.9,
       dynamicColor("primary", ColorMode.Dark)
@@ -160,7 +159,6 @@ const rootClass = css`
   ${mode(ColorMode.Light)} {
     --primary-emph: ${color("primary-10")};
     --primary-strong: ${color("primary-10")};
-    --border-color: ${transparentize(0.9, staticColor("dark"))};
     --hover-overlay: ${transparentize(
       0.9,
       dynamicColor("primary", ColorMode.Light)
@@ -214,9 +212,9 @@ const SideNavTree: React.FC<SideNavTreeProps> = ({
     <Styled.List className={cx(className, isRoot && rootClass)} style={style}>
       {items.map((item) =>
         item.children.length > 0 ? (
-          <CollapsibleItem {...item} isRoot={isRoot} />
+          <CollapsibleItem {...item} isRoot={isRoot} key={item.path} />
         ) : (
-          <Item {...item} isRoot={isRoot} />
+          <Item {...item} isRoot={isRoot} key={item.path} />
         )
       )}
     </Styled.List>
