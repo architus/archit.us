@@ -22,26 +22,6 @@ const Article = styled.article`
   & > * + * {
     margin-top: ${gap.flow};
     margin-bottom: 0;
-
-    &h2 {
-      margin-top: 1.75rem;
-    }
-
-    &h3 {
-      margin-top: 1.7rem;
-    }
-
-    &h4 {
-      margin-top: 1.6rem;
-    }
-
-    &h5 {
-      margin-top: 1.75rem;
-    }
-
-    &h6 {
-      margin-top: ${gap.micro};
-    }
   }
 
   & > p + p {

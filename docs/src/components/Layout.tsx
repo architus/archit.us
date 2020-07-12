@@ -28,7 +28,6 @@ import {
   color,
   up,
   mediaMaxWidth,
-  scrollBarAuto,
   mode,
   ColorMode,
   between,
@@ -58,7 +57,7 @@ export const global = css`
 `;
 
 const Drawer = styled.div`
-  height: 100%;
+  height: 100vh;
   width: ${fullDrawerWidth};
   position: fixed;
   z-index: ${ZIndex.Drawer};
@@ -75,9 +74,7 @@ const Drawer = styled.div`
     box-shadow: ${shadow("z1")};
   }
 
-  ${scrollBarAuto()}
   overflow-x: hidden;
-  overflow-y: auto;
 
   ${transition(["transform"])}
   transform: none;
@@ -89,6 +86,8 @@ const Drawer = styled.div`
   ${down(collapseBreakpoint)} {
     height: 100%;
     width: ${fullDrawerWidth};
+    z-index: ${ZIndex.ModalDrawer};
+    padding-top: ${gap.nano};
   }
 
   ${mediaMaxWidth(fullDrawerWidth)} {
@@ -132,6 +131,10 @@ const Styled = {
       display: none;
     }
 
+    ${down(collapseBreakpoint)} {
+      z-index: ${ZIndex.ModalDrawerButton};
+    }
+
     --size: 48px;
     --offset: 24px;
     button {
@@ -161,7 +164,6 @@ const Styled = {
     height: auto;
     position: relative;
     flex-grow: 1;
-    overflow-x: auto;
 
     ${down("md")} {
       ${DrawerOverlay} {
@@ -211,7 +213,7 @@ const Styled = {
 export type LayoutProps = {
   /**
    * ID of the currently active NavigationTree root node to use to display on
-   * the left side
+   * the left side/header
    */
   activeNavRoot?: string;
   lead?: string;
@@ -234,7 +236,7 @@ const Layout: React.FC<LayoutProps> = ({
   return (
     <>
       <SEO title={title} description={description} />
-      <Header />
+      <Header activeNavRoot={activeNavRoot} />
       <Styled.Layout drawerVisible={drawerVisible}>
         <Styled.Drawer>
           <SideNav activeNavRoot={activeNavRoot} />

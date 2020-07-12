@@ -1,6 +1,6 @@
 import React from "react";
 import { styled } from "linaria/react";
-import { darken, lighten } from "polished";
+import { darken, lighten, transparentize } from "polished";
 
 import {
   shadow,
@@ -25,6 +25,7 @@ const Styled = {
     overflow-y: hidden !important;
   `,
   TableInner: styled.table`
+    width: 100%;
     border-collapse: collapse;
     color: ${color("text")};
 
@@ -32,7 +33,7 @@ const Styled = {
       --row-odd-bg: ${lighten(0.02, dynamicColor("bg+10", ColorMode.Dark))};
       --row-even-bg: ${lighten(0.04, dynamicColor("bg+10", ColorMode.Dark))};
       --row-header-bg: ${lighten(0.02, dynamicColor("bg", ColorMode.Dark))};
-      --row-border: ${dynamicColor("bg", ColorMode.Dark)};
+      --row-border: ${transparentize(0.6, dynamicColor("bg", ColorMode.Dark))};
     }
     ${mode(ColorMode.Light)} {
       --row-odd-bg: ${darken(0.01, dynamicColor("bg", ColorMode.Light))};

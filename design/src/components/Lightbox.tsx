@@ -163,6 +163,7 @@ const Lightbox: React.FC<LightboxProps> = ({
         {latentSource.isDefined() && (
           <>
             <Styled.Image src={latentSource.get} />
+            <br />
             <Styled.OriginalLink
               href={latentSource.get}
               noUnderline

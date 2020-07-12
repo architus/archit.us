@@ -14,7 +14,7 @@ const Badge = styled.span<{ variant?: Variant }>`
   vertical-align: baseline;
   border-radius: 8px;
   padding: 0.45em 0.6em 0.35em;
-  margin-top: 0.1em;
+  margin-top: 0.4em;
   top: -0.1em;
 
   font-size: 70%;

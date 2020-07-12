@@ -4,7 +4,7 @@ import { transparentize } from "polished";
 
 import NavLabel from "@docs/components/NavLabel";
 import Badge from "@docs/components/Badge";
-import { Link, useLocation } from "@docs/components/Router";
+import { Link } from "@docs/components/Router";
 import { useNavigationTree } from "@docs/data/nav";
 import {
   transition,
@@ -17,13 +17,6 @@ import {
   mode,
   down,
 } from "@design/theme";
-import {
-  splitPath,
-  withoutLeading,
-  withoutTrailing,
-  trimPrefix,
-} from "@lib/utility";
-import { usePathPrefix } from "@docs/data/path";
 
 const Styled = {
   Link: styled<React.ComponentProps<typeof Link>>(Link)`
@@ -54,6 +47,7 @@ const Styled = {
       color: ${color("primary-20")};
       font-weight: 600;
       font-size: 80%;
+      top: -0.1em;
     }
 
     /* Active/hover gradient overlay */
@@ -115,56 +109,29 @@ const Styled = {
   `,
 };
 
+export type HeaderLinksProps = {
+  activeNavRoot?: string;
+};
+
 /**
  * Shows each header link at the top of the page, which are active depending
  * on the matching URL (link to nav tree root nodes)
  */
-const HeaderLinks: React.FC = () => {
-  const navTree = useNavigationTree();
-  const location = useLocation();
-  const pathPrefix = usePathPrefix();
-
-  // Determine the longest partially-matching path to set as
-  // the active one
-  let longestIndex = -1;
-  let longestMatch = -1;
-  const roots = [...navTree.values()];
-
-  // Remove the pathPrefix if it exists
-  let { pathname } = location;
-  if (pathPrefix.isDefined()) {
-    const withLeading = `/${withoutLeading(withoutTrailing(pathPrefix.get))}`;
-    pathname = trimPrefix(pathname, withLeading);
-  }
-
-  roots.forEach((navRoot, i) => {
-    if (pathname.startsWith(navRoot.path)) {
-      const fragments = splitPath(navRoot.path).filter((f) => f !== "");
-      if (fragments.length > longestMatch) {
-        longestMatch = fragments.length;
-        longestIndex = i;
-      }
-    }
-  });
-
-  return (
-    <>
-      {roots.map((navRoot, i) => {
-        return (
-          <React.Fragment key={navRoot.path}>
-            <Styled.Link
-              className={i === longestIndex ? "active" : undefined}
-              to={navRoot.path}
-              partiallyActive={false}
-              activeClassName={""}
-            >
-              <NavLabel text={navRoot.label} badge={navRoot.badge} />
-            </Styled.Link>
-          </React.Fragment>
-        );
-      })}
-    </>
-  );
-};
+const HeaderLinks: React.FC<HeaderLinksProps> = ({ activeNavRoot }) => (
+  <>
+    {[...useNavigationTree().entries()].map(([key, navRoot]) => (
+      <React.Fragment key={navRoot.path}>
+        <Styled.Link
+          className={key === activeNavRoot ? "active" : undefined}
+          to={navRoot.path}
+          partiallyActive={false}
+          activeClassName={""}
+        >
+          <NavLabel text={navRoot.label} badge={navRoot.badge} />
+        </Styled.Link>
+      </React.Fragment>
+    ))}
+  </>
+);
 
 export default HeaderLinks;

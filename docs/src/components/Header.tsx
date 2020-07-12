@@ -121,6 +121,7 @@ const Styled = {
 };
 
 export type HeaderProps = {
+  activeNavRoot?: string;
   className?: string;
   style?: React.CSSProperties;
 };
@@ -128,7 +129,7 @@ export type HeaderProps = {
 /**
  * Site header, including navigation links and an action bar on the right side
  */
-const Header: React.FC<HeaderProps> = ({ className, style }) => {
+const Header: React.FC<HeaderProps> = ({ activeNavRoot, className, style }) => {
   const mode = useColorMode();
   const initialRender = useInitialRender();
   const ssr = typeof window === "undefined" || initialRender;
@@ -138,7 +139,7 @@ const Header: React.FC<HeaderProps> = ({ className, style }) => {
         <CompositeBrand buildTooltipPlacement="bottom" hideTagBreakpoint="vs" />
       </Styled.LogoLink>
       <Styled.HeaderLinksWrapper>
-        <HeaderLinks />
+        <HeaderLinks activeNavRoot={activeNavRoot} />
       </Styled.HeaderLinksWrapper>
       <Styled.RightComponents>
         <HeaderActionBar />

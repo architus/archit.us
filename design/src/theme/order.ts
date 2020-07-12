@@ -7,5 +7,7 @@ export enum ZIndex {
   Drawer = 899,
   Modal = 900,
   Header = 1000,
+  ModalDrawer = 1050,
+  ModalDrawerButton = 1051,
   Tooltip = 1100,
 }

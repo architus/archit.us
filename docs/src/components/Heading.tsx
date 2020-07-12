@@ -34,7 +34,7 @@ const rightActiveMixin = `transform: translateX(0.25em);`;
 const leftActiveMixin = `margin-left: -1.125em !important;`;
 const moveBreakpoint = "xxl";
 
-const Link = styled.a`
+const IconWrapper = styled.span`
   font-style: normal;
   font-variant: normal;
   font-weight: normal;
@@ -60,10 +60,6 @@ const Link = styled.a`
 
   &.${rightLink} {
     ${rightMixin}
-  }
-
-  &:hover {
-    opacity: 0.9 !important;
   }
 `;
 
@@ -107,27 +103,38 @@ const Styled = {
     display: inline-block;
     background-repeat: no-repeat;
   `,
-  Link,
-  AnchorWrapper: styled.div`
+  IconWrapper,
+  AnchorWrapper: styled.a`
+    display: block;
     position: relative;
+    border-bottom: none !important;
 
-    &.${activeClass} ${Link} {
-      opacity: 0.9 !important;
+    &:active,
+    &.${activeClass} {
+      & ${IconWrapper} {
+        opacity: 0.9 !important;
+      }
     }
 
-    &:hover ${Link}, ${Link}:focus, &.${activeClass} ${Link} {
-      &:not(.${rightLink}) {
-        ${down(moveBreakpoint)} {
+    &:hover,
+    &:focus,
+    &.${activeClass} {
+      & ${IconWrapper} {
+        opacity: 0.5;
+
+        &:not(.${rightLink}) {
+          ${down(moveBreakpoint)} {
+            ${rightActiveMixin}
+          }
+          ${up(moveBreakpoint)} {
+            ${leftActiveMixin}
+          }
+        }
+
+        &.${rightLink} {
           ${rightActiveMixin}
         }
-        ${up(moveBreakpoint)} {
-          ${leftActiveMixin}
-        }
       }
-      &.${rightLink} {
-        ${rightActiveMixin}
-      }
-      opacity: 0.5;
     }
   `,
   Anchor: styled.div`
@@ -172,16 +179,14 @@ export function createHeading({
           anchorClass(typeof Component === "string" ? Component : "custom")
         )}
         style={style}
+        href={`#${id}`}
       >
         <Styled.Anchor id={id}> </Styled.Anchor>
         <Component {...rest}>
           {children}
-          <Styled.Link
-            className={right ? rightLink : undefined}
-            href={`#${id}`}
-          >
+          <Styled.IconWrapper className={right ? rightLink : undefined}>
             <Styled.LinkIcon />
-          </Styled.Link>
+          </Styled.IconWrapper>
         </Component>
       </Styled.AnchorWrapper>
     );

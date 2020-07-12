@@ -1,10 +1,8 @@
 ---
-shortTitle: Docs
-title: Documentation
+title: User Guide
 noBreadcrumb: true
 noSequenceLinks: true
 isRoot: true
-badge: in-progress
 ---
 
 This site contains support documentation on the architus bot and its companion web app, including documentation about features, commands, and tutorials on common use cases.
