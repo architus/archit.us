@@ -1,11 +1,12 @@
+# Ignore changes to files only in /docs
 on:
   push:
-    paths:
-      - 'app/**'
+    paths-ignore:
+      - 'docs/**'
   pull_request:
     types: [opened, synchronize, reopened]
-    paths:
-      - 'app/**'
+    paths-ignore:
+      - 'docs/**'
 
 # Workflow to run continuous integration builds for each commit/PR,
 # and then upload the artifacts to our staging server
