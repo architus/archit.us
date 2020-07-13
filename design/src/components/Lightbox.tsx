@@ -99,10 +99,6 @@ const Styled = {
       width: 100%;
       height: 100%;
     }
-
-    & > * {
-      pointer-events: auto;
-    }
   `,
   Image: styled.img<{ constrainHeight: boolean }>`
     /* See https://stackoverflow.com/a/9994936 */
@@ -116,6 +112,7 @@ const Styled = {
     border-radius: 8px;
     box-shadow: ${shadow("z1")};
     user-select: none;
+    pointer-events: auto;
   `,
   ImagePlacer: styled.div`
     width: 100%;
@@ -125,6 +122,7 @@ const Styled = {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    pointer-events: none;
   `,
 };
 
