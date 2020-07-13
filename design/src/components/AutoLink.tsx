@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { styled } from "linaria/react";
-import { FaExternalLinkAlt } from "react-icons/fa";
+import { RiExternalLinkLine } from "react-icons/ri";
 
 import { isDefined, isExternal } from "@lib/utility";
 import { SpacingKey, gap, primaryLink } from "@design/theme";
@@ -18,7 +18,9 @@ const Styled = {
   ExternalIcon: styled.span<{ mr?: SpacingKey; ml?: SpacingKey }>`
     margin-right: ${(p): string => (isDefined(p.mr) ? gap(p.mr) : "0")};
     margin-left: ${(p): string => (isDefined(p.ml) ? gap(p.ml) : "0")};
-    font-size: 80%;
+    font-size: 90%;
+    position: relative;
+    top: 1px;
   `,
 };
 
@@ -81,13 +83,13 @@ const AutoLink: React.FC<AutoLinkProps> = ({
       <a href={href} className={classNames} style={style} {...props}>
         {left && !hideIcon && (
           <Styled.ExternalIcon mr={space}>
-            <FaExternalLinkAlt />
+            <RiExternalLinkLine />
           </Styled.ExternalIcon>
         )}
         {children}
         {!left && !hideIcon && (
           <Styled.ExternalIcon ml={space}>
-            <FaExternalLinkAlt />
+            <RiExternalLinkLine />
           </Styled.ExternalIcon>
         )}
       </a>

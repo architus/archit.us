@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { styled } from "linaria/react";
 
 import { useNavigationTree } from "@docs/data/nav";
@@ -9,8 +9,9 @@ import SideNavSelector from "@docs/components/SideNavSelector";
 import { color, gap, up, down, scrollBarAuto } from "@design/theme";
 import { sitePadding } from "@docs/layout";
 import { isDefined } from "@lib/utility";
+import { navigate } from "@docs/components/Router";
 
-const rightPadding = gap.milli;
+const rightPadding = gap.nano;
 const Styled = {
   SideNav: styled.nav`
     ${scrollBarAuto()};
@@ -40,6 +41,12 @@ const Styled = {
     }
   `,
   SideNavSelector: styled(SideNavSelector)`
+    margin-top: ${gap.atto};
+    margin-bottom: ${gap.micro};
+    padding-left: ${sitePadding};
+    padding-right: ${rightPadding};
+    cursor: pointer;
+
     ${up("md")} {
       display: none;
     }
@@ -66,12 +73,22 @@ const SideNav: React.FC<SideNavProps> = ({
     // fall back to the first navigation tree if none given
     .orElse(() => Option.from(navTree.keys().next().value));
   const navRootOption = navRootIdOption.flatMapNil((id) => navTree.get(id));
+  const onChangePages = useCallback((path: string): void => {
+    navigate(path);
+  }, []);
+
   return Option.merge(navRootIdOption, navRootOption).match({
     None: () => (
       <Styled.SideNav style={style} className={className}>
         {navRootIdOption
-          // eslint-disable-next-line react/jsx-key
-          .map((id) => <Styled.SideNavSelector value={id} items={navTree} />)
+          .map((id) => (
+            // eslint-disable-next-line react/jsx-key
+            <Styled.SideNavSelector
+              onChange={onChangePages}
+              value={id}
+              items={navTree}
+            />
+          ))
           .orUndefined()}
         <Styled.SideNavHeader withBadge={false}>Unknown</Styled.SideNavHeader>
       </Styled.SideNav>
@@ -79,7 +96,11 @@ const SideNav: React.FC<SideNavProps> = ({
     Some: ([id, navRoot]) => {
       return (
         <Styled.SideNav>
-          <Styled.SideNavSelector value={id} items={navTree} />
+          <Styled.SideNavSelector
+            onChange={onChangePages}
+            value={id}
+            items={navTree}
+          />
           <Styled.SideNavHeader withBadge={isDefined(navRoot.badge)}>
             <NavLabel text={navRoot.label} badge={navRoot.badge} />
           </Styled.SideNavHeader>
