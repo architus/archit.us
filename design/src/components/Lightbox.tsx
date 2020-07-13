@@ -173,6 +173,8 @@ const Lightbox: React.FC<LightboxProps> = ({
               }}
             />
             <Styled.ImagePlacer>
+              {/* There could be a link here,
+                  but it might be best just to use the built-in browser method */}
               <Styled.Image src={src} constrainHeight={constrainHeight} />
             </Styled.ImagePlacer>
           </Styled.ImageWrapper>
