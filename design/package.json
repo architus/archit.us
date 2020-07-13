@@ -26,6 +26,7 @@
     "react-icons": "^3.10.0",
     "react-overlays": "^3.2.0",
     "react-popper-tooltip": "^3.0.0",
+    "react-resize-observer": "^1.1.1",
     "react-transition-group": "^4.4.1"
   }
 }

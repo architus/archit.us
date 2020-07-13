@@ -14,3 +14,13 @@ declare module "*.woff2" {
   const content: string;
   export default content;
 }
+
+declare module "react-resize-observer" {
+  export type ResizeObserverProps = {
+    onResize?: (rect: DOMRect) => void;
+    onPosition?: (rect: DOMRect) => void;
+    onReflow?: (rect: DOMRect) => void;
+  };
+  const ResizeObserver: React.FC<ResizeObserverProps>;
+  export default ResizeObserver;
+}

@@ -48,10 +48,12 @@ const ImageHandler: React.FC<ImageHandlerProps> = ({
   forwardedRef,
   targetLinkClass = "gatsby-resp-image-link",
 }) => {
-  const [currentImage, setCurrentImage] = useState<Option<string>>(None);
+  const [currentImage, setCurrentImage] = useState<Option<[string, number]>>(
+    None
+  );
   const showFullScreen = useCallback(
-    (src: string): void => {
-      setCurrentImage(Some(src));
+    (src: string, aspectRatio: number): void => {
+      setCurrentImage(Some([src, aspectRatio]));
     },
     [setCurrentImage]
   );
@@ -69,7 +71,8 @@ const ImageHandler: React.FC<ImageHandlerProps> = ({
           const handler: EventListener = (e) => {
             e.preventDefault();
             e.stopPropagation();
-            showFullScreen(fullScale);
+            const bounds = element.getBoundingClientRect();
+            showFullScreen(fullScale, bounds.width / bounds.height);
           };
           element.addEventListener("click", handler);
           attachedHandlers.push([element, "click", handler]);
@@ -89,7 +92,7 @@ const ImageHandler: React.FC<ImageHandlerProps> = ({
     <>
       {children}
       <Styled.Lightbox
-        src={currentImage}
+        image={currentImage}
         onClose={(): void => {
           setCurrentImage(None);
         }}

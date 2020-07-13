@@ -1,21 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { styled } from "linaria/react";
 import { Modal } from "react-overlays";
 import { CSSTransition } from "react-transition-group";
+import ResizeObserver from "react-resize-observer";
 
 import { Option, None } from "@lib/option";
 import {
   ZIndex,
   shadow,
   color,
-  gap,
   transition,
   down,
   TransitionSpeed,
   ease,
   easeOutBack,
 } from "@design/theme";
-import AutoLink from "@design/components/AutoLink";
 import { usePrevious } from "@lib/hooks";
 
 const fade = "lightbox-fade";
@@ -92,42 +91,45 @@ const Styled = {
     }
   `,
   ImageWrapper: styled.div`
-    max-width: 85%;
-    max-height: 85%;
+    width: 85%;
+    height: 85%;
+    position: relative;
 
     ${down("md")} {
-      max-width: 100%;
-      max-height: 100%;
+      width: 100%;
+      height: 100%;
     }
 
     & > * {
       pointer-events: auto;
     }
   `,
-  Image: styled.img`
-    max-width: 100%;
-    max-height: 100%;
+  Image: styled.img<{ constrainHeight: boolean }>`
+    /* See https://stackoverflow.com/a/9994936 */
+    /* Background-images or object-fit don't work because we need:
+       - border radiuses
+       - clickable overlay with image being non-clickable */
+    height: ${(props): string => (props.constrainHeight ? "100%" : "auto")};
+    width: ${(props): string => (props.constrainHeight ? "auto" : "100%")};
+    margin: auto;
+
     border-radius: 8px;
     box-shadow: ${shadow("z1")};
+    user-select: none;
   `,
-  OriginalLink: styled(AutoLink)`
-    font-weight: 500;
-    color: ${color("light")};
-    padding-top: ${gap.atto};
-    display: inline-block;
+  ImagePlacer: styled.div`
+    width: 100%;
+    height: 100%;
 
-    ${transition(["opacity"])}
-    opacity: 0.6;
-
-    &:hover {
-      text-decoration: underline;
-      opacity: 1;
-    }
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   `,
 };
 
 export type LightboxProps = {
-  src: Option<string>;
+  image: Option<[string, number]>;
   onClose: () => void;
   className?: string;
   style?: React.CSSProperties;
@@ -137,44 +139,47 @@ export type LightboxProps = {
  * Used to show a full screen preview of an image
  */
 const Lightbox: React.FC<LightboxProps> = ({
-  src,
+  image,
   onClose,
   className,
   style,
 }) => {
-  // Use the previous value of 'src' as a fallback to show when transitioning out
-  const prevSrc = usePrevious(src);
-  const latentSource = src.or(prevSrc ?? None);
+  // Use the previous value of 'image' as a fallback to show when transitioning out
+  const prevImage = usePrevious(image);
+  const latentImage = image.or(prevImage ?? None);
+  const [constrainHeight, setConstrainHeight] = useState(false);
   return (
     <Styled.Lightbox
-      show={src.isDefined()}
+      show={image.isDefined()}
       onHide={onClose}
       onBackdropClick={onClose}
       className={className}
       style={style}
-      unmountOnExit
       transition={FadeZoom}
       backdropTransition={Fade}
       renderBackdrop={(props): React.ReactNode => (
         <Styled.Backdrop {...props} />
       )}
     >
-      <Styled.ImageWrapper>
-        {latentSource.isDefined() && (
-          <>
-            <Styled.Image src={latentSource.get} />
-            <br />
-            <Styled.OriginalLink
-              href={latentSource.get}
-              noUnderline
-              noIcon
-              external
-            >
-              Open original
-            </Styled.OriginalLink>
-          </>
-        )}
-      </Styled.ImageWrapper>
+      {latentImage.match({
+        None: () => <Styled.ImageWrapper />,
+        Some: ([src, aspectRatio]) => (
+          <Styled.ImageWrapper>
+            <ResizeObserver
+              onResize={(rect): void => {
+                const { width, height } = rect;
+                const shouldConstrainHeight = width / height > aspectRatio;
+                if (shouldConstrainHeight !== constrainHeight) {
+                  setConstrainHeight(shouldConstrainHeight);
+                }
+              }}
+            />
+            <Styled.ImagePlacer>
+              <Styled.Image src={src} constrainHeight={constrainHeight} />
+            </Styled.ImagePlacer>
+          </Styled.ImageWrapper>
+        ),
+      })}
     </Styled.Lightbox>
   );
 };
