@@ -2,17 +2,12 @@ import { styled } from "linaria/react";
 import { transparentize } from "polished";
 
 import Article from "@design/components/Article";
-import {
-  mode,
-  ColorMode,
-  shadow,
-  gap,
-  staticColor,
-  color,
-} from "@design/theme";
-import { anchorClass } from "@docs/components/Heading";
+import { mode, ColorMode, color, staticColor } from "@design/theme/color";
+import { shadow } from "@design/theme/shadow";
+import { gap } from "@design/theme/spacing";
 import { CopyButton } from "@docs/components/CodeBlock";
 import { CollapseContent } from "@docs/components/Collapse";
+import { anchorClass } from "@docs/components/Heading";
 
 /**
  * Contains styling modifications to `<Article />`

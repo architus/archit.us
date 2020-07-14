@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable max-classes-per-file */
-import { isDefined, isNil } from "@lib/utility/primitive";
 import { Nil, Predicate } from "@lib/types";
+import { isDefined, isNil } from "@lib/utility/primitive";
 
 export type Unwrap<T> = T extends Option<infer K> ? K : T;
 

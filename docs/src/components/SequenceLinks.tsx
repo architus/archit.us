@@ -1,23 +1,18 @@
-import React from "react";
 import { styled } from "linaria/react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { transparentize } from "polished";
+import React from "react";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
-import { Nil } from "@lib/types";
-import { isNil } from "@lib/utility";
 import Card from "@design/components/Card";
+import { dynamicColor, ColorMode, color } from "@design/theme/color";
+import { down, up } from "@design/theme/media";
+import { transition } from "@design/theme/motion";
+import { shadow } from "@design/theme/shadow";
+import { gap } from "@design/theme/spacing";
 import NavLabel from "@docs/components/NavLabel";
 import { Link } from "@docs/components/Router";
-import {
-  gap,
-  color,
-  shadow,
-  transition,
-  up,
-  down,
-  dynamicColor,
-  ColorMode,
-} from "@design/theme";
+import { Nil } from "@lib/types";
+import { isNil } from "@lib/utility";
 
 const Icon = styled.div`
   display: flex;

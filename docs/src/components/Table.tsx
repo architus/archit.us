@@ -1,17 +1,12 @@
-import React from "react";
 import { styled } from "linaria/react";
 import { darken, lighten, transparentize } from "polished";
+import React from "react";
 
-import {
-  shadow,
-  color,
-  gap,
-  mode,
-  ColorMode,
-  dynamicColor,
-  down,
-} from "@design/theme";
-import { tableSidePadding } from "@docs/layout";
+import { tableHeaderSidePadding } from "@design/components/Article";
+import { color, mode, ColorMode, dynamicColor } from "@design/theme/color";
+import { down } from "@design/theme/media";
+import { shadow } from "@design/theme/shadow";
+import { gap } from "@design/theme/spacing";
 
 const tablePadding = gap.pico;
 const Styled = {
@@ -65,11 +60,11 @@ const Styled = {
       border-top: 1px solid var(--row-border);
 
       &:first-child {
-        padding-left: ${tableSidePadding};
+        padding-left: ${tableHeaderSidePadding};
       }
 
       &:last-child {
-        padding-right: ${tableSidePadding};
+        padding-right: ${tableHeaderSidePadding};
       }
     }
 

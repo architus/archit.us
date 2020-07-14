@@ -1,15 +1,18 @@
-import React, { useCallback } from "react";
 import { styled } from "linaria/react";
+import React, { useCallback } from "react";
 
-import { useNavigationTree } from "@docs/data/nav";
-import { Option } from "@lib/option";
+import { color } from "@design/theme/color";
+import { down, up } from "@design/theme/media";
+import { scrollBarAuto } from "@design/theme/mixins";
+import { gap } from "@design/theme/spacing";
 import NavLabel from "@docs/components/NavLabel";
-import SideNavTree from "@docs/components/SideNavTree";
-import SideNavSelector from "@docs/components/SideNavSelector";
-import { color, gap, up, down, scrollBarAuto } from "@design/theme";
-import { sitePadding } from "@docs/layout";
-import { isDefined } from "@lib/utility";
 import { navigate } from "@docs/components/Router";
+import SideNavSelector from "@docs/components/SideNavSelector";
+import SideNavTree from "@docs/components/SideNavTree";
+import { useNavigationTree } from "@docs/data/nav";
+import { sitePadding } from "@docs/layout";
+import { Option } from "@lib/option";
+import { isDefined } from "@lib/utility";
 
 const rightPadding = gap.nano;
 const Styled = {

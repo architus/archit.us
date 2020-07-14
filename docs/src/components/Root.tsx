@@ -1,7 +1,7 @@
 import React from "react";
 
-import ColorModeProvider from "@docs/components/ColorModeProvider";
 import { AutoLinkContext } from "@design/components/AutoLink";
+import ColorModeProvider from "@docs/components/ColorModeProvider";
 import { Link } from "@docs/components/Router";
 
 // import the global CSS

@@ -1,5 +1,5 @@
-import { isDefined, isNil } from "@lib/utility";
 import { Option, Some, None } from "@lib/option";
+import { isDefined, isNil } from "@lib/utility";
 
 const _dimensionUnits = [
   "cm",

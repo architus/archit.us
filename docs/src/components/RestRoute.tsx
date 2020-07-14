@@ -1,18 +1,18 @@
-import React from "react";
 import { styled } from "linaria/react";
+import { lighten } from "polished";
+import React from "react";
 
-import { useApiVersions } from "@docs/data/apiVersions";
-import { isDefined, splitFragments } from "@lib/utility";
 import {
   color,
-  down,
   mode,
   ColorMode,
-  shadow,
-  staticColor,
   dynamicColor,
-} from "@design/theme";
-import { lighten } from "polished";
+  staticColor,
+} from "@design/theme/color";
+import { down } from "@design/theme/media";
+import { shadow } from "@design/theme/shadow";
+import { useApiVersions } from "@docs/data/apiVersions";
+import { isDefined, splitFragments } from "@lib/utility";
 
 const PathParamRegex = /{[^{}]+}/g;
 

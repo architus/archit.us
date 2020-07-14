@@ -1,19 +1,14 @@
-import React from "react";
-import { styled } from "linaria/react";
 import { cx } from "linaria";
+import { styled } from "linaria/react";
+import React from "react";
 
-import { isDefined } from "@lib/utility";
-import { headerHeight } from "@docs/layout";
+import { dynamicColor, ColorMode, mode } from "@design/theme/color";
+import { down, up } from "@design/theme/media";
+import { transition } from "@design/theme/motion";
+import { gap } from "@design/theme/spacing";
 import { useLocation } from "@docs/components/Router";
-import {
-  transition,
-  dynamicColor,
-  ColorMode,
-  mode,
-  down,
-  up,
-  gap,
-} from "@design/theme";
+import { headerHeight } from "@docs/layout";
+import { isDefined } from "@lib/utility";
 
 const rightLink = "right";
 const rightMixin = `

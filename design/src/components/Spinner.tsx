@@ -1,5 +1,5 @@
-import React from "react";
 import { styled } from "linaria/react";
+import React from "react";
 
 import { color, Variant } from "@design/theme/color";
 import { animation } from "@design/theme/motion";

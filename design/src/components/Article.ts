@@ -1,17 +1,13 @@
 import { styled } from "linaria/react";
 import { darken } from "polished";
 
-import {
-  gap,
-  dynamicColor,
-  ColorMode,
-  color,
-  mode,
-  down,
-  ZIndex,
-  primaryLink,
-} from "@design/theme";
-import { tableSidePadding } from "@docs/layout";
+import { color, mode, ColorMode, dynamicColor } from "@design/theme/color";
+import { down } from "@design/theme/media";
+import { primaryLink } from "@design/theme/mixins";
+import { ZIndex } from "@design/theme/order";
+import { gap } from "@design/theme/spacing";
+
+export const tableHeaderSidePadding = gap.nano;
 
 /**
  * HTML styled article component as a wrapper for long-form Markdown-like content
@@ -96,8 +92,8 @@ const Article = styled.article`
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
     z-index: ${ZIndex.TableHeader};
-    padding-left: ${tableSidePadding};
-    padding-right: ${tableSidePadding};
+    padding-left: ${tableHeaderSidePadding};
+    padding-right: ${tableHeaderSidePadding};
     font-size: 1.125rem;
     font-weight: 600;
     height: 44px;

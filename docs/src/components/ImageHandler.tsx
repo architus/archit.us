@@ -1,10 +1,8 @@
-import React, { useEffect, useCallback, useState } from "react";
 import { styled } from "linaria/react";
+import React, { useEffect, useCallback, useState } from "react";
 
-import { None, Some, Option } from "@lib/option";
-import { isDefined } from "@lib/utility";
 import Lightbox from "@design/components/Lightbox";
-import { up, between } from "@design/theme";
+import { up, between } from "@design/theme/media";
 import {
   minimizeBreakpoint,
   collapseBreakpoint,
@@ -13,6 +11,8 @@ import {
   headerHeight,
   sitePadding,
 } from "@docs/layout";
+import { None, Some, Option } from "@lib/option";
+import { isDefined } from "@lib/utility";
 
 const Styled = {
   Lightbox: styled(Lightbox)`

@@ -1,15 +1,15 @@
 import { Node as GatsbyGraphqlNode, CreateResolversArgs } from "gatsby";
+import { prune } from "underscore.string";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Node } from "unist";
 import visit from "unist-util-visit";
-import { prune } from "underscore.string";
 
 import { Nil } from "@lib/types";
 import { isDefined, isNil } from "@lib/utility";
 
 // ! Internal `gatsby-plugin-mdx` API
-const genMdx = require("gatsby-plugin-mdx/utils/gen-mdx");
 const mdxDefaultOptions = require("gatsby-plugin-mdx/utils/default-options");
+const genMdx = require("gatsby-plugin-mdx/utils/gen-mdx");
 
 /**
  * Custom resolver function that extracts the lead for a docs page

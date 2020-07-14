@@ -1,5 +1,5 @@
-import { useMemo } from "react";
 import { graphql, useStaticQuery } from "gatsby";
+import { useMemo } from "react";
 
 import { NavigationTreeNode } from "@docs/build/nav";
 

@@ -1,19 +1,13 @@
-import React from "react";
 import { styled } from "linaria/react";
 import { darken, lighten } from "polished";
+import React from "react";
 
-import {
-  gap,
-  color,
-  mode,
-  ColorMode,
-  dynamicColor,
-  shadow,
-  down,
-  up,
-} from "@design/theme";
-import Card from "@design/components/Card";
 import AutoLink from "@design/components/AutoLink";
+import Card from "@design/components/Card";
+import { dynamicColor, ColorMode, color, mode } from "@design/theme/color";
+import { down, up } from "@design/theme/media";
+import { shadow } from "@design/theme/shadow";
+import { gap } from "@design/theme/spacing";
 
 const FooterDivider = styled.hr`
   margin: ${gap.pico} auto ${gap.pico} 0;

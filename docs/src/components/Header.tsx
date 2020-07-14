@@ -1,28 +1,23 @@
-import React from "react";
 import { styled } from "linaria/react";
 import { mix, transparentize } from "polished";
+import React from "react";
 
-import {
-  color,
-  gap,
-  transition,
-  ColorMode,
-  dynamicColor,
-  ZIndex,
-  shadow,
-  down,
-  up,
-  scrollBar,
-} from "@design/theme";
-import { headerHeight, sitePadding } from "@docs/layout";
-import HeaderLinks from "@docs/components/HeaderLinks";
+import { color, ColorMode, dynamicColor } from "@design/theme/color";
+import { up, down } from "@design/theme/media";
+import { scrollBar } from "@design/theme/mixins";
+import { transition } from "@design/theme/motion";
+import { ZIndex } from "@design/theme/order";
+import { shadow } from "@design/theme/shadow";
+import { gap } from "@design/theme/spacing";
+import CompositeBrand from "@docs/components/CompositeBrand";
 import HeaderActionBar, {
   actionBarSpacing,
 } from "@docs/components/HeaderActionBar";
-import { useColorMode } from "@docs/hooks";
-import { useInitialRender } from "@lib/hooks";
-import CompositeBrand from "@docs/components/CompositeBrand";
+import HeaderLinks from "@docs/components/HeaderLinks";
 import { Link } from "@docs/components/Router";
+import { useColorMode } from "@docs/hooks";
+import { headerHeight, sitePadding } from "@docs/layout";
+import { useInitialRender } from "@lib/hooks";
 
 const headerTransparency = 0.06;
 const logoLeftSpace = gap.nano;

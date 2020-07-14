@@ -1,16 +1,13 @@
 // From https://react-popper-tooltip.netlify.app/readme#quick-start
+import { css } from "linaria";
 import React from "react";
 import TooltipTrigger from "react-popper-tooltip";
-import { css } from "linaria";
 
-import {
-  ZIndex,
-  shadow,
-  transition,
-  color,
-  gap,
-  SpacingKey,
-} from "@design/theme";
+import { color } from "@design/theme/color";
+import { transition } from "@design/theme/motion";
+import { ZIndex } from "@design/theme/order";
+import { shadow } from "@design/theme/shadow";
+import { gap, SpacingKey } from "@design/theme/spacing";
 
 const globalPadding = 18;
 

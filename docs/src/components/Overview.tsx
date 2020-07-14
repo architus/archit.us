@@ -1,10 +1,10 @@
-import React, { useContext } from "react";
 import { styled } from "linaria/react";
+import React, { useContext } from "react";
 
-import { gap } from "@design/theme";
 import AutoLink from "@design/components/AutoLink";
-import NavLabel from "@docs/components/NavLabel";
+import { gap } from "@design/theme/spacing";
 import { createHeading } from "@docs/components/Heading";
+import NavLabel from "@docs/components/NavLabel";
 import { Nil } from "@lib/types";
 
 type OverviewEntry = {

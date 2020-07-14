@@ -1,7 +1,7 @@
-import React from "react";
 import { ThemeToggler } from "gatsby-plugin-dark-mode";
+import React from "react";
 
-import { ColorMode, defaultMode } from "@design/theme";
+import { ColorMode, defaultMode } from "@design/theme/color";
 
 export type ColorModeContext = {
   mode: ColorMode;

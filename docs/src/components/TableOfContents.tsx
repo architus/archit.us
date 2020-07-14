@@ -1,10 +1,11 @@
-import React from "react";
 import { styled } from "linaria/react";
 import { transparentize } from "polished";
+import React from "react";
 
-import { isDefined } from "@lib/utility";
-import { font, color, staticColor, ColorMode, mode } from "@design/theme";
 import Article from "@design/components/Article";
+import { color, staticColor, mode, ColorMode } from "@design/theme/color";
+import { font } from "@design/theme/typography";
+import { isDefined } from "@lib/utility";
 
 const Styled = {
   TableOfContents: styled.div`

@@ -7,13 +7,16 @@ import {
 } from "gatsby";
 
 import {
-  isDefined,
-  isNil,
-  trimMarkdownPath,
-  splitPath,
-  capitalize,
-} from "@lib/utility";
-import { Option, Some, None } from "@lib/option";
+  buildMetadataType,
+  createBuildMetadataNode,
+} from "@docs/build/build-metadata";
+import {
+  load as loadGithubMetadata,
+  attachAuthorship,
+} from "@docs/build/github-integration";
+import { historyType, githubUserType } from "@docs/build/github-types";
+import { getLead } from "@docs/build/lead";
+import { createNavigationTrees, navigationTreeType } from "@docs/build/nav";
 import {
   DocsPage,
   DocsContext,
@@ -27,17 +30,14 @@ import {
   breadcrumbType,
   docsPageType,
 } from "@docs/templates/Docs/frontmatter";
+import { Option, Some, None } from "@lib/option";
 import {
-  load as loadGithubMetadata,
-  attachAuthorship,
-} from "@docs/build/github-integration";
-import { historyType, githubUserType } from "@docs/build/github-types";
-import { createNavigationTrees, navigationTreeType } from "@docs/build/nav";
-import { getLead } from "@docs/build/lead";
-import {
-  buildMetadataType,
-  createBuildMetadataNode,
-} from "@docs/build/build-metadata";
+  isDefined,
+  isNil,
+  trimMarkdownPath,
+  splitPath,
+  capitalize,
+} from "@lib/utility";
 
 const DocsPageTemplate = require("path").resolve(
   "./src/templates/Docs/index.tsx"

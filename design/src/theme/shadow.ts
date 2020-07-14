@@ -1,4 +1,4 @@
-import { color } from "./color";
+import { color } from "@design/theme/color";
 
 const shadows = {
   z0: [

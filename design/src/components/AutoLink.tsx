@@ -1,10 +1,11 @@
-import React, { useContext } from "react";
+import { css, cx } from "linaria";
 import { styled } from "linaria/react";
+import React, { useContext } from "react";
 import { RiExternalLinkLine } from "react-icons/ri";
 
+import { primaryLink } from "@design/theme/mixins";
+import { SpacingKey, gap } from "@design/theme/spacing";
 import { isDefined, isExternal } from "@lib/utility";
-import { SpacingKey, gap, primaryLink } from "@design/theme";
-import { css, cx } from "linaria";
 
 const baseLinkClass = css`
   ${primaryLink}

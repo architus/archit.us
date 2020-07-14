@@ -1,6 +1,7 @@
 import { css } from "linaria";
-import { mode, ColorMode, color, dynamicColor } from "@design/theme";
 import { lighten } from "polished";
+
+import { dynamicColor, ColorMode, mode, color } from "@design/theme/color";
 
 export const global = css`
   :global() {

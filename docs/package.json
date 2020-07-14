@@ -15,7 +15,7 @@
   "scripts": {
     "build": "gatsby build",
     "start": "gatsby develop",
-    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json}\" \"gatsby-*.{js,ts}\"",
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json}\" \"gatsby-*.{js,ts}\" && eslint --fix -f unix \"src/**/*.{js,jsx,ts,tsx,json}\" \"gatsby-*.{js,ts}\"",
     "lint": "bash -c 'if [ \"$CI\" == \"true\" ]; then yarn run develop-build && yarn run lint-base; else yarn run lint-base; fi'",
     "lint-base": "eslint --max-warnings 0 -f unix \"src/**/*.{js,jsx,ts,tsx,json}\" \"gatsby-*.{js,ts}\"",
     "typecheck": "bash -c 'if [ \"$CI\" == \"true\" ]; then yarn run develop-build && yarn run typecheck-base; else yarn run typecheck-base; fi'",

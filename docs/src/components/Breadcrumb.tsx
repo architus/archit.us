@@ -1,11 +1,13 @@
-import React from "react";
 import { styled } from "linaria/react";
+import React from "react";
 import { FaChevronRight } from "react-icons/fa";
 
+import AutoLink from "@design/components/AutoLink";
+import { color } from "@design/theme/color";
+import { primaryLink } from "@design/theme/mixins";
+import { gap } from "@design/theme/spacing";
 import { BreadcrumbSegment } from "@docs/templates/Docs/frontmatter";
 import { isDefined } from "@lib/utility";
-import { color, gap, primaryLink } from "@design/theme";
-import AutoLink from "@design/components/AutoLink";
 
 const Styled = {
   Link: styled(AutoLink)`

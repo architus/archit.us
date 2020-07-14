@@ -20,11 +20,10 @@
     "noFallthroughCasesInSwitch": true,
 
     /* Module Resolution Options */
-    "baseUrl": "src",
+    "baseUrl": ".",
     "paths": {
-      "@lib/*": ["../../lib/src/*"],
-      "@docs/*": ["../../docs/src/*"],
-      "@design/*": ["../../design/src/*"]
+      "@lib/*": ["../lib/src/*"],
+      "@design/*": ["../design/src/*"]
     },
     "esModuleInterop": true,
 

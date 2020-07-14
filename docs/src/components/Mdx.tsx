@@ -1,20 +1,19 @@
-import React, { useMemo } from "react";
 import { MDXRenderer } from "gatsby-plugin-mdx";
-import { MDXProvider } from "@mdx-js/react";
+import React, { useMemo } from "react";
 
-import { gap } from "@design/theme/spacing";
-import { createHeading } from "@docs/components/Heading";
+import Alert from "@design/components/Alert";
+import Article from "@design/components/Article";
 import AutoLink from "@design/components/AutoLink";
-import Overview from "@docs/components/Overview";
-import Iframe from "@docs/components/Iframe";
+import { gap } from "@design/theme/spacing";
+import CodeBlock from "@docs/components/CodeBlock";
 import Collapse from "@docs/components/Collapse";
 import Demo from "@docs/components/Demo";
-import Article from "@design/components/Article";
-import Alert from "@design/components/Alert";
-import Table from "@docs/components/Table";
-import CodeBlock from "@docs/components/CodeBlock";
 import ExternalSnippet from "@docs/components/ExternalSnippet";
+import { createHeading } from "@docs/components/Heading";
+import Iframe from "@docs/components/Iframe";
+import Overview from "@docs/components/Overview";
 import RestRoute from "@docs/components/RestRoute";
+import Table from "@docs/components/Table";
 import { usePathPrefix } from "@docs/data/path";
 import {
   withoutLeading,
@@ -22,6 +21,7 @@ import {
   trimPrefix,
   isExternal,
 } from "@lib/utility";
+import { MDXProvider } from "@mdx-js/react";
 
 export type MdxProps = {
   content: string;

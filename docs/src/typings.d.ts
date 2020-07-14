@@ -1,5 +1,6 @@
 /* eslint-disable import/no-duplicates */
 declare module "gatsby-plugin-dark-mode" {
+  // eslint-disable-next-line import/order
   import React from "react";
 
   export const ThemeToggler: React.FC<{
@@ -11,6 +12,7 @@ declare module "gatsby-plugin-dark-mode" {
 }
 
 declare module "unist-util-find" {
+  import React from "react";
   // eslint-disable-next-line import/no-extraneous-dependencies
   import { Node } from "unist";
 
@@ -19,8 +21,6 @@ declare module "unist-util-find" {
 }
 
 declare module "*.svg" {
-  import React from "react";
-
   const content: React.FC<React.SVGAttributes<SVGElement>>;
   export default content;
 }

@@ -1,9 +1,9 @@
 import { CreatePagesArgs, Reporter } from "gatsby";
 
-import { isDefined, isNil, withoutLeading } from "@lib/utility";
-import { Option, Some, None } from "@lib/option";
-import { NavTree } from "@docs/templates/Docs/frontmatter";
 import { GithubUser } from "@docs/build/github-types";
+import { NavTree } from "@docs/templates/Docs/frontmatter";
+import { Option, Some, None } from "@lib/option";
+import { isDefined, isNil, withoutLeading } from "@lib/utility";
 
 /**
  * Page authorship information extracted from GitHub

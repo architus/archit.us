@@ -1,12 +1,22 @@
-import React, { useState } from "react";
-import { styled } from "linaria/react";
-import { FaBars, FaTimes } from "react-icons/fa";
 import { css } from "linaria";
+import { styled } from "linaria/react";
+import React, { useState } from "react";
+import { FaBars, FaTimes } from "react-icons/fa";
 
-import Header from "@docs/components/Header";
-import SideNav from "@docs/components/SideNav";
 import Footer, { FooterContent } from "@design/components/Footer";
+import { color, mode, ColorMode } from "@design/theme/color";
+import { down, mediaMaxWidth, up, between } from "@design/theme/media";
+import { blankButton } from "@design/theme/mixins";
+import { transition } from "@design/theme/motion";
+import { ZIndex } from "@design/theme/order";
+import { shadow } from "@design/theme/shadow";
+import { gap } from "@design/theme/spacing";
+import CompositeBrand from "@docs/components/CompositeBrand";
+import Header from "@docs/components/Header";
+import SecondaryFooter from "@docs/components/SecondaryFooter";
 import SEO from "@docs/components/SEO";
+import SideNav from "@docs/components/SideNav";
+import { useFooterData } from "@docs/data/footer";
 import {
   headerHeight,
   minimizeBreakpoint,
@@ -18,23 +28,6 @@ import {
   fullDrawerWidth,
   minimizedDrawerWidth,
 } from "@docs/layout";
-import {
-  gap,
-  blankButton,
-  down,
-  transition,
-  ZIndex,
-  shadow,
-  color,
-  up,
-  mediaMaxWidth,
-  mode,
-  ColorMode,
-  between,
-} from "@design/theme";
-import CompositeBrand from "@docs/components/CompositeBrand";
-import SecondaryFooter from "@docs/components/SecondaryFooter";
-import { useFooterData } from "@docs/data/footer";
 
 export const global = css`
   :global() {

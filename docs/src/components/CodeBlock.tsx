@@ -1,17 +1,14 @@
-import React, { useRef, useState } from "react";
-import { styled } from "linaria/react";
-import { MdContentCopy } from "react-icons/md";
 import copy from "copy-to-clipboard";
+import { styled } from "linaria/react";
+import React, { useRef, useState } from "react";
+import { MdContentCopy } from "react-icons/md";
 
-import {
-  color,
-  gap,
-  blankButton,
-  transition,
-  scrollBarAuto,
-} from "@design/theme";
-import { isDefined } from "@lib/utility";
 import Tooltip from "@design/components/Tooltip";
+import { color } from "@design/theme/color";
+import { blankButton, scrollBarAuto } from "@design/theme/mixins";
+import { transition } from "@design/theme/motion";
+import { gap } from "@design/theme/spacing";
+import { isDefined } from "@lib/utility";
 
 // Export for styling
 export const CopyButton = styled.button<{ showingToast: boolean }>`

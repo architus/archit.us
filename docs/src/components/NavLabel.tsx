@@ -1,10 +1,10 @@
-import React from "react";
 import { styled } from "linaria/react";
+import React from "react";
 
 import Badge from "@design/components/Badge";
-import { isDefined } from "@lib/utility";
-import { gap, SpacingKey } from "@design/theme";
+import { gap, SpacingKey } from "@design/theme/spacing";
 import { Nil } from "@lib/types";
+import { isDefined } from "@lib/utility";
 
 const Styled = {
   Gap: styled.span<{ gap: SpacingKey }>`

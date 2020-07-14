@@ -31,6 +31,20 @@ rules:
   import/default: off
   import/no-extraneous-dependencies: error
   import/no-unresolved: off
+  import/order:
+    - error
+    - groups:
+      - ["external", "builtin"]
+      - ["index", "sibling", "parent", "internal", "object"]
+      pathGroups:
+        - pattern: "@*/**"
+          group: "internal"
+      pathGroupsExcludedImportTypes:
+        - builtin
+      newlines-between: always
+      alphabetize:
+        order: asc
+        caseInsensitive: true
   react/prop-types: off
   no-plusplus:
     - error

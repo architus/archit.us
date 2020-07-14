@@ -1,12 +1,14 @@
-import React, { useContext } from "react";
-import { styled } from "linaria/react";
+import { useStaticQuery, graphql } from "gatsby";
 import { css } from "linaria";
-import { IoMdSunny } from "react-icons/io";
+import { styled } from "linaria/react";
+import React, { useContext } from "react";
 import { BsMoon } from "react-icons/bs";
 import { FaGithub, FaDiscord } from "react-icons/fa";
-import { useStaticQuery, graphql } from "gatsby";
+import { IoMdSunny } from "react-icons/io";
 
-import { ColorMode, gap, transition, color } from "@design/theme";
+import { color, ColorMode } from "@design/theme/color";
+import { transition } from "@design/theme/motion";
+import { gap } from "@design/theme/spacing";
 import { ColorModeContext } from "@docs/components/ColorModeProvider";
 import { isDefined } from "@lib/utility";
 

@@ -1,14 +1,14 @@
-import React, { useMemo } from "react";
 import { useStaticQuery, graphql } from "gatsby";
+import React, { useMemo } from "react";
 import { FaGithub } from "react-icons/fa";
 import { FiGitCommit, FiGitPullRequest } from "react-icons/fi";
 
-import { Option, Some, None } from "@lib/option";
-import { BuildMetadata } from "@design/components/BuildTag";
 import {
   BuildContext,
   BuildMetadataEntry,
 } from "@design/components/BuildDetails";
+import { BuildMetadata } from "@design/components/BuildTag";
+import { Option, Some, None } from "@lib/option";
 import { isDefined } from "@lib/utility";
 
 /**

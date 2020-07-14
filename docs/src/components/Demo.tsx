@@ -1,17 +1,17 @@
-import React from "react";
 import { styled } from "linaria/react";
+import { transparentize, lighten } from "polished";
+import React from "react";
 
-import { isDefined } from "@lib/utility";
 import {
   color,
-  scrollBarAuto,
-  shadow,
   mode,
   ColorMode,
   staticColor,
   dynamicColor,
-} from "@design/theme";
-import { transparentize, lighten } from "polished";
+} from "@design/theme/color";
+import { scrollBarAuto } from "@design/theme/mixins";
+import { shadow } from "@design/theme/shadow";
+import { isDefined } from "@lib/utility";
 
 const Styled = {
   Demo: styled.div`

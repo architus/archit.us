@@ -1,12 +1,12 @@
-import React, { useState, useMemo, useEffect } from "react";
-import Prism, { Grammar } from "prismjs";
 import { cx } from "linaria";
 import { styled } from "linaria/react";
+import Prism, { Grammar } from "prismjs";
+import React, { useState, useMemo, useEffect } from "react";
 
-import { isDefined } from "@lib/utility";
-import { Option, Some } from "@lib/option";
 import Spinner from "@design/components/Spinner";
 import CodeBlock from "@docs/components/CodeBlock";
+import { Option, Some } from "@lib/option";
+import { isDefined } from "@lib/utility";
 import "@docs/languages";
 
 const Styled = {

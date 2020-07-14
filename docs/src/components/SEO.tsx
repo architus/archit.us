@@ -1,9 +1,9 @@
+import { useStaticQuery, graphql } from "gatsby";
 import React from "react";
 import { Helmet } from "react-helmet";
-import { useStaticQuery, graphql } from "gatsby";
 
-import { isDefined } from "@lib/utility";
 import { withPathPrefix } from "@docs/site";
+import { isDefined } from "@lib/utility";
 
 export type SEOProps = {
   description?: string;

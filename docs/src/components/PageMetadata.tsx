@@ -1,20 +1,22 @@
-import React from "react";
 import { useStaticQuery, graphql } from "gatsby";
-import { GoPencil } from "react-icons/go";
 import { styled } from "linaria/react";
+import React from "react";
+import { GoPencil } from "react-icons/go";
 import ago from "s-ago";
 
-import { Nil } from "@lib/types";
-import { History, GithubUser } from "@docs/build/github-types";
+import AutoLink from "@design/components/AutoLink";
 import Tooltip from "@design/components/Tooltip";
-import { withoutLeading, withoutTrailing, isNil } from "@lib/utility";
+import { color } from "@design/theme/color";
+import { down } from "@design/theme/media";
+import { gap } from "@design/theme/spacing";
+import { History, GithubUser } from "@docs/build/github-types";
 import {
   addMissingUnit,
   multiplyDimension,
   formatDimension,
 } from "@lib/dimension";
-import { color, gap, down } from "@design/theme";
-import AutoLink from "@design/components/AutoLink";
+import { Nil } from "@lib/types";
+import { withoutLeading, withoutTrailing, isNil } from "@lib/utility";
 
 const authorsMixin = `
   width: 32px;

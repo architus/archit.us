@@ -1,10 +1,10 @@
 import { SourceNodesArgs } from "gatsby";
 
-import { isNil } from "@lib/utility";
-import { Option, Some, None } from "@lib/option";
 import { BuildMetadataEntry } from "@design/components/BuildDetails";
 import { NodeInput } from "@docs/build/types";
+import { Option, Some, None } from "@lib/option";
 import { Nil } from "@lib/types";
+import { isNil } from "@lib/utility";
 
 export const buildMetadataType = `
   type BuildMetadataContext {

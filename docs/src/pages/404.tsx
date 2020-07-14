@@ -1,11 +1,13 @@
-import React from "react";
 import { styled } from "linaria/react";
+import React from "react";
 
-import Layout from "@docs/components/Layout";
-import { gap, down, color } from "@design/theme";
-import { contentWidth } from "@docs/layout";
 import Article from "@design/components/Article";
 import AutoLink from "@design/components/AutoLink";
+import { color } from "@design/theme/color";
+import { down } from "@design/theme/media";
+import { gap } from "@design/theme/spacing";
+import Layout from "@docs/components/Layout";
+import { contentWidth } from "@docs/layout";
 
 const Styled = {
   Outer: styled.div`

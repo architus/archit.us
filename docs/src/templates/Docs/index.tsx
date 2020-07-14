@@ -1,30 +1,32 @@
-import React, { useRef } from "react";
 import { PageProps, graphql } from "gatsby";
-import { styled } from "linaria/react";
 import { css, cx } from "linaria";
+import { styled } from "linaria/react";
 import { transparentize } from "polished";
+import React, { useRef } from "react";
 
+import Article from "@design/components/Article";
+import { color, mode, ColorMode, dynamicColor } from "@design/theme/color";
+import { down } from "@design/theme/media";
+import { gap } from "@design/theme/spacing";
+import Breadcrumb from "@docs/components/Breadcrumb";
+import ImageHandler from "@docs/components/ImageHandler";
 import Layout from "@docs/components/Layout";
 import Mdx from "@docs/components/Mdx";
-import Article from "@design/components/Article";
 import MdxArticle from "@docs/components/MdxArticle";
-import Breadcrumb from "@docs/components/Breadcrumb";
-import PageMetadata from "@docs/components/PageMetadata";
-import Overview, { OverviewContext } from "@docs/components/Overview";
-import ImageHandler from "@docs/components/ImageHandler";
 import NavLabel from "@docs/components/NavLabel";
-import TableOfContents from "@docs/components/TableOfContents";
+import Overview, { OverviewContext } from "@docs/components/Overview";
+import PageMetadata from "@docs/components/PageMetadata";
 import SequenceLinks from "@docs/components/SequenceLinks";
-import { DocsContext } from "@docs/templates/Docs/frontmatter";
+import TableOfContents from "@docs/components/TableOfContents";
 import {
   minimizeBreakpoint,
   contentWidth,
   contentWidthToc,
   headerHeight,
 } from "@docs/layout";
-import { down, gap, color, ColorMode, mode, dynamicColor } from "@design/theme";
-import { isDefined, isNil } from "@lib/utility";
+import { DocsContext } from "@docs/templates/Docs/frontmatter";
 import { MutableArray } from "@lib/types";
+import { isDefined, isNil } from "@lib/utility";
 import "@docs/one-universal";
 
 const contentWithToc = css`

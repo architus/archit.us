@@ -1,20 +1,15 @@
-import React, { useCallback, useState } from "react";
 import { css, cx } from "linaria";
 import { styled } from "linaria/react";
-import { FaChevronRight } from "react-icons/fa";
 import { transparentize } from "polished";
+import React, { useCallback, useState } from "react";
+import { FaChevronRight } from "react-icons/fa";
 
+import { color, mode, ColorMode, dynamicColor } from "@design/theme/color";
+import { blankButton } from "@design/theme/mixins";
+import { transition } from "@design/theme/motion";
+import { gap } from "@design/theme/spacing";
+import { font } from "@design/theme/typography";
 import { NavigationTreeNode } from "@docs/build/nav";
-import {
-  mode,
-  ColorMode,
-  color,
-  transition,
-  gap,
-  blankButton,
-  dynamicColor,
-  font,
-} from "@design/theme";
 import NavLabel from "@docs/components/NavLabel";
 import { Link } from "@docs/components/Router";
 import { useLocationMatch } from "@docs/hooks";

@@ -1,7 +1,8 @@
 // Loaded by /gatsby-config.js
-import { themeColor, themeBgColor, msTileColor } from "@design/theme/color";
 import * as dotenv from "dotenv";
 import path from "path";
+
+import { themeColor, themeBgColor, msTileColor } from "@design/theme/color";
 
 dotenv.config();
 const title = process.env.SITE_NAME ?? "Architus Docs";

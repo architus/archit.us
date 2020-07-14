@@ -1,3 +1,5 @@
+/* eslint-disable import/order */
+
 // Font files (copied to site upon build)
 // https://www.gatsbyjs.org/docs/importing-assets-into-files/
 import rennerBold from "../assets/renner/renner-bold-webfont.woff";

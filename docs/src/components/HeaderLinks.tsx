@@ -1,22 +1,22 @@
-import React from "react";
 import { styled } from "linaria/react";
 import { transparentize } from "polished";
+import React from "react";
 
-import NavLabel from "@docs/components/NavLabel";
 import Badge from "@design/components/Badge";
-import { Link } from "@docs/components/Router";
-import { useNavigationTree } from "@docs/data/nav";
 import {
-  transition,
-  gap,
-  color,
   staticColor,
-  font,
+  color,
   dynamicColor,
   ColorMode,
   mode,
-  down,
-} from "@design/theme";
+} from "@design/theme/color";
+import { down } from "@design/theme/media";
+import { transition } from "@design/theme/motion";
+import { gap } from "@design/theme/spacing";
+import { font } from "@design/theme/typography";
+import NavLabel from "@docs/components/NavLabel";
+import { Link } from "@docs/components/Router";
+import { useNavigationTree } from "@docs/data/nav";
 
 const Styled = {
   Link: styled<React.ComponentProps<typeof Link>>(Link)`

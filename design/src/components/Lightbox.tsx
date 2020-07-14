@@ -1,21 +1,21 @@
-import React, { useState } from "react";
 import { styled } from "linaria/react";
+import React, { useState } from "react";
 import { Modal } from "react-overlays";
-import { CSSTransition } from "react-transition-group";
 import ResizeObserver from "react-resize-observer";
+import { CSSTransition } from "react-transition-group";
 
-import { Option, None } from "@lib/option";
+import { color } from "@design/theme/color";
+import { down } from "@design/theme/media";
 import {
-  ZIndex,
-  shadow,
-  color,
-  transition,
-  down,
   TransitionSpeed,
+  transition,
   ease,
   easeOutBack,
-} from "@design/theme";
+} from "@design/theme/motion";
+import { ZIndex } from "@design/theme/order";
+import { shadow } from "@design/theme/shadow";
 import { usePrevious } from "@lib/hooks";
+import { Option, None } from "@lib/option";
 
 const fade = "lightbox-fade";
 const fadeZoom = "lightbox-fadeZoom";

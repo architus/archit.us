@@ -1,9 +1,12 @@
-import React, { useCallback, useState, cloneElement } from "react";
 import { styled } from "linaria/react";
+import React, { useCallback, useState, cloneElement } from "react";
 import { FaChevronRight } from "react-icons/fa";
 
+import { color } from "@design/theme/color";
+import { blankButton } from "@design/theme/mixins";
+import { transition } from "@design/theme/motion";
+import { shadow } from "@design/theme/shadow";
 import { isDefined } from "@lib/utility";
-import { color, blankButton, transition, shadow } from "@design/theme";
 
 export const CollapseContent = styled.div``;
 const CollapseIcon = styled(FaChevronRight)`

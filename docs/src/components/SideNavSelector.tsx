@@ -1,18 +1,18 @@
+import { lighten, darken } from "polished";
 import React, { useCallback } from "react";
 import Select, { ValueType, Theme } from "react-select";
-import { lighten, darken } from "polished";
 
-import { NavigationTreeNode } from "@docs/build/nav";
-import { isDefined } from "@lib/utility";
-import NavLabel from "@docs/components/NavLabel";
 import {
   color,
   staticColor,
   ColorMode,
   ColorKey,
   hybridColor,
-} from "@design/theme";
+} from "@design/theme/color";
+import { NavigationTreeNode } from "@docs/build/nav";
+import NavLabel from "@docs/components/NavLabel";
 import { useColorMode } from "@docs/hooks";
+import { isDefined } from "@lib/utility";
 
 export type SideNavSelectorProps = {
   value: string;

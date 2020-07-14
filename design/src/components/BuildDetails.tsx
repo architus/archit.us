@@ -1,12 +1,12 @@
-import React from "react";
 import { styled } from "linaria/react";
 import { transparentize } from "polished";
+import React from "react";
 
-import { Option } from "@lib/option";
 import AutoLink from "@design/components/AutoLink";
+import { staticColor, dynamicColor, ColorMode } from "@design/theme/color";
 import { setLinkColor } from "@design/theme/mixins";
 import { gap } from "@design/theme/spacing";
-import { staticColor, dynamicColor, ColorMode } from "@design/theme/color";
+import { Option } from "@lib/option";
 
 const Styled = {
   Divider: styled.hr`
