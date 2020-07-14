@@ -4,16 +4,11 @@ import React from "react";
 import ago from "s-ago";
 
 import AutoLink from "@design/components/AutoLink";
-import {
-  staticColor,
-  dynamicColor,
-  ColorMode,
-  color,
-} from "@design/theme/color";
+import { staticColor, dynamicColor, ColorMode } from "@design/theme/color";
 import { setLinkColor } from "@design/theme/mixins";
 import { gap } from "@design/theme/spacing";
 import { Option } from "@lib/option";
-import { formatDate } from "@lib/utility";
+import { formatDate, isExternal } from "@lib/utility";
 
 const Styled = {
   Divider: styled.hr`
@@ -43,7 +38,7 @@ const Styled = {
     ${setLinkColor(dynamicColor("primary+10", ColorMode.Dark))}
   `,
   AgoSpan: styled.span`
-    color: ${color("textFade")};
+    opacity: 0.8;
   `,
 };
 
@@ -131,7 +126,15 @@ const Entry: React.FC<{ data: BuildMetadataEntry | NodeEntry }> = ({
       content = Option.from(data.href)
         .map((href) => (
           // eslint-disable-next-line react/jsx-key
-          <AutoLink href={href} space="femto">
+          <AutoLink
+            href={href}
+            space="femto"
+            onClick={(): void => {
+              if (isExternal(href)) {
+                window.open(href, "_blank", "noopener");
+              }
+            }}
+          >
             {data.text ?? href}
           </AutoLink>
         ))
