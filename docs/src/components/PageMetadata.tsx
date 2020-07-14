@@ -16,7 +16,12 @@ import {
   formatDimension,
 } from "@lib/dimension";
 import { Nil } from "@lib/types";
-import { withoutLeading, withoutTrailing, isNil } from "@lib/utility";
+import {
+  withoutLeading,
+  withoutTrailing,
+  isNil,
+  formatDate,
+} from "@lib/utility";
 
 const authorsMixin = `
   width: 32px;
@@ -164,19 +169,10 @@ const HistoryDisplay: React.FC<{ history: History }> = React.memo(
     const { lastModified, authors } = history;
     // Pretty print modified Unix timestamp
     const modifiedDate = new Date(parseInt(lastModified, 10));
-    const lang =
-      typeof window === "undefined" ? "en-US" : navigator.languages[0];
-    const dateString = modifiedDate.toLocaleDateString(lang, {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-    const timeString = modifiedDate.toLocaleTimeString(lang, {});
     return (
       <span>
         {authors.length > 0 && <Authors authors={authors} />}
-        <Tooltip tooltip={`${dateString} at ${timeString}`} placement="top">
+        <Tooltip tooltip={formatDate(modifiedDate)} placement="top">
           <Styled.ModifiedLabel>
             Last modified {ago(modifiedDate)}
           </Styled.ModifiedLabel>

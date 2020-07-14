@@ -7,7 +7,7 @@ import Logo from "@design/components/Logo";
 import { TooltipProps } from "@design/components/Tooltip";
 import { down, BreakpointKey, maxWidth, breakpoint } from "@design/theme/media";
 import { gap } from "@design/theme/spacing";
-import { useBuildMetadata } from "@docs/build/build-metadata-hook";
+import { useBuildMetadata } from "@docs/data/build-metadata";
 import { useMedia } from "@lib/hooks";
 import { isDefined } from "@lib/utility";
 

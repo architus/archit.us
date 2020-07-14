@@ -32,6 +32,7 @@ export function useBuildMetadata(): Option<BuildMetadata> {
           href
           text
           content
+          timestamp
         }
       }
     }
@@ -59,25 +60,34 @@ export function useBuildMetadata(): Option<BuildMetadata> {
 
       // Transform entries
       const details: BuildMetadataEntry[] = [];
-      buildMetadata.details.forEach(({ type, label, href, text, content }) => {
-        switch (type) {
-          case "optionLink":
-            details.push({
-              type: "optionLink",
-              label,
-              href,
-              text,
-            });
-            break;
-          case "content":
-            details.push({
-              type: "content",
-              label,
-              content: content ?? "",
-            });
-            break;
+      buildMetadata.details.forEach(
+        ({ type, label, href, text, content, timestamp }) => {
+          switch (type) {
+            case "optionLink":
+              details.push({
+                type: "optionLink",
+                label,
+                href,
+                text,
+              });
+              break;
+            case "content":
+              details.push({
+                type: "content",
+                label,
+                content: content ?? "",
+              });
+              break;
+            case "date":
+              details.push({
+                type: "date",
+                label,
+                timestamp: timestamp ?? String(Date.now()),
+              });
+              break;
+          }
         }
-      });
+      );
 
       return Some({
         label: buildMetadata.label,

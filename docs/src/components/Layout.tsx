@@ -216,6 +216,12 @@ export type LayoutProps = {
   style?: React.CSSProperties;
 };
 
+/**
+ * Main site layout component, forming the basis for each page.
+ * Includes the header, footer(s), and the side navigation, including
+ * drawer state handling.
+ * Additionally, the layout component handles SEO via the `<SEO />` component
+ */
 const Layout: React.FC<LayoutProps> = ({
   activeNavRoot,
   title,

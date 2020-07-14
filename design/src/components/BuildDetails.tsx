@@ -1,12 +1,19 @@
 import { styled } from "linaria/react";
 import { transparentize } from "polished";
 import React from "react";
+import ago from "s-ago";
 
 import AutoLink from "@design/components/AutoLink";
-import { staticColor, dynamicColor, ColorMode } from "@design/theme/color";
+import {
+  staticColor,
+  dynamicColor,
+  ColorMode,
+  color,
+} from "@design/theme/color";
 import { setLinkColor } from "@design/theme/mixins";
 import { gap } from "@design/theme/spacing";
 import { Option } from "@lib/option";
+import { formatDate } from "@lib/utility";
 
 const Styled = {
   Divider: styled.hr`
@@ -35,6 +42,9 @@ const Styled = {
     /* Set the link color to be light always */
     ${setLinkColor(dynamicColor("primary+10", ColorMode.Dark))}
   `,
+  AgoSpan: styled.span`
+    color: ${color("textFade")};
+  `,
 };
 
 export interface BuildContext {
@@ -43,7 +53,7 @@ export interface BuildContext {
   icon?: React.ReactNode;
 }
 
-export type BuildMetadataEntry = OptionLinkEntry | ContentEntry;
+export type BuildMetadataEntry = OptionLinkEntry | ContentEntry | DateEntry;
 export interface OptionLinkEntry {
   type: "optionLink";
   label: string;
@@ -54,6 +64,11 @@ export interface ContentEntry {
   type: "content";
   label: string;
   content: string;
+}
+export interface DateEntry {
+  type: "date";
+  label: string;
+  timestamp: string;
 }
 
 // Only used internally at runtime
@@ -122,6 +137,16 @@ const Entry: React.FC<{ data: BuildMetadataEntry | NodeEntry }> = ({
         ))
         .getOrElse(<>~</>);
       break;
+    case "date": {
+      const date = new Date(parseInt(data.timestamp, 10));
+      content = (
+        <>
+          {formatDate(date)}
+          <br />
+          <Styled.AgoSpan>({ago(date)})</Styled.AgoSpan>
+        </>
+      );
+    }
   }
   return (
     <>

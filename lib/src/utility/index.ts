@@ -1,4 +1,5 @@
 // Convenience exports
 
-export * from "./primitive";
+export * from "./date";
 export * from "./path";
+export * from "./primitive";

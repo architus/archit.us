@@ -87,7 +87,7 @@ export type CodeBlockProps = React.HTMLAttributes<HTMLPreElement>;
  * Formatted code block component that includes a copy button in the top right corner.
  * Uses the same children as a normal `<pre />` element.
  */
-const Table: React.FC<CodeBlockProps> = ({
+const CodeBlock: React.FC<CodeBlockProps> = ({
   className,
   style,
   children,
@@ -142,4 +142,4 @@ const Table: React.FC<CodeBlockProps> = ({
   );
 };
 
-export default Table;
+export default CodeBlock;

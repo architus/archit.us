@@ -5,6 +5,10 @@ export type ApiVersions = {
   gatewayVersion?: string;
 };
 
+/**
+ * Hook to get the versions of the APIs from the site metadata,
+ * used when displaying routes.
+ */
 export function useApiVersions(): ApiVersions {
   return (
     useStaticQuery<GatsbyTypes.ApiVersionQuery>(graphql`

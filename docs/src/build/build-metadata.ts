@@ -18,6 +18,7 @@ export const buildMetadataType = `
     href: String
     text: String
     content: String
+    timestamp: String
   }
   type BuildMetadata implements Node @dontInfer {
     label: String!
@@ -56,20 +57,10 @@ export async function createBuildMetadataNode(
  * Makes an entry for the site build time, run during site build
  */
 function makeBuildTimeEntry(): BuildMetadataEntry {
-  const buildTime = new Date();
-  const dateOptions = {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  };
   return {
-    type: "content",
+    type: "date",
     label: "Build time",
-    content: `${buildTime.toLocaleDateString(
-      undefined,
-      dateOptions
-    )} at ${buildTime.toLocaleTimeString()}`,
+    timestamp: String(new Date().getTime()),
   };
 }
 
@@ -96,6 +87,7 @@ function flatten(
     content: undefined,
     href: undefined,
     text: undefined,
+    timestamp: undefined,
     ...obj,
   }));
 }

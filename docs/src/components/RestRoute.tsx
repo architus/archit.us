@@ -11,7 +11,7 @@ import {
 } from "@design/theme/color";
 import { down } from "@design/theme/media";
 import { shadow } from "@design/theme/shadow";
-import { useApiVersions } from "@docs/data/apiVersions";
+import { useApiVersions } from "@docs/data/api-versions";
 import { isDefined, splitFragments } from "@lib/utility";
 
 const PathParamRegex = /{[^{}]+}/g;
@@ -85,7 +85,7 @@ const Styled = {
   `,
 };
 
-type RestRouteProps = {
+export type RestRouteProps = {
   method: string;
   path: string;
   auth?: boolean;

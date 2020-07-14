@@ -27,6 +27,7 @@
     "react-overlays": "^3.2.0",
     "react-popper-tooltip": "^3.0.0",
     "react-resize-observer": "^1.1.1",
-    "react-transition-group": "^4.4.1"
+    "react-transition-group": "^4.4.1",
+    "s-ago": "^2.2.0"
   }
 }

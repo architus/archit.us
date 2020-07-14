@@ -19,7 +19,7 @@ const Styled = {
   `,
 };
 
-type ExternalSnippetProps = {
+export type ExternalSnippetProps = {
   src: string;
   grammar?: Grammar;
   language?: string;
