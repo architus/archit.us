@@ -62,7 +62,7 @@ Then, there would be **three generated docs pages**: `/`, `/pathA/`, and `/pathA
 ###### h6 - Lorem ipsum
 ```
 
-<div>
+<Article>
 {/* These are html elements to prevent them from being added to ToC */}
 <h1 style={{marginTop: 0}}>h1 - Lorem ipsum</h1>
 <h2>h2 - Lorem ipsum</h2>
@@ -70,7 +70,7 @@ Then, there would be **three generated docs pages**: `/`, `/pathA/`, and `/pathA
 <h4>h4 - Lorem ipsum</h4>
 <h5>h5 - Lorem ipsum</h5>
 <h6>h6 - Lorem ipsum</h6>
-</div>
+</Article>
 </Demo>
 
 ## Elements
@@ -122,7 +122,7 @@ Then, there would be **three generated docs pages**: `/`, `/pathA/`, and `/pathA
 ~~~md
 ```py
 async def all_guilds(self):
-    """Return information about all guilds that the bot is in, including their admins"""
+    """Return information about all guilds the bot is in, including their admins"""
     guilds = []
     for shard, shard_store in self.store.items():
         guilds += shard_store.get('guilds', ())
@@ -132,7 +132,7 @@ async def all_guilds(self):
 
 ```py
 async def all_guilds(self):
-    """Return information about all guilds that the bot is in, including their admins"""
+    """Return information about all guilds the bot is in, including their admins"""
     guilds = []
     for shard, shard_store in self.store.items():
         guilds += shard_store.get('guilds', ())
@@ -359,9 +359,9 @@ successful
 <Demo>
 
 ~~~jsx
-<Collapse>
+<Collapse innerStyle={{ paddingTop: "1.5rem"}}>
 
-# Lorem ipsum
+## Lorem ipsum
 
 Etiam blandit diam sit amet pharetra pellentesque. Integer auctor nisl et sodales
 imperdiet. Integer vitae tincidunt augue. Duis condimentum lectus at tincidunt
@@ -370,10 +370,10 @@ Nam interdum vitae arcu et pharetra. Integer eget faucibus arcu.
 
 </Collapse>
 ~~~
-<Collapse>
+<Collapse innerStyle={{ paddingTop: "1.5rem"}}>
 <Article>
 
-<h1>Lorem ipsum</h1>
+<h2>Lorem ipsum</h2>
 
 Etiam blandit diam sit amet pharetra pellentesque. Integer auctor nisl et sodales imperdiet. Integer vitae tincidunt augue. Duis condimentum lectus at tincidunt vehicula. Maecenas ultricies erat id nunc tempus, malesuada accumsan justo dignissim. Nam interdum vitae arcu et pharetra. Integer eget faucibus arcu.
 

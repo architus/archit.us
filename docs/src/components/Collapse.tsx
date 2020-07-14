@@ -69,6 +69,8 @@ export type CollapseProps = {
   unwrap?: boolean;
   className?: string;
   style?: React.CSSProperties;
+  innerClassName?: string;
+  innerStyle?: React.CSSProperties;
 };
 
 /**
@@ -80,6 +82,8 @@ const Collapse: React.FC<CollapseProps> = ({
   unwrap,
   className,
   style,
+  innerClassName,
+  innerStyle,
 }) => {
   const [open, setOpen] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
@@ -111,7 +115,9 @@ const Collapse: React.FC<CollapseProps> = ({
         <Styled.CollapseHeader>{open ? "Hide" : "Show"}</Styled.CollapseHeader>
         <Styled.CollapseIcon name="chevron-right" />
       </Styled.CollapseButton>
-      <Styled.CollapseContent>{derivedChildren}</Styled.CollapseContent>
+      <Styled.CollapseContent className={innerClassName} style={innerStyle}>
+        {derivedChildren}
+      </Styled.CollapseContent>
     </Styled.Collapse>
   );
 };

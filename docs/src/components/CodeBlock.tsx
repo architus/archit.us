@@ -23,19 +23,46 @@ export const CopyButton = styled.button<{ showingToast: boolean }>`
   border-radius: 4px;
 
   color: ${(props): string =>
-    props.showingToast ? color("textLight") : "transparent"};
-
-  background-color: transparent;
-  opacity: 0.3;
+    props.showingToast ? color("text") : "transparent"};
+  background-color: ${(props): string =>
+    props.showingToast ? "var(--code-bg)" : "transparent"};
+  opacity: ${(props): number => (props.showingToast ? 0.7 : 0.3)};
   ${transition(["color", "opacity", "background-color"])}
 
   &:hover, &:focus {
-    opacity: 0.8;
-    background-color: ${color("textOverlay")};
+    opacity: 0.5;
+    background-color: var(--code-bg);
   }
 
   &:active {
     opacity: 1;
+    background-color: var(--code-bg);
+  }
+
+  &::after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 4px;
+    z-index: -1;
+    content: " ";
+
+    ${transition(["background-color"])}
+    background-color: transparent;
+  }
+
+  &:hover,
+  &:focus {
+    &::after {
+      background-color: ${color("textOverlay")};
+    }
+  }
+
+  & > * {
+    position: relative;
+    z-index: 1;
   }
 `;
 
