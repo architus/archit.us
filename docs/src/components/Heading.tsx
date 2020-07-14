@@ -1,6 +1,6 @@
 import { cx } from "linaria";
 import { styled } from "linaria/react";
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import { dynamicColor, ColorMode, mode } from "@design/theme/color";
 import { down, up } from "@design/theme/media";
@@ -9,6 +9,7 @@ import { gap } from "@design/theme/spacing";
 import { useLocation } from "@docs/components/Router";
 import { headerHeight } from "@docs/layout";
 import { isDefined } from "@lib/utility";
+import { useInitialRender } from "@lib/hooks";
 
 const rightLink = "right";
 const rightMixin = `
@@ -164,7 +165,10 @@ export function createHeading({
   }) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const location = useLocation();
-    const active = location.hash === `#${id}`;
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const firstRender = useInitialRender();
+    const active = !firstRender && location.hash === `#${id}`;
+
     return (
       <Styled.AnchorWrapper
         id={isDefined(id) ? makeWrapperId(id) : undefined}

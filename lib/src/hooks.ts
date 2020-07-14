@@ -11,7 +11,8 @@ export function useEffectOnce(effectFunc: () => void | (() => void)): void {
 
 /**
  * Returns true only if the current render
- * (useful for ensuring SSR/client hydration symmetry)
+ * (useful for ensuring SSR/client hydration symmetry).
+ * *Will cause a re-render after initial render*
  */
 export function useInitialRender(): boolean {
   const [isInitial, setIsInitial] = useState(true);
