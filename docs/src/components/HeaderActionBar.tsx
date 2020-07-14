@@ -76,12 +76,12 @@ const HeaderActionBar: React.FC = () => {
       {isDefined(socials) && hasSocial && (
         <>
           {isDefined(socials.discord) && (
-            <SocialButton to={socials.discord}>
+            <SocialButton to={socials.discord} title="Discord server">
               <FaDiscord />
             </SocialButton>
           )}
           {isDefined(socials.github) && (
-            <SocialButton to={socials.github}>
+            <SocialButton to={socials.github} title="GitHub">
               <FaGithub />
             </SocialButton>
           )}
@@ -99,8 +99,18 @@ export default HeaderActionBar;
 // ? Sub-components
 // ? ==============
 
-const SocialButton: React.FC<{ to: string }> = ({ to, children }) => (
-  <a rel="noreferrer" target="_blank" href={to} className={buttonClass}>
+const SocialButton: React.FC<{ to: string; title: string }> = ({
+  to,
+  title,
+  children,
+}) => (
+  <a
+    rel="noreferrer"
+    target="_blank"
+    href={to}
+    className={buttonClass}
+    title={title}
+  >
     {children}
   </a>
 );
@@ -118,6 +128,7 @@ const ColorModeToggle: React.FC = () => {
     <button
       className={buttonClass}
       onClick={(): void => setMode(isDark ? ColorMode.Light : ColorMode.Dark)}
+      title="Switch color mode"
     >
       {isDark ? <BsMoon /> : <IoMdSunny />}
     </button>

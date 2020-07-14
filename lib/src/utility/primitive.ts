@@ -86,3 +86,60 @@ export function trimPrefix(base: string, prefix: string, maxTrims = 1): string {
   }
   return processed;
 }
+
+/**
+ * Splits a string into alternating fragments of text that match the regular
+ * expression between those that don't
+ * @param input - The string to split
+ * @param regex - The regular expression to use to perform the splitting
+ */
+export function splitFragments(input: string, regex: RegExp): string[] {
+  const excludedFragments: string[] = input.split(regex);
+  const matchedFragments: string[] = allMatches(input, regex);
+
+  // Zip the two arrays together
+  const sequence: string[] = [];
+  const zippedLength = Math.min(
+    matchedFragments.length,
+    excludedFragments.length
+  );
+  for (let i = 0; i < zippedLength; ++i) {
+    sequence.push(excludedFragments[i]);
+    sequence.push(matchedFragments[i]);
+  }
+  if (matchedFragments.length > excludedFragments.length) {
+    for (let i = excludedFragments.length; i < matchedFragments.length; ++i) {
+      sequence.push(matchedFragments[i]);
+    }
+  } else if (matchedFragments.length < excludedFragments.length) {
+    for (let i = matchedFragments.length; i < excludedFragments.length; ++i) {
+      sequence.push(excludedFragments[i]);
+    }
+  }
+
+  return sequence;
+}
+
+/**
+ * Re-instantiates a new regular expression with the specified one's flags and pattern
+ * @param source - The source regular expression to use as a template
+ */
+export function remakeRegex(source: RegExp): RegExp {
+  return new RegExp(source.source, source.flags);
+}
+
+/**
+ * Finds all matches it can in a string before returning an array of total matches
+ * @param string - The string to search for matches in
+ * @param regex - The regular expression to use to find matches of
+ */
+export function allMatches(string: string, regex: RegExp): string[] {
+  const remadeRegex = remakeRegex(regex);
+  const matches: string[] = [];
+  let currentMatch;
+  do {
+    currentMatch = remadeRegex.exec(string);
+    if (currentMatch) matches.push(currentMatch[0]);
+  } while (currentMatch);
+  return matches;
+}

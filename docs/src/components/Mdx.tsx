@@ -13,6 +13,7 @@ import Alert from "@design/components/Alert";
 import Table from "@docs/components/Table";
 import CodeBlock from "@docs/components/CodeBlock";
 import ExternalSnippet from "@docs/components/ExternalSnippet";
+import RestRoute from "@docs/components/RestRoute";
 import { usePathPrefix } from "@docs/data/path";
 import {
   withoutLeading,
@@ -37,12 +38,7 @@ export const shortcodes = {
   Article,
   Alert,
   Link: AutoLink,
-  // TODO implement
-  Route: () => (
-    <Alert type="danger">
-      Not implemented <strong>(Route)</strong>
-    </Alert>
-  ),
+  Route: RestRoute,
   // TODO implement
   GatewayRoute: () => (
     <Alert type="danger">

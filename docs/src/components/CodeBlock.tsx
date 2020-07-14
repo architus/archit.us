@@ -45,6 +45,7 @@ export const CopyButton = styled.button<{ showingToast: boolean }>`
 const Styled = {
   Pre: styled.pre`
     position: relative;
+    margin: 0;
     padding: ${gap.micro};
     & > code {
       font-size: 0.875rem;

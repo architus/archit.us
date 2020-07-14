@@ -55,6 +55,10 @@ export const siteMetadata = {
       },
     ],
   },
+  api: {
+    restVersion: "v1 Rest API",
+    gatewayVersion: "v1 Gateway API",
+  },
 };
 
 export const plugins = [
