@@ -16,13 +16,12 @@
     "build": "gatsby build",
     "start": "gatsby develop",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json}\" \"gatsby-*.{js,ts}\" && eslint --fix -f unix \"src/**/*.{js,jsx,ts,tsx,json}\" \"gatsby-*.{js,ts}\"",
-    "lint": "bash -c 'if [ \"$CI\" == \"true\" ]; then yarn run develop-build && yarn run lint-base; else yarn run lint-base; fi'",
+    "lint": "bash -c 'if [ \"$CI\" == \"true\" ]; then yarn run build && yarn run lint-base; else yarn run lint-base; fi'",
     "lint-base": "eslint --max-warnings 0 -f unix \"src/**/*.{js,jsx,ts,tsx,json}\" \"gatsby-*.{js,ts}\"",
-    "typecheck": "bash -c 'if [ \"$CI\" == \"true\" ]; then yarn run develop-build && yarn run typecheck-base; else yarn run typecheck-base; fi'",
+    "typecheck": "bash -c 'if [ \"$CI\" == \"true\" ]; then yarn run build && yarn run typecheck-base; else yarn run typecheck-base; fi'",
     "typecheck-base": "tsc --noEmit",
     "serve": "gatsby serve",
-    "clean": "gatsby clean",
-    "develop-build": "ts-node ./src/scripts/develop-build.ts"
+    "clean": "gatsby clean"
   },
   "dependencies": {
     "@mdx-js/mdx": "^1.6.6",

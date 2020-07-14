@@ -1,6 +1,6 @@
 import { useContext } from "react";
 
-import { ColorMode } from "@design/theme";
+import { ColorMode } from "@design/theme/color";
 import { ColorModeContext } from "@docs/components/ColorModeProvider";
 import { useLocation } from "@docs/components/Router";
 import { usePathPrefix } from "@docs/data/path";
