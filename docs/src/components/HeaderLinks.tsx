@@ -3,7 +3,7 @@ import { styled } from "linaria/react";
 import { transparentize } from "polished";
 
 import NavLabel from "@docs/components/NavLabel";
-import Badge from "@docs/components/Badge";
+import Badge from "@design/components/Badge";
 import { Link } from "@docs/components/Router";
 import { useNavigationTree } from "@docs/data/nav";
 import {

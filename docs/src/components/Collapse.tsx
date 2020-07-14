@@ -38,6 +38,8 @@ const Styled = {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    position: relative;
+    z-index: 2;
 
     box-shadow: ${shadow("z1")};
     padding: 0.75rem 1.25rem;

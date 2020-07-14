@@ -12,6 +12,7 @@ import Article from "@design/components/Article";
 import Alert from "@design/components/Alert";
 import Table from "@docs/components/Table";
 import CodeBlock from "@docs/components/CodeBlock";
+import ExternalSnippet from "@docs/components/ExternalSnippet";
 import { usePathPrefix } from "@docs/data/path";
 import {
   withoutLeading,
@@ -48,12 +49,7 @@ export const shortcodes = {
       Not implemented <strong>(GatewayRoute)</strong>
     </Alert>
   ),
-  // TODO implement
-  ExternalSnippet: () => (
-    <Alert type="danger">
-      Not implemented <strong>(ExternalSnippet)</strong>
-    </Alert>
-  ),
+  ExternalSnippet,
 } as const;
 
 // React components that replace HTML components in the markdown

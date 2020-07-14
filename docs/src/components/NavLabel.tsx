@@ -1,7 +1,7 @@
 import React from "react";
 import { styled } from "linaria/react";
 
-import Badge from "@docs/components/Badge";
+import Badge from "@design/components/Badge";
 import { isDefined } from "@lib/utility";
 import { gap, SpacingKey } from "@design/theme";
 import { Nil } from "@lib/types";

@@ -1,4 +1,5 @@
 import { styled } from "linaria/react";
+import { transparentize } from "polished";
 
 import Article from "@design/components/Article";
 import {
@@ -6,11 +7,12 @@ import {
   ColorMode,
   shadow,
   gap,
-  scrollBarAuto,
   staticColor,
+  color,
 } from "@design/theme";
 import { anchorClass } from "@docs/components/Heading";
-import { transparentize } from "polished";
+import { CopyButton } from "@docs/components/CodeBlock";
+import { CollapseContent } from "@docs/components/Collapse";
 
 /**
  * Contains styling modifications to `<Article />`
@@ -33,14 +35,10 @@ const MdxArticle = styled(Article)`
     border-radius: 8px;
     padding: 0 ${gap.pico};
     white-space: pre-line;
+    position: relative;
 
-    pre {
-      ${scrollBarAuto(0.125)}
-      padding: ${gap.micro};
-
-      & > code {
-        font-size: 0.875rem;
-      }
+    &:hover ${CopyButton} {
+      color: ${color("textStrong")};
     }
   }
 
@@ -65,6 +63,16 @@ const MdxArticle = styled(Article)`
     box-shadow: ${shadow("z0")};
     border-radius: 8px;
     overflow: hidden;
+  }
+
+  ${CollapseContent} .gatsby-highlight {
+    margin-top: calc(${gap.flow} * -0.5);
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+
+    ${CopyButton} {
+      margin-top: ${gap.nano};
+    }
   }
 `;
 

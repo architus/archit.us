@@ -35,3 +35,40 @@ export function transition(
     transition-duration: ${speed}ms${suffix};
   `;
 }
+
+const animationDefinitions = {
+  rotate: `
+    100% {
+      transform: rotate(360deg);
+    }
+  `,
+  spinnerDash: `
+    0% {
+      stroke-dasharray: 1, 150;
+      stroke-dashoffset: 0;
+    }
+    50% {
+      stroke-dasharray: 90, 150;
+      stroke-dashoffset: -35;
+    }
+    100% {
+      stroke-dasharray: 90, 150;
+      stroke-dashoffset: -124;
+    }
+  `,
+};
+
+export type AnimationKey = keyof typeof animationDefinitions;
+
+/**
+ * Mixin used to create scoped keyframes
+ * @param key - animation content key
+ * @param name - name of keyframes
+ */
+export function animation(key: AnimationKey, name?: string): string {
+  return `
+    @keyframes ${name ?? key} {
+      ${animationDefinitions[key]}
+    }
+  `;
+}

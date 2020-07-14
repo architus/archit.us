@@ -129,13 +129,14 @@ function colorSwitch(
   } = {}
 ): string {
   const apply = (
+    actualMode: ColorMode,
     key: ColorKey,
     modifyFn?: (color: string) => string
   ): string => {
-    const base = hybridColor(key, mode);
+    const base = hybridColor(key, actualMode);
     return isDefined(modifyFn) ? modifyFn(base) : base;
   };
   return mode === ColorMode.Light
-    ? apply(light, modifyLight)
-    : apply(dark, modifyDark);
+    ? apply(ColorMode.Light, light, modifyLight)
+    : apply(ColorMode.Dark, dark, modifyDark);
 }

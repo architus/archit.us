@@ -3,15 +3,23 @@ import { styled } from "linaria/react";
 import { MdContentCopy } from "react-icons/md";
 import copy from "copy-to-clipboard";
 
-import { color, gap, blankButton, transition } from "@design/theme";
+import {
+  color,
+  gap,
+  blankButton,
+  transition,
+  scrollBarAuto,
+} from "@design/theme";
 import { isDefined } from "@lib/utility";
 import Tooltip from "@design/components/Tooltip";
 
-const CopyButton = styled.button<{ showingToast: boolean }>`
+// Export for styling
+export const CopyButton = styled.button<{ showingToast: boolean }>`
   ${blankButton()}
   position: absolute;
-  top: 0;
-  right: 0;
+  z-index: 1;
+  top: ${gap.pico};
+  right: ${gap.pico};
   font-size: 1.4rem;
   line-height: 0.9;
   padding: ${gap.pico};
@@ -19,25 +27,31 @@ const CopyButton = styled.button<{ showingToast: boolean }>`
 
   color: ${(props): string =>
     props.showingToast ? color("textLight") : "transparent"};
+
   background-color: transparent;
-  ${transition(["color", "background-color"])}
+  opacity: 0.3;
+  ${transition(["color", "opacity", "background-color"])}
 
   &:hover, &:focus {
-    color: ${color("text")} !important;
+    opacity: 0.8;
     background-color: ${color("textOverlay")};
   }
 
   &:active {
-    color: ${color("textStrong")} !important;
+    opacity: 1;
   }
 `;
+
 const Styled = {
   Pre: styled.pre`
     position: relative;
-
-    &:hover ${CopyButton} {
-      color: ${color("textLight")};
+    padding: ${gap.micro};
+    & > code {
+      font-size: 0.875rem;
     }
+
+    ${scrollBarAuto(0.125)}
+    overflow: auto;
   `,
   CopyButton,
 };
@@ -81,8 +95,7 @@ const Table: React.FC<CodeBlockProps> = ({
   };
 
   return (
-    <Styled.Pre {...rest} ref={parentRef}>
-      {children}
+    <>
       <Styled.CopyButton
         ref={buttonRef}
         onClick={onCopy}
@@ -97,7 +110,10 @@ const Table: React.FC<CodeBlockProps> = ({
           <MdContentCopy />
         </Tooltip>
       </Styled.CopyButton>
-    </Styled.Pre>
+      <Styled.Pre {...rest} ref={parentRef}>
+        {children}
+      </Styled.Pre>
+    </>
   );
 };
 

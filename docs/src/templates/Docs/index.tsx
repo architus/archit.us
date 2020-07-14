@@ -15,7 +15,6 @@ import ImageHandler from "@docs/components/ImageHandler";
 import NavLabel from "@docs/components/NavLabel";
 import TableOfContents from "@docs/components/TableOfContents";
 import SequenceLinks from "@docs/components/SequenceLinks";
-import { CollapseContent } from "@docs/components/Collapse";
 import { DocsContext } from "@docs/templates/Docs/frontmatter";
 import {
   minimizeBreakpoint,
@@ -68,12 +67,6 @@ const Styled = {
       margin-bottom: 2rem;
       opacity: 0.95;
     }
-
-    ${CollapseContent} .gatsby-highlight {
-      margin-top: calc(${gap.flow} * -0.5);
-      border-top-right-radius: 0;
-      border-top-left-radius: 0;
-    }
   `,
   Outer: styled.div`
     max-width: ${contentWidth};
@@ -93,7 +86,7 @@ const Styled = {
   `,
   TableOfContentsWrapper: styled.aside`
     position: sticky !important;
-    top: calc(${headerHeight} + 5.5rem);
+    top: calc(${headerHeight} + ${gap.milli} - 0.45rem);
     padding-left: 2.65em;
     padding-top: 0.35em !important;
     z-index: 10;

@@ -144,6 +144,8 @@ const StyledCollapsibleItem = styled(StyledItem)`
     props.partial && props.isRoot ? "var(--hover-overlay)" : "transparent"};
 `;
 
+const CollapseIcon = styled(FaChevronRight)``;
+
 const rootClass = css`
   --left-padding: ${sitePadding};
   --border-color: ${color("textOverlay")};
@@ -173,6 +175,10 @@ const rootClass = css`
       font-family: ${font("headings")};
       text-transform: uppercase;
       letter-spacing: 0.5px;
+
+      ${CollapseIcon} {
+        vertical-align: -2px;
+      }
     }
   }
 `;
@@ -188,7 +194,7 @@ const Styled = {
   ItemRow,
   ItemLink,
   ItemButton,
-  CollapseIcon: styled(FaChevronRight)``,
+  CollapseIcon,
 };
 
 export type SideNavTreeProps = {
