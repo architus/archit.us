@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import { MDXRenderer } from "gatsby-plugin-mdx";
 import { MDXProvider } from "@mdx-js/react";
 
+import { gap } from "@design/theme/spacing";
 import { createHeading } from "@docs/components/Heading";
 import AutoLink from "@design/components/AutoLink";
 import Overview from "@docs/components/Overview";
@@ -39,10 +40,26 @@ export const shortcodes = {
   Alert,
   Link: AutoLink,
   Route: RestRoute,
-  // TODO implement
   GatewayRoute: () => (
     <Alert type="danger">
-      Not implemented <strong>(GatewayRoute)</strong>
+      <h4>
+        Not implemented <strong>(GatewayRoute)</strong>
+      </h4>
+      <p style={{ marginTop: gap.pico }}>
+        The GatewayRoute component is in the middle of a proposed redesign that
+        uses{" "}
+        <AutoLink href="https://www.gatsbyjs.org/packages/@commercetools-docs/gatsby-transformer-mdx-introspection/">
+          the gatsby-transformer-mdx-introspection plugin
+        </AutoLink>{" "}
+        to parse structured data with the MDX and create references across the
+        text. See{" "}
+        <AutoLink href="https://github.com/architus/docs.archit.us/pull/2">
+          this PR
+        </AutoLink>{" "}
+        on the old repo for more information. This would allow us to include
+        route information within the text, in addition to having an
+        &ldquo;Index&rdquo; page that includes all routes.
+      </p>
     </Alert>
   ),
   ExternalSnippet,
