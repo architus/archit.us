@@ -1,3 +1,4 @@
+import { MDXProvider } from "@mdx-js/react";
 import { MDXRenderer } from "gatsby-plugin-mdx";
 import React, { useMemo } from "react";
 
@@ -21,7 +22,6 @@ import {
   trimPrefix,
   isExternal,
 } from "@lib/utility";
-import { MDXProvider } from "@mdx-js/react";
 
 export type MdxProps = {
   content: string;
