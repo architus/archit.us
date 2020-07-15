@@ -1,0 +1,20 @@
+{
+    "folders": [
+		{
+			"name": "docs",
+			"path": "docs"
+		},
+		{
+			"name": "design",
+			"path": "design"
+		},
+		{
+			"name": "lib",
+			"path": "lib"
+		},
+		{
+			"name": "app",
+			"path": "app"
+		}
+	]
+}
