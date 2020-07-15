@@ -20,7 +20,7 @@ export function withPathPrefix(pathPrefix: string | Nil, base: string): string {
 /**
  * Normalizes an absolute site path
  */
-function normalizePath(path: string): string {
+export function normalizePath(path: string): string {
   return `/${withoutTrailing(withoutLeading(path))}`;
 }
 
@@ -34,7 +34,7 @@ export function locationMatches({
   location,
   partial = false,
 }: {
-  pathPrefix: string | Nil;
+  pathPrefix?: string | Nil;
   path: string;
   location: string;
   partial?: boolean;
@@ -43,6 +43,7 @@ export function locationMatches({
   let actualLocation = location;
   if (isDefined(pathPrefix) && pathPrefix !== "/") {
     const withLeading = `/${withoutLeading(pathPrefix)}`;
+    if (!actualLocation.startsWith(withLeading)) return false;
     actualLocation = trimPrefix(actualLocation, withLeading);
   }
 

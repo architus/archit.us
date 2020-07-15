@@ -21,7 +21,8 @@
     "typecheck": "bash -c 'if [ \"$CI\" == \"true\" ]; then yarn run build && yarn run typecheck-base; else yarn run typecheck-base; fi'",
     "typecheck-base": "tsc --noEmit",
     "serve": "gatsby serve",
-    "clean": "gatsby clean"
+    "clean": "gatsby clean",
+    "test": "jest --passWithNoTests --coverage"
   },
   "dependencies": {
     "@mdx-js/mdx": "^1.6.6",
@@ -77,7 +78,14 @@
     "yarn": "^1.22.4"
   },
   "devDependencies": {
+    "@jest/globals": "^26.1.0",
+    "@types/jest": "^26.0.4",
+    "babel-jest": "^26.1.0",
     "eslint-plugin-import": "2.x",
-    "eslint-plugin-react": "7.x"
+    "eslint-plugin-react": "7.x",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^26.1.0",
+    "react-test-renderer": "^16.13.1",
+    "ts-jest": "^26.1.2"
   }
 }

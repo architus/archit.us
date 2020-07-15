@@ -29,7 +29,9 @@ rules:
   import/prefer-default-export: off
   no-underscore-dangle: 0
   import/default: off
-  import/no-extraneous-dependencies: error
+  import/no-extraneous-dependencies:
+    - error
+    - devDependencies: true
   import/no-unresolved: off
   import/order:
     - error
@@ -37,7 +39,7 @@ rules:
       - ["external", "builtin"]
       - ["index", "sibling", "parent", "internal", "object"]
       pathGroups:
-        - pattern: "@*/**"
+        - pattern: "@(?:app)|(?:docs)|(?:lib)|(?:design)/**"
           group: "internal"
       pathGroupsExcludedImportTypes:
         - builtin

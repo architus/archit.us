@@ -6,7 +6,8 @@
   "scripts": {
     "format": "yarn workspaces run format && cd ./app && yarn run format",
     "lint": "yarn workspaces run lint && cd ./app && yarn run lint",
-    "typecheck": "yarn workspaces run typecheck && cd ./app && yarn run typecheck"
+    "typecheck": "yarn workspaces run typecheck && cd ./app && yarn run typecheck",
+    "test": "yarn workspaces run test && cd ./app && yarn run test"
   },
   "repository": {
     "type": "git",
