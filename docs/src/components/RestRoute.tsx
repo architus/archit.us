@@ -8,11 +8,11 @@ import {
   ColorMode,
   dynamicColor,
   staticColor,
-} from "@design/theme/color";
-import { down } from "@design/theme/media";
-import { shadow } from "@design/theme/shadow";
+} from "@architus/facade/theme/color";
+import { down } from "@architus/facade/theme/media";
+import { shadow } from "@architus/facade/theme/shadow";
+import { isDefined, splitFragments } from "@architus/lib/utility";
 import { useApiVersions } from "@docs/data/api-versions";
-import { isDefined, splitFragments } from "@lib/utility";
 
 const PathParamRegex = /{[^{}]+}/g;
 

@@ -6,11 +6,11 @@ import { BsMoon } from "react-icons/bs";
 import { FaGithub, FaDiscord } from "react-icons/fa";
 import { IoMdSunny } from "react-icons/io";
 
-import { color, ColorMode } from "@design/theme/color";
-import { transition } from "@design/theme/motion";
-import { gap } from "@design/theme/spacing";
+import { color, ColorMode } from "@architus/facade/theme/color";
+import { transition } from "@architus/facade/theme/motion";
+import { gap } from "@architus/facade/theme/spacing";
+import { isDefined } from "@architus/lib/utility";
 import { ColorModeContext } from "@docs/components/ColorModeProvider";
-import { isDefined } from "@lib/utility";
 
 export const actionBarSpacing = gap.pico;
 

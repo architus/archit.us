@@ -3,11 +3,11 @@ import { css } from "linaria";
 import React from "react";
 import TooltipTrigger from "react-popper-tooltip";
 
-import { color } from "@design/theme/color";
-import { transition } from "@design/theme/motion";
-import { ZIndex } from "@design/theme/order";
-import { shadow } from "@design/theme/shadow";
-import { gap, SpacingKey } from "@design/theme/spacing";
+import { color } from "../theme/color";
+import { transition } from "../theme/motion";
+import { ZIndex } from "../theme/order";
+import { shadow } from "../theme/shadow";
+import { gap, SpacingKey } from "../theme/spacing";
 
 const globalPadding = 18;
 

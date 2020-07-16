@@ -1,30 +1,25 @@
 {
-  "name": "architus-docs",
+  "name": "@architus/docs",
   "private": true,
-  "description": "Implementation documentation for Architus",
+  "description": "User guide, changelog, and implementation documentation for the Architus project",
   "version": "1.1.0",
-  "author": "architus",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/architus/archit.us"
-  },
-  "bugs": {
-    "url": "https://github.com/architus/archit.us/issues"
-  },
+  "author": "architus",
   "scripts": {
-    "build": "gatsby build",
     "start": "gatsby develop",
-    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json}\" \"gatsby-*.{js,ts}\" && eslint --fix -f unix \"src/**/*.{js,jsx,ts,tsx,json}\" \"gatsby-*.{js,ts}\"",
+    "test": "jest --coverage",
+    "build": "gatsby build",
+    "serve": "gatsby serve",
     "lint": "bash -c 'if [ \"$CI\" == \"true\" ]; then yarn run build && yarn run lint-base; else yarn run lint-base; fi'",
     "lint-base": "eslint --max-warnings 0 -f unix \"src/**/*.{js,jsx,ts,tsx,json}\" \"gatsby-*.{js,ts}\"",
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json}\" \"gatsby-*.{js,ts}\" && eslint --fix -f unix \"src/**/*.{js,jsx,ts,tsx,json}\" \"gatsby-*.{js,ts}\"",
     "typecheck": "bash -c 'if [ \"$CI\" == \"true\" ]; then yarn run build && yarn run typecheck-base; else yarn run typecheck-base; fi'",
     "typecheck-base": "tsc --noEmit",
-    "serve": "gatsby serve",
-    "clean": "gatsby clean",
-    "test": "jest --passWithNoTests --coverage"
+    "clean": "gatsby clean"
   },
   "dependencies": {
+    "@architus/facade": "^0.1.0",
+    "@architus/lib": "^0.1.0",
     "@mdx-js/mdx": "^1.6.6",
     "@mdx-js/react": "^1.6.6",
     "@reach/router": "^1.3.4",
@@ -60,6 +55,7 @@
     "gatsby-source-filesystem": "^2.3.13",
     "gatsby-source-graphql": "^2.5.7",
     "gatsby-transformer-sharp": "^2.5.10",
+    "graphql": "^15.3.0",
     "linaria": "^1.4.0-beta.3",
     "polished": "^3.6.5",
     "prismjs": "^1.20.0",
@@ -78,14 +74,15 @@
     "yarn": "^1.22.4"
   },
   "devDependencies": {
-    "@jest/globals": "^26.1.0",
-    "@types/jest": "^26.0.4",
-    "babel-jest": "^26.1.0",
+    "babel-preset-gatsby": "^0.5.2",
     "eslint-plugin-import": "2.x",
-    "eslint-plugin-react": "7.x",
-    "identity-obj-proxy": "^3.0.0",
-    "jest": "^26.1.0",
-    "react-test-renderer": "^16.13.1",
-    "ts-jest": "^26.1.2"
+    "eslint-plugin-react": "7.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/architus/archit.us"
+  },
+  "bugs": {
+    "url": "https://github.com/architus/archit.us/issues"
   }
 }

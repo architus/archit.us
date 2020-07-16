@@ -1,10 +1,10 @@
-import { Nil } from "@lib/types";
+import { Nil } from "@architus/lib/types";
 import {
   isDefined,
   withoutTrailing,
   withoutLeading,
   trimPrefix,
-} from "@lib/utility";
+} from "@architus/lib/utility";
 
 /**
  * Adds a path prefix to a base path

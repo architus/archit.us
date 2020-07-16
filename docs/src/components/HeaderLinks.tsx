@@ -2,18 +2,18 @@ import { styled } from "linaria/react";
 import { transparentize } from "polished";
 import React from "react";
 
-import Badge from "@design/components/Badge";
+import Badge from "@architus/facade/components/Badge";
 import {
   staticColor,
   color,
   dynamicColor,
   ColorMode,
   mode,
-} from "@design/theme/color";
-import { down } from "@design/theme/media";
-import { transition } from "@design/theme/motion";
-import { gap } from "@design/theme/spacing";
-import { font } from "@design/theme/typography";
+} from "@architus/facade/theme/color";
+import { down } from "@architus/facade/theme/media";
+import { transition } from "@architus/facade/theme/motion";
+import { gap } from "@architus/facade/theme/spacing";
+import { font } from "@architus/facade/theme/typography";
 import NavLabel from "@docs/components/NavLabel";
 import { Link } from "@docs/components/Router";
 import { useNavigationTree } from "@docs/data/nav";

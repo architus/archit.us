@@ -1,11 +1,11 @@
 import { styled } from "linaria/react";
 import { darken } from "polished";
 
-import { color, mode, ColorMode, dynamicColor } from "@design/theme/color";
-import { down } from "@design/theme/media";
-import { primaryLink } from "@design/theme/mixins";
-import { ZIndex } from "@design/theme/order";
-import { gap } from "@design/theme/spacing";
+import { color, mode, ColorMode, dynamicColor } from "../theme/color";
+import { down } from "../theme/media";
+import { primaryLink } from "../theme/mixins";
+import { ZIndex } from "../theme/order";
+import { gap } from "../theme/spacing";
 
 export const tableHeaderSidePadding = gap.nano;
 

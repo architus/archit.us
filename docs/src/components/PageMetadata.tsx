@@ -4,24 +4,24 @@ import React from "react";
 import { GoPencil } from "react-icons/go";
 import ago from "s-ago";
 
-import AutoLink from "@design/components/AutoLink";
-import Tooltip from "@design/components/Tooltip";
-import { color } from "@design/theme/color";
-import { down } from "@design/theme/media";
-import { gap } from "@design/theme/spacing";
-import { History, GithubUser } from "@docs/build/github-types";
+import AutoLink from "@architus/facade/components/AutoLink";
+import Tooltip from "@architus/facade/components/Tooltip";
+import { color } from "@architus/facade/theme/color";
+import { down } from "@architus/facade/theme/media";
+import { gap } from "@architus/facade/theme/spacing";
 import {
   addMissingUnit,
   multiplyDimension,
   formatDimension,
-} from "@lib/dimension";
-import { Nil } from "@lib/types";
+} from "@architus/lib/dimension";
+import { Nil } from "@architus/lib/types";
 import {
   withoutLeading,
   withoutTrailing,
   isNil,
   formatDate,
-} from "@lib/utility";
+} from "@architus/lib/utility";
+import { History, GithubUser } from "@docs/build/github-types";
 
 const authorsMixin = `
   width: 32px;

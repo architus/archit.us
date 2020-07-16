@@ -2,10 +2,16 @@ import { MDXProvider } from "@mdx-js/react";
 import { MDXRenderer } from "gatsby-plugin-mdx";
 import React, { useMemo } from "react";
 
-import Alert from "@design/components/Alert";
-import Article from "@design/components/Article";
-import AutoLink from "@design/components/AutoLink";
-import { gap } from "@design/theme/spacing";
+import Alert from "@architus/facade/components/Alert";
+import Article from "@architus/facade/components/Article";
+import AutoLink from "@architus/facade/components/AutoLink";
+import { gap } from "@architus/facade/theme/spacing";
+import {
+  withoutLeading,
+  withoutTrailing,
+  trimPrefix,
+  isExternal,
+} from "@architus/lib/utility";
 import CodeBlock from "@docs/components/CodeBlock";
 import Collapse from "@docs/components/Collapse";
 import Demo from "@docs/components/Demo";
@@ -16,12 +22,6 @@ import Overview from "@docs/components/Overview";
 import RestRoute from "@docs/components/RestRoute";
 import Table from "@docs/components/Table";
 import { usePathPrefix } from "@docs/data/path";
-import {
-  withoutLeading,
-  withoutTrailing,
-  trimPrefix,
-  isExternal,
-} from "@lib/utility";
 
 export type MdxProps = {
   content: string;

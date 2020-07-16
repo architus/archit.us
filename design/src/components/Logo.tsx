@@ -1,9 +1,9 @@
 import React from "react";
 
-import SymbolSvg from "@design/assets/logo/logo-symbol.svg";
-import LogotypeSvg from "@design/assets/logo/logo-text.svg";
-import CombinedSvg from "@design/assets/logo/logo.svg";
-import { isNil } from "@lib/utility";
+import SymbolSvg from "../assets/logo/logo-symbol.svg";
+import LogotypeSvg from "../assets/logo/logo-text.svg";
+import CombinedSvg from "../assets/logo/logo.svg";
+import { isNil } from "@architus/lib/utility";
 
 /**
  * Adds auto sizing if no sizing props have been supplied

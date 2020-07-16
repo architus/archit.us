@@ -2,14 +2,19 @@ import { useStaticQuery, graphql } from "gatsby";
 import { styled } from "linaria/react";
 import React from "react";
 
-import BuildTag from "@design/components/BuildTag";
-import Logo from "@design/components/Logo";
-import { TooltipProps } from "@design/components/Tooltip";
-import { down, BreakpointKey, maxWidth, breakpoint } from "@design/theme/media";
-import { gap } from "@design/theme/spacing";
+import BuildTag from "@architus/facade/components/BuildTag";
+import Logo from "@architus/facade/components/Logo";
+import { TooltipProps } from "@architus/facade/components/Tooltip";
+import {
+  down,
+  BreakpointKey,
+  maxWidth,
+  breakpoint,
+} from "@architus/facade/theme/media";
+import { gap } from "@architus/facade/theme/spacing";
+import { useMedia } from "@architus/lib/hooks";
+import { isDefined } from "@architus/lib/utility";
 import { useBuildMetadata } from "@docs/data/build-metadata";
-import { useMedia } from "@lib/hooks";
-import { isDefined } from "@lib/utility";
 
 const Styled = {
   Brand: styled.div<{ withVersion: boolean }>`

@@ -1,6 +1,6 @@
 import { graphql, useStaticQuery } from "gatsby";
 
-import { Option } from "@lib/option";
+import { Option } from "@architus/lib/option";
 
 /**
  * Gets the site's `pathPrefix` if it is set, else None

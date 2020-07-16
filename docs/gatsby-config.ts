@@ -2,7 +2,11 @@
 import * as dotenv from "dotenv";
 import path from "path";
 
-import { themeColor, themeBgColor, msTileColor } from "@design/theme/color";
+import {
+  themeColor,
+  themeBgColor,
+  msTileColor,
+} from "@architus/facade/theme/color";
 
 dotenv.config();
 const title = process.env.SITE_NAME ?? "Architus Docs";
@@ -67,9 +71,13 @@ export const plugins = [
     resolve: `gatsby-plugin-alias-imports`,
     options: {
       alias: {
-        "@lib": path.resolve(__dirname, "../lib/src"),
+        // Utility absolute base import
+        // Same as ./tsconfig.json
         "@docs": path.resolve(__dirname, "../docs/src"),
-        "@design": path.resolve(__dirname, "../design/src"),
+        // Same aliases as /tsconfig.json, used to enable sibling development
+        // & hot reloading
+        "@architus/lib": path.resolve(__dirname, "../lib/src"),
+        "@architus/facade": path.resolve(__dirname, "../design/src"),
       },
       extensions: [],
     },

@@ -1,11 +1,11 @@
 import React from "react";
 
-import { AutoLinkContext } from "@design/components/AutoLink";
+import { AutoLinkContext } from "@architus/facade/components/AutoLink";
 import ColorModeProvider from "@docs/components/ColorModeProvider";
 import { Link } from "@docs/components/Router";
 
 // import the global CSS
-import "@design/theme/globals";
+import "@architus/facade/theme/globals";
 
 // Inject the Gatsby router link to auto links
 const linkContext: AutoLinkContext = { link: Link };

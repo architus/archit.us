@@ -1,9 +1,9 @@
 import { CreatePagesArgs, Reporter } from "gatsby";
 
+import { Option, Some, None } from "@architus/lib/option";
+import { isDefined, isNil, withoutLeading } from "@architus/lib/utility";
 import { GithubUser } from "@docs/build/github-types";
 import { NavTree } from "@docs/templates/Docs/frontmatter";
-import { Option, Some, None } from "@lib/option";
-import { isDefined, isNil, withoutLeading } from "@lib/utility";
 
 /**
  * Page authorship information extracted from GitHub
@@ -40,7 +40,7 @@ export async function load(
   const activity = reporter.activityTimer(
     `loading page authorship metadata via GitHub integration`
   );
-  // activity.start();
+  activity.start();
 
   type GithubMetadataQueryResult = {
     site: {
@@ -161,11 +161,17 @@ export async function load(
   );
 
   // Make sure no errors ocurred
-  if (isDefined(githubErrors) || isNil(githubData)) {
+  if (
+    isDefined(githubErrors) ||
+    isNil(githubData) ||
+    isNil(githubData.github.repository.object)
+  ) {
     reporter.warn(
       "An error ocurred while querying the GitHub API for page authorship sourcing"
     );
-    reporter.warn(String(githubErrors));
+    if (isDefined(githubErrors)) reporter.warn(String(githubErrors));
+    if (isDefined(githubData))
+      reporter.warn(`data: \n${JSON.stringify(githubData)}`);
     activity.end();
     return None;
   }

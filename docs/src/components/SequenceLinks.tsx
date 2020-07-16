@@ -3,16 +3,16 @@ import { transparentize } from "polished";
 import React from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
-import Card from "@design/components/Card";
-import { dynamicColor, ColorMode, color } from "@design/theme/color";
-import { down, up } from "@design/theme/media";
-import { transition } from "@design/theme/motion";
-import { shadow } from "@design/theme/shadow";
-import { gap } from "@design/theme/spacing";
+import Card from "@architus/facade/components/Card";
+import { dynamicColor, ColorMode, color } from "@architus/facade/theme/color";
+import { down, up } from "@architus/facade/theme/media";
+import { transition } from "@architus/facade/theme/motion";
+import { shadow } from "@architus/facade/theme/shadow";
+import { gap } from "@architus/facade/theme/spacing";
+import { Nil } from "@architus/lib/types";
+import { isNil } from "@architus/lib/utility";
 import NavLabel from "@docs/components/NavLabel";
 import { Link } from "@docs/components/Router";
-import { Nil } from "@lib/types";
-import { isNil } from "@lib/utility";
 
 const Icon = styled.div`
   display: flex;

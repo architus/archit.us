@@ -4,8 +4,8 @@ import { prune } from "underscore.string";
 import { Node } from "unist";
 import visit from "unist-util-visit";
 
-import { Nil } from "@lib/types";
-import { isDefined, isNil } from "@lib/utility";
+import { Nil } from "@architus/lib/types";
+import { isDefined, isNil } from "@architus/lib/utility";
 
 // ! Internal `gatsby-plugin-mdx` API
 const mdxDefaultOptions = require("gatsby-plugin-mdx/utils/default-options");

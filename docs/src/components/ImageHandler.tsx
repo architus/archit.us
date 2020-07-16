@@ -1,8 +1,10 @@
 import { styled } from "linaria/react";
 import React, { useEffect, useCallback, useState } from "react";
 
-import Lightbox from "@design/components/Lightbox";
-import { up, between } from "@design/theme/media";
+import Lightbox from "@architus/facade/components/Lightbox";
+import { up, between } from "@architus/facade/theme/media";
+import { None, Some, Option } from "@architus/lib/option";
+import { isDefined } from "@architus/lib/utility";
 import {
   minimizeBreakpoint,
   collapseBreakpoint,
@@ -11,8 +13,6 @@ import {
   headerHeight,
   sitePadding,
 } from "@docs/layout";
-import { None, Some, Option } from "@lib/option";
-import { isDefined } from "@lib/utility";
 
 const Styled = {
   Lightbox: styled(Lightbox)`

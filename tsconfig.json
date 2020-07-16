@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    /* Visit https://aka.ms/tsconfig.json to read more about this file */
+    /* This file is <extended> by each package to reduce duplication */
+    "target": "es6",
+    "module": "commonjs",
+    "jsx": "preserve",
+
+    /* Strict Type-Checking Options (all on) */
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+
+    /* Additional Checks (all on) */
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+
+    /* Module Resolution Options */
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "paths": {
+      /* Configure path aliases for non-terminal monorepo packages */
+      "@architus/lib/*": ["./lib/src/*"],
+      "@architus/facade/*": ["./design/src/*"],
+    },
+
+    /* Advanced Options */
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  }
+}

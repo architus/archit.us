@@ -1,6 +1,6 @@
 import { styled } from "linaria/react";
 
-import { Variant, color } from "@design/theme/color";
+import { Variant, color } from "../theme/color";
 
 /**
  * Pill-style inline badge that adopts the surrounding text's size

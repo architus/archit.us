@@ -1,31 +1,23 @@
 {
+  "name": "@architus/base",
   "private": true,
-  "name": "architus",
-  "author": "architus",
+  "description": "Lerna monorepo for the Architus project",
+  "version": "0.0.0",
   "license": "MIT",
+  "author": "architus",
+  "workspaces": ["docs", "design", "lib"],
   "scripts": {
-    "format": "yarn workspaces run format && cd ./app && yarn run format",
+    "test": "yarn workspaces run test && cd ./app && yarn run test",
     "lint": "yarn workspaces run lint && cd ./app && yarn run lint",
+    "format": "yarn workspaces run format && cd ./app && yarn run format",
     "typecheck": "yarn workspaces run typecheck && cd ./app && yarn run typecheck",
-    "test": "yarn workspaces run test && cd ./app && yarn run test"
+    "bootstrap": "lerna bootstrap"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/architus/archit.us"
-  },
-  "bugs": {
-    "url": "https://github.com/architus/archit.us/issues"
-  },
-  "workspaces": [
-    "docs",
-    "design",
-    "lib"
-  ],
   "dependencies": {
-    "eslint-plugin-graphql": "^4.0.0",
     "typescript": "^3.9.5"
   },
   "devDependencies": {
+    "eslint-plugin-graphql": "^4.0.0",
     "@typescript-eslint/eslint-plugin": "2.x",
     "@typescript-eslint/parser": "2.x",
     "babel-eslint": "10.x",
@@ -42,6 +34,21 @@
     "eslint-plugin-react": "7.x",
     "eslint-plugin-react-hooks": "2.x",
     "eslint-plugin-tsdoc": "^0.2.5",
-    "prettier": "2.0.5"
+    "lerna": "^3.22.1",
+    "prettier": "2.0.5",
+    "@jest/globals": "^26.1.0",
+    "@types/jest": "^26.0.4",
+    "babel-jest": "^26.1.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^26.1.0",
+    "react-test-renderer": "^16.13.1",
+    "ts-jest": "^26.1.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/architus/archit.us"
+  },
+  "bugs": {
+    "url": "https://github.com/architus/archit.us/issues"
   }
 }

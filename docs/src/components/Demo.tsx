@@ -8,10 +8,10 @@ import {
   ColorMode,
   staticColor,
   dynamicColor,
-} from "@design/theme/color";
-import { scrollBarAuto } from "@design/theme/mixins";
-import { shadow } from "@design/theme/shadow";
-import { isDefined } from "@lib/utility";
+} from "@architus/facade/theme/color";
+import { scrollBarAuto } from "@architus/facade/theme/mixins";
+import { shadow } from "@architus/facade/theme/shadow";
+import { isDefined } from "@architus/lib/utility";
 
 const Styled = {
   Demo: styled.div`
