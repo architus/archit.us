@@ -1,22 +1,15 @@
 {
   "name": "@architus/facade",
-  "private": true,
-  "description": "Architus Design system",
+  "private": false,
+  "description": "Design system and React component library used throughout the Architus project",
   "version": "0.1.0",
-  "author": "architus",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/architus/archit.us"
-  },
-  "bugs": {
-    "url": "https://github.com/architus/archit.us/issues"
-  },
+  "author": "architus",
   "scripts": {
-    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json}\" && eslint --fix -f unix \"src/**/*.{js,jsx,ts,tsx,json}\"",
+    "test": "jest --coverage",
     "lint": "eslint --max-warnings 0 -f unix \"src/**/*.{js,jsx,ts,tsx,json}\"",
-    "typecheck": "tsc --noEmit",
-    "test": "echo \"Not running any tests\""
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json}\" && eslint --fix -f unix \"src/**/*.{js,jsx,ts,tsx,json}\"",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@architus/lib": "^0.1.0",
@@ -31,5 +24,12 @@
     "react-resize-observer": "^1.1.1",
     "react-transition-group": "^4.4.1",
     "s-ago": "^2.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/architus/archit.us"
+  },
+  "bugs": {
+    "url": "https://github.com/architus/archit.us/issues"
   }
 }

@@ -1,28 +1,21 @@
 {
   "name": "@architus/docs",
   "private": true,
-  "description": "Implementation documentation for Architus",
+  "description": "User guide, changelog, and implementation documentation for the Architus project",
   "version": "1.1.0",
-  "author": "architus",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/architus/archit.us"
-  },
-  "bugs": {
-    "url": "https://github.com/architus/archit.us/issues"
-  },
+  "author": "architus",
   "scripts": {
-    "build": "gatsby build",
     "start": "gatsby develop",
-    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json}\" \"gatsby-*.{js,ts}\" && eslint --fix -f unix \"src/**/*.{js,jsx,ts,tsx,json}\" \"gatsby-*.{js,ts}\"",
+    "test": "jest --coverage",
+    "build": "gatsby build",
+    "serve": "gatsby serve",
     "lint": "bash -c 'if [ \"$CI\" == \"true\" ]; then yarn run build && yarn run lint-base; else yarn run lint-base; fi'",
     "lint-base": "eslint --max-warnings 0 -f unix \"src/**/*.{js,jsx,ts,tsx,json}\" \"gatsby-*.{js,ts}\"",
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json}\" \"gatsby-*.{js,ts}\" && eslint --fix -f unix \"src/**/*.{js,jsx,ts,tsx,json}\" \"gatsby-*.{js,ts}\"",
     "typecheck": "bash -c 'if [ \"$CI\" == \"true\" ]; then yarn run build && yarn run typecheck-base; else yarn run typecheck-base; fi'",
     "typecheck-base": "tsc --noEmit",
-    "serve": "gatsby serve",
-    "clean": "gatsby clean",
-    "test": "jest --passWithNoTests --coverage"
+    "clean": "gatsby clean"
   },
   "dependencies": {
     "@architus/facade": "^0.1.0",
@@ -89,5 +82,12 @@
     "jest": "^26.1.0",
     "react-test-renderer": "^16.13.1",
     "ts-jest": "^26.1.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/architus/archit.us"
+  },
+  "bugs": {
+    "url": "https://github.com/architus/archit.us/issues"
   }
 }

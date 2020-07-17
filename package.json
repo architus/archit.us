@@ -1,26 +1,21 @@
 {
-  "private": true,
   "name": "@architus/base",
-  "author": "architus",
+  "private": true,
+  "description": "Lerna monorepo for the Architus project",
   "license": "MIT",
-  "scripts": {
-    "format": "yarn workspaces run format && cd ./app && yarn run format",
-    "lint": "yarn workspaces run lint && cd ./app && yarn run lint",
-    "typecheck": "yarn workspaces run typecheck && cd ./app && yarn run typecheck",
-    "test": "yarn workspaces run test && cd ./app && yarn run test"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/architus/archit.us"
-  },
-  "bugs": {
-    "url": "https://github.com/architus/archit.us/issues"
-  },
+  "author": "architus",
   "workspaces": [
     "docs",
     "design",
     "lib"
   ],
+  "scripts": {
+    "test": "yarn workspaces run test && cd ./app && yarn run test",
+    "lint": "yarn workspaces run lint && cd ./app && yarn run lint",
+    "format": "yarn workspaces run format && cd ./app && yarn run format",
+    "typecheck": "yarn workspaces run typecheck && cd ./app && yarn run typecheck",
+    "bootstrap": "lerna bootstrap"
+  },
   "dependencies": {
     "eslint-plugin-graphql": "^4.0.0",
     "typescript": "^3.9.5"
@@ -43,5 +38,12 @@
     "eslint-plugin-react-hooks": "2.x",
     "eslint-plugin-tsdoc": "^0.2.5",
     "prettier": "2.0.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/architus/archit.us"
+  },
+  "bugs": {
+    "url": "https://github.com/architus/archit.us/issues"
   }
 }
