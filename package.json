@@ -17,7 +17,6 @@
     "bootstrap": "lerna bootstrap"
   },
   "dependencies": {
-    "eslint-plugin-graphql": "^4.0.0",
     "graphql": "^14.7.0",
     "typescript": "^3.9.5"
   },
@@ -35,6 +34,7 @@
     "eslint-config-react-tools": "^1.1.7",
     "eslint-import-resolver-typescript": "^2.0.0",
     "eslint-plugin-flowtype": "4.x",
+    "eslint-plugin-graphql": "^4.0.0",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-jsx-a11y": "6.x",
     "eslint-plugin-prettier": "^3.1.4",
@@ -43,6 +43,7 @@
     "eslint-plugin-tsdoc": "^0.2.5",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^26.1.0",
+    "lerna": "^3.22.1",
     "prettier": "2.0.5",
     "react-test-renderer": "^16.13.1",
     "ts-jest": "^26.1.3"
