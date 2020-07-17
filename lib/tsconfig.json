@@ -1,6 +1,6 @@
 {
-  /* See /tsconfig.json for actual values */
-  "extends": "../tsconfig.json",
+  /* See /common/tsconfig.json for actual values */
+  "extends": "../common/tsconfig.json",
   "compilerOptions": {
     "baseUrl": "."
   }

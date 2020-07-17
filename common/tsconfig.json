@@ -4,7 +4,7 @@
     /* This file is <extended> by each package to reduce duplication */
     "target": "es6",
     "module": "commonjs",
-    "jsx": "preserve",
+    "jsx": "react",
 
     /* Strict Type-Checking Options (all on) */
     "strict": true,
