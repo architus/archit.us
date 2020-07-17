@@ -72,17 +72,6 @@
     "unist-util-visit": "^2.0.2",
     "yarn": "^1.22.4"
   },
-  "devDependencies": {
-    "@jest/globals": "^26.1.0",
-    "@types/jest": "^26.0.4",
-    "babel-jest": "^26.1.0",
-    "eslint-plugin-import": "2.x",
-    "eslint-plugin-react": "7.x",
-    "identity-obj-proxy": "^3.0.0",
-    "jest": "^26.1.0",
-    "react-test-renderer": "^16.13.1",
-    "ts-jest": "^26.1.2"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/architus/archit.us"
