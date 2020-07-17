@@ -1,21 +1,28 @@
 {
   "name": "@architus/docs",
   "private": true,
-  "description": "User guide, changelog, and implementation documentation for the Architus project",
+  "description": "Implementation documentation for Architus",
   "version": "1.1.0",
-  "license": "MIT",
   "author": "architus",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/architus/archit.us"
+  },
+  "bugs": {
+    "url": "https://github.com/architus/archit.us/issues"
+  },
   "scripts": {
-    "start": "gatsby develop",
-    "test": "jest --coverage",
     "build": "gatsby build",
-    "serve": "gatsby serve",
+    "start": "gatsby develop",
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json}\" \"gatsby-*.{js,ts}\" && eslint --fix -f unix \"src/**/*.{js,jsx,ts,tsx,json}\" \"gatsby-*.{js,ts}\"",
     "lint": "bash -c 'if [ \"$CI\" == \"true\" ]; then yarn run build && yarn run lint-base; else yarn run lint-base; fi'",
     "lint-base": "eslint --max-warnings 0 -f unix \"src/**/*.{js,jsx,ts,tsx,json}\" \"gatsby-*.{js,ts}\"",
-    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json}\" \"gatsby-*.{js,ts}\" && eslint --fix -f unix \"src/**/*.{js,jsx,ts,tsx,json}\" \"gatsby-*.{js,ts}\"",
     "typecheck": "bash -c 'if [ \"$CI\" == \"true\" ]; then yarn run build && yarn run typecheck-base; else yarn run typecheck-base; fi'",
     "typecheck-base": "tsc --noEmit",
-    "clean": "gatsby clean"
+    "serve": "gatsby serve",
+    "clean": "gatsby clean",
+    "test": "jest --passWithNoTests --coverage"
   },
   "dependencies": {
     "@architus/facade": "^0.1.0",
@@ -72,14 +79,15 @@
     "unist-util-visit": "^2.0.2",
     "yarn": "^1.22.4"
   },
-  "resolutions": {
-    "graphql": "15.3.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/architus/archit.us"
-  },
-  "bugs": {
-    "url": "https://github.com/architus/archit.us/issues"
+  "devDependencies": {
+    "@jest/globals": "^26.1.0",
+    "@types/jest": "^26.0.4",
+    "babel-jest": "^26.1.0",
+    "eslint-plugin-import": "2.x",
+    "eslint-plugin-react": "7.x",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^26.1.0",
+    "react-test-renderer": "^16.13.1",
+    "ts-jest": "^26.1.2"
   }
 }
