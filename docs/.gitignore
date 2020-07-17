@@ -3,6 +3,7 @@
 # gatsby files
 .cache/
 public
+recipe-*.log
 
 # Linaria
 .linaria-cache
