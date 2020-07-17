@@ -1,7 +1,7 @@
 import { Option, Some, None } from "./option";
 import { isDefined, isNil } from "./utility";
 
-const _dimensionUnits = [
+const baseDimensionUnits = [
   "cm",
   "mm",
   "Q",
@@ -26,7 +26,7 @@ const _dimensionUnits = [
  * @remarks
  * The units come from the {@link https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Values_and_units | mozilla list of CSS units}
  */
-export type DimensionUnit = typeof _dimensionUnits[number];
+export type DimensionUnit = typeof baseDimensionUnits[number];
 
 /**
  * CSS spatial units
@@ -34,7 +34,7 @@ export type DimensionUnit = typeof _dimensionUnits[number];
  * @remarks
  * The units come from the {@link https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Values_and_units | mozilla list of CSS units}
  */
-export const dimensionUnits = _dimensionUnits as readonly string[];
+export const dimensionUnits = baseDimensionUnits as readonly string[];
 
 /**
  * Represents a CSS dimension, with possible units derived from DimensionUnit

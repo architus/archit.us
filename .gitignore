@@ -1,3 +1,5 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
 # Yarn
 node_modules
 yarn-error.log
@@ -5,3 +7,6 @@ yarn-debug.log
 
 # IDE files
 .vscode
+
+# Testing files
+coverage/

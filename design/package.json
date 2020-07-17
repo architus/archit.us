@@ -6,10 +6,10 @@
   "license": "MIT",
   "author": "architus",
   "scripts": {
-    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json}\" && eslint --fix -f unix \"src/**/*.{js,jsx,ts,tsx,json}\"",
+    "test": "jest --coverage",
     "lint": "eslint --max-warnings 0 -f unix \"src/**/*.{js,jsx,ts,tsx,json}\"",
-    "typecheck": "tsc --noEmit",
-    "test": "echo \"Not running any tests\""
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json}\" && eslint --fix -f unix \"src/**/*.{js,jsx,ts,tsx,json}\"",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@architus/lib": "^0.1.0",

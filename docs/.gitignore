@@ -13,6 +13,3 @@ public
 
 # Generated files
 src/__generated__
-
-# Testing files
-coverage/

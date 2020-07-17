@@ -169,6 +169,7 @@ const Docs: React.FC<PageProps<
   // Extract overview children
   const overviewChildren: MutableArray<OverviewContext> = [];
   children.forEach((child) => {
+    // eslint-disable-next-line no-underscore-dangle
     if (child.__typename === "DocsPage") {
       overviewChildren.push(child);
     }

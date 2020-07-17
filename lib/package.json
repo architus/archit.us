@@ -16,11 +16,6 @@
     "react": "^16.13.1",
     "shallow-equals": "^1.0.0"
   },
-  "devDependencies": {
-    "@babel/core": "^7.10.5",
-    "@babel/preset-env": "^7.10.4",
-    "@babel/preset-typescript": "^7.10.4"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/architus/archit.us"

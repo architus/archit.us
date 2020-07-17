@@ -22,12 +22,6 @@
 
     /* Module Resolution Options */
     "esModuleInterop": true,
-    "baseUrl": ".",
-    "paths": {
-      /* Configure path aliases for non-terminal monorepo packages */
-      "@architus/lib/*": ["./lib/src/*"],
-      "@architus/facade/*": ["./design/src/*"],
-    },
 
     /* Advanced Options */
     "skipLibCheck": true,

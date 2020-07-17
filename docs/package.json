@@ -55,7 +55,6 @@
     "gatsby-source-filesystem": "^2.3.13",
     "gatsby-source-graphql": "^2.5.7",
     "gatsby-transformer-sharp": "^2.5.10",
-    "graphql": "^15.3.0",
     "linaria": "^1.4.0-beta.3",
     "polished": "^3.6.5",
     "prismjs": "^1.20.0",
@@ -73,10 +72,8 @@
     "unist-util-visit": "^2.0.2",
     "yarn": "^1.22.4"
   },
-  "devDependencies": {
-    "babel-preset-gatsby": "^0.5.2",
-    "eslint-plugin-import": "2.x",
-    "eslint-plugin-react": "7.x"
+  "resolutions": {
+    "graphql": "15.3.0"
   },
   "repository": {
     "type": "git",
