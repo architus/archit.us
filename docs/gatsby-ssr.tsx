@@ -1,5 +1,5 @@
-import React from "react";
 import { GatsbySSR, WrapRootElementNodeArgs } from "gatsby";
+import React from "react";
 
 import Root from "@docs/components/Root";
 
