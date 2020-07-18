@@ -1,6 +1,6 @@
 ---
 extends:
-  - "../common/.eslintrc.yml"
+  - "../.shared/.eslintrc.yml"
 
 # ESLint Project Settings
 settings:

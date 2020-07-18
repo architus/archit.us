@@ -1,6 +1,6 @@
 {
-  /* See /common/tsconfig.json for actual values */
-  "extends": "../common/tsconfig.json",
+  /* See /.shared/tsconfig.json for actual values */
+  "extends": "../.shared/tsconfig.json",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
