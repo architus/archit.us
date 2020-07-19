@@ -3,12 +3,12 @@ import { transparentize } from "polished";
 import React from "react";
 import ago from "s-ago";
 
-import AutoLink from "@design/components/AutoLink";
-import { staticColor, dynamicColor, ColorMode } from "@design/theme/color";
-import { setLinkColor } from "@design/theme/mixins";
-import { gap } from "@design/theme/spacing";
-import { Option } from "@lib/option";
-import { formatDate, isExternal } from "@lib/utility";
+import { staticColor, dynamicColor, ColorMode } from "../theme/color";
+import { setLinkColor } from "../theme/mixins";
+import { gap } from "../theme/spacing";
+import AutoLink from "./AutoLink";
+import { Option } from "@architus/lib/option";
+import { formatDate, isExternal } from "@architus/lib/utility";
 
 const Styled = {
   Divider: styled.hr`

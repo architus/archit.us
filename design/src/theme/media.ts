@@ -1,7 +1,7 @@
 // Implementation similar to xstyled
 // See https://xstyled.dev/docs/responsive/
 
-import { Nil } from "@lib/types";
+import { Nil } from "@architus/lib/types";
 
 const breakpoints = {
   xs: 0,

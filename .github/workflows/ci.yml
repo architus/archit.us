@@ -35,8 +35,11 @@ jobs:
         run: yarn install
         working-directory: ./app
 
+      - name: Bootstrap monorepo
+        run: yarn run bootstrap
+
       - name: Run eslint
-        run: yarn lint
+        run: yarn workspaces run lint
 
   # Run TSC (TypeScript compiler/typechecker)
   typecheck:
@@ -66,5 +69,43 @@ jobs:
         run: yarn install
         working-directory: ./app
 
+      - name: Bootstrap monorepo
+        run: yarn run bootstrap
+
       - name: Run tsc
-        run: yarn typecheck
+        run: yarn workspaces run typecheck
+
+  # Run Jest (test runner)
+  typecheck:
+    name: Test
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Load Yarn cache
+        uses: actions/cache@v1
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}-${{ hashFiles('app/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Install dependencies (app)
+        run: yarn install
+        working-directory: ./app
+
+      - name: Bootstrap monorepo
+        run: yarn run bootstrap
+
+      - name: Run tsc
+        run: yarn workspaces run test
+

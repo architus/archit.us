@@ -3,23 +3,23 @@ import { transparentize } from "polished";
 import React from "react";
 import { FaGithub, FaHeart, FaReact, FaAlgolia } from "react-icons/fa";
 
-import AutoLink from "@design/components/AutoLink";
-import { FooterContent } from "@design/components/Footer";
-import Tooltip from "@design/components/Tooltip";
-import GatsbyIcon from "@design/icons/gatsby.svg";
-import GraphQlIcon from "@design/icons/graphql.svg";
-import LinariaIcon from "@design/icons/linaria.svg";
-import TypeScriptIcon from "@design/icons/typescript.svg";
+import AutoLink from "@architus/facade/components/AutoLink";
+import { FooterContent } from "@architus/facade/components/Footer";
+import Tooltip from "@architus/facade/components/Tooltip";
+import GatsbyIcon from "@architus/facade/icons/gatsby.svg";
+import GraphQlIcon from "@architus/facade/icons/graphql.svg";
+import LinariaIcon from "@architus/facade/icons/linaria.svg";
+import TypeScriptIcon from "@architus/facade/icons/typescript.svg";
 import {
   color,
   dynamicColor,
   ColorMode,
   mode,
   staticColor,
-} from "@design/theme/color";
-import { down } from "@design/theme/media";
-import { shadow } from "@design/theme/shadow";
-import { gap } from "@design/theme/spacing";
+} from "@architus/facade/theme/color";
+import { down } from "@architus/facade/theme/media";
+import { shadow } from "@architus/facade/theme/shadow";
+import { gap } from "@architus/facade/theme/spacing";
 
 const Styled = {
   SecondaryFooter: styled.footer`

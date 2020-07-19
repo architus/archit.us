@@ -1,7 +1,12 @@
 import { css } from "linaria";
 import { lighten } from "polished";
 
-import { dynamicColor, ColorMode, mode, color } from "@design/theme/color";
+import {
+  dynamicColor,
+  ColorMode,
+  mode,
+  color,
+} from "@architus/facade/theme/color";
 
 export const global = css`
   :global() {

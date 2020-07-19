@@ -4,11 +4,16 @@ import { transparentize } from "polished";
 import React, { useCallback, useState } from "react";
 import { FaChevronRight } from "react-icons/fa";
 
-import { color, mode, ColorMode, dynamicColor } from "@design/theme/color";
-import { blankButton } from "@design/theme/mixins";
-import { transition } from "@design/theme/motion";
-import { gap } from "@design/theme/spacing";
-import { font } from "@design/theme/typography";
+import {
+  color,
+  mode,
+  ColorMode,
+  dynamicColor,
+} from "@architus/facade/theme/color";
+import { blankButton } from "@architus/facade/theme/mixins";
+import { transition } from "@architus/facade/theme/motion";
+import { gap } from "@architus/facade/theme/spacing";
+import { font } from "@architus/facade/theme/typography";
 import { NavigationTreeNode } from "@docs/build/nav";
 import NavLabel from "@docs/components/NavLabel";
 import { Link } from "@docs/components/Router";

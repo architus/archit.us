@@ -1,11 +1,11 @@
 import { styled } from "linaria/react";
 import React from "react";
 
-import Article from "@design/components/Article";
-import AutoLink from "@design/components/AutoLink";
-import { color } from "@design/theme/color";
-import { down } from "@design/theme/media";
-import { gap } from "@design/theme/spacing";
+import Article from "@architus/facade/components/Article";
+import AutoLink from "@architus/facade/components/AutoLink";
+import { color } from "@architus/facade/theme/color";
+import { down } from "@architus/facade/theme/media";
+import { gap } from "@architus/facade/theme/spacing";
 import Layout from "@docs/components/Layout";
 import { contentWidth } from "@docs/layout";
 

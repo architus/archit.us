@@ -1,12 +1,7 @@
 import { transparentize } from "polished";
 
-import {
-  dynamicColor,
-  ColorMode,
-  mode,
-  staticColor,
-} from "@design/theme/color";
-import { transition } from "@design/theme/motion";
+import { dynamicColor, ColorMode, mode, staticColor } from "./color";
+import { transition } from "./motion";
 
 const linkColor = `--link-color`;
 const linkColorFade = `--link-color-fade`;

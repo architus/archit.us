@@ -1,8 +1,8 @@
 import { styled } from "linaria/react";
 import React from "react";
 
-import { color, Variant } from "@design/theme/color";
-import { animation } from "@design/theme/motion";
+import { color, Variant } from "../theme/color";
+import { animation } from "../theme/motion";
 
 const Styled = {
   Spinner: styled.svg<{ variant: Variant; size: string }>`

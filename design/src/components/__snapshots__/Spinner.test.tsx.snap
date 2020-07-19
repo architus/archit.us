@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Spinner /> renders correctly 1`] = `
+<svg
+  className="additional-class Spinner_sjge0pw"
+  size="64px"
+  style={
+    Object {
+      "--sjge0pw-0": "64px",
+      "--sjge0pw-1": "var(--c-primary)",
+      "backgroundColor": "blue",
+    }
+  }
+  viewBox="0 0 50 50"
+>
+  <circle
+    className="Path_piekwga"
+    cx="25"
+    cy="25"
+    r="20"
+  />
+</svg>
+`;

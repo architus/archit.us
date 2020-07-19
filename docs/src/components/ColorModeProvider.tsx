@@ -1,7 +1,7 @@
 import { ThemeToggler } from "gatsby-plugin-dark-mode";
 import React from "react";
 
-import { ColorMode, defaultMode } from "@design/theme/color";
+import { ColorMode, defaultMode } from "@architus/facade/theme/color";
 
 export type ColorModeContext = {
   mode: ColorMode;

@@ -2,8 +2,8 @@ import { useStaticQuery, graphql } from "gatsby";
 import React, { useMemo } from "react";
 import { FaGithub, FaDiscord } from "react-icons/fa";
 
-import { FooterLink, FooterProps } from "@design/components/Footer";
-import { isNil } from "@lib/utility";
+import { FooterLink, FooterProps } from "@architus/facade/components/Footer";
+import { isNil } from "@architus/lib/utility";
 
 /**
  * Gets the footer data from the site config

@@ -2,13 +2,14 @@ import { styled } from "linaria/react";
 import { mix, transparentize } from "polished";
 import React from "react";
 
-import { color, ColorMode, dynamicColor } from "@design/theme/color";
-import { up, down } from "@design/theme/media";
-import { scrollBar } from "@design/theme/mixins";
-import { transition } from "@design/theme/motion";
-import { ZIndex } from "@design/theme/order";
-import { shadow } from "@design/theme/shadow";
-import { gap } from "@design/theme/spacing";
+import { color, ColorMode, dynamicColor } from "@architus/facade/theme/color";
+import { up, down } from "@architus/facade/theme/media";
+import { scrollBar } from "@architus/facade/theme/mixins";
+import { transition } from "@architus/facade/theme/motion";
+import { ZIndex } from "@architus/facade/theme/order";
+import { shadow } from "@architus/facade/theme/shadow";
+import { gap } from "@architus/facade/theme/spacing";
+import { useInitialRender } from "@architus/lib/hooks";
 import CompositeBrand from "@docs/components/CompositeBrand";
 import HeaderActionBar, {
   actionBarSpacing,
@@ -17,7 +18,6 @@ import HeaderLinks from "@docs/components/HeaderLinks";
 import { Link } from "@docs/components/Router";
 import { useColorMode } from "@docs/hooks";
 import { headerHeight, sitePadding } from "@docs/layout";
-import { useInitialRender } from "@lib/hooks";
 
 const headerTransparency = 0.06;
 const logoLeftSpace = gap.nano;

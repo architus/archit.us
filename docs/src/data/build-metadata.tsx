@@ -6,10 +6,10 @@ import { FiGitCommit, FiGitPullRequest } from "react-icons/fi";
 import {
   BuildContext,
   BuildMetadataEntry,
-} from "@design/components/BuildDetails";
-import { BuildMetadata } from "@design/components/BuildTag";
-import { Option, Some, None } from "@lib/option";
-import { isDefined } from "@lib/utility";
+} from "@architus/facade/components/BuildDetails";
+import { BuildMetadata } from "@architus/facade/components/BuildTag";
+import { Option, Some, None } from "@architus/lib/option";
+import { isDefined } from "@architus/lib/utility";
 
 /**
  * Gets the build metadata for the site, constructed at build time and stored

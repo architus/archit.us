@@ -1,18 +1,18 @@
 import { styled } from "linaria/react";
 import React, { useCallback } from "react";
 
-import { color } from "@design/theme/color";
-import { down, up } from "@design/theme/media";
-import { scrollBarAuto } from "@design/theme/mixins";
-import { gap } from "@design/theme/spacing";
+import { color } from "@architus/facade/theme/color";
+import { down, up } from "@architus/facade/theme/media";
+import { scrollBarAuto } from "@architus/facade/theme/mixins";
+import { gap } from "@architus/facade/theme/spacing";
+import { Option } from "@architus/lib/option";
+import { isDefined } from "@architus/lib/utility";
 import NavLabel from "@docs/components/NavLabel";
 import { navigate } from "@docs/components/Router";
 import SideNavSelector from "@docs/components/SideNavSelector";
 import SideNavTree from "@docs/components/SideNavTree";
-import { useNavigationTree } from "@docs/data/nav";
+import { useNavigationTree } from "@docs/data/navigation-tree";
 import { sitePadding } from "@docs/layout";
-import { Option } from "@lib/option";
-import { isDefined } from "@lib/utility";
 
 const rightPadding = gap.nano;
 const Styled = {

@@ -1,10 +1,10 @@
 import { SourceNodesArgs } from "gatsby";
 
-import { BuildMetadataEntry } from "@design/components/BuildDetails";
+import { BuildMetadataEntry } from "@architus/facade/components/BuildDetails";
+import { Option, Some, None } from "@architus/lib/option";
+import { Nil } from "@architus/lib/types";
+import { isNil } from "@architus/lib/utility";
 import { NodeInput } from "@docs/build/types";
-import { Option, Some, None } from "@lib/option";
-import { Nil } from "@lib/types";
-import { isNil } from "@lib/utility";
 
 export const buildMetadataType = `
   type BuildMetadataContext {

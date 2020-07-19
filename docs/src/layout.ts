@@ -1,4 +1,4 @@
-import { BreakpointKey } from "@design/theme/media";
+import { BreakpointKey } from "@architus/facade/theme/media";
 
 export const headerHeight = "58px" as const;
 export const collapseBreakpoint: BreakpointKey = "md";

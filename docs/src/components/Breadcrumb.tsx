@@ -2,12 +2,12 @@ import { styled } from "linaria/react";
 import React from "react";
 import { FaChevronRight } from "react-icons/fa";
 
-import AutoLink from "@design/components/AutoLink";
-import { color } from "@design/theme/color";
-import { primaryLink } from "@design/theme/mixins";
-import { gap } from "@design/theme/spacing";
+import AutoLink from "@architus/facade/components/AutoLink";
+import { color } from "@architus/facade/theme/color";
+import { primaryLink } from "@architus/facade/theme/mixins";
+import { gap } from "@architus/facade/theme/spacing";
+import { isDefined } from "@architus/lib/utility";
 import { BreadcrumbSegment } from "@docs/templates/Docs/frontmatter";
-import { isDefined } from "@lib/utility";
 
 const Styled = {
   Link: styled(AutoLink)`

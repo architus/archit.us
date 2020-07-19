@@ -6,6 +6,14 @@ import {
   Node,
 } from "gatsby";
 
+import { Option, Some, None } from "@architus/lib/option";
+import {
+  isDefined,
+  isNil,
+  trimMarkdownPath,
+  splitPath,
+  capitalize,
+} from "@architus/lib/utility";
 import {
   buildMetadataType,
   createBuildMetadataNode,
@@ -30,14 +38,6 @@ import {
   breadcrumbType,
   docsPageType,
 } from "@docs/templates/Docs/frontmatter";
-import { Option, Some, None } from "@lib/option";
-import {
-  isDefined,
-  isNil,
-  trimMarkdownPath,
-  splitPath,
-  capitalize,
-} from "@lib/utility";
 
 const DocsPageTemplate = require("path").resolve(
   "./src/templates/Docs/index.tsx"

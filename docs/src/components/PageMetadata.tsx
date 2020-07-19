@@ -1,27 +1,26 @@
-import { useStaticQuery, graphql } from "gatsby";
 import { styled } from "linaria/react";
 import React from "react";
 import { GoPencil } from "react-icons/go";
 import ago from "s-ago";
 
-import AutoLink from "@design/components/AutoLink";
-import Tooltip from "@design/components/Tooltip";
-import { color } from "@design/theme/color";
-import { down } from "@design/theme/media";
-import { gap } from "@design/theme/spacing";
-import { History, GithubUser } from "@docs/build/github-types";
+import AutoLink from "@architus/facade/components/AutoLink";
+import Tooltip from "@architus/facade/components/Tooltip";
+import { color } from "@architus/facade/theme/color";
+import { down } from "@architus/facade/theme/media";
+import { gap } from "@architus/facade/theme/spacing";
 import {
   addMissingUnit,
   multiplyDimension,
   formatDimension,
-} from "@lib/dimension";
-import { Nil } from "@lib/types";
+} from "@architus/lib/dimension";
+import { Nil } from "@architus/lib/types";
 import {
   withoutLeading,
   withoutTrailing,
-  isNil,
   formatDate,
-} from "@lib/utility";
+} from "@architus/lib/utility";
+import { History, GithubUser } from "@docs/build/github-types";
+import { useGithubMetadata } from "@docs/data/github-metadata";
 
 const authorsMixin = `
   width: 32px;
@@ -124,38 +123,24 @@ const PageMetadata: React.FC<PageMetadataProps> = ({
   className,
   style,
 }) => {
-  const result = useStaticQuery<GatsbyTypes.GitHubMetadataQuery>(graphql`
-    query GitHubMetadata {
-      site {
-        siteMetadata {
-          github {
-            owner
-            name
-            docsRoot
-            branch
-          }
-        }
-      }
-    }
-  `);
-
-  const github = result.site?.siteMetadata?.github;
-  if (isNil(github)) return null;
-
-  const { owner, name, docsRoot, branch } = github;
-  if (isNil(owner) || isNil(name) || isNil(branch)) return null;
-  const root = withoutLeading(withoutTrailing(docsRoot ?? ""));
-  const filePath = withoutLeading(originalPath ?? "");
-  const rootSegment = root === "" ? "" : `/${root}`;
-  const editLink = `https://github.com/${owner}/${name}/blob/${branch}${rootSegment}/${filePath}`;
-  return (
-    <Styled.PageMetadata className={className} style={style}>
-      {history && <HistoryDisplay history={history} />}
-      <AutoLink href={editLink} noIcon>
-        <GoPencil /> Edit this page on GitHub
-      </AutoLink>
-    </Styled.PageMetadata>
-  );
+  const githubMetadata = useGithubMetadata();
+  return githubMetadata.match({
+    None: () => null,
+    Some: ({ owner, name, docsRoot, branch }) => {
+      const root = withoutLeading(withoutTrailing(docsRoot));
+      const filePath = withoutLeading(originalPath ?? "");
+      const rootSegment = root === "" ? "" : `/${root}`;
+      const editLink = `https://github.com/${owner}/${name}/blob/${branch}${rootSegment}/${filePath}`;
+      return (
+        <Styled.PageMetadata className={className} style={style}>
+          {history && <HistoryDisplay history={history} />}
+          <AutoLink href={editLink} noIcon>
+            <GoPencil /> Edit this page on GitHub
+          </AutoLink>
+        </Styled.PageMetadata>
+      );
+    },
+  });
 };
 
 export default PageMetadata;

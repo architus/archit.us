@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    /* Visit https://www.typescriptlang.org/tsconfig to read more about this file */
+    /* This file is <extended> by each package to reduce duplication */
+    "target": "es6",
+    "module": "esnext",
+    "jsx": "preserve",
+    "isolatedModules": true,
+
+    /* Strict Type-Checking Options (all on) */
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+
+    /* Additional Checks (all on) */
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+
+    /* Module Resolution Options */
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "paths": {
+      /* Configure utility absolute base imports */
+      "@docs/*": ["../docs/src/*"],
+      /* Configure path aliases for non-terminal monorepo packages */
+      "@architus/lib/*": ["../lib/src/*"],
+      "@architus/facade/*": ["../design/src/*"]
+    },
+
+    /* Advanced Options */
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  }
+}

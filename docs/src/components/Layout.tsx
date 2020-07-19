@@ -3,20 +3,20 @@ import { styled } from "linaria/react";
 import React, { useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 
-import Footer, { FooterContent } from "@design/components/Footer";
-import { color, mode, ColorMode } from "@design/theme/color";
-import { down, mediaMaxWidth, up, between } from "@design/theme/media";
-import { blankButton } from "@design/theme/mixins";
-import { transition } from "@design/theme/motion";
-import { ZIndex } from "@design/theme/order";
-import { shadow } from "@design/theme/shadow";
-import { gap } from "@design/theme/spacing";
+import Footer, { FooterContent } from "@architus/facade/components/Footer";
+import { color, mode, ColorMode } from "@architus/facade/theme/color";
+import { down, mediaMaxWidth, up, between } from "@architus/facade/theme/media";
+import { blankButton } from "@architus/facade/theme/mixins";
+import { transition } from "@architus/facade/theme/motion";
+import { ZIndex } from "@architus/facade/theme/order";
+import { shadow } from "@architus/facade/theme/shadow";
+import { gap } from "@architus/facade/theme/spacing";
 import CompositeBrand from "@docs/components/CompositeBrand";
 import Header from "@docs/components/Header";
 import SecondaryFooter from "@docs/components/SecondaryFooter";
 import SEO from "@docs/components/SEO";
 import SideNav from "@docs/components/SideNav";
-import { useFooterData } from "@docs/data/footer";
+import { useFooterData } from "@docs/data/footer-data";
 import {
   headerHeight,
   minimizeBreakpoint,
@@ -29,7 +29,7 @@ import {
   minimizedDrawerWidth,
 } from "@docs/layout";
 
-export const global = css`
+export const globalCss = css`
   :global() {
     /* Set global site padding */
     body {

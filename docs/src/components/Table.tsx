@@ -2,11 +2,16 @@ import { styled } from "linaria/react";
 import { darken, lighten, transparentize } from "polished";
 import React from "react";
 
-import { tableHeaderSidePadding } from "@design/components/Article";
-import { color, mode, ColorMode, dynamicColor } from "@design/theme/color";
-import { down } from "@design/theme/media";
-import { shadow } from "@design/theme/shadow";
-import { gap } from "@design/theme/spacing";
+import { tableHeaderSidePadding } from "@architus/facade/components/Article";
+import {
+  color,
+  mode,
+  ColorMode,
+  dynamicColor,
+} from "@architus/facade/theme/color";
+import { down } from "@architus/facade/theme/media";
+import { shadow } from "@architus/facade/theme/shadow";
+import { gap } from "@architus/facade/theme/spacing";
 
 const tablePadding = gap.pico;
 const Styled = {

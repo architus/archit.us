@@ -1,11 +1,11 @@
 import { styled } from "linaria/react";
 import React, { useContext } from "react";
 
-import AutoLink from "@design/components/AutoLink";
-import { gap } from "@design/theme/spacing";
+import AutoLink from "@architus/facade/components/AutoLink";
+import { gap } from "@architus/facade/theme/spacing";
+import { Nil } from "@architus/lib/types";
 import { createHeading } from "@docs/components/Heading";
 import NavLabel from "@docs/components/NavLabel";
-import { Nil } from "@lib/types";
 
 type OverviewEntry = {
   title: string;

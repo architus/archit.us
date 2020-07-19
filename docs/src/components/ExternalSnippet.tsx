@@ -3,10 +3,11 @@ import { styled } from "linaria/react";
 import Prism, { Grammar } from "prismjs";
 import React, { useState, useMemo, useEffect } from "react";
 
-import Spinner from "@design/components/Spinner";
+import Spinner from "@architus/facade/components/Spinner";
+import { Option, Some } from "@architus/lib/option";
+import { isDefined } from "@architus/lib/utility";
 import CodeBlock from "@docs/components/CodeBlock";
-import { Option, Some } from "@lib/option";
-import { isDefined } from "@lib/utility";
+
 import "@docs/languages";
 
 const Styled = {

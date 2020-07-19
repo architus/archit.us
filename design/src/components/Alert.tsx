@@ -8,15 +8,9 @@ import {
 } from "react-icons/bs";
 import { IoIosCheckmarkCircle } from "react-icons/io";
 
-import Article from "@design/components/Article";
-import {
-  Variant,
-  color,
-  mode,
-  ColorMode,
-  hybridColor,
-} from "@design/theme/color";
-import { isDefined } from "@lib/utility";
+import { Variant, color, mode, ColorMode, hybridColor } from "../theme/color";
+import Article from "./Article";
+import { isDefined } from "@architus/lib/utility";
 
 const IconWrapper = styled.div`
   font-size: 2rem;
