@@ -37,3 +37,13 @@ In order for the emoji manager to work properly, architus requires the following
 * manage emojis
 * manage messages
 * manage webhooks
+
+## Settings
+
+The emoji manager settings can be accessed through the `settings` command
+
+###### Options
+| name | type | description |
+| ---- | ---- | ----------- |
+| Emoji Manager | bool | Whether architus will manage your emoji |
+
