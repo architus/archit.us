@@ -1,6 +1,5 @@
-import { None } from "@architus/lib/option";
-
 import { ApiVersions } from "../api-versions";
+import { None } from "@architus/lib/option";
 
 export function useApiVersions(): ApiVersions {
   return {

@@ -2,19 +2,40 @@
 // If publishing sub-packages in the future and building from source using Babel
 // These presets should be a good starting point
 
+const moduleResolver = [
+  "babel-plugin-module-resolver",
+  {
+    root: ["."],
+    alias: {
+      "@architus/facade": "../design/src",
+      "@architus/lib": "../lib/src",
+      "@docs": "../docs/src",
+    },
+  },
+];
+
+const basePlugins = [moduleResolver];
+const basePresets = ["babel-preset-gatsby", "@babel/preset-typescript"];
+
 const babelOptions = {
+  plugins: [...basePlugins],
   presets: [
-    ["@babel/preset-env", { targets: { node: "current" } }],
-    "@babel/preset-react",
-    ["linaria/babel", { evaluate: true, displayName: true }],
-    "@babel/preset-typescript",
+    ...basePresets,
+    [
+      // The linaria Babel plugin should receive the same babel config
+      // for its own evaluation mechanics (except for its own
+      // babel preset, which it injects automatically)
+      "linaria/babel",
+      {
+        evaluate: true,
+        displayName: true,
+        babelOptions: {
+          plugins: [...basePlugins],
+          presets: [...basePresets],
+        },
+      },
+    ],
   ],
-  // plugins: [
-  //   [
-  //     "@babel/plugin-transform-typescript",
-  //     { isTSX: true, allExtensions: true },
-  //   ],
-  // ],
 };
 
 module.exports = require("babel-jest").createTransformer(babelOptions);

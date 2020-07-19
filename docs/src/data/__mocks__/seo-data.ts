@@ -1,6 +1,5 @@
-import { None } from "@architus/lib/option";
-
 import { SEOData } from "../seo-data";
+import { None } from "@architus/lib/option";
 
 export function useSEOData(): SEOData {
   return {

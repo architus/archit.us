@@ -9,9 +9,14 @@ module.exports = {
   testURL: `http://localhost`,
   moduleNameMapper: {
     ".+\\.(css|styl|less|sass|scss)$": `identity-obj-proxy`,
+    // Base package aliases
+    "^@architus/facade/(.*)$": "<rootDir>/../design/src/$1",
+    "^@architus/lib/(.*)$": "<rootDir>/../lib/src/$1",
+    // Utility absolute import
+    "^@docs/(.*)$": "<rootDir>/../docs/src/$1",
   },
   transform: {
-    "^.+\\.tsx?$": path.resolve(path.join(__dirname , "./jest-babel.js")),
+    "^.+\\.[jt]sx?$": path.resolve(path.join(__dirname , "./jest-babel.js")),
   },
   globals: {
     __PATH_PREFIX__: ``,

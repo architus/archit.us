@@ -1,4 +1,11 @@
-import { describe, beforeEach, afterEach, it, expect } from "@jest/globals";
+import {
+  jest,
+  describe,
+  beforeEach,
+  afterEach,
+  it,
+  expect,
+} from "@jest/globals";
 
 import { formatDate } from "./date";
 
@@ -24,6 +31,10 @@ describe("formatDate", () => {
   });
 
   it("pulls the locale from the window object", () => {
+    // Note, to get language definitions for "de" (German),
+    // we need to import `full-icu` by specifying it during startup
+    // This is passed in as an argument to `yarn run test`
+    // (See package.json)
     windowSpy.mockImplementation(
       () =>
         (({

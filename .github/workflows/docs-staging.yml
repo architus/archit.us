@@ -62,6 +62,11 @@ jobs:
 
       - name: Install dependencies
         run: yarn install
+        working-directory: .
+
+      - name: Bootstrap monorepo
+        run: yarn run bootstrap
+        working-directory: .
 
       - name: Resolve staging URL
         id: resolve-staging

@@ -9,7 +9,6 @@ import { color, ColorMode } from "@architus/facade/theme/color";
 import { transition } from "@architus/facade/theme/motion";
 import { gap } from "@architus/facade/theme/spacing";
 import { Option } from "@architus/lib/option";
-import { isDefined } from "@architus/lib/utility";
 import { ColorModeContext } from "@docs/components/ColorModeProvider";
 import { useSocials } from "@docs/data/socials";
 

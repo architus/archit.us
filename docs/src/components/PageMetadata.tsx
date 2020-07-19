@@ -17,7 +17,6 @@ import { Nil } from "@architus/lib/types";
 import {
   withoutLeading,
   withoutTrailing,
-  isNil,
   formatDate,
 } from "@architus/lib/utility";
 import { History, GithubUser } from "@docs/build/github-types";
