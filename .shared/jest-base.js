@@ -16,7 +16,7 @@ module.exports = {
     "^@docs/(.*)$": "<rootDir>/../docs/src/$1",
   },
   transform: {
-    "^.+\\.[jt]sx?$": path.resolve(path.join(__dirname , "./jest-babel.js")),
+    "^.+\\.[jt]sx?$": path.resolve(path.join(__dirname, "./jest-babel.js")),
   },
   globals: {
     __PATH_PREFIX__: ``,

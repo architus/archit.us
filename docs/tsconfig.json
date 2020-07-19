@@ -1,15 +1,7 @@
 {
-  /* See /.shared/tsconfig.json for actual values */
-  "extends": "../.shared/tsconfig.json",
+  /* See /tsconfig.json for actual values */
+  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      /* Configure Utility absolute base import */
-      /* Matches ./gatsby-config.ts */
-      "@docs/*": ["./src/*"],
-      /* Configure path aliases for non-terminal monorepo packages */
-      "@architus/lib/*": ["../lib/src/*"],
-      "@architus/facade/*": ["../design/src/*"]
-    }
+    "baseUrl": "."
   }
 }

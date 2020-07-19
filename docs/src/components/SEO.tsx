@@ -1,7 +1,7 @@
 import React from "react";
 import { Helmet } from "react-helmet";
 
-import { isDefined } from "@architus/lib/utility";
+import { Option } from "@architus/lib/option";
 import { useSEOData } from "@docs/data/seo-data";
 import { withPathPrefix } from "@docs/site";
 
@@ -18,8 +18,12 @@ const SEO: React.FC<SEOProps> = ({ description, meta, title, lang = `en` }) => {
   const themeColor = seoData.themeColor.getOrElse("#ff00ff");
   const msTileColor = seoData.themeColor.getOrElse("#ff00ff");
   const siteTitle = seoData.title.getOrElse("Documentation");
-  const derivedTitle = isDefined(title) ? `${title} | ${siteTitle}` : siteTitle;
-  const metaDescription = seoData.description.getOrElse("");
+  const derivedTitle = Option.from(title)
+    .map((t) => `${t} | ${siteTitle}`)
+    .getOrElse(siteTitle);
+  const metaDescription = Option.from(description)
+    .or(seoData.description)
+    .getOrElse("");
   const pathPrefix = (base: string): string =>
     withPathPrefix(seoData.pathPrefix.orUndefined(), base);
 

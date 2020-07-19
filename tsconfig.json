@@ -4,7 +4,7 @@
     /* This file is <extended> by each package to reduce duplication */
     "target": "es6",
     "module": "esnext",
-    "jsx": "react",
+    "jsx": "preserve",
     "isolatedModules": true,
 
     /* Strict Type-Checking Options (all on) */
@@ -23,6 +23,14 @@
 
     /* Module Resolution Options */
     "esModuleInterop": true,
+    "moduleResolution": "node",
+    "paths": {
+      /* Configure utility absolute base imports */
+      "@docs/*": ["../docs/src/*"],
+      /* Configure path aliases for non-terminal monorepo packages */
+      "@architus/lib/*": ["../lib/src/*"],
+      "@architus/facade/*": ["../design/src/*"]
+    },
 
     /* Advanced Options */
     "skipLibCheck": true,

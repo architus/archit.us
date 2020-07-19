@@ -12,7 +12,11 @@ import { formatDate } from "./date";
 // Set up window Mocks
 let windowSpy: jest.SpyInstance<(Window & typeof globalThis) | undefined, []>;
 beforeEach(() => {
-  windowSpy = jest.spyOn(global, "window", "get");
+  windowSpy = (jest.spyOn(
+    global,
+    "window",
+    "get"
+  ) as unknown) as typeof windowSpy;
 });
 afterEach(() => windowSpy.mockRestore());
 

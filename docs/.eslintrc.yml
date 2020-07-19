@@ -1,6 +1,6 @@
 ---
 extends:
-  - "../.shared/.eslintrc.yml"
+  - "../.eslintrc.yml"
 
 rules:
   # GraphQL

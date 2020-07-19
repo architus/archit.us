@@ -20,6 +20,9 @@ plugins:
   - jsx-a11y
   - graphql
 rules:
+  # Disable this rule; import = is bad anyways
+  "@typescript-eslint/no-var-requires": off
+
   # Enforce TSdoc syntax (but don't require it)
   tsdoc/syntax: warn
 
@@ -61,14 +64,12 @@ rules:
       - ["external", "builtin"]
       - ["index", "sibling", "parent", "internal", "object"]
       pathGroups:
-          # Architus packages are considered internal
-        - pattern: "@(?:architus)|(?:docs)/**"
+        - pattern: "^[@]((architus)|(docs))/**"
           group: "internal"
       pathGroupsExcludedImportTypes:
         - builtin
       newlines-between: always
       alphabetize:
-        # Order the packages for consistency
         order: asc
         caseInsensitive: true
 
@@ -79,9 +80,8 @@ rules:
 overrides:
   # Disable warning `require` on Node-js files
   - files:
-      - jest-config.js
+      - "**/jest-config.js"
     rules:
-      "@typescript-eslint/no-var-requires": off
       "global-require": off
 
   # Disable TS rules on JS files
