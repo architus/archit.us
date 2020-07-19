@@ -1,4 +1,3 @@
-import { useStaticQuery, graphql } from "gatsby";
 import { css } from "linaria";
 import { styled } from "linaria/react";
 import React, { useContext } from "react";
@@ -6,11 +5,12 @@ import { BsMoon } from "react-icons/bs";
 import { FaGithub, FaDiscord } from "react-icons/fa";
 import { IoMdSunny } from "react-icons/io";
 
-import { color, ColorMode } from "@design/theme/color";
-import { transition } from "@design/theme/motion";
-import { gap } from "@design/theme/spacing";
+import { color, ColorMode } from "@architus/facade/theme/color";
+import { transition } from "@architus/facade/theme/motion";
+import { gap } from "@architus/facade/theme/spacing";
+import { Option } from "@architus/lib/option";
 import { ColorModeContext } from "@docs/components/ColorModeProvider";
-import { isDefined } from "@lib/utility";
+import { useSocials } from "@docs/data/socials";
 
 export const actionBarSpacing = gap.pico;
 
@@ -58,32 +58,23 @@ const Styled = {
  * (for example, the dark mode button)
  */
 const HeaderActionBar: React.FC = () => {
-  const data = useStaticQuery<GatsbyTypes.HeaderActionBarQuery>(graphql`
-    query HeaderActionBar {
-      site {
-        siteMetadata {
-          socials {
-            github
-            discord
-          }
-        }
-      }
-    }
-  `);
+  const socials = useSocials();
+  const hasSocial =
+    Object.values(socials).findIndex((option: Option<unknown>) =>
+      option.isDefined()
+    ) !== -1;
 
-  const socials = data?.site?.siteMetadata?.socials;
-  const hasSocial = Object.values(socials ?? {}).findIndex(isDefined) !== -1;
   return (
     <>
-      {isDefined(socials) && hasSocial && (
+      {hasSocial && (
         <>
-          {isDefined(socials.discord) && (
-            <SocialButton to={socials.discord} title="Discord server">
+          {socials.discord.isDefined() && (
+            <SocialButton to={socials.discord.get} title="Discord server">
               <FaDiscord />
             </SocialButton>
           )}
-          {isDefined(socials.github) && (
-            <SocialButton to={socials.github} title="GitHub">
+          {socials.github.isDefined() && (
+            <SocialButton to={socials.github.get} title="GitHub">
               <FaGithub />
             </SocialButton>
           )}

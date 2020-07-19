@@ -1,39 +1,7 @@
 {
+  /* See /tsconfig.json for actual values */
+  "extends": "../tsconfig.json",
   "compilerOptions": {
-    /* Visit https://aka.ms/tsconfig.json to read more about this file */
-    "target": "es6",
-    "module": "commonjs",
-    "jsx": "preserve",
-
-    /* Strict Type-Checking Options */
-    "strict": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "strictBindCallApply": true,
-    "strictPropertyInitialization": true,
-    "noImplicitThis": true,
-    "alwaysStrict": true,
-
-    /* Additional Checks */
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-
-    /* Module Resolution Options */
-    "baseUrl": ".",
-    "paths": {
-      "@lib/*": ["../lib/src/*"],
-      "@docs/*": ["../docs/src/*"],
-      "@design/*": ["../design/src/*"]
-    },
-    "esModuleInterop": true,
-
-    /* Advanced Options */
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
-  },
-  /* Disable type-checking in ts-node */
-  "ts-node": {
-    "transpileOnly": true
-  },
+    "baseUrl": "."
+  }
 }

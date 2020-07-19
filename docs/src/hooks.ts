@@ -1,9 +1,9 @@
 import { useContext } from "react";
 
-import { ColorMode } from "@design/theme/color";
+import { ColorMode } from "@architus/facade/theme/color";
 import { ColorModeContext } from "@docs/components/ColorModeProvider";
 import { useLocation } from "@docs/components/Router";
-import { usePathPrefix } from "@docs/data/path";
+import { usePathPrefix } from "@docs/data/path-prefix";
 import { locationMatches } from "@docs/site";
 
 /**

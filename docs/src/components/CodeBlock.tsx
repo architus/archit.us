@@ -3,12 +3,12 @@ import { styled } from "linaria/react";
 import React, { useRef, useState } from "react";
 import { MdContentCopy } from "react-icons/md";
 
-import Tooltip from "@design/components/Tooltip";
-import { color } from "@design/theme/color";
-import { blankButton, scrollBarAuto } from "@design/theme/mixins";
-import { transition } from "@design/theme/motion";
-import { gap } from "@design/theme/spacing";
-import { isDefined } from "@lib/utility";
+import Tooltip from "@architus/facade/components/Tooltip";
+import { color } from "@architus/facade/theme/color";
+import { blankButton, scrollBarAuto } from "@architus/facade/theme/mixins";
+import { transition } from "@architus/facade/theme/motion";
+import { gap } from "@architus/facade/theme/spacing";
+import { isDefined } from "@architus/lib/utility";
 
 // Export for styling
 export const CopyButton = styled.button<{ showingToast: boolean }>`

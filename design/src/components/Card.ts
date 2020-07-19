@@ -1,8 +1,8 @@
 import { styled } from "linaria/react";
 
-import { color } from "@design/theme/color";
-import { shadow } from "@design/theme/shadow";
-import { gap } from "@design/theme/spacing";
+import { color } from "../theme/color";
+import { shadow } from "../theme/shadow";
+import { gap } from "../theme/spacing";
 
 /**
  * Display component used to render a plain raised Material-esque card component

@@ -2,10 +2,15 @@ import { styled } from "linaria/react";
 import { transparentize } from "polished";
 import React from "react";
 
-import Article from "@design/components/Article";
-import { color, staticColor, mode, ColorMode } from "@design/theme/color";
-import { font } from "@design/theme/typography";
-import { isDefined } from "@lib/utility";
+import Article from "@architus/facade/components/Article";
+import {
+  color,
+  staticColor,
+  mode,
+  ColorMode,
+} from "@architus/facade/theme/color";
+import { font } from "@architus/facade/theme/typography";
+import { isDefined } from "@architus/lib/utility";
 
 const Styled = {
   TableOfContents: styled.div`

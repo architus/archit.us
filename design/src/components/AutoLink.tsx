@@ -3,9 +3,9 @@ import { styled } from "linaria/react";
 import React, { useContext } from "react";
 import { RiExternalLinkLine } from "react-icons/ri";
 
-import { primaryLink } from "@design/theme/mixins";
-import { SpacingKey, gap } from "@design/theme/spacing";
-import { isDefined, isExternal } from "@lib/utility";
+import { primaryLink } from "../theme/mixins";
+import { SpacingKey, gap } from "../theme/spacing";
+import { isDefined, isExternal } from "@architus/lib/utility";
 
 const baseLinkClass = css`
   ${primaryLink}

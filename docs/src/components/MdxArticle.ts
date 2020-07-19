@@ -1,10 +1,15 @@
 import { styled } from "linaria/react";
 import { transparentize } from "polished";
 
-import Article from "@design/components/Article";
-import { mode, ColorMode, color, staticColor } from "@design/theme/color";
-import { shadow } from "@design/theme/shadow";
-import { gap } from "@design/theme/spacing";
+import Article from "@architus/facade/components/Article";
+import {
+  mode,
+  ColorMode,
+  color,
+  staticColor,
+} from "@architus/facade/theme/color";
+import { shadow } from "@architus/facade/theme/shadow";
+import { gap } from "@architus/facade/theme/spacing";
 import { CopyButton } from "@docs/components/CodeBlock";
 import { CollapseContent } from "@docs/components/Collapse";
 import { anchorClass } from "@docs/components/Heading";

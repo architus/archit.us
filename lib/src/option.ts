@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable max-classes-per-file */
-import { Nil, Predicate } from "@lib/types";
-import { isDefined, isNil } from "@lib/utility/primitive";
+import { Nil, Predicate } from "./types";
+import { isDefined, isNil } from "./utility/primitive";
 
 export type Unwrap<T> = T extends Option<infer K> ? K : T;
 
@@ -287,17 +287,17 @@ export class SomeType<A> extends Option<A> implements ValuedOption<A> {
 }
 
 export class NoneType extends Option<never> {
-  private static _instance: NoneType | undefined = undefined;
+  private static inst: NoneType | undefined = undefined;
 
   private constructor() {
     super();
   }
 
   public static get instance(): NoneType {
-    if (isNil(NoneType._instance)) {
-      NoneType._instance = new NoneType();
+    if (isNil(NoneType.inst)) {
+      NoneType.inst = new NoneType();
     }
-    return NoneType._instance;
+    return NoneType.inst;
   }
 
   _ = true;

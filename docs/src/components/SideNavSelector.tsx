@@ -8,11 +8,11 @@ import {
   ColorMode,
   ColorKey,
   hybridColor,
-} from "@design/theme/color";
+} from "@architus/facade/theme/color";
+import { isDefined } from "@architus/lib/utility";
 import { NavigationTreeNode } from "@docs/build/nav";
 import NavLabel from "@docs/components/NavLabel";
 import { useColorMode } from "@docs/hooks";
-import { isDefined } from "@lib/utility";
 
 export type SideNavSelectorProps = {
   value: string;

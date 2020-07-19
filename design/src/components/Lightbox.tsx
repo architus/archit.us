@@ -4,18 +4,18 @@ import { Modal } from "react-overlays";
 import ResizeObserver from "react-resize-observer";
 import { CSSTransition } from "react-transition-group";
 
-import { color } from "@design/theme/color";
-import { down } from "@design/theme/media";
+import { color } from "../theme/color";
+import { down } from "../theme/media";
 import {
   TransitionSpeed,
   transition,
   ease,
   easeOutBack,
-} from "@design/theme/motion";
-import { ZIndex } from "@design/theme/order";
-import { shadow } from "@design/theme/shadow";
-import { usePrevious } from "@lib/hooks";
-import { Option, None } from "@lib/option";
+} from "../theme/motion";
+import { ZIndex } from "../theme/order";
+import { shadow } from "../theme/shadow";
+import { usePrevious } from "@architus/lib/hooks";
+import { Option, None } from "@architus/lib/option";
 
 const fade = "lightbox-fade";
 const fadeZoom = "lightbox-fadeZoom";

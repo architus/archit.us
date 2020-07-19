@@ -2,14 +2,11 @@ import { styled } from "linaria/react";
 import { transparentize } from "polished";
 import React from "react";
 
-import BuildDetails, {
-  BuildContext,
-  BuildMetadataEntry,
-} from "@design/components/BuildDetails";
-import Tooltip, { TooltipProps } from "@design/components/Tooltip";
-import { dynamicColor, ColorMode, color } from "@design/theme/color";
-import { gap } from "@design/theme/spacing";
-import { isDefined } from "@lib/utility";
+import { dynamicColor, ColorMode, color } from "../theme/color";
+import { gap } from "../theme/spacing";
+import BuildDetails, { BuildContext, BuildMetadataEntry } from "./BuildDetails";
+import Tooltip, { TooltipProps } from "./Tooltip";
+import { isDefined } from "@architus/lib/utility";
 
 const Styled = {
   Pill: styled.div<{ hasIcon: boolean }>`

@@ -1,5 +1,5 @@
+import { Nil } from "@architus/lib/types";
 import { History } from "@docs/build/github-types";
-import { Nil } from "@lib/types";
 
 /**
  * Gatsby GraphQL type used to define frontmatter fields/types

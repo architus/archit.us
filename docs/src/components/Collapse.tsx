@@ -2,11 +2,11 @@ import { styled } from "linaria/react";
 import React, { useCallback, useState, cloneElement } from "react";
 import { FaChevronRight } from "react-icons/fa";
 
-import { color } from "@design/theme/color";
-import { blankButton } from "@design/theme/mixins";
-import { transition } from "@design/theme/motion";
-import { shadow } from "@design/theme/shadow";
-import { isDefined } from "@lib/utility";
+import { color } from "@architus/facade/theme/color";
+import { blankButton } from "@architus/facade/theme/mixins";
+import { transition } from "@architus/facade/theme/motion";
+import { shadow } from "@architus/facade/theme/shadow";
+import { isDefined } from "@architus/lib/utility";
 
 export const CollapseContent = styled.div``;
 const CollapseIcon = styled(FaChevronRight)`

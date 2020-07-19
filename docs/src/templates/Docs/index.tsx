@@ -4,10 +4,17 @@ import { styled } from "linaria/react";
 import { transparentize } from "polished";
 import React, { useRef } from "react";
 
-import Article from "@design/components/Article";
-import { color, mode, ColorMode, dynamicColor } from "@design/theme/color";
-import { down } from "@design/theme/media";
-import { gap } from "@design/theme/spacing";
+import Article from "@architus/facade/components/Article";
+import {
+  color,
+  mode,
+  ColorMode,
+  dynamicColor,
+} from "@architus/facade/theme/color";
+import { down } from "@architus/facade/theme/media";
+import { gap } from "@architus/facade/theme/spacing";
+import { MutableArray } from "@architus/lib/types";
+import { isDefined, isNil } from "@architus/lib/utility";
 import Breadcrumb from "@docs/components/Breadcrumb";
 import ImageHandler from "@docs/components/ImageHandler";
 import Layout from "@docs/components/Layout";
@@ -25,8 +32,7 @@ import {
   headerHeight,
 } from "@docs/layout";
 import { DocsContext } from "@docs/templates/Docs/frontmatter";
-import { MutableArray } from "@lib/types";
-import { isDefined, isNil } from "@lib/utility";
+
 import "@docs/one-universal";
 
 const contentWithToc = css`
@@ -163,6 +169,7 @@ const Docs: React.FC<PageProps<
   // Extract overview children
   const overviewChildren: MutableArray<OverviewContext> = [];
   children.forEach((child) => {
+    // eslint-disable-next-line no-underscore-dangle
     if (child.__typename === "DocsPage") {
       overviewChildren.push(child);
     }
