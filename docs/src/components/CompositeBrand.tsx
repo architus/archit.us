@@ -1,4 +1,3 @@
-import { useStaticQuery, graphql } from "gatsby";
 import { styled } from "linaria/react";
 import React from "react";
 
@@ -15,6 +14,7 @@ import { gap } from "@architus/facade/theme/spacing";
 import { useMedia } from "@architus/lib/hooks";
 import { isDefined } from "@architus/lib/utility";
 import { useBuildMetadata } from "@docs/data/build-metadata";
+import { useSiteTitle } from "@docs/data/site-title";
 
 const Styled = {
   Brand: styled.div<{ withVersion: boolean }>`
@@ -71,17 +71,7 @@ const CompositeBrand: React.FC<CompositeBrandProps> = ({
   className,
   style,
 }) => {
-  const data = useStaticQuery<GatsbyTypes.SiteTitleQuery>(graphql`
-    query SiteTitle {
-      site {
-        siteMetadata {
-          headerTitle
-          version
-        }
-      }
-    }
-  `);
-
+  const siteTitle = useSiteTitle();
   const buildMetadata = useBuildMetadata();
 
   let breakpoints: string[] = [];
@@ -96,15 +86,15 @@ const CompositeBrand: React.FC<CompositeBrandProps> = ({
     <Styled.Brand className={className} style={style} withVersion={showVersion}>
       <Styled.Logo height={36} />
       <Styled.SiteTitle>
-        {data?.site?.siteMetadata?.headerTitle}
+        {siteTitle.title}
         {buildMetadata.isDefined() && showBuildTag && (
           <Styled.BuildTag
             metadata={buildMetadata.get}
             tooltipPlacement={buildTooltipPlacement}
           />
         )}
-        {showVersion && (
-          <Styled.Version>{data?.site?.siteMetadata?.version}</Styled.Version>
+        {showVersion && siteTitle.version.isDefined() && (
+          <Styled.Version>{siteTitle.version.get}</Styled.Version>
         )}
       </Styled.SiteTitle>
     </Styled.Brand>

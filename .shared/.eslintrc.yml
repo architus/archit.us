@@ -62,7 +62,7 @@ rules:
       - ["index", "sibling", "parent", "internal", "object"]
       pathGroups:
           # Architus packages are considered internal
-        - pattern: "@architus/**"
+        - pattern: "@(?:architus)|(?:docs)/**"
           group: "internal"
       pathGroupsExcludedImportTypes:
         - builtin
@@ -77,12 +77,28 @@ rules:
   prettier/prettier: error
 
 overrides:
+  # Disable warning `require` on Node-js files
+  - files:
+      - jest-config.js
+    rules:
+      "@typescript-eslint/no-var-requires": off
+      "global-require": off
+
+  # Disable TS rules on JS files
+  - files:
+      - "*.js"
+      - "*.jsx"
+    rules:
+      "@typescript-eslint/explicit-function-return-type": off
+
   # Disable the dev dependency checks on test files
   - files:
       - "*.test.js"
       - "*.test.jsx"
       - "*.test.ts"
       - "*.test.tsx"
+      - "jest.config.js"
+      - "src/test/**"
     rules:
       import/no-extraneous-dependencies: off
 
@@ -111,5 +127,4 @@ parserOptions:
   ecmaFeatures:
     jsx: true
     modules: true
-# ignorePatterns:
-#   - "src/__generated__/*"
+

@@ -105,8 +105,10 @@ const RestRoute: React.FC<RestRouteProps> = ({
   className,
   style,
 }) => {
-  const { restVersion } = useApiVersions();
-  const derivedVersion = isDefined(version) ? version : restVersion;
+  const { rest: restVersion } = useApiVersions();
+  const derivedVersion = isDefined(version)
+    ? version
+    : restVersion.getOrElse("Unversioned");
   return (
     <Styled.RestfulRoute className={className} style={style}>
       <Styled.Version>{derivedVersion}</Styled.Version>

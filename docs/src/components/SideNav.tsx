@@ -11,7 +11,7 @@ import NavLabel from "@docs/components/NavLabel";
 import { navigate } from "@docs/components/Router";
 import SideNavSelector from "@docs/components/SideNavSelector";
 import SideNavTree from "@docs/components/SideNavTree";
-import { useNavigationTree } from "@docs/data/nav";
+import { useNavigationTree } from "@docs/data/navigation-tree";
 import { sitePadding } from "@docs/layout";
 
 const rightPadding = gap.nano;

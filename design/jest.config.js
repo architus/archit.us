@@ -13,14 +13,22 @@ module.exports = {
   globals: {
     __PATH_PREFIX__: ``,
     "ts-jest": {
+      diagnostics: {
+        ignoreCodes: [2307, 7006],
+      },
       babelConfig: {
         presets: [
-          "linaria/babel",
-          // ["@babel/preset-env", { targets: { node: "current" } }],
+          ["linaria/babel", { evaluate: true, displayName: true }],
+          ["@babel/preset-env", { targets: { node: "current" } }],
           "@babel/preset-react",
-          // ["linaria/babel", { evaluate: true, displayName: true }],
         ],
+        plugins: ["@babel/plugin-transform-modules-commonjs"],
       },
     },
   },
 };
+// module.exports = {
+//   ...require("../.shared/jest-base"),
+//   setupFiles: [`<rootDir>/src/test/loader-shim.js`],
+//   // globalSetup: `<rootDir>/src/test/global-setup.js`,
+// };

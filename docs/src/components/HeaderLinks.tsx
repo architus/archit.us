@@ -16,7 +16,7 @@ import { gap } from "@architus/facade/theme/spacing";
 import { font } from "@architus/facade/theme/typography";
 import NavLabel from "@docs/components/NavLabel";
 import { Link } from "@docs/components/Router";
-import { useNavigationTree } from "@docs/data/nav";
+import { useNavigationTree } from "@docs/data/navigation-tree";
 
 const Styled = {
   Link: styled<React.ComponentProps<typeof Link>>(Link)`

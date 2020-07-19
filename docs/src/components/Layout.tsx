@@ -16,7 +16,7 @@ import Header from "@docs/components/Header";
 import SecondaryFooter from "@docs/components/SecondaryFooter";
 import SEO from "@docs/components/SEO";
 import SideNav from "@docs/components/SideNav";
-import { useFooterData } from "@docs/data/footer";
+import { useFooterData } from "@docs/data/footer-data";
 import {
   headerHeight,
   minimizeBreakpoint,
@@ -29,7 +29,7 @@ import {
   minimizedDrawerWidth,
 } from "@docs/layout";
 
-export const global = css`
+export const globalCss = css`
   :global() {
     /* Set global site padding */
     body {

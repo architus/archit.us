@@ -1,9 +1,9 @@
-import { useStaticQuery, graphql } from "gatsby";
 import React from "react";
 import { Helmet } from "react-helmet";
 
 import { isDefined } from "@architus/lib/utility";
 import { withPathPrefix } from "@docs/site";
+import { useSEOData } from "@docs/data/seo-data";
 
 export type SEOProps = {
   description?: string;
@@ -13,31 +13,15 @@ export type SEOProps = {
 };
 
 const SEO: React.FC<SEOProps> = ({ description, meta, title, lang = `en` }) => {
-  const { site } = useStaticQuery<GatsbyTypes.SEOQuery>(
-    graphql`
-      query SEO {
-        site {
-          pathPrefix
-          siteMetadata {
-            title
-            description
-            author
-            themeColor
-            msTileColor
-          }
-        }
-      }
-    `
-  );
-
-  const author = site?.siteMetadata?.author ?? "";
-  const themeColor = site?.siteMetadata?.themeColor ?? "#ff00ff";
-  const msTileColor = site?.siteMetadata?.msTileColor ?? "#ff00fff";
-  const siteTitle = site?.siteMetadata?.title ?? "Documentation";
+  const seoData = useSEOData();
+  const author = seoData.author.getOrElse("");
+  const themeColor = seoData.themeColor.getOrElse("#ff00ff");
+  const msTileColor = seoData.themeColor.getOrElse("#ff00ff");
+  const siteTitle = seoData.title.getOrElse("Documentation");
   const derivedTitle = isDefined(title) ? `${title} | ${siteTitle}` : siteTitle;
-  const metaDescription = description ?? site?.siteMetadata?.description ?? "";
+  const metaDescription = seoData.description.getOrElse("");
   const pathPrefix = (base: string): string =>
-    withPathPrefix(site?.pathPrefix, base);
+    withPathPrefix(seoData.pathPrefix.orUndefined(), base);
 
   return (
     <Helmet

@@ -21,7 +21,7 @@ import Iframe from "@docs/components/Iframe";
 import Overview from "@docs/components/Overview";
 import RestRoute from "@docs/components/RestRoute";
 import Table from "@docs/components/Table";
-import { usePathPrefix } from "@docs/data/path";
+import { usePathPrefix } from "@docs/data/path-prefix";
 
 export type MdxProps = {
   content: string;

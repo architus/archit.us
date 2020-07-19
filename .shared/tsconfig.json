@@ -1,10 +1,11 @@
 {
   "compilerOptions": {
-    /* Visit https://aka.ms/tsconfig.json to read more about this file */
+    /* Visit https://www.typescriptlang.org/tsconfig to read more about this file */
     /* This file is <extended> by each package to reduce duplication */
     "target": "es6",
-    "module": "commonjs",
-    "jsx": "preserve",
+    "module": "esnext",
+    "jsx": "react",
+    "isolatedModules": true,
 
     /* Strict Type-Checking Options (all on) */
     "strict": true,
