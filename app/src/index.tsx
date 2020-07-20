@@ -14,7 +14,6 @@ import { isHot } from "@app/utility/types";
 addPrefetchExcludes([/\/?app(?:\/.*)?/]);
 
 export default App;
-console.log("gay gay gay gay");
 
 // Render your app
 if (typeof document !== "undefined") {
