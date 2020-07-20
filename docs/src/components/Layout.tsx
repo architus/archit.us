@@ -1,9 +1,10 @@
 import { css } from "linaria";
 import { styled } from "linaria/react";
 import React, { useState } from "react";
-import { FaBars, FaTimes } from "react-icons/fa";
+import { FaBars, FaTimes, FaAlgolia } from "react-icons/fa";
 
 import Footer, { FooterContent } from "@architus/facade/components/Footer";
+import SecondaryFooter from "@architus/facade/components/SecondaryFooter";
 import { color, mode, ColorMode } from "@architus/facade/theme/color";
 import { down, mediaMaxWidth, up, between } from "@architus/facade/theme/media";
 import { blankButton } from "@architus/facade/theme/mixins";
@@ -13,7 +14,6 @@ import { shadow } from "@architus/facade/theme/shadow";
 import { gap } from "@architus/facade/theme/spacing";
 import CompositeBrand from "@docs/components/CompositeBrand";
 import Header from "@docs/components/Header";
-import SecondaryFooter from "@docs/components/SecondaryFooter";
 import SEO from "@docs/components/SEO";
 import SideNav from "@docs/components/SideNav";
 import { useFooterData } from "@docs/data/footer-data";
@@ -251,7 +251,15 @@ const Layout: React.FC<LayoutProps> = ({
             {children}
           </Styled.ContentExpand>
           <Footer brand={<CompositeBrand showVersion />} {...useFooterData()} />
-          <SecondaryFooter />
+          <SecondaryFooter
+            additionalTechnologies={[
+              {
+                icon: FaAlgolia,
+                tooltip: "Algolia",
+                link: "https://www.algolia.com/",
+              },
+            ]}
+          />
         </Styled.Content>
       </Styled.Layout>
     </>

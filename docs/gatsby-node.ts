@@ -5,6 +5,7 @@ import {
   CreateResolversArgs,
   Node,
 } from "gatsby";
+import fsPath from "path";
 
 import { Option, Some, None } from "@architus/lib/option";
 import {
@@ -39,9 +40,7 @@ import {
   docsPageType,
 } from "@docs/templates/Docs/frontmatter";
 
-const DocsPageTemplate = require("path").resolve(
-  "./src/templates/Docs/index.tsx"
-);
+const DocsPageTemplate = fsPath.resolve("./src/templates/Docs/index.tsx");
 
 // Define custom graphql schema to enforce rigid type structures
 export const sourceNodes: GatsbyNode["sourceNodes"] = async (

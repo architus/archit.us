@@ -1,5 +1,5 @@
-@import "scss/colors";
-@import "scss/util";
+@import "../../scss/colors.scss";
+@import "../../scss/util.scss";
 
 %base-style {
     @include dark {

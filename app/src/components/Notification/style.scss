@@ -1,6 +1,6 @@
-@import "scss/colors";
-@import "scss/theme";
-@import "scss/media";
+@import "../../scss/colors.scss";
+@import "../../scss/theme.scss";
+@import "../../scss/media.scss";
 
 @mixin notification-variant($color, $icon) {
     background-color: $color;

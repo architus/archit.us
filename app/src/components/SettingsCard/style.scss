@@ -1,4 +1,4 @@
-@import "scss/media";
+@import "../../scss/media.scss";
 
 @mixin card-width($width: 5) {
     @include respond-above(md) {

@@ -10,7 +10,7 @@ import StoreDecorator from "./StoreDecorator";
 import { primaryColor, secondaryColor } from "global.json";
 import lightLogo from "@app/assets/light_logo.png";
 import darkLogo from "@app/assets/dark_logo.png";
-import "scss/main.scss";
+import "@app/scss/main.scss";
 
 const themeBase = {
   colorPrimary: secondaryColor,

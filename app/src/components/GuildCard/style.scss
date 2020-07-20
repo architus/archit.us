@@ -1,7 +1,7 @@
-@import "scss/colors";
-@import "scss/theme";
-@import "scss/util";
-@import "scss/media";
+@import "../../scss/colors.scss";
+@import "../../scss/theme.scss";
+@import "../../scss/util.scss";
+@import "../../scss/media.scss";
 @import "@app/components/GuildIcon/style";
 
 .guild-card {

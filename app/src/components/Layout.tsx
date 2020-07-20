@@ -1,21 +1,13 @@
 import styled, { css, useColorMode } from "@xstyled/emotion";
 import React, { useCallback, useEffect } from "react";
-import { Head } from "react-static";
+import { Helmet } from "react-helmet";
 import useDarkMode from "use-dark-mode";
 
 import Header from "@app/components/Header";
 import Icon from "@app/components/Icon";
 import Switch from "@app/components/Switch";
-import { description } from "@app/meta.json";
-import {
-  Color,
-  ColorMode,
-  useThemeColor,
-  safariTabColor,
-  applicationThemeColor,
-  windowsTileColor,
-} from "@app/theme";
-import { isNil, withBasePath } from "@app/utility";
+import { Color, ColorMode, useThemeColor } from "@app/theme";
+import { isNil } from "@app/utility";
 import { StyleObject } from "@app/utility/types";
 
 const Styled = {
@@ -112,82 +104,13 @@ const Layout: React.FC<LayoutProps> = ({
           )}
         </Header>
       )}
-      <Head>
+      <Helmet>
         <title>{builtTitle}</title>
         <meta property="og:title" content={builtTitle} />
-      </Head>
+      </Helmet>
       {children}
     </Styled.Layout>
   );
 };
 
 export default Layout;
-
-/**
- * SEO component that adds all relevant meta tags to the page via `react-helmet`
- */
-export const SEO: React.FC = () => (
-  <Head>
-    {/* Web crawler tags */}
-    <meta name="robots" content="index, follow" />
-    <link
-      rel="sitemap"
-      type="application/xml"
-      href={withBasePath("/sitemap.xml")}
-    />
-    {/* PWA */}
-    <link rel="manifest" href={withBasePath("/manifest.json")} />
-    {/* Social media */}
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content={withBasePath("/img/card.png")} />
-    <meta property="og:description" content={description} />
-    <meta name="twitter:card" content="summary" />
-    <meta name="description" content={description} />
-    {/* Misc. display meta */}
-    <meta name="theme-color" content={applicationThemeColor} />
-    <link
-      rel="mask-icon"
-      color={safariTabColor}
-      href={withBasePath("/safari-pinned-tab.svg")}
-    />
-    <meta name="msapplication-TileColor" content={windowsTileColor} />
-    <meta
-      name="msapplication-config"
-      content={withBasePath("/browserconfig.xml")}
-    />
-    {/* Favicons */}
-    <link
-      rel="apple-touch-icon"
-      sizes="192x192"
-      href={withBasePath("/android-chrome-192x192.png")}
-    />
-    <link
-      rel="apple-touch-icon"
-      sizes="256x256"
-      href={withBasePath("/android-chrome-256x256.png")}
-    />
-    <link
-      rel="apple-touch-icon"
-      sizes="512x512"
-      href={withBasePath("/android-chrome-512x512.png")}
-    />
-    <link
-      href={withBasePath("/apple-touch-icon.png")}
-      rel="apple-touch-icon"
-      sizes="180x180"
-    />
-    <link href={withBasePath("/favicon.ico")} rel="icon" type="image/x-icon" />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href={withBasePath("/favicon-32x32.png")}
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href={withBasePath("/favicon-16x16.png")}
-    />
-  </Head>
-);

@@ -1,7 +1,7 @@
-@import "scss/colors";
-@import "scss/util";
-@import "scss/theme";
-@import "scss/app";
+@import "../../scss/colors.scss";
+@import "../../scss/util.scss";
+@import "../../scss/theme.scss";
+@import "../../scss/app.scss";
 
 .side-navbar {
     $this: &;

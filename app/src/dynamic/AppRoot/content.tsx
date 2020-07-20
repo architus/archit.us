@@ -15,7 +15,7 @@ import {
   TabPath,
 } from "@app/dynamic/AppRoot/tabs";
 import Begin from "@app/dynamic/Begin";
-import Login from "@app/pages/Login";
+import Login from "@app/pages/login";
 import { usePool } from "@app/store/slices/pools";
 import { useSessionStatus } from "@app/store/slices/session";
 import {

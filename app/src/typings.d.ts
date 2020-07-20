@@ -45,6 +45,7 @@ declare module "@xstyled/emotion" {
   export const ThemeProvider: React.ComponentType<{ theme: object }>;
   export const ColorModeProvider: React.ComponentType<{}>;
   export const useColorMode: () => [string, (newMode: str) => void];
+  export const getColorModeInitScriptElement: () => React.ReactNode;
 
   export interface SpaceProps {
     // Spacing props

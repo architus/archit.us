@@ -1,25 +1,25 @@
 import { styled } from "linaria/react";
 import { transparentize } from "polished";
 import React from "react";
-import { FaGithub, FaHeart, FaReact, FaAlgolia } from "react-icons/fa";
+import { FaGithub, FaHeart, FaReact } from "react-icons/fa";
 
-import AutoLink from "@architus/facade/components/AutoLink";
-import { FooterContent } from "@architus/facade/components/Footer";
-import Tooltip from "@architus/facade/components/Tooltip";
-import GatsbyIcon from "@architus/facade/icons/gatsby.svg";
-import GraphQlIcon from "@architus/facade/icons/graphql.svg";
-import LinariaIcon from "@architus/facade/icons/linaria.svg";
-import TypeScriptIcon from "@architus/facade/icons/typescript.svg";
+import GatsbyIcon from "../icons/gatsby.svg";
+import GraphQlIcon from "../icons/graphql.svg";
+import LinariaIcon from "../icons/linaria.svg";
+import TypeScriptIcon from "../icons/typescript.svg";
 import {
   color,
   dynamicColor,
   ColorMode,
   mode,
   staticColor,
-} from "@architus/facade/theme/color";
-import { down } from "@architus/facade/theme/media";
-import { shadow } from "@architus/facade/theme/shadow";
-import { gap } from "@architus/facade/theme/spacing";
+} from "../theme/color";
+import { down } from "../theme/media";
+import { shadow } from "../theme/shadow";
+import { gap } from "../theme/spacing";
+import AutoLink from "./AutoLink";
+import { FooterContent } from "./Footer";
+import Tooltip from "./Tooltip";
 
 const Styled = {
   SecondaryFooter: styled.footer`
@@ -71,6 +71,7 @@ const Styled = {
 };
 
 export type SecondaryFooterProps = {
+  additionalTechnologies?: Technology[];
   className?: string;
   style?: React.CSSProperties;
 };
@@ -80,6 +81,7 @@ export type SecondaryFooterProps = {
  * showing list of core technologies
  */
 const SecondaryFooter: React.FC<SecondaryFooterProps> = ({
+  additionalTechnologies = [],
   className,
   style,
 }) => {
@@ -87,7 +89,8 @@ const SecondaryFooter: React.FC<SecondaryFooterProps> = ({
     <>
       <Styled.SecondaryFooter className={className} style={style}>
         <Styled.SecondaryContent>
-          Built with <Styled.HeartIcon /> using <TechnologyList />
+          Built with <Styled.HeartIcon /> using{" "}
+          <TechnologyList additional={additionalTechnologies} />
         </Styled.SecondaryContent>
       </Styled.SecondaryFooter>
     </>
@@ -100,7 +103,11 @@ export default SecondaryFooter;
 // ? Sub-components
 // ? ==============
 
-const TechnologyList: React.FC = () => (
+export type TechnologyListProps = {
+  additional: Technology[];
+};
+
+const TechnologyList: React.FC<TechnologyListProps> = ({ additional }) => (
   <Styled.TechnologyList>
     <Technology
       icon={FaGithub}
@@ -124,28 +131,21 @@ const TechnologyList: React.FC = () => (
       tooltip="GraphQL"
     />
     <Technology
-      icon={FaAlgolia}
-      link="https://www.algolia.com/"
-      tooltip="Algolia"
-    />
-    <Technology
       icon={TypeScriptIcon}
       link="http://typescriptlang.org/"
       tooltip="TypeScript"
     />
+    {additional}
   </Styled.TechnologyList>
 );
 
-type TechnologyProps = {
+export type Technology = {
   icon: React.ComponentType<React.SVGAttributes<SVGElement>>;
   link: string;
   tooltip: string;
 };
-const Technology: React.FC<TechnologyProps> = ({
-  icon: Icon,
-  link,
-  tooltip,
-}) => (
+
+const Technology: React.FC<Technology> = ({ icon: Icon, link, tooltip }) => (
   <Tooltip placement="top" tooltip={tooltip}>
     <Styled.TechnologyLink href={link} noIcon>
       <Icon />

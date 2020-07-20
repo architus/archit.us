@@ -1,7 +1,7 @@
-@import "scss/util";
-@import "scss/colors";
-@import "scss/theme";
-@import "scss/app";
+@import "../../scss/util.scss";
+@import "../../scss/colors.scss";
+@import "../../scss/theme.scss";
+@import "../../scss/app.scss";
 @import "@app/components/GuildIcon/style";
 
 $margin: 0.75rem;

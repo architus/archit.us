@@ -1,6 +1,6 @@
-@import "scss/colors";
-@import "scss/util";
-@import "scss/app";
+@import "./colors.scss";
+@import "./util.scss";
+@import "./app.scss";
 
 $drop-shadow-0: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 $drop-shadow-1: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);

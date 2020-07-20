@@ -1,5 +1,5 @@
-@import "scss/theme";
-@import "scss/fonts";
+@import "../../scss/theme.scss";
+@import "../../scss/fonts.scss";
 
 .syntax-highlighted-input {
     @extend %input-base;

@@ -2,7 +2,6 @@ import styled, { Box, down, css, up, BoxProps } from "@xstyled/emotion";
 import React from "react";
 import { Container, Button, Badge } from "react-bootstrap";
 import { shallowEqual } from "react-redux";
-import { useRouteData } from "react-static";
 
 import { messageSets, allowedCommands, customEmotes } from "./demo.json";
 import LogsSvg from "./svg/logs.svg";
@@ -14,7 +13,6 @@ import {
   Logo,
   Card,
   Window,
-  Footer,
   Layout,
   DiscordMock,
   CubeBackground,
@@ -40,6 +38,8 @@ import {
   DiscordMockCommands,
   WithBoxProps,
 } from "@app/utility/types";
+import Footer from "@architus/facade/components/Footer";
+import SecondaryFooter from "@architus/facade/components/SecondaryFooter";
 
 const Content = styled.divBox`
   & :not(pre) > code,
@@ -353,10 +353,11 @@ const SectionBox = Box.withComponent("section");
 
 const Homepage: React.FC<{}> = () => {
   // Get the cached guild/user counts from the route data (cached upon site build)
-  const {
-    guildCount: cachedGuildCount,
-    userCount: cachedUserCount,
-  } = useRouteData();
+  const { guildCount: cachedGuildCount, userCount: cachedUserCount } = {
+    guildCount: 10,
+    userCount: 100,
+  };
+  // TODO extract into useStaticQuery
 
   // Get the live guild/user counts from the store
   const {
@@ -620,7 +621,8 @@ const Homepage: React.FC<{}> = () => {
             <hr className="hr-short" />
           </Styled.Container>
         </Styled.BottomCta>
-        <Footer />
+        <Footer brand={null} about="" links={[]} />
+        <SecondaryFooter />
       </article>
     </Layout>
   );

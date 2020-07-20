@@ -3,22 +3,11 @@ extends:
   - "../.eslintrc.yml"
 
 overrides:
-  # Disable warning `require`/console-log on Node-js files
+  # Disable warning `require` on build files
   - files:
-      - node.api.js
-      - static.config.js
+      - gatsby-config.js
     rules:
       "@typescript-eslint/no-var-requires": off
-      "global-require": off
-      "no-console": off
-
-  # Disable extensions on scss files inside scss files
-  - files:
-      - "*.scss"
-    rules:
-      import/extensions:
-        - warn
-        - scss: never
 
   # Disable no-cycle warnings in utility files (unavoidable)
   - files:

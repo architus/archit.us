@@ -35,7 +35,7 @@ $link-hover-decoration: none !default;
 
 // Base Bootstrap
 @import "./bootstrap";
-@import "node_modules/bootstrap/scss/mixins/buttons";
+@import "../../../node_modules/bootstrap/scss/mixins/buttons";
 
 h1,
 h2,
