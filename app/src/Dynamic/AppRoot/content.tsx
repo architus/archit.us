@@ -1,8 +1,23 @@
-import React, { lazy, Suspense } from "react";
-import { useSessionStatus } from "Store/slices/session";
 import { Box } from "@xstyled/emotion";
-import Login from "Pages/Login";
-import { Redirect, Router, PageProps } from "Components/Router";
+import classNames from "classnames";
+import React, { lazy, Suspense } from "react";
+
+import { useFragments } from "./types";
+import ErrorBoundary from "@app/components/ErrorBoundary";
+import { Redirect, Router, PageProps } from "@app/components/Router";
+import Skeleton from "@app/components/Skeleton";
+import { APP_PATH_ROOT } from "@app/dynamic/AppRoot/config";
+import { NavigationContext } from "@app/dynamic/AppRoot/context";
+import {
+  DEFAULT_TAB,
+  tabs,
+  tabPaths,
+  TabPath,
+} from "@app/dynamic/AppRoot/tabs";
+import Begin from "@app/dynamic/Begin";
+import Login from "@app/pages/Login";
+import { usePool } from "@app/store/slices/pools";
+import { useSessionStatus } from "@app/store/slices/session";
 import {
   withClientSide,
   attach,
@@ -11,18 +26,9 @@ import {
   useMemoOnce,
   isDefined,
   error,
-} from "Utility";
-import { Snowflake, isSnowflake, Guild } from "Utility/types";
-import classNames from "classnames";
-import { usePool } from "Store/slices/pools";
-import { APP_PATH_ROOT } from "Dynamic/AppRoot/config";
-import { DEFAULT_TAB, tabs, tabPaths, TabPath } from "Dynamic/AppRoot/tabs";
-import { NavigationContext } from "Dynamic/AppRoot/context";
-import ErrorBoundary from "Components/ErrorBoundary";
-import Skeleton from "Components/Skeleton";
-import Begin from "Dynamic/Begin";
-import { Option, Some, None } from "Utility/option";
-import { useFragments } from "./types";
+} from "@app/utility";
+import { Option, Some, None } from "@app/utility/option";
+import { Snowflake, isSnowflake, Guild } from "@app/utility/types";
 
 interface AppLocation {
   currentTab: TabPath | null;
@@ -105,7 +111,7 @@ const AppContent: React.ComponentType<AppContentProps> = withClientSide(
   }
 );
 
-const LazyPageRenderer = lazy(() => import("Dynamic/AppRoot/lazy"));
+const LazyPageRenderer = lazy(() => import("@app/dynamic/AppRoot/lazy"));
 
 type PageRendererProps = {
   tabOption: Option<TabPath>;

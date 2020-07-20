@@ -1,16 +1,17 @@
-import React from "react";
-import { Root, Routes } from "react-static";
-import { ThemeProvider, ColorModeProvider, css } from "@xstyled/emotion";
 import { Global } from "@emotion/core";
-import Store from "Store";
-import { Router } from "Components/Router";
+import { ThemeProvider, ColorModeProvider, css } from "@xstyled/emotion";
+import React from "react";
 import { Provider } from "react-redux";
-import { SEO } from "Components/Layout";
-import NotificationPane from "Components/NotificationPane";
-import AppRoot from "Dynamic/AppRoot";
-import NotFound from "Pages/NotFound";
-import { withBasePath } from "Utility";
-import theme from "Theme";
+import { Root, Routes } from "react-static";
+
+import { SEO } from "@app/components/Layout";
+import NotificationPane from "@app/components/NotificationPane";
+import { Router } from "@app/components/Router";
+import AppRoot from "@app/dynamic/AppRoot";
+import NotFound from "@app/pages/NotFound";
+import Store from "@app/store";
+import theme from "@app/theme";
+import { withBasePath } from "@app/utility";
 import "scss/main.scss";
 
 // Base path for the renner font

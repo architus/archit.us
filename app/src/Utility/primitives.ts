@@ -1,8 +1,8 @@
 import { isNil, isDefined, randomItem } from "./data";
 import { isClient, isRemote } from "./document";
-import { left, right } from "./names.json";
 import { identity } from "./functions";
 import { error } from "./logging";
+import { left, right } from "./names.json";
 import { Option, Some, None } from "./option";
 import {
   Dimension,

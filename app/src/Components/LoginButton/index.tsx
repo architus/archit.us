@@ -1,15 +1,17 @@
 import React from "react";
+import { Button, ButtonProps } from "react-bootstrap";
+
+import Icon from "@app/components/Icon";
+import { Link as RouterLink } from "@app/components/Router";
+import { useSessionStatus } from "@app/store/slices/session";
 import {
   useReturnQuery,
   API_BASE,
   processIfNotEmptyOrNil,
   isDefined,
   withBasePath,
-} from "Utility";
-import { useSessionStatus } from "Store/slices/session";
-import { Link as RouterLink } from "Components/Router";
-import Icon from "Components/Icon";
-import { Button, ButtonProps } from "react-bootstrap";
+} from "@app/utility";
+
 import "./style.scss";
 
 export function useOauthUrl(): string {

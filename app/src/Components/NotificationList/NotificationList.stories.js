@@ -1,13 +1,13 @@
-import React, { useState, useCallback } from "react";
-import { select, boolean, number } from "@storybook/addon-knobs";
 import { action } from "@storybook/addon-actions";
-import { useCallbackOnce } from "Utility";
-
-import NotificationList from "./index";
+import { select, boolean, number } from "@storybook/addon-knobs";
+import React, { useState, useCallback } from "react";
 import { Form, Col, Button } from "react-bootstrap";
 
+import NotificationList from "./index";
+import { useCallbackOnce } from "@app/utility";
+
 export default {
-  title: "Components|NotificationList",
+  title: "@app/components|NotificationList",
   parameters: { component: NotificationList },
 };
 

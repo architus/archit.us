@@ -10,6 +10,7 @@ const moduleResolver = [
       "@architus/facade": "../design/src",
       "@architus/lib": "../lib/src",
       "@docs": "../docs/src",
+      "@app": "../app/src",
     },
   },
 ];

@@ -1,8 +1,9 @@
-import React from "react";
 import classNames from "classnames";
-import { Snowflake } from "Utility/types";
-import Icon from "Components/Icon";
-import GuildIcon from "Components/GuildIcon";
+import React from "react";
+
+import GuildIcon from "@app/components/GuildIcon";
+import Icon from "@app/components/Icon";
+import { Snowflake } from "@app/utility/types";
 import "./style.scss";
 
 type GuildCard = {

@@ -1,7 +1,8 @@
-import React from "react";
 import styled, { css } from "@xstyled/emotion";
-import { ColorKey, color } from "Theme";
-import { WithBoxProps } from "Utility/types";
+import React from "react";
+
+import { ColorKey, color } from "@app/theme";
+import { WithBoxProps } from "@app/utility/types";
 
 const Styled = {
   Card: styled.asideBox<ResolvedCardProps>`

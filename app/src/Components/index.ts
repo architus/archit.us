@@ -14,7 +14,7 @@ export { default as Window } from "./Window";
 export { default as Tooltip } from "./Tooltip";
 export { default as AutoLink } from "./AutoLink";
 export { default as HelpTooltip } from "./HelpTooltip";
-export { default as AddRowModal } from "./AddRowModal";
+// export { default as AddRowModal } from "./AddRowModal";
 export { default as Skeleton } from "./Skeleton";
 export { default as DiscordMock } from "./DiscordMock";
 export { default as UserDisplay } from "./UserDisplay";

@@ -1,10 +1,11 @@
-import React from "react";
 import classNames from "classnames";
-import { Snowflake } from "Utility/types";
-import Tooltip from "Components/Tooltip";
-import Acronym from "Components/Acronym";
-import Icon from "Components/Icon";
-import { isDefined } from "Utility";
+import React from "react";
+
+import Acronym from "@app/components/Acronym";
+import Icon from "@app/components/Icon";
+import Tooltip from "@app/components/Tooltip";
+import { isDefined } from "@app/utility";
+import { Snowflake } from "@app/utility/types";
 
 export const iconSource = (id: Snowflake, icon: string): string =>
   `https://cdn.discordapp.com/icons/${id}/${icon}.png`;

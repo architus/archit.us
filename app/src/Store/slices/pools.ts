@@ -1,7 +1,9 @@
-import { useEffect, useMemo, useRef } from "react";
 import { createSlice, PayloadAction, createAction } from "@reduxjs/toolkit";
-import { isDefined, shallowEqual, doublyShallowEqual } from "Utility";
-import { useDispatch, useSelector } from "Store/hooks";
+import { useEffect, useMemo, useRef } from "react";
+
+import { useDispatch, useSelector } from "@app/store/hooks";
+import { isDefined, shallowEqual, doublyShallowEqual } from "@app/utility";
+import { Option, None, Some } from "@app/utility/option";
 import {
   Guild,
   User,
@@ -10,8 +12,7 @@ import {
   AutoResponse,
   HoarFrost,
   Member,
-} from "Utility/types";
-import { Option, None, Some } from "Utility/option";
+} from "@app/utility/types";
 
 export type AllPoolTypes = {
   guild: Guild;

@@ -1,10 +1,10 @@
-import React from "react";
 import { text, object } from "@storybook/addon-knobs";
+import React from "react";
 
 import Icon from "./index";
 
 export default {
-  title: "Components|Icon",
+  title: "@app/components|Icon",
   parameters: { component: Icon },
 };
 

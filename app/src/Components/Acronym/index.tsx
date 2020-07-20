@@ -1,11 +1,12 @@
 import React from "react";
+
 import {
   multiplyDimension,
   toAcronym,
   parseDimension,
   formatDimension,
-} from "Utility";
-import { RawDimension, StyleObject } from "Utility/types";
+} from "@app/utility";
+import { RawDimension, StyleObject } from "@app/utility/types";
 
 type AcronymProps = {
   name: string;

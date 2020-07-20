@@ -1,4 +1,37 @@
 import React, { useMemo, useCallback, useState, useEffect } from "react";
+import { AnyAction } from "redux";
+
+import {
+  DiscordMockDispatchContext,
+  sendInvisibleMessage,
+  sendMessage,
+  react,
+  unreact,
+  clearMessages,
+} from "@app/components/DiscordMock/actions";
+import DiscordView from "@app/components/DiscordMock/DiscordView";
+import {
+  TransformMessageContext,
+  transformMockMessage,
+} from "@app/components/DiscordMock/transform";
+import {
+  createMockUser,
+  IdProvisioner,
+  Extension,
+  makeMockUser,
+} from "@app/components/DiscordMock/util";
+import ErrorBoundary from "@app/components/ErrorBoundary";
+import { useCurrentUser } from "@app/store/actions";
+import { useDispatch, useSelector } from "@app/store/hooks";
+import {
+  interpretInvisible,
+  interpretMessage,
+  interpretReact,
+  interpretUnreact,
+  interpretLocalMessage,
+  interpretLocalDelete,
+  interpretClear,
+} from "@app/store/slices/interpret";
 import {
   addMissingUnit,
   formatDimension,
@@ -10,25 +43,8 @@ import {
   isNil,
   architusUser,
   error,
-} from "Utility";
-import { Option } from "Utility/option";
-import { useDispatch, useSelector } from "Store/hooks";
-import {
-  interpretInvisible,
-  interpretMessage,
-  interpretReact,
-  interpretUnreact,
-  interpretLocalMessage,
-  interpretLocalDelete,
-  interpretClear,
-} from "Store/slices/interpret";
-import {
-  createMockUser,
-  IdProvisioner,
-  Extension,
-  makeMockUser,
-} from "Components/DiscordMock/util";
-import DiscordView from "Components/DiscordMock/DiscordView";
+} from "@app/utility";
+import { Option } from "@app/utility/option";
 import {
   MockUser,
   RawDimension,
@@ -38,22 +54,7 @@ import {
   DiscordMockCommands,
   TransformMessage,
   User,
-} from "Utility/types";
-import {
-  DiscordMockDispatchContext,
-  sendInvisibleMessage,
-  sendMessage,
-  react,
-  unreact,
-  clearMessages,
-} from "Components/DiscordMock/actions";
-import {
-  TransformMessageContext,
-  transformMockMessage,
-} from "Components/DiscordMock/transform";
-import { AnyAction } from "redux";
-import { useCurrentUser } from "Store/actions";
-import ErrorBoundary from "Components/ErrorBoundary";
+} from "@app/utility/types";
 
 // Error display options
 const ERROR_DISPLAY_DELAY = 4000;

@@ -1,6 +1,7 @@
 import React, { TouchEvent } from "react";
-import { StyleObject } from "Utility/types";
-import { isDefined } from "Utility";
+
+import { isDefined } from "@app/utility";
+import { StyleObject } from "@app/utility/types";
 
 // Sourced from leandrowd/react-easy-swipe. Forked to modify (and
 // converted to TypeScript)

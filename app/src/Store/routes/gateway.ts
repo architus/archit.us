@@ -1,11 +1,11 @@
-import { makeGatewayRoute } from "Store/api/gateway";
-import { LogEvents, BaseGatewayPacket } from "Utility/types";
+import { makeGatewayRoute } from "@app/store/api/gateway";
 import {
   DistributePoolTypes,
   AllPoolTypes,
   SpecificPools,
   AgnosticPools,
-} from "Store/slices/pools";
+} from "@app/store/slices/pools";
+import { LogEvents, BaseGatewayPacket } from "@app/utility/types";
 
 export interface BaseInterpretPayload<T extends number> {
   action: T;

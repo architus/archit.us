@@ -1,6 +1,6 @@
-import { Supplier } from "./types";
-import { toJSON } from "./primitives";
 import { warn } from "./logging";
+import { toJSON } from "./primitives";
+import { Supplier } from "./types";
 
 /**
  * Identity function that maps an object onto itself

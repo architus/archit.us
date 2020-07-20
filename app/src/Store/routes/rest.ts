@@ -1,9 +1,10 @@
-import { User, Access, Guild } from "Utility/types";
-import * as t from "io-ts";
-import { makeRoute } from "Store/api/rest";
-import { Errors } from "Store/api/rest/types";
 import { Either, either } from "fp-ts/lib/Either";
-import { HttpVerbs } from "Utility";
+import * as t from "io-ts";
+
+import { makeRoute } from "@app/store/api/rest";
+import { Errors } from "@app/store/api/rest/types";
+import { HttpVerbs } from "@app/utility";
+import { User, Access, Guild } from "@app/utility/types";
 
 export type IdentifySessionResponse = t.TypeOf<typeof IdentifySessionResponse>;
 export const IdentifySessionResponse = t.interface({

@@ -1,7 +1,8 @@
 import { useColorMode, useTheme } from "@xstyled/emotion";
-import { isDefined, isNil } from "Utility";
-import { Option, Some, None } from "Utility/option";
+
 import { ColorKey, ColorMode, parseThemeColor } from "./tokens";
+import { isDefined, isNil } from "@app/utility";
+import { Option, Some, None } from "@app/utility/option";
 
 /**
  * Obtains the resolved color corresponding to the key for the current color mode (i.e.

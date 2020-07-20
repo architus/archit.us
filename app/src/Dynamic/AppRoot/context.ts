@@ -1,5 +1,6 @@
 import React from "react";
-import { AppDispatch } from "Dynamic/AppRoot/types";
+
+import { AppDispatch } from "@app/dynamic/AppRoot/types";
 
 export type NavigationContext = {
   defaultPath: string;

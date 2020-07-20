@@ -1,10 +1,11 @@
-import React, { useCallback } from "react";
 import classNames from "classnames";
-import { useInitialRender } from "Utility";
-import { TabPath } from "Dynamic/AppRoot/tabs";
-import { useAppLocation } from "Dynamic/AppRoot/content";
-import { AppTab } from "Dynamic/AppRoot/types";
-import Tooltip from "Components/Tooltip";
+import React, { useCallback } from "react";
+
+import Tooltip from "@app/components/Tooltip";
+import { useAppLocation } from "@app/dynamic/AppRoot/content";
+import { TabPath } from "@app/dynamic/AppRoot/tabs";
+import { AppTab } from "@app/dynamic/AppRoot/types";
+import { useInitialRender } from "@app/utility";
 import "./style.scss";
 
 type SideNavbarProps = {

@@ -1,13 +1,12 @@
-import React from "react";
-import { text, boolean } from "@storybook/addon-knobs";
 import { action } from "@storybook/addon-actions";
+import { text, boolean } from "@storybook/addon-knobs";
+import React from "react";
 
 import SettingsCategory from "./index";
-
 import { cards } from "./story/example.json.js";
 
 export default {
-  title: "Components|SettingsCategory",
+  title: "@app/components|SettingsCategory",
   parameters: {
     component: SettingsCategory,
   },

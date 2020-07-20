@@ -1,11 +1,12 @@
-import React from "react";
-import classNames from "classnames";
+import { IconPrefix, IconName } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled, { css, BoxProps } from "@xstyled/emotion";
-import { IconPrefix, IconName } from "@fortawesome/fontawesome-svg-core";
-import { warn } from "Utility";
-import { StyleObject } from "Utility/types";
+import classNames from "classnames";
+import React from "react";
+
 import { resolveIcon, allIconNames, AnyIconName } from "./loader";
+import { warn } from "@app/utility";
+import { StyleObject } from "@app/utility/types";
 
 const Styled = {
   Icon: styled.spanBox<{ noAutoWidth: boolean }>`

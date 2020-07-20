@@ -1,9 +1,10 @@
-import { PageProps } from "Components/Router";
-import { useLocation } from "Utility";
-import { Guild } from "Utility/types";
 import { AnyAction } from "redux";
-import { splitPath } from "Utility/primitives";
+
 import { APP_PATH_ROOT } from "./config";
+import { PageProps } from "@app/components/Router";
+import { useLocation } from "@app/utility";
+import { splitPath } from "@app/utility/primitives";
+import { Guild } from "@app/utility/types";
 
 export interface AppTab {
   icon: string;

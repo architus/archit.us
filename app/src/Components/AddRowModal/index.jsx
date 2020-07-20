@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import React, {
   useCallback,
   useEffect,
@@ -5,16 +6,15 @@ import React, {
   useMemo,
   useRef,
 } from "react";
-import PropTypes from "prop-types";
+import { Modal, Button, Form } from "react-bootstrap";
+
 import {
   isDefined,
   identity,
   isNil,
   binarySearch,
   createObject,
-} from "Utility";
-
-import { Modal, Button, Form } from "react-bootstrap";
+} from "@app/utility";
 
 import "./style.scss";
 
@@ -57,23 +57,22 @@ function AddRowModal({ data, show, columns, onHide, onAdd, title, ...rest }) {
   const sortedUniqueColumns = useMemo(() => {
     // Skip updates if not rendering
     if (!show) return [];
-    else {
-      let uniqueColumns = columns.filter((c) => c.unique).map((c) => c.key);
-      if (uniqueColumns.length === 0) return [];
-      let sorted = createObject();
-      for (const col of uniqueColumns) {
-        sorted[col] = [];
-      }
-      for (const row of data) {
-        for (const col of uniqueColumns) {
-          sorted[col].push(row[col]);
-        }
-      }
-      for (const col of uniqueColumns) {
-        sorted[col].sort();
-      }
-      return sorted;
+
+    const uniqueColumns = columns.filter((c) => c.unique).map((c) => c.key);
+    if (uniqueColumns.length === 0) return [];
+    const sorted = createObject();
+    for (const col of uniqueColumns) {
+      sorted[col] = [];
     }
+    for (const row of data) {
+      for (const col of uniqueColumns) {
+        sorted[col].push(row[col]);
+      }
+    }
+    for (const col of uniqueColumns) {
+      sorted[col].sort();
+    }
+    return sorted;
   }, [columns, data, show]);
 
   // Auto-focus first input field
@@ -85,7 +84,7 @@ function AddRowModal({ data, show, columns, onHide, onAdd, title, ...rest }) {
   // Input validation calculation & status
   const [showValidation, setShowValidation] = useState(false);
   const [validationStatus, isValid] = useMemo(() => {
-    let validationStatus = {};
+    const validationStatus = {};
     let allPass = true;
     for (const i in relevantColumns) {
       const { key, required, name, validator, unique } = relevantColumns[i];
@@ -103,7 +102,7 @@ function AddRowModal({ data, show, columns, onHide, onAdd, title, ...rest }) {
       }
 
       if (unique) {
-        let index = binarySearch(sortedUniqueColumns[key], value);
+        const index = binarySearch(sortedUniqueColumns[key], value);
         if (index !== -1) {
           validationStatus[key] = {
             result: false,
@@ -158,7 +157,7 @@ function AddRowModal({ data, show, columns, onHide, onAdd, title, ...rest }) {
   // Enter press handler
   const handleKeyPressed = useCallback(
     (e) => {
-      var code = e.keyCode || e.which;
+      const code = e.keyCode || e.which;
       // Enter keycode
       if (code === 13) {
         tryAdd();

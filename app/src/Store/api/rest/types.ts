@@ -1,6 +1,7 @@
-import { ConditionalWrap, Omitted, ErrorContents } from "Utility/types";
-import { HttpVerbs } from "Utility";
 import * as t from "io-ts";
+
+import { HttpVerbs } from "@app/utility";
+import { ConditionalWrap, Omitted, ErrorContents } from "@app/utility/types";
 
 export type Errors = t.Errors;
 

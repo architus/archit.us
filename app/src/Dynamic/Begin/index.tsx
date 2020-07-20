@@ -1,8 +1,9 @@
 import React, { useContext } from "react";
-import HeroImage from "Assets/begin-hero.inline.svg";
-import { AppContext } from "Dynamic/AppRoot/context";
-import { showGuildAddModal } from "Dynamic/AppRoot/actions";
-import { AppPageProps } from "Dynamic/AppRoot/types";
+
+import HeroImage from "@app/assets/begin-hero.inline.svg";
+import { showGuildAddModal } from "@app/dynamic/AppRoot/actions";
+import { AppContext } from "@app/dynamic/AppRoot/context";
+import { AppPageProps } from "@app/dynamic/AppRoot/types";
 import "./style.scss";
 
 type BeginProps = Omit<AppPageProps, "guild">;

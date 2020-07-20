@@ -1,9 +1,8 @@
-import React, { useState, useMemo, useRef } from "react";
-import PropTypes from "prop-types";
-import Fuse from "fuse.js";
 import classNames from "classnames";
+import Fuse from "fuse.js";
 import get from "lodash/get";
-
+import PropTypes from "prop-types";
+import React, { useState, useMemo, useRef } from "react";
 import AutoSuggest from "react-autosuggest";
 
 import "./style.scss";
@@ -12,27 +11,26 @@ const MAX_FUZZY_SEARCH_LENGTH = 32;
 
 function naiveSearch(value, items, { fields, minLength, maxItems }) {
   const trimmed = value.trim().toLowerCase();
-  const length = trimmed.length;
+  const { length } = trimmed;
   if (length === 0 || length < minLength) return [];
-  else {
-    const matched = [];
-    for (let i = 0; i < items.length; ++i) {
-      const current = items[i];
-      for (let j = 0; j < fields.length; ++j) {
-        const field = fields[j];
-        const currentValue =
-          typeof field === "string"
-            ? get(current, field)
-            : get(current, field.name);
-        if (currentValue.toLowerCase().slice(0, length) === trimmed) {
-          matched.push(current);
-          break;
-        }
+
+  const matched = [];
+  for (let i = 0; i < items.length; ++i) {
+    const current = items[i];
+    for (let j = 0; j < fields.length; ++j) {
+      const field = fields[j];
+      const currentValue =
+        typeof field === "string"
+          ? get(current, field)
+          : get(current, field.name);
+      if (currentValue.toLowerCase().slice(0, length) === trimmed) {
+        matched.push(current);
+        break;
       }
-      if (matched.length >= maxItems && maxItems > 0) break;
     }
-    return matched;
+    if (matched.length >= maxItems && maxItems > 0) break;
   }
+  return matched;
 }
 
 function AutoCompleteInput({
@@ -75,12 +73,11 @@ function AutoCompleteInput({
         minLength: triggerLength,
         maxItems,
       });
-    } else {
-      const result = fuse.search(trimmed);
-      return maxItems > 0
-        ? result.slice(0, Math.min(maxItems, result.length))
-        : result;
     }
+    const result = fuse.search(trimmed);
+    return maxItems > 0
+      ? result.slice(0, Math.min(maxItems, result.length))
+      : result;
   };
 
   // Calculate validation status className

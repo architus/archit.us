@@ -1,4 +1,19 @@
 import {
+  createSlice,
+  PayloadAction,
+  SliceCaseReducers,
+  Slice,
+  CreateSliceOptions,
+} from "@reduxjs/toolkit";
+import { shallowEqual } from "react-redux";
+
+import { Store } from "@app/store";
+import { useSelector } from "@app/store/hooks";
+import {
+  IdentifySessionResponse,
+  TokenExchangeResponse,
+} from "@app/store/routes";
+import {
   getUrlParameter,
   clearUrlQueries,
   log,
@@ -8,26 +23,15 @@ import {
   warn,
   isNil,
   withBasePath,
-} from "Utility";
+} from "@app/utility";
+import { Option, Some, None } from "@app/utility/option";
 import {
   User,
   PersistentSession,
   MapDiscriminatedUnion,
   Access,
   expiresAt,
-} from "Utility/types";
-import { Option, Some, None } from "Utility/option";
-import {
-  createSlice,
-  PayloadAction,
-  SliceCaseReducers,
-  Slice,
-  CreateSliceOptions,
-} from "@reduxjs/toolkit";
-import { IdentifySessionResponse, TokenExchangeResponse } from "Store/routes";
-import { Store } from "Store";
-import { useSelector } from "Store/hooks";
-import { shallowEqual } from "react-redux";
+} from "@app/utility/types";
 
 // ? ====================
 // ? Types

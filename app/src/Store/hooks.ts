@@ -3,8 +3,9 @@ import {
   useDispatch as useRawDispatch,
   TypedUseSelectorHook,
 } from "react-redux";
-import { Store, Dispatch } from "Store";
-import { isDefined } from "Utility";
+
+import { Store, Dispatch } from "@app/store";
+import { isDefined } from "@app/utility";
 
 /**
  * Typed useSelector hook that is aware of the root store state shape

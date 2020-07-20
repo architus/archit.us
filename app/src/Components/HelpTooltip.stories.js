@@ -1,11 +1,11 @@
-import React from "react";
 import { text, boolean, number, object } from "@storybook/addon-knobs";
+import React from "react";
 
 import HelpTooltip from "./index";
-import Icon from "Components/Icon";
+import Icon from "@app/components/Icon";
 
 export default {
-  title: "Components|HelpTooltip",
+  title: "@app/components|HelpTooltip",
   parameters: { component: HelpTooltip },
 };
 

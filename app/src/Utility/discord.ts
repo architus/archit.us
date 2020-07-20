@@ -1,6 +1,6 @@
-import { Snowflake, MockUser, Guild } from "./types";
-import { constructAvatarUrl } from "./network";
 import { isDefined } from "./data";
+import { constructAvatarUrl } from "./network";
+import { Snowflake, MockUser, Guild } from "./types";
 
 const architusId: Snowflake = "448546825532866560" as Snowflake;
 const architusAvatar = "99de1e495875fb5c27ba9ac7303b45b7";

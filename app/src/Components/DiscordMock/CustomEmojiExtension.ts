@@ -1,13 +1,16 @@
-import { Extension, makeFakeWebhookUser } from "Components/DiscordMock/util";
-import { transformMockMessage } from "Components/DiscordMock/transform";
+import { transformMockMessage } from "@app/components/DiscordMock/transform";
+import {
+  Extension,
+  makeFakeWebhookUser,
+} from "@app/components/DiscordMock/util";
+import { TransformerStep, makeTransformer, isDefined } from "@app/utility";
 import {
   DiscordMockContext,
   DiscordMockCommands,
   TransformMessage,
   MockMessage,
   MockUser,
-} from "Utility/types";
-import { TransformerStep, makeTransformer, isDefined } from "Utility";
+} from "@app/utility/types";
 
 const deleteDelay = 400;
 

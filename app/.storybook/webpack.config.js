@@ -11,7 +11,7 @@ module.exports = async ({ config }) => {
       {
         loader: "sass-loader",
         options: {
-          includePaths: [path.resolve("./node_modules"), path.resolve("./src")]
+          includePaths: [path.resolve("./store"), path.resolve("./src")]
         }
       }
     ]

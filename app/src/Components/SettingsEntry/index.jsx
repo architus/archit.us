@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
 import classNames from "classnames";
-import { isDefined, useCallbackOnce } from "Utility";
-import inputControls from "./inputs";
+import PropTypes from "prop-types";
+import React, { useState } from "react";
 
-import HelpTooltip from "Components/HelpTooltip";
+import inputControls from "./inputs";
+import HelpTooltip from "@app/components/HelpTooltip";
+import { isDefined, useCallbackOnce } from "@app/utility";
 
 import "./style.scss";
 

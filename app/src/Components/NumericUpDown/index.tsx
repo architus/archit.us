@@ -1,7 +1,5 @@
-import React from "react";
 import classNames from "classnames";
-import Icon from "Components/Icon";
-import { StyleObject } from "Utility/types";
+import React from "react";
 import {
   InputGroup,
   FormControl,
@@ -9,6 +7,10 @@ import {
   ButtonProps,
   FormControlProps,
 } from "react-bootstrap";
+
+import Icon from "@app/components/Icon";
+import { StyleObject } from "@app/utility/types";
+
 import "./style.scss";
 
 type NumericUpDownProps = {

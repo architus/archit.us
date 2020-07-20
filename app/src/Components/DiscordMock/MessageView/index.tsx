@@ -1,18 +1,20 @@
-import React, { useCallback } from "react";
 import classNames from "classnames";
+import React, { useCallback } from "react";
+
+import {
+  DiscordMockDispatchContext,
+  react,
+  unreact,
+} from "@app/components/DiscordMock/actions";
+import MessageClump from "@app/components/DiscordMock/MessageClump";
 import {
   formatAmPm,
   getScrollDistance,
   scrollToBottom,
   isDefined,
-} from "Utility";
-import { MockMessageClump, StyleObject } from "Utility/types";
-import MessageClump from "Components/DiscordMock/MessageClump";
-import {
-  DiscordMockDispatchContext,
-  react,
-  unreact,
-} from "Components/DiscordMock/actions";
+} from "@app/utility";
+import { MockMessageClump, StyleObject } from "@app/utility/types";
+
 import "./style.scss";
 import { AnyAction } from "redux";
 

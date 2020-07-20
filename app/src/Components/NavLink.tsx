@@ -1,6 +1,7 @@
-import React from "react";
-import AutoLink from "Components/AutoLink";
 import classNames from "classnames";
+import React from "react";
+
+import AutoLink from "@app/components/AutoLink";
 
 // This link will be active when itself or deeper routes are current
 export const isPartiallyActive = ({

@@ -1,4 +1,4 @@
-import { Omitted } from "Utility/types";
+import { Omitted } from "@app/utility/types";
 
 export * from "./steps";
 

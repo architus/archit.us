@@ -1,10 +1,11 @@
-import React from "react";
 import { useUp } from "@xstyled/emotion";
 import classNames from "classnames";
-import { useSessionStatus } from "Store/slices/session";
-import NavLink from "Components/NavLink";
-import { Breakpoint } from "Theme";
-import { withBasePath } from "Utility";
+import React from "react";
+
+import NavLink from "@app/components/NavLink";
+import { useSessionStatus } from "@app/store/slices/session";
+import { Breakpoint } from "@app/theme";
+import { withBasePath } from "@app/utility";
 
 const LoggedInLinks: React.FC = () => (
   <NavLink to={withBasePath("/app")}>Dashboard</NavLink>

@@ -1,10 +1,10 @@
-import React from "react";
 import { boolean } from "@storybook/addon-knobs";
+import React from "react";
 
 import LoginButton from "./index";
 
 export default {
-  title: "Components|LoginButton",
+  title: "@app/components|LoginButton",
   parameters: {
     component: LoginButton,
   },

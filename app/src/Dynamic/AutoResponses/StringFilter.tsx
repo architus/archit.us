@@ -1,6 +1,7 @@
 import React from "react";
 import { FilterRendererProps } from "react-data-grid";
-import { Option, Some } from "Utility/option";
+
+import { Option, Some } from "@app/utility/option";
 
 export function StringFilter<R, SR>({
   value,

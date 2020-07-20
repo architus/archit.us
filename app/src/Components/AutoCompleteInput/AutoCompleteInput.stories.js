@@ -1,12 +1,11 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
 import { text } from "@storybook/addon-knobs";
-import { useCallbackOnce } from "Utility";
+import MaxWidthDecorator from "MaxWidthDecorator";
+import PropTypes from "prop-types";
+import React, { useState } from "react";
 
 import AutoCompleteInput from "./index";
-import MaxWidthDecorator from "MaxWidthDecorator";
-
 import { data } from "./story/sample.json.js";
+import { useCallbackOnce } from "@app/utility";
 
 export default {
   title: "Inputs|AutoCompleteInput",

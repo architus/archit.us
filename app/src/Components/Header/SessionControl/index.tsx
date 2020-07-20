@@ -1,17 +1,18 @@
-import React from "react";
 import { useDown, Box } from "@xstyled/emotion";
+import React from "react";
 import { Dropdown } from "react-bootstrap";
-import { useDispatch } from "Store";
-import { useLocation, withBasePath } from "Utility";
-import { Option } from "Utility/option";
-import { User } from "Utility/types";
-import { signOut } from "Store/actions";
-import { useCurrentUser, useSessionStatus } from "Store/slices/session";
-import AutoLink from "Components/AutoLink";
-import { useOauthUrl } from "Components/LoginButton";
-import UserDisplay from "Components/UserDisplay";
-import Icon from "Components/Icon";
-import { Breakpoint } from "Theme";
+
+import AutoLink from "@app/components/AutoLink";
+import Icon from "@app/components/Icon";
+import { useOauthUrl } from "@app/components/LoginButton";
+import UserDisplay from "@app/components/UserDisplay";
+import { useDispatch } from "@app/store";
+import { signOut } from "@app/store/actions";
+import { useCurrentUser, useSessionStatus } from "@app/store/slices/session";
+import { Breakpoint } from "@app/theme";
+import { useLocation, withBasePath } from "@app/utility";
+import { Option } from "@app/utility/option";
+import { User } from "@app/utility/types";
 import "./style.scss";
 
 const SessionControl: React.FC = React.memo(() => {

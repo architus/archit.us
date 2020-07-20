@@ -1,9 +1,9 @@
-import React, { useState } from "react";
 import { text } from "@storybook/addon-knobs";
+import MaxWidthDecorator from "MaxWidthDecorator";
+import React, { useState } from "react";
+import { Form } from "react-bootstrap";
 
 import SetInput from "./index";
-import MaxWidthDecorator from "MaxWidthDecorator";
-import { Form } from "react-bootstrap";
 
 export default {
   title: "Inputs|SetInput/Basic",

@@ -1,10 +1,10 @@
-import React, { useMemo, useCallback } from "react";
-import PropTypes from "prop-types";
 import classNames from "classnames";
-import { isDefined, escapeRegExp } from "Utility";
 import Prism from "prismjs";
-
+import PropTypes from "prop-types";
+import React, { useMemo, useCallback } from "react";
 import Editor from "react-simple-code-editor";
+
+import { isDefined, escapeRegExp } from "@app/utility";
 
 import "./style.scss";
 
@@ -26,7 +26,7 @@ function SyntaxHighlightedInput({
     if (isDefined(prismLanguage)) return prismLanguage;
 
     // Assign tokens to token classes, placing in bins using round robin method
-    let assignments = [];
+    const assignments = [];
     for (let i = 0; i < tokens.length; ++i) {
       const index = i % TOKEN_COUNT;
       const token = tokens[i];
@@ -38,7 +38,7 @@ function SyntaxHighlightedInput({
     }
 
     // Convert token assignments to a prism language
-    let language = {};
+    const language = {};
     for (const assignment of assignments) {
       language[assignment.className] = new RegExp(
         `(?:${escapeRegExp(assignment.token.join("|"))})`

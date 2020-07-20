@@ -1,10 +1,10 @@
-import chartSvg from "Assets/chart.inline.svg";
-import cogsSvg from "Assets/cogs.inline.svg";
-import emojiSvg from "Assets/emoji.inline.svg";
-import musicSvg from "Assets/music.inline.svg";
-import responsesSvg from "Assets/responses.inline.svg";
-import scrollSvg from "Assets/scroll.inline.svg";
 import { AppTab } from "./types";
+import chartSvg from "@app/assets/chart.inline.svg";
+import cogsSvg from "@app/assets/cogs.inline.svg";
+import emojiSvg from "@app/assets/emoji.inline.svg";
+import musicSvg from "@app/assets/music.inline.svg";
+import responsesSvg from "@app/assets/responses.inline.svg";
+import scrollSvg from "@app/assets/scroll.inline.svg";
 
 // Type helper function
 const tab = (t: AppTab): AppTab => t;

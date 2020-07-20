@@ -1,8 +1,8 @@
-import React, { useState } from "react";
 import { text, boolean } from "@storybook/addon-knobs";
+import MaxWidthDecorator from "MaxWidthDecorator";
+import React, { useState } from "react";
 
 import Switch from "./index";
-import MaxWidthDecorator from "MaxWidthDecorator";
 
 export default {
   title: "Inputs|Switch",

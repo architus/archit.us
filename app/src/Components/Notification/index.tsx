@@ -1,8 +1,9 @@
-import React, { useCallback } from "react";
 import classNames from "classnames";
+import React, { useCallback } from "react";
 import { CloseButton } from "react-bootstrap";
-import { NotificationType, NotificationVariant } from "Store/actions";
-import { StyleObject } from "Utility/types";
+
+import { NotificationType, NotificationVariant } from "@app/store/actions";
+import { StyleObject } from "@app/utility/types";
 import "./style.scss";
 
 type NotificationProps = {

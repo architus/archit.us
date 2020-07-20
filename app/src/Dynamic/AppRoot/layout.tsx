@@ -1,6 +1,7 @@
-import React from "react";
 import classNames from "classnames";
-import { Layout } from "Components";
+import React from "react";
+
+import { Layout } from "@app/components";
 
 type AppLayoutProps = {
   children: React.ReactNode;

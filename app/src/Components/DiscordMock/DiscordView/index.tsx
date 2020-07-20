@@ -1,9 +1,14 @@
-import React, { useContext } from "react";
 import classNames from "classnames";
-import MessageView from "Components/DiscordMock/MessageView";
-import InputController from "Components/DiscordMock/InputController";
-import { MockMessageClump, StyleObject, MockMessageSet } from "Utility/types";
-import { DiscordMockDispatchContext } from "Components/DiscordMock/actions";
+import React, { useContext } from "react";
+
+import { DiscordMockDispatchContext } from "@app/components/DiscordMock/actions";
+import InputController from "@app/components/DiscordMock/InputController";
+import MessageView from "@app/components/DiscordMock/MessageView";
+import {
+  MockMessageClump,
+  StyleObject,
+  MockMessageSet,
+} from "@app/utility/types";
 import "./style.scss";
 
 type DiscordViewProps = {

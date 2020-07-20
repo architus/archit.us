@@ -1,7 +1,8 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable max-classes-per-file */
-import * as t from "io-ts";
 import { isRight, Either, either, right } from "fp-ts/lib/Either";
+import * as t from "io-ts";
+
 import { isDefined, isNil } from "./data";
 import { Nil, Predicate } from "./types";
 

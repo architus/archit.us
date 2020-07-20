@@ -1,7 +1,7 @@
 import { isDefined } from "./data";
-import { Snowflake } from "./types";
 import { Option } from "./option";
 import { parseInteger } from "./primitives";
+import { Snowflake } from "./types";
 
 export { API_BASE, GATEWAY_API_BASE, withBasePath } from "./api.node";
 

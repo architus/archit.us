@@ -1,6 +1,7 @@
-import React from "react";
 import styled, { down, css } from "@xstyled/emotion";
-import { Layout, AutoLink } from "Components";
+import React from "react";
+
+import { Layout, AutoLink } from "@app/components";
 
 const Styled = {
   Layout: styled.divBox`

@@ -1,14 +1,15 @@
 import React, { useCallback, Suspense, lazy, useState } from "react";
 import { shallowEqual } from "react-redux";
-import { hideNotification } from "Store/actions";
-import { isDefined, withClientSide } from "Utility";
-import { Dispatch, useSelector, useDispatch } from "Store";
+
+import ErrorBoundary from "@app/components/ErrorBoundary";
+import { Dispatch, useSelector, useDispatch } from "@app/store";
+import { hideNotification } from "@app/store/actions";
 import {
   selectAllNotifications,
   NotificationType,
   Notification,
-} from "Store/slices/notifications";
-import ErrorBoundary from "Components/ErrorBoundary";
+} from "@app/store/slices/notifications";
+import { isDefined, withClientSide } from "@app/utility";
 import "./style.scss";
 
 // Lazy-loading tree contains:
@@ -61,7 +62,7 @@ NotificationPane.displayName = "NotificationPane";
 // ? =================
 
 // Split bundle
-const NotificationList = lazy(() => import("Components/NotificationList"));
+const NotificationList = lazy(() => import("@app/components/NotificationList"));
 
 type LazyLoadingWrapperProps = {
   toast: Notification[];

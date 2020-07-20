@@ -1,15 +1,14 @@
 import React from "react";
 
-import Settings from "Dynamic/Settings";
-import AutoResponses from "Dynamic/AutoResponses";
-import EmojiManager from "Dynamic/EmojiManager";
-import Logs from "Dynamic/Logs";
-import MusicQueue from "Dynamic/MusicQueue";
-import Statistics from "Dynamic/Statistics";
-
-import { Guild } from "Utility/types";
-import { TabPath } from "Dynamic/AppRoot/tabs";
 import { AppPageProps } from "./types";
+import { TabPath } from "@app/dynamic/AppRoot/tabs";
+import AutoResponses from "@app/dynamic/AutoResponses";
+import EmojiManager from "@app/dynamic/EmojiManager";
+import Logs from "@app/dynamic/Logs";
+import MusicQueue from "@app/dynamic/MusicQueue";
+import Settings from "@app/dynamic/Settings";
+import Statistics from "@app/dynamic/Statistics";
+import { Guild } from "@app/utility/types";
 
 const tabComponents: Record<TabPath, React.ComponentType<AppPageProps>> = {
   stats: Statistics,

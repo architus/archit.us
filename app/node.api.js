@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/camelcase */
 /* eslint-disable no-param-reassign */
-import { GenerateSW } from "workbox-webpack-plugin";
+import chalk from "chalk";
 import fs from "fs-extra";
 import nodePath from "path";
-import chalk from "chalk";
-import transform from "./src/Build/webpack.transform";
+import { GenerateSW } from "workbox-webpack-plugin";
+
+import transform from "./src/build/webpack.transform";
 
 /**
  * Generates the manifest JSON string

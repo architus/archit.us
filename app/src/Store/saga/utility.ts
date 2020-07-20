@@ -1,6 +1,7 @@
-import { select as sagaSelect } from "redux-saga/effects";
 import { SelectEffect } from "@redux-saga/core/effects";
-import { Store } from "Store";
+import { select as sagaSelect } from "redux-saga/effects";
+
+import { Store } from "@app/store";
 
 /**
  * Same as `redux-saga/effects.select(selector)`, but automatically types

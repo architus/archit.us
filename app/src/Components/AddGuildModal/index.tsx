@@ -1,15 +1,17 @@
-import React from "react";
 import { Box } from "@xstyled/emotion";
-import { usePool } from "Store/slices/pools";
+import React from "react";
+import { Modal, Button, ModalProps, Spinner } from "react-bootstrap";
+
+import GuildCard from "@app/components/GuildCard";
+import { usePool } from "@app/store/slices/pools";
 import {
   useReturnQuery,
   API_BASE,
   processIfNotEmptyOrNil,
   isDiscordAdminWithoutArchitus,
-} from "Utility";
-import { Snowflake } from "Utility/types";
-import GuildCard from "Components/GuildCard";
-import { Modal, Button, ModalProps, Spinner } from "react-bootstrap";
+} from "@app/utility";
+import { Snowflake } from "@app/utility/types";
+
 import "./style.scss";
 
 type AddGuildModalProps = {

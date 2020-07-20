@@ -1,5 +1,5 @@
-import React, { MutableRefObject, useMemo } from "react";
 import styled, { Box } from "@xstyled/emotion";
+import React, { MutableRefObject, useMemo } from "react";
 import { ContextMenuTrigger } from "react-contextmenu";
 import {
   FormatterProps,
@@ -8,15 +8,16 @@ import {
   RowRendererProps,
   Row as GridRow,
 } from "react-data-grid";
-import { UserDisplay, Tooltip } from "Components";
+
+import { TransformedAutoResponse } from "./types";
+import { UserDisplay, Tooltip } from "@app/components";
 import {
   isEmptyOrNil,
   makeTransformer,
   escapeHtml,
   convertUnicodeEmoji,
-} from "Utility";
-import { User, AutoResponseTriggerMode } from "Utility/types";
-import { TransformedAutoResponse } from "./types";
+} from "@app/utility";
+import { User, AutoResponseTriggerMode } from "@app/utility/types";
 
 const Styled = {
   Name: styled.span`

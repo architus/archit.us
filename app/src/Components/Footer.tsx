@@ -1,12 +1,13 @@
-import React from "react";
 import styled, { Box, BoxProps, down, css } from "@xstyled/emotion";
+import React from "react";
 import { Container } from "react-bootstrap";
-import Header from "Components/Header";
-import Icon from "Components/Icon";
-import Card from "Components/Card";
-import { Space, ColorMode, Breakpoint, mode } from "Theme";
-import { WithBoxProps } from "Utility/types";
-import { version } from "meta.json";
+
+import Card from "@app/components/Card";
+import Header from "@app/components/Header";
+import Icon from "@app/components/Icon";
+import { version } from "@app/meta.json";
+import { Space, ColorMode, Breakpoint, mode } from "@app/theme";
+import { WithBoxProps } from "@app/utility/types";
 
 const Styled = {
   Footer: styled.asideBox`

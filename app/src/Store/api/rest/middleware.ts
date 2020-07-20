@@ -1,7 +1,8 @@
 import axios from "axios";
-import { isNil } from "Utility";
 import { Middleware, Dispatch as ReduxDispatch, AnyAction } from "redux";
-import { Store, Dispatch } from "Store";
+
+import { ApiError } from "./types";
+import { Store, Dispatch } from "@app/store";
 import {
   restDispatch,
   restStart,
@@ -9,8 +10,8 @@ import {
   restSuccess,
   isApiError,
   restFailure,
-} from "Store/api/rest";
-import { ApiError } from "./types";
+} from "@app/store/api/rest";
+import { isNil } from "@app/utility";
 
 // axios default configs
 if (isNil(axios.defaults.headers)) {

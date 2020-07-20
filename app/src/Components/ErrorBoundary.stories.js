@@ -1,11 +1,12 @@
-import React, { useState } from "react";
 import { action } from "@storybook/addon-actions";
-import { useCallbackOnce } from "Utility";
+import React, { useState } from "react";
 import { Button } from "react-bootstrap";
+
 import ErrorBoundary from "./ErrorBoundary";
+import { useCallbackOnce } from "@app/utility";
 
 export default {
-  title: "Components|ErrorBoundary",
+  title: "@app/components|ErrorBoundary",
   parameters: {
     component: ErrorBoundary,
   },

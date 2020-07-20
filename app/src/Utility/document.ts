@@ -1,5 +1,5 @@
-import { Option, None } from "Utility/option";
-import { isDefined } from "Utility/data";
+import { isDefined } from "@app/utility/data";
+import { Option, None } from "@app/utility/option";
 
 /**
  * Gets the amount needed to scroll to be at the bottom from the top

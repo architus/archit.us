@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "@xstyled/emotion";
 import {
   compose,
@@ -6,10 +5,12 @@ import {
   marginLeft,
   createSystemComponent,
 } from "@xstyled/system";
-import Icon from "Components/Icon";
-import { Link, LinkProps } from "Components/Router";
-import { isDefined, isExternal } from "Utility";
-import { Space } from "Theme";
+import React from "react";
+
+import Icon from "@app/components/Icon";
+import { Link, LinkProps } from "@app/components/Router";
+import { Space } from "@app/theme";
+import { isDefined, isExternal } from "@app/utility";
 
 const lrMargin = compose(marginLeft, marginRight);
 const MarginIcon = createSystemComponent(React, Icon, lrMargin);

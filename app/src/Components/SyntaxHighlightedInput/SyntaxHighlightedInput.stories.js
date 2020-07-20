@@ -1,12 +1,11 @@
-import React, { useState } from "react";
 import Prism from "prismjs";
+import React, { useState } from "react";
 import "prismjs/components/prism-python.js";
-import { useCallbackOnce } from "Utility";
 
 import SyntaxHighlightedInput from "./index";
-
-import pythonExample from "./story/python.txt";
 import { content, tokens } from "./story/custom.json.js";
+import pythonExample from "./story/python.txt";
+import { useCallbackOnce } from "@app/utility";
 
 export default {
   title: "Inputs|SyntaxHighlightedInput",

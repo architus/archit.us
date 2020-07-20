@@ -1,9 +1,10 @@
+import styled from "@xstyled/emotion";
 import React, { ErrorInfo } from "react";
 import { Spinner } from "react-bootstrap";
-import styled from "@xstyled/emotion";
-import { warn, isDefined } from "Utility";
-import { Option, Some, None } from "Utility/option";
-import { opacity } from "Theme";
+
+import { opacity } from "@app/theme";
+import { warn, isDefined } from "@app/utility";
+import { Option, Some, None } from "@app/utility/option";
 
 const Styled = {
   FallbackRenderer: styled.div`

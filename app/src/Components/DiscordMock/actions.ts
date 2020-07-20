@@ -1,6 +1,7 @@
-import { MockReactionContext } from "Utility/types";
 import { createAction, AnyAction } from "@reduxjs/toolkit";
 import React from "react";
+
+import { MockReactionContext } from "@app/utility/types";
 
 export type DiscordMockDispatch = React.Dispatch<AnyAction>;
 

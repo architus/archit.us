@@ -1,5 +1,5 @@
-import { isDefined } from "Utility";
-import { Some, Option, None } from "Utility/option";
+import { isDefined } from "@app/utility";
+import { Some, Option, None } from "@app/utility/option";
 
 /* eslint-disable @typescript-eslint/camelcase */
 

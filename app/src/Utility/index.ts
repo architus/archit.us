@@ -1,26 +1,26 @@
 // Data manipulation functions
-export * from "Utility/data";
+export * from "@app/utility/data";
 
 // Function utilities & async/promise utilities
-export * from "Utility/functions";
+export * from "@app/utility/functions";
 
 // Logging
-export * from "Utility/logging";
+export * from "@app/utility/logging";
 
 // Custom React hooks
-export * from "Utility/hooks";
+export * from "@app/utility/hooks";
 
 // String/number Utility functions
-export * from "Utility/primitives";
+export * from "@app/utility/primitives";
 
 // Useful Utility methods/types for network communication
-export * from "Utility/network";
+export * from "@app/utility/network";
 
 // Utility methods about DOM/execution context
-export * from "Utility/document";
+export * from "@app/utility/document";
 
 // Misc
-export * from "Utility/MockTyper";
-export * from "Utility/transform";
-export * from "Utility/components";
-export * from "Utility/discord";
+export * from "@app/utility/MockTyper";
+export * from "@app/utility/transform";
+export * from "@app/utility/components";
+export * from "@app/utility/discord";

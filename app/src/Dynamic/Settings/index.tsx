@@ -1,6 +1,7 @@
 import React from "react";
-import { AppPageProps } from "Dynamic/AppRoot/types";
 import { Container, Badge } from "react-bootstrap";
+
+import { AppPageProps } from "@app/dynamic/AppRoot/types";
 import "./style.scss";
 
 const Settings: React.FC<AppPageProps> = () => (

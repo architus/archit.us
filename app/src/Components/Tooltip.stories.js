@@ -1,12 +1,12 @@
-import React from "react";
 import { text, boolean, number, object } from "@storybook/addon-knobs";
-
-import Tooltip from "./index";
-import Icon from "Components/Icon";
+import React from "react";
 import { Button } from "react-bootstrap";
 
+import Tooltip from "./index";
+import Icon from "@app/components/Icon";
+
 export default {
-  title: "Components|Tooltip",
+  title: "@app/components|Tooltip",
   parameters: { component: Tooltip },
 };
 

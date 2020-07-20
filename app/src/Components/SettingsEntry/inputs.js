@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
 import React, { useCallback } from "react";
-import { isEmptyOrNil, isDefined } from "Utility";
-
 import { Form } from "react-bootstrap";
-import NumericUpDown from "Components/NumericUpDown";
-import SyntaxHighlightedInput from "Components/SyntaxHighlightedInput";
-import AutoCompleteInput from "Components/AutoCompleteInput";
-import Switch from "Components/Switch";
+
+import AutoCompleteInput from "@app/components/AutoCompleteInput";
+import NumericUpDown from "@app/components/NumericUpDown";
+import Switch from "@app/components/Switch";
+import SyntaxHighlightedInput from "@app/components/SyntaxHighlightedInput";
+import { isEmptyOrNil, isDefined } from "@app/utility";
 
 export default {
   string: StringInput,

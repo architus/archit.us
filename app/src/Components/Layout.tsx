@@ -1,6 +1,12 @@
+import styled, { css, useColorMode } from "@xstyled/emotion";
 import React, { useCallback, useEffect } from "react";
 import { Head } from "react-static";
-import styled, { css, useColorMode } from "@xstyled/emotion";
+import useDarkMode from "use-dark-mode";
+
+import Header from "@app/components/Header";
+import Icon from "@app/components/Icon";
+import Switch from "@app/components/Switch";
+import { description } from "@app/meta.json";
 import {
   Color,
   ColorMode,
@@ -8,14 +14,9 @@ import {
   safariTabColor,
   applicationThemeColor,
   windowsTileColor,
-} from "Theme";
-import useDarkMode from "use-dark-mode";
-import { isNil, withBasePath } from "Utility";
-import { StyleObject } from "Utility/types";
-import Header from "Components/Header";
-import Switch from "Components/Switch";
-import Icon from "Components/Icon";
-import { description } from "meta.json";
+} from "@app/theme";
+import { isNil, withBasePath } from "@app/utility";
+import { StyleObject } from "@app/utility/types";
 
 const Styled = {
   Layout: styled.div<{ noHeader: boolean }>`

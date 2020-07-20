@@ -1,13 +1,13 @@
-import React from "react";
-import Card from "./Card";
 import { boolean, text } from "@storybook/addon-knobs";
 import MaxWidthDecorator from "MaxWidthDecorator";
-
-import Icon from "Components/Icon";
+import React from "react";
 import { Button } from "react-bootstrap";
 
+import Card from "./Card";
+import Icon from "@app/components/Icon";
+
 export default {
-  title: "Components/Card",
+  title: "@app/components/Card",
   decorators: [MaxWidthDecorator],
   parameters: { component: Card },
 };

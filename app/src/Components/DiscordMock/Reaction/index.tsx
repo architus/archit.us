@@ -1,6 +1,7 @@
-import React, { useCallback } from "react";
 import classNames from "classnames";
-import { MockReaction, StyleObject } from "Utility/types";
+import React, { useCallback } from "react";
+
+import { MockReaction, StyleObject } from "@app/utility/types";
 import "./style.scss";
 
 type ReactionProps = {

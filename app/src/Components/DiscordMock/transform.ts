@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  MockMessage,
-  TransformMessage,
-  DiscordMockContext,
-  MockUser,
-} from "Utility/types";
+
 import {
   makeTransformer,
   escapeHtml,
@@ -24,7 +19,13 @@ import {
   emojiToShortcode,
   architusUser,
   isDefined,
-} from "Utility";
+} from "@app/utility";
+import {
+  MockMessage,
+  TransformMessage,
+  DiscordMockContext,
+  MockUser,
+} from "@app/utility/types";
 
 export type TransformerContext = {
   users: Record<MockUser["id"], MockUser>;

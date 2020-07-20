@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 /* eslint-disable @typescript-eslint/camelcase */
 /* eslint-disable max-classes-per-file */
-import * as t from "io-ts";
-import { either } from "fp-ts/lib/Either";
 import { BoxProps } from "@xstyled/emotion";
+import { either } from "fp-ts/lib/Either";
+import * as t from "io-ts";
+
 import { isDefined } from "./data";
-import { TransformerStep } from "./transform";
 import { option } from "./option";
+import { TransformerStep } from "./transform";
 
 export class EnumType<A> extends t.Type<A> {
   public readonly _tag: "EnumType" = "EnumType";
@@ -111,7 +112,7 @@ export type ConditionalWrap<K extends string, T> = T extends Omitted
   ? {}
   : { [k in K]: T };
 
-const _dimensionUnits = [
+const baseDimensionUnits = [
   "cm",
   "mm",
   "Q",
@@ -136,7 +137,7 @@ const _dimensionUnits = [
  * @remarks
  * The units come from the {@link https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Values_and_units | mozilla list of CSS units}
  */
-export type DimensionUnit = typeof _dimensionUnits[number];
+export type DimensionUnit = typeof baseDimensionUnits[number];
 
 /**
  * CSS spatial units
@@ -144,7 +145,7 @@ export type DimensionUnit = typeof _dimensionUnits[number];
  * @remarks
  * The units come from the {@link https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Values_and_units | mozilla list of CSS units}
  */
-export const dimensionUnits = _dimensionUnits as readonly string[];
+export const dimensionUnits = baseDimensionUnits as readonly string[];
 
 /**
  * Represents a CSS dimension, with possible units derived from DimensionUnit

@@ -1,10 +1,11 @@
 import { createAction, AnyAction, PayloadAction } from "@reduxjs/toolkit";
-import { ErrorContents, Omitted } from "Utility/types";
+import { Either } from "fp-ts/lib/Either";
 import * as t from "io-ts";
 import { Errors } from "io-ts";
-import { Either } from "fp-ts/lib/Either";
-import { isDefined } from "Utility";
-import { option } from "Utility/option";
+
+import { isDefined } from "@app/utility";
+import { option } from "@app/utility/option";
+import { ErrorContents, Omitted } from "@app/utility/types";
 
 // ? ==================
 // ? Actions

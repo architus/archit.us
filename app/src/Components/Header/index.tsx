@@ -1,14 +1,15 @@
+import { Box, useUp } from "@xstyled/emotion";
 import React from "react";
 import { Navbar } from "react-bootstrap";
-import { Box, useUp } from "@xstyled/emotion";
-import Links from "Components/Header/Links";
-import SessionControl from "Components/Header/SessionControl";
-import Link from "Components/AutoLink";
-import { LinkProps } from "Components/Router";
-import BuildMarker, { BuildMarkerPropsBase } from "Components/BuildMarker";
-import Logo from "Components/Logo";
-import { attach, withBasePath } from "Utility";
-import { Breakpoint } from "Theme";
+
+import Link from "@app/components/AutoLink";
+import BuildMarker, { BuildMarkerPropsBase } from "@app/components/BuildMarker";
+import Links from "@app/components/Header/Links";
+import SessionControl from "@app/components/Header/SessionControl";
+import Logo from "@app/components/Logo";
+import { LinkProps } from "@app/components/Router";
+import { Breakpoint } from "@app/theme";
+import { attach, withBasePath } from "@app/utility";
 import "./style.scss";
 
 type HeaderProps = {

@@ -1,6 +1,6 @@
-import React, { useState, createRef } from "react";
-import styled, { Box, BoxProps } from "@xstyled/emotion";
 import * as Popper from "@popperjs/core";
+import styled, { Box, BoxProps } from "@xstyled/emotion";
+import React, { useState, createRef } from "react";
 import {
   OverlayTrigger,
   Tooltip as BootstrapTooltip,
@@ -8,9 +8,10 @@ import {
   Overlay,
 } from "react-bootstrap";
 import { UsePopperOptions } from "react-overlays/esm/usePopper";
-import { isDefined, isNil } from "Utility";
-import { StyleObject } from "Utility/types";
-import { Space } from "Theme";
+
+import { Space } from "@app/theme";
+import { isDefined, isNil } from "@app/utility";
+import { StyleObject } from "@app/utility/types";
 
 const Styled = {
   Tooltip: styled<

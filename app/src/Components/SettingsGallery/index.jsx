@@ -1,7 +1,7 @@
-import React, { useCallback } from "react";
 import PropTypes from "prop-types";
+import React, { useCallback } from "react";
 
-import SettingsCategory, { propShape } from "Components/SettingsCategory";
+import SettingsCategory, { propShape } from "@app/components/SettingsCategory";
 
 function SettingsGallery({ categories, noCollapse, onCommit }) {
   return (

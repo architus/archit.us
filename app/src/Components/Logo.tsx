@@ -1,9 +1,10 @@
-import React from "react";
 import styled, { BoxProps, Box } from "@xstyled/emotion";
-import { renderResponsiveProp } from "Theme";
-import CombinedSvg from "Assets/logo/logo.inline.svg";
-import LogotypeSvg from "Assets/logo/logo-text.inline.svg";
-import SymbolSvg from "Assets/logo/logo-symbol.inline.svg";
+import React from "react";
+
+import SymbolSvg from "@app/assets/logo/logo-symbol.inline.svg";
+import LogotypeSvg from "@app/assets/logo/logo-text.inline.svg";
+import CombinedSvg from "@app/assets/logo/logo.inline.svg";
+import { renderResponsiveProp } from "@app/theme";
 
 const Styled = {
   LogoBox: styled(Box, {

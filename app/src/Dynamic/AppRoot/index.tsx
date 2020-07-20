@@ -1,3 +1,5 @@
+import { navigate } from "@reach/router";
+import classNames from "classnames";
 import React, {
   useRef,
   useState,
@@ -7,36 +9,36 @@ import React, {
   useContext,
   useLayoutEffect,
 } from "react";
-import classNames from "classnames";
-import { navigate } from "@reach/router";
-import {
-  useCallbackOnce,
-  isDefined,
-  usePrevious,
-  useRefWrapper,
-} from "Utility";
 import { AnyAction } from "redux";
-import SwipeHandler from "Components/SwipeHandler";
-import GuildList from "Components/GuildList";
-import SideNavbar from "Components/SideNavbar";
-import AddGuildModal from "Components/AddGuildModal";
-import Icon from "Components/Icon";
-import { PageProps } from "Components/Router";
-import { Snowflake, Guild } from "Utility/types";
-import { ScrollContext, AppContext } from "Dynamic/AppRoot/context";
-import { tabs, TabPath, DEFAULT_TAB } from "Dynamic/AppRoot/tabs";
-import AppContent, { useAppLocation } from "Dynamic/AppRoot/content";
-import AppLayout from "Dynamic/AppRoot/layout";
-import { APP_HTML_CLASS, APP_PATH_ROOT } from "Dynamic/AppRoot/config";
-import { AppDispatch, getFragments } from "Dynamic/AppRoot/types";
+
+import AddGuildModal from "@app/components/AddGuildModal";
+import GuildList from "@app/components/GuildList";
+import Icon from "@app/components/Icon";
+import { PageProps } from "@app/components/Router";
+import SideNavbar from "@app/components/SideNavbar";
+import SwipeHandler from "@app/components/SwipeHandler";
 import {
   focusGuild,
   showGuildAddModal,
   hideGuildAddModal,
   focusTab,
-} from "Dynamic/AppRoot/actions";
+} from "@app/dynamic/AppRoot/actions";
+import { APP_HTML_CLASS, APP_PATH_ROOT } from "@app/dynamic/AppRoot/config";
+import AppContent, { useAppLocation } from "@app/dynamic/AppRoot/content";
+import { ScrollContext, AppContext } from "@app/dynamic/AppRoot/context";
+import AppLayout from "@app/dynamic/AppRoot/layout";
+import { tabs, TabPath, DEFAULT_TAB } from "@app/dynamic/AppRoot/tabs";
+import { AppDispatch, getFragments } from "@app/dynamic/AppRoot/types";
+import { usePool } from "@app/store/slices/pools";
+import {
+  useCallbackOnce,
+  isDefined,
+  usePrevious,
+  useRefWrapper,
+} from "@app/utility";
+import { Snowflake, Guild } from "@app/utility/types";
+
 import "./style.scss";
-import { usePool } from "Store/slices/pools";
 
 type DrawerWrapperProps = {
   children: React.ReactNode;

@@ -1,14 +1,15 @@
-import React from "react";
 import styled, { Box } from "@xstyled/emotion";
 import preval from "preval.macro";
-import Link from "Components/AutoLink";
-import Tooltip from "Components/Tooltip";
-import Icon from "Components/Icon";
-import { AnyIconName } from "Components/Icon/loader";
-import { isEmptyOrNil, isNil } from "Utility";
-import { Option, Some, None } from "Utility/option";
-import { WithBoxProps, Nil } from "Utility/types";
-import { opacity, adjust } from "Theme";
+import React from "react";
+
+import Link from "@app/components/AutoLink";
+import Icon from "@app/components/Icon";
+import { AnyIconName } from "@app/components/Icon/loader";
+import Tooltip from "@app/components/Tooltip";
+import { opacity, adjust } from "@app/theme";
+import { isEmptyOrNil, isNil } from "@app/utility";
+import { Option, Some, None } from "@app/utility/option";
+import { WithBoxProps, Nil } from "@app/utility/types";
 
 const Styled = {
   TooltipDivider: styled.hr`

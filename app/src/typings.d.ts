@@ -19,14 +19,15 @@ declare module "shallow-equal" {
 }
 
 declare module "@xstyled/emotion" {
-  import React from "react";
   import _styled, {
     CreateStyled,
     StyledComponent,
     CreateStyledComponentBase,
   } from "@emotion/styled";
-  import { Theme, Space, ColorKey, WithBreakpointArgs } from "Theme";
-  import { StyleObject } from "Utility/types";
+  import React from "react";
+
+  import { Theme, Space, ColorKey, WithBreakpointArgs } from "@app/theme";
+  import { StyleObject } from "@app/utility/types";
 
   export * from "emotion";
 

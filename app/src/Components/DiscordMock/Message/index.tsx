@@ -1,8 +1,9 @@
-import React from "react";
 import classNames from "classnames";
-import ReactionList from "Components/DiscordMock/ReactionList";
-import Skeleton from "Components/Skeleton";
-import { MockReaction, StyleObject } from "Utility/types";
+import React from "react";
+
+import ReactionList from "@app/components/DiscordMock/ReactionList";
+import Skeleton from "@app/components/Skeleton";
+import { MockReaction, StyleObject } from "@app/utility/types";
 import "./style.scss";
 
 type MessageProps = {

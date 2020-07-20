@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { guildCount } from "Store/routes";
-import { restSuccess } from "Store/api/rest";
-import { Nil } from "Utility/types";
+
+import { restSuccess } from "@app/store/api/rest";
+import { guildCount } from "@app/store/routes";
+import { Nil } from "@app/utility/types";
 
 /**
  * Stores static guild count metadata about the bot

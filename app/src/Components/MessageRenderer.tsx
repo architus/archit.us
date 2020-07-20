@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { UserLike, Role, Channel, Snowflake } from "Utility/types";
+
 import {
   tokenizeFragments,
   TaggedFragment,
@@ -7,7 +7,8 @@ import {
   escapeHtml,
   escapeMarkdown,
   convertUnderlines,
-} from "Utility";
+} from "@app/utility";
+import { UserLike, Role, Channel, Snowflake } from "@app/utility/types";
 
 type MessageRendererProps = {
   content: string;

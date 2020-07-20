@@ -1,6 +1,6 @@
-import { th, ThemeGetterFunc, breakpoints } from "@xstyled/system";
-import { isNil, isDefined } from "Utility";
 import { css } from "@xstyled/emotion";
+import { th, ThemeGetterFunc, breakpoints } from "@xstyled/system";
+
 import { Color, ColorInstance } from "./color";
 import {
   WithBreakpointArgs,
@@ -8,6 +8,7 @@ import {
   ColorKey,
   parseThemeColor,
 } from "./tokens";
+import { isNil, isDefined } from "@app/utility";
 
 /**
  * Adds opacity to a color from the theme.

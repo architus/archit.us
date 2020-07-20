@@ -1,12 +1,13 @@
 import React from "react";
-import { CSSTransition, TransitionGroup } from "react-transition-group";
-import Notification from "Components/Notification";
 import { Container } from "react-bootstrap";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
+
+import Notification from "@app/components/Notification";
 import {
   Notification as NotificationInterface,
   NotificationType,
-} from "Store/actions";
-import { StyleObject } from "Utility/types";
+} from "@app/store/actions";
+import { StyleObject } from "@app/utility/types";
 import "./style.scss";
 
 type NotificationListProps = {

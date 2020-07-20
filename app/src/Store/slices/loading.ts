@@ -1,6 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { restStart, restSuccess, restFailure, Route } from "Store/api/rest";
-import { Store } from "Store";
+
+import { Store } from "@app/store";
+import {
+  restStart,
+  restSuccess,
+  restFailure,
+  Route,
+} from "@app/store/api/rest";
 
 /**
  * Stores loading status for each request =\> response API request type

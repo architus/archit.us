@@ -1,19 +1,20 @@
-import React, { useContext, useMemo, useCallback } from "react";
 import classNames from "classnames";
-import { toHumanTime } from "Utility";
+import React, { useContext, useMemo, useCallback } from "react";
+import { Badge, BadgeProps } from "react-bootstrap";
+
+import Message from "@app/components/DiscordMock/Message";
+import { TransformMessageContext } from "@app/components/DiscordMock/transform";
+import Icon from "@app/components/Icon";
+import Skeleton from "@app/components/Skeleton";
+import UserDisplay from "@app/components/UserDisplay";
+import { toHumanTime } from "@app/utility";
 import {
   StyleObject,
   MockReaction,
   MockMessageClump,
   MockMessage,
   MockUser,
-} from "Utility/types";
-import { Badge, BadgeProps } from "react-bootstrap";
-import UserDisplay from "Components/UserDisplay";
-import Icon from "Components/Icon";
-import Skeleton from "Components/Skeleton";
-import Message from "Components/DiscordMock/Message";
-import { TransformMessageContext } from "Components/DiscordMock/transform";
+} from "@app/utility/types";
 import "./style.scss";
 
 // pseudorandom yet determinate skeleton amount

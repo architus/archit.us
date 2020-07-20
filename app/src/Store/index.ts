@@ -4,16 +4,16 @@ import {
   createImmutableStateInvariantMiddleware,
   isPlain,
 } from "@reduxjs/toolkit";
-import { isHot } from "Utility/types";
-import { Option } from "Utility/option";
-import createSagaMiddleware from "redux-saga";
 import { batchDispatchMiddleware } from "redux-batched-actions";
+import createSagaMiddleware from "redux-saga";
 
-import saga from "Store/saga";
-import RestMiddleware from "Store/api/rest/middleware";
 import rootReducer from "./slices/index";
+import RestMiddleware from "@app/store/api/rest/middleware";
+import saga from "@app/store/saga";
+import { Option } from "@app/utility/option";
+import { isHot } from "@app/utility/types";
 
-export * from "Store/hooks";
+export * from "@app/store/hooks";
 
 const SagaMiddleware = createSagaMiddleware();
 

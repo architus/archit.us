@@ -1,9 +1,10 @@
-import React from "react";
 import classNames from "classnames";
-import { constructAvatarUrl, attach, isDefined } from "Utility";
-import { UserLike, normalizeUserLike } from "Utility/types";
-import { Option } from "Utility/option";
-import Skeleton from "Components/Skeleton";
+import React from "react";
+
+import Skeleton from "@app/components/Skeleton";
+import { constructAvatarUrl, attach, isDefined } from "@app/utility";
+import { Option } from "@app/utility/option";
+import { UserLike, normalizeUserLike } from "@app/utility/types";
 import "./style.scss";
 
 const avatarSize = 40;

@@ -1,3 +1,4 @@
+import { globalHistory, History } from "@reach/router";
 import {
   useState,
   useEffect,
@@ -6,12 +7,12 @@ import {
   useRef,
   MutableRefObject,
 } from "react";
-import { globalHistory, History } from "@reach/router";
-import { addMissingUnit, collator } from "./primitives";
-import { isClient, isProduction } from "./document";
-import { Option, Some, None } from "./option";
-import { withBasePath } from "./network";
+
 import { isDefined } from "./data";
+import { isClient, isProduction } from "./document";
+import { withBasePath } from "./network";
+import { Option, Some, None } from "./option";
+import { addMissingUnit, collator } from "./primitives";
 
 /**
  * Gets the optional encoded return query param if not in production mode (where the

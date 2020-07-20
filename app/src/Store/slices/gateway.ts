@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
+
 import {
   gatewayConnect,
   gatewayDisconnect,
   gatewayReconnect,
   gatewayInitialize,
-} from "Store/api/gateway";
+} from "@app/store/api/gateway";
 
 /**
  * Current state of the gateway (whether it is connected or not)

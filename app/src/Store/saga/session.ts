@@ -1,15 +1,10 @@
-import { put } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/core";
 import { delay, take, race, call } from "@redux-saga/core/effects";
-import {
-  LOCAL_STORAGE_KEY,
-  refreshSession,
-  SessionLoad,
-} from "Store/slices/session";
-import { log, warn, setLocalStorage, toJSON, isDefined, error } from "Utility";
-import { PersistentSession, expiresAt } from "Utility/types";
-import { Option } from "Utility/option";
-import { showToast, signOut, loadSession } from "Store/actions";
+import { put } from "redux-saga/effects";
+
+import { showToast, signOut, loadSession } from "@app/store/actions";
+import { isApiError, isDecodeError } from "@app/store/api/rest";
+import { ApiResponse } from "@app/store/api/rest/types";
 import {
   identify,
   tokenExchange,
@@ -17,10 +12,23 @@ import {
   sessionRefresh,
   TokenExchangeResponse,
   IdentifySessionResponse,
-} from "Store/routes";
-import { ApiResponse } from "Store/api/rest/types";
-import { isApiError, isDecodeError } from "Store/api/rest";
-import { select } from "Store/saga/utility";
+} from "@app/store/routes";
+import { select } from "@app/store/saga/utility";
+import {
+  LOCAL_STORAGE_KEY,
+  refreshSession,
+  SessionLoad,
+} from "@app/store/slices/session";
+import {
+  log,
+  warn,
+  setLocalStorage,
+  toJSON,
+  isDefined,
+  error,
+} from "@app/utility";
+import { Option } from "@app/utility/option";
+import { PersistentSession, expiresAt } from "@app/utility/types";
 
 type LoadSessionAction = ReturnType<typeof loadSession>;
 const TIMEOUT = 3000;

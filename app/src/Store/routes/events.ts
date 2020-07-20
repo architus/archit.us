@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import * as t from "io-ts";
 import { Either, either } from "fp-ts/lib/Either";
-import { makeGatewayEvent } from "Store/api/gateway";
+import * as t from "io-ts";
+
+import { makeGatewayEvent } from "@app/store/api/gateway";
 import {
   LogEvents,
   BaseGatewayPacket,
   TSnowflake,
   THoarFrost,
-} from "Utility/types";
+} from "@app/utility/types";
 
 export type MockBotEventAction = t.TypeOf<typeof MockBotEventAction>;
 export const MockBotEventAction = t.taggedUnion(

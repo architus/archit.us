@@ -1,7 +1,16 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { mockBotEvent } from "Store/routes";
-import { gatewayEvent } from "Store/api/gateway";
+
+import { transformReaction } from "@app/components/DiscordMock/transform";
+import {
+  createClump,
+  shouldMergeClumps,
+  mergeClumps,
+  containingClumpIndex,
+} from "@app/components/DiscordMock/util";
+import { gatewayEvent } from "@app/store/api/gateway";
+import { mockBotEvent } from "@app/store/routes";
+import { isNil, isDefined, architusUser } from "@app/utility";
 import {
   DiscordMockContext,
   MockReactionContext,
@@ -11,15 +20,7 @@ import {
   MockReaction,
   SerializedMockReaction,
   LogEvents,
-} from "Utility/types";
-import { transformReaction } from "Components/DiscordMock/transform";
-import {
-  createClump,
-  shouldMergeClumps,
-  mergeClumps,
-  containingClumpIndex,
-} from "Components/DiscordMock/util";
-import { isNil, isDefined, architusUser } from "Utility";
+} from "@app/utility/types";
 
 /**
  * Stores incoming responses from the Gateway interpret API

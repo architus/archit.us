@@ -1,12 +1,12 @@
-import React, { useCallback, useState } from "react";
-import PropTypes from "prop-types";
 import classNames from "classnames";
-import { isDefined, useCallbackOnce } from "Utility";
+import PropTypes from "prop-types";
+import React, { useCallback, useState } from "react";
 
+import Icon from "@app/components/Icon";
 import SettingsCard, {
   propShape as cardPropShape,
-} from "Components/SettingsCard";
-import Icon from "Components/Icon";
+} from "@app/components/SettingsCard";
+import { isDefined, useCallbackOnce } from "@app/utility";
 
 import "./style.scss";
 

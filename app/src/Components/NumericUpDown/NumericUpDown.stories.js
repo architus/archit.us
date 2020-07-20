@@ -1,10 +1,10 @@
-import React, { useState, useCallback } from "react";
-import { boolean, text } from "@storybook/addon-knobs";
 import { action } from "@storybook/addon-actions";
-import { isDefined, isEmptyOrNil, useCallbackOnce } from "Utility";
+import { boolean, text } from "@storybook/addon-knobs";
+import MaxWidthDecorator from "MaxWidthDecorator";
+import React, { useState, useCallback } from "react";
 
 import NumericUpDown from "./index";
-import MaxWidthDecorator from "MaxWidthDecorator";
+import { isDefined, isEmptyOrNil, useCallbackOnce } from "@app/utility";
 
 export default {
   title: "Inputs|NumericUpDown",

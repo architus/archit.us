@@ -1,7 +1,8 @@
-import React from "react";
 import classNames from "classnames";
-import { MockReaction, StyleObject } from "Utility/types";
-import Reaction from "Components/DiscordMock/Reaction";
+import React from "react";
+
+import Reaction from "@app/components/DiscordMock/Reaction";
+import { MockReaction, StyleObject } from "@app/utility/types";
 
 type ReactionListProps = {
   reactions: MockReaction[];

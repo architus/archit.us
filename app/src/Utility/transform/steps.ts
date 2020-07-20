@@ -1,13 +1,14 @@
 import marked from "marked";
-import twemoji from "twemoji";
 import { unemojify, hasEmoji, get } from "node-emoji";
+import twemoji from "twemoji";
+
+import { isNil } from "../data";
 import {
   replaceAll,
   escapeHtml,
   allMatches,
   splitFragments,
 } from "../primitives";
-import { isNil } from "../data";
 import { MockUser } from "../types";
 import aliases from "./discordAliases.json";
 

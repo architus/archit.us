@@ -1,13 +1,12 @@
-import React from "react";
+import { cards } from "@app/components/SettingsCategory/story/example.json.js";
 import { action } from "@storybook/addon-actions";
+import { text, number } from "@storybook/addon-knobs";
+import React from "react";
 
 import SettingsCard from "./index";
 
-import { cards } from "Components/SettingsCategory/story/example.json.js";
-import { text, number } from "@storybook/addon-knobs";
-
 export default {
-  title: "Components|SettingsCard",
+  title: "@app/components|SettingsCard",
   parameters: {
     component: SettingsCard,
   },

@@ -1,11 +1,11 @@
-import React from "react";
 import { boolean } from "@storybook/addon-knobs";
+import React from "react";
 
 import Window from "./index";
-import Icon from "Components/Icon";
+import Icon from "@app/components/Icon";
 
 export default {
-  title: "Components|Window",
+  title: "@app/components|Window",
   parameters: { component: Window },
 };
 

@@ -1,8 +1,8 @@
-import React from "react";
 import {
   LinkProps as RouterLinkProps,
   RouteComponentProps,
 } from "@reach/router";
+import React from "react";
 
 // Convenience export from reach/router (used for abstraction)
 export { Link, Router, Redirect } from "@reach/router";

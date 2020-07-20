@@ -1,4 +1,5 @@
 /* eslint-disable max-classes-per-file */
+import { getAvatarUrl } from "@app/components/UserDisplay";
 import {
   takeOrReplenish,
   includes,
@@ -6,7 +7,7 @@ import {
   generateName,
   randomColor,
   randomInt,
-} from "Utility";
+} from "@app/utility";
 import {
   MockUser,
   User,
@@ -17,8 +18,7 @@ import {
   DiscordMockContext,
   TransformMessage,
   DiscordMockCommands,
-} from "Utility/types";
-import { getAvatarUrl } from "Components/UserDisplay";
+} from "@app/utility/types";
 
 // ? ==========================
 // ? User creation utilities
@@ -31,15 +31,15 @@ const discriminatorMax = 5;
  * unless the internal pool becomes depleted
  */
 export class DiscriminatorProvisioner {
-  private static _instance: DiscriminatorProvisioner | undefined;
+  private static inst: DiscriminatorProvisioner | undefined;
 
   static get instance(): DiscriminatorProvisioner {
-    if (isNil(DiscriminatorProvisioner._instance)) {
-      DiscriminatorProvisioner._instance = new DiscriminatorProvisioner(
+    if (isNil(DiscriminatorProvisioner.inst)) {
+      DiscriminatorProvisioner.inst = new DiscriminatorProvisioner(
         discriminatorMax
       );
     }
-    return DiscriminatorProvisioner._instance;
+    return DiscriminatorProvisioner.inst;
   }
 
   private max: number;

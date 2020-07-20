@@ -1,8 +1,9 @@
-import React from "react";
 import styled, { css, down } from "@xstyled/emotion";
+import React from "react";
 import { Container } from "react-bootstrap";
-import { Card, LoginButton, Layout } from "Components";
-import { Breakpoint } from "Theme";
+
+import { Card, LoginButton, Layout } from "@app/components";
+import { Breakpoint } from "@app/theme";
 
 const Styled = {
   Layout: styled.div`

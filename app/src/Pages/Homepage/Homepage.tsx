@@ -1,23 +1,14 @@
+import styled, { Box, down, css, up, BoxProps } from "@xstyled/emotion";
 import React from "react";
-import { shallowEqual } from "react-redux";
-import LoginButton, { useOauthUrl } from "Components/LoginButton";
-import { useRouteData } from "react-static";
-import {
-  useEffectOnce,
-  isDefined,
-  useCallbackOnce,
-  withBasePath,
-} from "Utility";
-import { useSelector, useDispatch } from "Store/hooks";
-import {
-  Nil,
-  DiscordMockContext,
-  DiscordMockCommands,
-  WithBoxProps,
-} from "Utility/types";
-import { useSessionStatus } from "Store/actions";
-import { guildCount } from "Store/routes";
 import { Container, Button, Badge } from "react-bootstrap";
+import { shallowEqual } from "react-redux";
+import { useRouteData } from "react-static";
+
+import { messageSets, allowedCommands, customEmotes } from "./demo.json";
+import LogsSvg from "./svg/logs.svg";
+import MusicSvg from "./svg/music.svg";
+import StatisticsSvg from "./svg/statistics.svg";
+import UserControlSvg from "./svg/user_control.svg";
 import {
   Icon,
   Logo,
@@ -28,17 +19,27 @@ import {
   DiscordMock,
   CubeBackground,
   ErrorBoundary,
-} from "Components";
-import { Link } from "Components/Router";
-import styled, { Box, down, css, up, BoxProps } from "@xstyled/emotion";
-import { CustomEmojiExtension } from "Components/DiscordMock/CustomEmojiExtension";
-import { Extension } from "Components/DiscordMock/util";
-import { Space, ColorMode, mode, color, opacity } from "Theme";
-import LogsSvg from "./svg/logs.svg";
-import MusicSvg from "./svg/music.svg";
-import StatisticsSvg from "./svg/statistics.svg";
-import UserControlSvg from "./svg/user_control.svg";
-import { messageSets, allowedCommands, customEmotes } from "./demo.json";
+} from "@app/components";
+import { CustomEmojiExtension } from "@app/components/DiscordMock/CustomEmojiExtension";
+import { Extension } from "@app/components/DiscordMock/util";
+import LoginButton, { useOauthUrl } from "@app/components/LoginButton";
+import { Link } from "@app/components/Router";
+import { useSessionStatus } from "@app/store/actions";
+import { useSelector, useDispatch } from "@app/store/hooks";
+import { guildCount } from "@app/store/routes";
+import { Space, ColorMode, mode, color, opacity } from "@app/theme";
+import {
+  useEffectOnce,
+  isDefined,
+  useCallbackOnce,
+  withBasePath,
+} from "@app/utility";
+import {
+  Nil,
+  DiscordMockContext,
+  DiscordMockCommands,
+  WithBoxProps,
+} from "@app/utility/types";
 
 const Content = styled.divBox`
   & :not(pre) > code,

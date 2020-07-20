@@ -1,13 +1,13 @@
-import React, { useCallback } from "react";
-import { text, select } from "@storybook/addon-knobs";
 import { action } from "@storybook/addon-actions";
-
-import Notification from "./index";
-import Icon from "Components/Icon";
+import { text, select } from "@storybook/addon-knobs";
+import React, { useCallback } from "react";
 import { Button } from "react-bootstrap";
 
+import Notification from "./index";
+import Icon from "@app/components/Icon";
+
 export default {
-  title: "Components|Notification",
+  title: "@app/components|Notification",
   parameters: { component: Notification },
 };
 

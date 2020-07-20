@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Store } from "Store";
+
+import { Store } from "@app/store";
 
 // ? ====================
 // ? Types

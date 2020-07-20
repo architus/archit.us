@@ -1,6 +1,7 @@
 import React from "react";
 import { Container, Badge } from "react-bootstrap";
-import { AppPageProps } from "Dynamic/AppRoot/types";
+
+import { AppPageProps } from "@app/dynamic/AppRoot/types";
 
 const Statistics: React.FC<AppPageProps> = () => (
   <Container className="py-5">

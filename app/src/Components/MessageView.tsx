@@ -1,6 +1,7 @@
 import React from "react";
-import MessageRenderer from "Components/MessageRenderer";
-import { Snowflake } from "Utility/types";
+
+import MessageRenderer from "@app/components/MessageRenderer";
+import { Snowflake } from "@app/utility/types";
 
 type MessageViewProps = {
   content: string;

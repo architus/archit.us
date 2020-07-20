@@ -1,13 +1,14 @@
-import React, { useMemo } from "react";
 import classNames from "classnames";
-import { Snowflake, isSnowflake, Guild } from "Utility/types";
-import { usePool } from "Store/slices/pools";
-import Skeleton from "Components/Skeleton";
-import GuildIcon from "Components/GuildIcon";
-import Tooltip from "Components/Tooltip";
-import Icon from "Components/Icon";
-import { Option, None, Some } from "Utility/option";
-import { useFragments } from "Dynamic/AppRoot/types";
+import React, { useMemo } from "react";
+
+import GuildIcon from "@app/components/GuildIcon";
+import Icon from "@app/components/Icon";
+import Skeleton from "@app/components/Skeleton";
+import Tooltip from "@app/components/Tooltip";
+import { useFragments } from "@app/dynamic/AppRoot/types";
+import { usePool } from "@app/store/slices/pools";
+import { Option, None, Some } from "@app/utility/option";
+import { Snowflake, isSnowflake, Guild } from "@app/utility/types";
 import "./style.scss";
 
 const SKELETON_COUNT = 5;

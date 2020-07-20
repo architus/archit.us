@@ -1,10 +1,10 @@
 /* eslint-disable react/prop-types */
-import React from "react";
-import axios from "axios";
-import path from "path";
-import fs from "fs";
-import SoureMapSupport from "source-map-support";
 import { getColorModeInitScriptElement } from "@xstyled/emotion";
+import axios from "axios";
+import fs from "fs";
+import path from "path";
+import React from "react";
+import SoureMapSupport from "source-map-support";
 
 const TypeScript = require("ts-node");
 
@@ -19,9 +19,9 @@ TypeScript.register({
   },
 });
 
-const { API_BASE } = require("./src/Utility/api.node");
+const { API_BASE } = require("./src/utility/api.node");
 
-const noFlashPath = path.resolve(__dirname, "./src/Build/no-flash.js");
+const noFlashPath = path.resolve(__dirname, "./src/build/no-flash.js");
 const noFlashScript = fs.readFileSync(noFlashPath);
 const config = {
   entry: path.join(__dirname, "src", "index.tsx"),
@@ -42,7 +42,7 @@ const config = {
     return [
       {
         path: "/",
-        template: "src/Pages/Homepage",
+        template: "src/pages/Homepage",
         getData: async () => ({
           guildCount,
           userCount,
@@ -50,15 +50,15 @@ const config = {
       },
       {
         path: "login",
-        template: "src/Pages/Login",
+        template: "src/pages/Login",
       },
       {
         path: "404",
-        template: "src/Pages/NotFound",
+        template: "src/pages/NotFound",
       },
       {
         path: "app",
-        template: "src/Dynamic/AppRoot",
+        template: "src/dynamic/AppRoot",
       },
     ];
   },

@@ -2,6 +2,8 @@
 
 const path = require("path");
 
+const relative = (p) => path.resolve(path.join(__dirname, p));
+
 module.exports = {
   testRegex: "(/__tests__/.*|(\\.|/)(test|spec))\\.([tj]sx?)$",
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json"],
@@ -10,13 +12,13 @@ module.exports = {
   moduleNameMapper: {
     ".+\\.(css|styl|less|sass|scss)$": `identity-obj-proxy`,
     // Base package aliases
-    "^@architus/facade/(.*)$": "<rootDir>/../design/src/$1",
-    "^@architus/lib/(.*)$": "<rootDir>/../lib/src/$1",
+    "^@architus/facade/(.*)$": relative("../design/src/$1"),
+    "^@architus/lib/(.*)$": relative("../lib/src/$1"),
     // Utility absolute import
-    "^@docs/(.*)$": "<rootDir>/../docs/src/$1",
+    "^@docs/(.*)$": relative("../docs/src/$1"),
   },
   transform: {
-    "^.+\\.[jt]sx?$": path.resolve(path.join(__dirname, "./jest-babel.js")),
+    "^.+\\.[jt]sx?$": relative("./jest-babel.js"),
   },
   globals: {
     __PATH_PREFIX__: ``,

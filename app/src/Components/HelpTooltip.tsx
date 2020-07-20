@@ -1,11 +1,12 @@
-import React from "react";
-import styled from "@xstyled/emotion";
 import * as Popper from "@popperjs/core";
+import styled from "@xstyled/emotion";
+import React from "react";
 import { OverlayProps } from "react-overlays/esm/Overlay";
-import Icon from "Components/Icon";
-import Tooltip, { TooltipMode } from "Components/Tooltip";
-import { StyleObject, WithBoxProps } from "Utility/types";
-import { Space } from "Theme";
+
+import Icon from "@app/components/Icon";
+import Tooltip, { TooltipMode } from "@app/components/Tooltip";
+import { Space } from "@app/theme";
+import { StyleObject, WithBoxProps } from "@app/utility/types";
 
 const Styled = {
   HelpIcon: styled.spanBox`

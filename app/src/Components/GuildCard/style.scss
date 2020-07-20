@@ -2,7 +2,7 @@
 @import "scss/theme";
 @import "scss/util";
 @import "scss/media";
-@import "Components/GuildIcon/style";
+@import "@app/components/GuildIcon/style";
 
 .guild-card {
     display: flex;

@@ -1,7 +1,8 @@
-import React, { useMemo } from "react";
 import styled from "@xstyled/emotion";
-import { useThemeColor, Color, ColorKey, ColorMode, color } from "Theme";
-import { WithBoxProps } from "Utility/types";
+import React, { useMemo } from "react";
+
+import { useThemeColor, Color, ColorKey, ColorMode, color } from "@app/theme";
+import { WithBoxProps } from "@app/utility/types";
 
 const Styled = {
   CubeBackground: styled.divBox<{

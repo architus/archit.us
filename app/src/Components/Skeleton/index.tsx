@@ -1,5 +1,6 @@
-import React from "react";
 import classNames from "classnames";
+import React from "react";
+
 import {
   addMissingUnit,
   multiplyDimension,
@@ -8,9 +9,9 @@ import {
   attach,
   formatDimension,
   parseDimension,
-} from "Utility";
+} from "@app/utility";
 import "./style.scss";
-import { RawDimension, StyleObject, Nil } from "Utility/types";
+import { RawDimension, StyleObject, Nil } from "@app/utility/types";
 
 type BaseSkeletonProps = {
   width: RawDimension;

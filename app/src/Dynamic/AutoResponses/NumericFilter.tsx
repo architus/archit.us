@@ -1,9 +1,10 @@
-import React from "react";
-import { FilterRendererProps } from "react-data-grid";
 import styled from "@xstyled/emotion";
 import deepEqual from "fast-deep-equal";
-import { Option, Some, None } from "Utility/option";
-import { HelpTooltip } from "Components";
+import React from "react";
+import { FilterRendererProps } from "react-data-grid";
+
+import { HelpTooltip } from "@app/components";
+import { Option, Some, None } from "@app/utility/option";
 
 const Styled = {
   HelpTooltip: styled(HelpTooltip)`

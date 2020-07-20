@@ -1,9 +1,10 @@
-import React from "react";
 import styled, { Box, BoxProps } from "@xstyled/emotion";
+import React from "react";
 import ReactSwitch from "react-switch";
-import { isDefined } from "Utility";
-import { StyleObject } from "Utility/types";
-import { Color, useThemeColor } from "Theme";
+
+import { Color, useThemeColor } from "@app/theme";
+import { isDefined } from "@app/utility";
+import { StyleObject } from "@app/utility/types";
 
 const Styled = {
   Switch: styled(ReactSwitch)`

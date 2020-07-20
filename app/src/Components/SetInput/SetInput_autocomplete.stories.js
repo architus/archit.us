@@ -1,13 +1,12 @@
-import React, { useState, useMemo } from "react";
-import PropTypes from "prop-types";
+import { data } from "@app/components/AutoCompleteInput/story/sample.json.js";
 import { text } from "@storybook/addon-knobs";
-import { isDefined } from "Utility";
+import MaxWidthDecorator from "MaxWidthDecorator";
+import PropTypes from "prop-types";
+import React, { useState, useMemo } from "react";
 
 import SetInput from "./index";
-import MaxWidthDecorator from "MaxWidthDecorator";
-import AutoCompleteInput from "Components/AutoCompleteInput";
-
-import { data } from "Components/AutoCompleteInput/story/sample.json.js";
+import AutoCompleteInput from "@app/components/AutoCompleteInput";
+import { isDefined } from "@app/utility";
 
 export default {
   title: "Inputs|SetInput/Autocomplete",
@@ -163,11 +162,10 @@ export const Advanced = () => {
 
   const isValid = useMemo(() => {
     if (!showValidation) return true;
-    else {
-      const trimmed = value.trim();
-      if (data.findIndex((d) => d.title.trim() === trimmed) !== -1) return true;
-      else return false;
-    }
+
+    const trimmed = value.trim();
+    if (data.findIndex((d) => d.title.trim() === trimmed) !== -1) return true;
+    return false;
   }, [showValidation, value]);
 
   const onChange = (v) => {

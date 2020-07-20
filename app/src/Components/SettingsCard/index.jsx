@@ -1,10 +1,10 @@
-import React, { useCallback } from "react";
 import PropTypes from "prop-types";
+import React, { useCallback } from "react";
 
-import Card from "Components/Card";
+import Card from "@app/components/Card";
 import SettingsEntry, {
   propShape as settingPropShape,
-} from "Components/SettingsEntry";
+} from "@app/components/SettingsEntry";
 
 import "./style.scss";
 

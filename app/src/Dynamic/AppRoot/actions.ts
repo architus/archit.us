@@ -1,6 +1,7 @@
-import { Snowflake } from "Utility/types";
 import { createAction } from "@reduxjs/toolkit";
+
 import { TabPath } from "./tabs";
+import { Snowflake } from "@app/utility/types";
 
 export const focusGuild = createAction<Snowflake>("app/focusGuild");
 export const showGuildAddModal = createAction("app/showGuildAddModal");

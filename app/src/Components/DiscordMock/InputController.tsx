@@ -1,13 +1,14 @@
 import React from "react";
-import { StyleObject, MockMessageSet } from "Utility/types";
-import { isDefined, MockTyper, isNil, isClient } from "Utility";
+
 import {
   DiscordMockDispatch,
   sendInvisibleMessage,
   sendMessage,
   clearMessages,
-} from "Components/DiscordMock/actions";
-import Input from "Components/DiscordMock/Input";
+} from "@app/components/DiscordMock/actions";
+import Input from "@app/components/DiscordMock/Input";
+import { isDefined, MockTyper, isNil, isClient } from "@app/utility";
+import { StyleObject, MockMessageSet } from "@app/utility/types";
 
 // Mock typer options
 const keypressDelay = 90;

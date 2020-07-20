@@ -1,4 +1,3 @@
-import { invertMap, isDefined } from "Utility";
 import {
   library,
   IconDefinition,
@@ -6,8 +5,10 @@ import {
   IconName,
   IconPrefix,
 } from "@fortawesome/fontawesome-svg-core";
-import * as FontAwesomeIcons from "./fontawesome";
+
 import { icons, CustomIconDefinition, CustomIconName } from "./custom";
+import * as FontAwesomeIcons from "./fontawesome";
+import { invertMap, isDefined } from "@app/utility";
 
 const faIcons: IconDefinition[] = Object.values(FontAwesomeIcons);
 

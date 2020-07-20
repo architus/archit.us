@@ -1,13 +1,14 @@
+import { SagaIterator } from "redux-saga";
+import { takeEvery, put } from "redux-saga/effects";
+
+import { mockUserEvent } from "@app/store/routes";
 import {
   interpretInvisible,
   interpretMessage,
   interpretReact,
   interpretUnreact,
-} from "Store/slices/interpret";
-import { mockUserEvent } from "Store/routes";
-import { LogEvents } from "Utility/types";
-import { SagaIterator } from "redux-saga";
-import { takeEvery, put } from "redux-saga/effects";
+} from "@app/store/slices/interpret";
+import { LogEvents } from "@app/utility/types";
 
 export default function* interpret(): SagaIterator {
   yield takeEvery(interpretMessage.type, handleInterpretMessage);
