@@ -9,7 +9,8 @@
     "test": "jest --coverage",
     "lint": "eslint --max-warnings 0 -f unix \"src/**/*.{js,jsx,ts,tsx,json}\"",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json}\" && eslint --fix -f unix \"src/**/*.{js,jsx,ts,tsx,json}\"",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "clean": "rimraf coverage"
   },
   "dependencies": {
     "@architus/lib": "^0.1.0",
