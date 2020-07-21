@@ -82,7 +82,7 @@ overrides:
   - files:
       - "**/jest-config.js"
     rules:
-      "global-require": off
+      "global-require": 0
 
   # Disable TS rules on JS files
   - files:

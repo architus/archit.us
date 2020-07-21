@@ -20,7 +20,7 @@ overrides:
   - files:
       - "./src/store/slices/**/*.ts"
     rules:
-      no-param-reassign: off
+      no-param-reassign: 0
 
 # ESLint Project Settings
 settings:
