@@ -14,6 +14,7 @@
     "test": "yarn workspaces run test && cd ./app && yarn run test",
     "lint": "yarn workspaces run lint && cd ./app && yarn run lint",
     "format": "yarn workspaces run format && cd ./app && yarn run format",
+    "clean": "yarn workspaces run clean && cd ./app && yarn run clean",
     "typecheck": "yarn workspaces run typecheck && cd ./app && yarn run typecheck",
     "bootstrap": "lerna bootstrap"
   },
@@ -52,7 +53,8 @@
     "lerna": "^3.22.1",
     "prettier": "2.0.5",
     "react": "^16.13.1",
-    "react-test-renderer": "^16.13.1"
+    "react-test-renderer": "^16.13.1",
+    "rimraf": "^3.0.2"
   },
   "repository": {
     "type": "git",

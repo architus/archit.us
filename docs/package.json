@@ -15,7 +15,7 @@
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json}\" \"gatsby-*.{js,ts}\" && eslint --fix -f unix \"src/**/*.{js,jsx,ts,tsx,json}\" \"gatsby-*.{js,ts}\"",
     "typecheck": "bash -c 'if [ \"$CI\" == \"true\" ]; then yarn run build && yarn run typecheck-base; else yarn run typecheck-base; fi'",
     "typecheck-base": "tsc --noEmit",
-    "clean": "gatsby clean"
+    "clean": "rimraf coverage .cache .linaria-cache public"
   },
   "dependencies": {
     "@architus/facade": "^0.1.0",
