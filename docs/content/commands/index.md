@@ -5,7 +5,7 @@ childrenOrder:
     - gulag
     - latex
     - music
-    - corona
+    - statistics
     - 8ball
     - purge
     - webcomic
@@ -49,8 +49,11 @@ Architus commands are the primary way of interacting with the bot through the Di
 
 ## Statistics
 
-* `messagecount` - Count the total messages a user has sent in the server
-* `spellcheck` - Checks the spelling of a user
+* [`messagecount`](/commands/statistics/#messagecount) - Count the total messages a user has sent in the server
+* [`spellcheck`](/commands/statistics/#spellcheck) - Checks the spelling of a user
+* [`joins`](/commands/statistics/#joins) - See member growth in a graph
+* [`optout`](/commands/statistics/#optout) - Stop your stats from being tracked
+* [`corona`](/commands/statistics/#corona) - See corona virus stats
 
 ## Settings
 
@@ -58,10 +61,9 @@ Architus commands are the primary way of interacting with the bot through the Di
 
 ## Misc
 
-* `ajax` - Tells you if Ajax is in masters or not
-* [`corona`](/commands/corona) - Shows the number of postive cases and deaths for the coronavirus
+* [`price`](/commands/stocks) - See current price of a stock
 * [`8ball`](/commands/8ball) - Answers from the beyond
 * [`purge`](/commands/purge) - Purge a channel of a user's messages
-* `quote` - Quotes a previous message in a pretty format. Use url or id
+* [`quote`](/commands/quote) - Quotes a previous message in a pretty format. Use url or id
 * [`webcomic`](/commands/webcomic) - Posts the daily comic for the specified webcomic
-* `help` - Displays in-app help text for each command
+* [`help`](/commands/help) - Displays in-app help text for each command
