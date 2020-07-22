@@ -11,8 +11,8 @@ import {
 import { isDefined } from "./data";
 import { isClient, isProduction } from "./document";
 import { withBasePath } from "./network";
-import { Option, Some, None } from "./option";
 import { addMissingUnit, collator } from "./primitives";
+import { Option, Some, None } from "@architus/lib/option";
 
 /**
  * Gets the optional encoded return query param if not in production mode (where the

@@ -1,5 +1,5 @@
 import { isDefined } from "@app/utility/data";
-import { Option, None } from "@app/utility/option";
+import { Option, None } from "@architus/lib/option";
 
 /**
  * Gets the amount needed to scroll to be at the bottom from the top

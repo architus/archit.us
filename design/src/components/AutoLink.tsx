@@ -5,7 +5,8 @@ import { RiExternalLinkLine } from "react-icons/ri";
 
 import { primaryLink } from "../theme/mixins";
 import { SpacingKey, gap } from "../theme/spacing";
-import { isDefined, isExternal } from "@architus/lib/utility";
+import { isDefined } from "@architus/lib/utility";
+import { isExternal } from "@architus/lib/path";
 
 const baseLinkClass = css`
   ${primaryLink}

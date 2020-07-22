@@ -6,8 +6,8 @@ import { either } from "fp-ts/lib/Either";
 import * as t from "io-ts";
 
 import { isDefined } from "./data";
-import { option } from "./option";
 import { TransformerStep } from "./transform";
+import { option } from "@architus/lib/option";
 
 export class EnumType<A> extends t.Type<A> {
   public readonly _tag: "EnumType" = "EnumType";

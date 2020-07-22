@@ -3,8 +3,8 @@ import React from "react";
 
 import Skeleton from "@app/components/Skeleton";
 import { constructAvatarUrl, attach, isDefined } from "@app/utility";
-import { Option } from "@app/utility/option";
 import { UserLike, normalizeUserLike } from "@app/utility/types";
+import { Option } from "@architus/lib/option";
 import "./style.scss";
 
 const avatarSize = 40;

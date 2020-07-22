@@ -2,7 +2,7 @@ import { useColorMode, useTheme } from "@xstyled/emotion";
 
 import { ColorKey, ColorMode, parseThemeColor } from "./tokens";
 import { isDefined, isNil } from "@app/utility";
-import { Option, Some, None } from "@app/utility/option";
+import { Option, Some, None } from "@architus/lib/option";
 
 /**
  * Obtains the resolved color corresponding to the key for the current color mode (i.e.

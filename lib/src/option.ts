@@ -1,7 +1,41 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable max-classes-per-file */
+import * as t from "io-ts";
+import { Either, either, right, isRight } from "fp-ts/lib/Either";
+
 import { Nil, Predicate } from "./types";
 import { isDefined, isNil } from "./utility/primitive";
+
+/**
+ * Provides a runtime type wrapper around the given type, using None if the type is null or undefined
+ * @param type - Underlying runtime type
+ * @param preferNull - Whether to prefer null when encoding a None Option<A> to O | Nil
+ */
+export function option<T extends t.Mixed>(
+  type: T,
+  preferNull = true
+): t.Type<Option<t.TypeOf<T>>, t.OutputOf<T> | Nil, unknown> {
+  return new t.Type<Option<t.TypeOf<T>>, t.OutputOf<T> | Nil, unknown>(
+    `Option<${type.name}>`,
+    (u: unknown): u is Option<t.TypeOf<T>> => {
+      if (isNil(u)) return true;
+      return type.is(u);
+    },
+    (u: unknown, c: t.Context) => {
+      if (isNil(u)) return right(None);
+      const decodeResult = type.validate(u, c);
+      return either.chain(
+        decodeResult,
+        (a: t.TypeOf<T>): Either<t.Errors, Option<t.TypeOf<T>>> =>
+          right(Some(a))
+      );
+    },
+    (a: Option<t.TypeOf<T>>): t.OutputOf<T> | Nil => {
+      const outputOption = a.map(type.encode);
+      return preferNull ? outputOption.orNull() : outputOption.orUndefined();
+    }
+  );
+}
 
 export type Unwrap<T> = T extends Option<infer K> ? K : T;
 
@@ -185,6 +219,14 @@ export abstract class Option<A> implements OptionLike<A> {
    */
   static if(cond: boolean): Option<{}> {
     if (cond) return Some({});
+    return None;
+  }
+
+  /**
+   * Drops an either into an option
+   */
+  static drop<A>(e: Either<unknown, A>): Option<A> {
+    if (isRight(e)) return Some(e.right);
     return None;
   }
 

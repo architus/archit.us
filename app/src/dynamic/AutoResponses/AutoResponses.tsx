@@ -39,7 +39,7 @@ import { useCurrentUser, showToast } from "@app/store/actions";
 import { usePool, usePoolEntities } from "@app/store/slices/pools";
 import { ColorMode, opacity, color, mode } from "@app/theme";
 import { intersection, memoize } from "@app/utility";
-import { Option, None, Some, Unwrap } from "@app/utility/option";
+import { Option, None, Some, Unwrap } from "@architus/lib/option";
 import {
   User,
   Member,

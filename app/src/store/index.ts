@@ -10,8 +10,8 @@ import createSagaMiddleware from "redux-saga";
 import rootReducer from "./slices/index";
 import RestMiddleware from "@app/store/api/rest/middleware";
 import saga from "@app/store/saga";
-import { Option } from "@app/utility/option";
 import { isHot } from "@app/utility/types";
+import { Option } from "@architus/lib/option";
 
 export * from "@app/store/hooks";
 

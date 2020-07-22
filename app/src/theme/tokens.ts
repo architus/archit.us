@@ -1,5 +1,5 @@
 import { isDefined } from "@app/utility";
-import { Some, Option, None } from "@app/utility/option";
+import { Some, Option, None } from "@architus/lib/option";
 
 /* eslint-disable @typescript-eslint/camelcase */
 

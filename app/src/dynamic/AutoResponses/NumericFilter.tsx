@@ -4,7 +4,7 @@ import React from "react";
 import { FilterRendererProps } from "react-data-grid";
 
 import { HelpTooltip } from "@app/components";
-import { Option, Some, None } from "@app/utility/option";
+import { Option, Some, None } from "@architus/lib/option";
 
 const Styled = {
   HelpTooltip: styled(HelpTooltip)`

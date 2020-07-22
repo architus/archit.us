@@ -1,4 +1,4 @@
-import { Option, Some, None } from "./option";
+import { Option, Some, None } from "@architus/lib/option";
 import { isDefined, isNil } from "./utility";
 
 const baseDimensionUnits = [

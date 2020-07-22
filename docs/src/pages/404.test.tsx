@@ -2,7 +2,7 @@ import { jest, describe, it, expect } from "@jest/globals";
 import React from "react";
 import renderer from "react-test-renderer";
 
-import "@docs/test/watch-media";
+import "@app/test/watch-media";
 import NotFoundPage from "./404";
 
 jest.mock("@docs/data/build-metadata");

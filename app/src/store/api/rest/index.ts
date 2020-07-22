@@ -25,8 +25,8 @@ import {
   log,
   warn,
 } from "@app/utility";
-import { Option, Some, None } from "@app/utility/option";
 import { Omitted, OrEmpty } from "@app/utility/types";
+import { Option, Some, None } from "@architus/lib/option";
 
 export const restDispatch = createAction<RestDispatch>("api/restDispatch");
 export const restStart = createAction<RestStart>("api/restStart");

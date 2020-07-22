@@ -1,3 +1,4 @@
+import { useFragments } from "@app/dynamic/AppRoot/types";
 import classNames from "classnames";
 import React, { useMemo } from "react";
 
@@ -5,10 +6,9 @@ import GuildIcon from "@app/components/GuildIcon";
 import Icon from "@app/components/Icon";
 import Skeleton from "@app/components/Skeleton";
 import Tooltip from "@app/components/Tooltip";
-import { useFragments } from "@app/dynamic/AppRoot/types";
 import { usePool } from "@app/store/slices/pools";
-import { Option, None, Some } from "@app/utility/option";
 import { Snowflake, isSnowflake, Guild } from "@app/utility/types";
+import { Option, None, Some } from "@architus/lib/option";
 import "./style.scss";
 
 const SKELETON_COUNT = 5;

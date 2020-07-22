@@ -1,7 +1,7 @@
 import React from "react";
 import { FilterRendererProps } from "react-data-grid";
 
-import { Option, Some } from "@app/utility/option";
+import { Option, Some } from "@architus/lib/option";
 
 export function StringFilter<R, SR>({
   value,

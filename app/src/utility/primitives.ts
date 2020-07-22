@@ -3,7 +3,6 @@ import { isClient, isRemote } from "./document";
 import { identity } from "./functions";
 import { error } from "./logging";
 import { left, right } from "./names.json";
-import { Option, Some, None } from "./option";
 import {
   Dimension,
   RawDimension,
@@ -12,6 +11,7 @@ import {
   Nil,
   isDimension,
 } from "./types";
+import { Option, Some, None } from "@architus/lib/option";
 
 /**
  * Generates a random name based on the Docker container naming algorithm (adjective,

@@ -64,7 +64,7 @@ rules:
       - ["external", "builtin"]
       - ["index", "sibling", "parent", "internal", "object"]
       pathGroups:
-        - pattern: "^[@]((architus)|(docs)|(app))/**"
+        - pattern: "^[@]((architus)|(docs)|(app))\/**"
           group: "internal"
       pathGroupsExcludedImportTypes:
         - builtin

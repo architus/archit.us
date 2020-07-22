@@ -13,12 +13,9 @@ import {
   multiplyDimension,
   formatDimension,
 } from "@architus/lib/dimension";
+import { withoutLeading, withoutTrailing } from "@architus/lib/path";
 import { Nil } from "@architus/lib/types";
-import {
-  withoutLeading,
-  withoutTrailing,
-  formatDate,
-} from "@architus/lib/utility";
+import { formatDate } from "@architus/lib/utility";
 import { History, GithubUser } from "@docs/build/github-types";
 import { useGithubMetadata } from "@docs/data/github-metadata";
 

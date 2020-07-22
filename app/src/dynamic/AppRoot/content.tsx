@@ -1,6 +1,6 @@
 import { Box } from "@xstyled/emotion";
 import classNames from "classnames";
-import React, { lazy, Suspense } from "react";
+import React, { lazy } from "react";
 
 import { useFragments } from "./types";
 import ErrorBoundary from "@app/components/ErrorBoundary";
@@ -27,7 +27,7 @@ import {
   isDefined,
   error,
 } from "@app/utility";
-import { Option, Some, None } from "@app/utility/option";
+import { Option, Some, None } from "@architus/lib/option";
 import { Snowflake, isSnowflake, Guild } from "@app/utility/types";
 
 interface AppLocation {
@@ -123,11 +123,12 @@ const PageRenderer: React.FC<PageRendererProps> = React.memo(
     return Option.merge(tabOption, guildOption)
       .map(([tab, guild]) => (
         // eslint-disable-next-line react/jsx-key
-        <Suspense fallback={<AppSkeleton />}>
-          <ErrorBoundary onError={(e: Error): void => error(e)}>
-            <LazyPageRenderer tab={tab} guild={guild} />
-          </ErrorBoundary>
-        </Suspense>
+        // <Suspense fallback={<AppSkeleton />}>
+        //   <ErrorBoundary onError={(e: Error): void => error(e)}>
+        //     <LazyPageRenderer tab={tab} guild={guild} />
+        //   </ErrorBoundary>
+        // </Suspense>
+        null
       ))
       .getOrElse(<AppSkeleton />);
   }
@@ -144,9 +145,9 @@ const Wrapper: React.FC<WrapperProps> = () => {
 
   return (
     <div className={classNames("app-content", contentClass)}>
-      <React.Suspense fallback={<em>Loading...</em>}>
+      {/* <React.Suspense fallback={<em>Loading...</em>}>
         <AppContent currentTab={currentTab} currentGuild={currentGuild} />
-      </React.Suspense>
+      </React.Suspense> */}
     </div>
   );
 };

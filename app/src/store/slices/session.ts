@@ -24,7 +24,6 @@ import {
   isNil,
   withBasePath,
 } from "@app/utility";
-import { Option, Some, None } from "@app/utility/option";
 import {
   User,
   PersistentSession,
@@ -32,6 +31,7 @@ import {
   Access,
   expiresAt,
 } from "@app/utility/types";
+import { Option, Some, None } from "@architus/lib/option";
 
 // ? ====================
 // ? Types

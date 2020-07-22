@@ -1,8 +1,8 @@
 import { shallowEqualObjects, shallowEqualArrays } from "shallow-equal";
 
-import { Option, Some, None } from "./option";
 import { randomInt } from "./primitives";
 import { Nil, Predicate, RecordKey, Comparator } from "./types";
+import { Option, Some, None } from "@architus/lib/option";
 
 /**
  * Determines whether a value is defined (non-undefined or null). Returns true if the

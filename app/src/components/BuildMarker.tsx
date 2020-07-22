@@ -8,8 +8,8 @@ import { AnyIconName } from "@app/components/Icon/loader";
 import Tooltip from "@app/components/Tooltip";
 import { opacity, adjust } from "@app/theme";
 import { isEmptyOrNil, isNil } from "@app/utility";
-import { Option, Some, None } from "@app/utility/option";
 import { WithBoxProps, Nil } from "@app/utility/types";
+import { Option, Some, None } from "@architus/lib/option";
 
 const Styled = {
   TooltipDivider: styled.hr`

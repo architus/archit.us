@@ -27,8 +27,8 @@ import {
   isDefined,
   error,
 } from "@app/utility";
-import { Option } from "@app/utility/option";
 import { PersistentSession, expiresAt } from "@app/utility/types";
+import { Option } from "@architus/lib/option";
 
 type LoadSessionAction = ReturnType<typeof loadSession>;
 const TIMEOUT = 3000;

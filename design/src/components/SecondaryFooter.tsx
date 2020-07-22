@@ -135,7 +135,9 @@ const TechnologyList: React.FC<TechnologyListProps> = ({ additional }) => (
       link="http://typescriptlang.org/"
       tooltip="TypeScript"
     />
-    {additional}
+    {additional.map((t) => (
+      <Technology {...t} key={t.link} />
+    ))}
   </Styled.TechnologyList>
 );
 

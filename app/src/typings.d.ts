@@ -1,11 +1,16 @@
-declare module "*.svg" {
-  const cssString: string;
-  export default cssString;
-}
+/* eslint-disable import/no-duplicates */
+/* eslint-disable import/order */
 
-declare module "*.inline.svg" {
-  const content: string;
-  export default content;
+declare module "gatsby-plugin-dark-mode" {
+  // eslint-disable-next-line import/order
+  import React from "react";
+
+  export const ThemeToggler: React.FC<{
+    children: (args: {
+      theme: string;
+      toggleTheme: (newTheme: string) => void;
+    }) => React.ReactNode;
+  }>;
 }
 
 declare module "shallow-equal" {
@@ -16,6 +21,30 @@ declare module "shallow-equal" {
   export function shallowEqualObjects<
     T extends Record<unknown, unknown> = Record<unknown, unknown>
   >(a: T, b: T): boolean;
+}
+
+declare module "unist-util-find" {
+  import React from "react";
+  // eslint-disable-next-line import/no-extraneous-dependencies
+  import { Node } from "unist";
+
+  const find: (node: Node, pattern: string) => Node | undefined;
+  export default find;
+}
+
+declare module "*.svg" {
+  const content: React.FC<React.SVGAttributes<SVGElement>>;
+  export default content;
+}
+
+declare module "*.woff" {
+  const content: string;
+  export default content;
+}
+
+declare module "*.woff2" {
+  const content: string;
+  export default content;
 }
 
 declare module "@xstyled/emotion" {
@@ -29,7 +58,12 @@ declare module "@xstyled/emotion" {
   import { Theme, Space, ColorKey, WithBreakpointArgs } from "@app/theme";
   import { StyleObject } from "@app/utility/types";
 
-  export * from "emotion";
+  import { Interpolation } from "@emotion/css";
+  export function css(
+    template: TemplateStringsArray,
+    ...args: Array<Interpolation>
+  ): string
+  export function css(...args: Array<Interpolation>): string
 
   export const useTheme: () => Theme;
   export const useDown: (breakpoint: Breakpoint) => boolean;

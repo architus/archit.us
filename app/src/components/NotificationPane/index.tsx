@@ -1,4 +1,4 @@
-import React, { useCallback, Suspense, lazy, useState } from "react";
+import React, { useCallback, lazy, useState } from "react";
 import { shallowEqual } from "react-redux";
 
 import ErrorBoundary from "@app/components/ErrorBoundary";
@@ -42,14 +42,14 @@ const NotificationPane: React.FC = () => {
   return (
     <div className="notification-pane">
       <ErrorBoundary>
-        <Suspense fallback={<div />}>
+        {/* <Suspense fallback={<div />}>
           <LazyLoadingWrapper
             toast={toast}
             alert={alert}
             onDismissToast={onDismissToast}
             onDismissAlert={onDismissAlert}
           />
-        </Suspense>
+        </Suspense> */}
       </ErrorBoundary>
     </div>
   );

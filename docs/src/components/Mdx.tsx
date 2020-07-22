@@ -9,9 +9,9 @@ import { gap } from "@architus/facade/theme/spacing";
 import {
   withoutLeading,
   withoutTrailing,
-  trimPrefix,
   isExternal,
-} from "@architus/lib/utility";
+} from "@architus/lib/path";
+import { trimPrefix } from "@architus/lib/utility";
 import CodeBlock from "@docs/components/CodeBlock";
 import Collapse from "@docs/components/Collapse";
 import Demo from "@docs/components/Demo";

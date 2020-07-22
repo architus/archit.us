@@ -11,8 +11,8 @@ import { signOut } from "@app/store/actions";
 import { useCurrentUser, useSessionStatus } from "@app/store/slices/session";
 import { Breakpoint } from "@app/theme";
 import { useLocation, withBasePath } from "@app/utility";
-import { Option } from "@app/utility/option";
 import { User } from "@app/utility/types";
+import { Option } from "@architus/lib/option";
 import "./style.scss";
 
 const SessionControl: React.FC = React.memo(() => {

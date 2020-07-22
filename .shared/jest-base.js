@@ -14,8 +14,9 @@ module.exports = {
     // Base package aliases
     "^@architus/facade/(.*)$": relative("../design/src/$1"),
     "^@architus/lib/(.*)$": relative("../lib/src/$1"),
-    // Utility absolute import
+    // Utility absolute imports
     "^@docs/(.*)$": relative("../docs/src/$1"),
+    "^@app/(.*)$": relative("../app/src/$1"),
   },
   transform: {
     "^.+\\.[jt]sx?$": relative("./jest-babel.js"),

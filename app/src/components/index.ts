@@ -3,7 +3,6 @@
 // * difficult-to-debug errors resulting from module loading order and cyclic dependencies
 
 export { Link } from "./Router";
-export { default as Logo } from "./Logo";
 export { default as Icon } from "./Icon/Icon";
 export { default as Card } from "./Card";
 export { default as Header } from "./Header";

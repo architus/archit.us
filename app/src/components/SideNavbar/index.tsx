@@ -1,10 +1,10 @@
+import { useAppLocation } from "@app/dynamic/AppRoot/content";
+import { TabPath } from "@app/dynamic/AppRoot/tabs";
+import { AppTab } from "@app/dynamic/AppRoot/types";
 import classNames from "classnames";
 import React, { useCallback } from "react";
 
 import Tooltip from "@app/components/Tooltip";
-import { useAppLocation } from "@app/dynamic/AppRoot/content";
-import { TabPath } from "@app/dynamic/AppRoot/tabs";
-import { AppTab } from "@app/dynamic/AppRoot/types";
 import { useInitialRender } from "@app/utility";
 import "./style.scss";
 

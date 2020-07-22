@@ -4,8 +4,8 @@ import * as t from "io-ts";
 import { Errors } from "io-ts";
 
 import { isDefined } from "@app/utility";
-import { option } from "@app/utility/option";
 import { ErrorContents, Omitted } from "@app/utility/types";
+import { option } from "@architus/lib/option";
 
 // ? ==================
 // ? Actions

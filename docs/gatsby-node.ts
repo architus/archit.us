@@ -8,13 +8,8 @@ import {
 import fsPath from "path";
 
 import { Option, Some, None } from "@architus/lib/option";
-import {
-  isDefined,
-  isNil,
-  trimMarkdownPath,
-  splitPath,
-  capitalize,
-} from "@architus/lib/utility";
+import { trimFilePath, splitPath } from "@architus/lib/path";
+import { isDefined, isNil, capitalize } from "@architus/lib/utility";
 import {
   buildMetadataType,
   createBuildMetadataNode,
@@ -471,7 +466,7 @@ function splitFrontmatter(
  * @param navTree - Mutable tree object that is constructed in-place
  */
 function walkTree(node: NormalizedGatsbyNode, navTree: BaseNavTree): void {
-  const nodePath = trimMarkdownPath(node.path);
+  const nodePath = trimFilePath(node.path, ["md", "mdx"]);
 
   // If root, replace default root node with this one
   if (nodePath === "/") {

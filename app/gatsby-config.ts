@@ -29,14 +29,14 @@ export const plugins = [
     options: {
       alias: {
         // Utility absolute base import
-        // Same as ./tsconfig.json
+        // Same as ../tsconfig.json
         "@app": path.resolve(__dirname, "../app/src"),
         // Same aliases as /tsconfig.json, used to enable sibling development
         // & hot reloading
         "@architus/lib": path.resolve(__dirname, "../lib/src"),
         "@architus/facade": path.resolve(__dirname, "../design/src"),
       },
-      extensions: ["ts", "tsx", "scss"],
+      extensions: [],
     },
   },
   {
@@ -48,28 +48,37 @@ export const plugins = [
     },
   },
   "gatsby-plugin-typescript",
+  {
+    resolve: `gatsby-plugin-typegen`,
+    options: {
+      outputPath: `src/__generated__/gatsby-types.d.ts`,
+      emitSchema: {
+        "src/__generated__/gatsby-introspection.json": true,
+        "src/__generated__/gatsby-schema.graphql": true,
+      },
+      emitPluginDocuments: {
+        "src/__generated__/gatsby-plugin-documents.graphql": true,
+      },
+    },
+  },
   "gatsby-plugin-linaria",
+  "gatsby-plugin-sass",
   "gatsby-plugin-emotion",
-  `gatsby-plugin-sass`,
   "gatsby-plugin-dark-mode",
   `gatsby-plugin-react-helmet`,
   `gatsby-plugin-remove-serviceworker`,
-  `gatsby-plugin-sharp`,
   {
     resolve: `gatsby-plugin-manifest`,
     options: {
       name: title,
-      // eslint-disable-next-line @typescript-eslint/camelcase
-      short_name: title,
       description,
-      // eslint-disable-next-line @typescript-eslint/camelcase
-      homepage_url: "https://docs.archit.us",
-      // eslint-disable-next-line @typescript-eslint/camelcase
+      /* eslint-disable @typescript-eslint/camelcase */
+      short_name: title,
+      homepage_url: "https://archit.us",
       start_url: pathPrefix,
-      // eslint-disable-next-line @typescript-eslint/camelcase
       background_color: themeBgColor,
-      // eslint-disable-next-line @typescript-eslint/camelcase
       theme_color: themeColor,
+      /* eslint-enable @typescript-eslint/camelcase */
       display: `minimal-ui`,
       icons: [
         {

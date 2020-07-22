@@ -4,7 +4,7 @@ import { Spinner } from "react-bootstrap";
 
 import { opacity } from "@app/theme";
 import { warn, isDefined } from "@app/utility";
-import { Option, Some, None } from "@app/utility/option";
+import { Option, Some, None } from "@architus/lib/option";
 
 const Styled = {
   FallbackRenderer: styled.div`

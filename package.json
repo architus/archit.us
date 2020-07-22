@@ -11,11 +11,11 @@
     "app"
   ],
   "scripts": {
-    "test": "yarn workspaces run test && cd ./app && yarn run test",
-    "lint": "yarn workspaces run lint && cd ./app && yarn run lint",
-    "format": "yarn workspaces run format && cd ./app && yarn run format",
-    "clean": "yarn workspaces run clean && cd ./app && yarn run clean",
-    "typecheck": "yarn workspaces run typecheck && cd ./app && yarn run typecheck",
+    "test": "yarn workspaces run test",
+    "lint": "yarn workspaces run lint",
+    "format": "yarn workspaces run format",
+    "typecheck": "yarn workspaces run typecheck",
+    "clean": "yarn workspaces run clean",
     "bootstrap": "lerna bootstrap"
   },
   "dependencies": {

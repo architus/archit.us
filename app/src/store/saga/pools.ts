@@ -44,8 +44,8 @@ import {
   MoveToLoadingPayload,
 } from "@app/store/slices/pools";
 import { isDefined, difference } from "@app/utility";
-import { None, Option, Some } from "@app/utility/option";
 import { Snowflake, Predicate, Nil } from "@app/utility/types";
+import { None, Option, Some } from "@architus/lib/option";
 
 // The delay (in ms) for clustering single/multiple Id requests from the hook API
 const PRESSURE_TIMEOUT = 200;

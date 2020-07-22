@@ -44,7 +44,6 @@ import {
   architusUser,
   error,
 } from "@app/utility";
-import { Option } from "@app/utility/option";
 import {
   MockUser,
   RawDimension,
@@ -55,6 +54,7 @@ import {
   TransformMessage,
   User,
 } from "@app/utility/types";
+import { Option } from "@architus/lib/option";
 
 // Error display options
 const ERROR_DISPLAY_DELAY = 4000;
