@@ -6,10 +6,10 @@ import Link from "@app/components/AutoLink";
 import BuildMarker, { BuildMarkerPropsBase } from "@app/components/BuildMarker";
 import Links from "@app/components/Header/Links";
 import SessionControl from "@app/components/Header/SessionControl";
-import Logo from "@architus/facade/components/Logo";
 import { LinkProps } from "@app/components/Router";
 import { Breakpoint } from "@app/theme";
 import { attach, withBasePath } from "@app/utility";
+import Logo from "@architus/facade/components/Logo";
 import "./style.scss";
 
 type HeaderProps = {

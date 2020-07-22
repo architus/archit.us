@@ -39,7 +39,6 @@ import { useCurrentUser, showToast } from "@app/store/actions";
 import { usePool, usePoolEntities } from "@app/store/slices/pools";
 import { ColorMode, opacity, color, mode } from "@app/theme";
 import { intersection, memoize } from "@app/utility";
-import { Option, None, Some, Unwrap } from "@architus/lib/option";
 import {
   User,
   Member,
@@ -47,6 +46,7 @@ import {
   HoarFrost,
   AutoResponse,
 } from "@app/utility/types";
+import { Option, None, Some, Unwrap } from "@architus/lib/option";
 
 const Styled = {
   Alert: styled(Alert)`

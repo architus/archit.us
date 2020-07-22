@@ -59,11 +59,12 @@ declare module "@xstyled/emotion" {
   import { StyleObject } from "@app/utility/types";
 
   import { Interpolation } from "@emotion/css";
+
   export function css(
     template: TemplateStringsArray,
     ...args: Array<Interpolation>
-  ): string
-  export function css(...args: Array<Interpolation>): string
+  ): string;
+  export function css(...args: Array<Interpolation>): string;
 
   export const useTheme: () => Theme;
   export const useDown: (breakpoint: Breakpoint) => boolean;

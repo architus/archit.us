@@ -1,8 +1,8 @@
 import React from "react";
 import { Helmet } from "react-helmet";
 
-import { Option } from "@architus/lib/option";
 import { useSEOData } from "@app/data/seo-data";
+import { Option } from "@architus/lib/option";
 import { withPathPrefix } from "@architus/lib/path";
 
 export type SEOProps = {

@@ -1,6 +1,6 @@
+import HeroImage from "@app/assets/begin-hero.inline.svg";
 import React, { useContext } from "react";
 
-import HeroImage from "@app/assets/begin-hero.inline.svg";
 import { showGuildAddModal } from "@app/dynamic/AppRoot/actions";
 import { AppContext } from "@app/dynamic/AppRoot/context";
 import { AppPageProps } from "@app/dynamic/AppRoot/types";

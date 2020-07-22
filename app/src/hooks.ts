@@ -1,10 +1,10 @@
+import { useLocation } from "@app/old/Router";
 import { useContext } from "react";
 
 import { ColorModeContext } from "@app/components/ColorModeProvider";
 import { usePathPrefix } from "@app/data/path-prefix";
-import { useLocation } from "@app/old/Router";
-import { locationMatches } from "@architus/lib/path";
 import { ColorMode } from "@architus/facade/theme/color";
+import { locationMatches } from "@architus/lib/path";
 
 /**
  * Gets the current active color mode.

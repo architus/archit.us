@@ -12,7 +12,6 @@ import LogsSvg from "@app/assets/logs.svg";
 import MusicSvg from "@app/assets/music.svg";
 import StatisticsSvg from "@app/assets/statistics.svg";
 import UserControlSvg from "@app/assets/user_control.svg";
-import Logo from "@architus/facade/components/Logo";
 import {
   Icon,
   Card,
@@ -42,8 +41,8 @@ import {
   DiscordMockCommands,
   WithBoxProps,
 } from "@app/utility/types";
-
 import Footer from "@architus/facade/components/Footer";
+import Logo from "@architus/facade/components/Logo";
 import SecondaryFooter from "@architus/facade/components/SecondaryFooter";
 
 const Content = styled.divBox`

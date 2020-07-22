@@ -27,8 +27,8 @@ import {
   isDefined,
   error,
 } from "@app/utility";
-import { Option, Some, None } from "@architus/lib/option";
 import { Snowflake, isSnowflake, Guild } from "@app/utility/types";
+import { Option, Some, None } from "@architus/lib/option";
 
 interface AppLocation {
   currentTab: TabPath | null;
@@ -121,15 +121,16 @@ type PageRendererProps = {
 const PageRenderer: React.FC<PageRendererProps> = React.memo(
   ({ tabOption, guildOption }) => {
     return Option.merge(tabOption, guildOption)
-      .map(([tab, guild]) => (
-        // eslint-disable-next-line react/jsx-key
-        // <Suspense fallback={<AppSkeleton />}>
-        //   <ErrorBoundary onError={(e: Error): void => error(e)}>
-        //     <LazyPageRenderer tab={tab} guild={guild} />
-        //   </ErrorBoundary>
-        // </Suspense>
-        null
-      ))
+      .map(
+        ([tab, guild]) =>
+          // eslint-disable-next-line react/jsx-key
+          // <Suspense fallback={<AppSkeleton />}>
+          //   <ErrorBoundary onError={(e: Error): void => error(e)}>
+          //     <LazyPageRenderer tab={tab} guild={guild} />
+          //   </ErrorBoundary>
+          // </Suspense>
+          null
+      )
       .getOrElse(<AppSkeleton />);
   }
 );
