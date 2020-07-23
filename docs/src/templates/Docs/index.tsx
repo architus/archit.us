@@ -33,7 +33,7 @@ import {
 } from "@docs/layout";
 import { DocsContext } from "@docs/templates/Docs/frontmatter";
 
-import "@docs/one-universal";
+import "@architus/facade/one-universal";
 
 const contentWithToc = css`
   display: flex;

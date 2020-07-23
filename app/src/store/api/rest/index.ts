@@ -5,6 +5,7 @@ import { Errors } from "io-ts";
 import { failure } from "io-ts/lib/PathReporter";
 import { CANCEL } from "redux-saga";
 
+import { API_BASE } from "@app/api";
 import {
   ApiError,
   DecodeError,
@@ -17,14 +18,7 @@ import {
   RestStart,
   ApiRequest,
 } from "@app/store/api/rest/types";
-import {
-  HttpVerbs,
-  API_BASE,
-  isDefined,
-  toJSON,
-  log,
-  warn,
-} from "@app/utility";
+import { HttpVerbs, isDefined, toJSON, log, warn } from "@app/utility";
 import { Omitted, OrEmpty } from "@app/utility/types";
 import { Option, Some, None } from "@architus/lib/option";
 

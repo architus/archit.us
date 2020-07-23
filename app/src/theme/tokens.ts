@@ -1,4 +1,5 @@
 import { isDefined } from "@app/utility";
+import { ColorMode } from "@architus/facade/theme/color";
 import { Some, Option, None } from "@architus/lib/option";
 
 /* eslint-disable @typescript-eslint/camelcase */
@@ -25,13 +26,8 @@ function withAliases<T, R extends string>(
 const sansSerif =
   "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'";
 
-/**
- * Xstyled color mode definitions
- */
-export enum ColorMode {
-  Dark = "dark",
-  Light = "light",
-}
+// Re-export actual color mode type from Facade
+export { ColorMode };
 
 const theme = {
   initialColorModeName: ColorMode.Dark,

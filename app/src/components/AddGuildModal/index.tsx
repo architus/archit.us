@@ -2,11 +2,11 @@ import { Box } from "@xstyled/emotion";
 import React from "react";
 import { Modal, Button, ModalProps, Spinner } from "react-bootstrap";
 
+import { API_BASE } from "@app/api";
 import GuildCard from "@app/components/GuildCard";
 import { usePool } from "@app/store/slices/pools";
 import {
   useReturnQuery,
-  API_BASE,
   processIfNotEmptyOrNil,
   isDiscordAdminWithoutArchitus,
 } from "@app/utility";

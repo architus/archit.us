@@ -1,14 +1,19 @@
-import styled, { css, useColorMode } from "@xstyled/emotion";
-import React, { useCallback, useEffect } from "react";
+import styled, {
+  css,
+  useColorMode as useEmotionColorMode,
+} from "@xstyled/emotion";
+import React, { useCallback, useEffect, useContext } from "react";
 import { Helmet } from "react-helmet";
 import useDarkMode from "use-dark-mode";
 
+import { ColorModeContext } from "@app/components/ColorModeProvider";
 import Header from "@app/components/Header";
 import Icon from "@app/components/Icon";
 import Switch from "@app/components/Switch";
-import { Color, ColorMode, useThemeColor } from "@app/theme";
+import { Color, useThemeColor } from "@app/theme";
 import { isNil } from "@app/utility";
 import { StyleObject } from "@app/utility/types";
+import { ColorMode } from "@architus/facade/theme/color";
 
 const Styled = {
   Layout: styled.div<{ noHeader: boolean }>`
@@ -59,21 +64,26 @@ const Layout: React.FC<LayoutProps> = ({
 
   // Dark mode control hooks
   const { value, toggle } = useDarkMode(false);
-  const [colorMode, setColorMode] = useColorMode();
+  const [_, setEmotionColorMode] = useEmotionColorMode();
+  const { mode, setMode } = useContext(ColorModeContext);
   const toggleWrapper = useCallback(
     (checked: boolean) => {
-      setColorMode(checked ? ColorMode.Dark : ColorMode.Light);
+      const targetMode = checked ? ColorMode.Dark : ColorMode.Light;
+      setMode(targetMode);
+      setEmotionColorMode(targetMode);
       toggle();
     },
-    [setColorMode, toggle]
+    [setMode, setEmotionColorMode, toggle]
   );
 
-  // Attempt to maintain consistency between the two systems during the migration from
-  // sass to xstyled/emotion
+  // Attempt to maintain consistency between the three systems during the migration from
+  // sass/emotion to linaria
   useEffect(() => {
-    const isDark = colorMode === ColorMode.Dark;
+    const isDark = mode === ColorMode.Dark;
     if (isDark !== value) {
-      setColorMode(value ? ColorMode.Dark : ColorMode.Light);
+      const targetMode = value ? ColorMode.Dark : ColorMode.Light;
+      setMode(targetMode);
+      setEmotionColorMode(targetMode);
     }
   });
 

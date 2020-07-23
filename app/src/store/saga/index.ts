@@ -3,6 +3,7 @@ import { SagaIterator } from "@redux-saga/core";
 import { delay } from "@redux-saga/core/effects";
 import { takeEvery, put, fork } from "redux-saga/effects";
 
+import { withBasePath } from "@app/api";
 import {
   hideNotification,
   showToast,
@@ -14,7 +15,7 @@ import interpret from "@app/store/saga/interpret";
 import pools from "@app/store/saga/pools";
 import sessionFlow from "@app/store/saga/session";
 import { LOCAL_STORAGE_KEY } from "@app/store/slices/session";
-import { setLocalStorage, withBasePath } from "@app/utility";
+import { setLocalStorage } from "@app/utility";
 
 /**
  * Root saga

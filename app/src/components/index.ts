@@ -20,4 +20,3 @@ export { default as UserDisplay } from "./UserDisplay";
 export { default as LoginButton } from "./LoginButton";
 export { default as SwipeHandler } from "./SwipeHandler";
 export { default as ErrorBoundary } from "./ErrorBoundary";
-export { default as CubeBackground } from "./CubeBackground";

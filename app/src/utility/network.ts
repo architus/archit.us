@@ -3,8 +3,6 @@ import { parseInteger } from "./primitives";
 import { Snowflake } from "./types";
 import { Option } from "@architus/lib/option";
 
-export { API_BASE, GATEWAY_API_BASE, withBasePath } from "./api.node";
-
 const avatarSizes = [16, 32, 40, 64, 128, 256, 512, 1024];
 function getNextLargerSize(size: number): number {
   for (const avatarSize of avatarSizes) {

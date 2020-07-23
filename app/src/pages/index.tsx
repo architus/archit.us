@@ -1,8 +1,15 @@
-import styled, { Box, down, css, up, BoxProps } from "@xstyled/emotion";
+import { styled } from "linaria/react";
+import { transparentize } from "polished";
 import React from "react";
-import { Container, Button, Badge } from "react-bootstrap";
+import {
+  Container as BootstrapContainer,
+  Button,
+  Badge,
+} from "react-bootstrap";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { shallowEqual } from "react-redux";
 
+import { withBasePath } from "@app/api";
 import {
   messageSets,
   allowedCommands,
@@ -13,106 +20,495 @@ import MusicSvg from "@app/assets/music.svg";
 import StatisticsSvg from "@app/assets/statistics.svg";
 import UserControlSvg from "@app/assets/user_control.svg";
 import {
-  Icon,
   Card,
   Window,
   Layout,
   DiscordMock,
-  CubeBackground,
   ErrorBoundary,
 } from "@app/components";
 import { CustomEmojiExtension } from "@app/components/DiscordMock/CustomEmojiExtension";
 import { Extension } from "@app/components/DiscordMock/util";
 import LoginButton, { useOauthUrl } from "@app/components/LoginButton";
 import { Link } from "@app/components/Router";
+import { useBotStats } from "@app/data/bot-stats";
 import { useSessionStatus } from "@app/store/actions";
 import { useSelector, useDispatch } from "@app/store/hooks";
-import { guildCount } from "@app/store/routes";
-import { Space, ColorMode, mode, color, opacity } from "@app/theme";
-import {
-  useEffectOnce,
-  isDefined,
-  useCallbackOnce,
-  withBasePath,
-} from "@app/utility";
-import {
-  Nil,
-  DiscordMockContext,
-  DiscordMockCommands,
-  WithBoxProps,
-} from "@app/utility/types";
+import { guildCount as guildCountRoute } from "@app/store/routes";
+import { useEffectOnce, useCallbackOnce } from "@app/utility";
+import { DiscordMockContext, DiscordMockCommands } from "@app/utility/types";
 import Footer from "@architus/facade/components/Footer";
+import Gap from "@architus/facade/components/Gap";
 import Logo from "@architus/facade/components/Logo";
 import SecondaryFooter from "@architus/facade/components/SecondaryFooter";
+import {
+  color,
+  mode,
+  ColorMode,
+  staticColor,
+  dynamicColor,
+} from "@architus/facade/theme/color";
+import { down, up } from "@architus/facade/theme/media";
+import { pattern } from "@architus/facade/theme/patterns";
+import { shadow } from "@architus/facade/theme/shadow";
+import { gap } from "@architus/facade/theme/spacing";
+import { Option } from "@architus/lib/option";
 
-const Content = styled.divBox`
-  & :not(pre) > code,
-  :not(pre) > code {
-    color: primary;
+const Container = styled(BootstrapContainer)`
+  position: relative;
+  z-index: 0;
+  padding-left: 0;
+  padding-right: 0;
+`;
+
+const Content = styled.article`
+  code {
+    color: ${color("primary")};
     display: inline-block;
-    background-color: b_500;
+    background-color: ${color("bg+10")};
     border-radius: 4px;
-    border: 1px solid ${color("contrast_border")};
-
-    // Specific values to match font
+    border: 1px solid ${color("contrastBorder")};
     padding: 0.1em 0.35em 0.05em;
     font-size: 87.5%;
   }
 `;
 
-const Styled = {
-  Lead: styled(CubeBackground)`
-    // Add inner shadow to the bottom
-    box-shadow: inset 0 -14px 15px -14px ${color("shadow_heavy")};
+const IndexPage: React.FC = () => {
+  // Get the cached guild/user counts from the route data (cached upon site build)
+  const botStatsOption = useBotStats();
+
+  // Get the live guild/user counts from the store
+  const {
+    guildCount: storeGuildCount,
+    userCount: storeUserCount,
+  } = useSelector((state) => {
+    return state.guildCount;
+  }, shallowEqual);
+
+  // Load the guild/user counts upon page load to get the live values
+  const dispatch = useDispatch();
+  useEffectOnce(() => {
+    dispatch(guildCountRoute());
+  });
+
+  const derivedGuildCount = Option.from(storeGuildCount)
+    .orElse(() => botStatsOption.map((stats) => stats.guildCount))
+    .getOrElse(0);
+  const derivedUserCount = Option.from(storeUserCount)
+    .orElse(() => botStatsOption.map((stats) => stats.userCount))
+    .getOrElse(0);
+
+  return (
+    <Layout title="Home">
+      <article>
+        <Lead guildCount={derivedGuildCount} userCount={derivedUserCount} />
+        <Features />
+        <MinorFeatures />
+        <BottomCta />
+      </article>
+      <Footer about="__about__" links={[]} brand={null} />
+      <SecondaryFooter />
+    </Layout>
+  );
+};
+
+export default IndexPage;
+
+// ? ==============
+// ? Lead component
+// ? ==============
+
+const LeadStyled = {
+  // Cube background outer div
+  Outer: styled.div`
+    position: relative;
+    background-color: ${color("bg-10")};
+    background-repeat: repeat;
+    background-position: center;
+
+    ${mode(ColorMode.Dark)} {
+      background-image: ${pattern("cube")(
+        transparentize(0.95, staticColor("light"))
+      )};
+    }
+
+    ${mode(ColorMode.Light)} {
+      background-image: ${pattern("cube")(
+        transparentize(0.94, staticColor("dark"))
+      )};
+    }
+
+    ${down("md")} {
+      padding: ${gap.centi} 0;
+    }
+
+    ${up("md")} {
+      padding: ${gap.kilo} 0;
+    }
+
+    /* Add inner shadow to the bottom */
+    box-shadow: inset 0 -14px 15px -14px ${color("shadowMedium")};
   `,
-  CtaWrapper: styled.divBox`
-    // Center contents vertically
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: stretch;
+  Layout: styled(Container)`
+    display: grid;
+    grid-gap: ${gap.centi};
+    grid: auto-flow / 1fr;
+
+    ${down("lg")} {
+      grid-gap: ${gap.milli};
+    }
+
+    ${up("lg")} {
+      grid-template-columns: 2fr 1fr;
+      & > *:nth-child(2n + 1) {
+        grid-column: 1 / 3;
+      }
+
+      & > *:nth-child(2n + 2) {
+        grid-column: 3;
+      }
+    }
   `,
-  Card,
-  LeadText: styled(Content.withComponent("p"))`
-    color: text;
+  Block: styled(Content)`
+    color: ${color("textStrong")};
     font-size: 1.1em;
 
     em {
       font-style: normal;
       font-weight: 600;
     }
-  `,
-  Container: styled(Container)`
-    position: relative;
-    z-index: 0;
-    padding-left: zero;
-    padding-right: zero;
-  `,
-  Features: styled.divBox`
-    color: text;
-    background-color: b_400;
-    border-top: 1px solid ${color("contrast_border")};
-    position: relative;
-    overflow: hidden;
 
-    // Add inner shadow to the bottom
-    box-shadow: inset 0 -14px 15px -14px ${color("shadow_heavy")};
+    & > p {
+      margin-bottom: 0;
+    }
   `,
-  Underline: styled.span`
-    border-bottom: 2px dashed ${opacity("primary", 0.8)};
+  Logo: styled(Logo.Logotype)`
+    fill: ${color("textStrong")};
+    width: auto;
+    height: 55px;
   `,
-  SmallCaps: styled.h4Box`
+  CtaWrapper: styled.div`
+    /* Centers elements vertically */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+  `,
+  CtaTitle: styled.h4`
     font-size: 1.2em;
     text-transform: uppercase;
     letter-spacing: 1px;
     opacity: 0.9;
   `,
-  Heading: styled.h2Box`
+  LoginButton: styled(LoginButton)`
+    & p {
+      margin-bottom: ${gap.micro};
+    }
+  `,
+};
+
+type LeadProps = {
+  guildCount: number;
+  userCount: number;
+};
+
+/**
+ * First section on the home page, used as an above-the-fold
+ * lead section with a Bootstrap-like jumbotron
+ * and a call-to-action.
+ *
+ * Additionally, shows formatted guild/user counts
+ */
+const Lead: React.FC<LeadProps> = ({ guildCount, userCount }) => (
+  <LeadStyled.Outer>
+    <LeadStyled.Layout>
+      <LeadStyled.Block>
+        <LeadStyled.Logo />
+        <Gap amount="milli" />
+        <p>
+          General purpose Discord bot supporting{" "}
+          <em>advanced role management</em>,{" "}
+          <em>custom emotes for non-nitro users</em>,{" "}
+          <em>configurable response commands</em>, and more.
+        </p>
+        <Gap amount="nano" />
+        <p>
+          Use the web dashboard to add architus to your servers, manage server
+          settings such as <em>emotes and responses</em>, and view extensive{" "}
+          <em>audit logs</em>.
+        </p>
+        <Gap amount="micro" />
+        <p>
+          architus is currently serving <code>{guildCount} servers</code> and{" "}
+          <code>{userCount} users</code>
+        </p>
+      </LeadStyled.Block>
+      <LeadStyled.CtaWrapper>
+        <Card>
+          <LeadStyled.CtaTitle>Getting Started</LeadStyled.CtaTitle>
+          <Gap amount="micro" />
+          <LeadStyled.LoginButton />
+        </Card>
+      </LeadStyled.CtaWrapper>
+    </LeadStyled.Layout>
+  </LeadStyled.Outer>
+);
+
+// ? ==================
+// ? Features component
+// ? ==================
+
+const FeaturesStyled = {
+  Outer: styled.div`
+    color: text;
+    background-color: ${color("bg")};
+    border-top: 1px solid ${color("contrastBorder")};
+    position: relative;
+    overflow: hidden;
+
+    /* Add inner shadow to the bottom */
+    box-shadow: inset 0 -14px 15px -14px ${color("shadowMedium")};
+
+    ${down("md")} {
+      padding: ${gap.centi} 0;
+    }
+
+    ${up("md")} {
+      padding: ${gap.kilo} 0;
+    }
+  `,
+  Heading: styled.h2`
     font-size: 2.5rem;
     font-weight: 300;
+    text-align: center;
+
+    ${down("md")} {
+      margin-bottom: ${gap.milli};
+    }
+
+    ${up("md")} {
+      margin-bottom: ${gap.centi};
+    }
   `,
-  FeatureContent: styled<typeof Content, { flipDots: boolean }>(Content)`
-    // Center contents vertically
+  Underline: styled.span`
+    border-bottom: 2px dashed;
+
+    ${mode(ColorMode.Dark)} {
+      border-bottom-color: ${transparentize(
+        0.2,
+        dynamicColor("primary", ColorMode.Dark)
+      )};
+    }
+
+    ${mode(ColorMode.Light)} {
+      border-bottom-color: ${transparentize(
+        0.2,
+        dynamicColor("primary", ColorMode.Light)
+      )};
+    }
+  `,
+  RaisedWindow: styled(Window)`
+    box-shadow: ${shadow("z3")};
+    ${mode(ColorMode.Dark)} {
+      box-shadow: ${shadow("z2")};
+    }
+  `,
+  TryCta: styled.p`
+    color: text_strong;
+    font-weight: 500;
+    font-style: italic;
+    margin-top: milli;
+    margin-bottom: zero;
+
+    /* Hide the call to action text on small screen sizes (where the feature columns
+       collapse and the arrows no longer make sense) */
+    ${down("lg")} {
+      display: none;
+    }
+  `,
+};
+
+type FeaturesProps = {};
+
+/**
+ * Second section on the home page, used to contain interactive
+ * Discord mock demos of Architus' features
+ */
+const Features: React.FC<FeaturesProps> = () => (
+  <FeaturesStyled.Outer>
+    <Container>
+      <FeaturesStyled.Heading>
+        <FeaturesStyled.Underline>Features</FeaturesStyled.Underline>
+      </FeaturesStyled.Heading>
+      <Feature
+        side="left"
+        lead="Have architus listen for predefined phrases"
+        header="Automatic Responses"
+        content={
+          <>
+            <p>
+              Users can configure architus to listen for and respond to message
+              patterns using an extensive syntax. Response pattern fragments
+              include:
+            </p>
+            <ul>
+              <li>random nouns and adjectives</li>
+              <li>a mention of the responded-to user</li>
+              <li>an incrementing count</li>
+              <li>randomly selected phrases</li>
+              <li>the option to add reactions to the original message</li>
+            </ul>
+            <TryCta side="left" />
+          </>
+        }
+      >
+        <FeaturesStyled.RaisedWindow variant="discord">
+          <ErrorBoundary fallback={<div style={{ height: 400 }} />}>
+            <DiscordMock
+              height={400}
+              channelName="auto-response-demo"
+              messageSets={messageSets.autoResponse}
+              allowedCommands={allowedCommands.autoResponse}
+              loop
+            />
+          </ErrorBoundary>
+        </FeaturesStyled.RaisedWindow>
+      </Feature>
+      <Gap amount="kilo" />
+      <Feature
+        side="right"
+        lead="Let non-nitro members use unlimited custom emoji"
+        header="Custom Emoji"
+        content={
+          <>
+            <p>
+              The custom emoji module allows for effectively unlimited custom
+              emoji to be used on a server, working by replacing a user&rsquo;s
+              message with another that has the hot-loaded emotes included. Both
+              standard and animated emotes are supported, and the syntax is the
+              same as normal Discord emotes (<code>:shortcode:</code>). Use the
+              <code>!emotes</code> command to view a list of all available
+              emotes.
+            </p>
+            <TryCta side="right" />
+          </>
+        }
+      >
+        <FeaturesStyled.RaisedWindow variant="discord">
+          <ErrorBoundary fallback={<div style={{ height: 400 }} />}>
+            <DiscordMock
+              height={400}
+              channelName="custom-emoji-demo"
+              messageSets={messageSets.customEmoji}
+              allowedCommands={allowedCommands.customEmoji}
+              offline
+              loop
+              // Inject custom emotes into custom emoji extension
+              extensionCreator={useCallbackOnce(
+                (
+                  context: DiscordMockContext,
+                  commands: DiscordMockCommands
+                ): Extension =>
+                  new CustomEmojiExtension(customEmotes, context, commands)
+              )}
+            />
+          </ErrorBoundary>
+        </FeaturesStyled.RaisedWindow>
+      </Feature>
+      <Gap amount="kilo" />
+      <Feature
+        side="left"
+        lead="Conduct votes or schedule events"
+        header="Polls & Schedules"
+        content={
+          <>
+            <p>
+              With the <code>!poll</code> command, users can conduct
+              reaction-based votes that include up to 10 custom options per
+              poll. Similarly, <code>!schedule</code> lets users create
+              scheduled events that other users can react to, giving a
+              convenient way to gauge future attendance.
+            </p>
+            <TryCta side="left" />
+          </>
+        }
+      >
+        <FeaturesStyled.RaisedWindow variant="discord">
+          <ErrorBoundary fallback={<div style={{ height: 400 }} />}>
+            <DiscordMock
+              height={400}
+              channelName="polls-schedules-demo"
+              messageSets={messageSets.pollsSchedules}
+              allowedCommands={allowedCommands.pollsSchedules}
+              loop
+            />
+          </ErrorBoundary>
+        </FeaturesStyled.RaisedWindow>
+      </Feature>
+    </Container>
+  </FeaturesStyled.Outer>
+);
+
+// ? ================
+// ? TryCta component
+// ? ================
+
+const TryCtaStyled = {
+  Outer: styled.div<{ side: "left" | "right" }>`
+    margin-top: ${gap.micro};
+    text-align: ${(props): string => props.side};
+    font-style: italic;
+    color: ${color("textStrong")};
+
+    & svg {
+      margin-left: ${(props): string =>
+        props.side === "left" ? "0" : gap.nano};
+      margin-right: ${(props): string =>
+        props.side === "left" ? gap.nano : "0"};
+    }
+  `,
+};
+
+type TryCtaProps = { side: "left" | "right" };
+
+/**
+ * Displays the "Try it out" call-to-action used at the bottom of feature descriptions
+ * that reside next to Discord Mocks
+ */
+const TryCta: React.FC<TryCtaProps> = ({ side }) => (
+  <TryCtaStyled.Outer side={side}>
+    {side === "left" && <FaChevronLeft />}
+    Try it out
+    {side === "right" && <FaChevronRight />}
+  </TryCtaStyled.Outer>
+);
+
+// ? =================
+// ? Feature component
+// ? =================
+
+const FeatureStyled = {
+  Layout: styled.section`
+    display: grid;
+    grid-gap: ${gap.centi};
+    grid: auto-flow / 1fr;
+
+    ${down("lg")} {
+      grid-gap: ${gap.milli};
+    }
+
+    ${up("lg")} {
+      grid-template-columns: 1fr 1fr;
+      & > *:nth-child(2n + 1) {
+        grid-column: 1;
+      }
+
+      & > *:nth-child(2n + 2) {
+        grid-column: 2;
+      }
+    }
+  `,
+  Content: styled(Content)`
+    /* Center contents vertically */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -122,107 +518,230 @@ const Styled = {
     & p,
     & ul,
     & ol {
-      color: text_fade;
+      color: ${color("textFade")};
+      margin-bottom: ${gap.nano};
     }
 
     & h3 {
-      color: text_strong;
+      color: ${color("textStrong")};
+      margin-bottom: ${gap.micro};
     }
-
-    // Add dots backgrounds
+  `,
+  Subheading: styled.h4`
+    font-size: 0.9em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.9;
+    color: ${color("textFade")};
+    margin-bottom: ${gap.femto};
+  `,
+  Dots: styled.div`
     &::before,
     &::after {
       z-index: -1;
       position: absolute;
       content: "";
-      opacity: 0.2;
+      opacity: 0.22;
       pointer-events: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15'%3E%3Ccircle fill='%23777777' cx='1.5' cy='1.5' r='1.5'/%3E%3Cscript xmlns=''/%3E%3C/svg%3E");
+
+      ${mode(ColorMode.Light)} {
+        background: ${pattern("dotGrid")(
+          transparentize(0.6, staticColor("dark"))
+        )};
+      }
+
+      ${mode(ColorMode.Dark)} {
+        background: ${pattern("dotGrid")(
+          transparentize(0.65, staticColor("light"))
+        )};
+      }
     }
 
-    ${(props): string =>
-      props.flipDots
-        ? css`
-            &::before {
-              top: 45px;
-              bottom: -32px;
-              left: 0;
-              width: 130%;
-              height: 100%;
-              margin-left: -65%;
-            }
+    &::before {
+      top: 45px;
+      bottom: -32px;
+      width: 130%;
+      height: 100%;
+    }
 
-            &::after {
-              top: 100px;
-              right: 0;
-              width: 20%;
-              height: 75%;
-              margin-right: 5%;
-            }
-          `
-        : // Reverse the direction on left-sided feature blocks
-          css`
-            &::before {
-              top: 45px;
-              bottom: -32px;
-              right: 0;
-              width: 130%;
-              height: 100%;
-              margin-right: -65%;
-            }
+    &::after {
+      top: 100px;
+      width: 20%;
+      height: 75%;
+    }
 
-            &::after {
-              top: 100px;
-              left: 0;
-              width: 20%;
-              height: 75%;
-              margin-left: 5%;
-            }
-          `}
-  `,
-  RaisedWindow: styled(Window)`
-    box-shadow: 3;
-    ${mode(
-      ColorMode.Dark,
-      css`
-        box-shadow: 2;
-      `
-    )};
-  `,
-  TryCta: styled.pBox`
-    color: text_strong;
-    font-weight: 500;
-    font-style: italic;
-    margin-top: milli;
-    margin-bottom: zero;
+    &[data-side="left"] {
+      &::before {
+        left: 0;
+        margin-left: -65%;
+      }
 
-    // Hide the call to action text on small screen sizes (where the feature columns
-    // collapse and the arrows no longer make sense)
-    ${down(
-      "lg",
-      css`
-        display: none;
-      `
-    )}
+      &::after {
+        right: 0;
+        margin-right: 5%;
+      }
+    }
+
+    &[data-side="right"] {
+      &::before {
+        right: 0;
+        margin-right: -65%;
+      }
+
+      &::after {
+        left: 0;
+        margin-left: 5%;
+      }
+    }
   `,
-  MinorFeatures: styled.divBox`
-    background-color: b_500;
-    border-top: 1px solid ${color("contrast_border")};
-    border-bottom: 1px solid ${color("contrast_border")};
+};
+
+type FeatureProps = {
+  side?: "left" | "right";
+  children: React.ReactNode;
+  lead: React.ReactNode;
+  header: React.ReactNode;
+  content: React.ReactNode;
+};
+
+/**
+ * Used to display a major feature, usually paired with a Discord mock
+ */
+const Feature: React.FC<FeatureProps> = ({
+  side = "left",
+  children,
+  lead,
+  header,
+  content,
+}) => (
+  <FeatureStyled.Layout>
+    {side === "left" && <div>{children}</div>}
+    <FeatureStyled.Content>
+      <FeatureStyled.Dots data-side={side}>
+        <FeatureStyled.Subheading>{lead}</FeatureStyled.Subheading>
+        <h3>{header}</h3>
+        <div>{content}</div>
+      </FeatureStyled.Dots>
+    </FeatureStyled.Content>
+    {side === "right" && <div>{children}</div>}
+  </FeatureStyled.Layout>
+);
+
+// ? =======================
+// ? MinorFeatures component
+// ? =======================
+
+const MinorFeaturesStyled = {
+  Outer: styled.div`
+    background-color: ${color("bg+10")};
+    border-top: 1px solid ${color("contrastBorder")};
+    border-bottom: 1px solid ${color("contrastBorder")};
+
+    ${down("md")} {
+      padding-bottom: ${gap.centi};
+    }
+
+    ${up("md")} {
+      padding-bottom: ${gap.mega};
+    }
   `,
-  MinorFeature: styled(Content)`
+  Layout: styled.div`
+    display: grid;
+    grid-gap: ${gap.centi};
+    grid: auto-flow / 1fr;
+
+    ${down("lg")} {
+      grid-gap: ${gap.milli};
+    }
+
+    ${up("lg")} {
+      grid-template-columns: 1fr 1fr;
+      & > *:nth-child(2n + 1) {
+        grid-column: 1;
+      }
+
+      & > *:nth-child(2n + 2) {
+        grid-column: 2;
+      }
+    }
+  `,
+};
+
+type MinorFeatures = {};
+
+const MinorFeatures: React.FC<MinorFeatures> = () => (
+  <MinorFeaturesStyled.Outer>
+    <Container>
+      <MinorFeaturesStyled.Layout>
+        <MinorFeature
+          header="Message history statistics/analytics"
+          icon={StatisticsSvg}
+          text={
+            <p>
+              Let users learn who sends the most messages or misspells the most
+              words with message history analytics that search the
+              server&rsquo;s message records.
+            </p>
+          }
+        />
+        <MinorFeature
+          header={
+            <span>
+              Extensive server and internal logs{" "}
+              <Badge variant="primary">Coming soon</Badge>
+            </span>
+          }
+          icon={LogsSvg}
+          text={
+            <p>
+              View, search, and export server audit logs from within the web
+              dashboard, including information about message sends/deletes, user
+              joins, and internal architus logs.
+            </p>
+          }
+        />
+        <MinorFeature
+          header="Voice chat-enabled music playback"
+          icon={MusicSvg}
+          text={
+            <p>
+              Play music from Spotify and Youtube directly in voice chat using{" "}
+              <code>!play</code>, or defer to other music playing bots if
+              available.
+            </p>
+          }
+        />
+        <MinorFeature
+          header="Per-server role management"
+          icon={UserControlSvg}
+          text={
+            <p>
+              Control which users have permissions to configure architus
+              settings on a per server basis, and let users automatically assign
+              themselves roles using <code>!role</code>.
+            </p>
+          }
+        />
+      </MinorFeaturesStyled.Layout>
+    </Container>
+  </MinorFeaturesStyled.Outer>
+);
+
+// ? ======================
+// ? MinorFeature component
+// ? ======================
+
+const MinorFeatureStyled = {
+  Outer: styled(Content)`
     text-align: center;
 
-    ${up(
-      "lg",
-      css`
-        & > * {
-          max-width: 80%;
-          margin-left: auto;
-          margin-right: auto;
-        }
-      `
-    )}
+    ${up("lg")} {
+      & > * {
+        max-width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
 
     & h3 {
       color: text_strong;
@@ -235,13 +754,13 @@ const Styled = {
       color: text_fade;
     }
 
-    // Inline code blocks need an even lighter background
+    /* Inline code blocks need an even lighter background */
     & :not(pre) > code,
     :not(pre) > code {
-      background-color: b_600;
+      background-color: ${color("bg+20")};
     }
   `,
-  MinorFeatureIcon: styled.div`
+  Icon: styled.div`
     width: 80px;
     height: 80px;
     margin: 0 auto nano;
@@ -249,93 +768,123 @@ const Styled = {
     background-size: contain;
     background-position: center;
 
-    // Lighten/desaturate the icon in dark mode to make it appear correctly
-    ${mode(
-      ColorMode.Dark,
-      css`
-        filter: brightness(2) saturate(0%);
-        opacity: 0.7;
-      `
-    )};
+    /* Lighten/desaturate the icon in dark mode to make it appear correctly */
+    ${mode(ColorMode.Dark)} {
+      filter: brightness(2) saturate(0%);
+      opacity: 0.7;
+    }
   `,
-  BottomCta: styled(CubeBackground)`
-    // Add inner shadows to the top and bottom
-    box-shadow: inset 0 14px 15px -14px ${color("shadow_heavy")},
-      inset 0 -14px 15px -14px ${color("shadow_heavy")};
+};
+
+type MinorFeatureProps = {
+  header: React.ReactNode;
+  text: React.ReactNode;
+  icon: React.ComponentType<React.SVGAttributes<SVGElement>>;
+};
+
+/**
+ * Used to display additional features that include a small SVG icon and descriptive text
+ */
+const MinorFeature: React.FC<MinorFeatureProps> = ({
+  header,
+  text,
+  icon: FeatureIcon,
+}) => (
+  <MinorFeatureStyled.Outer>
+    <MinorFeatureStyled.Icon>
+      <FeatureIcon />
+    </MinorFeatureStyled.Icon>
+    <h3>{header}</h3>
+    <div>{text}</div>
+  </MinorFeatureStyled.Outer>
+);
+
+// ? ===================
+// ? BottomCta component
+// ? ===================
+
+const BottomCtaStyled = {
+  Outer: styled.div`
+    position: relative;
+    background-color: ${color("bg-10")};
+    background-repeat: repeat;
+    background-position: center;
+
+    ${mode(ColorMode.Dark)} {
+      background-image: ${pattern("cube")(
+        transparentize(0.95, staticColor("light"))
+      )};
+    }
+
+    ${mode(ColorMode.Light)} {
+      background-image: ${pattern("cube")(
+        transparentize(0.93, staticColor("light"))
+      )};
+    }
+
+    /* Add inner shadows to the top and bottom */
+    box-shadow: inset 0 14px 15px -14px ${color("shadowMedium")},
+      inset 0 -14px 15px -14px ${color("shadowMedium")};
 
     padding-bottom: centi;
 
-    // Add padding to the top and sides on small screen sizes
-    ${down(
-      "lg",
-      css`
-        padding-left: micro;
-        padding-right: micro;
-        padding-top: centi;
-      `
-    )}
-
-    & hr {
-      border-top-style: dashed;
-      margin-top: 0;
-      margin-bottom: 0;
-
-      // Move hr on large screen sizes so it aligns with the shift on the card above
-      ${(props): string[] =>
-        up(
-          "lg",
-          css`
-            margin-top: -${props.theme.space.milli};
-          `
-        )(props)}
+    /* Add padding to the top and sides on small screen sizes */
+    ${down("lg")} {
+      padding-left: ${gap.micro};
+      padding-right: ${gap.micro};
+      padding-top: ${gap.centi};
     }
   `,
-  BottomCtaCard: styled(Card)`
+  Divider: styled.hr`
+    max-width: 300px;
+    margin-right: auto;
+    border-style: dashed;
+    margin-top: 0;
+    margin-bottom: 0;
+
+    /* Move hr on large screen sizes so it aligns with the shift on the card above */
+    ${up("lg")} {
+      margin-top: -${gap.milli};
+    }
+  `,
+  Card: styled(Card)`
     position: relative;
     box-shadow: 2;
     max-width: 800px;
     margin: 0 auto;
     text-align: center;
 
-    & h4 {
-      font-size: 2.2em;
-      font-weight: 300;
+    & p {
+      color: ${color("textFade")};
+    }
 
-      em {
-        font-weight: 400;
-        font-style: normal;
+    ${up("lg")} {
+      /* Perform a shift on large screen sizes so that it overlaps the previous section */
+      top: -${gap.kilo};
+      /* Add additional padding on large screen sizes */
+      padding: ${gap.centi};
+
+      /* Make intensity of frosted glass effect slightly less on large screen sizes */
+      &::before {
+        opacity: 0.8;
       }
     }
 
-    & p {
-      color: text_fade;
+    /* Add margins on the bottom on small screen sizes */
+    ${down("lg")} {
+      margin-bottom: ${gap.centi};
     }
-
-    ${(props): string[] =>
-      up(
-        "lg",
-        css`
-          // Perform a shift on large screen sizes so that it overlaps the previous section
-          top: -${props.theme.space.kilo};
-          // Add additional padding on large screen sizes
-          padding: centi;
-
-          // Make intensity of frosted glass effect slightly less on large screen sizes
-          &::before {
-            opacity: 0.8;
-          }
-        `
-      )(props)}
-
-    // Add margins on the bottom on small screen sizes
-    ${down(
-      "lg",
-      css`
-        margin-bottom: centi;
-      `
-    )}
   `,
-  BottomCtaButton: styled(Button)`
+  Header: styled.h4`
+    font-size: 2.2em;
+    font-weight: 300;
+
+    em {
+      font-weight: 400;
+      font-style: normal;
+    }
+  `,
+  Button: styled(Button)`
     span {
       margin-left: 0;
       width: 0 !important;
@@ -353,424 +902,45 @@ const Styled = {
   `,
 };
 
-const SectionBox = Box.withComponent("section");
-
-const Homepage: React.FC<{}> = () => {
-  // Get the cached guild/user counts from the route data (cached upon site build)
-  const { guildCount: cachedGuildCount, userCount: cachedUserCount } = {
-    guildCount: 10,
-    userCount: 100,
-  };
-
-  // TODO extract into useStaticQuery
-
-  // Get the live guild/user counts from the store
-  const {
-    guildCount: storeGuildCount,
-    userCount: storeUserCount,
-  } = useSelector((state) => {
-    return state.guildCount;
-  }, shallowEqual);
-
-  // Load the guild/user counts upon page load to get the live values
-  const dispatch = useDispatch();
-  useEffectOnce(() => {
-    dispatch(guildCount());
-  });
-
-  const derivedGuildCount = takeLive(cachedGuildCount, storeGuildCount, 0);
-  const derivedUserCount = takeLive(cachedUserCount, storeUserCount, 0);
-
-  return (
-    <Layout title="Home">
-      <article>
-        <Styled.Lead py={{ xs: "centi", md: "kilo" }}>
-          <Styled.Container>
-            {/* Use the padding/-margin/padding pattern to add gutters to the columns */}
-            <Box px={{ xs: "zero", lg: "milli" }}>
-              <Box row mx={{ xs: "zero", lg: "-milli" as Space }}>
-                <Box
-                  col={{ xs: 1, lg: 2 / 3 }}
-                  px="micro"
-                  // Make the column have a bottom margin when it appears above the Cta
-                  // card
-                  mb={{ xs: "milli", lg: "zero" }}
-                >
-                  <Logo.Logotype />
-                  <Styled.LeadText mb="nano">
-                    General purpose Discord bot supporting{" "}
-                    <em>advanced role management</em>,{" "}
-                    <em>custom emotes for non-nitro users</em>,{" "}
-                    <em>configurable response commands</em>, and more.
-                  </Styled.LeadText>
-                  <Styled.LeadText mb="micro">
-                    Use the web dashboard to add architus to your servers,
-                    manage server settings such as <em>emotes and responses</em>
-                    , and view extensive <em>audit logs</em>.
-                  </Styled.LeadText>
-                  <Styled.LeadText mb="zero">
-                    architus is currently serving{" "}
-                    <code>{derivedGuildCount} servers</code> and{" "}
-                    <code>{derivedUserCount} users</code>
-                  </Styled.LeadText>
-                </Box>
-                <Styled.CtaWrapper col={{ xs: 1, lg: 1 / 3 }} px="micro">
-                  <Styled.Card>
-                    <Styled.SmallCaps>Getting Started</Styled.SmallCaps>
-                    <LoginButton />
-                  </Styled.Card>
-                </Styled.CtaWrapper>
-              </Box>
-            </Box>
-          </Styled.Container>
-        </Styled.Lead>
-        <Styled.Features py={{ xs: "centi", md: "kilo" }}>
-          <Styled.Container>
-            <Styled.Heading
-              textAlign="center"
-              mb={{ xs: "milli", md: "centi" }}
-            >
-              <Styled.Underline>Features</Styled.Underline>
-            </Styled.Heading>
-            <Feature
-              left
-              mb="kilo"
-              lead="Have architus listen for predefined phrases"
-              header="Automatic Responses"
-              content={
-                <>
-                  <p>
-                    Users can configure architus to listen for and respond to
-                    message patterns using an extensive syntax. Response pattern
-                    fragments include:
-                  </p>
-                  <ul>
-                    <li>random nouns and adjectives</li>
-                    <li>a mention of the responded-to user</li>
-                    <li>an incrementing count</li>
-                    <li>randomly selected phrases</li>
-                    <li>the option to add reactions to the original message</li>
-                  </ul>
-                  <TryCta left />
-                </>
-              }
-            >
-              <Styled.RaisedWindow variant="discord">
-                <ErrorBoundary fallback={<Box height={400} />}>
-                  <DiscordMock
-                    height={400}
-                    channelName="auto-response-demo"
-                    messageSets={messageSets.autoResponse}
-                    allowedCommands={allowedCommands.autoResponse}
-                    loop
-                  />
-                </ErrorBoundary>
-              </Styled.RaisedWindow>
-            </Feature>
-            <Feature
-              right
-              mb="kilo"
-              lead="Let non-nitro members use unlimited custom emoji"
-              header="Custom Emoji"
-              content={
-                <>
-                  <p>
-                    The custom emoji module allows for effectively unlimited
-                    custom emoji to be used on a server, working by replacing a
-                    user&rsquo;s message with another that has the hot-loaded
-                    emotes included. Both standard and animated emotes are
-                    supported, and the syntax is the same as normal Discord
-                    emotes (<code>:shortcode:</code>). Use the
-                    <code>!emotes</code> command to view a list of all available
-                    emotes.
-                  </p>
-                  <TryCta />
-                </>
-              }
-            >
-              <Styled.RaisedWindow variant="discord">
-                <ErrorBoundary fallback={<Box height={400} />}>
-                  <DiscordMock
-                    height={400}
-                    channelName="custom-emoji-demo"
-                    messageSets={messageSets.customEmoji}
-                    allowedCommands={allowedCommands.customEmoji}
-                    offline
-                    loop
-                    // Inject custom emotes into custom emoji extension
-                    extensionCreator={useCallbackOnce(
-                      (
-                        context: DiscordMockContext,
-                        commands: DiscordMockCommands
-                      ): Extension =>
-                        new CustomEmojiExtension(
-                          customEmotes,
-                          context,
-                          commands
-                        )
-                    )}
-                  />
-                </ErrorBoundary>
-              </Styled.RaisedWindow>
-            </Feature>
-            <Feature
-              left
-              lead="Conduct votes or schedule events"
-              header="Polls & Schedules"
-              content={
-                <>
-                  <p>
-                    With the <code>!poll</code> command, users can conduct
-                    reaction-based votes that include up to 10 custom options
-                    per poll. Similarly, <code>!schedule</code> lets users
-                    create scheduled events that other users can react to,
-                    giving a convenient way to gauge future attendance.
-                  </p>
-                  <TryCta left />
-                </>
-              }
-            >
-              <Styled.RaisedWindow variant="discord">
-                <ErrorBoundary fallback={<Box height={400} />}>
-                  <DiscordMock
-                    height={400}
-                    channelName="polls-schedules-demo"
-                    messageSets={messageSets.pollsSchedules}
-                    allowedCommands={allowedCommands.pollsSchedules}
-                    loop
-                  />
-                </ErrorBoundary>
-              </Styled.RaisedWindow>
-            </Feature>
-          </Styled.Container>
-        </Styled.Features>
-        <Styled.MinorFeatures pt="centi" pb={{ xs: "centi", lg: "mega" }}>
-          <Styled.Container>
-            <Box px={{ xs: "zero", md: "milli" }}>
-              <Box row mx={{ xs: "zero", md: "-milli" as Space }}>
-                <MinorFeature
-                  col={{ xs: 1, md: 1 / 2 }}
-                  header="Message history statistics/analytics"
-                  icon={StatisticsSvg}
-                  text={
-                    <p>
-                      Let users learn who sends the most messages or misspells
-                      the most words with message history analytics that search
-                      the server&rsquo;s message records.
-                    </p>
-                  }
-                />
-                <MinorFeature
-                  col={{ xs: 1, md: 1 / 2 }}
-                  header={
-                    <span>
-                      Extensive server and internal logs{" "}
-                      <Badge variant="primary">Coming soon</Badge>
-                    </span>
-                  }
-                  icon={LogsSvg}
-                  text={
-                    <p>
-                      View, search, and export server audit logs from within the
-                      web dashboard, including information about message
-                      sends/deletes, user joins, and internal architus logs.
-                    </p>
-                  }
-                />
-                <MinorFeature
-                  col={{ xs: 1, md: 1 / 2 }}
-                  header="Voice chat-enabled music playback"
-                  icon={MusicSvg}
-                  text={
-                    <p>
-                      Play music from Spotify and Youtube directly in voice chat
-                      using <code>!play</code>, or defer to other music playing
-                      bots if available.
-                    </p>
-                  }
-                />
-                <MinorFeature
-                  col={{ xs: 1, md: 1 / 2 }}
-                  header="Per-server role management"
-                  icon={UserControlSvg}
-                  text={
-                    <p>
-                      Control which users have permissions to configure architus
-                      settings on a per server basis, and let users
-                      automatically assign themselves roles using{" "}
-                      <code>!role</code>.
-                    </p>
-                  }
-                />
-              </Box>
-            </Box>
-          </Styled.Container>
-        </Styled.MinorFeatures>
-        <Styled.BottomCta>
-          <Styled.Container>
-            <Styled.BottomCtaCard>
-              <h4>
-                See what <em>architus</em> can do for you
-              </h4>
-              <p>
-                Connect with Discord to get a link that adds architus to your
-                server.
-              </p>
-              <Box height="micro" />
-              <CallToAction />
-            </Styled.BottomCtaCard>
-            <hr className="hr-short" />
-          </Styled.Container>
-        </Styled.BottomCta>
-      </article>
-      <Footer about="__about__" links={[]} brand={null} />
-      <SecondaryFooter />
-    </Layout>
-  );
-};
-
-export default Homepage;
-
-// ? ================
-// ? Helper functions
-// ? ================
+type BottomCtaProps = {};
 
 /**
- * Extracts the correct value for the possibly cached statistic
- * @param cached - The cached version of the given statistic
- * @param live - The live version
- * @param defaultValue - The default value for the statistic
+ * Bottom section of the home page,
+ * used to display a card with a button that acts as a call to action.
+ * On large screens, the card floats above the layout
  */
-function takeLive<T>(cached: T | Nil, live: T | Nil, defaultValue: T): T {
-  if (isDefined(live)) {
-    return live;
-  }
-
-  if (isDefined(cached)) {
-    return cached;
-  }
-
-  return defaultValue;
-}
-
-// ? ==============
-// ? Sub-components
-// ? ==============
-
-type FeatureProps = WithBoxProps<{
-  left?: boolean;
-  right?: boolean;
-  children: React.ReactNode;
-  lead: React.ReactNode;
-  header: React.ReactNode;
-  content: React.ReactNode;
-}>;
-
-/**
- * Used to display a major feature, usually paired with a Discord mock
- */
-const Feature: React.FC<FeatureProps> = ({
-  left,
-  right = false,
-  children,
-  lead,
-  header,
-  content,
-  ...boxProps
-}) => (
-  <>
-    {/* Use the -margin/padding pattern to add gutters to the columns */}
-    <SectionBox {...boxProps} px={{ xs: "zero", lg: "milli" }}>
-      <Box
-        row
-        mx={{ xs: "zero", lg: "-milli" as Space }}
-        flexDirection={right ? "row-reverse" : "row"}
-      >
-        <Box
-          px={{ xs: "micro", lg: "micro" }}
-          col={{ xs: 1, lg: 1 / 2 }}
-          // Add bottom margin on small screen sizes to add spaces between collapsed
-          // columns
-          mb={{ xs: "micro", lg: "zero" }}
-        >
-          {children}
-        </Box>
-        <Styled.FeatureContent
-          px={{ xs: "micro", lg: "micro" }}
-          col={{ xs: 1, lg: 1 / 2 }}
-          flipDots={!right}
-        >
-          <Styled.SmallCaps fontSize="0.9rem" color="text_fade" mb="femto">
-            {lead}
-          </Styled.SmallCaps>
-          <h3>{header}</h3>
-          <div>{content}</div>
-        </Styled.FeatureContent>
-      </Box>
-    </SectionBox>
-  </>
-);
-
-type MinorFeatureProps = WithBoxProps<{
-  header: React.ReactNode;
-  text: React.ReactNode;
-  icon: string;
-}>;
-
-/**
- * Used to display additional features that include a small SVG icon and descriptive text
- */
-const MinorFeature: React.FC<MinorFeatureProps> = ({
-  header,
-  text,
-  icon,
-  ...boxProps
-}) => (
-  <Styled.MinorFeature {...boxProps} px="micro" mt="milli" mb="micro">
-    {icon && (
-      <Styled.MinorFeatureIcon
-        style={{
-          backgroundImage: `url("${icon}")`,
-        }}
-      />
-    )}
-    <h3>{header}</h3>
-    <div>{text}</div>
-  </Styled.MinorFeature>
-);
-
-/**
- * Bottom call-to-action button placed inside of a card
- */
-const CallToAction: React.FC<Omit<BoxProps, "ref">> = (boxProps) => {
+const BottomCta: React.FC<BottomCtaProps> = () => {
   const { isSignedIn } = useSessionStatus();
   const oauthUrl = useOauthUrl();
-  const additionalProps = isSignedIn
+  const buttonProps = isSignedIn
     ? { as: Link, to: withBasePath("/app") }
     : { href: oauthUrl };
+
   return (
-    <Styled.BottomCtaButton
-      variant="primary"
-      size="lg"
-      {...additionalProps}
-      {...boxProps}
-    >
-      Get Started
-      <Icon name="chevron-right" />
-    </Styled.BottomCtaButton>
+    <BottomCtaStyled.Outer>
+      <Container>
+        <BottomCtaStyled.Card>
+          <BottomCtaStyled.Header>
+            See what <em>architus</em> can do for you
+          </BottomCtaStyled.Header>
+          <p>
+            Connect with Discord to get a link that adds architus to your
+            server.
+          </p>
+          <Gap amount="micro" />
+          <BottomCtaStyled.Button
+            variant="primary"
+            size="lg"
+            {...(buttonProps as React.ComponentProps<
+              typeof BottomCtaStyled.Button
+            >)}
+          >
+            Get Started
+            <FaChevronRight />
+          </BottomCtaStyled.Button>
+        </BottomCtaStyled.Card>
+        <BottomCtaStyled.Divider />
+      </Container>
+    </BottomCtaStyled.Outer>
   );
 };
-
-type TryCtaProps = { left?: boolean };
-
-/**
- * Displays the "Try it out" call-to-action used at the bottom of feature descriptions
- * that reside next to Discord Mocks
- */
-const TryCta: React.FC<TryCtaProps> = ({ left }) => (
-  <Styled.TryCta textAlign={left ? "left" : "right"}>
-    {left && <Icon name="chevron-left" mr="nano" />}
-    Try it out
-    {!left && <Icon name="chevron-right" ml="nano" />}
-  </Styled.TryCta>
-);

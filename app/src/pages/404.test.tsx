@@ -3,17 +3,15 @@ import React from "react";
 import renderer from "react-test-renderer";
 
 import "@app/test/watch-media";
-import IndexPage from "./index";
+import NotFoundPage from "./404";
 import Root from "@app/components/Root";
 
-jest.mock("@docs/data/bot-stats");
-
-describe("<IndexPage />", () => {
+describe("<NotFoundPage />", () => {
   it("renders correctly", () => {
     const tree = renderer
       .create(
         <Root>
-          <IndexPage />
+          <NotFoundPage />
         </Root>
       )
       .toJSON();

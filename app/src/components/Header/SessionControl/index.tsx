@@ -2,6 +2,7 @@ import { useDown, Box } from "@xstyled/emotion";
 import React from "react";
 import { Dropdown } from "react-bootstrap";
 
+import { withBasePath } from "@app/api";
 import AutoLink from "@app/components/AutoLink";
 import Icon from "@app/components/Icon";
 import { useOauthUrl } from "@app/components/LoginButton";
@@ -10,7 +11,7 @@ import { useDispatch } from "@app/store";
 import { signOut } from "@app/store/actions";
 import { useCurrentUser, useSessionStatus } from "@app/store/slices/session";
 import { Breakpoint } from "@app/theme";
-import { useLocation, withBasePath } from "@app/utility";
+import { useLocation } from "@app/utility";
 import { User } from "@app/utility/types";
 import { Option } from "@architus/lib/option";
 import "./style.scss";

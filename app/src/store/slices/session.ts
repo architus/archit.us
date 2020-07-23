@@ -7,6 +7,7 @@ import {
 } from "@reduxjs/toolkit";
 import { shallowEqual } from "react-redux";
 
+import { withBasePath } from "@app/api";
 import { Store } from "@app/store";
 import { useSelector } from "@app/store/hooks";
 import {
@@ -22,7 +23,6 @@ import {
   setLocalStorage,
   warn,
   isNil,
-  withBasePath,
 } from "@app/utility";
 import {
   User,

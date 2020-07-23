@@ -16,7 +16,7 @@ export function useColorMode(): ColorMode {
 }
 
 /**
- * Determines if the current location matxhes the given path,
+ * Determines if the current location matches the given path,
  * taking the site prefix into account if applicable.
  * @param path - Absolute site path
  * @returns A tuple containing `[fullMatch, partialMatch]`

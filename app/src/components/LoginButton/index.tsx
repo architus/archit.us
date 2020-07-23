@@ -1,15 +1,15 @@
+import { cx } from "linaria";
 import React from "react";
 import { Button, ButtonProps } from "react-bootstrap";
 
+import { API_BASE, withBasePath } from "@app/api";
 import Icon from "@app/components/Icon";
 import { Link as RouterLink } from "@app/components/Router";
 import { useSessionStatus } from "@app/store/slices/session";
 import {
   useReturnQuery,
-  API_BASE,
   processIfNotEmptyOrNil,
   isDefined,
-  withBasePath,
 } from "@app/utility";
 
 import "./style.scss";
@@ -22,12 +22,16 @@ export function useOauthUrl(): string {
   )}`;
 }
 
-type LoginButtonProps = {
+export type LoginButtonProps = {
+  className?: string;
+  style?: React.CSSProperties;
   loggedIn?: boolean;
   showLabel?: boolean;
 };
 
 const LoginButton: React.FC<LoginButtonProps> = ({
+  className,
+  style,
   loggedIn,
   showLabel = true,
 }) => {
@@ -36,7 +40,7 @@ const LoginButton: React.FC<LoginButtonProps> = ({
   const loggedInProp = isDefined(loggedIn) ? loggedIn : isSigningIn;
 
   return (
-    <div className="login-button">
+    <div className={cx("login-button", className)} style={style}>
       {loggedInProp ? (
         <>
           {showLabel ? <p className="mb-3">You are already logged in</p> : null}

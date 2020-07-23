@@ -8,6 +8,7 @@ type WindowProps = {
   children: React.ReactNode;
   variant: WindowVariant;
   className?: string;
+  style?: React.CSSProperties;
   noPadding?: boolean;
   noChrome?: boolean;
 } & Partial<React.HTMLAttributes<HTMLElement>>;
@@ -16,6 +17,7 @@ const Window: React.FC<WindowProps> = ({
   children,
   variant = "light",
   className,
+  style,
   noPadding = false,
   noChrome = false,
   ...rest
@@ -24,6 +26,7 @@ const Window: React.FC<WindowProps> = ({
     className={classNames("window", `window--${variant}`, className, {
       "pb-0": noPadding,
     })}
+    style={style}
     {...rest}
   >
     {!noChrome ? (

@@ -1,12 +1,22 @@
-import styled, { down, css } from "@xstyled/emotion";
+import { styled } from "linaria/react";
+import { transparentize } from "polished";
 import React from "react";
 
 import { Layout, AutoLink } from "@app/components";
+import {
+  color,
+  mode,
+  staticColor,
+  ColorMode,
+} from "@architus/facade/theme/color";
+import { up, down } from "@architus/facade/theme/media";
+import { pattern } from "@architus/facade/theme/patterns";
+import { gap } from "@architus/facade/theme/spacing";
 
 const Styled = {
-  Layout: styled.divBox`
-    background-color: b_400;
-    color: text;
+  Layout: styled.div`
+    background-color: ${color("bg")};
+    color: ${color("text")};
     overflow: hidden;
 
     display: flex;
@@ -15,18 +25,35 @@ const Styled = {
     justify-content: space-around;
     text-align: center;
   `,
-  Content: styled.divBox`
+  Content: styled.div`
     max-width: 360px;
     position: relative;
     z-index: 1;
+    padding: ${gap.milli} ${gap.nano} 0;
 
+    ${up("lg")} {
+      padding-top: ${gap.kilo};
+    }
+
+    /* Add dot background "hangers" on content div */
     &::before,
     &::after {
       position: absolute;
       content: "";
-      opacity: 0.2;
+      opacity: 0.15;
       pointer-events: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15'%3E%3Ccircle fill='%23777777' cx='1.5' cy='1.5' r='1.5'/%3E%3Cscript xmlns=''/%3E%3C/svg%3E");
+
+      ${mode(ColorMode.Light)} {
+        background: ${pattern("dotGrid")(
+          transparentize(0.6, staticColor("dark"))
+        )};
+      }
+
+      ${mode(ColorMode.Dark)} {
+        background: ${pattern("dotGrid")(
+          transparentize(0.6, staticColor("light"))
+        )};
+      }
     }
 
     &::before {
@@ -45,55 +72,50 @@ const Styled = {
       height: 75%;
       margin-right: -30%;
     }
+  `,
+  PageTitle: styled.h2`
+    color: ${color("textStrong")};
+    font-size: 7rem;
+    font-weight: 200;
+    margin-bottom: ${gap.pico};
+    line-height: 1;
 
-    h2 {
-      font-size: 7rem;
-      font-weight: 200;
-      margin-bottom: pico;
-      line-height: 1;
-
-      ${down(
-        "md",
-        css`
-          font-size: 4.5rem;
-        `
-      )}
+    ${down("md")} {
+      font-size: 4.5rem;
     }
-
-    h3 {
-      font-size: 1.5rem;
-      margin-bottom: micro;
-    }
-
-    p {
-      color: text_fade;
-      margin-bottom: pico;
-    }
+  `,
+  Subtitle: styled.h3`
+    font-size: 1.5rem;
+    margin-bottom: ${gap.micro};
+  `,
+  Paragraph: styled.p`
+    color: ${color("textFade")};
+    margin-bottom: ${gap.pico};
   `,
 };
 
-type NotFoundProps = {
+export type NotFoundPageProps = {
   fromApp?: boolean;
 };
 
-const NotFound: React.FC<NotFoundProps> = ({ fromApp = false }) => (
+const NotFoundPage: React.FC<NotFoundPageProps> = ({ fromApp = false }) => (
   <Layout title="Not Found" noHeader={fromApp}>
     <Styled.Layout>
-      <Styled.Content pt={{ xs: "milli", lg: "kilo" }} px="nano">
-        <h2>404</h2>
-        <h3>Page not found</h3>
-        <p>
+      <Styled.Content>
+        <Styled.PageTitle>404</Styled.PageTitle>
+        <Styled.Subtitle>Page not found</Styled.Subtitle>
+        <Styled.Paragraph>
           The page you&apos;re looking for doesn&apos;t exist or was removed.
-        </p>
-        <p>
+        </Styled.Paragraph>
+        <Styled.Paragraph>
           If you feel this is an error, please file a new issue{" "}
           <AutoLink to="https://github.com/architus/archit.us/issues/new">
             on GitHub
           </AutoLink>
-        </p>
+        </Styled.Paragraph>
       </Styled.Content>
     </Styled.Layout>
   </Layout>
 );
 
-export default NotFound;
+export default NotFoundPage;

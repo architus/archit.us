@@ -10,8 +10,8 @@ import {
 
 import { isDefined } from "./data";
 import { isClient, isProduction } from "./document";
-import { withBasePath } from "./network";
 import { addMissingUnit, collator } from "./primitives";
+import { withBasePath } from "@app/api";
 import { Option, Some, None } from "@architus/lib/option";
 
 /**

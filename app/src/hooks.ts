@@ -1,7 +1,7 @@
-import { useLocation } from "@app/old/Router";
 import { useContext } from "react";
 
 import { ColorModeContext } from "@app/components/ColorModeProvider";
+import { useLocation } from "@app/components/Router";
 import { usePathPrefix } from "@app/data/path-prefix";
 import { ColorMode } from "@architus/facade/theme/color";
 import { locationMatches } from "@architus/lib/path";
@@ -16,7 +16,7 @@ export function useColorMode(): ColorMode {
 }
 
 /**
- * Determines if the current location matxhes the given path,
+ * Determines if the current location matches the given path,
  * taking the site prefix into account if applicable.
  * @param path - Absolute site path
  * @returns A tuple containing `[fullMatch, partialMatch]`

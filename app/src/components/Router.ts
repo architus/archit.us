@@ -1,6 +1,7 @@
 import {
   LinkProps as RouterLinkProps,
   RouteComponentProps,
+  useLocation,
 } from "@reach/router";
 import React from "react";
 
@@ -8,3 +9,4 @@ import React from "react";
 export { Link, Router, Redirect } from "@reach/router";
 export type LinkProps = React.PropsWithoutRef<RouterLinkProps<unknown>>;
 export type PageProps = RouteComponentProps;
+export { useLocation };

@@ -8,6 +8,7 @@ import { failure } from "io-ts/lib/PathReporter";
 import { AnyAction } from "redux";
 import io from "socket.io-client";
 
+import { GATEWAY_API_BASE } from "@app/api";
 import { signOut, loadSession } from "@app/store/actions";
 import {
   gatewayInitialize,
@@ -25,7 +26,7 @@ import {
 } from "@app/store/api/gateway";
 import * as events from "@app/store/routes/events";
 import { select } from "@app/store/saga/utility";
-import { isDefined, GATEWAY_API_BASE, warn } from "@app/utility";
+import { isDefined, warn } from "@app/utility";
 
 type LoadSessionAction = ReturnType<typeof loadSession>;
 type Socket = SocketIOClient.Socket;
