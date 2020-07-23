@@ -15,10 +15,10 @@ import {
   allowedCommands,
   customEmotes,
 } from "@app/assets/demo.json";
-import LogsSvg from "@app/assets/logs.svg";
-import MusicSvg from "@app/assets/music.svg";
-import StatisticsSvg from "@app/assets/statistics.svg";
-import UserControlSvg from "@app/assets/user_control.svg";
+import LogsSvg from "@app/assets/images/logs.svg";
+import MusicSvg from "@app/assets/images/music.svg";
+import StatisticsSvg from "@app/assets/images/statistics.svg";
+import UserControlSvg from "@app/assets/images/user_control.svg";
 import {
   Card,
   Window,
