@@ -18,9 +18,49 @@ export const siteMetadata = {
   title,
   description,
   author: `architus`,
+  version: "v0.2.1",
   siteUrl: process.env.SITE_ROOT ?? "https://archit.us",
   themeColor,
   msTileColor,
+  footer: {
+    about: `This site contains implementation documentation for the architus ecosystem, including the microservice-based backend application as well as the React-based web dashboard.`,
+    links: [
+      {
+        href: "https://discord.gg/svrRrSe",
+        text: "Discord server",
+        icon: "discord",
+      },
+      {
+        href: "https://github.com/architus",
+        text: "GitHub",
+        icon: "github",
+      },
+      {
+        href: "https://docs.archit.us/",
+        text: "Documentation",
+      },
+      ...(process.env.SITE_ROOT !== "https://archit.us"
+        ? [
+            {
+              href: "https://archit.us/",
+              text: "Live build",
+            },
+          ]
+        : []),
+      ...(process.env.SITE_ROOT !== "https://docs.archit.us"
+        ? [
+            {
+              href: "https://develop.archit.us/",
+              text: "Canary build",
+            },
+          ]
+        : []),
+      {
+        href: "https://status.archit.us/",
+        text: "Status",
+      },
+    ],
+  },
 };
 
 export const plugins = [

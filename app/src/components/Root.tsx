@@ -16,6 +16,7 @@ import "@app/scss/main.scss";
 
 // Import the global CSS rules from Linaria
 import "@architus/facade/theme/globals";
+import "@app/layout";
 
 /**
  * Represents the root component of the application,

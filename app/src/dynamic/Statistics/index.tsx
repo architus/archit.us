@@ -1,7 +1,8 @@
 import React from "react";
-import { Container, Badge } from "react-bootstrap";
 
 import { AppPageProps } from "@app/dynamic/AppRoot/types";
+import { Container } from "@app/layout";
+import Badge from "@architus/facade/components/Badge";
 
 const Statistics: React.FC<AppPageProps> = () => (
   <Container className="py-5">

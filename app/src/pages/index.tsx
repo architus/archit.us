@@ -1,12 +1,8 @@
 import { styled } from "linaria/react";
-import { transparentize } from "polished";
+import { transparentize, darken, lighten } from "polished";
 import React from "react";
-import {
-  Container as BootstrapContainer,
-  Button,
-  Badge,
-} from "react-bootstrap";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { Button } from "react-bootstrap";
+import { FaChevronRight } from "react-icons/fa";
 import { shallowEqual } from "react-redux";
 
 import { withBasePath } from "@app/api";
@@ -20,23 +16,28 @@ import MusicSvg from "@app/assets/images/music.svg";
 import StatisticsSvg from "@app/assets/images/statistics.svg";
 import UserControlSvg from "@app/assets/images/user_control.svg";
 import {
-  Card,
+  Card as GlassCard,
   Window,
   Layout,
   DiscordMock,
   ErrorBoundary,
 } from "@app/components";
+import CompositeBrand from "@app/components/CompositeBrand";
 import { CustomEmojiExtension } from "@app/components/DiscordMock/CustomEmojiExtension";
 import { Extension } from "@app/components/DiscordMock/util";
 import LoginButton, { useOauthUrl } from "@app/components/LoginButton";
 import { Link } from "@app/components/Router";
 import { useBotStats } from "@app/data/bot-stats";
+import { useFooterData } from "@app/data/footer-data";
+import { Container, container } from "@app/layout";
 import { useSessionStatus } from "@app/store/actions";
 import { useSelector, useDispatch } from "@app/store/hooks";
 import { guildCount as guildCountRoute } from "@app/store/routes";
 import { useEffectOnce, useCallbackOnce } from "@app/utility";
 import { DiscordMockContext, DiscordMockCommands } from "@app/utility/types";
-import Footer from "@architus/facade/components/Footer";
+import Badge from "@architus/facade/components/Badge";
+import Card from "@architus/facade/components/Card";
+import Footer, { FooterContent } from "@architus/facade/components/Footer";
 import Gap from "@architus/facade/components/Gap";
 import Logo from "@architus/facade/components/Logo";
 import SecondaryFooter from "@architus/facade/components/SecondaryFooter";
@@ -47,21 +48,15 @@ import {
   staticColor,
   dynamicColor,
 } from "@architus/facade/theme/color";
-import { down, up } from "@architus/facade/theme/media";
+import { down, up, BreakpointKey } from "@architus/facade/theme/media";
 import { pattern } from "@architus/facade/theme/patterns";
 import { shadow } from "@architus/facade/theme/shadow";
 import { gap } from "@architus/facade/theme/spacing";
 import { Option } from "@architus/lib/option";
 
-const Container = styled(BootstrapContainer)`
-  position: relative;
-  z-index: 0;
-  padding-left: 0;
-  padding-right: 0;
-`;
-
 const Content = styled.article`
-  code {
+  & :not(pre) > code,
+  :not(pre) > code {
     color: ${color("primary")};
     display: inline-block;
     background-color: ${color("bg+10")};
@@ -71,6 +66,35 @@ const Content = styled.article`
     font-size: 87.5%;
   }
 `;
+
+const Styled = {
+  Footers: styled.div`
+    ${FooterContent} {
+      ${container};
+    }
+
+    footer:nth-of-type(2n + 1) {
+      box-shadow: none;
+
+      ${mode(ColorMode.Dark)} {
+        background-color: ${darken(0.02, dynamicColor("bg", ColorMode.Dark))};
+
+        ${Card} {
+          background-color: ${lighten(
+            0.02,
+            dynamicColor("bg", ColorMode.Dark)
+          )};
+        }
+      }
+    }
+
+    footer:nth-of-type(2n + 2) {
+      ${mode(ColorMode.Dark)} {
+        background-color: ${color("bg-10")};
+      }
+    }
+  `,
+};
 
 const IndexPage: React.FC = () => {
   // Get the cached guild/user counts from the route data (cached upon site build)
@@ -105,8 +129,10 @@ const IndexPage: React.FC = () => {
         <MinorFeatures />
         <BottomCta />
       </article>
-      <Footer about="__about__" links={[]} brand={null} />
-      <SecondaryFooter />
+      <Styled.Footers>
+        <Footer {...useFooterData()} brand={<CompositeBrand showVersion />} />
+        <SecondaryFooter />
+      </Styled.Footers>
     </Layout>
   );
 };
@@ -243,11 +269,11 @@ const Lead: React.FC<LeadProps> = ({ guildCount, userCount }) => (
         </p>
       </LeadStyled.Block>
       <LeadStyled.CtaWrapper>
-        <Card>
+        <GlassCard>
           <LeadStyled.CtaTitle>Getting Started</LeadStyled.CtaTitle>
           <Gap amount="micro" />
           <LeadStyled.LoginButton />
-        </Card>
+        </GlassCard>
       </LeadStyled.CtaWrapper>
     </LeadStyled.Layout>
   </LeadStyled.Outer>
@@ -310,19 +336,6 @@ const FeaturesStyled = {
     box-shadow: ${shadow("z3")};
     ${mode(ColorMode.Dark)} {
       box-shadow: ${shadow("z2")};
-    }
-  `,
-  TryCta: styled.p`
-    color: text_strong;
-    font-weight: 500;
-    font-style: italic;
-    margin-top: milli;
-    margin-bottom: zero;
-
-    /* Hide the call to action text on small screen sizes (where the feature columns
-       collapse and the arrows no longer make sense) */
-    ${down("lg")} {
-      display: none;
     }
   `,
 };
@@ -454,16 +467,23 @@ const Features: React.FC<FeaturesProps> = () => (
 
 const TryCtaStyled = {
   Outer: styled.div<{ side: "left" | "right" }>`
+    color: ${color("textStrong")};
+    font-weight: 500;
+    font-style: italic;
     margin-top: ${gap.micro};
     text-align: ${(props): string => props.side};
-    font-style: italic;
-    color: ${color("textStrong")};
 
     & svg {
       margin-left: ${(props): string =>
         props.side === "left" ? "0" : gap.nano};
       margin-right: ${(props): string =>
         props.side === "left" ? gap.nano : "0"};
+      transform: ${(props): string =>
+        props.side === "left" ? "rotate(180deg)" : "none"};
+
+      ${down("lg")} {
+        transform: rotate(90deg);
+      }
     }
   `,
 };
@@ -476,7 +496,7 @@ type TryCtaProps = { side: "left" | "right" };
  */
 const TryCta: React.FC<TryCtaProps> = ({ side }) => (
   <TryCtaStyled.Outer side={side}>
-    {side === "left" && <FaChevronLeft />}
+    {side === "left" && <FaChevronRight />}
     Try it out
     {side === "right" && <FaChevronRight />}
   </TryCtaStyled.Outer>
@@ -489,21 +509,33 @@ const TryCta: React.FC<TryCtaProps> = ({ side }) => (
 const FeatureStyled = {
   Layout: styled.section`
     display: grid;
-    grid-gap: ${gap.centi};
     grid: auto-flow / 1fr;
+    grid-gap: ${gap.milli};
+    grid-template-areas:
+      "text"
+      "demo";
 
-    ${down("lg")} {
-      grid-gap: ${gap.milli};
+    & > *:nth-child(2n + 1) {
+      grid-area: text;
+    }
+
+    & > *:nth-child(2n + 2) {
+      grid-area: demo;
     }
 
     ${up("lg")} {
       grid-template-columns: 1fr 1fr;
-      & > *:nth-child(2n + 1) {
-        grid-column: 1;
-      }
+      grid-template-areas: "demo text";
+      grid-gap: ${gap.centi};
 
-      & > *:nth-child(2n + 2) {
-        grid-column: 2;
+      &[data-side="right"] {
+        & > *:nth-child(2n + 1) {
+          grid-area: demo;
+        }
+
+        & > *:nth-child(2n + 2) {
+          grid-area: text;
+        }
       }
     }
   `,
@@ -614,8 +646,7 @@ const Feature: React.FC<FeatureProps> = ({
   header,
   content,
 }) => (
-  <FeatureStyled.Layout>
-    {side === "left" && <div>{children}</div>}
+  <FeatureStyled.Layout data-side={side}>
     <FeatureStyled.Content>
       <FeatureStyled.Dots data-side={side}>
         <FeatureStyled.Subheading>{lead}</FeatureStyled.Subheading>
@@ -623,7 +654,7 @@ const Feature: React.FC<FeatureProps> = ({
         <div>{content}</div>
       </FeatureStyled.Dots>
     </FeatureStyled.Content>
-    {side === "right" && <div>{children}</div>}
+    <div>{children}</div>
   </FeatureStyled.Layout>
 );
 
@@ -631,19 +662,25 @@ const Feature: React.FC<FeatureProps> = ({
 // ? MinorFeatures component
 // ? =======================
 
+const bottomCtaOverlapBreakpoint: BreakpointKey = "lg";
+const bottomCtaOverlayOffset = gap.kilo;
+
 const MinorFeaturesStyled = {
   Outer: styled.div`
     background-color: ${color("bg+10")};
     border-top: 1px solid ${color("contrastBorder")};
     border-bottom: 1px solid ${color("contrastBorder")};
 
-    ${down("md")} {
-      padding-bottom: ${gap.centi};
+    --offset: 0px;
+    --base-padding: ${gap.centi};
+
+    ${up(bottomCtaOverlapBreakpoint)} {
+      --offset: ${bottomCtaOverlayOffset};
+      --base-padding: ${gap.kilo};
     }
 
-    ${up("md")} {
-      padding-bottom: ${gap.mega};
-    }
+    padding-top: var(--base-padding);
+    padding-bottom: calc(var(--base-padding) + var(--offset));
   `,
   Layout: styled.div`
     display: grid;
@@ -743,34 +780,38 @@ const MinorFeatureStyled = {
       }
     }
 
-    & h3 {
-      color: text_strong;
-      font-size: 20px;
-      font-weight: 400;
-      margin-bottom: femto;
-    }
-
-    & p {
-      color: text_fade;
-    }
-
     /* Inline code blocks need an even lighter background */
     & :not(pre) > code,
     :not(pre) > code {
       background-color: ${color("bg+20")};
     }
   `,
+  Header: styled.h3`
+    color: ${color("textStrong")};
+    font-size: 20px;
+    font-weight: 400;
+    margin-bottom: ${gap.femto};
+  `,
+  Text: styled.div`
+    color: ${color("textFade")};
+  `,
   Icon: styled.div`
-    width: 80px;
-    height: 80px;
-    margin: 0 auto nano;
+    --size: 80px;
+    width: var(--size);
+    height: var(--size);
+    margin: 0 auto ${gap.nano};
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center;
+    color: ${color("primary")};
+
+    ${down("md")} {
+      --size: 60px;
+    }
 
     /* Lighten/desaturate the icon in dark mode to make it appear correctly */
     ${mode(ColorMode.Dark)} {
-      filter: brightness(2) saturate(0%);
+      color: ${color("light")};
       opacity: 0.7;
     }
   `,
@@ -794,8 +835,8 @@ const MinorFeature: React.FC<MinorFeatureProps> = ({
     <MinorFeatureStyled.Icon>
       <FeatureIcon />
     </MinorFeatureStyled.Icon>
-    <h3>{header}</h3>
-    <div>{text}</div>
+    <MinorFeatureStyled.Header>{header}</MinorFeatureStyled.Header>
+    <MinorFeatureStyled.Text>{text}</MinorFeatureStyled.Text>
   </MinorFeatureStyled.Outer>
 );
 
@@ -818,7 +859,7 @@ const BottomCtaStyled = {
 
     ${mode(ColorMode.Light)} {
       background-image: ${pattern("cube")(
-        transparentize(0.93, staticColor("light"))
+        transparentize(0.94, staticColor("dark"))
       )};
     }
 
@@ -847,7 +888,7 @@ const BottomCtaStyled = {
       margin-top: -${gap.milli};
     }
   `,
-  Card: styled(Card)`
+  Card: styled(GlassCard)`
     position: relative;
     box-shadow: 2;
     max-width: 800px;
@@ -858,16 +899,18 @@ const BottomCtaStyled = {
       color: ${color("textFade")};
     }
 
-    ${up("lg")} {
+    ${up(bottomCtaOverlapBreakpoint)} {
       /* Perform a shift on large screen sizes so that it overlaps the previous section */
-      top: -${gap.kilo};
+      top: -${bottomCtaOverlayOffset};
       /* Add additional padding on large screen sizes */
-      padding: ${gap.centi};
+      padding: ${gap.centi} !important;
 
       /* Make intensity of frosted glass effect slightly less on large screen sizes */
       &::before {
-        opacity: 0.8;
+        opacity: 0.7 !important;
       }
+
+      box-shadow: ${shadow("z3")} !important;
     }
 
     /* Add margins on the bottom on small screen sizes */
@@ -885,7 +928,7 @@ const BottomCtaStyled = {
     }
   `,
   Button: styled(Button)`
-    span {
+    svg {
       margin-left: 0;
       width: 0 !important;
       opacity: 0;
@@ -893,7 +936,7 @@ const BottomCtaStyled = {
     }
 
     &:hover {
-      span {
+      svg {
         margin-left: 1rem;
         width: 12.5px !important;
         opacity: 1;
@@ -923,11 +966,12 @@ const BottomCta: React.FC<BottomCtaProps> = () => {
           <BottomCtaStyled.Header>
             See what <em>architus</em> can do for you
           </BottomCtaStyled.Header>
+          <Gap amount="micro" />
           <p>
             Connect with Discord to get a link that adds architus to your
             server.
           </p>
-          <Gap amount="micro" />
+          <Gap amount="milli" />
           <BottomCtaStyled.Button
             variant="primary"
             size="lg"

@@ -56,6 +56,7 @@ const Styled = {
 
     &:hover {
       background-color: ${transparentize(0.95, staticColor("light"))};
+      color: ${color("light")};
     }
 
     & > svg {
