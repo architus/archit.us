@@ -73,7 +73,7 @@ rules:
         order: asc
         caseInsensitive: true
 
-  # Prettier config (all defaults)
+  # Prettier config (uses all defaults)
   # See https://prettier.io/docs/en/options.html
   prettier/prettier: error
 
