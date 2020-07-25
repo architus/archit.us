@@ -17,7 +17,7 @@ const SEO: React.FC<SEOProps> = ({ description, meta, title, lang = `en` }) => {
   const author = seoData.author.getOrElse("");
   const themeColor = seoData.themeColor.getOrElse("#ff00ff");
   const msTileColor = seoData.themeColor.getOrElse("#ff00ff");
-  const siteTitle = seoData.title.getOrElse("Documentation");
+  const siteTitle = seoData.title.getOrElse("Architus");
   const derivedTitle = Option.from(title)
     .map((t) => `${t} | ${siteTitle}`)
     .getOrElse(siteTitle);

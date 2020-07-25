@@ -1,5 +1,18 @@
-import { Option, Some } from "@architus/lib/option";
+import { graphql, useStaticQuery } from "gatsby";
 
+import { Option } from "@architus/lib/option";
+
+/**
+ * Gets the site's `pathPrefix` if it is set, else None
+ */
 export function usePathPrefix(): Option<string> {
-  return Some("/");
+  const queryResult = useStaticQuery<GatsbyTypes.UsePathPrefixQuery>(graphql`
+    query UsePathPrefix {
+      site {
+        pathPrefix
+      }
+    }
+  `);
+
+  return Option.from(queryResult.site?.pathPrefix);
 }
