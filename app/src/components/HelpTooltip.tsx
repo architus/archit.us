@@ -1,15 +1,14 @@
 import * as Popper from "@popperjs/core";
-import styled from "@xstyled/emotion";
+import { styled } from "linaria/react";
 import React from "react";
+import { FaQuestionCircle } from "react-icons/fa";
 import { OverlayProps } from "react-overlays/esm/Overlay";
 
-import Icon from "@app/components/Icon";
 import Tooltip, { TooltipMode } from "@app/components/Tooltip";
 import { Space } from "@app/theme";
-import { StyleObject, WithBoxProps } from "@app/utility/types";
 
 const Styled = {
-  HelpIcon: styled.spanBox`
+  HelpIconWrapper: styled.span`
     width: 1.5em;
     display: inline-block;
     position: relative;
@@ -17,12 +16,12 @@ const Styled = {
     opacity: 0.55;
     font-size: 1.2em;
 
-    // Needs a slight nudge
+    /* Needs a slight nudge */
     transform: translateY(1px);
   `,
 };
 
-type HelpTooltipProps = WithBoxProps<{
+export type HelpTooltipProps = {
   text: string;
   id: string;
   placement?: Popper.Placement;
@@ -34,14 +33,13 @@ type HelpTooltipProps = WithBoxProps<{
   delay?: number;
   toggle?: TooltipMode;
   popperConfig?: OverlayProps["popperConfig"];
-  // Common style Props
   className?: string;
-  style?: StyleObject;
-}>;
+  style?: React.CSSProperties;
+};
 
 /**
- * Displays a help icon with a tooltip, used for providing additonal information to users
- * in a compact way
+ * Displays a help icon with a tooltip,
+ * used for providing additonal information to users in a compact way
  */
 const HelpTooltip: React.FC<HelpTooltipProps> = ({
   text,
@@ -57,7 +55,6 @@ const HelpTooltip: React.FC<HelpTooltipProps> = ({
   popperConfig,
   className,
   style,
-  ...boxProps
 }) => (
   <Tooltip
     id={id}
@@ -72,9 +69,9 @@ const HelpTooltip: React.FC<HelpTooltipProps> = ({
     toggle={toggle}
     popperConfig={popperConfig}
   >
-    <Styled.HelpIcon className={className} style={style} {...boxProps}>
-      <Icon name="question-circle" />
-    </Styled.HelpIcon>
+    <Styled.HelpIconWrapper className={className} style={style}>
+      <FaQuestionCircle />
+    </Styled.HelpIconWrapper>
   </Tooltip>
 );
 

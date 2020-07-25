@@ -1,14 +1,14 @@
 import classNames from "classnames";
 import React from "react";
+
+import Icon from "@app/components/Icon";
 import {
   InputGroup,
   FormControl,
   Button,
   ButtonProps,
   FormControlProps,
-} from "react-bootstrap";
-
-import Icon from "@app/components/Icon";
+} from "@app/react-bootstrap";
 import { StyleObject } from "@app/utility/types";
 
 import "./style.scss";

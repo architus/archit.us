@@ -7,6 +7,7 @@ import { primaryLink } from "../theme/mixins";
 import { SpacingKey, gap } from "../theme/spacing";
 import { isDefined } from "@architus/lib/utility";
 import { isExternal } from "@architus/lib/path";
+import { Nil } from "@architus/lib/types";
 
 const baseLinkClass = css`
   ${primaryLink}
@@ -28,7 +29,7 @@ const Styled = {
 
 export type AutoLinkProps = {
   href: string;
-  external?: boolean | null;
+  external?: boolean | Nil;
   left?: boolean;
   space?: SpacingKey;
   newTab?: boolean;

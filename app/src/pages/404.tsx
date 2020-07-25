@@ -2,8 +2,9 @@ import { styled } from "linaria/react";
 import { transparentize } from "polished";
 import React from "react";
 
-import { Layout, AutoLink } from "@app/components";
 import Footers from "@app/components/Footers";
+import Layout from "@app/components/Layout";
+import AutoLink from "@architus/facade/components/AutoLink";
 import {
   color,
   mode,
@@ -30,9 +31,9 @@ const Styled = {
     max-width: 360px;
     position: relative;
     z-index: 1;
-    padding: ${gap.milli} ${gap.nano} ${gap.milli};
+    padding: ${gap.centi} ${gap.nano} ${gap.centi};
 
-    ${up("lg")} {
+    ${up("md")} {
       padding-top: ${gap.kilo};
       padding-bottom: ${gap.kilo};
     }
@@ -42,7 +43,7 @@ const Styled = {
     &::after {
       position: absolute;
       content: "";
-      opacity: 0.15;
+      opacity: 0.25;
       pointer-events: none;
 
       ${mode(ColorMode.Light)} {
@@ -101,7 +102,7 @@ export type NotFoundPageProps = {
 };
 
 const NotFoundPage: React.FC<NotFoundPageProps> = ({ fromApp = false }) => (
-  <Layout title="Not Found" noHeader={fromApp}>
+  <Layout seo={{ title: "Not Found" }} noHeader={fromApp}>
     <Styled.Layout>
       <Styled.Content>
         <Styled.PageTitle>404</Styled.PageTitle>
@@ -111,7 +112,7 @@ const NotFoundPage: React.FC<NotFoundPageProps> = ({ fromApp = false }) => (
         </Styled.Paragraph>
         <Styled.Paragraph>
           If you feel this is an error, please file a new issue{" "}
-          <AutoLink to="https://github.com/architus/archit.us/issues/new">
+          <AutoLink href="https://github.com/architus/archit.us/issues/new">
             on GitHub
           </AutoLink>
         </Styled.Paragraph>

@@ -1,14 +1,14 @@
 import * as Popper from "@popperjs/core";
 import styled, { Box, BoxProps } from "@xstyled/emotion";
 import React, { useState, createRef } from "react";
+import { UsePopperOptions } from "react-overlays/esm/usePopper";
+
 import {
   OverlayTrigger,
   Tooltip as BootstrapTooltip,
   OverlayProps,
   Overlay,
-} from "react-bootstrap";
-import { UsePopperOptions } from "react-overlays/esm/usePopper";
-
+} from "@app/react-bootstrap";
 import { Space } from "@app/theme";
 import { isDefined, isNil } from "@app/utility";
 import { StyleObject } from "@app/utility/types";
@@ -70,6 +70,7 @@ type TooltipControllerProps = {
  * The tooltip itself is rendered at the root of the HTML body via a React Portal. The
  * `style` and `className` props are **passed in to the rendered overlay, not the in-flow
  * component**. That means that child selectors will not work as expected.
+ * @deprecated - Use `@architus/facade/components/Tooltip` instead
  */
 const TooltipController: React.FC<TooltipControllerProps> = ({
   id,

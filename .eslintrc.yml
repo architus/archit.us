@@ -91,6 +91,12 @@ overrides:
     rules:
       "@typescript-eslint/explicit-function-return-type": off
 
+  # Disable unused expression in JSON files
+  - files:
+      - "*.json"
+    rules:
+      no-unused-expressions: 0
+
   # Disable the dev dependency checks on test files
   - files:
       - "*.test.js"

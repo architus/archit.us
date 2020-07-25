@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 /* eslint-disable @typescript-eslint/camelcase */
 /* eslint-disable max-classes-per-file */
-import { BoxProps } from "@xstyled/emotion";
 import { either } from "fp-ts/lib/Either";
 import * as t from "io-ts";
 
@@ -602,8 +601,6 @@ export function normalizeUserLike(userLike: UserLike): NormalizedUserLike {
       : (userLike as { name: string }).name,
   };
 }
-
-export type WithBoxProps<P> = P & Omit<BoxProps, keyof P>;
 
 export type Member = t.TypeOf<typeof Member>;
 export const Member = t.type({

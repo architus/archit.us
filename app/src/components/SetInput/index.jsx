@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
 import React, { useCallback } from "react";
-import { Button } from "react-bootstrap";
 
 import Icon from "@app/components/Icon";
+import { Button } from "@app/react-bootstrap";
 
 import "./style.scss";
 

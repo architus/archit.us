@@ -1,8 +1,10 @@
 import { styled } from "linaria/react";
 import React from "react";
 
-import { Card, LoginButton, Layout } from "@app/components";
 import Footers from "@app/components/Footers";
+import GlassCard from "@app/components/GlassCard";
+import Layout from "@app/components/Layout";
+import LoginPrompt from "@app/components/LoginPrompt";
 import { Container } from "@app/layout";
 import { color } from "@architus/facade/theme/color";
 import { down } from "@architus/facade/theme/media";
@@ -13,7 +15,7 @@ const Styled = {
     background-color: ${color("bg")};
     color: ${color("text")};
   `,
-  Card: styled(Card)`
+  Card: styled(GlassCard)`
     max-width: 500px;
     margin: ${gap.centi} auto ${gap.centi} 0;
   `,
@@ -38,7 +40,7 @@ export type LoginPageProps = {
 };
 
 const LoginPage: React.FC<LoginPageProps> = ({ fromRestricted }) => (
-  <Layout title="Login" noHeader={fromRestricted}>
+  <Layout seo={{ title: "Login" }} noHeader={fromRestricted}>
     <Styled.Layout>
       <Container>
         <Styled.Card>
@@ -53,7 +55,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ fromRestricted }) => (
               </p>
             )}
           </Styled.Content>
-          <LoginButton showLabel={false} />
+          <LoginPrompt showLabel={false} />
         </Styled.Card>
       </Container>
     </Styled.Layout>

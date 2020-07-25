@@ -1,29 +1,28 @@
 import { styled } from "linaria/react";
-import { mix, transparentize } from "polished";
+import { transparentize, mix } from "polished";
 import React from "react";
 
+import CompositeBrand from "@app/components/CompositeBrand";
+import HeaderLinks from "@app/components/HeaderLinks";
+import SessionControl from "@app/components/SessionControl";
+import { headerHeight, sitePadding, container } from "@app/layout";
+import { color, ColorMode } from "@app/theme";
+import { useInitialRender } from "@app/utility";
+import AutoLink from "@architus/facade/components/AutoLink";
 import { useColorMode } from "@architus/facade/hooks";
-import { color, ColorMode, dynamicColor } from "@architus/facade/theme/color";
+import { dynamicColor } from "@architus/facade/theme/color";
 import { up, down } from "@architus/facade/theme/media";
 import { scrollBar } from "@architus/facade/theme/mixins";
 import { transition } from "@architus/facade/theme/motion";
 import { ZIndex } from "@architus/facade/theme/order";
 import { shadow } from "@architus/facade/theme/shadow";
 import { gap } from "@architus/facade/theme/spacing";
-import { useInitialRender } from "@architus/lib/hooks";
-import CompositeBrand from "@docs/components/CompositeBrand";
-import HeaderActionBar, {
-  actionBarSpacing,
-} from "@docs/components/HeaderActionBar";
-import HeaderLinks from "@docs/components/HeaderLinks";
-import { Link } from "@docs/components/Router";
-import { headerHeight, sitePadding } from "@docs/layout";
 
 const headerTransparency = 0.06;
 const logoLeftSpace = gap.nano;
 
 const Styled = {
-  LogoLink: styled(Link)`
+  LogoLink: styled(AutoLink)`
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -70,26 +69,13 @@ const Styled = {
     width: 100%;
     color: ${color("light")};
     height: ${headerHeight};
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
-    justify-content: flex-start;
     z-index: ${ZIndex.Header};
     box-shadow: ${shadow("z1")};
-    padding-left: calc(${sitePadding} - ${logoLeftSpace});
 
     ${down("md")} {
-      /* Scroll horizontally when the screen isn't wide enough */
-      overflow-x: overlay;
-      ${scrollBar(ColorMode.Light)}
-
       /* Stop the header from sticking on small screens */
       position: absolute;
     }
-
-    /* This has to be a function
-    to have linaria not eagerly evaluate 'actionBarSpacing' at build time */
-    padding-right: calc(${sitePadding} - ${(): string => actionBarSpacing});
 
     /* Set the background-color to be primary on SSR
     and try to reverse-blend it with the background while adding opacity,
@@ -107,6 +93,25 @@ const Styled = {
             )
           )};
   `,
+  HeaderContent: styled.div`
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: flex-start;
+
+    /* Display a conditional container around header content */
+    &[data-container="true"] {
+      ${container}
+    }
+    padding-left: calc(${sitePadding} - ${logoLeftSpace}) !important;
+
+    ${down("md")} {
+      /* Scroll horizontally when the screen isn't wide enough */
+      overflow-x: overlay;
+      ${scrollBar(ColorMode.Light)}
+    }
+  `,
   RightComponents: styled.div`
     display: flex;
     flex-direction: row;
@@ -116,29 +121,46 @@ const Styled = {
 };
 
 export type HeaderProps = {
-  activeNavRoot?: string;
+  children?: React.ReactNode;
+  noContainer?: boolean;
+  noLinks?: boolean;
   className?: string;
   style?: React.CSSProperties;
 };
 
 /**
- * Site header, including navigation links and an action bar on the right side
+ * Primary header component, including links and the session control dropdown.
+ * Additional children can be passed in via the `children` prop.
  */
-const Header: React.FC<HeaderProps> = ({ activeNavRoot, className, style }) => {
+const Header: React.FC<HeaderProps> = ({
+  children,
+  noContainer = false,
+  noLinks = false,
+  className,
+  style,
+}) => {
   const mode = useColorMode();
   const initialRender = useInitialRender();
   const ssr = typeof window === "undefined" || initialRender;
   return (
     <Styled.Header mode={mode} ssr={ssr} className={className} style={style}>
-      <Styled.LogoLink to="/">
-        <CompositeBrand buildTooltipPlacement="bottom" hideTagBreakpoint="vs" />
-      </Styled.LogoLink>
-      <Styled.HeaderLinksWrapper>
-        <HeaderLinks activeNavRoot={activeNavRoot} />
-      </Styled.HeaderLinksWrapper>
-      <Styled.RightComponents>
-        <HeaderActionBar />
-      </Styled.RightComponents>
+      <Styled.HeaderContent data-container={String(!noContainer)}>
+        <Styled.LogoLink href="/">
+          <CompositeBrand
+            buildTooltipPlacement="bottom"
+            hideTagBreakpoint="vs"
+          />
+        </Styled.LogoLink>
+        {noLinks ? null : (
+          <Styled.HeaderLinksWrapper>
+            <HeaderLinks />
+          </Styled.HeaderLinksWrapper>
+        )}
+        <Styled.RightComponents>
+          {children}
+          <SessionControl />
+        </Styled.RightComponents>
+      </Styled.HeaderContent>
     </Styled.Header>
   );
 };

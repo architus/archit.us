@@ -6,8 +6,8 @@ import React, {
   useMemo,
   useRef,
 } from "react";
-import { Modal, Button, Form } from "react-bootstrap";
 
+import { Modal, Button, Form } from "@app/react-bootstrap";
 import {
   isDefined,
   identity,

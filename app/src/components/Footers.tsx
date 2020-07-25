@@ -39,7 +39,7 @@ export type FootersProps = {
  * Includes site-specific adjustments
  */
 const Footers: React.FC<FootersProps> = ({ className, style }) => (
-  <Styled.Footers>
+  <Styled.Footers className={className} style={style}>
     <Footer {...useFooterData()} brand={<CompositeBrand showVersion />} />
     <SecondaryFooter />
   </Styled.Footers>

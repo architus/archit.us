@@ -1,4 +1,5 @@
 import { parseToRgb } from "polished";
+import React from "react";
 import tinycolor, { Instance } from "tinycolor2";
 
 // Re-export tinycolor for convenience
@@ -14,6 +15,16 @@ export enum ColorMode {
 }
 
 export const defaultMode: ColorMode = ColorMode.Dark;
+
+export type ColorModeContext = {
+  mode: ColorMode;
+  setMode: (newMode: ColorMode) => void;
+};
+
+export const ColorModeContext = React.createContext<ColorModeContext>({
+  mode: defaultMode,
+  setMode: () => null,
+});
 
 // Dynamic colors that change depending on the theme
 const colors = {
@@ -217,7 +228,7 @@ export function injectColorGlobals(): string {
 }
 
 /**
- * Gets the (unchanging) string value of the given static color key
+ * Gets the (unchanging) raw string value of the given static color key
  * @param key - static color key to get the color for
  */
 export function staticColor(key: StaticColorKey): string {
@@ -225,11 +236,11 @@ export function staticColor(key: StaticColorKey): string {
 }
 
 /**
- * Gets the (unchanging) string value of the given dynamic color key
+ * Gets the (unchanging) raw string value of the given dynamic color key
  * under the given color mode (uses `defaultMode` as a fallback).
  * **Will not be reactive to the app's theme**.
  * To use a reactive version, see `color` for CSS
- * and `useThemeColor` (implementation specific) for JavaScript
+ * and `useColorMode` + `hybridColor` for JavaScript
  * @param key - dynamic color key to get the color for
  * @param colorMode - color mode to use when looking up actual value
  */
@@ -259,11 +270,11 @@ export function splitColor(baseColor: string): string {
 }
 
 /**
- * Gets the (unchanging) string value of the given color key
+ * Gets the (unchanging) raw string value of the given color key
  * under the given color mode (uses `defaultMode` as a fallback).
  * **Will not be reactive to the app's theme**.
  * To use a reactive version, see `color` for CSS
- * and `useThemeColor` (implementation specific) for JavaScript
+ * and include `useColorMode` for JavaScript
  * @param key - dynamic color key to get the color for
  * @param colorMode - color mode to use when looking up actual value
  */
@@ -274,5 +285,5 @@ export function hybridColor(
   if (key in staticColors) {
     return staticColors[key as StaticColorKey];
   }
-  return colors[colorMode][key as DynamicColorKey];
+  return (colors[colorMode] ?? colors[defaultMode])[key as DynamicColorKey];
 }

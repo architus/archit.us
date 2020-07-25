@@ -1,7 +1,6 @@
 import { css } from "@xstyled/emotion";
 import { th, ThemeGetterFunc, breakpoints } from "@xstyled/system";
 
-import { Color, ColorInstance } from "./color";
 import {
   WithBreakpointArgs,
   ColorMode,
@@ -9,13 +8,13 @@ import {
   parseThemeColor,
 } from "./tokens";
 import { isNil, isDefined } from "@app/utility";
+import { Color, ColorInstance } from "@architus/facade/theme/color";
 
 /**
  * Adds opacity to a color from the theme.
  *
  * **Note**: this adjustment is only possible for **static** theme colors (ones that
- * don't change depending on the current color mode (i.e. light/dark theme)). To create
- * custom colors dependent on the current color theme, see `useThemeColor`
+ * don't change depending on the current color mode (i.e. light/dark theme)).
  * @param key - Color key from the theme
  * @param amount - Amount of opacity to have in the final color (alpha level)
  */
@@ -33,8 +32,7 @@ export function opacity(key: ColorKey, amount: number): ThemeGetterFunc {
  * Adjusts a static color from the theme
  *
  * **Note**: this adjustment is only possible for **static** theme colors (ones that
- * don't change depending on the current color mode (i.e. light/dark theme)). To create
- * custom colors dependent on the current color theme, see `useThemeColor`
+ * don't change depending on the current color mode (i.e. light/dark theme)).
  * @param key - Color key from the theme
  * @param amount - Adjustment function to apply to the Color
  */

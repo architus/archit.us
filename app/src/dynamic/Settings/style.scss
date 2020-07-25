@@ -1,9 +1,0 @@
-@import "../../scss/media.scss";
-
-.settings {
-    padding: 2.5rem;
-
-    @include respond-below(lg) {
-        padding: 1.5rem;
-    }
-}

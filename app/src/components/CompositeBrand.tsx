@@ -29,12 +29,11 @@ const Styled = {
   Title: styled.div`
     font-size: 1.15rem;
     margin-left: ${gap.pico};
-    top: 3px;
+    top: 5px;
     position: relative;
   `,
   Logotype: styled(Logo.Logotype)`
     fill: currentColor;
-    margin-bottom: ${gap.femto};
   `,
   BuildTag: styled(BuildTag)`
     margin-left: ${gap.nano};

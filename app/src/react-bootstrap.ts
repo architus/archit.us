@@ -5,7 +5,6 @@ export {
   Button,
   Modal,
   Form,
-  Navbar,
   Dropdown,
   CloseButton,
   Col,

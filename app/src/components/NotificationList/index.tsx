@@ -1,8 +1,8 @@
 import React from "react";
-import { Container } from "react-bootstrap";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 
 import Notification from "@app/components/Notification";
+import { Container } from "@app/layout";
 import {
   Notification as NotificationInterface,
   NotificationType,

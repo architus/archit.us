@@ -7,7 +7,6 @@ import React, {
   useState,
   useCallback,
 } from "react";
-import { Alert } from "react-bootstrap";
 import { ContextMenu, MenuItem, connectMenu } from "react-contextmenu";
 import DataGrid, { Column, SortDirection } from "react-data-grid";
 import { createPortal } from "react-dom";
@@ -29,11 +28,15 @@ import {
 } from "./NumericFilter";
 import { StringFilter } from "./StringFilter";
 import { TransformedAutoResponse, AuthorData } from "./types";
-import { Tooltip, Icon, Switch, HelpTooltip, AutoLink } from "@app/components";
+import HelpTooltip from "@app/components/HelpTooltip";
+import Icon from "@app/components/Icon";
 import { AnyIconName } from "@app/components/Icon/loader";
+import Switch from "@app/components/Switch";
+import Tooltip from "@app/components/Tooltip";
 import { getAvatarUrl } from "@app/components/UserDisplay";
 import { ScrollContext } from "@app/dynamic/AppRoot/context";
 import { AppPageProps } from "@app/dynamic/AppRoot/types";
+import { Alert } from "@app/react-bootstrap";
 import { Dispatch, useDispatch } from "@app/store";
 import { useCurrentUser, showToast } from "@app/store/actions";
 import { usePool, usePoolEntities } from "@app/store/slices/pools";
@@ -46,6 +49,7 @@ import {
   HoarFrost,
   AutoResponse,
 } from "@app/utility/types";
+import AutoLink from "@architus/facade/components/AutoLink";
 import { Option, None, Some, Unwrap } from "@architus/lib/option";
 
 const Styled = {
@@ -1075,12 +1079,12 @@ const MigrationAlert: React.FC<{}> = () => {
           <em>regular expression auto responses</em> enabled in order to
           preserve old whitespace behavior. For more information on auto
           responses check out{" "}
-          <AutoLink to="https://docs.archit.us/features/auto-responses">
+          <AutoLink href="https://docs.archit.us/features/auto-responses">
             the docs
           </AutoLink>
           , and to learn more about all of the new features that arrived in
           v0.2.0, check out{" "}
-          <AutoLink to="https://docs.archit.us/changelog/v0.2.0/">
+          <AutoLink href="https://docs.archit.us/changelog/v0.2.0/">
             the changelog
           </AutoLink>
           .

@@ -1,7 +1,7 @@
+import { css } from "linaria";
 import { styled } from "linaria/react";
 import { transparentize, darken, lighten } from "polished";
 import React from "react";
-import { Button } from "react-bootstrap";
 import { FaChevronRight } from "react-icons/fa";
 import { shallowEqual } from "react-redux";
 
@@ -15,19 +15,18 @@ import LogsSvg from "@app/assets/images/logs.svg";
 import MusicSvg from "@app/assets/images/music.svg";
 import StatisticsSvg from "@app/assets/images/statistics.svg";
 import UserControlSvg from "@app/assets/images/user_control.svg";
-import {
-  Card as GlassCard,
-  Window,
-  Layout,
-  DiscordMock,
-  ErrorBoundary,
-} from "@app/components";
+import DiscordMock from "@app/components/DiscordMock";
 import { CustomEmojiExtension } from "@app/components/DiscordMock/CustomEmojiExtension";
 import { Extension } from "@app/components/DiscordMock/util";
+import ErrorBoundary from "@app/components/ErrorBoundary";
 import Footers from "@app/components/Footers";
-import LoginButton, { useOauthUrl } from "@app/components/LoginButton";
+import GlassCard from "@app/components/GlassCard";
+import Layout from "@app/components/Layout";
+import LoginPrompt from "@app/components/LoginPrompt";
 import { Link } from "@app/components/Router";
+import Window from "@app/components/Window";
 import { useBotStats } from "@app/data/bot-stats";
+import { useOauthUrl } from "@app/hooks";
 import { Container } from "@app/layout";
 import { useSessionStatus } from "@app/store/actions";
 import { useSelector, useDispatch } from "@app/store/hooks";
@@ -35,6 +34,7 @@ import { guildCount as guildCountRoute } from "@app/store/routes";
 import { useEffectOnce, useCallbackOnce } from "@app/utility";
 import { DiscordMockContext, DiscordMockCommands } from "@app/utility/types";
 import Badge from "@architus/facade/components/Badge";
+import Button from "@architus/facade/components/Button";
 import Card from "@architus/facade/components/Card";
 import Gap from "@architus/facade/components/Gap";
 import Logo from "@architus/facade/components/Logo";
@@ -46,6 +46,7 @@ import {
   dynamicColor,
 } from "@architus/facade/theme/color";
 import { down, up, BreakpointKey } from "@architus/facade/theme/media";
+import { transition } from "@architus/facade/theme/motion";
 import { pattern } from "@architus/facade/theme/patterns";
 import { shadow } from "@architus/facade/theme/shadow";
 import { gap } from "@architus/facade/theme/spacing";
@@ -60,13 +61,13 @@ const Content = styled.article`
     border-radius: 4px;
     border: 1px solid ${color("contrastBorder")};
     padding: 0.1em 0.35em 0.05em;
-    font-size: 87.5%;
+    font-size: 100%;
   }
 `;
 
 const Styled = {
   Footers: styled(Footers)`
-    footer:nth-of-type(2n + 1) {
+    & footer:nth-of-type(2n + 1) {
       box-shadow: none;
 
       ${mode(ColorMode.Dark)} {
@@ -81,7 +82,7 @@ const Styled = {
       }
     }
 
-    footer:nth-of-type(2n + 2) {
+    & footer:nth-of-type(2n + 2) {
       ${mode(ColorMode.Dark)} {
         background-color: ${color("bg-10")};
       }
@@ -107,15 +108,18 @@ const IndexPage: React.FC = () => {
     dispatch(guildCountRoute());
   });
 
+  const formatNumber = (num: number): string => Number(num).toLocaleString();
   const derivedGuildCount = Option.from(storeGuildCount)
     .orElse(() => botStatsOption.map((stats) => stats.guildCount))
-    .getOrElse(0);
+    .map(formatNumber)
+    .getOrElse("0");
   const derivedUserCount = Option.from(storeUserCount)
     .orElse(() => botStatsOption.map((stats) => stats.userCount))
-    .getOrElse(0);
+    .map(formatNumber)
+    .getOrElse("0");
 
   return (
-    <Layout title="Home">
+    <Layout seo={{ title: "Home" }}>
       <article>
         <Lead guildCount={derivedGuildCount} userCount={derivedUserCount} />
         <Features />
@@ -200,7 +204,11 @@ const LeadStyled = {
   Logo: styled(Logo.Logotype)`
     fill: ${color("textStrong")};
     width: auto;
-    height: 55px;
+    height: 54px;
+
+    ${down("sm")} {
+      height: 40px;
+    }
   `,
   CtaWrapper: styled.div`
     /* Centers elements vertically */
@@ -215,7 +223,7 @@ const LeadStyled = {
     letter-spacing: 1px;
     opacity: 0.9;
   `,
-  LoginButton: styled(LoginButton)`
+  LoginPrompt: styled(LoginPrompt)`
     & p {
       margin-bottom: ${gap.micro};
     }
@@ -223,8 +231,8 @@ const LeadStyled = {
 };
 
 type LeadProps = {
-  guildCount: number;
-  userCount: number;
+  guildCount: string;
+  userCount: string;
 };
 
 /**
@@ -262,7 +270,7 @@ const Lead: React.FC<LeadProps> = ({ guildCount, userCount }) => (
         <GlassCard>
           <LeadStyled.CtaTitle>Getting Started</LeadStyled.CtaTitle>
           <Gap amount="micro" />
-          <LeadStyled.LoginButton />
+          <LeadStyled.LoginPrompt />
         </GlassCard>
       </LeadStyled.CtaWrapper>
     </LeadStyled.Layout>
@@ -857,7 +865,7 @@ const BottomCtaStyled = {
     box-shadow: inset 0 14px 15px -14px ${color("shadowMedium")},
       inset 0 -14px 15px -14px ${color("shadowMedium")};
 
-    padding-bottom: centi;
+    padding-bottom: ${gap.milli};
 
     /* Add padding to the top and sides on small screen sizes */
     ${down("lg")} {
@@ -867,11 +875,12 @@ const BottomCtaStyled = {
     }
   `,
   Divider: styled.hr`
-    max-width: 300px;
+    max-width: 192px;
     margin-right: auto;
-    border-style: dashed;
     margin-top: 0;
-    margin-bottom: 0;
+    border-top-style: dashed;
+    border-top-width: 2px;
+    border-top-color: ${color("primary")};
 
     /* Move hr on large screen sizes so it aligns with the shift on the card above */
     ${up("lg")} {
@@ -917,23 +926,29 @@ const BottomCtaStyled = {
       font-style: normal;
     }
   `,
-  Button: styled(Button)`
-    svg {
-      margin-left: 0;
-      width: 0 !important;
-      opacity: 0;
-      transition: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
-    }
-
-    &:hover {
-      svg {
-        margin-left: 1rem;
-        width: 12.5px !important;
-        opacity: 1;
-      }
-    }
-  `,
 };
+
+// Use a class here so Linaria doesn't eagerly interpet the `as` prop
+const bottomCtaButtonClass = css`
+  font-size: 1.2rem;
+
+  svg {
+    position: relative;
+    ${transition(["opacity", "width", "margin-left"])}
+    margin-left: 0;
+    width: 0 !important;
+    opacity: 0;
+    top: 3px;
+  }
+
+  &:hover {
+    svg {
+      margin-left: 1rem;
+      width: 12.5px !important;
+      opacity: 1;
+    }
+  }
+`;
 
 type BottomCtaProps = {};
 
@@ -947,7 +962,7 @@ const BottomCta: React.FC<BottomCtaProps> = () => {
   const oauthUrl = useOauthUrl();
   const buttonProps = isSignedIn
     ? { as: Link, to: withBasePath("/app") }
-    : { href: oauthUrl };
+    : { as: "a", href: oauthUrl };
 
   return (
     <BottomCtaStyled.Outer>
@@ -962,16 +977,15 @@ const BottomCta: React.FC<BottomCtaProps> = () => {
             server.
           </p>
           <Gap amount="milli" />
-          <BottomCtaStyled.Button
+          <Button
+            className={bottomCtaButtonClass}
             variant="primary"
-            size="lg"
-            {...(buttonProps as React.ComponentProps<
-              typeof BottomCtaStyled.Button
-            >)}
+            type="solid"
+            {...(buttonProps as React.ComponentProps<typeof Button>)}
           >
             Get Started
             <FaChevronRight />
-          </BottomCtaStyled.Button>
+          </Button>
         </BottomCtaStyled.Card>
         <BottomCtaStyled.Divider />
       </Container>

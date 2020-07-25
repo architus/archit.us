@@ -10,7 +10,8 @@ import {
 } from "react-data-grid";
 
 import { TransformedAutoResponse } from "./types";
-import { UserDisplay, Tooltip } from "@app/components";
+import Tooltip from "@app/components/Tooltip";
+import UserDisplay from "@app/components/UserDisplay";
 import {
   isEmptyOrNil,
   makeTransformer,

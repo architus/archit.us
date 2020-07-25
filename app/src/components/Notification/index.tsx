@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import React, { useCallback } from "react";
-import { CloseButton } from "react-bootstrap";
 
+import { CloseButton } from "@app/react-bootstrap";
 import { NotificationType, NotificationVariant } from "@app/store/actions";
 import { StyleObject } from "@app/utility/types";
 import "./style.scss";

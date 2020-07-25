@@ -1,9 +1,9 @@
 import styled from "@xstyled/emotion";
 import React, { ErrorInfo } from "react";
-import { Spinner } from "react-bootstrap";
 
 import { opacity } from "@app/theme";
 import { warn, isDefined } from "@app/utility";
+import Spinner from "@architus/facade/components/Spinner";
 import { Option, Some, None } from "@architus/lib/option";
 
 const Styled = {
@@ -192,9 +192,7 @@ const FallbackRenderer: React.FC<FallbackRendererProps> = ({
             <p>
               <strong>Component stack</strong>:{" "}
               {info.match({
-                None: () => (
-                  <Spinner animation="border" variant="primary" size="sm" />
-                ),
+                None: () => <Spinner variant="primary" size="32px" />,
                 Some: (infoInner) => (
                   <pre>
                     <code>{infoInner.componentStack}</code>

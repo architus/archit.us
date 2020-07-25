@@ -1,23 +1,25 @@
-import styled, { Box, BoxProps } from "@xstyled/emotion";
+import { styled } from "linaria/react";
 import React from "react";
 import ReactSwitch from "react-switch";
 
-import { Color, useThemeColor } from "@app/theme";
 import { isDefined } from "@app/utility";
-import { StyleObject } from "@app/utility/types";
+import { useColorMode } from "@architus/facade/hooks";
+import { Color, hybridColor } from "@architus/facade/theme/color";
 
 const Styled = {
+  Wrapper: styled.div`
+    line-height: 0;
+  `,
   Switch: styled(ReactSwitch)`
-    // Needs nudge
+    /* Needs nudge */
     vertical-align: -6px;
     line-height: 24px;
 
-    .icon {
+    svg {
       position: relative;
-      color: white;
 
-      // Nudges
-      top: 2px;
+      /* Nudges */
+      top: 4px;
       left: 6px;
     }
   `,
@@ -30,32 +32,26 @@ type SwitchProps = {
   onChange: (checked: boolean) => void;
   checked: boolean;
   label?: React.ReactNode;
-  // Common style props
   className?: string;
-  style?: StyleObject;
-  boxProps?: BoxProps;
+  style?: React.CSSProperties;
 } & Partial<React.ComponentProps<typeof ReactSwitch>>;
 
 const Switch: React.FC<SwitchProps> = ({
   onChange,
   checked,
   label,
-  boxProps,
-  // Style props
   className,
   style,
   ...rest
 }) => {
+  const colorMode = useColorMode();
+
   // react-switch expects colors to be hex strings
-  const primaryColor = Color(useThemeColor("primary")[0]).toString("hex");
-  const lightColor = Color(useThemeColor("light")[0]).toString("hex");
+  const primaryColor = Color(hybridColor("primary", colorMode)).toString("hex");
+  const lightColor = Color(hybridColor("light", colorMode)).toString("hex");
+
   return (
-    <Box
-      className={className}
-      style={style}
-      lineHeight={0}
-      {...(boxProps ?? {})}
-    >
+    <Styled.Wrapper className={className} style={style}>
       <Styled.Switch
         activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
         boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
@@ -74,7 +70,7 @@ const Switch: React.FC<SwitchProps> = ({
       {isDefined(label) ? (
         <Styled.SwitchLabel className="label">{label}</Styled.SwitchLabel>
       ) : null}
-    </Box>
+    </Styled.Wrapper>
   );
 };
 

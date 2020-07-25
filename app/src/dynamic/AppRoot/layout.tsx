@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import React from "react";
 
-import { Layout } from "@app/components";
+import Layout from "@app/components/Layout";
 
 type AppLayoutProps = {
   children: React.ReactNode;
@@ -15,11 +15,10 @@ const AppLayout: React.FC<AppLayoutProps> = ({
 }) => {
   return (
     <Layout
-      title="Web Dashboard"
+      seo={{ title: "Web Dashboard" }}
       className="app-root"
       noContainer
       noLinks
-      sticky={false}
     >
       <div className={classNames(className, "content-container")} {...rest}>
         {children}

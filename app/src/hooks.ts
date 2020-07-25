@@ -1,19 +1,8 @@
-import { useContext } from "react";
-
-import { ColorModeContext } from "@app/components/ColorModeProvider";
+import { API_BASE } from "@app/api";
 import { useLocation } from "@app/components/Router";
 import { usePathPrefix } from "@app/data/path-prefix";
-import { ColorMode } from "@architus/facade/theme/color";
+import { useReturnQuery, processIfNotEmptyOrNil } from "@app/utility";
 import { locationMatches } from "@architus/lib/path";
-
-/**
- * Gets the current active color mode.
- * **Note**: care should be taken when using this to render on the server,
- * as there may be a flash upon initially rendering
- */
-export function useColorMode(): ColorMode {
-  return useContext(ColorModeContext).mode;
-}
 
 /**
  * Determines if the current location matches the given path,
@@ -37,4 +26,15 @@ export function useLocationMatch(path: string): [boolean, boolean] {
     partial: true,
   });
   return [fullMatch, partialMatch];
+}
+
+/**
+ * Constructs an oauth URL used to login to Discord
+ */
+export function useOauthUrl(): string {
+  const returnQuery = useReturnQuery();
+  return `${API_BASE}/session/login${processIfNotEmptyOrNil(
+    returnQuery,
+    (q) => `?${q}`
+  )}`;
 }

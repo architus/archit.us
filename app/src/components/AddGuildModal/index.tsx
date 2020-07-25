@@ -1,9 +1,9 @@
 import { Box } from "@xstyled/emotion";
 import React from "react";
-import { Modal, Button, ModalProps, Spinner } from "react-bootstrap";
 
 import { API_BASE } from "@app/api";
 import GuildCard from "@app/components/GuildCard";
+import { Modal, Button, ModalProps } from "@app/react-bootstrap";
 import { usePool } from "@app/store/slices/pools";
 import {
   useReturnQuery,
@@ -11,6 +11,7 @@ import {
   isDiscordAdminWithoutArchitus,
 } from "@app/utility";
 import { Snowflake } from "@app/utility/types";
+import Spinner from "@architus/facade/components/Spinner";
 
 import "./style.scss";
 
@@ -76,7 +77,7 @@ const AddGuildModal: React.FC<AddGuildModalProps> = ({
           {!guildsLoaded && (
             // Show a spinner if the pool hasn't been completely loaded
             <Box py="micro" display="flex" justifyContent="center">
-              <Spinner animation="border" variant="primary" />
+              <Spinner variant="primary" />
             </Box>
           )}
         </div>

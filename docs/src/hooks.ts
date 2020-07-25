@@ -1,19 +1,6 @@
-import { useContext } from "react";
-
-import { ColorMode } from "@architus/facade/theme/color";
 import { locationMatches } from "@architus/lib/path";
-import { ColorModeContext } from "@docs/components/ColorModeProvider";
 import { useLocation } from "@docs/components/Router";
 import { usePathPrefix } from "@docs/data/path-prefix";
-
-/**
- * Gets the current active color mode.
- * **Note**: care should be taken when using this to render on the server,
- * as there may be a flash upon initially rendering
- */
-export function useColorMode(): ColorMode {
-  return useContext(ColorModeContext).mode;
-}
 
 /**
  * Determines if the current location matches the given path,

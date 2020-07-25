@@ -3,7 +3,7 @@ import deepEqual from "fast-deep-equal";
 import React from "react";
 import { FilterRendererProps } from "react-data-grid";
 
-import { HelpTooltip } from "@app/components";
+import HelpTooltip from "@app/components/HelpTooltip";
 import { Option, Some, None } from "@architus/lib/option";
 
 const Styled = {

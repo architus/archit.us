@@ -1,12 +1,13 @@
 import classNames from "classnames";
+import { styled } from "linaria/react";
 import React, { useContext, useMemo, useCallback } from "react";
-import { Badge, BadgeProps } from "react-bootstrap";
 
 import Message from "@app/components/DiscordMock/Message";
 import { TransformMessageContext } from "@app/components/DiscordMock/transform";
 import Icon from "@app/components/Icon";
 import Skeleton from "@app/components/Skeleton";
 import UserDisplay from "@app/components/UserDisplay";
+import { OtherColors } from "@app/theme/color";
 import { toHumanTime } from "@app/utility";
 import {
   StyleObject,
@@ -15,11 +16,30 @@ import {
   MockMessage,
   MockUser,
 } from "@app/utility/types";
+import Badge from "@architus/facade/components/Badge";
+import { font } from "@architus/facade/theme/typography";
 import "./style.scss";
 
 // pseudorandom yet determinate skeleton amount
 const skeletonMessageWidth = (index: number): number =>
   100 - ((index * 37) % 10) * 6;
+
+const Styled = {
+  VerifiedBadge: styled(Badge)`
+    background-color: ${OtherColors.Discord};
+    color: white;
+    text-transform: uppercase;
+    margin-left: 0.5rem;
+    border-radius: 4px;
+    font-size: 68%;
+    padding: 0.3em 0.45em 0.25em 0.4em;
+    vertical-align: middle;
+    position: relative;
+    top: -2px;
+    font-family: ${font("headings")};
+    font-weight: 700;
+  `,
+};
 
 type MessageClumpProps = {
   first: boolean;
@@ -82,10 +102,10 @@ const MessageClump: React.FC<MessageClumpProps> = React.forwardRef(
             >
               {username}
               {bot && (
-                <Badge variant={"bot" as BadgeProps["variant"]}>
+                <Styled.VerifiedBadge>
                   {verified && <Icon name="check" mr="femto" />}
                   bot
-                </Badge>
+                </Styled.VerifiedBadge>
               )}
             </Skeleton.Custom>
             <Skeleton.Text
