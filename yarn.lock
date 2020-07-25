@@ -3491,6 +3491,11 @@
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.157.tgz#fdac1c52448861dfde1a2e1515dbc46e54926dc8"
   integrity sha512-Ft5BNFmv2pHDgxV5JDsndOWTRJ+56zte0ZpYLowp03tW+K+t8u8YMOzAnpuqPgzX6WO1XpDIUm7u04M8vdDiVQ==
 
+"@types/marked@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@types/marked/-/marked-1.1.0.tgz#53509b5f127e0c05c19176fcf1d743a41e00ff19"
+  integrity sha512-j8XXj6/l9kFvCwMyVqozznqpd/nk80krrW+QiIJN60Uu9gX5Pvn4/qPJ2YngQrR3QREPwmrE1f9/EWKVTFzoEw==
+
 "@types/mdast@^3.0.0":
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/@types/mdast/-/mdast-3.0.3.tgz#2d7d671b1cd1ea3deb306ea75036c2a0407d2deb"
@@ -3521,6 +3526,11 @@
   integrity sha512-U5icWpv7YnZYGsN4/cmh3WD2onMY0aJIiTE6+51TwJCttdHvtCYmkBNOobHlXwrJRL0nkH9jH4kD+1FAdMN4Tg==
   dependencies:
     "@types/node" "*"
+
+"@types/node-emoji@^1.8.1":
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/@types/node-emoji/-/node-emoji-1.8.1.tgz#689cb74fdf6e84309bcafce93a135dfecd01de3f"
+  integrity sha512-0fRfA90FWm6KJfw6P9QGyo0HDTCmthZ7cWaBQndITlaWLTZ6njRyKwrwpzpg+n6kBXBIGKeUHEQuBx7bphGJkA==
 
 "@types/node-fetch@^2.5.7":
   version "2.5.7"
@@ -3693,6 +3703,11 @@
   version "0.0.33"
   resolved "https://registry.yarnpkg.com/@types/tmp/-/tmp-0.0.33.tgz#1073c4bc824754ae3d10cfab88ab0237ba964e4d"
   integrity sha1-EHPEvIJHVK49EM+riKsCN7qWTk0=
+
+"@types/twemoji@^12.1.1":
+  version "12.1.1"
+  resolved "https://registry.yarnpkg.com/@types/twemoji/-/twemoji-12.1.1.tgz#34c5dcecff438b5be173889a6ee8ad51ba90445f"
+  integrity sha512-dW1B1WHTfrWmEzXb/tp8xsZqQHAyMB9JwLwbBqkIQVzmNUI02R7lJqxUpKFM114ygNZHKA1r74oPugCAiYHt1A==
 
 "@types/underscore.string@^0.0.38":
   version "0.0.38"
@@ -8960,6 +8975,11 @@ fp-ts@^2.7.0:
   version "2.7.0"
   resolved "https://registry.yarnpkg.com/fp-ts/-/fp-ts-2.7.0.tgz#41de65a846715ca4df6889b91c6b3aa953165198"
   integrity sha512-J7EIg4MEVuOm1vZspQDVYRD/CTsQECQk01cP5VEBvQ5LnSSjp6sckun1m1eUPSuvtMIlGgm9NqqOxE0+QyntWQ==
+
+fp-ts@^2.7.1:
+  version "2.7.1"
+  resolved "https://registry.yarnpkg.com/fp-ts/-/fp-ts-2.7.1.tgz#7bd754f3362f4b9bc4d272a97c0658e9a1bc16bc"
+  integrity sha512-rYy41jF1gVhBNYbPwup50dtyT686OKOoa86PXwh8aKpBRfmvPhnBh2zUkOYj84GIMSCsgY+oJ/RVhVKRvWNPTA==
 
 fragment-cache@^0.2.1:
   version "0.2.1"

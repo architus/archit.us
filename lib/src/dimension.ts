@@ -1,5 +1,5 @@
-import { Option, Some, None } from "@architus/lib/option";
 import { isDefined, isNil } from "./utility";
+import { Option, Some, None } from "@architus/lib/option";
 
 const baseDimensionUnits = [
   "cm",

@@ -123,6 +123,9 @@
     "url": "https://github.com/architus/archit.us/issues"
   },
   "devDependencies": {
+    "@types/marked": "^1.1.0",
+    "@types/node-emoji": "^1.8.1",
+    "@types/twemoji": "^12.1.1",
     "@types/xstyled__system": "^1.17.0"
   }
 }

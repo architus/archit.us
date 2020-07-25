@@ -8,8 +8,8 @@ import { setLinkColor } from "../theme/mixins";
 import { gap } from "../theme/spacing";
 import AutoLink from "./AutoLink";
 import { Option } from "@architus/lib/option";
-import { formatDate } from "@architus/lib/utility";
 import { isExternal } from "@architus/lib/path";
+import { formatDate } from "@architus/lib/utility";
 
 const Styled = {
   Divider: styled.hr`

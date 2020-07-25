@@ -3,6 +3,11 @@
 
 export {
   Button,
+  InputGroup,
+  FormControl,
+  OverlayTrigger,
+  Tooltip,
+  Overlay,
   Modal,
   Form,
   Dropdown,
@@ -10,4 +15,9 @@ export {
   Col,
   Alert,
 } from "react-bootstrap";
-export type { ModalProps, ButtonProps } from "react-bootstrap";
+export type {
+  ModalProps,
+  ButtonProps,
+  OverlayProps,
+  FormControlProps,
+} from "react-bootstrap";
