@@ -31,10 +31,6 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Install dependencies (app)
-        run: yarn install
-        working-directory: ./app
-
       - name: Bootstrap monorepo
         run: yarn run bootstrap
 
@@ -65,10 +61,6 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Install dependencies (app)
-        run: yarn install
-        working-directory: ./app
-
       - name: Bootstrap monorepo
         run: yarn run bootstrap
 
@@ -98,10 +90,6 @@ jobs:
 
       - name: Install dependencies
         run: yarn install
-
-      - name: Install dependencies (app)
-        run: yarn install
-        working-directory: ./app
 
       - name: Bootstrap monorepo
         run: yarn run bootstrap

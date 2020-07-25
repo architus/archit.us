@@ -15,6 +15,7 @@ env:
   BASE_STAGING_URL: https://staging.archit.us
   ARCHIVE_NAME: dist.tar.gz
   WORKING_DIR: ./app
+  COMMENT_TAG: app
 defaults:
   run:
     working-directory: ./app
@@ -40,7 +41,7 @@ jobs:
         with:
           mode: pre
           job-name: Build
-          tag: app
+          tag: ${{ env.COMMENT_TAG }}
           build-time: ${{ steps.build-time.outputs.time }}
           base-staging-url: ${{ env.BASE_STAGING_URL }}
           GITHUB_TOKEN: ${{ secrets.ARCHITUS_BOT_TOKEN }}
@@ -54,12 +55,17 @@ jobs:
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('app/yarn.lock') }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
 
       - name: Install dependencies
         run: yarn install
+        working-directory: .
+
+      - name: Bootstrap monorepo
+        run: yarn run bootstrap
+        working-directory: .
 
       - name: Resolve staging URL
         id: resolve-staging
@@ -82,8 +88,9 @@ jobs:
           SITE_NAME: Architus Staging
           SITE_ROOT: ${{ env.BASE_STAGING_URL }}
           SITE_BASE_PATH: ${{ steps.resolve-staging.outputs.path }}
-          # Inject the following environment variables from the output of the
-          # staging comments action
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_BRANCH: ${{ steps.staging-comment.outputs.branch }}
+          # Build environment variables used in the tag
           BUILD_LOCATION: remote
           BUILD_PATH: ${{ steps.resolve-staging.outputs.path }}
           BUILD_RUN_ID: ${{ steps.staging-comment.outputs.runId }}
@@ -94,14 +101,10 @@ jobs:
           BUILD_COMMIT_URL: ${{ steps.staging-comment.outputs.commitUrl }}
           BUILD_PR_ID: ${{ steps.staging-comment.outputs.prId }}
           BUILD_BASE_BRANCH: ${{ steps.staging-comment.outputs.baseBranch }}
-        # Build the website from a bash script, tracking the build duration
-        # and re-raising the resultant exit code from the build command
-        # TODO: it seems like react-static build doesn't return non-zero exit
-        #       codes, even for failed builds
         run: >-
           T="$(date +%s)";
 
-          yarn build --no-type-check;
+          yarn build --prefix-paths;
           exit_code=$?;
 
           T="$(($(date +%s)-T))";
@@ -111,7 +114,7 @@ jobs:
 
       - name: Create archive
         run: tar -czvf ../${{ env.ARCHIVE_NAME }} .
-        working-directory: ${{ env.WORKING_DIR }}/dist
+        working-directory: ${{ env.WORKING_DIR }}/public
 
       - name: Upload built archive to staging API
         uses: architus/upload-api-action@master
@@ -126,7 +129,7 @@ jobs:
         with:
           mode: post
           job-name: Build
-          tag: app
+          tag: ${{ env.COMMENT_TAG }}
           build-time: ${{ steps.build-time.outputs.time }}
           build-duration: ${{ steps.build.outputs.duration }}
           base-staging-url: ${{ env.BASE_STAGING_URL }}
@@ -138,7 +141,7 @@ jobs:
         with:
           mode: failure
           job-name: Build
-          tag: app
+          tag: ${{ env.COMMENT_TAG }}
           build-time: ${{ steps.build-time.outputs.time }}
           base-staging-url: ${{ env.BASE_STAGING_URL }}
           GITHUB_TOKEN: ${{ secrets.ARCHITUS_BOT_TOKEN }}
