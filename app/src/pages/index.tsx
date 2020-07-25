@@ -22,14 +22,13 @@ import {
   DiscordMock,
   ErrorBoundary,
 } from "@app/components";
-import CompositeBrand from "@app/components/CompositeBrand";
 import { CustomEmojiExtension } from "@app/components/DiscordMock/CustomEmojiExtension";
 import { Extension } from "@app/components/DiscordMock/util";
+import Footers from "@app/components/Footers";
 import LoginButton, { useOauthUrl } from "@app/components/LoginButton";
 import { Link } from "@app/components/Router";
 import { useBotStats } from "@app/data/bot-stats";
-import { useFooterData } from "@app/data/footer-data";
-import { Container, container } from "@app/layout";
+import { Container } from "@app/layout";
 import { useSessionStatus } from "@app/store/actions";
 import { useSelector, useDispatch } from "@app/store/hooks";
 import { guildCount as guildCountRoute } from "@app/store/routes";
@@ -37,10 +36,8 @@ import { useEffectOnce, useCallbackOnce } from "@app/utility";
 import { DiscordMockContext, DiscordMockCommands } from "@app/utility/types";
 import Badge from "@architus/facade/components/Badge";
 import Card from "@architus/facade/components/Card";
-import Footer, { FooterContent } from "@architus/facade/components/Footer";
 import Gap from "@architus/facade/components/Gap";
 import Logo from "@architus/facade/components/Logo";
-import SecondaryFooter from "@architus/facade/components/SecondaryFooter";
 import {
   color,
   mode,
@@ -68,11 +65,7 @@ const Content = styled.article`
 `;
 
 const Styled = {
-  Footers: styled.div`
-    ${FooterContent} {
-      ${container};
-    }
-
+  Footers: styled(Footers)`
     footer:nth-of-type(2n + 1) {
       box-shadow: none;
 
@@ -128,11 +121,8 @@ const IndexPage: React.FC = () => {
         <Features />
         <MinorFeatures />
         <BottomCta />
+        <Styled.Footers />
       </article>
-      <Styled.Footers>
-        <Footer {...useFooterData()} brand={<CompositeBrand showVersion />} />
-        <SecondaryFooter />
-      </Styled.Footers>
     </Layout>
   );
 };

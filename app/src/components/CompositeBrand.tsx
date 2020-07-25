@@ -23,24 +23,21 @@ const Styled = {
     align-items: center;
     padding-bottom: ${(p): string => (p.withVersion ? "13px" : "0")};
   `,
-  Logo: styled(Logo.Combined)`
+  Logo: styled(Logo.Symbol)`
     fill: currentColor;
   `,
-  SiteTitle: styled.h1`
-    font-size: 1.24rem;
-    margin-bottom: 0;
+  Title: styled.div`
+    font-size: 1.15rem;
     margin-left: ${gap.pico};
-    top: 2px;
+    top: 3px;
     position: relative;
-    white-space: nowrap;
-
-    /* The font size needs to be slightly smaller on very small devices */
-    ${down("vs")} {
-      font-size: 1.1rem;
-    }
+  `,
+  Logotype: styled(Logo.Logotype)`
+    fill: currentColor;
+    margin-bottom: ${gap.femto};
   `,
   BuildTag: styled(BuildTag)`
-    margin-left: ${gap.pico};
+    margin-left: ${gap.nano};
     vertical-align: 2px;
   `,
   Version: styled.span`
@@ -85,7 +82,8 @@ const CompositeBrand: React.FC<CompositeBrandProps> = ({
   return (
     <Styled.Brand className={className} style={style} withVersion={showVersion}>
       <Styled.Logo height={36} />
-      <Styled.SiteTitle>
+      <Styled.Title>
+        <Styled.Logotype height={20} />
         {buildMetadata.isDefined() && showBuildTag && (
           <Styled.BuildTag
             metadata={buildMetadata.get}
@@ -95,7 +93,7 @@ const CompositeBrand: React.FC<CompositeBrandProps> = ({
         {showVersion && version.isDefined() && (
           <Styled.Version>{version.get}</Styled.Version>
         )}
-      </Styled.SiteTitle>
+      </Styled.Title>
     </Styled.Brand>
   );
 };

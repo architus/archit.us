@@ -2,18 +2,25 @@ import { styled } from "linaria/react";
 import React from "react";
 
 import { Card, LoginButton, Layout } from "@app/components";
+import Footers from "@app/components/Footers";
 import { Container } from "@app/layout";
 import { color } from "@architus/facade/theme/color";
 import { down } from "@architus/facade/theme/media";
+import { gap } from "@architus/facade/theme/spacing";
 
 const Styled = {
   Layout: styled.div`
     background-color: ${color("bg")};
     color: ${color("text")};
   `,
+  Card: styled(Card)`
+    max-width: 500px;
+    margin: ${gap.centi} auto ${gap.centi} 0;
+  `,
   Header: styled.h1`
     font-size: 3.6rem;
     font-weight: 200;
+    margin-bottom: ${gap.nano};
     color: ${color("text")};
 
     ${down("md")} {
@@ -22,6 +29,7 @@ const Styled = {
   `,
   Content: styled.div`
     color: ${color("textFade")};
+    margin-bottom: ${gap.pico};
   `,
 };
 
@@ -33,7 +41,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ fromRestricted }) => (
   <Layout title="Login" noHeader={fromRestricted}>
     <Styled.Layout>
       <Container>
-        <Card maxWidth="500px" mt="centi">
+        <Styled.Card>
           <Styled.Content>
             <Styled.Header>Login</Styled.Header>
             {fromRestricted ? (
@@ -46,9 +54,10 @@ const LoginPage: React.FC<LoginPageProps> = ({ fromRestricted }) => (
             )}
           </Styled.Content>
           <LoginButton showLabel={false} />
-        </Card>
+        </Styled.Card>
       </Container>
     </Styled.Layout>
+    <Footers />
   </Layout>
 );
 

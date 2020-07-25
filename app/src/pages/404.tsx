@@ -3,6 +3,7 @@ import { transparentize } from "polished";
 import React from "react";
 
 import { Layout, AutoLink } from "@app/components";
+import Footers from "@app/components/Footers";
 import {
   color,
   mode,
@@ -29,10 +30,11 @@ const Styled = {
     max-width: 360px;
     position: relative;
     z-index: 1;
-    padding: ${gap.milli} ${gap.nano} 0;
+    padding: ${gap.milli} ${gap.nano} ${gap.milli};
 
     ${up("lg")} {
       padding-top: ${gap.kilo};
+      padding-bottom: ${gap.kilo};
     }
 
     /* Add dot background "hangers" on content div */
@@ -115,6 +117,7 @@ const NotFoundPage: React.FC<NotFoundPageProps> = ({ fromApp = false }) => (
         </Styled.Paragraph>
       </Styled.Content>
     </Styled.Layout>
+    <Footers />
   </Layout>
 );
 

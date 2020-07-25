@@ -1,12 +1,11 @@
-import styled, {
-  css,
-  useColorMode as useEmotionColorMode,
-} from "@xstyled/emotion";
+import { useColorMode as useEmotionColorMode } from "@xstyled/emotion";
+import { styled } from "linaria/react";
 import React, { useCallback, useEffect, useContext } from "react";
 import { Helmet } from "react-helmet";
 import useDarkMode from "use-dark-mode";
 
 import { ColorModeContext } from "@app/components/ColorModeProvider";
+import { StyledFooters } from "@app/components/Footers";
 import Header from "@app/components/Header";
 import Icon from "@app/components/Icon";
 import Switch from "@app/components/Switch";
@@ -16,27 +15,28 @@ import { StyleObject } from "@app/utility/types";
 import { ColorMode } from "@architus/facade/theme/color";
 
 const Styled = {
-  Layout: styled.div<{ noHeader: boolean }>`
-    ${(props): string =>
-      !props.noHeader
-        ? css`
-            display: flex;
-            min-height: 100vh;
-            flex-direction: column;
+  Layout: styled.div`
+    ${StyledFooters} {
+      flex-grow: 0 !important;
+    }
 
-            & > nav {
-              flex-grow: 0;
-            }
+    &[data-no-header="false"] {
+      display: flex;
+      min-height: 100vh;
+      flex-direction: column;
 
-            & > *:not(nav) {
-              flex-grow: 1;
-            }
-          `
-        : ""}
+      & > nav {
+        flex-grow: 0;
+      }
+
+      & > *:not(nav) {
+        flex-grow: 1;
+      }
+    }
   `,
 };
 
-type LayoutProps = {
+export type LayoutProps = {
   title?: string;
   children?: React.ReactNode;
   className?: string;
@@ -64,7 +64,7 @@ const Layout: React.FC<LayoutProps> = ({
 
   // Dark mode control hooks
   const { value, toggle } = useDarkMode(false);
-  const [_, setEmotionColorMode] = useEmotionColorMode();
+  const [, setEmotionColorMode] = useEmotionColorMode();
   const { mode, setMode } = useContext(ColorModeContext);
   const toggleWrapper = useCallback(
     (checked: boolean) => {
@@ -92,7 +92,11 @@ const Layout: React.FC<LayoutProps> = ({
   const lightHex = Color(useThemeColor("light")[0]).toString("hex");
 
   return (
-    <Styled.Layout noHeader={noHeader} className={className} style={style}>
+    <Styled.Layout
+      data-no-header={String(noHeader)}
+      className={className}
+      style={style}
+    >
       {!noHeader && (
         <Header sticky={sticky} {...rest}>
           {headerChildren}
