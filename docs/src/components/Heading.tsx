@@ -2,6 +2,7 @@ import { cx } from "linaria";
 import { styled } from "linaria/react";
 import React from "react";
 
+import { svgDataUrl } from "@architus/facade/css";
 import { dynamicColor, ColorMode, mode } from "@architus/facade/theme/color";
 import { down, up } from "@architus/facade/theme/media";
 import { transition } from "@architus/facade/theme/motion";
@@ -83,15 +84,15 @@ const makeLinkIconSvg = (color: string): string => {
     `34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271` +
     `-59.259 59.271-155.699.001-214.959z"/>` +
     `</svg>`;
-  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
+  return svgDataUrl(svg);
 };
 
 const activeClass = "active";
 const Styled = {
   LinkIcon: styled.span`
-    background-image: url("${makeLinkIconSvg(darkLinkColor)}");
+    background-image: ${makeLinkIconSvg(darkLinkColor)};
     ${mode(ColorMode.Light)} {
-      background-image: url("${makeLinkIconSvg(lightLinkColor)}");
+      background-image: ${makeLinkIconSvg(lightLinkColor)};
     }
 
     height: 1em;

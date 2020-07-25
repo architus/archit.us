@@ -1,4 +1,4 @@
-import { transparentize } from "polished";
+import { transparentize, lighten, darken } from "polished";
 
 import { dynamicColor, ColorMode, mode, staticColor } from "./color";
 import { transition } from "./motion";
@@ -127,5 +127,64 @@ export function scrollBarAuto(opacity = 0.25): string {
       --scroll-thumb-active ${transparentize(transparency * 0.5, darkFg)};
     }
     ${scrollBase}
+  `;
+}
+
+/**
+ * Creates a Discord-style scrollbar using a linear gradient
+ * to make the appearance of a wide padding on the track/thumb
+ *
+ * **Note**: doesn't really work as a horizontal scrollbar
+ * without adjusting the gradient
+ */
+export function discordScrollbar({
+  background,
+  thumb,
+  track,
+  invert = false,
+}: {
+  background: string;
+  thumb: string;
+  track: string;
+  invert?: boolean;
+}): string {
+  return `
+    &::-webkit-scrollbar {
+      width: 17px;
+      height: 17px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: ${thumb};
+      border-radius: 100rem;
+      border: 4px solid ${background};
+      margin: 4px;
+
+      &:hover {
+        background: ${invert ? lighten(0.05, thumb) : darken(0.05, thumb)};
+      }
+
+      &:active {
+        background: ${invert ? lighten(0.1, thumb) : darken(0.1, thumb)};
+      }
+    }
+
+    &::-webkit-scrollbar-track {
+      border-radius: 100rem;
+      background: linear-gradient(
+        to right,
+        ${background} 0%,
+        ${background} 23%,
+        ${track} 24%,
+        ${track} 76%,
+        ${background} 77%,
+        ${background} 100%
+      );
+    }
+
+    &::-webkit-scrollbar-corner {
+      background-color: transparent;
+      display: none;
+    }
   `;
 }

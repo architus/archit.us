@@ -147,13 +147,13 @@ $scrollbar-width: 12px;
     border: 1px solid #ced4da;
 
     @include dark {
-        background-color: rgba($dark-000, 0.425) !important;
+        background-color: rgba($dark-000, 0.425);
         color: $-light;
         border-color: transparent;
     }
 
     @include light {
-        background-color: white !important;
+        background-color: white;
         color: $-dark;
     }
 

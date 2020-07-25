@@ -1,10 +1,17 @@
-import classNames from "classnames";
+import { styled } from "linaria/react";
 import React from "react";
 
 import Reaction from "@app/components/DiscordMock/Reaction";
 import { MockReaction, StyleObject } from "@app/utility/types";
 
-type ReactionListProps = {
+const Styled = {
+  ReactionList: styled.div`
+    display: flex;
+    flex-direction: row;
+  `,
+};
+
+export type ReactionListProps = {
   reactions: MockReaction[];
   onReact: (r: MockReaction) => void;
   onUnreact: (r: MockReaction) => void;
@@ -12,6 +19,9 @@ type ReactionListProps = {
   className?: string;
 };
 
+/**
+ * Shows a horizontal list of reactions, used in a Discord mock
+ */
 const ReactionList: React.FC<ReactionListProps> = ({
   reactions,
   onReact,
@@ -19,7 +29,7 @@ const ReactionList: React.FC<ReactionListProps> = ({
   style,
   className,
 }) => (
-  <div className={classNames("reaction-list", className)} style={style}>
+  <Styled.ReactionList className={className} style={style}>
     {reactions.map((reaction, index) => (
       <Reaction
         key={index}
@@ -28,7 +38,7 @@ const ReactionList: React.FC<ReactionListProps> = ({
         {...reaction}
       />
     ))}
-  </div>
+  </Styled.ReactionList>
 );
 
 export default ReactionList;

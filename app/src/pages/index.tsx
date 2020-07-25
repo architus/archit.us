@@ -50,16 +50,17 @@ import { transition } from "@architus/facade/theme/motion";
 import { pattern } from "@architus/facade/theme/patterns";
 import { shadow } from "@architus/facade/theme/shadow";
 import { gap } from "@architus/facade/theme/spacing";
+import { font } from "@architus/facade/theme/typography";
 import { Option } from "@architus/lib/option";
 
 const Content = styled.article`
-  & :not(pre) > code,
-  :not(pre) > code {
+  & :not(pre) > code {
     color: ${color("primary")};
     display: inline-block;
     background-color: ${color("bg+10")};
     border-radius: 4px;
     border: 1px solid ${color("contrastBorder")};
+    font-family: ${font("monospace")};
     padding: 0.1em 0.35em 0.05em;
     font-size: 100%;
   }

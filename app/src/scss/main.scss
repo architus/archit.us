@@ -165,10 +165,6 @@ main > div[role="group"] {
     background-position: calc(100% - 8px) calc(0.375em + 0.1875rem);
 }
 
-input[type="text"] {
-    @extend %input-base;
-}
-
 .button-blank {
     @extend %button-blank;
 }

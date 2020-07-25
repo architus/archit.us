@@ -1,3 +1,4 @@
+import { svgDataUrl } from "../css";
 import { Color } from "./color";
 
 const patterns = {
@@ -22,7 +23,7 @@ const patterns = {
       // Make circle at least ${radius} in from the edges
       `<circle fill='${hex}' cx='${radius}' cy='${radius}' r='${radius}'/>` +
       `</svg>`;
-    return `url("data:image/svg+xml, ${encodeURIComponent(svg)}");`;
+    return svgDataUrl(svg);
   },
   // Tiling cube background used as the background of jumbotrons
   cube: (color: string, { size = 125 }: { size?: number } = {}): string => {
@@ -40,7 +41,7 @@ const patterns = {
       `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 144 250' width='${width}' height='${height}'>` +
       `<path fill='${hex}' d='${data}'/>` +
       `</svg>`;
-    return `url("data:image/svg+xml, ${encodeURIComponent(svg)}");`;
+    return svgDataUrl(svg);
   },
 } as const;
 

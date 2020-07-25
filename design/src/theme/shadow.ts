@@ -1,3 +1,6 @@
+
+import { transparentize } from "polished";
+
 import { color } from "./color";
 
 const shadows = {
@@ -18,17 +21,19 @@ const shadows = {
     `0 10px 10px ${color("shadowMedium")}`,
   ].join(","),
   innerTop: `inset 0 11px 8px -10px ${color("shadowMedium")}`,
+  highlight: (glowColor: string) =>
+    `0 0 0 0.2rem ${transparentize(0.6, glowColor)}`,
 } as const;
 
 /**
- * Elevation of component compared to its background
+ * Shadow type
  */
-export type Elevation = keyof typeof shadows;
+export type ShadowKey = keyof typeof shadows;
 
 /**
  * Extracts a CSS expression for a shadow
- * @param elevation - Elevation of component compared to its background
+ * @param key - Shadow type
  */
-export function shadow(elevation: Elevation): string {
-  return shadows[elevation];
+export function shadow<K extends ShadowKey>(key: K): typeof shadows[K] {
+  return shadows[key];
 }

@@ -1,10 +1,9 @@
-import classNames from "classnames";
 import { styled } from "linaria/react";
 import React, { useContext, useMemo, useCallback } from "react";
+import { FaCheck } from "react-icons/fa";
 
-import Message from "@app/components/DiscordMock/Message";
+import Message, { MessageProps } from "@app/components/DiscordMock/Message";
 import { TransformMessageContext } from "@app/components/DiscordMock/transform";
-import Icon from "@app/components/Icon";
 import Skeleton from "@app/components/Skeleton";
 import UserDisplay from "@app/components/UserDisplay";
 import { OtherColors } from "@app/theme/color";
@@ -18,13 +17,67 @@ import {
 } from "@app/utility/types";
 import Badge from "@architus/facade/components/Badge";
 import { font } from "@architus/facade/theme/typography";
-import "./style.scss";
+import { gap } from "@architus/facade/theme/spacing";
+import { transparentize } from "polished";
 
 // pseudorandom yet determinate skeleton amount
 const skeletonMessageWidth = (index: number): number =>
   100 - ((index * 37) % 10) * 6;
 
 const Styled = {
+  Clump: styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    border-bottom: 1px solid ${OtherColors.DiscordMessageDivider};
+    padding-bottom: 1rem;
+    padding-top: 0.8rem;
+
+    &[data-first="true"] {
+      padding-top: 1.35rem;
+    }
+
+    &[data-last="true"] {
+      border-bottom: none;
+    }
+  `,
+  Avatar: styled.div`
+    flex-grow: 0;
+
+    &:hover {
+      opacity: 0.85;
+    }
+  `,
+  Messages: styled.div`
+    margin-left: 1.1rem;
+    flex-grow: 1;
+    margin-right: 1rem;
+  `,
+  MessageHeader: styled.div`
+    margin-top: -0.25rem;
+    margin-bottom: 0.125rem;
+
+    .username {
+      font-weight: 600;
+      margin-right: 0.5rem;
+      font-size: 1.05rem !important;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    .timestamp:not(.skeleton) {
+      color: ${transparentize(0.6, OtherColors.DiscordFg)};
+      font-size: 0.8rem !important;
+    }
+
+    .timestamp.skeleton,
+    .username.skeleton {
+      margin-top: 0.35rem;
+      margin-bottom: 0.35rem;
+    }
+  `,
   VerifiedBadge: styled(Badge)`
     background-color: ${OtherColors.Discord};
     color: white;
@@ -39,9 +92,12 @@ const Styled = {
     font-family: ${font("headings")};
     font-weight: 700;
   `,
+  CheckIcon: styled(FaCheck)`
+    margin-right: ${gap.femto};
+  `,
 };
 
-type MessageClumpProps = {
+export type MessageClumpProps = {
   first: boolean;
   last: boolean;
   onReact: (messageId: number, r: MockReaction) => void;
@@ -50,6 +106,10 @@ type MessageClumpProps = {
   className?: string;
 } & MockMessageClump;
 
+/**
+ * Shows a grouped clump of messages with a common header (avatar/username/timestamp),
+ * used in a Discord Mock
+ */
 const MessageClump: React.FC<MessageClumpProps> = React.forwardRef(
   (
     {
@@ -74,24 +134,23 @@ const MessageClump: React.FC<MessageClumpProps> = React.forwardRef(
       bot,
     } = sender;
     return (
-      <div
+      <Styled.Clump
         ref={ref}
         style={style}
-        className={classNames(className, "message-clump", {
-          "clump-first": first,
-          "clump-last": last,
-        })}
+        className={className}
+        data-first={first ? "true" : undefined}
+        data-last={last ? "true" : undefined}
       >
-        <div>
+        <Styled.Avatar>
           <UserDisplay.Avatar
             avatarUrl={avatarUrl}
             discriminator={discriminator}
             circle
             size={44}
           />
-        </div>
-        <div>
-          <div className="message-header">
+        </Styled.Avatar>
+        <Styled.Messages>
+          <Styled.MessageHeader>
             <Skeleton.Custom
               value={username}
               height="1.1em"
@@ -103,7 +162,7 @@ const MessageClump: React.FC<MessageClumpProps> = React.forwardRef(
               {username}
               {bot && (
                 <Styled.VerifiedBadge>
-                  {verified && <Icon name="check" mr="femto" />}
+                  {verified && <Styled.CheckIcon />}
                   bot
                 </Styled.VerifiedBadge>
               )}
@@ -116,7 +175,7 @@ const MessageClump: React.FC<MessageClumpProps> = React.forwardRef(
               inline
               className="timestamp"
             />
-          </div>
+          </Styled.MessageHeader>
           {messages.map((message, index) => (
             <RenderedMessage
               key={message.id}
@@ -127,13 +186,18 @@ const MessageClump: React.FC<MessageClumpProps> = React.forwardRef(
               message={message}
             />
           ))}
-        </div>
-      </div>
+        </Styled.Messages>
+      </Styled.Clump>
     );
   }
 );
 
-type MessageProps = React.ComponentProps<typeof Message>;
+export default MessageClump;
+
+// ? ==============
+// ? Sub-components
+// ? ==============
+
 type RenderedMessageProps = {
   message: MockMessage;
   sender: MockUser;
@@ -153,7 +217,7 @@ const RenderedMessage: React.FC<RenderedMessageProps> = React.memo(
     );
     return (
       <Message
-        content={result}
+        html={result}
         edited={message.edited}
         reactions={message.reactions}
         mentionsUser={mentions.includes(context.thisUser.id)}
@@ -171,5 +235,3 @@ const RenderedMessage: React.FC<RenderedMessageProps> = React.memo(
     );
   }
 );
-
-export default MessageClump;

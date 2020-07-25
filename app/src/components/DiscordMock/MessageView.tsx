@@ -1,5 +1,6 @@
-import classNames from "classnames";
+import { styled } from "linaria/react";
 import React, { useCallback } from "react";
+import { AnyAction } from "redux";
 
 import {
   DiscordMockDispatchContext,
@@ -14,21 +15,27 @@ import {
   isDefined,
 } from "@app/utility";
 import { MockMessageClump, StyleObject } from "@app/utility/types";
-
-import "./style.scss";
-import { AnyAction } from "redux";
+import { OtherColors } from "@app/theme/color";
+import { discordScrollbar } from "@architus/facade/theme/mixins";
 
 const scrollThreshold = 100;
 
-function makeKey(clump: MockMessageClump): string {
-  const date = new Date(clump.timestamp);
-  const timestamp = formatAmPm(date);
-  const seconds = date.getSeconds();
-  const millis = date.getMilliseconds();
-  return `${clump.sender.username}=>${timestamp}.${seconds}.${millis}`;
-}
+const Styled = {
+  List: styled.article`
+    overflow-y: auto;
+    overflow-x: hidden;
+    color: inherit;
+    margin-right: 12px;
 
-type MessageViewProps = {
+    ${discordScrollbar({
+      background: OtherColors.DiscordBg,
+      thumb: OtherColors.DiscordScrollThumb,
+      track: OtherColors.DiscordScrollTrack,
+    })}
+  `,
+};
+
+export type MessageViewProps = {
   clumps: MockMessageClump[];
   style?: StyleObject;
   className?: string;
@@ -86,11 +93,7 @@ class MessageView extends React.PureComponent<
   render(): React.ReactNode {
     const { clumps, style, className } = this.props;
     return (
-      <article
-        className={classNames(className, "discord-messages")}
-        ref={this.list}
-        style={style}
-      >
+      <Styled.List ref={this.list} className={className} style={style}>
         <DiscordMockDispatchContext.Consumer>
           {({ dispatch }): React.ReactNode =>
             clumps.map((clump, index) => (
@@ -105,7 +108,7 @@ class MessageView extends React.PureComponent<
             ))
           }
         </DiscordMockDispatchContext.Consumer>
-      </article>
+      </Styled.List>
     );
   }
 }
@@ -138,3 +141,15 @@ const RenderedMessageClump: React.FC<RenderedMessageClumpProps> = React.memo(
 );
 
 export default MessageView;
+
+// ? =================
+// ? Utility functions
+// ? =================
+
+function makeKey(clump: MockMessageClump): string {
+  const date = new Date(clump.timestamp);
+  const timestamp = formatAmPm(date);
+  const seconds = date.getSeconds();
+  const millis = date.getMilliseconds();
+  return `${clump.sender.username}=>${timestamp}.${seconds}.${millis}`;
+}
