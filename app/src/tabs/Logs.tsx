@@ -1,15 +1,15 @@
 import React from "react";
 
-import { AppPageProps } from "@app/dynamic/AppRoot/types";
 import { Container } from "@app/layout";
+import { TabProps } from "@app/tabs/types";
 import Badge from "@architus/facade/components/Badge";
 
-const Settings: React.FC<AppPageProps> = () => (
+const Logs: React.FC<TabProps> = () => (
   <Container className="py-5">
     <h2>
-      Settings <Badge variant="primary">Coming Soon</Badge>
+      Logs <Badge variant="primary">Coming Soon</Badge>
     </h2>
   </Container>
 );
 
-export default Settings;
+export default Logs;

@@ -82,7 +82,7 @@ type DiscordMockProps = {
     context: DiscordMockContext,
     commands: DiscordMockCommands
   ) => Extension;
-  style?: StyleObject;
+  style?: React.CSSProperties;
   className?: string;
 };
 

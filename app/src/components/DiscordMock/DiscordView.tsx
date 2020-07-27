@@ -116,7 +116,7 @@ export type DiscordViewProps = {
   pause?: boolean;
   loop?: boolean;
   messageSets?: MockMessageSet[];
-  style?: StyleObject;
+  style?: React.CSSProperties;
   className?: string;
 };
 

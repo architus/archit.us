@@ -22,7 +22,7 @@ type NumericUpDownProps = {
   isValid?: boolean;
   isInvalid?: boolean;
   className?: string;
-  style?: StyleObject;
+  style?: React.CSSProperties;
 };
 
 const NumericUpDown: React.FC<NumericUpDownProps> = React.forwardRef(

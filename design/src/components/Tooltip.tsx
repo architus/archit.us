@@ -3,6 +3,7 @@ import { css } from "linaria";
 import React from "react";
 import TooltipTrigger from "react-popper-tooltip";
 
+import { isDefined } from "@architus/lib/utility";
 import { color } from "../theme/color";
 import { transition } from "../theme/motion";
 import { ZIndex } from "../theme/order";
@@ -170,61 +171,64 @@ const Tooltip: React.FC<TooltipProps> = ({
   maxWidth = gap.giga,
   onContentClick,
   ...props
-}) => (
-  <TooltipTrigger
-    {...props}
-    modifiers={[
-      {
-        name: "preventOverflow",
-        options: {
-          padding: globalPadding,
+}) =>
+  isDefined(tooltip) ? (
+    <TooltipTrigger
+      {...props}
+      modifiers={[
+        {
+          name: "preventOverflow",
+          options: {
+            padding: globalPadding,
+          },
         },
-      },
-      {
-        name: "offset",
-        options: {
-          offset: [0, 8],
+        {
+          name: "offset",
+          options: {
+            offset: [0, 8],
+          },
         },
-      },
-    ]}
-    tooltip={({
-      arrowRef,
-      tooltipRef,
-      getArrowProps,
-      getTooltipProps,
-      placement,
-    }): React.ReactNode => (
-      <div
-        {...getTooltipProps({
-          ref: tooltipRef,
-          className: tooltipContainerClass,
-        })}
-        onClick={onContentClick}
-      >
-        {!hideArrow && (
-          <div
-            {...getArrowProps({
-              ref: arrowRef,
-              className: tooltipArrowClass,
-              "data-placement": placement,
-            })}
-          />
-        )}
-        <div style={{ padding: gap(padding), maxWidth, overflow: "auto" }}>
-          {tooltip}
+      ]}
+      tooltip={({
+        arrowRef,
+        tooltipRef,
+        getArrowProps,
+        getTooltipProps,
+        placement,
+      }): React.ReactNode => (
+        <div
+          {...getTooltipProps({
+            ref: tooltipRef,
+            className: tooltipContainerClass,
+          })}
+          onClick={onContentClick}
+        >
+          {!hideArrow && (
+            <div
+              {...getArrowProps({
+                ref: arrowRef,
+                className: tooltipArrowClass,
+                "data-placement": placement,
+              })}
+            />
+          )}
+          <div style={{ padding: gap(padding), maxWidth, overflow: "auto" }}>
+            {tooltip}
+          </div>
         </div>
-      </div>
-    )}
-  >
-    {({ getTriggerProps, triggerRef }): React.ReactNode => (
-      <span
-        {...getTriggerProps({
-          ref: triggerRef,
-        })}
-      >
-        {children}
-      </span>
-    )}
-  </TooltipTrigger>
-);
+      )}
+    >
+      {({ getTriggerProps, triggerRef }): React.ReactNode => (
+        <span
+          {...getTriggerProps({
+            ref: triggerRef,
+          })}
+        >
+          {children}
+        </span>
+      )}
+    </TooltipTrigger>
+  ) : (
+    <>{children}</>
+  );
 export default Tooltip;

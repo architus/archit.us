@@ -205,7 +205,7 @@ declare module "@xstyled/emotion" {
     children?: React.ReactNode;
     dangerouslySetInnerHTML?: { __html: string };
     className?: string;
-    style?: StyleObject;
+    style?: React.CSSProperties;
   };
 
   type MakeBoxStyled<

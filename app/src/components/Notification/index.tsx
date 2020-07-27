@@ -12,7 +12,7 @@ type NotificationProps = {
   message: React.ReactNode;
   id: number;
   onDismiss: (id: number) => void;
-  style?: StyleObject;
+  style?: React.CSSProperties;
   className?: string;
 };
 

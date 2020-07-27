@@ -404,7 +404,7 @@ export function usePool<T extends PoolType>(
   // - when any of the return values change
 
   const { type, filter } = options;
-  const { guildId } = options as { guildId: Snowflake };
+  const { guildId } = (options as unknown) as { guildId: Snowflake };
   const dispatch = useDispatch();
 
   // Track whether the current options have pressured
@@ -522,7 +522,7 @@ export function usePoolEntity<T extends PoolType>(
   // - when any of the return values change
 
   const { type, id } = options;
-  const { guildId } = options as { guildId: Snowflake };
+  const { guildId } = (options as unknown) as { guildId: Snowflake };
   const dispatch = useDispatch();
 
   // Track whether the current options have pressured
@@ -664,7 +664,7 @@ export function usePoolEntities<T extends PoolType>(
   // - when any of the return values change
 
   const { type, ids } = options;
-  const { guildId } = options as { guildId: Snowflake };
+  const { guildId } = (options as unknown) as { guildId: Snowflake };
   const dispatch = useDispatch();
 
   // Track whether the current options have pressured

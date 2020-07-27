@@ -30,7 +30,6 @@ export type Supplier<T> = () => T;
 export type RecordKey = string | number | symbol;
 export type Comparator<T> = (a: T, b: T) => number;
 export type RawDimension = string | number | Dimension;
-export type StyleObject = React.CSSProperties;
 
 export function isDimension(o: unknown): o is Dimension {
   return (

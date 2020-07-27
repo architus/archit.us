@@ -40,7 +40,7 @@ type InputControllerProps = {
   loop?: boolean;
   pause?: boolean;
   messageSets?: MockMessageSet[];
-  style?: StyleObject;
+  style?: React.CSSProperties;
   className?: string;
 };
 

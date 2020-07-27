@@ -104,7 +104,9 @@ const Styled = {
     &[data-container="true"] {
       ${container}
     }
+
     padding-left: calc(${sitePadding} - ${logoLeftSpace}) !important;
+    padding-right: ${sitePadding};
 
     ${down("md")} {
       /* Scroll horizontally when the screen isn't wide enough */

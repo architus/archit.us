@@ -15,7 +15,7 @@ export type ReactionListProps = {
   reactions: MockReaction[];
   onReact: (r: MockReaction) => void;
   onUnreact: (r: MockReaction) => void;
-  style?: StyleObject;
+  style?: React.CSSProperties;
   className?: string;
 };
 

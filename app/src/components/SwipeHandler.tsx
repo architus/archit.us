@@ -69,7 +69,7 @@ type SwipeHandlerProps = {
 
   children?: React.ReactNode;
   className?: string;
-  style?: StyleObject;
+  style?: React.CSSProperties;
 } & Record<string, unknown>;
 
 class SwipeHandler extends React.Component<SwipeHandlerProps> {

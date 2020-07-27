@@ -89,6 +89,10 @@ export const plugins = [
   },
   "gatsby-plugin-typescript",
   {
+    resolve: `gatsby-plugin-create-client-paths`,
+    options: { prefixes: [`/app/*`] },
+  },
+  {
     resolve: `gatsby-plugin-typegen`,
     options: {
       outputPath: `src/__generated__/gatsby-types.d.ts`,

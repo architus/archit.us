@@ -9,6 +9,8 @@ export const sitePaddingVariable = `--site-padding`;
 export const contentWidthVariable = `--content-width`;
 export const sitePadding = `var(${sitePaddingVariable})`;
 export const contentWidth = `var(${contentWidthVariable})`;
+export const appHorizontalPadding = gap.nano;
+export const appVerticalPadding = gap.nano;
 
 export const global = css`
   :global() {

@@ -37,7 +37,7 @@ const Styled = {
 
 export type MessageViewProps = {
   clumps: MockMessageClump[];
-  style?: StyleObject;
+  style?: React.CSSProperties;
   className?: string;
 };
 

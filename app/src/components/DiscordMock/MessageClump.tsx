@@ -102,7 +102,7 @@ export type MessageClumpProps = {
   last: boolean;
   onReact: (messageId: number, r: MockReaction) => void;
   onUnreact: (messageId: number, r: MockReaction) => void;
-  style?: StyleObject;
+  style?: React.CSSProperties;
   className?: string;
 } & MockMessageClump;
 

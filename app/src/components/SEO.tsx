@@ -8,11 +8,18 @@ import { withPathPrefix } from "@architus/lib/path";
 export type SEOProps = {
   description?: string;
   title?: string;
+  noTitle?: boolean;
   meta?: React.ComponentProps<typeof Helmet>["meta"];
   lang?: string;
 };
 
-const SEO: React.FC<SEOProps> = ({ description, meta, title, lang = `en` }) => {
+const SEO: React.FC<SEOProps> = ({
+  description,
+  meta,
+  title,
+  noTitle = false,
+  lang = `en`,
+}) => {
   const seoData = useSEOData();
   const author = seoData.author.getOrElse("");
   const themeColor = seoData.themeColor.getOrElse("#ff00ff");
@@ -32,7 +39,7 @@ const SEO: React.FC<SEOProps> = ({ description, meta, title, lang = `en` }) => {
       htmlAttributes={{
         lang,
       }}
-      title={derivedTitle}
+      title={noTitle ? undefined : derivedTitle}
       meta={[
         {
           httpEquiv: "Content-Type",
@@ -56,10 +63,14 @@ const SEO: React.FC<SEOProps> = ({ description, meta, title, lang = `en` }) => {
           property: "og:type",
           content: "website",
         },
-        {
-          property: `og:title`,
-          content: derivedTitle,
-        },
+        ...(noTitle
+          ? []
+          : [
+              {
+                property: `og:title`,
+                content: derivedTitle,
+              },
+            ]),
         {
           property: `og:description`,
           content: metaDescription,
@@ -81,10 +92,14 @@ const SEO: React.FC<SEOProps> = ({ description, meta, title, lang = `en` }) => {
           name: `twitter:creator`,
           content: author,
         },
-        {
-          name: `twitter:title`,
-          content: derivedTitle,
-        },
+        ...(noTitle
+          ? []
+          : [
+              {
+                name: `twitter:title`,
+                content: derivedTitle,
+              },
+            ]),
         {
           name: `twitter:description`,
           content: metaDescription,

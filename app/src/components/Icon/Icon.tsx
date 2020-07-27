@@ -23,7 +23,7 @@ const Styled = {
 
 type IconProps = {
   className?: string;
-  style?: StyleObject;
+  style?: React.CSSProperties;
   name: AnyIconName;
   prefix?: IconPrefix;
   noAutoWidth?: boolean;

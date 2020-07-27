@@ -16,7 +16,7 @@ type NotificationListProps = {
   type: NotificationType;
   transitionLength?: number;
   container?: boolean;
-  style?: StyleObject;
+  style?: React.CSSProperties;
   className?: string;
 };
 

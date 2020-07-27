@@ -54,7 +54,7 @@ const Styled = {
 export type ReactionProps = {
   onReact: () => void;
   onUnreact: () => void;
-  style?: StyleObject;
+  style?: React.CSSProperties;
   className?: string;
 } & MockReaction;
 

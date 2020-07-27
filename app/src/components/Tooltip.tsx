@@ -16,7 +16,7 @@ import { StyleObject } from "@app/utility/types";
 const Styled = {
   Tooltip: styled<
     typeof BootstrapTooltip,
-    { id: string; className?: string; style?: StyleObject }
+    { id: string; className?: string; style?: React.CSSProperties }
   >(BootstrapTooltip)`
     z-index: 1090;
 
@@ -59,7 +59,7 @@ type TooltipControllerProps = {
   popperConfig?: OverlayProps["popperConfig"];
   // Common style Props
   className?: string;
-  style?: StyleObject;
+  style?: React.CSSProperties;
   boxProps?: BoxProps;
 };
 

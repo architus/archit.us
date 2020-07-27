@@ -6,12 +6,12 @@ import {
   parseDimension,
   formatDimension,
 } from "@app/utility";
-import { RawDimension, StyleObject } from "@app/utility/types";
+import { RawDimension } from "@app/utility/types";
 
 type AcronymProps = {
   name: string;
   baseFontSize?: RawDimension;
-  style?: StyleObject;
+  style?: React.CSSProperties;
 };
 
 const Acronym: React.FC<AcronymProps> = ({

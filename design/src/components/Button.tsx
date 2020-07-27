@@ -1,3 +1,4 @@
+import { isDefined } from "@architus/lib/utility";
 import { css, cx } from "linaria";
 import { styled } from "linaria/react";
 import { transparentize, darken, readableColor } from "polished";
@@ -13,7 +14,6 @@ import {
 } from "../theme/color";
 import { transition } from "../theme/motion";
 import { gap } from "../theme/spacing";
-import { isDefined } from "@architus/lib/utility";
 
 // Used to manage keyboard-only focus
 // See https://www.kizu.ru/keyboard-only-focus/
@@ -64,7 +64,7 @@ const Styled = {
   CombinedIcon: styled.div`
     position: relative;
     flex-grow: 0;
-    margin-right: ${gap.nano};
+    margin-right: var(--button-padding);
     transform: scale(1.25);
     top: 2px;
   `,
@@ -146,27 +146,24 @@ const sizeClasses = {
 } as const;
 
 export type ButtonSize = "compact" | "normal" | "large";
-
-type GhostButton = { type?: "ghost" };
-type CustomColor = { color: string };
-type VariantColor = { variant: Variant };
-type ColoredButton = { type?: "solid" | "outline" } & (
-  | CustomColor
-  | VariantColor
-);
+export type ButtonType = "solid" | "outline" | "ghost";
 
 type BaseProps<As> = {
   as?: As;
   children?: React.ReactNode;
   icon?: React.ReactNode;
+  variant?: Variant;
+  color?: string;
+  type?: "solid" | "outline" | "ghost";
   size?: ButtonSize;
   className?: string;
   style?: string;
-} & (ColoredButton | GhostButton);
+};
 
 export type ButtonProps<
   As extends React.ElementType = React.ElementType
-> = BaseProps<As> & React.ComponentProps<As>;
+> = Omit<React.ComponentProps<As>, keyof Required<BaseProps<As>>> &
+  BaseProps<As>;
 
 /**
  * Shows a standard Bootstrap-style button component,
@@ -183,6 +180,8 @@ function Button<As extends React.ElementType = "button">(
     icon,
     size = "normal",
     type = "solid",
+    variant = "primary",
+    color,
     className,
     style = {},
     ...rest
@@ -190,17 +189,8 @@ function Button<As extends React.ElementType = "button">(
 
   const styles: React.CSSProperties = { ...style };
   const colorMode = useColorMode();
-  if (isDefined((props as ColoredButton).type)) {
-    let buttonColor: string;
-    if (isDefined((props as CustomColor).color)) {
-      buttonColor = (props as CustomColor).color;
-    } else {
-      buttonColor = hybridColor(
-        (props as VariantColor).variant ?? "primary",
-        colorMode
-      );
-    }
-
+  if (type !== "ghost") {
+    const buttonColor = color ?? hybridColor(variant, colorMode);
     Object.assign(styles, makeColors(buttonColor));
   }
 
@@ -237,6 +227,15 @@ function Button<As extends React.ElementType = "button">(
 }
 
 export default Button;
+
+/**
+ * Creates a button component that can be wrapped via `styled`.
+ */
+export function StylableButton<As extends React.ElementType>(): React.FC<
+  ButtonProps<As>
+> {
+  return (props): JSX.Element => <Button<As> {...props} />;
+}
 
 // ? ================
 // ? Helper functions

@@ -23,7 +23,7 @@ type SkeletonProps = {
   circle?: boolean;
   block?: boolean;
   className?: string;
-  style?: StyleObject;
+  style?: React.CSSProperties;
 } & BaseSkeletonProps &
   Partial<React.HTMLAttributes<HTMLSpanElement>>;
 
@@ -87,7 +87,7 @@ const RenderContent: React.FC<RenderContentProps> = ({
 
 type TextProps = {
   text: string;
-  style?: StyleObject;
+  style?: React.CSSProperties;
   inline?: boolean;
   size?: RawDimension;
   width?: RawDimension;
@@ -172,7 +172,7 @@ const lineAmount = 100;
 type MultilineProps = {
   text: string | Nil;
   children?: React.ReactNode | Nil;
-  style?: StyleObject;
+  style?: React.CSSProperties;
   inline?: boolean;
   size?: RawDimension;
   light?: boolean;

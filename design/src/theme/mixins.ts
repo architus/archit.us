@@ -188,3 +188,18 @@ export function discordScrollbar({
     }
   `;
 }
+
+/**
+ * Mixin to allow scrolling but have the scroll-bar be hidden
+ */
+export function hiddenScrollbar(): string {
+  return `
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE 10+ */
+    &::-webkit-scrollbar {
+        /* WebKit */
+        width: 0;
+        height: 0;
+    }
+  `;
+}

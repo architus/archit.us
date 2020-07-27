@@ -1,10 +1,10 @@
 import React from "react";
 
-import { AppPageProps } from "@app/dynamic/AppRoot/types";
 import { Container } from "@app/layout";
+import { TabProps } from "@app/tabs/types";
 import Badge from "@architus/facade/components/Badge";
 
-const MusicQueue: React.FC<AppPageProps> = () => (
+const MusicQueue: React.FC<TabProps> = () => (
   <Container className="py-5">
     <h2>
       MusicQueue <Badge variant="primary">Coming Soon</Badge>
