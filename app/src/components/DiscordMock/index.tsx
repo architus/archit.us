@@ -48,7 +48,6 @@ import {
   MockUser,
   RawDimension,
   MockMessageSet,
-  StyleObject,
   DiscordMockContext,
   DiscordMockCommands,
   TransformMessage,

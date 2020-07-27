@@ -1,9 +1,12 @@
-import styled from "@xstyled/emotion";
+import { styled } from "linaria/react";
 import React, { ErrorInfo } from "react";
 
-import { opacity } from "@app/theme";
 import { warn, isDefined } from "@app/utility";
 import Spinner from "@architus/facade/components/Spinner";
+import { color } from "@architus/facade/theme/color";
+import { scrollBarAuto } from "@architus/facade/theme/mixins";
+import { gap } from "@architus/facade/theme/spacing";
+import { font } from "@architus/facade/theme/typography";
 import { Option, Some, None } from "@architus/lib/option";
 
 const Styled = {
@@ -18,62 +21,68 @@ const Styled = {
     bottom: 0;
     left: 0;
     right: 0;
-    background-color: dark_overlay_strong;
+    color: ${color("textStrong")};
+    padding: ${gap.milli};
     z-index: 10;
+    background-color: ${color("modalOverlay")};
+
     overflow-x: hide;
     overflow-y: auto;
-    color: light;
-    padding: milli;
+    ${scrollBarAuto()}
 
-    & :not(pre) > code,
-    :not(pre) > code {
-      color: primary;
+    & :not(pre) > code {
+      color: ${color("primary")};
       display: inline-block;
-      background-color: light_overlay;
+      background-color: ${color("bg+10")};
       border-radius: 4px;
-
-      // Specific values to match font
+      font-family: ${font("monospace")};
       padding: 0.1em 0.35em 0.05em;
-      font-size: 87.5%;
+      font-size: 100%;
     }
 
     & p {
-      color: ${opacity("light", 0.7)};
+      color: ${color("text")};
+      margin-bottom: ${gap.pico};
     }
 
     & h2 {
       font-size: 3rem;
       font-weight: 200;
-      margin-bottom: nano;
+      margin-bottom: ${gap.nano};
     }
 
     & h3 {
       font-size: 1.5rem;
-      margin-bottom: pico;
+      margin-bottom: ${gap.pico};
     }
 
     & h4 {
       font-size: 1.25rem;
-      margin-bottom: pico;
+      margin-bottom: ${gap.pico};
     }
+  `,
+  Divider: styled.hr`
+    border-top: 1px solid ${color("textLight")};
   `,
   ErrorDetails: styled.article`
     pre {
-      color: light;
-      margin-bottom: pico;
-      background-color: light_overlay;
+      color: ${color("text")};
+      margin-bottom: ${gap.pico};
+      background-color: ${color("bg+10")};
       border-radius: 4px;
-      padding: nano;
+      padding: ${gap.nano};
+      margin-top: ${gap.pico};
+
       overflow: auto;
-      margin-top: pico;
+      ${scrollBarAuto()}
     }
 
     & p {
-      margin-bottom: pico;
+      margin-bottom: ${gap.pico};
 
       strong {
         font-weight: 400;
-        color: light;
+        color: ${color("textStrong")};
       }
     }
   `,
@@ -165,7 +174,7 @@ const FallbackRenderer: React.FC<FallbackRendererProps> = ({
           <p>
             <em>This message is hidden in production.</em>
           </p>
-          <hr />
+          <Styled.Divider />
           <h3>Error details</h3>
           {error.match({
             None: () => (
