@@ -69,8 +69,8 @@ export function useFragments(prefix?: string): string[] {
  */
 export function useAppLocation(appPrefix: string): AppLocation {
   const fragments = useFragments(appPrefix);
-  const guildFragment = fragments.length >= 2 ? fragments[0] : null;
-  const tabFragment = fragments.length >= 3 ? fragments[1] : null;
+  const guildFragment = fragments.length >= 1 ? fragments[0] : null;
+  const tabFragment = fragments.length >= 2 ? fragments[1] : null;
   return {
     guild: Option.from(guildFragment as Snowflake | null),
     tab: Option.from(tabFragment),

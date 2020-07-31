@@ -176,7 +176,12 @@ const AppNavigation: React.FC<AppNavigationProps> = ({
               />
             </Styled.GuildList>
             <Styled.TabList>
-              <TabNav onClickTab={tagNavigate} tabs={tabs} currentTab={tab} />
+              <TabNav
+                onClickTab={tagNavigate}
+                tabs={tabs}
+                currentTab={tab}
+                activeBackground={color("bg")}
+              />
             </Styled.TabList>
           </Styled.Drawer>
           <Styled.ExpandButton onClick={expandClick}>
@@ -246,6 +251,6 @@ export function navigateToTab(
     let defaultGuild = guilds[0];
     const adminGuilds = guilds.filter((g) => g.architus_admin);
     if (adminGuilds.length > 0) [defaultGuild] = adminGuilds;
-    navigate(`${prefix}/${defaultGuild.id}/${path}`);
+    navigate(`${prefix}/${defaultGuild.id}/${tab}`);
   }
 }

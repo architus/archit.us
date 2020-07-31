@@ -2,6 +2,7 @@ import { styled } from "linaria/react";
 import React from "react";
 
 import { withBasePath } from "@app/api";
+import { useLocationMatch } from "@app/hooks";
 import { useSessionStatus } from "@app/store/slices/session";
 import HeaderLink from "@architus/facade/components/HeaderLink";
 import { down } from "@architus/facade/theme/media";
@@ -20,11 +21,19 @@ const Styled = {
   `,
 };
 
-const LoggedInLinks: React.FC = () => (
-  <HeaderLink active={false} path={withBasePath("/app")}>
-    Dashboard
-  </HeaderLink>
-);
+const LoggedInLinks: React.FC = () => {
+  const [, isInApp] = useLocationMatch("/app");
+  return (
+    <>
+      {/* Hide the link to the dashboard when in the app */}
+      {!isInApp && (
+        <HeaderLink active={false} path={withBasePath("/app")}>
+          Dashboard
+        </HeaderLink>
+      )}
+    </>
+  );
+};
 const LoggedOutLinks: React.FC = () => null;
 const CommonLinks: React.FC = () => null;
 

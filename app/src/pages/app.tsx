@@ -121,7 +121,6 @@ const TabRenderer: React.FC<TabRendererProps> = ({
   const { component: Component, placeholder } = tab;
   const { entity: guildOption } = usePoolEntity({ type: "guild", id });
   const appProps = useAppProps();
-  console.log({ guildId, guildOption });
   return guildOption.match({
     Some: (guild) => <Component guild={guild} {...appProps} {...rest} />,
     None: () => {

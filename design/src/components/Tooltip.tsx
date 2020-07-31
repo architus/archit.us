@@ -238,6 +238,8 @@ const Tooltip: React.FC<TooltipProps> = ({
       )}
     </TooltipTrigger>
   ) : (
-    <>{children}</>
+    <span className={className} style={style} {...innerProps}>
+      {children}
+    </span>
   );
 export default Tooltip;
