@@ -13,6 +13,7 @@ import { Option } from "@architus/lib/option";
 
 const skeletonCount = 5;
 const iconWidth = 52;
+const iconSpacing = gap.pico;
 
 const Styled = {
   List: styled.div`
@@ -20,6 +21,7 @@ const Styled = {
     align-items: center;
     justify-content: flex-start;
     flex-direction: column;
+    padding: ${gap.pico};
   `,
   AddButton: styled.button`
     color: ${color("text")};
@@ -66,15 +68,18 @@ const Styled = {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    flex-direction: row;
+    flex-direction: column;
 
     & > * {
-      margin-bottom: ${gap.nano};
+      margin-bottom: ${iconSpacing};
     }
   `,
   SectionDivider: styled.hr`
     width: 80%;
     border-top: 2px solid ${color("textLight")};
+  `,
+  GuildSkeleton: styled(Skeleton.Auto)`
+    margin-bottom: ${iconSpacing};
   `,
 };
 
@@ -82,6 +87,7 @@ export type GuildNavProps = {
   loaded: boolean;
   guilds: Guild[];
   currentGuild: Option<Snowflake>;
+  backgroundColor: string;
   onClickGuild: (id: Snowflake) => void;
   onClickAdd: () => void;
   className?: string;
@@ -100,6 +106,7 @@ const GuildNav: React.FC<GuildNavProps> = ({
   loaded,
   guilds,
   currentGuild,
+  backgroundColor,
   onClickGuild,
   onClickAdd,
 }) => {
@@ -119,6 +126,7 @@ const GuildNav: React.FC<GuildNavProps> = ({
               guilds={architusAdminGuilds}
               onClickGuild={onClickGuild}
               activeGuildId={currentGuild.orNull()}
+              backgroundColor={backgroundColor}
               elevated
             />
           ) : null}
@@ -127,6 +135,7 @@ const GuildNav: React.FC<GuildNavProps> = ({
               guilds={otherGuilds}
               onClickGuild={onClickGuild}
               activeGuildId={currentGuild.orNull()}
+              backgroundColor={backgroundColor}
             />
           ) : null}
           <Tooltip tooltip="Add architus to a server...">
@@ -137,7 +146,7 @@ const GuildNav: React.FC<GuildNavProps> = ({
         </>
       ) : (
         [...Array(skeletonCount)].map((_e, i) => (
-          <Skeleton.Auto circle width={`${iconWidth}px`} key={i} />
+          <Styled.GuildSkeleton circle width={`${iconWidth}px`} key={i} />
         ))
       )}
     </Styled.List>
@@ -155,6 +164,7 @@ type SectionProps = {
   onClickGuild: (id: Snowflake) => void;
   activeGuildId: Snowflake | null;
   elevated?: boolean;
+  backgroundColor: string;
 };
 
 /**
@@ -165,6 +175,7 @@ const Section: React.FC<SectionProps> = ({
   onClickGuild,
   activeGuildId,
   elevated = false,
+  backgroundColor,
 }) => (
   <Styled.Section>
     {guilds.map(({ icon, id, name }) => (
@@ -177,6 +188,8 @@ const Section: React.FC<SectionProps> = ({
         data-active={id === activeGuildId ? "true" : undefined}
         onClick={(): void => onClickGuild(id)}
         tabIndex={0}
+        backgroundColor={backgroundColor}
+        size={`${iconWidth}px`}
       />
     ))}
     <Styled.SectionDivider />

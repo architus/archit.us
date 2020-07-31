@@ -70,10 +70,12 @@ const Styled = {
   `,
   ExpandButton: styled.button`
     position: absolute;
+    bottom: 0;
   `,
   ExpandIcon: styled(FaChevronRight)``,
   Overlay: styled.button`
     position: absolute;
+    bottom: 0;
   `,
 };
 
@@ -170,6 +172,7 @@ const AppNavigation: React.FC<AppNavigationProps> = ({
                 currentGuild={guild}
                 onClickGuild={guildNavigate}
                 onClickAdd={onOpenAddGuildModal}
+                backgroundColor={color("bg-20")}
               />
             </Styled.GuildList>
             <Styled.TabList>

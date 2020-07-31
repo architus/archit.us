@@ -55,7 +55,12 @@ const AppPage: React.FC<PageProps> = () => {
   } else {
     content = (
       <Router basepath="/app">
-        {tabRoutes}
+        {/* {tabRoutes} */}
+        <TabRenderer
+          path=":guildId/logs"
+          tab={tabs[0]}
+          showGuildAddModal={onAddGuild}
+        />
         <Redirect
           path=":guildId"
           from=":guildId"
@@ -116,6 +121,7 @@ const TabRenderer: React.FC<TabRendererProps> = ({
   const { component: Component, placeholder } = tab;
   const { entity: guildOption } = usePoolEntity({ type: "guild", id });
   const appProps = useAppProps();
+  console.log({ guildId, guildOption });
   return guildOption.match({
     Some: (guild) => <Component guild={guild} {...appProps} {...rest} />,
     None: () => {

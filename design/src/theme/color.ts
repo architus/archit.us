@@ -75,6 +75,8 @@ const colors = {
     // Same as `dark.bg+20`
     footer: "hsl(220, 13%, 28%)",
     modalOverlay: "rgba(255, 255, 255, 0.7)",
+    hoverOverlay: "rgba(33, 33, 33, 0.05)",
+    activeOverlay: "rgba(33, 33, 33, 0.1)",
   },
   [ColorMode.Dark]: {
     // Foreground colors
@@ -123,6 +125,8 @@ const colors = {
     // Same as `dark.bg`
     footer: "hsl(220, 13%, 18%)",
     modalOverlay: "rgba(0, 0, 0, 0.7)",
+    hoverOverlay: "rgba(201, 213, 219, 0.05)",
+    activeOverlay: "rgba(201, 213, 219, 0.1)",
   },
 };
 

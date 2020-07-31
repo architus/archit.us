@@ -1,9 +1,9 @@
-import { navigate } from "@reach/router";
 import { SagaIterator } from "@redux-saga/core";
 import { delay } from "@redux-saga/core/effects";
 import { takeEvery, put, fork } from "redux-saga/effects";
 
 import { withBasePath } from "@app/api";
+import { navigate } from "@app/components/Router";
 import {
   hideNotification,
   showToast,

@@ -150,6 +150,9 @@ type BaseTooltipProps = {
   padding?: SpacingKey;
   maxWidth?: string | number;
   onContentClick?: (e: React.MouseEvent) => void;
+  innerProps?: Partial<React.HTMLAttributes<HTMLSpanElement>>;
+  className?: string;
+  style?: React.CSSProperties;
 };
 
 export type TooltipProps = BaseTooltipProps &
@@ -170,6 +173,9 @@ const Tooltip: React.FC<TooltipProps> = ({
   padding = "atto",
   maxWidth = gap.giga,
   onContentClick,
+  className,
+  style,
+  innerProps = {},
   ...props
 }) =>
   isDefined(tooltip) ? (
@@ -223,6 +229,9 @@ const Tooltip: React.FC<TooltipProps> = ({
           {...getTriggerProps({
             ref: triggerRef,
           })}
+          className={className}
+          style={style}
+          {...innerProps}
         >
           {children}
         </span>
