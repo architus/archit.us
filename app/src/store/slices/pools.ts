@@ -429,6 +429,8 @@ export function usePool<T extends PoolType>(
           guildId
         ) as Pool<T> | undefined);
 
+    console.log(JSON.stringify(pool));
+
     let loading: boolean;
     let isLoaded: boolean;
 
@@ -573,6 +575,7 @@ export function usePoolEntity<T extends PoolType>(
 
       shouldPressure = !(isLoaded || pressured || loading);
       entity = entityPool[id];
+      console.log({ entity, type, id });
     } else {
       // If the pool doesn't exist, then it is completely empty and should be pressured
       pressured = false;

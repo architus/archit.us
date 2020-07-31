@@ -30,4 +30,5 @@ export interface TabDefinition {
   component: React.ElementType<TabProps>;
   placeholder?: React.ElementType<PlaceholderProps>;
   contentClass?: string;
+  tooltip?: string;
 }

@@ -28,30 +28,35 @@ const definitions: TabDefinition[] = [
     name: "Emoji Manager",
     icon: EmojiManagerIcon,
     component: EmojiManager,
+    tooltip: "Coming soon",
   },
   {
     path: "stats",
     name: "Statistics",
     icon: StatisticsIcon,
     component: Statistics,
+    tooltip: "Coming soon",
   },
   {
     path: "logs",
     name: "Logs",
     icon: LogsIcon,
     component: Logs,
+    tooltip: "Coming soon",
   },
   {
     path: "settings",
     name: "Settings",
     icon: SettingsIcon,
     component: Settings,
+    tooltip: "Coming soon",
   },
   {
     path: "music",
     name: "Music Queue",
     icon: MusicQueueIcon,
     component: MusicQueue,
+    tooltip: "Coming soon",
   },
 ];
 

@@ -61,7 +61,8 @@ export type LayoutProps = {
   noHeader?: boolean;
   style?: React.CSSProperties;
   className?: string;
-} & Partial<React.ComponentProps<typeof Header>>;
+  headerProps?: React.ComponentProps<typeof Header>;
+};
 
 /**
  * Root layout component, handling site title and rendering the header/dark mode switch
@@ -73,7 +74,7 @@ const Layout: React.FC<LayoutProps> = ({
   noHeader = false,
   className,
   style,
-  ...rest
+  headerProps,
 }) => {
   // Dark mode control hooks
   const { value, toggle } = useDarkMode(false);
@@ -112,7 +113,7 @@ const Layout: React.FC<LayoutProps> = ({
     >
       <SEO {...seo} />
       {!noHeader && (
-        <Header {...rest}>
+        <Header {...headerProps}>
           {headerChildren}
           {typeof window === "undefined" ? null : (
             <Styled.Switch

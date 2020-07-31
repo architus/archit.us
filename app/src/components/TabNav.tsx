@@ -10,9 +10,10 @@ import { gap } from "@architus/facade/theme/spacing";
 import { Option, None, Some } from "@architus/lib/option";
 
 const tabOuterCornerRadius = "6px";
+const tabOverlayCornerRadius = "4px";
 const tabInnerCornerRadius = "6px";
 const tabHorizontalPadding = gap.pico;
-const tabVerticalPadding = gap.nano;
+const tabVerticalPadding = "16px";
 const tabListPadding = gap.pico;
 
 const cornerMixin = `
@@ -24,7 +25,7 @@ const cornerMixin = `
   overflow: hidden;
 
   &:before {
-    color: var(--tab-corner-bg);
+    color: var(--tab-bg);
     position: absolute;
     box-shadow: 0 0 0 300px;
     content: "";
@@ -55,52 +56,66 @@ const Styled = {
     cursor: pointer;
     border-radius: ${tabOuterCornerRadius};
     position: relative;
+    color: ${color("textStrong")};
 
     --tab-bg: transparent;
-    --tab-fg: ${color("textFade")};
-    --tab-icon-fg: ${color("textLight")};
-    --tab-corner-bg: transparent;
+    --tab-overlay-bg: transparent;
+    --tab-text-opacity: 0.5;
+    --tab-icon-opacity: 0.3;
 
-    ${transition(["background-color", "color"])}
-    color: var(--tab-fg);
     background-color: var(--tab-bg);
 
+    /* Overlay background */
+    &::before {
+      position: absolute;
+      content: " ";
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      border-radius: ${tabOverlayCornerRadius};
+
+      ${transition(["background-color"])}
+      background-color: var(--tab-overlay-bg);
+    }
+
+    /* Thin strip to connect tab to right content */
+    &::after {
+      position: absolute;
+      content: " ";
+      top: 0;
+      bottom: 0;
+      right: -${tabListPadding};
+      width: ${tabListPadding};
+      display: block;
+      background-color: var(--tab-bg);
+    }
+
     &:hover {
-      --tab-bg: ${color("hoverOverlay")};
+      --tab-overlay-bg: ${color("hoverOverlay")};
     }
 
-    &:hover,
-    &:active,
-    &[data-active="true"] {
-      --tab-fg: ${color("text")};
-      --tab-icon-fg: ${color("text")};
-    }
-
-    &[data-active="true"],
     &:active {
-      --tab-fg: ${color("textStrong")};
-      --tab-icon-fg: ${color("textStrong")};
+      --tab-overlay-bg: ${color("activeOverlay")};
     }
 
     &[data-active="true"] {
       --tab-bg: ${(props): string => props.activeBackground};
-      --tab-corner-bg: ${(props): string => props.activeBackground};
+      --tab-text-opacity: 1;
+      --tab-icon-opacity: 0.9;
 
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
 
-      &::after {
-        position: absolute;
-        content: " ";
-        top: 0;
-        bottom: 0;
-        right: -${tabListPadding};
-        width: ${tabListPadding};
-        display: block;
-
-        ${transition(["background-color"])}
-        background-color: var(--tab-bg);
+      &::before {
+        display: none;
       }
+    }
+
+    &:hover,
+    &:active {
+      --tab-text-opacity: 0.8;
+      --tab-icon-opacity: 0.7;
     }
   `,
   TabIcon: styled.div`
@@ -108,15 +123,18 @@ const Styled = {
     width: 70%;
     margin: 0 auto ${gap.femto};
 
+    ${transition(["opacity"])}
+    opacity: var(--tab-icon-opacity);
+
     .str {
       stroke-width: 0.75;
       stroke-miterlimit: 10;
       fill: none;
-      stroke: var(--tab-icon-fg);
+      stroke: currentColor;
     }
 
     .fil {
-      fill: var(--tab-icon-fg);
+      fill: currentColor;
     }
 
     .op4 {
@@ -139,6 +157,10 @@ const Styled = {
     font-size: 0.8rem;
     line-height: 1.03;
     opacity: 0.8;
+    user-select: none;
+
+    ${transition(["opacity"])}
+    opacity: var(--tab-text-opacity);
   `,
   TabTopCorner: styled.span`
     ${cornerMixin}
@@ -176,10 +198,13 @@ const TabNav: React.FC<TabNavProps> = ({
 
   return (
     <Styled.Outer>
-      {tabs.map(({ path, name, icon: Icon }) => {
+      {tabs.map(({ path, name, tooltip, icon: Icon }) => {
         const isActive = activeTab.equals(Some(path));
         return (
-          <Styled.TabButtonOuter tooltip={isActive ? null : name} key={path}>
+          <Styled.TabButtonOuter
+            tooltip={isActive ? null : tooltip ?? name}
+            key={path}
+          >
             <Styled.TabButton
               data-active={isActive ? "true" : undefined}
               onClick={(): void => onClickTab(path)}
