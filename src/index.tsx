@@ -41,18 +41,14 @@ if (typeof document !== "undefined") {
     }
   }
 
-  // Register service worker
+  // Unregister service worker
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
-      if (process.env.PRODUCTION) {
-        navigator.serviceWorker.register("/service-worker.js");
-      } else {
-        navigator.serviceWorker.getRegistrations().then((registrations) => {
-          for (const registration of registrations) {
-            registration.unregister();
-          }
-        });
-      }
+      navigator.serviceWorker.getRegistrations().then((registrations) => {
+        for (const registration of registrations) {
+          registration.unregister();
+        }
+      });
     });
   }
 }
