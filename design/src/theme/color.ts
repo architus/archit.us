@@ -39,7 +39,7 @@ const colors = {
     "bg-40": "hsl(200, 20%, 75%)",
     "bg-30": "hsl(200, 20%, 80%)",
     "bg-20": "hsl(200, 20%, 85%)",
-    "bg-10": "hsl(200, 20%, 93%)",
+    "bg-10": "hsl(200, 19%, 91%)",
     bg: "hsl(200, 20%, 97%)",
     "bg+10": "hsl(200, 20%, 100%)",
     "bg+20": "hsl(200, 20%, 100%)",
@@ -66,8 +66,8 @@ const colors = {
     "secondary+40": "#f5edde",
     // Semantic component colors
     contrastBorder: "rgba(194, 207, 214, 0.9)",
-    border: "",
-    inputFocusBorder: "",
+    border: "rgba(194, 207, 214, 0.8)",
+    inputFocusBorder: "hsl(209, 45%, 55%)",
     shadowLight: "rgba(0, 0, 0, 0.06)",
     shadowMedium: "rgba(0, 0, 0, 0.075)",
     shadowBold: "rgba(0, 0, 0, 0.09)",
@@ -79,7 +79,7 @@ const colors = {
     modalOverlay: "rgba(255, 255, 255, 0.7)",
     hoverOverlay: "rgba(33, 33, 33, 0.05)",
     activeOverlay: "rgba(33, 33, 33, 0.1)",
-    contrastOverlay: "",
+    contrastOverlay: "rgba(0, 0, 0, 0.04)",
   },
   [ColorMode.Dark]: {
     // Foreground colors
@@ -119,8 +119,8 @@ const colors = {
     "secondary+40": "#f6eee2",
     // Semantic component colors
     contrastBorder: "transparent",
-    border: "",
-    inputFocusBorder: "",
+    border: "rgba(246, 248, 249, 0.09)",
+    inputFocusBorder: "transparent",
     shadowLight: "rgba(0, 0, 0, 0.08)",
     shadowMedium: "rgba(0, 0, 0, 0.12)",
     shadowBold: "rgba(0, 0, 0, 0.18)",
@@ -132,7 +132,7 @@ const colors = {
     modalOverlay: "rgba(0, 0, 0, 0.7)",
     hoverOverlay: "rgba(201, 213, 219, 0.05)",
     activeOverlay: "rgba(201, 213, 219, 0.1)",
-    contrastOverlay: "",
+    contrastOverlay: "rgba(255, 255, 255, 0.023)",
   },
 };
 
@@ -196,7 +196,7 @@ type MustBeEmpty3 = Exclude<Variant, ColorKey>;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const n3: never = null as MustBeEmpty3;
 
-function toVariable(key: ColorKey): string {
+export function toVariable(key: string): string {
   return `--c-${key.replace("+", "_plus_")}`;
 }
 
@@ -213,28 +213,42 @@ export function color(key: ColorKey): string {
 
 /**
  * Creates variable definition statements for all dynamic colors in a color mode
+ * @param map - source theme/color map
  * @param colorMode - desired color mode from which to use colors
  */
-function makeVariableDefinitions(colorMode: ColorMode): string {
-  return Object.entries(colors[colorMode])
+export function makeVariableDefinitions(
+  map: Record<ColorMode, Record<string, string>>,
+  colorMode: ColorMode
+): string {
+  return Object.entries(map[colorMode])
     .map(([key, value]) => `${toVariable(key as ColorKey)}: ${value};`)
     .join("");
 }
 
 /**
  * Gets the css for use in the global CSS root
+ * @param map - source theme/color map
  */
-export function injectColorGlobals(): string {
-  const definitions =
-    makeVariableDefinitions(defaultMode) +
+export function makeRootDefinitions(
+  map: Record<ColorMode, Record<string, string>>
+): string {
+  return (
+    makeVariableDefinitions(map, defaultMode) +
     Object.values(ColorMode)
       .filter((colorMode) => defaultMode !== colorMode)
       .map(
         (colorMode) =>
-          `&.${colorMode} { ${makeVariableDefinitions(colorMode)} }`
+          `&.${colorMode} { ${makeVariableDefinitions(map, colorMode)} }`
       )
-      .join(" ");
-  return `body { ${definitions} }`;
+      .join(" ")
+  );
+}
+
+/**
+ * Gets the css for use in the global CSS root
+ */
+export function injectColorGlobals(): string {
+  return `body { ${makeRootDefinitions(colors)} }`;
 }
 
 /**

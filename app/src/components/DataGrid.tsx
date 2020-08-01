@@ -5,10 +5,13 @@ import ReactDataGrid, { DataGridProps } from "react-data-grid";
 import AutoSizer from "react-virtualized-auto-sizer";
 
 import { color, dynamicColor, ColorMode } from "@architus/facade/theme/color";
+import { shadow } from "@architus/facade/theme/shadow";
 import { gap } from "@architus/facade/theme/spacing";
 
+// import "react-data-grid/dist/react-data-grid.css";
+
 const Styled = {
-  Wrapper: styled(AutoSizer)`
+  AutoSizer: styled(AutoSizer)`
     .rdg-cell {
       display: inline-block;
       position: absolute;
@@ -78,12 +81,11 @@ const Styled = {
       height: 20px;
       border: 2px solid ${color("border")};
       background-color: ${color("bg+20")};
-      margin-top: 7px;
       margin-left: 7px;
     }
 
     .rdg-checkbox-input:checked + .rdg-checkbox {
-      background-color: primary;
+      background-color: ${color("primary")};
       box-shadow: inset 0 0 0 3px ${color("bg+10")};
     }
 
@@ -100,7 +102,7 @@ const Styled = {
       overflow-y: scroll;
       -webkit-user-select: none;
       user-select: none;
-      background-color: ${color("bg")};
+      background-color: ${color("bg-10")};
       font-size: 14px;
     }
 
@@ -146,18 +148,22 @@ const Styled = {
       width: var(--row-width);
       position: -webkit-sticky;
       position: sticky;
-      background-color: ${color("bg+10")};
+      background-color: ${color("bg")};
       font-weight: 700;
       -webkit-user-select: none;
       user-select: none;
       z-index: 3;
-      box-shadow: 1;
+      box-shadow: ${shadow("z1")};
     }
 
     .rdg-header-row {
       height: var(--header-row-height);
       line-height: var(--header-row-height);
       top: 0;
+
+      .rdg-checkbox {
+        margin-top: 3px;
+      }
     }
 
     .rdg-filter-container {
@@ -174,9 +180,10 @@ const Styled = {
         transition: box-shadow 0.25s ease;
         box-shadow: none;
         background-color: ${color("bg+10")};
-        color: text;
+        color: ${color("text")};
         border-color: ${color("contrastBorder")};
         width: 100%;
+        font-weight: 400;
 
         &::placeholder {
           color: ${color("textFade")};
@@ -264,6 +271,7 @@ const Styled = {
       flex-grow: 1;
       overflow: hidden;
       text-overflow: ellipsis;
+      transform: translateY(2px);
     }
 
     .rdg-selected {
@@ -315,6 +323,10 @@ const Styled = {
     }
 
     .rdg-row {
+      contain: strict;
+      display: flex;
+      position: absolute;
+      left: 0;
       width: var(--row-width);
       height: var(--row-height);
       line-height: var(--row-height);
@@ -328,7 +340,7 @@ const Styled = {
 
       &.rdg-row-even {
         & .rdg-cell {
-          background-color: contrast_overlay;
+          background-color: ${color("contrastOverlay")};
         }
       }
 
@@ -364,7 +376,7 @@ function DataGrid<R, K extends keyof R, SR = unknown>(
   props: DataGridProps<R, K, SR>
 ): JSX.Element {
   return (
-    <Styled.Wrapper>
+    <Styled.AutoSizer>
       {({
         height,
         width,
@@ -373,10 +385,10 @@ function DataGrid<R, K extends keyof R, SR = unknown>(
         width: number;
       }): React.ReactNode => (
         <>
-          <ReactDataGrid<R, K, SR> height={height} width={width} {...props} />
+          <ReactDataGrid<R, K, SR> {...props} height={height} width={width} />
         </>
       )}
-    </Styled.Wrapper>
+    </Styled.AutoSizer>
   );
 }
 

@@ -3,6 +3,8 @@ import React from "react";
 
 import HelpTooltip from "@app/components/HelpTooltip";
 import Switch from "@app/components/Switch";
+import { sitePadding } from "@app/layout";
+import { StylableButton } from "@architus/facade/components/Button";
 import Tooltip from "@architus/facade/components/Tooltip";
 import Comfy from "@architus/facade/icons/comfy.svg";
 import Compact from "@architus/facade/icons/compact.svg";
@@ -12,6 +14,17 @@ import { up } from "@architus/facade/theme/media";
 import { shadow } from "@architus/facade/theme/shadow";
 import { gap } from "@architus/facade/theme/spacing";
 
+const BaseButton = StylableButton<"button">();
+const ViewModeButton = styled(BaseButton)`
+  &[data-active="true"] {
+    background-color: ${color("activeOverlay")} !important;
+    box-shadow: inset 0 3px 7px ${color("activeOverlay")} !important;
+  }
+
+  svg {
+    transform: translateY(2px);
+  }
+`;
 const Styled = {
   GridHeader: styled.div`
     display: flex;
@@ -35,34 +48,29 @@ const Styled = {
     }
   `,
   ViewModeButtonGroup: styled.div`
-    margin: 0 0.5rem;
     padding: 0 0.25rem;
     border-radius: 0.5rem;
     margin-left: auto;
 
     ${up("lg")} {
-      margin-right: 0.75rem;
+      margin-right: ${sitePadding};
+    }
+
+    & > * {
+      &:not(:first-of-type) ${ViewModeButton} {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+
+      &:not(:last-of-type) ${ViewModeButton} {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
     }
   `,
-  ViewModeButton: styled.button<{ active: boolean }>`
-    outline: none;
-    border: none;
-    padding: 0.5rem 0.6rem;
-
-    background-color: ${(props): string =>
-      props.active ? color("text") : color("textLight")};
-    color: ${(props): string =>
-      props.active ? "rgba(0,0,0,0.1)" : color("textLight")};
-
-    &:first-of-type {
-      border-top-left-radius: 0.5rem;
-      border-bottom-left-radius: 0.5em;
-    }
-
-    &:last-of-type {
-      border-top-right-radius: 0.5rem;
-      border-bottom-right-radius: 0.5em;
-    }
+  ViewModeButton,
+  ViewModeTooltip: styled(Tooltip)`
+    display: inline-block;
   `,
   FilterSwitch: styled(Switch)`
     padding: 0 1rem;
@@ -137,14 +145,20 @@ const GridHeader: React.FC<GridHeaderProps> = ({
       {viewModeOrder.map((key) => {
         const Icon = viewModes[key].icon;
         return (
-          <Tooltip placement="top" tooltip={viewModes[key].label} key={key}>
+          <Styled.ViewModeTooltip
+            placement="top"
+            tooltip={viewModes[key].label}
+            key={key}
+          >
             <Styled.ViewModeButton
+              type="ghost"
+              size="compact"
               onClick={(): void => setViewMode(key as ViewMode)}
-              active={viewMode === key}
+              data-active={viewMode === key ? "true" : undefined}
             >
               <Icon />
             </Styled.ViewModeButton>
-          </Tooltip>
+          </Styled.ViewModeTooltip>
         );
       })}
     </Styled.ViewModeButtonGroup>

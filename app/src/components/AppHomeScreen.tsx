@@ -7,7 +7,6 @@ import PageTitle from "@app/components/PageTitle";
 import { BaseAppProps } from "@app/tabs/types";
 import { StylableButton } from "@architus/facade/components/Button";
 import {
-  staticColor,
   dynamicColor,
   ColorMode,
   color,
@@ -30,7 +29,8 @@ const Styled = {
   HeroImage: styled(AppHeroSvg)`
     max-width: 640px;
     height: auto;
-    margin-bottom: 2rem;
+    margin-top: 3rem;
+    margin-bottom: 0.5rem;
 
     /* Style sub-elements in the SVG document */
     .str {
@@ -42,49 +42,50 @@ const Styled = {
     .cloud {
       opacity: 0.2;
       ${mode(ColorMode.Light)} {
-        opacity: 0.1;
+        opacity: 0.08;
+        fill: ${dynamicColor("bg", ColorMode.Dark)};
       }
     }
 
     .fg {
-      fill: #afafaf;
+      fill: ${darken(0.24, dynamicColor("bg", ColorMode.Light))};
       ${mode(ColorMode.Dark)} {
-        fill: ${lighten(0.06, staticColor("dark"))};
+        fill: ${lighten(0.24, dynamicColor("bg", ColorMode.Dark))};
       }
     }
 
     .strong-fg {
-      fill: #4b4b4b;
+      fill: ${darken(0.4, dynamicColor("bg", ColorMode.Light))};
       ${mode(ColorMode.Dark)} {
-        fill: ${lighten(0.1, staticColor("dark"))};
+        fill: ${lighten(0.4, dynamicColor("bg", ColorMode.Dark))};
       }
     }
 
     .strongest {
-      fill: #999999;
+      fill: ${darken(0.16, dynamicColor("bg", ColorMode.Light))};
       ${mode(ColorMode.Dark)} {
-        fill: ${darken(0.01, staticColor("dark"))};
+        fill: ${darken(0.02, dynamicColor("bg", ColorMode.Dark))};
       }
     }
 
     .stronger {
-      fill: #c4c4c4;
+      fill: ${darken(0.08, dynamicColor("bg", ColorMode.Light))};
       ${mode(ColorMode.Dark)} {
-        fill: ${lighten(0.01, staticColor("dark"))};
+        fill: ${lighten(0.04, dynamicColor("bg", ColorMode.Dark))};
       }
     }
 
     .strong {
-      fill: #efefef;
+      fill: ${darken(0.02, dynamicColor("bg", ColorMode.Light))};
       ${mode(ColorMode.Dark)} {
-        fill: ${lighten(0.03, staticColor("dark"))};
+        fill: ${lighten(0.12, dynamicColor("bg", ColorMode.Dark))};
       }
     }
 
     .bg {
-      fill: #ffffff;
+      fill: ${darken(0.05, dynamicColor("bg", ColorMode.Light))};
       ${mode(ColorMode.Dark)} {
-        fill: ${lighten(0.05, staticColor("dark"))};
+        fill: ${lighten(0.2, dynamicColor("bg", ColorMode.Dark))};
       }
     }
   `,
@@ -108,6 +109,8 @@ const Styled = {
   `,
   CtaButton: styled(BaseButton)`
     border-radius: 1000rem;
+    padding-left: ${gap.micro};
+    padding-right: ${gap.micro};
     &:hover {
       transform: translateY(1px);
     }
@@ -135,7 +138,6 @@ const AppHomeScreen: React.FC<AppHomeScreenProps> = ({ showGuildAddModal }) => (
           onClick={showGuildAddModal}
           variant="primary"
           type="solid"
-          size="large"
         >
           Add <strong> architus </strong> to a server
         </Styled.CtaButton>

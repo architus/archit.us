@@ -1,3 +1,4 @@
+import { css } from "linaria";
 import React from "react";
 import { Provider } from "react-redux";
 
@@ -5,6 +6,7 @@ import ColorModeProvider from "@app/components/ColorModeProvider";
 import NotificationPane from "@app/components/NotificationPane";
 import { Link } from "@app/components/Router";
 import Store from "@app/store";
+import { injectColorGlobals } from "@app/theme/color";
 import { AutoLinkContext } from "@architus/facade/components/AutoLink";
 
 // Import the global CSS rules from SCSS/Bootstrap
@@ -16,6 +18,13 @@ import "@app/layout";
 
 // Inject the Gatsby router link to auto links
 const linkContext: AutoLinkContext = { link: Link };
+
+// Import the global app colors
+export const global = css`
+  :global() {
+    ${injectColorGlobals()}
+  }
+`;
 
 /**
  * Represents the root component of the application,

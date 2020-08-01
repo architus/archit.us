@@ -4,7 +4,6 @@ import React from "react";
 
 import ReactionList from "@app/components/DiscordMock/ReactionList";
 import { transformerClasses } from "@app/components/DiscordMock/style";
-import Skeleton from "@app/components/Skeleton";
 import { OtherColors } from "@app/theme/color";
 import { MockReaction } from "@app/utility/types";
 
@@ -186,16 +185,8 @@ const Message: React.FC<MessageProps> = ({
 }) => (
   <div className={className} style={style}>
     <Styled.Message data-mentions-user={mentionsUser ? true : undefined}>
-      <Skeleton.Multiline
-        text={html}
-        displayBlank={true}
-        amount={skeletonAmount}
-        size="0.9em"
-        light
-      >
-        <Styled.Content dangerouslySetInnerHTML={{ __html: html }} />
-        {edited && <Styled.EditedMarker>(edited)</Styled.EditedMarker>}
-      </Skeleton.Multiline>
+      <Styled.Content dangerouslySetInnerHTML={{ __html: html }} />
+      {edited && <Styled.EditedMarker>(edited)</Styled.EditedMarker>}
     </Styled.Message>
     <ReactionList
       reactions={reactions}

@@ -19,6 +19,8 @@ import {
 } from "@app/utility";
 import { User, AutoResponseTriggerMode } from "@app/utility/types";
 import Tooltip from "@architus/facade/components/Tooltip";
+import { color } from "@architus/facade/theme/color";
+import { gap } from "@architus/facade/theme/spacing";
 import { font } from "@architus/facade/theme/typography";
 
 const EmojiContainer = styled.div`
@@ -33,13 +35,13 @@ const EmojiContainer = styled.div`
 
 const Styled = {
   Name: styled.span`
-    margin-left: femto;
+    margin-left: ${gap.femto};
     color: text;
     font-weight: 600;
   `,
   Discriminator: styled.span`
     margin-left: 1px;
-    color: text_fade;
+    color: ${color("textFade")};
   `,
   EmojiContainer,
   RegexEmojiContainer: styled(EmojiContainer)`
@@ -51,6 +53,7 @@ const Styled = {
     height: 100%;
   `,
   Count: styled.span`
+    display: block;
     text-align: right;
   `,
   TooltipContent: styled.div`

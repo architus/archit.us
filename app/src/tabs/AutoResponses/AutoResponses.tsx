@@ -42,6 +42,7 @@ import {
 } from "@app/utility/types";
 import { color, ColorMode, dynamicColor } from "@architus/facade/theme/color";
 import { up } from "@architus/facade/theme/media";
+import { shadow } from "@architus/facade/theme/shadow";
 import { gap } from "@architus/facade/theme/spacing";
 import { Option, None, Some, Unwrap } from "@architus/lib/option";
 
@@ -64,13 +65,14 @@ const Styled = {
     }
   `,
   MigrationAlert: styled(MigrationAlert)`
+    margin-top: ${gap.micro};
     margin-bottom: ${gap.nano};
   `,
   Title: styled.h2`
     color: ${color("textStrong")};
     font-size: 1.9rem;
     font-weight: 300;
-    margin-bottom: ${gap.micro};
+    margin-bottom: ${gap.nano};
   `,
   GridWrapper: styled.div`
     position: relative;
@@ -80,6 +82,7 @@ const Styled = {
     align-items: stretch;
     flex-direction: column;
     background-color: ${color("bg")};
+    overflow: hidden;
 
     ${up("md")} {
       margin-left: ${gap.milli};
@@ -99,7 +102,7 @@ const Styled = {
       border-radius: 8px;
       border: 1px solid;
       border-color: ${color("contrastBorder")};
-      box-shadow: 2;
+      box-shadow: ${shadow("z2")};
       color: text;
       padding: ${gap.femto} 0;
       user-select: none;

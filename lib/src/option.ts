@@ -240,6 +240,17 @@ export abstract class Option<A> implements OptionLike<A> {
     if (op1.isDefined() && op2.isDefined()) return Some([op1.get, op2.get]);
     return None;
   }
+
+  /**
+   * Creates an Option<string> from a source string, which may be Nil or empty;
+   * uses None if the string is empty/Nil
+   * @param source - source string
+   * @param trim - whether to consider strings that are all spaces as None
+   */
+  static fromString(source: string | Nil, trim = false): Option<string> {
+    if (isNil(source) || (trim ? source.trim() : source) === "") return None;
+    return Option.from(source);
+  }
 }
 
 export interface Matcher<A, B> {

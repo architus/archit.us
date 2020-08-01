@@ -54,6 +54,9 @@ const Styled = {
       text-decoration: none;
     }
   `,
+  UserDisplay: styled(UserDisplay)`
+    margin-right: ${gap.nano};
+  `,
   IconOffset: styled.span`
     /* Specific number is to offset the size of the icon on Sign Out */
     margin-right: 26px;
@@ -102,8 +105,7 @@ const SessionControl: React.FC<SessionControlProps> = React.memo(
         {isSigningIn ? (
           <Dropdown className={className} style={style}>
             <Styled.DropdownButton>
-              <UserDisplay
-                className="mr-2"
+              <Styled.UserDisplay
                 user={user.getOrElse(undefined)}
                 avatar={isSmallScreen}
               />

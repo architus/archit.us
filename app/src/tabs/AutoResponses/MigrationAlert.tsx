@@ -6,6 +6,7 @@ import { IoMdClose } from "react-icons/io";
 import AutoLink from "@architus/facade/components/AutoLink";
 import { color, staticColor } from "@architus/facade/theme/color";
 import { blankButton } from "@architus/facade/theme/mixins";
+import { transition } from "@architus/facade/theme/motion";
 import { gap } from "@architus/facade/theme/spacing";
 
 const Styled = {
@@ -14,7 +15,7 @@ const Styled = {
     position: relative;
     margin-top: calc(-1 * ${gap.pico});
     font-size: 0.95em;
-    padding: ${gap.nano} ${gap.centi} ${gap.nano} ${gap.micro};
+    padding: ${gap.nano} 48px ${gap.nano} ${gap.micro};
     color: ${color("textFade")};
     background-color: ${transparentize(0.85, staticColor("info"))};
     border: 1px solid ${transparentize(0.5, staticColor("info"))};
@@ -23,10 +24,27 @@ const Styled = {
   CloseButton: styled.div`
     ${blankButton()}
     position: absolute;
-    top: ${gap.nano};
-    right: ${gap.nano};
+    top: 0;
+    right: 0;
     font-size: 1.5rem;
-    color: ${"text"};
+    color: ${color("textStrong")};
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+
+    ${transition(["opacity"])}
+    opacity: 0.3;
+
+    &:hover {
+      opacity: 0.7;
+    }
+
+    &:active {
+      opacity: 1;
+    }
   `,
 };
 

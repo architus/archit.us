@@ -5,7 +5,6 @@ import { FaCheck } from "react-icons/fa";
 
 import Message, { MessageProps } from "@app/components/DiscordMock/Message";
 import { TransformMessageContext } from "@app/components/DiscordMock/transform";
-import Skeleton from "@app/components/Skeleton";
 import UserDisplay from "@app/components/UserDisplay";
 import { OtherColors } from "@app/theme/color";
 import { toHumanTime } from "@app/utility";
@@ -66,15 +65,9 @@ const Styled = {
       }
     }
 
-    .timestamp:not(.skeleton) {
+    .timestamp {
       color: ${transparentize(0.6, OtherColors.DiscordFg)};
       font-size: 0.8rem !important;
-    }
-
-    .timestamp.skeleton,
-    .username.skeleton {
-      margin-top: 0.35rem;
-      margin-bottom: 0.35rem;
     }
   `,
   VerifiedBadge: styled(Badge)`
@@ -150,14 +143,7 @@ const MessageClump: React.FC<MessageClumpProps> = React.forwardRef(
         </Styled.Avatar>
         <Styled.Messages>
           <Styled.MessageHeader>
-            <Skeleton.Custom
-              value={username}
-              height="1.1em"
-              width={100}
-              light
-              className="username"
-              style={{ color: nameColor }}
-            >
+            <span className="username" style={{ color: nameColor }}>
               {username}
               {bot && (
                 <Styled.VerifiedBadge>
@@ -165,15 +151,10 @@ const MessageClump: React.FC<MessageClumpProps> = React.forwardRef(
                   bot
                 </Styled.VerifiedBadge>
               )}
-            </Skeleton.Custom>
-            <Skeleton.Text
-              text={toHumanTime(new Date(timestamp))}
-              size="0.7em"
-              width={90}
-              light
-              inline
-              className="timestamp"
-            />
+            </span>
+            <span className="timestamp">
+              {toHumanTime(new Date(timestamp))}
+            </span>
           </Styled.MessageHeader>
           {messages.map((message, index) => (
             <RenderedMessage

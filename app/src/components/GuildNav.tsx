@@ -7,8 +7,8 @@ import GuildIcon, {
   textButton,
   bgColorVar,
 } from "@app/components/GuildIcon";
-import Skeleton from "@app/components/Skeleton";
 import { Snowflake, Guild } from "@app/utility/types";
+import Skeleton from "@architus/facade/components/Skeleton";
 import Tooltip from "@architus/facade/components/Tooltip";
 import { color, mode, ColorMode } from "@architus/facade/theme/color";
 import { transition } from "@architus/facade/theme/motion";
@@ -140,7 +140,7 @@ const Styled = {
     margin-top: 0;
     margin-bottom: ${iconSpacing};
   `,
-  GuildSkeleton: styled(Skeleton.Auto)`
+  GuildSkeleton: styled(Skeleton.Box)`
     margin-bottom: ${iconSpacing};
   `,
 };
@@ -214,11 +214,21 @@ const GuildNav: React.FC<GuildNavProps> = ({
       ) : (
         <>
           {[...Array(4)].map((_e, i) => (
-            <Styled.GuildSkeleton circle width={`${iconWidth}px`} key={i} />
+            <Styled.GuildSkeleton
+              circle
+              width={iconWidth}
+              height={iconWidth}
+              key={i}
+            />
           ))}
           <Styled.SectionDivider style={{ opacity: 0.25 }} />
           {[...Array(1)].map((_e, i) => (
-            <Styled.GuildSkeleton circle width={`${iconWidth}px`} key={i} />
+            <Styled.GuildSkeleton
+              circle
+              width={iconWidth}
+              height={iconWidth}
+              key={i}
+            />
           ))}
         </>
       )}

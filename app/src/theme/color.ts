@@ -1,3 +1,9 @@
+import {
+  ColorMode,
+  toVariable,
+  makeRootDefinitions,
+} from "@architus/facade/theme/color";
+
 /**
  * Collection of other colors used in the dashboard
  */
@@ -20,3 +26,26 @@ export const OtherColors = {
   DiscordMessageDivider: "#3e4147",
   DiscordInputBg: "#484c52",
 } as const;
+
+const appColors = {
+  [ColorMode.Light]: { placeholder: "" },
+  [ColorMode.Dark]: { placeholder: "" },
+} as const;
+
+export type AppColorKey = keyof typeof appColors[ColorMode.Dark] &
+  keyof typeof appColors[ColorMode.Light];
+
+/**
+ * Extracts a CSS expression to use an app color
+ * @param key - color key to use
+ */
+export function appColor(key: AppColorKey): string {
+  return `var(${toVariable(key)})`;
+}
+
+/**
+ * Gets the css for use in the global CSS root
+ */
+export function injectColorGlobals(): string {
+  return `body { ${makeRootDefinitions(appColors)} }`;
+}
