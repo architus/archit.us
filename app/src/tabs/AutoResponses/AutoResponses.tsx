@@ -1,18 +1,11 @@
-import { ScrollContext } from "@app/dynamic/AppRoot/context";
-import { AppPageProps } from "@app/dynamic/AppRoot/types";
-import styled, { css, up, Box } from "@xstyled/emotion";
 import copy from "copy-to-clipboard";
-import React, {
-  useContext,
-  useMemo,
-  MutableRefObject,
-  useState,
-  useCallback,
-} from "react";
+import { styled } from "linaria/react";
+import { transparentize } from "polished";
+import React, { useMemo, MutableRefObject } from "react";
 import { ContextMenu, MenuItem, connectMenu } from "react-contextmenu";
-import DataGrid, { Column, SortDirection } from "react-data-grid";
+import { Column, SortDirection } from "react-data-grid";
 import { createPortal } from "react-dom";
-import AutoSizer from "react-virtualized-auto-sizer";
+import { FaTrash, FaCopy } from "react-icons/fa";
 
 import {
   TriggerFormatter,
@@ -23,6 +16,8 @@ import {
   SelectionFormatter,
   RowRenderer,
 } from "./formatters";
+import GridHeader, { ViewMode, viewModes } from "./GridHeader";
+import MigrationAlert from "./MigrationAlert";
 import {
   NumericFilterValue,
   applyNumericFilter,
@@ -30,17 +25,13 @@ import {
 } from "./NumericFilter";
 import { StringFilter } from "./StringFilter";
 import { TransformedAutoResponse, AuthorData } from "./types";
-import HelpTooltip from "@app/components/HelpTooltip";
-import Icon from "@app/components/Icon";
-import { AnyIconName } from "@app/components/Icon/loader";
-import Switch from "@app/components/Switch";
-import Tooltip from "@app/components/Tooltip";
+import DataGrid from "@app/components/DataGrid";
+import PageTitle from "@app/components/PageTitle";
 import { getAvatarUrl } from "@app/components/UserDisplay";
-import { Alert } from "@app/react-bootstrap";
 import { Dispatch, useDispatch } from "@app/store";
 import { useCurrentUser, showToast } from "@app/store/actions";
 import { usePool, usePoolEntities } from "@app/store/slices/pools";
-import { ColorMode, opacity, color, mode } from "@app/theme";
+import { TabProps } from "@app/tabs/types";
 import { intersection, memoize } from "@app/utility";
 import {
   User,
@@ -49,28 +40,12 @@ import {
   HoarFrost,
   AutoResponse,
 } from "@app/utility/types";
-import AutoLink from "@architus/facade/components/AutoLink";
+import { color, ColorMode, dynamicColor } from "@architus/facade/theme/color";
+import { up } from "@architus/facade/theme/media";
+import { gap } from "@architus/facade/theme/spacing";
 import { Option, None, Some, Unwrap } from "@architus/lib/option";
 
 const Styled = {
-  Alert: styled(Alert)`
-    margin-top: -pico;
-    font-size: 0.95em;
-    padding-top: nano;
-    padding-bottom: nano;
-    padding-left: micro;
-    padding-right: milli;
-    color: text_fade;
-
-    ${(props): string[] =>
-      mode(
-        ColorMode.Dark,
-        css`
-          border: none;
-          background-color: ${opacity("info", 0.15)(props)};
-        `
-      )(props)}
-  `,
   PageOuter: styled.div`
     position: relative;
     display: flex;
@@ -79,10 +54,23 @@ const Styled = {
     flex-direction: column;
     height: 100%;
 
-    padding-top: milli;
+    padding-top: ${gap.milli};
   `,
   Header: styled.div`
-    padding: 0 milli;
+    padding: 0 ${gap.milli};
+
+    p {
+      margin-bottom: ${gap.micro};
+    }
+  `,
+  MigrationAlert: styled(MigrationAlert)`
+    margin-bottom: ${gap.nano};
+  `,
+  Title: styled.h2`
+    color: ${color("textStrong")};
+    font-size: 1.9rem;
+    font-weight: 300;
+    margin-bottom: ${gap.micro};
   `,
   GridWrapper: styled.div`
     position: relative;
@@ -91,119 +79,12 @@ const Styled = {
     justify-content: stretch;
     align-items: stretch;
     flex-direction: column;
+    background-color: ${color("bg")};
 
-    background-color: b_300;
-
-    ${up(
-      "md",
-      css`
-        margin-left: milli;
-        border-top-left-radius: 1rem;
-      `
-    )}
-  `,
-  GridHeader: styled.div`
-    display: flex;
-    min-height: centi;
-    align-items: center;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-    z-index: 4;
-
-    box-shadow: 0;
-    background-color: b_500;
-    padding: femto 0;
-
-    & > * {
-      margin-top: femto;
-      margin-bottom: femto;
+    ${up("md")} {
+      margin-left: ${gap.milli};
+      border-top-left-radius: 1rem;
     }
-
-    ${up(
-      "md",
-      css`
-        border-top-left-radius: 1rem;
-      `
-    )}
-  `,
-  ViewModeButtonGroup: styled.div`
-    margin: 0 0.5rem;
-    padding: 0 0.25rem;
-    border-radius: 0.5rem;
-    margin-left: auto;
-
-    ${up(
-      "lg",
-      css`
-        margin-right: 0.75rem;
-      `
-    )}
-  `,
-  ViewModeButton: styled.button<{ active: boolean }>`
-    outline: none;
-    border: none;
-    background-color: transparent;
-    padding: 0.5rem 0.6rem;
-    color: foreground_fade;
-
-    ${(props): string =>
-      props.active
-        ? css`
-            background-color: dark_adjust;
-            color: text;
-          `
-        : ""}
-
-    &:first-of-type {
-      border-top-left-radius: 0.5rem;
-      border-bottom-left-radius: 0.5em;
-    }
-
-    &:last-of-type {
-      border-top-right-radius: 0.5rem;
-      border-bottom-right-radius: 0.5em;
-    }
-  `,
-  FilterSwitch: styled(Switch)`
-    padding: 0 1rem;
-  `,
-  FilterSelfSwitch: styled(Switch)`
-    padding: 0 1rem;
-  `,
-  GridHeaderButton: styled.button`
-    outline: none;
-    background-color: transparent;
-    margin-left: nano;
-    padding: 0.5rem nano;
-    transition-duration: 0.15s;
-    transition-easing-function: linear;
-    transition-property: opacity, background-color;
-    color: text;
-    border-radius: 0.5rem;
-    border: 1.5px solid transparent;
-    border-color: contrast_border;
-
-    ${(props): string =>
-      props.disabled
-        ? css`
-            opacity: 0;
-          `
-        : css`
-            opacity: 1;
-            background-color: light_adjust;
-            box-shadow: none;
-
-            &:not(:hover):not(:active) {
-              box-shadow: 0;
-            }
-
-            &:hover {
-              background-color: dark_adjust_slight;
-            }
-            &:active {
-              background-color: dark_adjust;
-            }
-          `}
   `,
   DataGridWrapper: styled.div`
     position: relative;
@@ -211,378 +92,46 @@ const Styled = {
     align-items: stretch;
     justify-content: stretch;
     flex-grow: 1;
-
-    .rdg-cell {
-      display: inline-block;
-      position: absolute;
-      height: inherit;
-      padding: 0 8px;
-      background-color: inherit;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .rdg-cell-frozen {
-      position: -webkit-sticky;
-      position: sticky;
-      z-index: 1;
-
-      &::after {
-        content: "";
-        position: absolute;
-        height: 100%;
-        width: 1px;
-        top: 0;
-        left: -6px;
-        z-index: -1;
-        box-shadow: 0px 0px 7px 8px ${color("shadow_heavy")};
-      }
-    }
-
-    .rdg-cell-frozen-last + .rdg-cell {
-      padding-left: pico;
-    }
-
-    .rdg-cell-mask {
-      display: none;
-    }
-
-    .rdg-checkbox-label {
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-    }
-
-    .rdg-checkbox-label-disabled {
-      cursor: default;
-    }
-
-    .rdg-checkbox-label-disabled .rdg-checkbox {
-      border-color: contrast_border;
-      background-color: b_300;
-    }
-
-    .rdg-checkbox-input {
-      all: unset;
-      width: 0;
-      margin: 0;
-    }
-
-    .rdg-checkbox {
-      content: "";
-      width: 20px;
-      height: 20px;
-      border: 2px solid ${color("border")};
-      background-color: b_600;
-      margin-top: 7px;
-      margin-left: 7px;
-    }
-
-    .rdg-checkbox-input:checked + .rdg-checkbox {
-      background-color: primary;
-      box-shadow: inset 0 0 0 3px ${color("b_400")};
-    }
-
-    .rdg-checkbox-input:focus + .rdg-checkbox {
-      border-color: secondary;
-      border-width: 3px;
-    }
-
-    .rdg {
-      position: relative;
-      z-index: 0;
-      box-sizing: border-box;
-      overflow-x: auto;
-      overflow-y: scroll;
-      -webkit-user-select: none;
-      user-select: none;
-      background-color: b_300;
-      font-size: 14px;
-    }
-
-    .rdg *,
-    .rdg ::after,
-    .rdg ::before {
-      box-sizing: inherit;
-    }
-
-    .rdg-editor-container {
-      position: absolute;
-    }
-
-    .rdg-select-editor,
-    .rdg-text-editor {
-      -moz-appearance: none;
-      -webkit-appearance: none;
-      appearance: none;
-      box-sizing: border-box;
-      width: calc(100% + 1px);
-      height: calc(100% + 1px);
-      padding: 1px 7px 0;
-      margin: -1px 0 0 -1px;
-      border: 2px solid #ccc;
-      background-color: #fff;
-      font-size: 14px;
-      line-height: 1.2;
-    }
-
-    .rdg-select-editor::placeholder,
-    .rdg-text-editor::placeholder {
-      color: #999;
-      opacity: 1;
-    }
-
-    .rdg-select-editor:focus,
-    .rdg-text-editor:focus {
-      border-color: #66afe9;
-    }
-
-    .rdg-filter-row,
-    .rdg-header-row {
-      width: var(--row-width);
-      position: -webkit-sticky;
-      position: sticky;
-      background-color: b_400;
-      font-weight: 700;
-      -webkit-user-select: none;
-      user-select: none;
-      z-index: 3;
-      box-shadow: 1;
-    }
-
-    .rdg-header-row {
-      height: var(--header-row-height);
-      line-height: var(--header-row-height);
-      top: 0;
-    }
-
-    .rdg-filter-container {
-      display: flex;
-      flex-direction: row;
-      align-items: stretch;
-
-      input {
-        flex-grow: 1;
-        outline: none;
-        padding: 6px 6px 6px 10px;
-        border: 1px solid;
-        border-radius: 8px;
-        transition: box-shadow 0.25s ease;
-        box-shadow: none;
-        background-color: b_500;
-        color: text;
-        border-color: contrast_border;
-        width: 100%;
-
-        &::placeholder {
-          color: text_fade;
-        }
-
-        &:focus {
-          border-color: input_focus_border;
-          box-shadow: 0 0 0 0.2rem ${opacity("primary", 0.3)};
-        }
-      }
-    }
-
-    .rdg-filter-row {
-      height: var(--filter-row-height);
-      top: var(--header-row-height);
-
-      .rdg-cell {
-        overflow: visible;
-      }
-    }
-
-    .rdg-header-cell-resizer {
-      cursor: col-resize;
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      width: 10px;
-    }
-
-    .rdg-cell .Select {
-      max-height: 30px;
-      font-size: 12px;
-      font-weight: 400;
-    }
-
-    .rdg-header-sort-cell {
-      cursor: pointer;
-      display: flex;
-
-      & > span:nth-of-type(2) {
-        opacity: 0.5;
-        margin-right: atto;
-      }
-
-      &::after {
-        --sort-header-indicator-height: 3px;
-        width: 100%;
-        top: 0;
-        height: var(--sort-header-indicator-height);
-        content: "";
-        position: absolute;
-        background-color: primary;
-        left: 0;
-        transform: translateY(calc(var(--sort-header-indicator-height) * -1));
-        border-bottom-left-radius: 1000em;
-        border-bottom-right-radius: 1000em;
-        transition: 0.1s linear transform;
-      }
-
-      &::before {
-        position: absolute;
-        content: "";
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: transparent;
-      }
-
-      &:hover {
-        &::before {
-          background-color: contrast_overlay;
-        }
-
-        &::after {
-          top: 0;
-          transform: none;
-        }
-      }
-    }
-
-    .rdg-header-sort-name {
-      flex-grow: 1;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .rdg-selected {
-      border: 2px solid #66afe9;
-    }
-
-    .rdg-selected .drag-handle {
-      pointer-events: auto;
-      position: absolute;
-      bottom: -5px;
-      right: -4px;
-      background: #66afe9;
-      width: 8px;
-      height: 8px;
-      border: 1px solid #fff;
-      border-right: 0;
-      border-bottom: 0;
-      cursor: crosshair;
-      cursor: -moz-grab;
-      cursor: -webkit-grab;
-      cursor: grab;
-    }
-
-    .rdg-selected:hover .drag-handle {
-      bottom: -8px;
-      right: -7px;
-      background: #fff;
-      width: 16px;
-      height: 16px;
-      border: 1px solid #66afe9;
-    }
-
-    .react-grid-cell-dragged-over-down,
-    .react-grid-cell-dragged-over-up {
-      border: 1px dashed #000;
-      background: rgba(0, 0, 255, 0.2) !important;
-    }
-
-    .react-grid-cell-dragged-over-up {
-      border-bottom-width: 0;
-    }
-
-    .react-grid-cell-dragged-over-down {
-      border-top-width: 0;
-    }
-
-    .rdg-cell-copied {
-      background: rgba(0, 0, 255, 0.2) !important;
-    }
-
-    .rdg-row {
-      width: var(--row-width);
-      height: var(--row-height);
-      line-height: var(--row-height);
-
-      &:hover {
-        background-color: ${opacity("primary", 0.075)};
-      }
-
-      &.rdg-row-even {
-        & .rdg-cell {
-          background-color: contrast_overlay;
-        }
-      }
-
-      &.rdg-row-selected {
-        & .rdg-cell {
-          background-color: ${opacity("primary", 0.25)} !important;
-        }
-      }
-    }
-
-    .rdg-summary-row {
-      position: -webkit-sticky;
-      position: sticky;
-      z-index: 3;
-    }
-
-    .rdg-summary-row > .rdg-cell {
-      border-top: 2px solid #aaa;
-    }
   `,
   ContextMenu: styled(ContextMenu)`
     &.react-contextmenu {
-      background-color: b_500;
+      background-color: ${color("bg+20")};
       border-radius: 8px;
       border: 1px solid;
-      border-color: contrast_border;
+      border-color: ${color("contrastBorder")};
       box-shadow: 2;
       color: text;
-      padding: femto 0;
+      padding: ${gap.femto} 0;
       user-select: none;
       z-index: 1091;
     }
 
     & .react-contextmenu-item {
-      padding: femto micro;
+      padding: ${gap.femto} ${gap.micro};
       cursor: pointer;
       outline: none;
 
       &:hover {
-        background-color: ${opacity("primary", 0.1)};
+        background-color: ${transparentize(
+          0.9,
+          dynamicColor("primary", ColorMode.Dark)
+        )};
       }
 
       &:active {
-        background-color: ${opacity("primary", 0.2)};
+        background-color: ${transparentize(
+          0.8,
+          dynamicColor("primary", ColorMode.Dark)
+        )};
       }
     }
   `,
-};
-
-type ViewMode = keyof typeof viewModes;
-const viewModeOrder: ViewMode[] = ["Sparse", "Comfy", "Compact"];
-const viewModes = {
-  Compact: { icon: "compact" as AnyIconName, label: "Compact", height: 28 },
-  Comfy: { icon: "comfy" as AnyIconName, label: "Comfy", height: 36 },
-  Sparse: { icon: "sparse" as AnyIconName, label: "Sparse", height: 44 },
+  CopyIcon: styled(FaCopy)`
+    margin-right: ${gap.nano};
+  `,
+  TrashIcon: styled(FaTrash)`
+    margin-right: ${gap.nano};
+  `,
 };
 
 type Author = Member;
@@ -594,8 +143,7 @@ type AutoResponsesProps = {
   isArchitusAdmin: boolean;
   currentUser: User;
   dispatch: Dispatch;
-  scrollHandler: () => void;
-} & AppPageProps;
+} & TabProps;
 
 type AutoResponsesState = {
   filterSelfAuthored: boolean;
@@ -946,13 +494,13 @@ export class AutoResponses extends React.Component<
         return (
           <Styled.ContextMenu id="auto-response-grid-context-menu">
             <MenuItem onClick={this.onCopy}>
-              <Icon name="copy" marginRight="nano" />
+              <Styled.CopyIcon />
               Copy to clipboard
             </MenuItem>
             {/* {trigger && trigger.canDelete ? (
               <>
                 <MenuItem onClick={this.onDelete}>
-                  <Icon name="trash" marginRight="nano" />
+                  <Styled.TrashIcon />
                   Delete
                 </MenuItem>
               </>
@@ -966,10 +514,11 @@ export class AutoResponses extends React.Component<
 
     return (
       <Styled.PageOuter>
+        <PageTitle title="Automatic Responses" />
         <Styled.Header>
-          <h2>Automatic Responses</h2>
-          <MigrationAlert />
-          <p className="hide-mobile">
+          <Styled.Title>Automatic Responses</Styled.Title>
+          <Styled.MigrationAlert />
+          <p>
             Manage the triggers and automatic responses for{" "}
             {isArchitusAdmin ? "all entries" : "self-authored entries"} on the
             current server.
@@ -989,37 +538,23 @@ export class AutoResponses extends React.Component<
             onAddNewRow={this.onAddNewRow}
           />
           <Styled.DataGridWrapper>
-            <AutoSizer>
-              {({
-                height,
-                width,
-              }: {
-                height: number;
-                width: number;
-              }): React.ReactNode => (
-                <>
-                  <DataGrid<TransformedAutoResponse, "id", {}>
-                    rows={this.getRows()}
-                    height={height}
-                    width={width}
-                    headerRowHeight={44}
-                    headerFiltersHeight={48}
-                    columns={columns}
-                    rowKey="id"
-                    rowHeight={viewModes[viewMode].height}
-                    selectedRows={selectedRows}
-                    onSelectedRowsChange={this.setSelectedRows}
-                    sortColumn={sort.getOrElse(undefined)?.column}
-                    sortDirection={sort.getOrElse(undefined)?.direction}
-                    onSort={this.onSort}
-                    rowRenderer={RowRenderer(currentUser, isArchitusAdmin)}
-                    enableFilters={showFilters}
-                    filters={filters}
-                    onFiltersChange={this.onFiltersChange}
-                  />
-                </>
-              )}
-            </AutoSizer>
+            <DataGrid<TransformedAutoResponse, "id", {}>
+              rows={this.getRows()}
+              headerRowHeight={44}
+              headerFiltersHeight={48}
+              columns={columns}
+              rowKey="id"
+              rowHeight={viewModes[viewMode].height}
+              selectedRows={selectedRows}
+              onSelectedRowsChange={this.setSelectedRows}
+              sortColumn={sort.getOrElse(undefined)?.column}
+              sortDirection={sort.getOrElse(undefined)?.direction}
+              onSort={this.onSort}
+              rowRenderer={RowRenderer(currentUser, isArchitusAdmin)}
+              enableFilters={showFilters}
+              filters={filters}
+              onFiltersChange={this.onFiltersChange}
+            />
             {createPortal(<CommandMenu />, document.body)}
           </Styled.DataGridWrapper>
         </Styled.GridWrapper>
@@ -1058,43 +593,7 @@ function foldAuthorData(
   };
 }
 
-/**
- * Shows a migration alert to users upon their first visit until they dismiss the alert
- */
-const MigrationAlert: React.FC<{}> = () => {
-  const storageKey = "autoResponseMigration";
-  const initialValue = window.localStorage.getItem(storageKey) !== "true";
-  const [show, setShow] = useState(initialValue);
-  const hide = useCallback((): void => {
-    setShow(false);
-    window.localStorage.setItem(storageKey, "true");
-  }, [setShow]);
-
-  return (
-    <>
-      {show && (
-        <Styled.Alert variant="info" onClose={hide} dismissible>
-          <strong>Notice</strong>: Old auto response triggers have been turned
-          into their equivalent regular expression triggers on servers with{" "}
-          <em>regular expression auto responses</em> enabled in order to
-          preserve old whitespace behavior. For more information on auto
-          responses check out{" "}
-          <AutoLink href="https://docs.archit.us/features/auto-responses">
-            the docs
-          </AutoLink>
-          , and to learn more about all of the new features that arrived in
-          v0.2.0, check out{" "}
-          <AutoLink href="https://docs.archit.us/changelog/v0.2.0/">
-            the changelog
-          </AutoLink>
-          .
-        </Styled.Alert>
-      )}
-    </>
-  );
-};
-
-const AutoResponsesProvider: React.FC<AppPageProps> = (pageProps) => {
+const AutoResponsesProvider: React.FC<TabProps> = (pageProps) => {
   const dispatch = useDispatch();
   const { guild } = pageProps;
   const currentUser: Option<User> = useCurrentUser();
@@ -1129,7 +628,6 @@ const AutoResponsesProvider: React.FC<AppPageProps> = (pageProps) => {
   }, [authorEntries]);
 
   // Transform the commands to include the authors
-  const { scrollHandler } = useContext(ScrollContext);
   const formattedCommands = useMemo(
     () =>
       commands.map((c) => ({
@@ -1147,7 +645,6 @@ const AutoResponsesProvider: React.FC<AppPageProps> = (pageProps) => {
         hasLoaded={false}
         currentUser={currentUser.get}
         isArchitusAdmin={false}
-        scrollHandler={scrollHandler}
         dispatch={dispatch}
         {...pageProps}
       />
@@ -1157,89 +654,3 @@ const AutoResponsesProvider: React.FC<AppPageProps> = (pageProps) => {
 };
 
 export default AutoResponsesProvider;
-
-// ? ==============
-// ? Sub-components
-// ? ==============
-
-type GridHeaderProps = {
-  viewMode: ViewMode;
-  setViewMode: (newMode: ViewMode) => void;
-  showFilters: boolean;
-  onChangeShowFilters: (newShow: boolean) => void;
-  filterSelfAuthored: boolean;
-  onChangeFilterSelfAuthored: (newShow: boolean) => void;
-  deleteSelectedEnable: boolean;
-  onDeleteSelected: () => void;
-  addNewRowEnable: boolean;
-  onAddNewRow: () => void;
-};
-
-const GridHeader: React.FC<GridHeaderProps> = ({
-  viewMode,
-  setViewMode,
-  showFilters,
-  onChangeShowFilters,
-  filterSelfAuthored,
-  onChangeFilterSelfAuthored,
-  deleteSelectedEnable,
-  onDeleteSelected,
-  addNewRowEnable,
-  onAddNewRow,
-}) => (
-  <Styled.GridHeader>
-    <Styled.FilterSwitch
-      label="Show filters"
-      checked={showFilters}
-      onChange={onChangeShowFilters}
-    />
-    <Styled.FilterSelfSwitch
-      checked={filterSelfAuthored}
-      onChange={onChangeFilterSelfAuthored}
-      label={
-        <>
-          <Box mr="nano" display="inline">
-            Filter by self-authored
-          </Box>
-          <HelpTooltip
-            top
-            id="self-authored-auto-response-help"
-            text="When selected, only show auto responses you have authored"
-          ></HelpTooltip>
-        </>
-      }
-    />
-    {/* <Styled.GridHeaderButton disabled={!addNewRowEnable} onClick={onAddNewRow}>
-      <Icon name="plus" />
-      <Box ml="nano" display="inline">
-        New
-      </Box>
-    </Styled.GridHeaderButton>
-    <Styled.GridHeaderButton
-      disabled={!deleteSelectedEnable}
-      onClick={onDeleteSelected}
-    >
-      <Icon name="trash" />
-      <Box ml="nano" display="inline">
-        Delete selected
-      </Box>
-    </Styled.GridHeaderButton> */}
-    <Styled.ViewModeButtonGroup>
-      {viewModeOrder.map((key) => (
-        <Tooltip
-          top
-          text={viewModes[key].label}
-          key={key}
-          id={`data-grid-view-mode-${key}`}
-        >
-          <Styled.ViewModeButton
-            onClick={(): void => setViewMode(key as ViewMode)}
-            active={viewMode === key}
-          >
-            <Icon name={viewModes[key].icon} />
-          </Styled.ViewModeButton>
-        </Tooltip>
-      ))}
-    </Styled.ViewModeButtonGroup>
-  </Styled.GridHeader>
-);

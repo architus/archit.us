@@ -66,6 +66,8 @@ const colors = {
     "secondary+40": "#f5edde",
     // Semantic component colors
     contrastBorder: "rgba(194, 207, 214, 0.9)",
+    border: "",
+    inputFocusBorder: "",
     shadowLight: "rgba(0, 0, 0, 0.06)",
     shadowMedium: "rgba(0, 0, 0, 0.075)",
     shadowBold: "rgba(0, 0, 0, 0.09)",
@@ -77,6 +79,7 @@ const colors = {
     modalOverlay: "rgba(255, 255, 255, 0.7)",
     hoverOverlay: "rgba(33, 33, 33, 0.05)",
     activeOverlay: "rgba(33, 33, 33, 0.1)",
+    contrastOverlay: "",
   },
   [ColorMode.Dark]: {
     // Foreground colors
@@ -116,6 +119,8 @@ const colors = {
     "secondary+40": "#f6eee2",
     // Semantic component colors
     contrastBorder: "transparent",
+    border: "",
+    inputFocusBorder: "",
     shadowLight: "rgba(0, 0, 0, 0.08)",
     shadowMedium: "rgba(0, 0, 0, 0.12)",
     shadowBold: "rgba(0, 0, 0, 0.18)",
@@ -127,6 +132,7 @@ const colors = {
     modalOverlay: "rgba(0, 0, 0, 0.7)",
     hoverOverlay: "rgba(201, 213, 219, 0.05)",
     activeOverlay: "rgba(201, 213, 219, 0.1)",
+    contrastOverlay: "",
   },
 };
 

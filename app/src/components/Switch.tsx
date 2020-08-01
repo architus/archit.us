@@ -5,6 +5,7 @@ import ReactSwitch from "react-switch";
 import { isDefined } from "@app/utility";
 import { useColorMode } from "@architus/facade/hooks";
 import { Color, hybridColor } from "@architus/facade/theme/color";
+import { gap } from "@architus/facade/theme/spacing";
 
 const Styled = {
   Wrapper: styled.div`
@@ -24,7 +25,7 @@ const Styled = {
     }
   `,
   SwitchLabel: styled.span`
-    margin-left: nano;
+    margin-left: ${gap.nano};
   `,
 };
 

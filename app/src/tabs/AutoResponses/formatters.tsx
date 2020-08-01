@@ -1,4 +1,4 @@
-import styled, { Box } from "@xstyled/emotion";
+import { styled } from "linaria/react";
 import React, { MutableRefObject, useMemo } from "react";
 import { ContextMenuTrigger } from "react-contextmenu";
 import {
@@ -10,7 +10,6 @@ import {
 } from "react-data-grid";
 
 import { TransformedAutoResponse } from "./types";
-import Tooltip from "@app/components/Tooltip";
 import UserDisplay from "@app/components/UserDisplay";
 import {
   isEmptyOrNil,
@@ -19,6 +18,18 @@ import {
   convertUnicodeEmoji,
 } from "@app/utility";
 import { User, AutoResponseTriggerMode } from "@app/utility/types";
+import Tooltip from "@architus/facade/components/Tooltip";
+import { font } from "@architus/facade/theme/typography";
+
+const EmojiContainer = styled.div`
+  & .emoji {
+    width: 24px;
+    height: auto;
+    margin: 0 0.05em 0 0.1em;
+    position: relative;
+    top: -1px;
+  }
+`;
 
 const Styled = {
   Name: styled.span`
@@ -30,14 +41,20 @@ const Styled = {
     margin-left: 1px;
     color: text_fade;
   `,
-  EmojiContainer: styled.divBox`
-    & .emoji {
-      width: 24px;
-      height: auto;
-      margin: 0 0.05em 0 0.1em;
-      position: relative;
-      top: -1px;
-    }
+  EmojiContainer,
+  RegexEmojiContainer: styled(EmojiContainer)`
+    font-family: ${font("monospace")};
+  `,
+  AuthorWrapper: styled.div`
+    display: flex;
+    align-items: center;
+    height: 100%;
+  `,
+  Count: styled.span`
+    text-align: right;
+  `,
+  TooltipContent: styled.div`
+    text-align: left;
   `,
 };
 
@@ -142,8 +159,7 @@ const transformRegex = makeTransformer([escapeHtml, convertUnicodeEmoji]);
  * TODO doesn't work at the moment
  */
 const RegexRenderer: React.FC<RegexRendererProps> = ({ content }) => (
-  <Styled.EmojiContainer
-    fontFamily="code"
+  <Styled.RegexEmojiContainer
     dangerouslySetInnerHTML={{
       __html: useMemo(() => transformRegex(content), [content]),
     }}
@@ -187,12 +203,11 @@ export const TriggerFormatter: React.FC<FormatterProps<
 
   return (
     <Tooltip
-      id={`trigger-tooltip-${row.id}`}
-      boxProps={{ textAlign: "left" }}
-      delay={{ show: 500, hide: 0 }}
+      delayHide={0}
+      delayShow={500}
       placement="bottom-start"
       maxWidth="peta"
-      text={content}
+      tooltip={<Styled.TooltipContent>{content}</Styled.TooltipContent>}
     >
       <div>{content}</div>
     </Tooltip>
@@ -210,12 +225,11 @@ export const ResponseFormatter: React.FC<FormatterProps<
   const content = <ResponseRenderer content={row.response} />;
   return (
     <Tooltip
-      id={`response-tooltip-${row.id}`}
-      boxProps={{ textAlign: "left" }}
-      delay={{ show: 500, hide: 0 }}
+      delayHide={0}
+      delayShow={500}
       placement="bottom-start"
       maxWidth="peta"
-      text={content}
+      tooltip={<Styled.TooltipContent>{content}</Styled.TooltipContent>}
     >
       <div>{content}</div>
     </Tooltip>
@@ -229,13 +243,13 @@ export const AuthorFormatter: React.FC<FormatterProps<
   TransformedAutoResponse,
   {}
 >> = ({ row }) => (
-  <Box display="flex" alignItems="center" height="100%">
+  <Styled.AuthorWrapper>
     <UserDisplay.Avatar avatarUrl={row.authorData.avatarUrl} circle size={28} />
     <Styled.Name className="name">{row.authorData.username}</Styled.Name>
     {isEmptyOrNil(row.authorData.discriminator) ? null : (
       <Styled.Discriminator>{`#${row.authorData.discriminator}`}</Styled.Discriminator>
     )}
-  </Box>
+  </Styled.AuthorWrapper>
 );
 
 /**
@@ -244,4 +258,4 @@ export const AuthorFormatter: React.FC<FormatterProps<
 export const CountFormatter: React.FC<FormatterProps<
   TransformedAutoResponse,
   {}
->> = ({ row }) => <Box textAlign="right">{row.count.toLocaleString()}</Box>;
+>> = ({ row }) => <Styled.Count>{row.count.toLocaleString()}</Styled.Count>;

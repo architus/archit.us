@@ -107,8 +107,8 @@ const Styled = {
 
     &[data-active="true"] {
       --tab-bg: ${(props): string => props.activeBackground};
-      --tab-text-opacity: 1;
-      --tab-icon-opacity: 0.9;
+      --tab-text-opacity: 1 !important;
+      --tab-icon-opacity: 0.9 !important;
 
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
@@ -120,8 +120,8 @@ const Styled = {
 
     &:hover,
     &:active {
-      --tab-text-opacity: 0.8;
-      --tab-icon-opacity: 0.7;
+      --tab-text-opacity: 0.8 !important;
+      --tab-icon-opacity: 0.7 !important;
     }
   `,
   TabIcon: styled.div`

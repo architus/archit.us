@@ -58,6 +58,7 @@
     "fp-ts": "^2.7.0",
     "gatsby": "^2.23.11",
     "gatsby-plugin-alias-imports": "^1.0.5",
+    "gatsby-plugin-compile-es6-packages": "^2.1.0",
     "gatsby-plugin-create-client-paths": "^2.3.10",
     "gatsby-plugin-dark-mode": "^1.1.2",
     "gatsby-plugin-emotion": "^4.3.10",

@@ -1,14 +1,17 @@
-import styled from "@xstyled/emotion";
 import deepEqual from "fast-deep-equal";
+import { styled } from "linaria/react";
 import React from "react";
 import { FilterRendererProps } from "react-data-grid";
 
 import HelpTooltip from "@app/components/HelpTooltip";
+import { gap } from "@architus/facade/theme/spacing";
 import { Option, Some, None } from "@architus/lib/option";
 
 const Styled = {
   HelpTooltip: styled(HelpTooltip)`
     top: 2px;
+    margin-left: ${gap.femto};
+    font-size: 1.4em;
   `,
 };
 
@@ -58,12 +61,7 @@ export function NumericFilter<R, SR>({
         className="rdg-filter"
         placeholder="e.g. 3,10-15,>20"
       />
-      <Styled.HelpTooltip
-        text={tooltipText}
-        id="numeric-filter-help-tooltip"
-        marginLeft="femto"
-        fontSize="1.4em"
-      />
+      <Styled.HelpTooltip tooltip={tooltipText} />
     </div>
   );
 }

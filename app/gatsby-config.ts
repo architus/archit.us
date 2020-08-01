@@ -80,6 +80,12 @@ export const plugins = [
     },
   },
   {
+    resolve: `gatsby-plugin-compile-es6-packages`,
+    options: {
+      modules: [`react-data-grid`],
+    },
+  },
+  {
     resolve: "gatsby-plugin-react-svg",
     options: {
       rule: {
