@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import { cx } from "linaria";
 import React from "react";
 
 import {
@@ -38,9 +38,11 @@ const Skeleton: React.FC<SkeletonProps> = ({
   ...rest
 }) => (
   <span
-    className={classNames(
+    className={cx(
       "skeleton",
-      { inline: !block, light, circle },
+      !block && "inline",
+      light && "light",
+      circle && "circle",
       className
     )}
     style={{
@@ -253,7 +255,7 @@ const Multiline: React.FC<MultilineProps> = ({
  * Skeleton that automatically switches colors according to the theme
  */
 const Auto: React.FC<SkeletonProps> = ({ className = "", ...rest }) => (
-  <Skeleton className={classNames("skeleton-auto", className)} {...rest} />
+  <Skeleton className={cx("skeleton-auto", className)} {...rest} />
 );
 
 export default attach(Skeleton, { Text, Custom, Multiline, Auto });

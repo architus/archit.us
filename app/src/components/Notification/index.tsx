@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import { cx } from "linaria";
 import React, { useCallback } from "react";
 
 import { CloseButton } from "@app/react-bootstrap";
@@ -34,12 +34,7 @@ const Notification: React.FC<NotificationProps> = ({
     <div
       style={style}
       onClick={outerOnClick}
-      className={classNames(
-        "notification",
-        `notification-${type}`,
-        variant,
-        className
-      )}
+      className={cx("notification", `notification-${type}`, variant, className)}
     >
       <CloseButton onClick={dismissHandler} label="Close notification" />
       <div className="notification-content">{message}</div>

@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import { cx } from "linaria";
 import Prism from "prismjs";
 import PropTypes from "prop-types";
 import React, { useMemo, useCallback } from "react";
@@ -57,10 +57,12 @@ function SyntaxHighlightedInput({
 
   return (
     <div
-      className={classNames("syntax-highlighted-input", className, {
-        "is-invalid": isInvalid,
-        "is-valid": isValid,
-      })}
+      className={cx(
+        "syntax-highlighted-input",
+        className,
+        isInvalid && "is-invalid",
+        isValid && "is-valid"
+      )}
     >
       <Editor
         value={value}

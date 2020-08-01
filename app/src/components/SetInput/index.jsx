@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React, { useCallback } from "react";
+import { FaPlus, FaTimesCircle } from "react-icons/fa";
 
-import Icon from "@app/components/Icon";
 import { Button } from "@app/react-bootstrap";
 
 import "./style.scss";
@@ -33,7 +33,7 @@ function SetInput({ items, addItem, removeItem, renderItem, children }) {
             }
           }}
         >
-          <Icon name="plus" />
+          <FaPlus />
         </Button>
       </div>
     </div>
@@ -74,7 +74,7 @@ function SetInputItem({ index, onRemove, children }) {
     >
       {children}
       <div className="set-input--remove">
-        <Icon name="times-circle" />
+        <FaTimesCircle />
       </div>
     </button>
   );

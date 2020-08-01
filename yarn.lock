@@ -530,7 +530,7 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.8.3"
 
-"@babel/plugin-syntax-jsx@^7.0.0", "@babel/plugin-syntax-jsx@^7.10.4", "@babel/plugin-syntax-jsx@^7.2.0":
+"@babel/plugin-syntax-jsx@^7.0.0", "@babel/plugin-syntax-jsx@^7.10.4":
   version "7.10.4"
   resolved "https://registry.yarnpkg.com/@babel/plugin-syntax-jsx/-/plugin-syntax-jsx-7.10.4.tgz#39abaae3cbf710c4373d8429484e6ba21340166c"
   integrity sha512-KCg9mio9jwiARCB7WAcQ7Y1q+qicILjoK8LP/VkPkEKaf5dkaZZK1EcTe91a3JJlZ3qy6L5s9X52boEYi8DM9g==
@@ -818,7 +818,7 @@
     "@babel/helper-plugin-utils" "^7.10.4"
     "@babel/plugin-syntax-jsx" "^7.10.4"
 
-"@babel/plugin-transform-react-jsx@^7.0.0", "@babel/plugin-transform-react-jsx@^7.10.3", "@babel/plugin-transform-react-jsx@^7.10.4", "@babel/plugin-transform-react-jsx@^7.3.0":
+"@babel/plugin-transform-react-jsx@^7.0.0", "@babel/plugin-transform-react-jsx@^7.10.3", "@babel/plugin-transform-react-jsx@^7.10.4":
   version "7.10.4"
   resolved "https://registry.yarnpkg.com/@babel/plugin-transform-react-jsx/-/plugin-transform-react-jsx-7.10.4.tgz#673c9f913948764a4421683b2bef2936968fddf2"
   integrity sha512-L+MfRhWjX0eI7Js093MM6MacKU4M6dnCRa/QPDwYMxjljzSCzzlzKzj9Pk4P3OtrPcxr2N3znR419nr3Xw+65A==
@@ -1057,7 +1057,7 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.10.0", "@babel/runtime@^7.10.5", "@babel/runtime@^7.4.2":
+"@babel/runtime@^7.10.0", "@babel/runtime@^7.4.2":
   version "7.10.5"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.10.5.tgz#303d8bd440ecd5a491eae6117fd3367698674c5c"
   integrity sha512-otddXKhdNn7d0ptoFRHtMLa8LqDxLYwTjB4nYgM1yy5N6gU/MUf8zqyyLltCH3yAVitBzmwK4us+DD0l/MauAg==
@@ -1170,23 +1170,6 @@
   dependencies:
     core-js "^3.6.4"
 
-"@emotion/babel-plugin-jsx-pragmatic@^0.1.5":
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/@emotion/babel-plugin-jsx-pragmatic/-/babel-plugin-jsx-pragmatic-0.1.5.tgz#27debfe9c27c4d83574d509787ae553bf8a34d7e"
-  integrity sha512-y+3AJ0SItMDaAgGPVkQBC/S/BaqaPACkQ6MyCI2CUlrjTxKttTVfD3TMtcs7vLEcLxqzZ1xiG0vzwCXjhopawQ==
-  dependencies:
-    "@babel/plugin-syntax-jsx" "^7.2.0"
-
-"@emotion/babel-preset-css-prop@^10.0.27":
-  version "10.0.27"
-  resolved "https://registry.yarnpkg.com/@emotion/babel-preset-css-prop/-/babel-preset-css-prop-10.0.27.tgz#58868d9a6afee0eeaeb0fa9dc5ccb1b12d4f786b"
-  integrity sha512-rducrjTpLGDholp0l2l4pXqpzAqYYGMg/x4IteO0db2smf6zegn6RRZdDnbaoMSs63tfPWgo2WukT1/F1gX/AA==
-  dependencies:
-    "@babel/plugin-transform-react-jsx" "^7.3.0"
-    "@babel/runtime" "^7.5.5"
-    "@emotion/babel-plugin-jsx-pragmatic" "^0.1.5"
-    babel-plugin-emotion "^10.0.27"
-
 "@emotion/cache@^10.0.27", "@emotion/cache@^10.0.9":
   version "10.0.29"
   resolved "https://registry.yarnpkg.com/@emotion/cache/-/cache-10.0.29.tgz#87e7e64f412c060102d589fe7c6dc042e6f9d1e0"
@@ -1197,7 +1180,7 @@
     "@emotion/utils" "0.11.3"
     "@emotion/weak-memoize" "0.2.5"
 
-"@emotion/core@^10.0.28", "@emotion/core@^10.0.9":
+"@emotion/core@^10.0.9":
   version "10.0.28"
   resolved "https://registry.yarnpkg.com/@emotion/core/-/core-10.0.28.tgz#bb65af7262a234593a9e952c041d0f1c9b9bef3d"
   integrity sha512-pH8UueKYO5jgg0Iq+AmCLxBsvuGtvlmiDCOuv8fGNYn3cowFpLN98L8zO56U0H1PjDIyAlXymgL3Wu7u7v6hbA==
@@ -1222,13 +1205,6 @@
   version "0.8.0"
   resolved "https://registry.yarnpkg.com/@emotion/hash/-/hash-0.8.0.tgz#bbbff68978fefdbe68ccb533bc8cbe1d1afb5413"
   integrity sha512-kBJtf7PH6aWwZ6fka3zQ0p6SBYzx4fl1LoZXE2RrnYST9Xljm7WfKJrU4g/Xr3Beg72MLrp1AWNUmuYJTL7Cow==
-
-"@emotion/is-prop-valid@0.8.8":
-  version "0.8.8"
-  resolved "https://registry.yarnpkg.com/@emotion/is-prop-valid/-/is-prop-valid-0.8.8.tgz#db28b1c4368a259b60a97311d6a952d4fd01ac1a"
-  integrity sha512-u5WtneEAr5IDG2Wv65yhunPSMLIpuKsbuOktRojfrEiEvRyC85LgPMZI63cr7NUqT8ZIGdSVg8ZKGxIug4lXcA==
-  dependencies:
-    "@emotion/memoize" "0.7.4"
 
 "@emotion/is-prop-valid@^0.7.3":
   version "0.7.3"
@@ -1262,24 +1238,6 @@
   version "0.9.4"
   resolved "https://registry.yarnpkg.com/@emotion/sheet/-/sheet-0.9.4.tgz#894374bea39ec30f489bbfc3438192b9774d32e5"
   integrity sha512-zM9PFmgVSqBw4zL101Q0HrBVTGmpAxFZH/pYx/cjJT5advXguvcgjHFTCaIO3enL/xr89vK2bh0Mfyj9aa0ANA==
-
-"@emotion/styled-base@^10.0.27":
-  version "10.0.31"
-  resolved "https://registry.yarnpkg.com/@emotion/styled-base/-/styled-base-10.0.31.tgz#940957ee0aa15c6974adc7d494ff19765a2f742a"
-  integrity sha512-wTOE1NcXmqMWlyrtwdkqg87Mu6Rj1MaukEoEmEkHirO5IoHDJ8LgCQL4MjJODgxWxXibGR3opGp1p7YvkNEdXQ==
-  dependencies:
-    "@babel/runtime" "^7.5.5"
-    "@emotion/is-prop-valid" "0.8.8"
-    "@emotion/serialize" "^0.11.15"
-    "@emotion/utils" "0.11.3"
-
-"@emotion/styled@^10.0.27":
-  version "10.0.27"
-  resolved "https://registry.yarnpkg.com/@emotion/styled/-/styled-10.0.27.tgz#12cb67e91f7ad7431e1875b1d83a94b814133eaf"
-  integrity sha512-iK/8Sh7+NLJzyp9a5+vIQIXTYxfT4yB/OJbjzQanB2RZpvmzBQOHZWhpAMZWYEKRNNbsD6WfBw5sVWkb6WzS/Q==
-  dependencies:
-    "@emotion/styled-base" "^10.0.27"
-    babel-plugin-emotion "^10.0.27"
 
 "@emotion/stylis@0.8.5":
   version "0.8.5"
@@ -1374,39 +1332,6 @@
     tar "^4.4.10"
     unique-filename "^1.1.1"
     which "^1.3.1"
-
-"@fortawesome/fontawesome-common-types@^0.2.30":
-  version "0.2.30"
-  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-0.2.30.tgz#2f1cc5b46bd76723be41d0013a8450c9ba92b777"
-  integrity sha512-TsRwpTuKwFNiPhk1UfKgw7zNPeV5RhNp2Uw3pws+9gDAkPGKrtjR1y2lI3SYn7+YzyfuNknflpBA1LRKjt7hMg==
-
-"@fortawesome/fontawesome-svg-core@^1.2.30":
-  version "1.2.30"
-  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-svg-core/-/fontawesome-svg-core-1.2.30.tgz#f56dc6791861fe5d1af04fb8abddb94658c576db"
-  integrity sha512-E3sAXATKCSVnT17HYmZjjbcmwihrNOCkoU7dVMlasrcwiJAHxSKeZ+4WN5O+ElgO/FaYgJmASl8p9N7/B/RttA==
-  dependencies:
-    "@fortawesome/fontawesome-common-types" "^0.2.30"
-
-"@fortawesome/free-brands-svg-icons@^5.14.0":
-  version "5.14.0"
-  resolved "https://registry.yarnpkg.com/@fortawesome/free-brands-svg-icons/-/free-brands-svg-icons-5.14.0.tgz#98555518ba41bdff82fbae2f4d1bc36cd3b1c043"
-  integrity sha512-WsqPFTvJFI7MYkcy0jeFE2zY+blC4OrnB9MJOcn1NxRXT/sSfEEhrI7CwzIkiYajLiVDBKWeErYOvpsMeodmCQ==
-  dependencies:
-    "@fortawesome/fontawesome-common-types" "^0.2.30"
-
-"@fortawesome/free-solid-svg-icons@^5.14.0":
-  version "5.14.0"
-  resolved "https://registry.yarnpkg.com/@fortawesome/free-solid-svg-icons/-/free-solid-svg-icons-5.14.0.tgz#970453f5e8c4915ad57856c3a0252ac63f6fec18"
-  integrity sha512-M933RDM8cecaKMWDSk3FRYdnzWGW7kBBlGNGfvqLVwcwhUPNj9gcw+xZMrqBdRqxnSXdl3zWzTCNNGEtFUq67Q==
-  dependencies:
-    "@fortawesome/fontawesome-common-types" "^0.2.30"
-
-"@fortawesome/react-fontawesome@^0.1.11":
-  version "0.1.11"
-  resolved "https://registry.yarnpkg.com/@fortawesome/react-fontawesome/-/react-fontawesome-0.1.11.tgz#c1a95a2bdb6a18fa97b355a563832e248bf6ef4a"
-  integrity sha512-sClfojasRifQKI0OPqTy8Ln8iIhnxR/Pv/hukBhWnBz9kQRmqi6JSH3nghlhAY7SUeIIM7B5/D2G8WjX0iepVg==
-  dependencies:
-    prop-types "^15.7.2"
 
 "@graphql-codegen/core@^1.14.0":
   version "1.16.0"
@@ -3213,7 +3138,7 @@
     native-url "^0.2.6"
     schema-utils "^2.6.5"
 
-"@popperjs/core@^2.0.0", "@popperjs/core@^2.4.3", "@popperjs/core@^2.4.4":
+"@popperjs/core@^2.0.0", "@popperjs/core@^2.4.3":
   version "2.4.4"
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.4.4.tgz#11d5db19bd178936ec89cd84519c4de439574398"
   integrity sha512-1oO6+dN5kdIA3sKPZhRGJTfGVP4SWV6KqlMOwry4J3HfyD68sl/3KmG7DeYUzvN+RbhXDnv/D8vNNB8168tAMg==
@@ -3754,14 +3679,6 @@
   dependencies:
     "@types/node" "*"
 
-"@types/xstyled__system@^1.17.0":
-  version "1.17.0"
-  resolved "https://registry.yarnpkg.com/@types/xstyled__system/-/xstyled__system-1.17.0.tgz#c5322dc75c4fa2f13bec5026fc389e8008002445"
-  integrity sha512-snh+MQ4JgcR9BriLrA6FZxVpN36VbG7l7GecLY8BQB4qhnQLxn5/ZZtL8Gnqe2w5zFbMjqSMI/P9lQp2huuRAA==
-  dependencies:
-    "@types/react" "*"
-    csstype "^2.6.6"
-
 "@types/yargs-parser@*":
   version "15.0.0"
   resolved "https://registry.yarnpkg.com/@types/yargs-parser/-/yargs-parser-15.0.0.tgz#cb3f9f741869e20cce330ffbeb9271590483882d"
@@ -3986,39 +3903,6 @@
   dependencies:
     tslib "^1.9.3"
 
-"@xstyled/core@^1.17.2":
-  version "1.17.2"
-  resolved "https://registry.yarnpkg.com/@xstyled/core/-/core-1.17.2.tgz#3d2f551a23897fe54087586dd78b0e8b5bf9adc8"
-  integrity sha512-4h8o3ykKTJkWht6BgD9nTGYquRtAJy1e7DSmXg4+3Puo1+0BkWKYNZrbA5kkffWwKOGTBjN1wNFEGUgSEA6/qA==
-  dependencies:
-    "@babel/runtime" "^7.10.5"
-    "@xstyled/system" "^1.17.2"
-
-"@xstyled/emotion@^1.17.2":
-  version "1.17.2"
-  resolved "https://registry.yarnpkg.com/@xstyled/emotion/-/emotion-1.17.2.tgz#c6ccc5aa04da98d4dde89c9618fea2fdbc197b4a"
-  integrity sha512-aOqv0zDvfjJzS3Pw1ToW75g6nZzWObOPDRCfX9ULQeci2GJvVgcGLg/krzbyXjVhmB6OBplrxOj5ncKHiRGCsg==
-  dependencies:
-    "@babel/runtime" "^7.10.5"
-    "@xstyled/core" "^1.17.2"
-    "@xstyled/system" "^1.17.2"
-    "@xstyled/util" "^1.17.2"
-
-"@xstyled/system@^1.17.2":
-  version "1.17.2"
-  resolved "https://registry.yarnpkg.com/@xstyled/system/-/system-1.17.2.tgz#06459804fd47abc1a3dca967c46feda9406f92b6"
-  integrity sha512-XzNpCfOnsPzP23sS5HzhYBkS0hyM0zFKUEeprtuXjeF2OJWX8ZzsHMTE2z7KEy/OW7OWw3tkoPJmmiiBQ+6/CQ==
-  dependencies:
-    "@babel/runtime" "^7.10.5"
-    "@xstyled/util" "^1.17.2"
-
-"@xstyled/util@^1.17.2":
-  version "1.17.2"
-  resolved "https://registry.yarnpkg.com/@xstyled/util/-/util-1.17.2.tgz#6b6fed6f8c8acada1805721d054f31a508c59d02"
-  integrity sha512-+JaSZK1k2rOEM2YMwUOum77CPghhTyrlxuTuxyiJbdIxYSTtzBRVmPAul30V6pFRYgK8NMdfm7f+yT28rTr8pg==
-  dependencies:
-    "@babel/runtime" "^7.10.5"
-
 "@xtuc/ieee754@^1.2.0":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@xtuc/ieee754/-/ieee754-1.2.0.tgz#eef014a3145ae477a1cbc00cd1e552336dceb790"
@@ -4096,11 +3980,6 @@ acorn@^7.1.1, acorn@^7.3.1:
   version "7.3.1"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-7.3.1.tgz#85010754db53c3fbaf3b9ea3e083aa5c5d147ffd"
   integrity sha512-tLc0wSnatxAQHVHUapaHdz72pi9KUyHjq5KyHjGg9Y8Ifdc79pTh2XvI6I1/chZbnM7QtNKzh66ooDogPZSleA==
-
-add@^2.0.6:
-  version "2.0.6"
-  resolved "https://registry.yarnpkg.com/add/-/add-2.0.6.tgz#248f0a9f6e5a528ef2295dbeec30532130ae2235"
-  integrity sha1-JI8Kn25aUo7yKV2+7DBTITCuIjU=
 
 address@1.0.3:
   version "1.0.3"
@@ -6841,7 +6720,7 @@ cssstyle@^2.2.0:
   dependencies:
     cssom "~0.3.6"
 
-csstype@^2.2.0, csstype@^2.5.7, csstype@^2.6.6, csstype@^2.6.7:
+csstype@^2.2.0, csstype@^2.5.7, csstype@^2.6.7:
   version "2.6.11"
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-2.6.11.tgz#452f4d024149ecf260a852b025e36562a253ffc5"
   integrity sha512-l8YyEC9NBkSm783PFTvh0FmJy7s5pFKrDp49ZL7zBGX3fWkO+N4EEyan1qqp8cwPLDcD0OSdyY6hAMoxp34JFw==
@@ -7630,15 +7509,6 @@ emojis-list@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/emojis-list/-/emojis-list-3.0.0.tgz#5570662046ad29e2e916e71aae260abdff4f6a78"
   integrity sha512-/kyM18EfinwXZbno9FyUGeFh87KC8HRQBQGildHZbEuRyWFOmv1U10o9BBp8XVZDVNNuQKyIGIu5ZYAAXJ0V2Q==
-
-emotion-theming@^10.0.27:
-  version "10.0.27"
-  resolved "https://registry.yarnpkg.com/emotion-theming/-/emotion-theming-10.0.27.tgz#1887baaec15199862c89b1b984b79806f2b9ab10"
-  integrity sha512-MlF1yu/gYh8u+sLUqA0YuA9JX0P4Hb69WlKc/9OLo+WCXuX6sy/KoIa+qJimgmr2dWqnypYKYPX37esjDBbhdw==
-  dependencies:
-    "@babel/runtime" "^7.5.5"
-    "@emotion/weak-memoize" "0.2.5"
-    hoist-non-react-statics "^3.3.0"
 
 encodeurl@~1.0.2:
   version "1.0.2"
@@ -9222,14 +9092,6 @@ gatsby-plugin-dark-mode@^1.1.2:
   integrity sha512-kq/7/KSIgyYxolSqLxXfmcC/iBU98XpRGcIOaa3bjjl8Tb0WDYwfa45zABx1XNjB0YecWdgniss+kqmeAu04GA==
   dependencies:
     prop-types "^15.5.7"
-
-gatsby-plugin-emotion@^4.3.10:
-  version "4.3.10"
-  resolved "https://registry.yarnpkg.com/gatsby-plugin-emotion/-/gatsby-plugin-emotion-4.3.10.tgz#569e9489837fa0f55db0a0264efda7f3c6c4a4cd"
-  integrity sha512-OQrNgq3Te+bjra/sNo2PwOm24dPVr8MsjWf3X/3ciPf4bkf+Ey0jzJ36JnIIUIzZvpbyBHAr6eNzSOWnE2X2zA==
-  dependencies:
-    "@babel/runtime" "^7.10.3"
-    "@emotion/babel-preset-css-prop" "^10.0.27"
 
 gatsby-plugin-linaria@^2.0.0:
   version "2.1.0"

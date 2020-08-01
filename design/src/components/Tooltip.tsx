@@ -3,12 +3,12 @@ import { css } from "linaria";
 import React from "react";
 import TooltipTrigger from "react-popper-tooltip";
 
-import { isDefined } from "@architus/lib/utility";
 import { color } from "../theme/color";
 import { transition } from "../theme/motion";
 import { ZIndex } from "../theme/order";
 import { shadow } from "../theme/shadow";
 import { gap, SpacingKey } from "../theme/spacing";
+import { isDefined } from "@architus/lib/utility";
 
 const globalPadding = 18;
 

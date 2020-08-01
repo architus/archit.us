@@ -1,7 +1,7 @@
-import classNames from "classnames";
+import { cx } from "linaria";
 import React from "react";
+import { FaMinus, FaPlus } from "react-icons/fa";
 
-import Icon from "@app/components/Icon";
 import {
   InputGroup,
   FormControl,
@@ -40,10 +40,7 @@ const NumericUpDown: React.FC<NumericUpDownProps> = React.forwardRef(
     ref: React.Ref<HTMLInputElement>
   ) => {
     return (
-      <InputGroup
-        className={classNames("numeric-up-down", className)}
-        style={style}
-      >
+      <InputGroup className={cx("numeric-up-down", className)} style={style}>
         <FormControl
           placeholder={placeholder}
           value={value}
@@ -59,13 +56,13 @@ const NumericUpDown: React.FC<NumericUpDownProps> = React.forwardRef(
             variant={"input-control" as ButtonProps["variant"]}
             onClick={onDown}
           >
-            <Icon name="minus" />
+            <FaMinus />
           </Button>
           <Button
             variant={"input-control" as ButtonProps["variant"]}
             onClick={onUp}
           >
-            <Icon name="plus" />
+            <FaPlus />
           </Button>
         </InputGroup.Append>
       </InputGroup>

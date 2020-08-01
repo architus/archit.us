@@ -1,4 +1,3 @@
-import { useColorMode as useEmotionColorMode } from "@xstyled/emotion";
 import { styled } from "linaria/react";
 import { darken } from "polished";
 import React, { useCallback, useEffect, useContext } from "react";
@@ -78,26 +77,23 @@ const Layout: React.FC<LayoutProps> = ({
 }) => {
   // Dark mode control hooks
   const { value, toggle } = useDarkMode(false);
-  const [, setEmotionColorMode] = useEmotionColorMode();
   const { mode, setMode } = useContext(ColorModeContext);
   const toggleWrapper = useCallback(
     (checked: boolean) => {
       const targetMode = checked ? ColorMode.Dark : ColorMode.Light;
       setMode(targetMode);
-      setEmotionColorMode(targetMode);
       toggle();
     },
-    [setMode, setEmotionColorMode, toggle]
+    [setMode, toggle]
   );
 
-  // Attempt to maintain consistency between the three systems during the migration from
-  // sass/emotion to linaria
+  // Attempt to maintain consistency between the two systems during the migration
+  // from sass to linaria
   useEffect(() => {
     const isDark = mode === ColorMode.Dark;
     if (isDark !== value) {
       const targetMode = value ? ColorMode.Dark : ColorMode.Light;
       setMode(targetMode);
-      setEmotionColorMode(targetMode);
     }
   });
 

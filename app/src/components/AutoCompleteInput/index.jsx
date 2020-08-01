@@ -1,5 +1,5 @@
-import classNames from "classnames";
 import Fuse from "fuse.js";
+import { cx } from "linaria";
 import get from "lodash/get";
 import PropTypes from "prop-types";
 import React, { useState, useMemo, useRef } from "react";
@@ -81,7 +81,7 @@ function AutoCompleteInput({
   };
 
   // Calculate validation status className
-  const validationClass = classNames({
+  const validationClass = cx({
     "is-valid": isValid,
     "is-invalid": isInvalid,
   });
@@ -105,7 +105,7 @@ function AutoCompleteInput({
   const autoSuggestRef = useRef(null);
 
   return (
-    <div className={classNames("auto-complete-input", validationClass)}>
+    <div className={cx("auto-complete-input", validationClass)}>
       <AutoSuggest
         ref={autoSuggestRef}
         suggestions={suggestions}

@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import { cx } from "linaria";
 import React from "react";
 
 import Skeleton from "@app/components/Skeleton";
@@ -27,7 +27,7 @@ const UserDisplay: React.FC<UserDisplayProps> = ({
   avatar = false,
   ...rest
 }) => (
-  <div className={classNames("user-display", className)} {...rest}>
+  <div className={cx("user-display", className)} {...rest}>
     <Avatar avatarUrl={avatarUrl} user={user} />
     {!avatar && (
       <div>
@@ -85,14 +85,14 @@ const Avatar: React.FC<AvatarProps> = ({
   return (
     <Skeleton.Custom
       value={effectiveAvatarUrl}
-      className={classNames("avatar", className)}
+      className={cx("avatar", className)}
       width={size}
       height={size}
       circle={circle}
       light
     >
       <div
-        className={classNames("avatar-image", className, { circle })}
+        className={cx("avatar-image", className, circle && "circle")}
         style={{
           backgroundImage: `url(${effectiveAvatarUrl})`,
           width: `${size}px`,

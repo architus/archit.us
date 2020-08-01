@@ -1,4 +1,3 @@
-import { useDown } from "@xstyled/emotion";
 import { styled } from "linaria/react";
 import { transparentize } from "polished";
 import React from "react";
@@ -11,10 +10,10 @@ import { Dropdown } from "@app/react-bootstrap";
 import { useDispatch } from "@app/store";
 import { signOut } from "@app/store/actions";
 import { useCurrentUser, useSessionStatus } from "@app/store/slices/session";
-import { Breakpoint } from "@app/theme";
 import { useLocation } from "@app/utility";
 import { User } from "@app/utility/types";
 import AutoLink from "@architus/facade/components/AutoLink";
+import { useDown } from "@architus/facade/hooks";
 import { color, staticColor } from "@architus/facade/theme/color";
 import { transition } from "@architus/facade/theme/motion";
 import { gap } from "@architus/facade/theme/spacing";
@@ -94,7 +93,7 @@ const SessionControl: React.FC<SessionControlProps> = React.memo(
     const { isSigningIn } = useSessionStatus();
     const dispatch = useDispatch();
     const oauthUrl = useOauthUrl();
-    const isSmallScreen = useDown(Breakpoint.SM);
+    const isSmallScreen = useDown("sm");
     const { location } = useLocation();
     const isInApp = location.pathname.startsWith(withBasePath("/app"));
 

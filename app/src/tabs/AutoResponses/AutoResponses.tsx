@@ -514,7 +514,7 @@ export class AutoResponses extends React.Component<
 
     return (
       <Styled.PageOuter>
-        <PageTitle title="Automatic Responses" />
+        <PageTitle title="Auto Responses" />
         <Styled.Header>
           <Styled.Title>Automatic Responses</Styled.Title>
           <Styled.MigrationAlert />

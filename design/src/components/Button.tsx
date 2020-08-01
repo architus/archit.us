@@ -1,4 +1,3 @@
-import { isDefined } from "@architus/lib/utility";
 import { css, cx } from "linaria";
 import { styled } from "linaria/react";
 import { transparentize, darken, readableColor } from "polished";
@@ -14,6 +13,7 @@ import {
 } from "../theme/color";
 import { transition } from "../theme/motion";
 import { gap } from "../theme/spacing";
+import { isDefined } from "@architus/lib/utility";
 
 // Used to manage keyboard-only focus
 // See https://www.kizu.ru/keyboard-only-focus/

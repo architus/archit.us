@@ -6,14 +6,9 @@ import { useVersion } from "@app/data/version";
 import BuildTag from "@architus/facade/components/BuildTag";
 import Logo from "@architus/facade/components/Logo";
 import { TooltipProps } from "@architus/facade/components/Tooltip";
-import {
-  BreakpointKey,
-  maxWidth,
-  breakpoint,
-} from "@architus/facade/theme/media";
+import { useUp } from "@architus/facade/hooks";
+import { BreakpointKey } from "@architus/facade/theme/media";
 import { gap } from "@architus/facade/theme/spacing";
-import { useMedia } from "@architus/lib/hooks";
-import { isDefined } from "@architus/lib/utility";
 
 const Styled = {
   Brand: styled.div<{ withVersion: boolean }>`
@@ -61,22 +56,14 @@ export type CompositeBrandProps = {
  */
 const CompositeBrand: React.FC<CompositeBrandProps> = ({
   showVersion = false,
-  hideTagBreakpoint,
+  hideTagBreakpoint = "vs",
   buildTooltipPlacement,
   className,
   style,
 }) => {
   const version = useVersion();
   const buildMetadata = useBuildMetadata();
-
-  let breakpoints: string[] = [];
-  let values: boolean[] = [];
-  if (isDefined(hideTagBreakpoint)) {
-    breakpoints = [maxWidth(breakpoint(hideTagBreakpoint))];
-    values = [false];
-  }
-  const showBuildTag = useMedia(breakpoints, values, true);
-
+  const showBuildTag = useUp(hideTagBreakpoint);
   return (
     <Styled.Brand className={className} style={style} withVersion={showVersion}>
       <Styled.Logo height={36} />

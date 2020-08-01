@@ -113,7 +113,6 @@ export const plugins = [
   },
   "gatsby-plugin-linaria",
   "gatsby-plugin-sass",
-  "gatsby-plugin-emotion",
   "gatsby-plugin-dark-mode",
   `gatsby-plugin-react-helmet`,
   `gatsby-plugin-remove-serviceworker`,
