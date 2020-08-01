@@ -1,15 +1,28 @@
+import { styled } from "linaria/react";
 import React from "react";
 
-import { Container } from "@app/layout";
+import { appVerticalPadding, appHorizontalPadding } from "@app/layout";
 import { TabProps } from "@app/tabs/types";
 import Badge from "@architus/facade/components/Badge";
+import { color } from "@architus/facade/theme/color";
+
+const Styled = {
+  Layout: styled.div`
+    padding: ${appVerticalPadding} ${appHorizontalPadding};
+  `,
+  Title: styled.h2`
+    color: ${color("textStrong")};
+    font-size: 1.9rem;
+    font-weight: 300;
+  `,
+};
 
 const Logs: React.FC<TabProps> = () => (
-  <Container className="py-5">
-    <h2>
+  <Styled.Layout>
+    <Styled.Title>
       Logs <Badge variant="primary">Coming Soon</Badge>
-    </h2>
-  </Container>
+    </Styled.Title>
+  </Styled.Layout>
 );
 
 export default Logs;

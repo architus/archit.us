@@ -8,7 +8,7 @@ import {
 } from "@app/components/DiscordMock/actions";
 import Input from "@app/components/DiscordMock/Input";
 import { isDefined, MockTyper, isNil, isClient } from "@app/utility";
-import { StyleObject, MockMessageSet } from "@app/utility/types";
+import { MockMessageSet } from "@app/utility/types";
 
 // Mock typer options
 const keypressDelay = 90;

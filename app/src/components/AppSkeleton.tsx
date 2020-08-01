@@ -15,13 +15,13 @@ const Styled = {
   `,
 };
 
-type AppPlaceholderProps = PageProps;
+type AppSkeletonProps = PageProps;
 
 /**
  * Default placeholder skeleton shown during app loading states
  * (ideally, each tab would have a better/more specific skeleton)
  */
-const AppPlaceholder: React.FC<AppPlaceholderProps> = () => (
+const AppSkeleton: React.FC<AppSkeletonProps> = () => (
   <>
     <PageTitle title="Dashboard" />
     <Styled.Wrapper>
@@ -32,4 +32,4 @@ const AppPlaceholder: React.FC<AppPlaceholderProps> = () => (
   </>
 );
 
-export default AppPlaceholder;
+export default AppSkeleton;

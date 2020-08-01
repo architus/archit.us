@@ -15,9 +15,34 @@ import { transition } from "@architus/facade/theme/motion";
 import { gap } from "@architus/facade/theme/spacing";
 import { Option } from "@architus/lib/option";
 
-const skeletonCount = 5;
 const iconWidth = 52;
 const iconSpacing = gap.nano;
+
+const indicatorMixin = `
+  &::after {
+    position: absolute;
+    content: " ";
+    top: 0;
+    bottom: 0;
+    left: -15px;
+    margin-top: auto;
+    margin-bottom: auto;
+    pointer-events: none;
+
+    width: 6px;
+
+    border-radius: 0 4px 4px 0;
+    border-right: 6px solid white;
+    ${mode(ColorMode.Light)} {
+      border-right-color: ${color("primary-10")};
+    }
+
+    ${transition(["height", "transform", "opacity"])}
+    height: 0;
+    opacity: 0.5;
+    transform: translateX(-6px);
+  }
+`;
 
 const Styled = {
   List: styled.div`
@@ -34,6 +59,7 @@ const Styled = {
     border: none;
     outline: none !important;
     cursor: pointer;
+    position: relative;
 
     display: flex;
     align-items: center;
@@ -44,35 +70,34 @@ const Styled = {
     ${circleIconHover}
 
     ${textButton}
+
+    &:active {
+      opacity: 0.9;
+    }
+
+    ${indicatorMixin}
+
+    &[data-active="true"] {
+      border-radius: 25%;
+
+      ${bgColorVar}: ${color("primary+10")};
+      color: ${color("light")};
+      ${mode(ColorMode.Dark)} {
+        ${bgColorVar}: ${color("primary-10")};
+      }
+
+      &::after {
+        height: 80%;
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
   `,
   GuildIcon: styled(GuildIcon)`
     color: ${color("text")};
     cursor: pointer;
 
-    &::after {
-      position: absolute;
-      z-index: 10000;
-      content: " ";
-      top: 0;
-      bottom: 0;
-      left: -15px;
-      margin-top: auto;
-      margin-bottom: auto;
-      pointer-events: none;
-
-      width: 6px;
-
-      border-radius: 0 4px 4px 0;
-      border-right: 6px solid white;
-      ${mode(ColorMode.Light)} {
-        border-right-color: ${color("primary-10")};
-      }
-
-      ${transition(["height", "transform", "opacity"])}
-      height: 0;
-      opacity: 0.5;
-      transform: translateX(-6px);
-    }
+    ${indicatorMixin}
 
     &:hover::after {
       height: 30%;
@@ -85,8 +110,11 @@ const Styled = {
         border-radius: 25%;
       }
 
-      ${bgColorVar}: ${color("primary")};
+      ${bgColorVar}: ${color("primary+10")};
       color: ${color("light")};
+      ${mode(ColorMode.Dark)} {
+        ${bgColorVar}: ${color("primary-10")};
+      }
 
       &::after {
         height: 80%;
@@ -122,6 +150,7 @@ export type GuildNavProps = {
   guilds: Guild[];
   currentGuild: Option<Snowflake>;
   backgroundColor: string;
+  addActive?: boolean;
   onClickGuild: (id: Snowflake) => void;
   onClickAdd: () => void;
   className?: string;
@@ -141,6 +170,7 @@ const GuildNav: React.FC<GuildNavProps> = ({
   guilds,
   currentGuild,
   backgroundColor,
+  addActive = false,
   onClickGuild,
   onClickAdd,
 }) => {
@@ -173,15 +203,24 @@ const GuildNav: React.FC<GuildNavProps> = ({
             />
           ) : null}
           <Tooltip tooltip="Add architus to a server...">
-            <Styled.AddButton onClick={onClickAdd}>
+            <Styled.AddButton
+              onClick={onClickAdd}
+              data-active={addActive ? "true" : undefined}
+            >
               <FaPlus />
             </Styled.AddButton>
           </Tooltip>
         </>
       ) : (
-        [...Array(skeletonCount)].map((_e, i) => (
-          <Styled.GuildSkeleton circle width={`${iconWidth}px`} key={i} />
-        ))
+        <>
+          {[...Array(4)].map((_e, i) => (
+            <Styled.GuildSkeleton circle width={`${iconWidth}px`} key={i} />
+          ))}
+          <Styled.SectionDivider style={{ opacity: 0.25 }} />
+          {[...Array(1)].map((_e, i) => (
+            <Styled.GuildSkeleton circle width={`${iconWidth}px`} key={i} />
+          ))}
+        </>
       )}
     </Styled.List>
   );

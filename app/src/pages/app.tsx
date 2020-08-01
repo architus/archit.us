@@ -1,15 +1,15 @@
 import { css } from "linaria";
 import { styled } from "linaria/react";
-import React, { useMemo, useState, useCallback } from "react";
+import React, { useMemo, useCallback } from "react";
 
-import AddGuildModal from "@app/components/AddGuildModal";
 import AppHomeScreen from "@app/components/AppHomeScreen";
 import AppNavigation, {
   useAppNavigationContext,
 } from "@app/components/AppNavigation";
-import AppPlaceholder from "@app/components/AppPlaceholder";
+import AppSkeleton from "@app/components/AppSkeleton";
+import InviteScreen from "@app/components/InviteScreen";
 import Layout from "@app/components/Layout";
-import { Router, Redirect, PageProps } from "@app/components/Router";
+import { Router, Redirect, PageProps, navigate } from "@app/components/Router";
 import { sitePaddingVariable } from "@app/layout";
 import LoginPage from "@app/pages/login";
 import { useSessionStatus } from "@app/store/actions";
@@ -39,9 +39,7 @@ const defaultTab = tabs.length > 0 ? tabs[0].path : "";
  * See https://www.gatsbyjs.org/docs/client-only-routes-and-user-authentication/
  */
 const AppPage: React.FC<PageProps> = () => {
-  const [addGuildModalOpen, setAddGuildModalOpen] = useState(false);
-  const onAddGuild = useCallback(() => setAddGuildModalOpen(true), []);
-  const closeAddGuildModal = useCallback(() => setAddGuildModalOpen(false), []);
+  const onAddGuild = useCallback(() => navigate("/app/invite"), []);
 
   // Creates individual tab renderers for each tab definition
   const tabRoutes = useMemo(
@@ -63,7 +61,7 @@ const AppPage: React.FC<PageProps> = () => {
   let content: React.ReactNode;
   if (isInitial) {
     // Render app skeleton on server/first render
-    content = <AppPlaceholder />;
+    content = <AppSkeleton />;
   } else if (!isSigningIn) {
     // Render restricted view if not logged in
     content = <LoginPage fromRestricted={true} />;
@@ -73,11 +71,16 @@ const AppPage: React.FC<PageProps> = () => {
         {tabRoutes}
         <Redirect from="/:guildId" to={`/app/:guildId/${defaultTab}`} noThrow />
         <PageRenderer
+          path="/invite"
+          page={InviteScreen}
+          showGuildAddModal={onAddGuild}
+        />
+        <PageRenderer
           path="/"
           page={AppHomeScreen}
           showGuildAddModal={onAddGuild}
         />
-        <AppPlaceholder default />
+        <AppSkeleton default />
       </Router>
     );
   }
@@ -88,7 +91,6 @@ const AppPage: React.FC<PageProps> = () => {
       headerProps={{ noContainer: true, className: headerClass }}
     >
       <AppNavigation tabs={tabs} prefix="/app" onOpenAddGuildModal={onAddGuild}>
-        <AddGuildModal open={addGuildModalOpen} onHide={closeAddGuildModal} />
         {content}
       </AppNavigation>
     </Styled.Layout>
@@ -125,11 +127,10 @@ const TabRenderer: React.FC<TabRendererProps> = ({ tab, guildId, ...rest }) => {
   const { component: Component, placeholder } = tab;
   const { entity: guildOption } = usePoolEntity({ type: "guild", id });
   const appProps = useAppProps();
-  console.log({ id, guildId, guildOption, rest });
   return guildOption.match({
     Some: (guild) => <Component guild={guild} {...appProps} {...rest} />,
     None: () => {
-      const Placeholder = placeholder ?? AppPlaceholder;
+      const Placeholder = placeholder ?? AppSkeleton;
       return <Placeholder {...appProps} {...rest} />;
     },
   });

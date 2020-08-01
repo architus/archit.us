@@ -1,4 +1,5 @@
 import { styled } from "linaria/react";
+import { transparentize } from "polished";
 import React, { useContext } from "react";
 
 import { DiscordMockDispatchContext } from "@app/components/DiscordMock/actions";
@@ -6,18 +7,13 @@ import InputController from "@app/components/DiscordMock/InputController";
 import MessageView from "@app/components/DiscordMock/MessageView";
 import { outerPadding } from "@app/components/DiscordMock/style";
 import {
-  MockMessageClump,
-  StyleObject,
-  MockMessageSet,
-} from "@app/utility/types";
-import { OtherColors } from "@app/theme/color";
-import { Color, staticColor } from "@architus/facade/theme/color";
-import { svgDataUrl } from "@architus/facade/css";
-import {
   windowPaddingBottom,
   windowBorderRadius,
 } from "@app/components/Window";
-import { transparentize } from "polished";
+import { OtherColors } from "@app/theme/color";
+import { MockMessageClump, MockMessageSet } from "@app/utility/types";
+import { svgDataUrl } from "@architus/facade/css";
+import { Color, staticColor } from "@architus/facade/theme/color";
 
 const errorSvg = (fill: string): string =>
   `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 39 39'>` +

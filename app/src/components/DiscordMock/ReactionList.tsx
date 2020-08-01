@@ -2,7 +2,7 @@ import { styled } from "linaria/react";
 import React from "react";
 
 import Reaction from "@app/components/DiscordMock/Reaction";
-import { MockReaction, StyleObject } from "@app/utility/types";
+import { MockReaction } from "@app/utility/types";
 
 const Styled = {
   ReactionList: styled.div`

@@ -8,14 +8,14 @@ import {
   unreact,
 } from "@app/components/DiscordMock/actions";
 import MessageClump from "@app/components/DiscordMock/MessageClump";
+import { OtherColors } from "@app/theme/color";
 import {
   formatAmPm,
   getScrollDistance,
   scrollToBottom,
   isDefined,
 } from "@app/utility";
-import { MockMessageClump, StyleObject } from "@app/utility/types";
-import { OtherColors } from "@app/theme/color";
+import { MockMessageClump } from "@app/utility/types";
 import { discordScrollbar } from "@architus/facade/theme/mixins";
 
 const scrollThreshold = 100;

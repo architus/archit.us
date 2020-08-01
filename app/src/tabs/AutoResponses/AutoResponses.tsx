@@ -1,3 +1,5 @@
+import { ScrollContext } from "@app/dynamic/AppRoot/context";
+import { AppPageProps } from "@app/dynamic/AppRoot/types";
 import styled, { css, up, Box } from "@xstyled/emotion";
 import copy from "copy-to-clipboard";
 import React, {
@@ -34,8 +36,6 @@ import { AnyIconName } from "@app/components/Icon/loader";
 import Switch from "@app/components/Switch";
 import Tooltip from "@app/components/Tooltip";
 import { getAvatarUrl } from "@app/components/UserDisplay";
-import { ScrollContext } from "@app/dynamic/AppRoot/context";
-import { AppPageProps } from "@app/dynamic/AppRoot/types";
 import { Alert } from "@app/react-bootstrap";
 import { Dispatch, useDispatch } from "@app/store";
 import { useCurrentUser, showToast } from "@app/store/actions";

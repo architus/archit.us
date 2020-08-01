@@ -9,7 +9,6 @@ import {
   ButtonProps,
   FormControlProps,
 } from "@app/react-bootstrap";
-import { StyleObject } from "@app/utility/types";
 
 import "./style.scss";
 

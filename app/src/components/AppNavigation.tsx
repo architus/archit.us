@@ -1,5 +1,4 @@
 import { styled } from "linaria/react";
-import path from "path";
 import React, {
   useContext,
   useCallback,
@@ -13,12 +12,12 @@ import GuildNav from "@app/components/GuildNav";
 import { navigate } from "@app/components/Router";
 import SwipeHandler from "@app/components/SwipeHandler";
 import TabNav from "@app/components/TabNav";
-import { useAppLocation } from "@app/hooks";
+import { useAppLocation, useLocationMatch } from "@app/hooks";
 import { headerHeight } from "@app/layout";
 import { usePool } from "@app/store/slices/pools";
 import { TabDefinition } from "@app/tabs/types";
 import { useCallbackOnce, usePrevious } from "@app/utility";
-import { Snowflake, Guild } from "@app/utility/types";
+import { Snowflake, Guild, isSnowflake } from "@app/utility/types";
 import { color } from "@architus/facade/theme/color";
 import { hiddenScrollbar } from "@architus/facade/theme/mixins";
 import { splitPath } from "@architus/lib/path";
@@ -51,6 +50,11 @@ const Styled = {
     flex-grow: 1;
     height: calc(100vh - ${headerHeight});
     overflow: auto;
+
+    & > div {
+      position: relative;
+      height: 100%;
+    }
   `,
   Drawer: styled.div`
     display: flex;
@@ -101,6 +105,7 @@ const AppNavigation: React.FC<AppNavigationProps> = ({
     showAppNav,
   ]);
   const closeAppNav = useCallbackOnce(() => setShowAppNav(false));
+  const [addGuildActive] = useLocationMatch(`${prefix}/invite`);
   const { tab, guild } = useAppLocation(prefix);
   usePrevious(
     tab.orNull(),
@@ -170,6 +175,7 @@ const AppNavigation: React.FC<AppNavigationProps> = ({
                 loaded={guildsLoaded}
                 guilds={guilds}
                 currentGuild={guild}
+                addActive={addGuildActive}
                 onClickGuild={guildNavigate}
                 onClickAdd={onOpenAddGuildModal}
                 backgroundColor={color("bg-20")}
@@ -246,8 +252,14 @@ export function navigateToTab(
 ): void {
   const fragments = getFragments(prefix);
   if (fragments.length >= 1) {
-    navigate(`${prefix}/${fragments[0]}/${tab}`);
-  } else if (guildsLoaded && guilds.length > 0) {
+    const id = fragments[0];
+    if (isSnowflake(id)) {
+      navigate(`${prefix}/${id}/${tab}`);
+      return;
+    }
+  }
+
+  if (guildsLoaded && guilds.length > 0) {
     let defaultGuild = guilds[0];
     const adminGuilds = guilds.filter((g) => g.architus_admin);
     if (adminGuilds.length > 0) [defaultGuild] = adminGuilds;

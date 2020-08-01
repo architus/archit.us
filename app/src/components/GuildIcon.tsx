@@ -18,12 +18,11 @@ import { transition } from "@architus/facade/theme/motion";
 import { shadow } from "@architus/facade/theme/shadow";
 import { isNil } from "@architus/lib/utility";
 
-export const bgColorVar = `--guild-icon-bg-color`;
+export const bgColorVar = `--guild-text-icon-bg-color`;
+export const fgColorVar = `--guild-text-icon-fg-color`;
 
 export const textButton = `
   user-select: none;
-  color: ${color("text")};
-  box-shadow: ${shadow("z1")};
   ${mode(ColorMode.Light)} {
     background-color: ${color("bg+20")};
   }
@@ -32,14 +31,16 @@ export const textButton = `
     background-color: ${color("bg+20")};
   }
 
-  ${bgColorVar}: transparent;
+  color: var(${fgColorVar}, ${color("text")});
 
   /* Use an inner shadow with no spread to mock a background color
      that doesn't transition when the page changes color scheme */
-  box-shadow: ${shadow("z1")}, inset 0 0 0 100px var(${bgColorVar});
+  box-shadow: ${shadow(
+    "z1"
+  )}, inset 0 0 0 100px var(${bgColorVar}, transparent);
 
   &:hover {
-    color: ${color("light")};
+    ${fgColorVar}: ${color("light")};
     ${bgColorVar}: ${color("primary")};
   }
 `;
@@ -53,10 +54,11 @@ export const circleIconHover = `
 
 const Styled = {
   Tooltip: styled(Tooltip)`
+    display: block;
     width: var(--size);
     height: var(--size);
 
-    ${transition(["border-radius"])}
+    ${transition(["border-radius", "box-shadow"])}
     ${circleIconHover}
     position: relative;
     box-shadow: ${shadow("z1")};
@@ -144,7 +146,7 @@ export type GuildIconProps = {
   noTooltip?: boolean;
   elevated?: boolean;
   backgroundColor: string;
-  size: string;
+  size?: string;
   className?: string;
   style?: React.CSSProperties;
 } & Partial<React.HTMLAttributes<HTMLDivElement>>;

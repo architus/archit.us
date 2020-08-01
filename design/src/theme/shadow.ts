@@ -1,4 +1,3 @@
-
 import { transparentize } from "polished";
 
 import { color } from "./color";
@@ -21,6 +20,8 @@ const shadows = {
     `0 10px 10px ${color("shadowMedium")}`,
   ].join(","),
   innerTop: `inset 0 11px 8px -10px ${color("shadowMedium")}`,
+  inner: (c: string) =>
+    `inset 0 11px 15px -12px ${c}, inset 0 -11px 15px -12px ${c}`,
   highlight: (glowColor: string) =>
     `0 0 0 0.2rem ${transparentize(0.6, glowColor)}`,
 } as const;

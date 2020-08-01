@@ -11,7 +11,6 @@ import {
 } from "@app/react-bootstrap";
 import { Space } from "@app/theme";
 import { isDefined, isNil } from "@app/utility";
-import { StyleObject } from "@app/utility/types";
 
 const Styled = {
   Tooltip: styled<

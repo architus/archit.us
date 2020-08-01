@@ -11,7 +11,7 @@ import {
   parseDimension,
 } from "@app/utility";
 import "./style.scss";
-import { RawDimension, StyleObject, Nil } from "@app/utility/types";
+import { RawDimension, Nil } from "@app/utility/types";
 
 type BaseSkeletonProps = {
   width: RawDimension;

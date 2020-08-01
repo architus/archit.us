@@ -2,8 +2,8 @@ import { styled } from "linaria/react";
 import { transparentize } from "polished";
 import React from "react";
 
-import { transformerClasses } from "@app/components/DiscordMock/style";
 import ReactionList from "@app/components/DiscordMock/ReactionList";
+import { transformerClasses } from "@app/components/DiscordMock/style";
 import Skeleton from "@app/components/Skeleton";
 import { OtherColors } from "@app/theme/color";
 import { MockReaction } from "@app/utility/types";

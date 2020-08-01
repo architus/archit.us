@@ -7,7 +7,6 @@ import BuildTag from "@architus/facade/components/BuildTag";
 import Logo from "@architus/facade/components/Logo";
 import { TooltipProps } from "@architus/facade/components/Tooltip";
 import {
-  down,
   BreakpointKey,
   maxWidth,
   breakpoint,

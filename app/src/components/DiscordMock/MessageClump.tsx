@@ -1,4 +1,5 @@
 import { styled } from "linaria/react";
+import { transparentize } from "polished";
 import React, { useContext, useMemo, useCallback } from "react";
 import { FaCheck } from "react-icons/fa";
 
@@ -9,16 +10,14 @@ import UserDisplay from "@app/components/UserDisplay";
 import { OtherColors } from "@app/theme/color";
 import { toHumanTime } from "@app/utility";
 import {
-  StyleObject,
   MockReaction,
   MockMessageClump,
   MockMessage,
   MockUser,
 } from "@app/utility/types";
 import Badge from "@architus/facade/components/Badge";
-import { font } from "@architus/facade/theme/typography";
 import { gap } from "@architus/facade/theme/spacing";
-import { transparentize } from "polished";
+import { font } from "@architus/facade/theme/typography";
 
 // pseudorandom yet determinate skeleton amount
 const skeletonMessageWidth = (index: number): number =>

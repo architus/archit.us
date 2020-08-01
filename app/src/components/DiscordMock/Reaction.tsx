@@ -4,7 +4,7 @@ import React, { useCallback } from "react";
 
 import { transformerClasses } from "@app/components/DiscordMock/style";
 import { OtherColors } from "@app/theme/color";
-import { MockReaction, StyleObject } from "@app/utility/types";
+import { MockReaction } from "@app/utility/types";
 
 const Styled = {
   Reaction: styled.button`

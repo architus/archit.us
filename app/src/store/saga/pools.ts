@@ -424,6 +424,7 @@ function* loadLoop(
     const { responseEvent, signOutAction } = yield race({
       responseEvent: take(
         (action: Action<unknown>) =>
+          // eslint-disable-next-line no-underscore-dangle
           poolResponse.match(action) && action.payload.data._id === requestId
       ),
       signOutAction: take(signOut.type),

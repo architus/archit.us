@@ -6,7 +6,6 @@ import React from "react";
 
 import { resolveIcon, allIconNames, AnyIconName } from "./loader";
 import { warn } from "@app/utility";
-import { StyleObject } from "@app/utility/types";
 
 const Styled = {
   Icon: styled.spanBox<{ noAutoWidth: boolean }>`

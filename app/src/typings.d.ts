@@ -56,7 +56,6 @@ declare module "@xstyled/emotion" {
   import React from "react";
 
   import { Theme, Space, ColorKey, WithBreakpointArgs } from "@app/theme";
-  import { StyleObject } from "@app/utility/types";
 
   import { Interpolation } from "@emotion/css";
 

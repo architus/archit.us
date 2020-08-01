@@ -13,6 +13,7 @@ import {
   color,
   mode,
 } from "@architus/facade/theme/color";
+import { gap } from "@architus/facade/theme/spacing";
 
 const BaseButton = StylableButton<"button">();
 const Styled = {
@@ -88,24 +89,25 @@ const Styled = {
     }
   `,
   Heading: styled.h2`
-    margin-top: 3.5rem;
-    margin-bottom: 3.5rem;
+    margin-top: ${gap.milli};
+    margin-bottom: ${gap.micro};
     text-align: center;
     font-size: 2.5rem;
     font-weight: 300;
   `,
   Text: styled.p`
-    margin-bottom: 2.25rem;
+    margin-bottom: ${gap.milli};
     max-width: 600px;
     text-align: center;
     color: ${color("textFade")};
   `,
   GlowWrapper: styled.div`
-    border-radius: 6px;
+    border-radius: 1000rem;
     box-shadow: 0 6px 16px
       ${transparentize(0.5, dynamicColor("primary", ColorMode.Dark))};
   `,
   CtaButton: styled(BaseButton)`
+    border-radius: 1000rem;
     &:hover {
       transform: translateY(1px);
     }

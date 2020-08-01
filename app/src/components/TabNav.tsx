@@ -4,13 +4,13 @@ import React from "react";
 import { TabDefinition } from "@app/tabs/types";
 import { useInitialRender } from "@app/utility";
 import Tooltip from "@architus/facade/components/Tooltip";
-import { color } from "@architus/facade/theme/color";
+import { color, mode, ColorMode } from "@architus/facade/theme/color";
 import { transition } from "@architus/facade/theme/motion";
 import { gap } from "@architus/facade/theme/spacing";
 import { Option, None, Some } from "@architus/lib/option";
 
 const tabOuterCornerRadius = "6px";
-const tabOverlayCornerRadius = "4px";
+const tabOverlayCornerRadius = "5px";
 const tabInnerCornerRadius = "6px";
 const tabHorizontalPadding = gap.pico;
 const tabVerticalPadding = "16px";
@@ -60,8 +60,14 @@ const Styled = {
 
     --tab-bg: transparent;
     --tab-overlay-bg: transparent;
-    --tab-text-opacity: 0.5;
-    --tab-icon-opacity: 0.3;
+    --tab-text-opacity: 0.4;
+    --tab-icon-opacity: 0.24;
+
+    /* Change the defaults on light mode slightly to be darker */
+    ${mode(ColorMode.Light)} {
+      --tab-text-opacity: 0.6;
+      --tab-icon-opacity: 0.4;
+    }
 
     background-color: var(--tab-bg);
 

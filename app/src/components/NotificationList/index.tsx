@@ -7,7 +7,6 @@ import {
   Notification as NotificationInterface,
   NotificationType,
 } from "@app/store/actions";
-import { StyleObject } from "@app/utility/types";
 import "./style.scss";
 
 type NotificationListProps = {
