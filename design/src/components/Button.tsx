@@ -12,6 +12,7 @@ import {
   mode,
 } from "../theme/color";
 import { transition } from "../theme/motion";
+import { shadow } from "../theme/shadow";
 import { gap } from "../theme/spacing";
 import { isDefined } from "@architus/lib/utility";
 
@@ -50,7 +51,7 @@ const buttonClass = css`
   /* Sub-classes need to add transition to box-shadow */
   box-shadow: none;
   &:active {
-    box-shadow: inset 0 3px 7px rgba(0, 0, 0, 0.125);
+    box-shadow: ${shadow("inset")(staticColor("dark"))};
   }
 `;
 

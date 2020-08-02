@@ -110,6 +110,7 @@ const Styled = {
     ${down("md")} {
       /* Scroll horizontally when the screen isn't wide enough */
       overflow-x: overlay;
+      overflow-y: visible;
       ${scrollBar(ColorMode.Light)}
     }
   `,

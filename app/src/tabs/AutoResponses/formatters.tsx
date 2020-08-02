@@ -59,6 +59,9 @@ const Styled = {
   TooltipContent: styled.div`
     text-align: left;
   `,
+  Avatar: styled(UserDisplay.Avatar)`
+    flex-shrink: 0;
+  `,
 };
 
 // ? =========
@@ -247,7 +250,7 @@ export const AuthorFormatter: React.FC<FormatterProps<
   {}
 >> = ({ row }) => (
   <Styled.AuthorWrapper>
-    <UserDisplay.Avatar avatarUrl={row.authorData.avatarUrl} circle size={28} />
+    <Styled.Avatar avatarUrl={row.authorData.avatarUrl} circle size={28} />
     <Styled.Name>{row.authorData.username}</Styled.Name>
     {isEmptyOrNil(row.authorData.discriminator) ? null : (
       <Styled.Discriminator>{`#${row.authorData.discriminator}`}</Styled.Discriminator>

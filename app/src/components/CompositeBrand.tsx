@@ -25,6 +25,7 @@ const Styled = {
     margin-left: ${gap.pico};
     top: 5px;
     position: relative;
+    white-space: pre;
   `,
   Logotype: styled(Logo.Logotype)`
     fill: currentColor;

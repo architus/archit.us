@@ -1,4 +1,6 @@
-import { AutoResponse } from "@app/utility/types";
+import { AutoResponse, Member } from "@app/utility/types";
+
+export type Author = Member;
 
 export type TransformedAutoResponse = AutoResponse & {
   authorData: AuthorData;

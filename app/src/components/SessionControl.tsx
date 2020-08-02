@@ -1,21 +1,22 @@
 import { styled } from "linaria/react";
 import { transparentize } from "polished";
-import React from "react";
-import { FaSignOutAlt } from "react-icons/fa";
+import React, { useState, useCallback } from "react";
+import { FaSignOutAlt, FaCaretDown } from "react-icons/fa";
 
-import { withBasePath } from "@app/api";
+import Menu from "@app/components/Menu";
+import { navigate } from "@app/components/Router";
 import UserDisplay from "@app/components/UserDisplay";
-import { useOauthUrl } from "@app/hooks";
+import { useOauthUrl, useLocationMatch } from "@app/hooks";
 import { Dropdown } from "@app/react-bootstrap";
 import { useDispatch } from "@app/store";
 import { signOut } from "@app/store/actions";
 import { useCurrentUser, useSessionStatus } from "@app/store/slices/session";
-import { useLocation } from "@app/utility";
 import { User } from "@app/utility/types";
 import AutoLink from "@architus/facade/components/AutoLink";
 import { useDown } from "@architus/facade/hooks";
 import { color, staticColor } from "@architus/facade/theme/color";
 import { transition } from "@architus/facade/theme/motion";
+import { shadow } from "@architus/facade/theme/shadow";
 import { gap } from "@architus/facade/theme/spacing";
 import { Option } from "@architus/lib/option";
 
@@ -27,26 +28,28 @@ const Styled = {
 
     margin-left: ${gap.micro};
   `,
-  DropdownButton: styled(Dropdown.Toggle)`
+  DropdownButton: styled.button`
     background-color: ${transparentize(0.9, staticColor("dark"))};
     border: none;
     box-shadow: none;
     color: ${color("light")};
+    outline: none !important;
+    padding: 6px;
+    border-radius: 4px;
+    cursor: pointer;
 
     &::after {
       vertical-align: 0.1em;
     }
 
     &:hover {
-      background-color: ${transparentize(0.8, staticColor("dark"))};
+      background-color: ${transparentize(0.85, staticColor("dark"))};
     }
 
-    &:active {
+    &:active,
+    &[data-active="true"] {
+      box-shadow: ${shadow("inset")(staticColor("dark"))};
       background-color: ${transparentize(0.75, staticColor("dark"))};
-    }
-
-    &:focus {
-      @include highlight-shadow($-dark);
     }
   `,
   DropdownMenu: styled(Dropdown.Menu)`
@@ -54,17 +57,12 @@ const Styled = {
       text-decoration: none;
     }
   `,
+  DropdownIcon: styled(FaCaretDown)`
+    color: ${color("light")};
+    margin-right: ${gap.femto};
+  `,
   UserDisplay: styled(UserDisplay)`
     margin-right: ${gap.nano};
-  `,
-  IconOffset: styled.span`
-    /* Specific number is to offset the size of the icon on Sign Out */
-    margin-right: 26px;
-  `,
-  SignOutIcon: styled(FaSignOutAlt)`
-    position: relative;
-    margin-right: ${gap.pico};
-    top: 1px;
   `,
   SignInLink: styled(AutoLink)`
     color: ${color("light")};
@@ -97,30 +95,49 @@ const SessionControl: React.FC<SessionControlProps> = React.memo(
     const dispatch = useDispatch();
     const oauthUrl = useOauthUrl();
     const isSmallScreen = useDown("sm");
-    const { location } = useLocation();
-    const isInApp = location.pathname.startsWith(withBasePath("/app"));
+    const [, isInApp] = useLocationMatch("/app");
+    const [dropdownShow, setDropdownShow] = useState(false);
+    const toggleDropdown = useCallback(() => setDropdownShow(!dropdownShow), [
+      dropdownShow,
+    ]);
 
     return (
-      <Styled.Outer>
+      <Styled.Outer className={className} style={style}>
         {isSigningIn ? (
-          <Dropdown className={className} style={style}>
-            <Styled.DropdownButton>
+          <Menu
+            trigger="none"
+            tooltipShown={dropdownShow}
+            onClose={(): void => setDropdownShow(false)}
+            menu={
+              <>
+                {!isInApp && isSmallScreen && (
+                  <Menu.Item onClick={(): unknown => navigate("/app")}>
+                    <Menu.Text>Go to dashboard</Menu.Text>
+                  </Menu.Item>
+                )}
+                <Menu.Item onClick={(): unknown => dispatch(signOut({}))}>
+                  <Menu.Icon>
+                    <FaSignOutAlt />
+                  </Menu.Icon>
+                  <Menu.Text>Sign Out</Menu.Text>
+                </Menu.Item>
+              </>
+            }
+          >
+            <Styled.DropdownButton
+              type="button"
+              data-active={dropdownShow ? "true" : undefined}
+              onClick={toggleDropdown}
+              aria-expanded={dropdownShow}
+              aria-haspopup={true}
+            >
               <Styled.UserDisplay
                 user={user.getOrElse(undefined)}
                 avatar={isSmallScreen}
               />
+              <Styled.DropdownIcon />
             </Styled.DropdownButton>
-            <Styled.DropdownMenu alignRight>
-              {!isInApp && isSmallScreen && (
-                <Dropdown.Item onClick={(): unknown => dispatch(signOut({}))}>
-                  <Styled.IconOffset /> Go to dashboard
-                </Dropdown.Item>
-              )}
-              <Dropdown.Item onClick={(): unknown => dispatch(signOut({}))}>
-                <Styled.SignOutIcon /> Sign Out
-              </Dropdown.Item>
-            </Styled.DropdownMenu>
-          </Dropdown>
+          </Menu>
         ) : (
           <Styled.SignInLink href={oauthUrl} noUnderline newTab={false}>
             Sign In

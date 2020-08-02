@@ -15,7 +15,6 @@ import { down } from "@architus/facade/theme/media";
 import { blankButton } from "@architus/facade/theme/mixins";
 import { transition } from "@architus/facade/theme/motion";
 import { shadow } from "@architus/facade/theme/shadow";
-import { gap } from "@architus/facade/theme/spacing";
 
 // Removes excess space from a multiline SVG source string
 const trimSvg = (src: string): string =>

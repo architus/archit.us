@@ -1,5 +1,6 @@
 // Fibonacci-based spacing values
 const spacing = {
+  zero: "0",
   atto: "3px",
   femto: "5px",
   pico: "8px",
