@@ -582,7 +582,7 @@ function foldAuthorData(
     const { name, discriminator } = authorOption.get;
     return {
       author: `${name}#${discriminator}|${id}`,
-      avatarUrl: getAvatarUrl({ user: authorOption.get }),
+      avatarUrl: getAvatarUrl({ user: authorOption.get }) ?? "",
       username: name,
       discriminator,
     };

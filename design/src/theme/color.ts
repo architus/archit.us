@@ -34,6 +34,7 @@ const colors = {
     textStrong: "rgba(33, 33, 33, 0.85)",
     textFade: "rgba(33, 33, 33, 0.6)",
     textLight: "rgba(33, 33, 33, 0.4)",
+    textReverse: "rgba(244, 246, 249, 0.7)",
     textOverlay: "rgba(33, 33, 33, 0.1)",
     // Background colors
     "bg-40": "hsl(200, 20%, 75%)",
@@ -87,6 +88,7 @@ const colors = {
     textStrong: "rgba(244, 246, 249, 0.9)",
     textFade: "rgba(201, 213, 219, 0.7)",
     textLight: "rgba(201, 213, 219, 0.4)",
+    textReverse: "rgba(0, 0, 0, 0.5)",
     textOverlay: "rgba(201, 213, 219, 0.1)",
     // Background colors
     "bg-40": "hsl(220, 19%, 2%)",

@@ -18,6 +18,13 @@ import { TabDefinition } from "@app/tabs/types";
  */
 const definitions: TabDefinition[] = [
   {
+    path: "stats",
+    name: "Statistics",
+    icon: StatisticsIcon,
+    component: Statistics,
+    tooltip: "Coming soon",
+  },
+  {
     path: "responses",
     name: "Auto Responses",
     icon: AutoResponsesIcon,
@@ -29,13 +36,6 @@ const definitions: TabDefinition[] = [
     name: "Emoji Manager",
     icon: EmojiManagerIcon,
     component: EmojiManager,
-    tooltip: "Coming soon",
-  },
-  {
-    path: "stats",
-    name: "Statistics",
-    icon: StatisticsIcon,
-    component: Statistics,
     tooltip: "Coming soon",
   },
   {

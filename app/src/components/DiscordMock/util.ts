@@ -112,7 +112,7 @@ export function makeMockUser(base: User): MockUser {
     id: userId,
     discriminator: base.discriminator,
     username: base.username,
-    avatarUrl: getAvatarUrl({ user: base }),
+    avatarUrl: getAvatarUrl({ user: base }) ?? "",
     nameColor: userColor,
     verified: false,
     bot: false,

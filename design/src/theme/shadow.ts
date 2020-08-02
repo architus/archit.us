@@ -24,6 +24,10 @@ const shadows = {
     `inset 0 11px 15px -12px ${c}, inset 0 -11px 15px -12px ${c}`,
   highlight: (glowColor: string) =>
     `0 0 0 0.2rem ${transparentize(0.6, glowColor)}`,
+  contrast: [
+    `0 6px 12px ${color("textReverse")}`,
+    `0 4px  5px ${color("textReverse")}`,
+  ].join(","),
 } as const;
 
 /**

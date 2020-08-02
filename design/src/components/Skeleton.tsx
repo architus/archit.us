@@ -13,11 +13,11 @@ import {
 } from "@architus/lib/dimension";
 
 const baseSkeletonClass = css`
-  --skeleton-dark-color: ${transparentize(0.9, staticColor("light"))};
-  --skeleton-dark-alt-color: ${transparentize(0.8, staticColor("light"))};
+  --skeleton-dark-color: ${transparentize(0.9, staticColor("dark"))};
+  --skeleton-dark-alt-color: ${transparentize(0.8, staticColor("dark"))};
 
-  --skeleton-light-color: ${transparentize(0.85, staticColor("dark"))};
-  --skeleton-light-alt-color: ${transparentize(0.7, staticColor("dark"))};
+  --skeleton-light-color: ${transparentize(0.85, staticColor("light"))};
+  --skeleton-light-alt-color: ${transparentize(0.7, staticColor("light"))};
 
   position: relative;
   background-size: 1000px 100%;
@@ -25,17 +25,7 @@ const baseSkeletonClass = css`
   ${animation("shimmer")}
   animation: shimmer 3s linear infinite;
 
-  &[data-variant="light"] {
-    background-image: linear-gradient(
-      to right,
-      var(--skeleton-light-color) 4%,
-      var(--skeleton-light-alt-color) 25%,
-      var(--skeleton-light-color) 36%
-    );
-  }
-
-  &[data-variant="dark"],
-  &[data-variant="auto"] {
+  &[data-variant="dark"] {
     background-image: linear-gradient(
       to right,
       var(--skeleton-dark-color) 4%,
@@ -44,13 +34,23 @@ const baseSkeletonClass = css`
     );
   }
 
+  &[data-variant="light"],
+  &[data-variant="auto"] {
+    background-image: linear-gradient(
+      to right,
+      var(--skeleton-light-color) 4%,
+      var(--skeleton-light-alt-color) 25%,
+      var(--skeleton-light-color) 36%
+    );
+  }
+
   &[data-variant="auto"] {
     ${mode(ColorMode.Light)} {
       background-image: linear-gradient(
         to right,
-        var(--skeleton-light-color) 4%,
-        var(--skeleton-light-alt-color) 25%,
-        var(--skeleton-light-color) 36%
+        var(--skeleton-dark-color) 4%,
+        var(--skeleton-dark-alt-color) 25%,
+        var(--skeleton-dark-color) 36%
       );
     }
   }

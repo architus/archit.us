@@ -3,7 +3,7 @@ import { transparentize } from "polished";
 import React from "react";
 
 import { constructAvatarUrl, attach, isDefined } from "@app/utility";
-import { UserLike, normalizeUserLike } from "@app/utility/types";
+import { UserLike, normalizeUserLike, Nil } from "@app/utility/types";
 import Skeleton from "@architus/facade/components/Skeleton";
 import { staticColor } from "@architus/facade/theme/color";
 import { Option } from "@architus/lib/option";
@@ -136,7 +136,12 @@ const Avatar: React.FC<AvatarProps> = ({
     getAvatarUrl({ avatarUrl, discriminator, user, size })
   ).match({
     None: () => (
-      <Skeleton.Box circle width={size} height={size} variant="light" />
+      <Skeleton.Box
+        circle={circle}
+        width={size}
+        height={size}
+        variant="light"
+      />
     ),
     Some: (url) => (
       <Styled.AvatarImage
@@ -172,7 +177,7 @@ export function getAvatarUrl({
   user?: UserLike;
   discriminator?: string;
   size?: number;
-}): string {
+}): string | Nil {
   // Use specified avatar url
   if (isDefined(avatarUrl)) return avatarUrl;
 
@@ -186,11 +191,16 @@ export function getAvatarUrl({
   }
 
   // Use default avatar url
-  let resolvedDiscriminator = "0";
+  let resolvedDiscriminator = null;
   if (isDefined(discriminator)) resolvedDiscriminator = discriminator;
   else if (isDefined(user)) resolvedDiscriminator = user.discriminator;
-  return constructAvatarUrl({
-    discriminator: resolvedDiscriminator,
-    size,
-  });
+
+  if (isDefined(resolvedDiscriminator)) {
+    return constructAvatarUrl({
+      discriminator: resolvedDiscriminator,
+      size,
+    });
+  }
+
+  return null;
 }

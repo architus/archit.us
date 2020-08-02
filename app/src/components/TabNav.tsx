@@ -1,10 +1,12 @@
 import { styled } from "linaria/react";
 import React from "react";
 
+import { minimizeBreakpoint } from "@app/layout";
 import { TabDefinition } from "@app/tabs/types";
 import { useInitialRender } from "@app/utility";
 import Tooltip from "@architus/facade/components/Tooltip";
 import { color, mode, ColorMode } from "@architus/facade/theme/color";
+import { up } from "@architus/facade/theme/media";
 import { transition } from "@architus/facade/theme/motion";
 import { gap } from "@architus/facade/theme/spacing";
 import { Option, None, Some } from "@architus/lib/option";
@@ -86,15 +88,17 @@ const Styled = {
     }
 
     /* Thin strip to connect tab to right content */
-    &::after {
-      position: absolute;
-      content: " ";
-      top: 0;
-      bottom: 0;
-      right: -${tabListPadding};
-      width: ${tabListPadding};
-      display: block;
-      background-color: var(--tab-bg);
+    ${up(minimizeBreakpoint)} {
+      &::after {
+        position: absolute;
+        content: " ";
+        top: 0;
+        bottom: 0;
+        right: -${tabListPadding};
+        width: ${tabListPadding};
+        display: block;
+        background-color: var(--tab-bg);
+      }
     }
 
     &:hover {
@@ -110,8 +114,10 @@ const Styled = {
       --tab-text-opacity: 1 !important;
       --tab-icon-opacity: 0.9 !important;
 
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
+      ${up(minimizeBreakpoint)} {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
 
       &::before {
         display: none;
@@ -164,22 +170,27 @@ const Styled = {
     line-height: 1.03;
     opacity: 0.8;
     user-select: none;
+    margin-bottom: ${gap.atto};
 
     ${transition(["opacity"])}
     opacity: var(--tab-text-opacity);
   `,
   TabTopCorner: styled.span`
-    ${cornerMixin}
-    top: calc(-2 * ${tabInnerCornerRadius});
-    &:before {
-      border-bottom-right-radius: calc(2 * ${tabInnerCornerRadius});
+    ${up(minimizeBreakpoint)} {
+      ${cornerMixin}
+      top: calc(-2 * ${tabInnerCornerRadius});
+      &:before {
+        border-bottom-right-radius: calc(2 * ${tabInnerCornerRadius});
+      }
     }
   `,
   TabBottomCorner: styled.span`
-    ${cornerMixin}
-    bottom: calc(-2 * ${tabInnerCornerRadius});
-    &:before {
-      border-top-right-radius: calc(2 * ${tabInnerCornerRadius});
+    ${up(minimizeBreakpoint)} {
+      ${cornerMixin}
+      bottom: calc(-2 * ${tabInnerCornerRadius});
+      &:before {
+        border-top-right-radius: calc(2 * ${tabInnerCornerRadius});
+      }
     }
   `,
 };

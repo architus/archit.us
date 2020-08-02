@@ -1,7 +1,7 @@
 import { css } from "linaria";
 import { styled } from "linaria/react";
 
-import { down } from "@architus/facade/theme/media";
+import { down, BreakpointKey } from "@architus/facade/theme/media";
 import { gap } from "@architus/facade/theme/spacing";
 
 export const headerHeight = "58px" as const;
@@ -11,6 +11,7 @@ export const sitePadding = `var(${sitePaddingVariable})`;
 export const contentWidth = `var(${contentWidthVariable})`;
 export const appHorizontalPadding = gap.milli;
 export const appVerticalPadding = gap.milli;
+export const minimizeBreakpoint: BreakpointKey = "md";
 
 export const global = css`
   :global() {
