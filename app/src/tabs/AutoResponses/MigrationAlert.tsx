@@ -1,12 +1,10 @@
 import { styled } from "linaria/react";
 import { transparentize } from "polished";
 import React, { useState, useCallback } from "react";
-import { IoMdClose } from "react-icons/io";
 
+import CloseButton from "@app/components/CloseButton";
 import AutoLink from "@architus/facade/components/AutoLink";
 import { color, staticColor } from "@architus/facade/theme/color";
-import { blankButton } from "@architus/facade/theme/mixins";
-import { transition } from "@architus/facade/theme/motion";
 import { gap } from "@architus/facade/theme/spacing";
 
 const Styled = {
@@ -21,30 +19,10 @@ const Styled = {
     border: 1px solid ${transparentize(0.5, staticColor("info"))};
     border-radius: 6px;
   `,
-  CloseButton: styled.div`
-    ${blankButton()}
+  CloseButton: styled(CloseButton)`
     position: absolute;
     top: 0;
     right: 0;
-    font-size: 1.5rem;
-    color: ${color("textStrong")};
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    width: 50px;
-    height: 50px;
-
-    ${transition(["opacity"])}
-    opacity: 0.3;
-
-    &:hover {
-      opacity: 0.7;
-    }
-
-    &:active {
-      opacity: 1;
-    }
   `,
 };
 
@@ -72,9 +50,7 @@ const MigrationAlert: React.FC<MigrationAlertProps> = ({
     <>
       {show && (
         <Styled.Alert className={className} style={style}>
-          <Styled.CloseButton onClick={hide}>
-            <IoMdClose />
-          </Styled.CloseButton>
+          <Styled.CloseButton onClick={hide} />
           <strong>Notice</strong>: Old auto response triggers have been turned
           into their equivalent regular expression triggers on servers with{" "}
           <em>regular expression auto responses</em> enabled in order to

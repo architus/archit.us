@@ -15,18 +15,28 @@ import { MockMessageClump, MockMessageSet } from "@app/utility/types";
 import { svgDataUrl } from "@architus/facade/css";
 import { Color, staticColor } from "@architus/facade/theme/color";
 
+// Removes excess space from a multiline SVG source string
+const trimSvg = (src: string): string =>
+  src
+    .split("\n")
+    .map((s) => s.trim())
+    .filter((s) => s.length > 0)
+    .join(" ");
+
 const errorSvg = (fill: string): string =>
-  `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 39 39'>` +
-  `<g style='opacity: 0.15;'>` +
-  `<polygon style='fill:${fill}' points='39 4.9 34.1 0 19.5 14.6 4.9 0 0 ` +
-  `4.9 14.6 19.5 0 34.1 4.9 39 19.5 24.4 34.1 39 39 34.1 24.4 19.5'/>` +
-  `<path style='fill:${fill};' d='m34.1 0.9l4 4-14.2 14.2-0.4 0.4 0.4 0.4 ` +
-  `14.2 14.2-4 4-14.2-14.2-0.4-0.4-0.4 0.4-14.2 14.2-4-4 14.2-14.2 0.4-0.4-0.4-0.4` +
-  `-14.2-14.2 4-4 14.2 14.2 0.4 0.4 0.4-0.4 14.2-14.2m0-0.9l-14.6 14.6-14.6-14.6` +
-  `-4.9 4.9 14.6 14.6-14.6 14.6 4.9 4.9 14.6-14.6 14.6 14.6 4.9-4.9-14.6-14.6 14.6` +
-  `-14.6-4.9-4.9z'/>` +
-  `</g>` +
-  `</svg>`;
+  trimSvg(
+    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 39 39'>
+      <g style='opacity: 0.15;'>
+        <polygon style='fill:${fill}' points='39 4.9 34.1 0 19.5 14.6 4.9 0 0
+          4.9 14.6 19.5 0 34.1 4.9 39 19.5 24.4 34.1 39 39 34.1 24.4 19.5'/>
+        <path style='fill:${fill};' d='m34.1 0.9l4 4-14.2 14.2-0.4 0.4 0.4 0.4
+          14.2 14.2-4 4-14.2-14.2-0.4-0.4-0.4 0.4-14.2 14.2-4-4 14.2-14.2 0.4
+          -0.4-0.4-0.4-14.2-14.2 4-4 14.2 14.2 0.4 0.4 0.4-0.4 14.2-14.2m0-0.9
+          l-14.6 14.6-14.6-14.6-4.9 4.9 14.6 14.6-14.6 14.6 4.9 4.9 14.6-14.6
+          14.6 14.6 4.9-4.9-14.6-14.6 14.6-14.6-4.9-4.9z'/>
+      </g>
+    </svg>`
+  );
 
 const Styled = {
   Outer: styled.div`

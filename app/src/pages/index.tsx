@@ -11,10 +11,10 @@ import {
   allowedCommands,
   customEmotes,
 } from "@app/assets/demo.json";
-import LogsSvg from "@app/assets/images/logs.svg";
-import MusicSvg from "@app/assets/images/music.svg";
-import StatisticsSvg from "@app/assets/images/statistics.svg";
-import UserControlSvg from "@app/assets/images/user_control.svg";
+import LogsSvg from "@app/assets/images/features/logs.svg";
+import MusicSvg from "@app/assets/images/features/music.svg";
+import StatisticsSvg from "@app/assets/images/features/statistics.svg";
+import UserControlSvg from "@app/assets/images/features/user_control.svg";
 import DiscordMock from "@app/components/DiscordMock";
 import { CustomEmojiExtension } from "@app/components/DiscordMock/CustomEmojiExtension";
 import { Extension } from "@app/components/DiscordMock/util";

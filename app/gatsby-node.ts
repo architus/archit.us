@@ -47,65 +47,67 @@ export const onCreateWebpackConfig: GatsbyNode["onCreateWebpackConfig"] = async 
   getConfig,
 }): Promise<void> => {
   const { replaceWebpackConfig } = actions;
+  const newConfig = getConfig();
 
   // Patch the webpack config to alias socket.io during linaria evaluation
-  const { rules } = getConfig().module;
-  const modifiedRules = rules.map(
-    (rule: { use?: Array<{ loader: string; options?: object }> }) => {
-      // Select the linaria rules
-      if (
-        isDefined(rule?.use) &&
-        rule.use.length > 0 &&
-        rule.use[0].loader === "linaria/loader"
-      ) {
-        return {
-          ...rule,
-          use: rule.use.map((use) => {
-            const { options } = use;
-            const linariaOptions = options as
-              | {
-                  babelOptions: { presets: object[]; plugins: object[] };
-                }
-              | Nil;
-            if (isDefined(linariaOptions)) {
-              const { babelOptions } = linariaOptions;
-              return {
-                ...use,
-                options: {
-                  ...linariaOptions,
-                  babelOptions: {
-                    ...babelOptions,
-                    plugins: [
-                      ...(babelOptions?.plugins ?? []),
-                      [
-                        "babel-plugin-module-resolver",
-                        {
-                          root: ["."],
-                          alias: {
-                            "@architus/facade": "../design/src",
-                            "@architus/lib": "../lib/src",
-                            "@docs": "../docs/src",
-                            "@app": "../app/src",
-                            "socket.io-client": "../.shared/socket.io-linaria",
-                          },
-                        },
-                      ],
-                    ],
-                  },
-                },
-              };
-            }
+  newConfig.module.rules = modifyLinariaRule(newConfig.module.rules);
 
-            return use;
-          }),
-        };
-      }
-
-      return rule;
-    }
-  );
-
-  const newConfig = getConfig();
-  newConfig.module.rules = modifiedRules;
   replaceWebpackConfig(newConfig);
 };
+
+type Rule = { use?: Array<{ loader: string; options?: object }> };
+
+function modifyLinariaRule(rules: Rule[]): Rule[] {
+  return rules.map((rule) => {
+    // Select the linaria rules
+    if (
+      isDefined(rule?.use) &&
+      rule.use.length > 0 &&
+      rule.use[0].loader === "linaria/loader"
+    ) {
+      return {
+        ...rule,
+        use: rule.use.map((use) => {
+          const { options } = use;
+          const linariaOptions = options as
+            | {
+                babelOptions: { presets: object[]; plugins: object[] };
+              }
+            | Nil;
+          if (isDefined(linariaOptions)) {
+            const { babelOptions } = linariaOptions;
+            return {
+              ...use,
+              options: {
+                ...linariaOptions,
+                babelOptions: {
+                  ...babelOptions,
+                  plugins: [
+                    ...(babelOptions?.plugins ?? []),
+                    [
+                      "babel-plugin-module-resolver",
+                      {
+                        root: ["."],
+                        alias: {
+                          "@architus/facade": "../design/src",
+                          "@architus/lib": "../lib/src",
+                          "@docs": "../docs/src",
+                          "@app": "../app/src",
+                          "socket.io-client": "../.shared/socket.io-linaria",
+                        },
+                      },
+                    ],
+                  ],
+                },
+              },
+            };
+          }
+
+          return use;
+        }),
+      };
+    }
+
+    return rule;
+  });
+}

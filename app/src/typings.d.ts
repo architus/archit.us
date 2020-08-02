@@ -32,6 +32,11 @@ declare module "unist-util-find" {
   export default find;
 }
 
+declare module "*.inline.svg" {
+  const content: string;
+  export default content;
+}
+
 declare module "*.svg" {
   const content: React.FC<React.SVGAttributes<SVGElement>>;
   export default content;

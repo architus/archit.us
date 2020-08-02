@@ -16,6 +16,9 @@ const Styled = {
     line-height: 1.2;
     padding-top: ${gap.nano};
   `,
+  LoggedIn: styled.p`
+    margin-bottom: ${gap.nano};
+  `,
 };
 
 export type LoginPromptProps = {
@@ -42,7 +45,9 @@ const LoginPrompt: React.FC<LoginPromptProps> = ({
     <Styled.Outer className={className} style={style}>
       {loggedInProp ? (
         <>
-          {showLabel ? <p className="mb-3">You are already logged in</p> : null}
+          {showLabel ? (
+            <Styled.LoggedIn>You are already logged in</Styled.LoggedIn>
+          ) : null}
           <Button
             type="solid"
             variant="primary"

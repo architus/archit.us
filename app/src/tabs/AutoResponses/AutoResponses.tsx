@@ -277,6 +277,7 @@ export class AutoResponses extends React.Component<
       showToast({
         message: "Copied to clipboard",
         variant: "success",
+        duration: 1000000,
       })
     );
   };

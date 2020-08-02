@@ -3,5 +3,5 @@
  * @param svg - Normal, unescaped SVG text
  */
 export function svgDataUrl(svg: string): string {
-  return `url("data:image/svg+xml, ${encodeURIComponent(svg)}");`;
+  return `url("data:image/svg+xml,${encodeURIComponent(svg)}");`;
 }
