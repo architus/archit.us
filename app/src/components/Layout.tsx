@@ -1,9 +1,8 @@
 import { styled } from "linaria/react";
 import { darken } from "polished";
-import React, { useCallback, useEffect, useContext } from "react";
+import React, { useCallback, useContext } from "react";
 import { BsMoon } from "react-icons/bs";
 import { IoMdSunny } from "react-icons/io";
-import useDarkMode from "use-dark-mode";
 
 import { StyledFooters } from "@app/components/Footers";
 import Header from "@app/components/Header";
@@ -76,26 +75,14 @@ const Layout: React.FC<LayoutProps> = ({
   headerProps,
 }) => {
   // Dark mode control hooks
-  const { value, toggle } = useDarkMode(false);
   const { mode, setMode } = useContext(ColorModeContext);
   const toggleWrapper = useCallback(
     (checked: boolean) => {
       const targetMode = checked ? ColorMode.Dark : ColorMode.Light;
       setMode(targetMode);
-      toggle();
     },
-    [setMode, toggle]
+    [setMode]
   );
-
-  // Attempt to maintain consistency between the two systems during the migration
-  // from sass to linaria
-  useEffect(() => {
-    const isDark = mode === ColorMode.Dark;
-    if (isDark !== value) {
-      const targetMode = value ? ColorMode.Dark : ColorMode.Light;
-      setMode(targetMode);
-    }
-  });
 
   // Get the string representations of the current colors
   const primaryColor = Color(hybridColor("primary", mode));
@@ -114,7 +101,7 @@ const Layout: React.FC<LayoutProps> = ({
           {typeof window === "undefined" ? null : (
             <Styled.Switch
               onChange={toggleWrapper}
-              checked={value}
+              checked={mode === ColorMode.Dark}
               aria-label="Dark mode switch"
               uncheckedIcon={<Styled.UncheckedIcon />}
               checkedIcon={<Styled.CheckedIcon />}

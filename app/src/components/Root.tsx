@@ -9,9 +9,6 @@ import Store from "@app/store";
 import { injectColorGlobals } from "@app/theme/color";
 import { AutoLinkContext } from "@architus/facade/components/AutoLink";
 
-// Import the global CSS rules from SCSS/Bootstrap
-import "@app/scss/main.scss";
-
 // Import the global CSS rules from Linaria
 import "@architus/facade/theme/globals";
 import "@app/layout";

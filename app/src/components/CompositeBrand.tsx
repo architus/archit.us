@@ -1,3 +1,4 @@
+import { css } from "linaria";
 import { styled } from "linaria/react";
 import React from "react";
 
@@ -9,6 +10,11 @@ import { TooltipProps } from "@architus/facade/components/Tooltip";
 import { useUp } from "@architus/facade/hooks";
 import { BreakpointKey } from "@architus/facade/theme/media";
 import { gap } from "@architus/facade/theme/spacing";
+
+const buildTagClass = css`
+  margin-left: ${gap.nano};
+  vertical-align: 2px;
+`;
 
 const Styled = {
   Brand: styled.div<{ withVersion: boolean }>`
@@ -29,10 +35,6 @@ const Styled = {
   `,
   Logotype: styled(Logo.Logotype)`
     fill: currentColor;
-  `,
-  BuildTag: styled(BuildTag)`
-    margin-left: ${gap.nano};
-    vertical-align: 2px;
   `,
   Version: styled.span`
     position: absolute;
@@ -71,7 +73,8 @@ const CompositeBrand: React.FC<CompositeBrandProps> = ({
       <Styled.Title>
         <Styled.Logotype height={20} />
         {buildMetadata.isDefined() && showBuildTag && (
-          <Styled.BuildTag
+          <BuildTag
+            className={buildTagClass}
             metadata={buildMetadata.get}
             tooltipPlacement={buildTooltipPlacement}
           />

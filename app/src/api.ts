@@ -1,3 +1,5 @@
+import { withPathPrefix } from "@architus/lib/path";
+
 /**
  * Gets the RESTful API base URL to use
  */
@@ -17,7 +19,9 @@ export const GATEWAY_API_BASE: string = process.env.PRODUCTION
  * @param path - base path with leading /
  */
 export function withBasePath(path: string): string {
-  if (process.env.SITE_BASE_PATH)
-    return `/${process.env.SITE_BASE_PATH}${path}`;
-  return path;
+  const maybePrefix =
+    typeof window === "undefined"
+      ? undefined
+      : (window as { __BASE_PATH__?: string })?.__BASE_PATH__;
+  return withPathPrefix(path, maybePrefix ?? "/");
 }

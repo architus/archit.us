@@ -7,7 +7,6 @@ import Menu from "@app/components/Menu";
 import { navigate } from "@app/components/Router";
 import UserDisplay from "@app/components/UserDisplay";
 import { useOauthUrl, useLocationMatch } from "@app/hooks";
-import { Dropdown } from "@app/react-bootstrap";
 import { useDispatch } from "@app/store";
 import { signOut } from "@app/store/actions";
 import { useCurrentUser, useSessionStatus } from "@app/store/slices/session";
@@ -50,11 +49,6 @@ const Styled = {
     &[data-active="true"] {
       box-shadow: ${shadow("inset")(staticColor("dark"))};
       background-color: ${transparentize(0.75, staticColor("dark"))};
-    }
-  `,
-  DropdownMenu: styled(Dropdown.Menu)`
-    a {
-      text-decoration: none;
     }
   `,
   DropdownIcon: styled(FaCaretDown)`

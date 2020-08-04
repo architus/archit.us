@@ -1,15 +1,29 @@
+import { useState } from "react";
+
 import { API_BASE } from "@app/api";
 import { useLocation } from "@app/components/Router";
 import { usePathPrefix } from "@app/data/path-prefix";
-import {
-  useReturnQuery,
-  processIfNotEmptyOrNil,
-  splitPath,
-} from "@app/utility";
+import { processIfNotEmptyOrNil, splitPath, isProduction } from "@app/utility";
 import { Snowflake } from "@app/utility/types";
+import { useEffectOnce } from "@architus/lib/hooks";
 import { Option } from "@architus/lib/option";
-import { locationMatches } from "@architus/lib/path";
+import {
+  locationMatches,
+  withoutTrailing,
+  withoutLeading,
+} from "@architus/lib/path";
 import { isDefined, trimPrefix } from "@architus/lib/utility";
+
+export function useBasePath(path = "/"): string {
+  let pathPrefix = usePathPrefix().getOrElse("/");
+  if (pathPrefix !== "/") {
+    pathPrefix = `/${withoutTrailing(withoutLeading(pathPrefix))}`;
+  } else {
+    pathPrefix = "";
+  }
+
+  return `${pathPrefix}/${withoutLeading(path)}`;
+}
 
 /**
  * Determines if the current location matches the given path,
@@ -33,6 +47,25 @@ export function useLocationMatch(path: string): [boolean, boolean] {
     partial: true,
   });
   return [fullMatch, partialMatch];
+}
+
+/**
+ * Gets the optional encoded return query param if not in production mode (where the
+ * return URL is automatically the production URL)
+ *
+ * **Note: Causes a re-render due to `useEffectOnce`**
+ */
+export function useReturnQuery(): string {
+  const appPath = useBasePath("/app");
+  const [returnQuery, setReturnQuery] = useState<string>("");
+  useEffectOnce(() => {
+    if (!isProduction && returnQuery === "") {
+      const returnUrl = `${window.location.protocol}//${window.location.host}${appPath}`;
+      const encoded = encodeURIComponent(returnUrl);
+      setReturnQuery(`return=${encoded}`);
+    }
+  });
+  return returnQuery;
 }
 
 /**

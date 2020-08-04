@@ -1,7 +1,6 @@
 import { styled } from "linaria/react";
 import React from "react";
 
-import { withBasePath } from "@app/api";
 import { useLocationMatch } from "@app/hooks";
 import { useSessionStatus } from "@app/store/slices/session";
 import HeaderLink from "@architus/facade/components/HeaderLink";
@@ -13,6 +12,7 @@ const Styled = {
     flex-direction: row;
     align-items: stretch;
     justify-content: flex-start;
+    padding: 0;
 
     /* Hide the navbar links on small screen sizes */
     ${down("sm")} {
@@ -27,7 +27,7 @@ const LoggedInLinks: React.FC = () => {
     <>
       {/* Hide the link to the dashboard when in the app */}
       {!isInApp && (
-        <HeaderLink active={false} path={withBasePath("/app")}>
+        <HeaderLink active={false} path="/app">
           Dashboard
         </HeaderLink>
       )}

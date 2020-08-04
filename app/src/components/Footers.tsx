@@ -18,7 +18,7 @@ const Styled = {
 
     footer:nth-of-type(2n + 1) {
       ${Card} {
-        ${up("lg")} {
+        ${up("xl")} {
           margin-left: ${gap.micro};
         }
       }

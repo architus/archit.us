@@ -96,7 +96,7 @@ export const plugins = [
   "gatsby-plugin-typescript",
   {
     resolve: `gatsby-plugin-create-client-paths`,
-    options: { prefixes: [`/app/*`] },
+    options: { prefixes: [`${pathPrefix}app/*`] },
   },
   {
     resolve: `gatsby-plugin-typegen`,
@@ -112,7 +112,6 @@ export const plugins = [
     },
   },
   "gatsby-plugin-linaria",
-  "gatsby-plugin-sass",
   "gatsby-plugin-dark-mode",
   `gatsby-plugin-react-helmet`,
   `gatsby-plugin-remove-serviceworker`,

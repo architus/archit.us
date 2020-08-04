@@ -9,30 +9,9 @@ import {
 } from "react";
 
 import { isDefined } from "./data";
-import { isClient, isProduction } from "./document";
+import { isClient } from "./document";
 import { addMissingUnit, collator } from "./primitives";
-import { withBasePath } from "@app/api";
 import { Option, Some, None } from "@architus/lib/option";
-
-/**
- * Gets the optional encoded return query param if not in production mode (where the
- * return URL is automatically the production URL)
- *
- * **Note: Causes a re-render due to `useEffectOnce`**
- */
-export function useReturnQuery(): string {
-  const [returnQuery, setReturnQuery] = useState<string>("");
-  useEffectOnce(() => {
-    if (!isProduction && returnQuery === "") {
-      const returnUrl = `${window.location.protocol}//${
-        window.location.host
-      }${withBasePath("/app")}`;
-      const encoded = encodeURIComponent(returnUrl);
-      setReturnQuery(`return=${encoded}`);
-    }
-  });
-  return returnQuery;
-}
 
 /**
  * Conditionally invokes a calculation function depending on the current execution

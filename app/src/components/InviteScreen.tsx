@@ -4,12 +4,12 @@ import React from "react";
 import { API_BASE } from "@app/api";
 import GuildCard from "@app/components/GuildCard";
 import PageTitle from "@app/components/PageTitle";
+import { useReturnQuery } from "@app/hooks";
 import { appHorizontalPadding, appVerticalPadding } from "@app/layout";
 import { usePool } from "@app/store/slices/pools";
 import { BaseAppProps } from "@app/tabs/types";
 import {
   isDiscordAdminWithoutArchitus,
-  useReturnQuery,
   processIfNotEmptyOrNil,
 } from "@app/utility";
 import { Snowflake } from "@app/utility/types";

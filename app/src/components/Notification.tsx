@@ -91,6 +91,7 @@ const StyledCloseButton = styled(CloseButton)`
   position: absolute;
   top: 0;
   right: 2px;
+  color: ${color("light")};
 `;
 
 const Styled = {

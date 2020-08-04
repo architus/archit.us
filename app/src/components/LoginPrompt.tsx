@@ -2,7 +2,6 @@ import { styled } from "linaria/react";
 import React from "react";
 import { FaDiscord } from "react-icons/fa";
 
-import { withBasePath } from "@app/api";
 import { Link as RouterLink } from "@app/components/Router";
 import { useOauthUrl } from "@app/hooks";
 import { useSessionStatus } from "@app/store/slices/session";
@@ -48,12 +47,7 @@ const LoginPrompt: React.FC<LoginPromptProps> = ({
           {showLabel ? (
             <Styled.LoggedIn>You are already logged in</Styled.LoggedIn>
           ) : null}
-          <Button
-            type="solid"
-            variant="primary"
-            to={withBasePath("/app")}
-            as={RouterLink}
-          >
+          <Button type="solid" variant="primary" to="/app" as={RouterLink}>
             Go to dashboard
           </Button>
         </>

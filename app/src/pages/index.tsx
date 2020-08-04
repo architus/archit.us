@@ -5,7 +5,6 @@ import React from "react";
 import { FaChevronRight } from "react-icons/fa";
 import { shallowEqual } from "react-redux";
 
-import { withBasePath } from "@app/api";
 import {
   messageSets,
   allowedCommands,
@@ -62,7 +61,7 @@ const Content = styled.article`
     border: 1px solid ${color("contrastBorder")};
     font-family: ${font("monospace")};
     padding: 0.1em 0.35em 0.05em;
-    font-size: 100%;
+    font-size: 90%;
   }
 `;
 
@@ -566,6 +565,9 @@ const FeatureStyled = {
     color: ${color("textFade")};
     margin-bottom: ${gap.femto};
   `,
+  Heading: styled.h3`
+    font-size: 1.75rem;
+  `,
   Dots: styled.div`
     &::before,
     &::after {
@@ -649,7 +651,7 @@ const Feature: React.FC<FeatureProps> = ({
     <FeatureStyled.Content>
       <FeatureStyled.Dots data-side={side}>
         <FeatureStyled.Subheading>{lead}</FeatureStyled.Subheading>
-        <h3>{header}</h3>
+        <FeatureStyled.Heading>{header}</FeatureStyled.Heading>
         <div>{content}</div>
       </FeatureStyled.Dots>
     </FeatureStyled.Content>
@@ -879,6 +881,7 @@ const BottomCtaStyled = {
     max-width: 192px;
     margin-right: auto;
     margin-top: 0;
+    border: none;
     border-top-style: dashed;
     border-top-width: 2px;
     border-top-color: ${color("primary")};
@@ -962,7 +965,7 @@ const BottomCta: React.FC<BottomCtaProps> = () => {
   const { isSignedIn } = useSessionStatus();
   const oauthUrl = useOauthUrl();
   const buttonProps = isSignedIn
-    ? { as: Link, to: withBasePath("/app") }
+    ? { as: Link, to: "/app" }
     : { as: "a", href: oauthUrl };
 
   return (

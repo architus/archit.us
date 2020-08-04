@@ -136,6 +136,7 @@ const Styled = {
   SectionDivider: styled.hr`
     opacity: 0.55;
     width: 100%;
+    border: none;
     border-top: 2px solid ${color("textLight")};
     margin-top: 0;
     margin-bottom: ${iconSpacing};

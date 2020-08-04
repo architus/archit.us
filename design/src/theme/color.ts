@@ -15,6 +15,9 @@ export enum ColorMode {
 }
 
 export const defaultMode: ColorMode = ColorMode.Dark;
+const nonDefaultModes = Object.values(ColorMode).filter(
+  (m) => m !== defaultMode
+);
 
 export type ColorModeContext = {
   mode: ColorMode;
@@ -282,6 +285,9 @@ export function dynamicColor(
  * @param colorMode - desired color mode
  */
 export function mode(colorMode: ColorMode): string {
+  // Make sure the default mode renders correctly on non-js browsers
+  if (colorMode === defaultMode)
+    return `body${nonDefaultModes.map((m) => `:not(.${m})`).join("")} &`;
   return `body.${colorMode} &`;
 }
 

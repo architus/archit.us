@@ -51,7 +51,3 @@ declare module "*.woff2" {
   const content: string;
   export default content;
 }
-
-declare module "preval.macro" {
-  export default function apply(code: string | TemplateStringsArray): string;
-}

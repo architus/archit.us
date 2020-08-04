@@ -2,7 +2,7 @@ import copy from "copy-to-clipboard";
 import { styled } from "linaria/react";
 import React, { MutableRefObject } from "react";
 import { Column, SortDirection } from "react-data-grid";
-import { createPortal } from "react-dom";
+// import { createPortal } from "react-dom";
 import { FaTrash, FaCopy } from "react-icons/fa";
 
 import {
@@ -22,10 +22,10 @@ import {
 } from "./NumericFilter";
 import { StringFilter } from "./StringFilter";
 import { TransformedAutoResponse, Author } from "./types";
-import ContextMenu, {
-  MenuItem,
-  connectMenu,
-} from "@app/components/ContextMenu";
+// import ContextMenu, {
+//   MenuItem,
+//   connectMenu,
+// } from "@app/components/ContextMenu";
 import DataGrid from "@app/components/DataGrid";
 import { Dispatch } from "@app/store";
 import { showToast } from "@app/store/actions";
@@ -408,28 +408,28 @@ export class AutoResponsesGrid extends React.Component<
       },
     ];
 
-    const CommandMenu = connectMenu("auto-response-grid-context-menu")(
-      ({ trigger }: { trigger: { canDelete: boolean } | null }) => {
-        return (
-          <ContextMenu id="auto-response-grid-context-menu">
-            <MenuItem onClick={this.onCopy}>
-              <Styled.CopyIcon />
-              Copy to clipboard
-            </MenuItem>
-            {/* {trigger && trigger.canDelete ? (
-              <>
-                <MenuItem onClick={this.onDelete}>
-                  <Styled.TrashIcon />
-                  Delete
-                </MenuItem>
-              </>
-            ) : (
-              <></>
-            )} */}
-          </ContextMenu>
-        );
-      }
-    );
+    // const CommandMenu = connectMenu("auto-response-grid-context-menu")(
+    //   ({ trigger }: { trigger: { canDelete: boolean } | null }) => {
+    //     return (
+    //       <ContextMenu id="auto-response-grid-context-menu">
+    //         <MenuItem onClick={this.onCopy}>
+    //           <Styled.CopyIcon />
+    //           Copy to clipboard
+    //         </MenuItem>
+    //         {/* {trigger && trigger.canDelete ? (
+    //           <>
+    //             <MenuItem onClick={this.onDelete}>
+    //               <Styled.TrashIcon />
+    //               Delete
+    //             </MenuItem>
+    //           </>
+    //         ) : (
+    //           <></>
+    //         )} */}
+    //       </ContextMenu>
+    //     );
+    //   }
+    // );
 
     return (
       <>
@@ -463,7 +463,7 @@ export class AutoResponsesGrid extends React.Component<
             filters={filters}
             onFiltersChange={this.onFiltersChange}
           />
-          {createPortal(<CommandMenu />, document.body)}
+          {/* {createPortal(<CommandMenu />, document.body)} */}
         </Styled.DataGridWrapper>
       </>
     );
