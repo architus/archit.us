@@ -36,6 +36,7 @@ const Styled = {
     padding: 6px;
     border-radius: 4px;
     cursor: pointer;
+    white-space: nowrap;
 
     &::after {
       vertical-align: 0.1em;

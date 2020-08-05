@@ -5,6 +5,7 @@ import ReactDataGrid, { DataGridProps } from "react-data-grid";
 import AutoSizer from "react-virtualized-auto-sizer";
 
 import { color, dynamicColor, ColorMode } from "@architus/facade/theme/color";
+import { scrollBarAuto } from "@architus/facade/theme/mixins";
 import { shadow } from "@architus/facade/theme/shadow";
 import { gap } from "@architus/facade/theme/spacing";
 
@@ -104,6 +105,7 @@ const Styled = {
       user-select: none;
       background-color: ${color("bg-10")};
       font-size: 14px;
+      ${scrollBarAuto()}
     }
 
     .rdg *,

@@ -45,12 +45,30 @@ export const sourceNodes: GatsbyNode["sourceNodes"] = async (
 export const onCreateWebpackConfig: GatsbyNode["onCreateWebpackConfig"] = async ({
   actions,
   getConfig,
+  stage,
 }): Promise<void> => {
   const { replaceWebpackConfig } = actions;
   const newConfig = getConfig();
 
   // Patch the webpack config to alias socket.io during linaria evaluation
   newConfig.module.rules = modifyLinariaRule(newConfig.module.rules);
+
+  // Fix CSS ordering rules
+  // (not needed since css classes are hashed/won't collide)
+  // The only area where this isn't the case is global styles,
+  // but we should avoid those as much as possible
+  // From https://spectrum.chat/gatsby-js/general/having-issue-related-to-chunk-commons-mini-css-extract-plugin~0ee9c456-a37e-472a-a1a0-cc36f8ae6033?m=MTU3MjYyNDQ5OTAyNQ==
+  if (stage === "build-javascript") {
+    const config = getConfig();
+    const miniCssExtractPlugin = config.plugins.find(
+      (plugin: { constructor: { name: string } }) =>
+        plugin.constructor.name === "MiniCssExtractPlugin"
+    );
+    if (miniCssExtractPlugin) {
+      miniCssExtractPlugin.options.ignoreOrder = true;
+    }
+    actions.replaceWebpackConfig(config);
+  }
 
   replaceWebpackConfig(newConfig);
 };

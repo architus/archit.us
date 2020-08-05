@@ -1,6 +1,5 @@
 import { styled } from "linaria/react";
 import React, { MutableRefObject, useMemo } from "react";
-import { ContextMenuTrigger } from "react-contextmenu";
 import {
   FormatterProps,
   HeaderRendererProps,
@@ -10,6 +9,7 @@ import {
 } from "react-data-grid";
 
 import { TransformedAutoResponse } from "./types";
+import Menu from "@app/components/Menu";
 import UserDisplay from "@app/components/UserDisplay";
 import {
   isEmptyOrNil,
@@ -123,9 +123,8 @@ export const RowRenderer: (
   selfAuthor,
   canDeleteAny
 ) => (props): React.ReactElement | null => (
-  <ContextMenuTrigger
-    id="auto-response-grid-context-menu"
-    collect={(): { rowIdx: number; canDelete: boolean } => ({
+  <Menu.Trigger
+    source={(): { rowIdx: number; canDelete: boolean } => ({
       rowIdx: props.rowIdx,
       canDelete:
         canDeleteAny ||
@@ -134,7 +133,7 @@ export const RowRenderer: (
     })}
   >
     <GridRow {...props} />
-  </ContextMenuTrigger>
+  </Menu.Trigger>
 );
 
 // ? =============

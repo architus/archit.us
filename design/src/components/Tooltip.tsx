@@ -32,7 +32,7 @@ const tooltipContainerClass = css`
   color: ${color("light")};
   flex-direction: column;
   ${transition(["opacity"])}
-  font-size: 90%;
+  font-size: 0.9rem;
   z-index: ${ZIndex.Tooltip};
 
   padding: ${gap.femto} ${gap.pico};

@@ -57,8 +57,8 @@ const Styled = {
   `,
   Divider: styled.hr`
     margin: 0;
+    border: none;
     border-bottom: 1px solid ${OtherColors.DiscordMessageDivider};
-    border-top: none;
     margin-right: 32px;
   `,
   ErrorOverlay: styled.div`

@@ -47,7 +47,6 @@
     "node-fetch": "^2.6.0",
     "polished": "^3.6.5",
     "react": "^16.13.1",
-    "react-contextmenu": "^2.14.0",
     "react-data-grid": "^7.0.0-canary.17",
     "react-dom": "^16.12.0",
     "react-helmet": "^6.1.0",

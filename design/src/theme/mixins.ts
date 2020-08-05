@@ -169,6 +169,11 @@ export function discordScrollbar({
       }
     }
 
+    &::-webkit-scrollbar-corner {
+      background-color: transparent;
+      display: none;
+    }
+
     &::-webkit-scrollbar-track {
       border-radius: 100rem;
       background: linear-gradient(
@@ -180,11 +185,6 @@ export function discordScrollbar({
         ${background} 77%,
         ${background} 100%
       );
-    }
-
-    &::-webkit-scrollbar-corner {
-      background-color: transparent;
-      display: none;
     }
   `;
 }

@@ -40,7 +40,7 @@ const defaultTab = tabs.length > 0 ? tabs[0].path : "";
  * See https://www.gatsbyjs.org/docs/client-only-routes-and-user-authentication/
  */
 const AppPage: React.FC<PageProps> = () => {
-  const appPrefix = `${usePathPrefix()}/app`;
+  const appPrefix = `${usePathPrefix().getOrElse("")}/app`;
   const onAddGuild = useCallback(() => navigate(`${appPrefix}/invite`), [
     appPrefix,
   ]);

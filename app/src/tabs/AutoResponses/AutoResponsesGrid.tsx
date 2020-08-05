@@ -2,8 +2,7 @@ import copy from "copy-to-clipboard";
 import { styled } from "linaria/react";
 import React, { MutableRefObject } from "react";
 import { Column, SortDirection } from "react-data-grid";
-// import { createPortal } from "react-dom";
-import { FaTrash, FaCopy } from "react-icons/fa";
+import { FaCopy } from "react-icons/fa";
 
 import {
   TriggerFormatter,
@@ -22,17 +21,13 @@ import {
 } from "./NumericFilter";
 import { StringFilter } from "./StringFilter";
 import { TransformedAutoResponse, Author } from "./types";
-// import ContextMenu, {
-//   MenuItem,
-//   connectMenu,
-// } from "@app/components/ContextMenu";
 import DataGrid from "@app/components/DataGrid";
+import Menu from "@app/components/Menu";
 import { Dispatch } from "@app/store";
 import { showToast } from "@app/store/actions";
 import { TabProps } from "@app/tabs/types";
 import { intersection, memoize } from "@app/utility";
 import { User, Snowflake, HoarFrost } from "@app/utility/types";
-import { gap } from "@architus/facade/theme/spacing";
 import { Option, None, Some, Unwrap } from "@architus/lib/option";
 
 const Styled = {
@@ -42,12 +37,6 @@ const Styled = {
     align-items: stretch;
     justify-content: stretch;
     flex-grow: 1;
-  `,
-  CopyIcon: styled(FaCopy)`
-    margin-right: ${gap.nano};
-  `,
-  TrashIcon: styled(FaTrash)`
-    margin-right: ${gap.nano};
   `,
 };
 
@@ -174,17 +163,11 @@ export class AutoResponsesGrid extends React.Component<
     // TODO implement
   };
 
-  onDelete = (
-    e: React.MouseEvent<HTMLDivElement>,
-    { rowIdx }: { rowIdx: number }
-  ): void => {
+  onDelete = (rowIdx: number): void => {
     // TODO implement
   };
 
-  onCopy = (
-    _: React.MouseEvent<HTMLDivElement>,
-    { rowIdx }: { rowIdx: number }
-  ): void => {
+  onCopy = (rowIdx: number): void => {
     const { dispatch } = this.props;
     const row = this.getRows()[rowIdx];
     const copyCommand = `${row.trigger}::${row.response}`;
@@ -408,29 +391,6 @@ export class AutoResponsesGrid extends React.Component<
       },
     ];
 
-    // const CommandMenu = connectMenu("auto-response-grid-context-menu")(
-    //   ({ trigger }: { trigger: { canDelete: boolean } | null }) => {
-    //     return (
-    //       <ContextMenu id="auto-response-grid-context-menu">
-    //         <MenuItem onClick={this.onCopy}>
-    //           <Styled.CopyIcon />
-    //           Copy to clipboard
-    //         </MenuItem>
-    //         {/* {trigger && trigger.canDelete ? (
-    //           <>
-    //             <MenuItem onClick={this.onDelete}>
-    //               <Styled.TrashIcon />
-    //               Delete
-    //             </MenuItem>
-    //           </>
-    //         ) : (
-    //           <></>
-    //         )} */}
-    //       </ContextMenu>
-    //     );
-    //   }
-    // );
-
     return (
       <>
         <GridHeader
@@ -446,24 +406,49 @@ export class AutoResponsesGrid extends React.Component<
           onAddNewRow={this.onAddNewRow}
         />
         <Styled.DataGridWrapper>
-          <DataGrid<TransformedAutoResponse, "id", {}>
-            rows={this.getRows()}
-            headerRowHeight={44}
-            headerFiltersHeight={48}
-            columns={columns}
-            rowKey="id"
-            rowHeight={viewModes[viewMode].height}
-            selectedRows={selectedRows}
-            onSelectedRowsChange={this.setSelectedRows}
-            sortColumn={sort.getOrElse(undefined)?.column}
-            sortDirection={sort.getOrElse(undefined)?.direction}
-            onSort={this.onSort}
-            rowRenderer={RowRenderer(currentUser, isArchitusAdmin)}
-            enableFilters={showFilters}
-            filters={filters}
-            onFiltersChange={this.onFiltersChange}
-          />
-          {/* {createPortal(<CommandMenu />, document.body)} */}
+          <Menu.Container
+            menu={(data: Record<string, unknown>): JSX.Element => {
+              const rawRowIdx = data?.rowIdx ?? 0;
+              const rowIdx = typeof rawRowIdx === "number" ? rawRowIdx : 0;
+              // const canDelete = !!(data?.canDelete ?? false);
+              return (
+                <>
+                  <Menu.Item onClick={(): void => this.onCopy(rowIdx)}>
+                    <Menu.Icon>
+                      <FaCopy />
+                    </Menu.Icon>
+                    <Menu.Text>Copy to clipboard</Menu.Text>
+                  </Menu.Item>
+                  {/* {canDelete && (
+                    <Menu.Item onClick={(): void => this.onDelete(rowIdx)}>
+                      <Menu.Icon>
+                        <FaTrash />
+                      </Menu.Icon>
+                      <Menu.Text>Delete</Menu.Text>
+                    </Menu.Item>
+                  )} */}
+                </>
+              );
+            }}
+          >
+            <DataGrid<TransformedAutoResponse, "id", {}>
+              rows={this.getRows()}
+              headerRowHeight={44}
+              headerFiltersHeight={48}
+              columns={columns}
+              rowKey="id"
+              rowHeight={viewModes[viewMode].height}
+              selectedRows={selectedRows}
+              onSelectedRowsChange={this.setSelectedRows}
+              sortColumn={sort.getOrElse(undefined)?.column}
+              sortDirection={sort.getOrElse(undefined)?.direction}
+              onSort={this.onSort}
+              rowRenderer={RowRenderer(currentUser, isArchitusAdmin)}
+              enableFilters={showFilters}
+              filters={filters}
+              onFiltersChange={this.onFiltersChange}
+            />
+          </Menu.Container>
         </Styled.DataGridWrapper>
       </>
     );

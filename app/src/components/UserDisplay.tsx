@@ -137,6 +137,7 @@ const Avatar: React.FC<AvatarProps> = ({
   ).match({
     None: () => (
       <Skeleton.Box
+        className={className}
         circle={circle}
         width={size}
         height={size}
@@ -147,6 +148,7 @@ const Avatar: React.FC<AvatarProps> = ({
       <Styled.AvatarImage
         data-circle={circle ? "true" : undefined}
         size={`${size}px`}
+        className={className}
         style={{
           backgroundImage: `url(${url})`,
         }}
