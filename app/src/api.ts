@@ -24,7 +24,5 @@ export function withBasePath(path: string): string {
   // we need to inject it manually.
   // See gatsby-node.ts#injectPathPrefixDefinition
   const maybePrefix = process.env.INJECTED_PATH_PREFIX;
-  const prefixed = withPathPrefix(path, maybePrefix ?? "/");
-  console.log({ path, maybePrefix, prefixed });
-  return prefixed;
+  return withPathPrefix(path, maybePrefix ?? "/");
 }

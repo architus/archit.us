@@ -61,7 +61,7 @@ export function trimFilePath(
  */
 export function withPathPrefix(path: string, prefix: string | Nil): string {
   return isDefined(prefix)
-    ? `${withoutTrailing(prefix)}/${withoutLeading(path)}`
+    ? `${normalizePath(prefix)}/${withoutLeading(path)}`
     : path;
 }
 
