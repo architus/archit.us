@@ -89,7 +89,7 @@ const SessionControl: React.FC<SessionControlProps> = React.memo(
     const { isSigningIn } = useSessionStatus();
     const dispatch = useDispatch();
     const oauthUrl = useOauthUrl();
-    const isSmallScreen = useDown("sm");
+    const isSmallScreen = useDown("md");
     const [, isInApp] = useLocationMatch("/app");
     const [dropdownShow, setDropdownShow] = useState(false);
     const toggleDropdown = useCallback(() => setDropdownShow(!dropdownShow), [

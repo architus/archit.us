@@ -20,6 +20,7 @@ import { TabDefinition, TabProps, BaseAppProps } from "@app/tabs/types";
 import { useInitialRender } from "@app/utility";
 import { Snowflake } from "@app/utility/types";
 import { gap } from "@architus/facade/theme/spacing";
+import { withPathPrefix } from "@architus/lib/path";
 
 const headerClass = css`
   /* Use exact padding amount to visually left-align logo with guild nav */
@@ -40,7 +41,7 @@ const defaultTab = tabs.length > 0 ? tabs[0].path : "";
  * See https://www.gatsbyjs.org/docs/client-only-routes-and-user-authentication/
  */
 const AppPage: React.FC<PageProps> = () => {
-  const fullAppPrefix = `${usePathPrefix().getOrElse("")}/app`;
+  const fullAppPrefix = withPathPrefix("/app", usePathPrefix().orNull());
   const onAddGuild = useCallback(() => navigate(`/app/invite`), []);
 
   // Creates individual tab renderers for each tab definition

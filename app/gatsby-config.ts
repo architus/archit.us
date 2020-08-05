@@ -12,7 +12,7 @@ dotenv.config();
 const title = process.env.SITE_NAME ?? "Architus";
 const description = `General purpose Discord bot supporting advanced role management, custom emotes for non-nitro users, configurable response commands, and more.`;
 
-export const pathPrefix = process.env.SITE_BASE_PATH ?? "/pr/l";
+export const pathPrefix = process.env.SITE_BASE_PATH ?? "/";
 
 export const siteMetadata = {
   title,
