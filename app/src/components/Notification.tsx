@@ -10,6 +10,7 @@ import {
   dynamicColor,
   ColorMode,
   staticColor,
+  mode,
 } from "@architus/facade/theme/color";
 import { down } from "@architus/facade/theme/media";
 import { blankButton } from "@architus/facade/theme/mixins";
@@ -71,15 +72,24 @@ const dangerIcon = `
 
 const notificationVariant = (
   variant: NotificationVariant,
-  c: string,
+  darkColor: string,
+  lightColor: string,
   icon: string
 ): string => `
   &[data-variant="${variant}"] {
-    background-color: ${c};
+    background-color: ${darkColor};
     background-image: ${svgDataUrl(icon)};
 
     &[data-type="toast"]:hover {
-      background-color: ${lighten(0.05, c)};
+      background-color: ${lighten(0.05, darkColor)};
+    }
+
+    ${mode(ColorMode.Light)} {
+      background-color: ${lightColor};
+
+      &[data-type="toast"]:hover {
+        background-color: ${lighten(0.05, lightColor)};
+      }
     }
   }
 `;
@@ -91,7 +101,7 @@ const StyledCloseButton = styled(CloseButton)`
   position: absolute;
   top: 0;
   right: 2px;
-  color: ${color("light")};
+  color: currentColor;
 `;
 
 const Styled = {
@@ -124,8 +134,9 @@ const Styled = {
     padding-bottom: 0.5rem;
     padding-left: 0.75rem;
     padding-right: 2.75rem;
+    overflow: hidden;
 
-    box-shadow: ${shadow("z0")};
+    box-shadow: ${shadow("z1")};
     color: ${color("light")};
     background-size: 60px 60px;
     background-position: left -12px bottom -12px;
@@ -173,21 +184,25 @@ const Styled = {
     ${notificationVariant(
       "info",
       dynamicColor("bg+10", ColorMode.Dark),
+      dynamicColor("bg+20", ColorMode.Dark),
       trimSvg(infoIcon)
     )}
     ${notificationVariant(
       "success",
       darken(0.2, staticColor("success")),
+      darken(0.05, staticColor("success")),
       trimSvg(successIcon)
     )}
     ${notificationVariant(
       "warning",
       darken(0.2, staticColor("warning")),
+      darken(0.05, staticColor("warning")),
       trimSvg(warningIcon)
     )}
     ${notificationVariant(
       "danger",
       darken(0.2, staticColor("danger")),
+      darken(0.05, staticColor("danger")),
       trimSvg(dangerIcon)
     )}
   `,

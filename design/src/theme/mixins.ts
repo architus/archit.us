@@ -170,8 +170,12 @@ export function discordScrollbar({
     }
 
     &::-webkit-scrollbar-corner {
+      color: transparent;
       background-color: transparent;
-      display: none;
+    }
+
+    &::-webkit-resizer {
+      background-color: transparent;
     }
 
     &::-webkit-scrollbar-track {

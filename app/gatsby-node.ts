@@ -42,6 +42,7 @@ export const sourceNodes: GatsbyNode["sourceNodes"] = async (
   return Promise.resolve<null>(null);
 };
 
+// Make any modifications to the webpack config as necessary
 export const onCreateWebpackConfig: GatsbyNode["onCreateWebpackConfig"] = async ({
   actions,
   getConfig,
@@ -53,28 +54,46 @@ export const onCreateWebpackConfig: GatsbyNode["onCreateWebpackConfig"] = async 
   // Patch the webpack config to alias socket.io during linaria evaluation
   newConfig.module.rules = modifyLinariaRule(newConfig.module.rules);
 
-  // Fix CSS ordering rules
-  // (not needed since css classes are hashed/won't collide)
-  // The only area where this isn't the case is global styles,
-  // but we should avoid those as much as possible
-  // From https://spectrum.chat/gatsby-js/general/having-issue-related-to-chunk-commons-mini-css-extract-plugin~0ee9c456-a37e-472a-a1a0-cc36f8ae6033?m=MTU3MjYyNDQ5OTAyNQ==
   if (stage === "build-javascript") {
-    const config = getConfig();
-    const miniCssExtractPlugin = config.plugins.find(
-      (plugin: { constructor: { name: string } }) =>
-        plugin.constructor.name === "MiniCssExtractPlugin"
-    );
-    if (miniCssExtractPlugin) {
-      miniCssExtractPlugin.options.ignoreOrder = true;
-    }
-    actions.replaceWebpackConfig(config);
+    newConfig.plugins = modifyCssExtractPlugin(newConfig.plugins);
   }
 
   replaceWebpackConfig(newConfig);
 };
 
+// Incomplete type
+type Plugin = {
+  constructor: { name: string };
+  options: Record<string, unknown>;
+};
+
+/**
+ * Fixes CSS ordering rules
+ * (not needed since css classes are hashed/won't collide)
+ * The only area where this isn't the case is global styles,
+ * but we should avoid those as much as possible
+ * From https://spectrum.chat/gatsby-js/general/having-issue-related-to-chunk-commons-mini-css-extract-plugin~0ee9c456-a37e-472a-a1a0-cc36f8ae6033?m=MTU3MjYyNDQ5OTAyNQ==
+ * @param plugins - Base plugins from the webpack config
+ */
+function modifyCssExtractPlugin(plugins: Plugin[]): Plugin[] {
+  return plugins.map((plugin) => {
+    if (plugin.constructor.name === "MiniCssExtractPlugin") {
+      // eslint-disable-next-line no-param-reassign
+      plugin.options.ignoreOrder = true;
+    }
+    return plugin;
+  });
+}
+
+// Incomplete type
 type Rule = { use?: Array<{ loader: string; options?: object }> };
 
+/**
+ * Modifies the linaria webpack rule(s) to add aliases needed
+ * for the build to succeed, such as aliasing Socket.IO
+ * while evaluating CSS rules
+ * @param rules - Base rules from the webpack config
+ */
 function modifyLinariaRule(rules: Rule[]): Rule[] {
   return rules.map((rule) => {
     // Select the linaria rules

@@ -3,6 +3,7 @@ import { styled } from "linaria/react";
 import React, { useMemo, useCallback } from "react";
 
 import AppHomeScreen from "@app/components/AppHomeScreen";
+import AppLogin from "@app/components/AppLogin";
 import AppNavigation, {
   useAppNavigationContext,
 } from "@app/components/AppNavigation";
@@ -12,7 +13,6 @@ import Layout from "@app/components/Layout";
 import { Router, Redirect, PageProps, navigate } from "@app/components/Router";
 import { usePathPrefix } from "@app/data/path-prefix";
 import { sitePaddingVariable } from "@app/layout";
-import LoginPage from "@app/pages/login";
 import { useSessionStatus } from "@app/store/actions";
 import { usePoolEntity } from "@app/store/slices/pools";
 import tabs from "@app/tabs/definitions";
@@ -68,7 +68,7 @@ const AppPage: React.FC<PageProps> = () => {
     content = <AppSkeleton />;
   } else if (!isSigningIn) {
     // Render restricted view if not logged in
-    content = <LoginPage fromRestricted={true} />;
+    content = <AppLogin />;
   } else {
     content = (
       <Router basepath={appPrefix}>

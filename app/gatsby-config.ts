@@ -96,7 +96,7 @@ export const plugins = [
   "gatsby-plugin-typescript",
   {
     resolve: `gatsby-plugin-create-client-paths`,
-    options: { prefixes: [`${pathPrefix}app/*`] },
+    options: { prefixes: [`/app/*`] },
   },
   {
     resolve: `gatsby-plugin-typegen`,

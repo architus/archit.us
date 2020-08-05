@@ -15,15 +15,7 @@ const Styled = {
     display: flex;
     flex-direction: column;
 
-    .${notificationClass}-enter-active, .${notificationClass}-exit {
-      opacity: 1 !important;
-      max-height: 120px !important;
-      margin-bottom: 0.6rem !important;
-      padding-top: 0.5rem !important;
-      padding-bottom: 0.5rem !important;
-    }
-
-    .${notificationClass}-enter, .${notificationClass}-exit-active {
+    .${notificationClass}-enter {
       opacity: 0 !important;
       max-height: 0 !important;
       margin-bottom: 0 !important;
@@ -31,14 +23,32 @@ const Styled = {
       padding-bottom: 0 !important;
     }
 
+    .${notificationClass}-enter-active {
+      opacity: 1 !important;
+      max-height: 120px !important;
+      margin-bottom: 0.6rem !important;
+      padding-top: 0.5rem !important;
+      padding-bottom: 0.5rem !important;
+    }
+
     .${notificationClass}-exit {
       transform: none;
       pointer-events: none;
+      opacity: 1 !important;
+      max-height: 120px !important;
+      margin-bottom: 0.6rem !important;
+      padding-top: 0.5rem !important;
+      padding-bottom: 0.5rem !important;
     }
 
     .${notificationClass}-exit-active {
       transform: translateX(-64px);
       pointer-events: none;
+      opacity: 0 !important;
+      max-height: 0 !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
     }
   `,
 };

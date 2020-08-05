@@ -236,9 +236,11 @@ const Container: React.FC<ContainerProps> = ({ menu, children }) => {
     );
   }
 
-  // Handle scroll events and hide the context menu
+  // Handle scroll events on the body and hide the context menu
   useEffect((): void | (() => void) => {
-    const handler = (): void => setShow(false);
+    const handler = (): void => {
+      setShow(false);
+    };
     if (show) {
       document.addEventListener("scroll", handler);
       return (): void => {
