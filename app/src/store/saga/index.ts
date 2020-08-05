@@ -49,7 +49,7 @@ function* autoHideNotification(
  * Upon sign out, clears session storage, shows a toast, and navigates to the home
  */
 function* handleSignOut(action: ReturnType<typeof signOut>): SagaIterator {
-  navigate(withBasePath("/"));
+  navigate("/");
   setLocalStorage(LOCAL_STORAGE_KEY, "");
   if (!action.payload.silent) {
     yield put(showToast({ message: "Signed out" }));

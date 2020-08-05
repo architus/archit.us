@@ -11,6 +11,7 @@ import {
   locationMatches,
   withoutTrailing,
   withoutLeading,
+  normalizePath,
 } from "@architus/lib/path";
 import { isDefined, trimPrefix } from "@architus/lib/utility";
 
@@ -91,14 +92,20 @@ export interface AppLocation {
 }
 
 /**
- * Gets the fragments of the current location
+ * Gets the fragments of the current location,
+ * subtracting the prefix if given.
+ * Note: always removes the global path prefix if configured
  */
 export function useFragments(prefix?: string): string[] {
-  const location = useLocation();
-  const withoutPrefix = isDefined(prefix)
-    ? trimPrefix(location.pathname, prefix)
-    : location.pathname;
-  return splitPath(withoutPrefix).filter(
+  const location = useLocation().pathname;
+  const pathPrefix = usePathPrefix();
+  const withoutPathPrefix = pathPrefix.isDefined()
+    ? normalizePath(trimPrefix(location, pathPrefix.get))
+    : location;
+  const withoutPrefixes = isDefined(prefix)
+    ? trimPrefix(withoutPathPrefix, prefix)
+    : withoutPathPrefix;
+  return splitPath(withoutPrefixes).filter(
     (fragment) => fragment.trim().length > 0
   );
 }

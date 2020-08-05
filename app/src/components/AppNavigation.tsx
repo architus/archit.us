@@ -24,8 +24,9 @@ import { hiddenScrollbar, blankButton } from "@architus/facade/theme/mixins";
 import { transition } from "@architus/facade/theme/motion";
 import { ZIndex } from "@architus/facade/theme/order";
 import { shadow } from "@architus/facade/theme/shadow";
-import { splitPath } from "@architus/lib/path";
+import { splitPath, withPathPrefix } from "@architus/lib/path";
 import { trimPrefix } from "@architus/lib/utility";
+import { usePathPrefix } from "src/data/path-prefix";
 
 /**
  * Context used to expose app navigation details to downstream consumers
@@ -177,7 +178,7 @@ export type AppNavigationProps = {
 const AppNavigation: React.FC<AppNavigationProps> = ({
   onOpenAddGuildModal,
   children,
-  prefix,
+  prefix: appPrefix,
   tabs,
 }) => {
   // Nav drawer logic
@@ -186,8 +187,8 @@ const AppNavigation: React.FC<AppNavigationProps> = ({
     showAppNav,
   ]);
   const closeAppNav = useCallbackOnce(() => setShowAppNav(false));
-  const [addGuildActive] = useLocationMatch(`${prefix}/invite`);
-  const { tab, guild } = useAppLocation(prefix);
+  const [addGuildActive] = useLocationMatch(`${appPrefix}/invite`);
+  const { tab, guild } = useAppLocation(appPrefix);
   usePrevious(
     tab.orNull(),
     // Close the app nav if the current tab changes
@@ -223,21 +224,22 @@ const AppNavigation: React.FC<AppNavigationProps> = ({
 
   // Navigation logic
   const { isLoaded: guildsLoaded, all: guilds } = usePool({ type: "guild" });
+  const pathPrefix = usePathPrefix().getOrElse("/");
   const tagNavigate = useCallback(
     (t: string) => {
-      navigateToTab(t, prefix, guildsLoaded, guilds);
+      navigateToTab(t, appPrefix, pathPrefix, guildsLoaded, guilds);
       if (guildsLoaded && guilds.length === 0) {
         onOpenAddGuildModal();
       }
     },
-    [onOpenAddGuildModal, prefix, guildsLoaded, guilds]
+    [onOpenAddGuildModal, appPrefix, pathPrefix, guildsLoaded, guilds]
   );
   const guildNavigate = useCallback(
     (id: Snowflake) => {
       const defaultTab = tabs.length > 0 ? tabs[0].path : "";
-      navigateToGuild(id, prefix, defaultTab);
+      navigateToGuild(id, appPrefix, pathPrefix, defaultTab);
     },
-    [prefix, tabs]
+    [appPrefix, pathPrefix, tabs]
   );
 
   return (
@@ -312,14 +314,15 @@ export function getFragments(prefix: string): string[] {
  */
 export function navigateToGuild(
   id: Snowflake,
-  prefix: string,
+  appPrefix: string,
+  pathPrefix: string,
   defaultTab: string
 ): void {
-  const fragments = getFragments(prefix);
+  const fragments = getFragments(withPathPrefix(appPrefix, pathPrefix));
   if (fragments.length >= 2) {
-    navigate(`${prefix}/${id}/${fragments[1]}`);
+    navigate(`${appPrefix}/${id}/${fragments[1]}`);
   } else {
-    navigate(`${prefix}/${id}/${defaultTab}`);
+    navigate(`${appPrefix}/${id}/${defaultTab}`);
   }
 }
 
@@ -329,15 +332,16 @@ export function navigateToGuild(
  */
 export function navigateToTab(
   tab: string,
-  prefix: string,
+  appPrefix: string,
+  pathPrefix: string,
   guildsLoaded: boolean,
   guilds: Guild[]
 ): void {
-  const fragments = getFragments(prefix);
+  const fragments = getFragments(withPathPrefix(appPrefix, pathPrefix));
   if (fragments.length >= 1) {
     const id = fragments[0];
     if (isSnowflake(id)) {
-      navigate(`${prefix}/${id}/${tab}`);
+      navigate(`${appPrefix}/${id}/${tab}`);
       return;
     }
   }
@@ -346,6 +350,6 @@ export function navigateToTab(
     let defaultGuild = guilds[0];
     const adminGuilds = guilds.filter((g) => g.architus_admin);
     if (adminGuilds.length > 0) [defaultGuild] = adminGuilds;
-    navigate(`${prefix}/${defaultGuild.id}/${tab}`);
+    navigate(`${appPrefix}/${defaultGuild.id}/${tab}`);
   }
 }

@@ -40,10 +40,8 @@ const defaultTab = tabs.length > 0 ? tabs[0].path : "";
  * See https://www.gatsbyjs.org/docs/client-only-routes-and-user-authentication/
  */
 const AppPage: React.FC<PageProps> = () => {
-  const appPrefix = `${usePathPrefix().getOrElse("")}/app`;
-  const onAddGuild = useCallback(() => navigate(`${appPrefix}/invite`), [
-    appPrefix,
-  ]);
+  const fullAppPrefix = `${usePathPrefix().getOrElse("")}/app`;
+  const onAddGuild = useCallback(() => navigate(`/app/invite`), []);
 
   // Creates individual tab renderers for each tab definition
   const tabRoutes = useMemo(
@@ -71,11 +69,11 @@ const AppPage: React.FC<PageProps> = () => {
     content = <AppLogin />;
   } else {
     content = (
-      <Router basepath={appPrefix}>
+      <Router basepath={fullAppPrefix}>
         {tabRoutes}
         <Redirect
           from="/:guildId"
-          to={`${appPrefix}/:guildId/${defaultTab}`}
+          to={`${fullAppPrefix}/:guildId/${defaultTab}`}
           noThrow
         />
         <PageRenderer
@@ -98,11 +96,7 @@ const AppPage: React.FC<PageProps> = () => {
       seo={{ noTitle: true }}
       headerProps={{ noContainer: true, className: headerClass }}
     >
-      <AppNavigation
-        tabs={tabs}
-        prefix={appPrefix}
-        onOpenAddGuildModal={onAddGuild}
-      >
+      <AppNavigation tabs={tabs} prefix="/app" onOpenAddGuildModal={onAddGuild}>
         {content}
       </AppNavigation>
     </Styled.Layout>
