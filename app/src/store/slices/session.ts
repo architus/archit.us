@@ -23,6 +23,7 @@ import {
   setLocalStorage,
   warn,
   isNil,
+  includes,
 } from "@app/utility";
 import {
   User,
@@ -100,7 +101,12 @@ function tryLoadSession(): Option<Session> {
 
   // URL param from Discord oauth Redirect URI
   const urlCode: Option<string> = getUrlParameter("code");
-  if (urlCode.isDefined() && authPathNames.includes(window.location.pathname)) {
+  if (
+    urlCode.isDefined() &&
+    includes(authPathNames, (prefix) =>
+      window.location.pathname.startsWith(prefix)
+    )
+  ) {
     clearUrlQueries();
     log("Loaded authorization code from discord oauth");
     // State will initiate token exchange when /app is loaded
