@@ -12,6 +12,7 @@ import GuildNav from "@app/components/GuildNav";
 import { navigate } from "@app/components/Router";
 import SwipeHandler from "@app/components/SwipeHandler";
 import TabNav from "@app/components/TabNav";
+import { usePathPrefix } from "@app/data/path-prefix";
 import { useAppLocation, useLocationMatch } from "@app/hooks";
 import { headerHeight, minimizeBreakpoint } from "@app/layout";
 import { usePool } from "@app/store/slices/pools";
@@ -26,7 +27,6 @@ import { ZIndex } from "@architus/facade/theme/order";
 import { shadow } from "@architus/facade/theme/shadow";
 import { splitPath, withPathPrefix } from "@architus/lib/path";
 import { trimPrefix } from "@architus/lib/utility";
-import { usePathPrefix } from "src/data/path-prefix";
 
 /**
  * Context used to expose app navigation details to downstream consumers
