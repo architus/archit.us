@@ -1,5 +1,6 @@
 import { GatsbyNode, SourceNodesArgs } from "gatsby";
 
+import { pathPrefix } from "./gatsby-config";
 import { botStatsType, createBotStatsNode } from "@app/build/bot-stats";
 import {
   buildMetadataType,
@@ -51,8 +52,8 @@ export const onCreateWebpackConfig: GatsbyNode["onCreateWebpackConfig"] = async 
   const { replaceWebpackConfig } = actions;
   const newConfig = getConfig();
 
-  // Patch the webpack config to alias socket.io during linaria evaluation
   newConfig.module.rules = modifyLinariaRule(newConfig.module.rules);
+  newConfig.plugins = injectPathPrefixDefinition(newConfig.plugins);
 
   if (stage === "build-javascript") {
     newConfig.plugins = modifyCssExtractPlugin(newConfig.plugins);
@@ -65,6 +66,7 @@ export const onCreateWebpackConfig: GatsbyNode["onCreateWebpackConfig"] = async 
 type Plugin = {
   constructor: { name: string };
   options: Record<string, unknown>;
+  definitions: Record<string, string>;
 };
 
 /**
@@ -80,6 +82,23 @@ function modifyCssExtractPlugin(plugins: Plugin[]): Plugin[] {
     if (plugin.constructor.name === "MiniCssExtractPlugin") {
       // eslint-disable-next-line no-param-reassign
       plugin.options.ignoreOrder = true;
+    }
+    return plugin;
+  });
+}
+
+/**
+ * Injects the path prefix so its available at runtime.
+ * For some reason, the normal Gatsby behavior doesn't work so
+ * we need to inject it manually
+ * @param plugins - Base plugins from the webpack config
+ */
+function injectPathPrefixDefinition(plugins: Plugin[]): Plugin[] {
+  return plugins.map((plugin) => {
+    if (plugin.constructor.name === "DefinePlugin") {
+      const envVar = `INJECTED_PATH_PREFIX`;
+      // eslint-disable-next-line no-param-reassign
+      plugin.definitions[`process.env.${envVar}`] = `"${pathPrefix}"`;
     }
     return plugin;
   });

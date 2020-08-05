@@ -19,11 +19,10 @@ export const GATEWAY_API_BASE: string = process.env.PRODUCTION
  * @param path - base path with leading /
  */
 export function withBasePath(path: string): string {
-  const maybePrefix =
-    typeof window === "undefined"
-      ? undefined
-      : (window as { __BASE_PATH__?: string })?.__BASE_PATH__;
-  const prefixed = withPathPrefix(path, maybePrefix ?? "/");
-  console.log({ path, maybePrefix, prefixed });
-  return prefixed;
+  // This value is injected via Webpack's DefinePlugin.
+  // For some reason, the normal gatsby behavior doesn't work so
+  // we need to inject it manually.
+  // See gatsby-node.ts#injectPathPrefixDefinition
+  const maybePrefix = process.env.INJECTED_PATH_PREFIX;
+  return withPathPrefix(path, maybePrefix ?? "/");
 }

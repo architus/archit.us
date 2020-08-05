@@ -58,10 +58,15 @@ export function useLocationMatch(path: string): [boolean, boolean] {
 export function useReturnQuery(): string {
   const appPath = useBasePath("/app");
   const [returnQuery, setReturnQuery] = useState<string>("");
-  console.log({ appPath, returnQuery });
   useEffectOnce(() => {
     if (!isProduction && returnQuery === "") {
-      const returnUrl = `${window.location.protocol}//${window.location.host}${appPath}`;
+      let returnPath = appPath;
+      if (window.location.pathname.startsWith(appPath)) {
+        // Enable deep-linking
+        returnPath = window.location.pathname;
+      }
+
+      const returnUrl = `${window.location.protocol}//${window.location.host}${returnPath}`;
       const encoded = encodeURIComponent(returnUrl);
       setReturnQuery(`return=${encoded}`);
     }
