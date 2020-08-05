@@ -58,6 +58,7 @@ export function useLocationMatch(path: string): [boolean, boolean] {
 export function useReturnQuery(): string {
   const appPath = useBasePath("/app");
   const [returnQuery, setReturnQuery] = useState<string>("");
+  console.log({ appPath, returnQuery });
   useEffectOnce(() => {
     if (!isProduction && returnQuery === "") {
       const returnUrl = `${window.location.protocol}//${window.location.host}${appPath}`;

@@ -23,5 +23,7 @@ export function withBasePath(path: string): string {
     typeof window === "undefined"
       ? undefined
       : (window as { __BASE_PATH__?: string })?.__BASE_PATH__;
-  return withPathPrefix(path, maybePrefix ?? "/");
+  const prefixed = withPathPrefix(path, maybePrefix ?? "/");
+  console.log({ path, maybePrefix, prefixed });
+  return prefixed;
 }
