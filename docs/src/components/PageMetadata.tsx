@@ -9,9 +9,11 @@ import { color } from "@architus/facade/theme/color";
 import { down } from "@architus/facade/theme/media";
 import { gap } from "@architus/facade/theme/spacing";
 import {
-  addMissingUnit,
+  parseDimension,
   multiplyDimension,
   formatDimension,
+  RawDimension,
+  Dimension,
 } from "@architus/lib/dimension";
 import { withoutLeading, withoutTrailing } from "@architus/lib/path";
 import { Nil } from "@architus/lib/types";
@@ -194,12 +196,15 @@ const Authors: React.FC<{ authors: readonly GithubUser[] }> = ({ authors }) => {
   );
 };
 
-const More: React.FC<{ amount: number; fontSize: string | number }> = ({
+const More: React.FC<{ amount: number; fontSize: RawDimension }> = ({
   amount,
   fontSize: baseFontSize,
 }) => {
   const text = `${amount}`;
-  let fontSize = addMissingUnit(baseFontSize);
+  let fontSize: Dimension = parseDimension(baseFontSize).getOrElse({
+    amount: 16,
+    unit: "px",
+  });
   if (text.length === 3) fontSize = multiplyDimension(fontSize, 0.9);
   else if (text.length >= 4) fontSize = multiplyDimension(fontSize, 0.75);
   return <span style={{ fontSize: formatDimension(fontSize) }}>{text}</span>;
