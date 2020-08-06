@@ -51,3 +51,13 @@ declare module "*.woff2" {
   const content: string;
   export default content;
 }
+
+declare module "@packtracker/webpack-plugin" {
+  export default class PacktrackerPlugin {
+    constructor(args: {
+      project_token: string;
+      upload: boolean;
+      fail_build: boolean;
+    });
+  }
+}

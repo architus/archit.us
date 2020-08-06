@@ -3,11 +3,6 @@ on:
 
 # Workflow to upload bundle information to packtracker
 name: app-bundle
-env:
-  WORKING_DIR: ./app
-defaults:
-  run:
-    working-directory: ./app
 
 jobs:
   # Upload packtracker to monitor bundle sizes
@@ -29,14 +24,18 @@ jobs:
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('app/yarn.lock') }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
 
       - name: Install dependencies
         run: yarn install
 
+      - name: Bootstrap monorepo
+        run: yarn run bootstrap
+
       - name: Run build with packtracker plugin enabled
-        run: yarn bundlesize
+        run: yarn workspace @architus/app build
         env:
-          PT_PROJECT_TOKEN: ${{ secrets.PT_PROJECT_TOKEN }}
+          ENABLE_PACKTRACKER: "1"
+          PACKTRACKER_TOKEN: ${{ secrets.PT_PROJECT_TOKEN }}

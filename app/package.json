@@ -20,6 +20,7 @@
   "dependencies": {
     "@architus/facade": "^0.1.0",
     "@architus/lib": "^0.1.0",
+    "@packtracker/webpack-plugin": "^2.3.0",
     "@reach/router": "^1.3.4",
     "@redux-saga/core": "^1.1.3",
     "@reduxjs/toolkit": "^1.4.0",

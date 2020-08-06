@@ -24,7 +24,7 @@ jobs:
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}-${{ hashFiles('app/yarn.lock') }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
 
@@ -68,7 +68,7 @@ jobs:
         run: yarn workspaces run typecheck
 
   # Run Jest (test runner)
-  typecheck:
+  test:
     name: Test
     if: "!contains(github.event.head_commit.message, 'skip ci')"
     runs-on: ubuntu-latest

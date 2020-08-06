@@ -1,3 +1,4 @@
+import PacktrackerPlugin from "@packtracker/webpack-plugin";
 import { GatsbyNode, SourceNodesArgs } from "gatsby";
 
 import { pathPrefix } from "./gatsby-config";
@@ -55,6 +56,10 @@ export const onCreateWebpackConfig: GatsbyNode["onCreateWebpackConfig"] = async 
   newConfig.module.rules = modifyLinariaRule(newConfig.module.rules);
   newConfig.plugins = injectPathPrefixDefinition(newConfig.plugins);
 
+  if (process.env.ENABLE_PACKTRACKER === "1") {
+    newConfig.plugins = addPacktrackerPlugin(newConfig.plugins);
+  }
+
   if (stage === "build-javascript") {
     newConfig.plugins = modifyCssExtractPlugin(newConfig.plugins);
   }
@@ -68,6 +73,24 @@ type Plugin = {
   options: Record<string, unknown>;
   definitions: Record<string, string>;
 };
+
+/**
+ * Adds a new packtracker Webpack plugin to track regressions in bundle size
+ * See https://docs.packtracker.io/uploading-your-webpack-stats/webpack-plugin
+ * @param plugins - Base plugins from the webpack config
+ */
+function addPacktrackerPlugin(plugins: Plugin[]): Plugin[] {
+  return [
+    ...plugins,
+    new PacktrackerPlugin({
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      project_token: process.env.PACKTRACKER_TOKEN ?? "",
+      upload: true,
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      fail_build: true,
+    }) as Plugin,
+  ];
+}
 
 /**
  * Fixes CSS ordering rules
