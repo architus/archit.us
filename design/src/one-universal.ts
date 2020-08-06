@@ -3,7 +3,7 @@ import { lighten } from "polished";
 
 import { dynamicColor, ColorMode, mode, color } from "./theme/color";
 
-export const global = css`
+export const oneUniversalGlobal = css`
   :global() {
     body {
       --code-bg: ${lighten(0.02, dynamicColor("bg+10", ColorMode.Dark))};

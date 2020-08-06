@@ -17,7 +17,7 @@ import "@app/layout";
 const linkContext: AutoLinkContext = { link: Link };
 
 // Import the global app colors
-export const global = css`
+export const rootGlobal = css`
   :global() {
     ${injectColorGlobals()}
   }

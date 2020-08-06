@@ -94,6 +94,6 @@ jobs:
       - name: Bootstrap monorepo
         run: yarn run bootstrap
 
-      - name: Run tsc
+      - name: Run jest
         run: yarn workspaces run test
 

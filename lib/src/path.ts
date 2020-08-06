@@ -60,9 +60,13 @@ export function trimFilePath(
  * @param prefix - Path prefix to add at the beginning
  */
 export function withPathPrefix(path: string, prefix: string | Nil): string {
-  return isDefined(prefix) && prefix.trim().length > 0 && prefix !== "/"
-    ? `${normalizePath(prefix)}/${withoutLeading(path)}`
-    : path;
+  if (isDefined(prefix) && prefix.trim().length > 0) {
+    if (prefix !== "/") {
+      return `${normalizePath(prefix)}/${withoutLeading(path)}`;
+    }
+    return `/${withoutLeading(path)}`;
+  }
+  return path;
 }
 
 /**

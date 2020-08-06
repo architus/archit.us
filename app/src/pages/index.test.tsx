@@ -6,7 +6,7 @@ import "@app/test/watch-media";
 import IndexPage from "./index";
 import Root from "@app/components/Root";
 
-jest.mock("@docs/data/bot-stats");
+jest.mock("@app/data/bot-stats");
 
 describe("<IndexPage />", () => {
   it("renders correctly", () => {

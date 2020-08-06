@@ -13,7 +13,7 @@ export const appHorizontalPadding = gap.milli;
 export const appVerticalPadding = gap.milli;
 export const minimizeBreakpoint: BreakpointKey = "md";
 
-export const global = css`
+export const layoutGlobal = css`
   :global() {
     :root {
       ${sitePaddingVariable}: ${gap.milli};
