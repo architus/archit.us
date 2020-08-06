@@ -56,12 +56,12 @@ export const onCreateWebpackConfig: GatsbyNode["onCreateWebpackConfig"] = async 
   newConfig.module.rules = modifyLinariaRule(newConfig.module.rules);
   newConfig.plugins = injectPathPrefixDefinition(newConfig.plugins);
 
-  if (process.env.ENABLE_PACKTRACKER === "1") {
-    newConfig.plugins = addPacktrackerPlugin(newConfig.plugins);
-  }
-
   if (stage === "build-javascript") {
     newConfig.plugins = modifyCssExtractPlugin(newConfig.plugins);
+
+    if (process.env.ENABLE_PACKTRACKER === "1") {
+      newConfig.plugins = addPacktrackerPlugin(newConfig.plugins);
+    }
   }
 
   replaceWebpackConfig(newConfig);
