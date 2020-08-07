@@ -4,7 +4,7 @@ import React from "react";
 
 import CloseButton from "@app/components/CloseButton";
 import { NotificationType, NotificationVariant } from "@app/store/actions";
-import { svgDataUrl } from "@architus/facade/css";
+import { svgDataUrl, trimSvg } from "@architus/facade/svg";
 import {
   color,
   dynamicColor,
@@ -16,14 +16,6 @@ import { down } from "@architus/facade/theme/media";
 import { blankButton } from "@architus/facade/theme/mixins";
 import { transition } from "@architus/facade/theme/motion";
 import { shadow } from "@architus/facade/theme/shadow";
-
-// Removes excess space from a multiline SVG source string
-const trimSvg = (src: string): string =>
-  src
-    .split("\n")
-    .map((s) => s.trim())
-    .filter((s) => s.length > 0)
-    .join(" ");
 
 const infoIcon = `
 <?xml version='1.0' encoding='utf-8'?>
@@ -70,6 +62,7 @@ const dangerIcon = `
 </svg>
 `;
 
+/* istanbul ignore next */
 const notificationVariant = (
   variant: NotificationVariant,
   darkColor: string,
@@ -180,7 +173,6 @@ const Styled = {
         pointer-events: none;
       }
     }
-
     ${notificationVariant(
       "info",
       dynamicColor("bg+10", ColorMode.Dark),

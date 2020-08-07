@@ -2,7 +2,7 @@ import { cx } from "linaria";
 import { styled } from "linaria/react";
 import React from "react";
 
-import { svgDataUrl } from "@architus/facade/css";
+import { svgDataUrl } from "@architus/facade/svg";
 import { dynamicColor, ColorMode, mode } from "@architus/facade/theme/color";
 import { down, up } from "@architus/facade/theme/media";
 import { transition } from "@architus/facade/theme/motion";

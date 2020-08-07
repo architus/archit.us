@@ -1,4 +1,4 @@
-import { svgDataUrl } from "../css";
+import { svgDataUrl } from "../svg";
 import { Color } from "./color";
 
 // Removes excess space from a multiline SVG source string

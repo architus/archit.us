@@ -9,6 +9,8 @@ module.exports = {
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json"],
   testPathIgnorePatterns: [`node_modules`],
   testURL: `http://localhost`,
+  coverageProvider: "babel",
+  testEnvironment: "jest-environment-jsdom-fifteen",
   moduleNameMapper: {
     ".+\\.(css|styl|less|sass|scss)$": `identity-obj-proxy`,
     // Base package aliases

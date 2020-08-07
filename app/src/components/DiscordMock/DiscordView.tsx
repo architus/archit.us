@@ -12,17 +12,10 @@ import {
 } from "@app/components/Window";
 import { OtherColors } from "@app/theme/color";
 import { MockMessageClump, MockMessageSet } from "@app/utility/types";
-import { svgDataUrl } from "@architus/facade/css";
+import { svgDataUrl, trimSvg } from "@architus/facade/svg";
 import { Color, staticColor } from "@architus/facade/theme/color";
 
-// Removes excess space from a multiline SVG source string
-const trimSvg = (src: string): string =>
-  src
-    .split("\n")
-    .map((s) => s.trim())
-    .filter((s) => s.length > 0)
-    .join(" ");
-
+/* istanbul ignore next */
 const errorSvg = (fill: string): string =>
   trimSvg(
     `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 39 39'>

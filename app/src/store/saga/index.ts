@@ -20,7 +20,7 @@ import { setLocalStorage } from "@app/utility";
  * Root saga
  */
 export default function* saga(): SagaIterator {
-  yield fork(gatewayFlow);
+  if (process.env.NODE_ENV !== "test") yield fork(gatewayFlow);
   yield fork(sessionFlow);
   yield fork(interpret);
   yield fork(pools);

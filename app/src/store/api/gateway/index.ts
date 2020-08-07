@@ -149,9 +149,9 @@ export interface GatewayRouteConfig<TEvent extends string = string> {
   elevated: boolean;
 }
 
-export function makeGatewayRoute<
-  TPayload extends Record<string, unknown> | Omitted = Omitted
->(): <TEvent extends string = string>(
+export function makeGatewayRoute<TPayload extends {} | Omitted = Omitted>(): <
+  TEvent extends string = string
+>(
   config: GatewayRouteConfig<TEvent>
 ) => GatewayRoute<TEvent, TPayload> {
   return <TEvent extends string = string>({
