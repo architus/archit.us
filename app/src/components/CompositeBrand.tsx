@@ -32,6 +32,8 @@ const Styled = {
     top: 5px;
     position: relative;
     white-space: pre;
+    display: flex;
+    flex-direction: row;
   `,
   Logotype: styled(Logo.Logotype)`
     fill: currentColor;
@@ -42,6 +44,9 @@ const Styled = {
     left: 0;
     opacity: 0.5;
     font-size: 80%;
+  `,
+  VersionWrapper: styled.div`
+    position: relative;
   `,
 };
 
@@ -71,16 +76,18 @@ const CompositeBrand: React.FC<CompositeBrandProps> = ({
     <Styled.Brand className={className} style={style} withVersion={showVersion}>
       <Styled.Logo height={36} />
       <Styled.Title>
-        <Styled.Logotype height={20} />
+        <Styled.VersionWrapper>
+          <Styled.Logotype height={20} />
+          {showVersion && version.isDefined() && (
+            <Styled.Version>{version.get}</Styled.Version>
+          )}
+        </Styled.VersionWrapper>
         {buildMetadata.isDefined() && showBuildTag && (
           <BuildTag
             className={buildTagClass}
             metadata={buildMetadata.get}
             tooltipPlacement={buildTooltipPlacement}
           />
-        )}
-        {showVersion && version.isDefined() && (
-          <Styled.Version>{version.get}</Styled.Version>
         )}
       </Styled.Title>
     </Styled.Brand>

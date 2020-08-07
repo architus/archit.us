@@ -188,7 +188,7 @@ const Styled = {
     ${notificationVariant(
       "warning",
       darken(0.2, staticColor("warning")),
-      darken(0.05, staticColor("warning")),
+      darken(0.15, staticColor("warning")),
       trimSvg(warningIcon)
     )}
     ${notificationVariant(
