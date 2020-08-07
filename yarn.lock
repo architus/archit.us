@@ -5922,7 +5922,7 @@ clone@^1.0.2:
   resolved "https://registry.yarnpkg.com/clone/-/clone-1.0.4.tgz#da309cc263df15994c688ca902179ca3c7cd7c7e"
   integrity sha1-2jCcwmPfFZlMaIypAheco8fNfH4=
 
-clsx@^1.1.0:
+clsx@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/clsx/-/clsx-1.1.1.tgz#98b3134f9abbdf23b2663491ace13c5c03a73188"
   integrity sha512-6/bPho624p3S2pMyvP5kKBPXnI3ufHLObBFCfgx+LkeR5lg2XYy2hqZqUf45ypD8COn2bhgGJSUE+l5dhNBieA==
@@ -8926,15 +8926,10 @@ forwarded@~0.1.2:
   resolved "https://registry.yarnpkg.com/forwarded/-/forwarded-0.1.2.tgz#98c23dab1175657b8c0573e8ceccd91b0ff18c84"
   integrity sha1-mMI9qxF1ZXuMBXPozszZGw/xjIQ=
 
-fp-ts@^2.7.0:
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/fp-ts/-/fp-ts-2.7.0.tgz#41de65a846715ca4df6889b91c6b3aa953165198"
-  integrity sha512-J7EIg4MEVuOm1vZspQDVYRD/CTsQECQk01cP5VEBvQ5LnSSjp6sckun1m1eUPSuvtMIlGgm9NqqOxE0+QyntWQ==
-
-fp-ts@^2.7.1:
-  version "2.7.1"
-  resolved "https://registry.yarnpkg.com/fp-ts/-/fp-ts-2.7.1.tgz#7bd754f3362f4b9bc4d272a97c0658e9a1bc16bc"
-  integrity sha512-rYy41jF1gVhBNYbPwup50dtyT686OKOoa86PXwh8aKpBRfmvPhnBh2zUkOYj84GIMSCsgY+oJ/RVhVKRvWNPTA==
+fp-ts@^2.7.0, fp-ts@^2.7.1:
+  version "2.8.1"
+  resolved "https://registry.yarnpkg.com/fp-ts/-/fp-ts-2.8.1.tgz#b1812171469a7c0fcbc0b770ac2568f8356d1993"
+  integrity sha512-HuA/6roEliHoBgEOLCKmGRcM90e2trW/ITZZ9d9P/ra7PreqQagC3Jg6OzqWkai13KUbG90b8QO9rHPBGK/ckw==
 
 fragment-cache@^0.2.1:
   version "0.2.1"
@@ -9478,9 +9473,9 @@ gatsby-source-filesystem@^2.3.13:
     xstate "^4.11.0"
 
 gatsby-source-graphql@^2.5.7:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/gatsby-source-graphql/-/gatsby-source-graphql-2.6.1.tgz#947c9de00a55f525df0c0f16166645cb9b614441"
-  integrity sha512-OvxyXODzwD92VWWRAeFzDNxRnIfQ4pm2KVU5ZRCqGD119KfqVPUX7Roo3E9ANnYnd5CpDmDFVecifl6rGjN8cg==
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/gatsby-source-graphql/-/gatsby-source-graphql-2.7.0.tgz#0ca9ee014005f1d294477696553c873c9bcfbaf0"
+  integrity sha512-LtPwoiME1nL+ejYitLnHZtSmkvrCODdFg6ASNsFASJeJcmmBLPHiy0INURSFNmfHGLfSQlIClBPSSx7mKUiacw==
   dependencies:
     "@babel/runtime" "^7.10.3"
     "@graphql-tools/links" v6.0.9
@@ -15531,9 +15526,9 @@ pretty-format@^26.2.0:
     react-is "^16.12.0"
 
 prismjs@^1.20.0:
-  version "1.20.0"
-  resolved "https://registry.yarnpkg.com/prismjs/-/prismjs-1.20.0.tgz#9b685fc480a3514ee7198eac6a3bf5024319ff03"
-  integrity sha512-AEDjSrVNkynnw6A+B1DsFkd6AVdTnp+/WoUixFRULlCLZVRZlVQMVWio/16jv7G1FscUxQxOQhWwApgbnxr6kQ==
+  version "1.21.0"
+  resolved "https://registry.yarnpkg.com/prismjs/-/prismjs-1.21.0.tgz#36c086ec36b45319ec4218ee164c110f9fc015a3"
+  integrity sha512-uGdSIu1nk3kej2iZsLyDoJ7e9bnPzIgY0naW/HdknGj61zScaprVEVGHrPoXqI+M9sP0NDnTK2jpkvmldpuqDw==
   optionalDependencies:
     clipboard "^2.0.0"
 
@@ -15848,11 +15843,11 @@ rc@^1.2.7, rc@^1.2.8:
     strip-json-comments "~2.0.1"
 
 react-data-grid@^7.0.0-canary.17:
-  version "7.0.0-canary.17"
-  resolved "https://registry.yarnpkg.com/react-data-grid/-/react-data-grid-7.0.0-canary.17.tgz#6460a34d4a9e696e55a8321124d4e3990fe02f41"
-  integrity sha512-k1/WHOWxZCd5+Uo/NWUtZpr7CC9SxXXnxa6qmrelFf/f620c4VrFoZYsADK0iSkmI2uh35pUijZCpC1KMtJ/9g==
+  version "7.0.0-canary.18"
+  resolved "https://registry.yarnpkg.com/react-data-grid/-/react-data-grid-7.0.0-canary.18.tgz#784067c02de81e74d17bf3bfd1c1092c3ab2fec4"
+  integrity sha512-rqm/cpNEAq/CKWejEkPXaw3ZUXvJxg7eqErqyvoaStptWAIK2X/Zt7Jettxe+Uq+2/KgyN9gYIJ82yzukTMUSw==
   dependencies:
-    clsx "^1.1.0"
+    clsx "^1.1.1"
 
 react-dev-utils@^4.2.3:
   version "4.2.3"
