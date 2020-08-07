@@ -12,9 +12,8 @@
   force = true
 
 [build]
-  command = "yarn build"
-  base = "app/"
-  publish = "public/"
+  command = "yarn bootstrap & yarn workspace @architus/app build"
+  publish = "app/public/"
 
   # Base environment for canary and production
   [build.environment]
