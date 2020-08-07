@@ -2,7 +2,9 @@ import { styled } from "linaria/react";
 import React from "react";
 
 import Badge from "@architus/facade/components/Badge";
-import HeaderLink from "@architus/facade/components/HeaderLink";
+import HeaderLink, {
+  HeaderLinkProps,
+} from "@architus/facade/components/HeaderLink";
 import { color } from "@architus/facade/theme/color";
 import NavLabel from "@docs/components/NavLabel";
 import { useNavigationTree } from "@docs/data/navigation-tree";
@@ -16,7 +18,8 @@ const Styled = {
       font-size: 80%;
       top: -0.1em;
     }
-  `,
+    /* TODO remove cast once bug with TypeScript is fixed */
+  ` as React.ComponentType<HeaderLinkProps>,
 };
 
 export type HeaderLinksProps = {

@@ -126,7 +126,7 @@ const Docs: React.FC<PageProps<
 >> = ({ data, pageContext }) => {
   const { id } = pageContext;
   const { page, previous, next } = data;
-  const contentRef = useRef<HTMLElement | null>(null);
+  const contentRef = useRef<HTMLDivElement | null>(null);
 
   if (isNil(page)) {
     const description =
