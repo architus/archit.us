@@ -2,6 +2,7 @@ import { lighten, darken } from "polished";
 import React, { useCallback } from "react";
 import Select, { ValueType, Theme } from "react-select";
 
+import { useColorMode } from "@architus/facade/hooks";
 import {
   color,
   staticColor,
@@ -12,7 +13,6 @@ import {
 import { isDefined } from "@architus/lib/utility";
 import { NavigationTreeNode } from "@docs/build/nav";
 import NavLabel from "@docs/components/NavLabel";
-import { useColorMode } from "@docs/hooks";
 
 export type SideNavSelectorProps = {
   value: string;

@@ -2,7 +2,7 @@
 // From https://github.com/cometkim/gatsby-plugin-typegen#vscode-extension
 module.exports = {
   client: {
-    name: "your-project-name",
+    name: "@architus/docs",
     tagName: "graphql",
     includes: [
       "./src/**/*.{ts,tsx}",

@@ -2,6 +2,7 @@ import { styled } from "linaria/react";
 import { mix, transparentize } from "polished";
 import React from "react";
 
+import { useColorMode } from "@architus/facade/hooks";
 import { color, ColorMode, dynamicColor } from "@architus/facade/theme/color";
 import { up, down } from "@architus/facade/theme/media";
 import { scrollBar } from "@architus/facade/theme/mixins";
@@ -16,7 +17,6 @@ import HeaderActionBar, {
 } from "@docs/components/HeaderActionBar";
 import HeaderLinks from "@docs/components/HeaderLinks";
 import { Link } from "@docs/components/Router";
-import { useColorMode } from "@docs/hooks";
 import { headerHeight, sitePadding } from "@docs/layout";
 
 const headerTransparency = 0.06;

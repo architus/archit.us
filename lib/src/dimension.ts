@@ -1,5 +1,5 @@
-import { Option, Some, None } from "./option";
 import { isDefined, isNil } from "./utility";
+import { Option, Some, None } from "@architus/lib/option";
 
 const baseDimensionUnits = [
   "cm",
@@ -54,16 +54,6 @@ export function isDimension(o: unknown): o is Dimension {
     typeof (o as Dimension).amount === "number" &&
     typeof (o as Dimension).unit === "string"
   );
-}
-
-/**
- * Adds a missing unit to a dimension string
- * @deprecated use `parseDimension(dimension)`
- * @param dimension - The raw dimension text ot number to process
- */
-export function addMissingUnit(dimension: RawDimension): Dimension {
-  const parsed: Option<Dimension> = parseDimension(dimension);
-  return parsed.getOrElse({ unit: "px", amount: 0 });
 }
 
 const DIMENSION_REGEX = /^([0-9]*\.?[0-9]*)([A-Za-z%]+)$/;

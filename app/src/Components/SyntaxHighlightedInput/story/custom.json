@@ -1,4 +1,0 @@
-{
-  "content": "%{count} more %{emoji}'s to gulag %{user}",
-  "tokens": ["%{count}", "%{emoji}", "%{user}"]
-}

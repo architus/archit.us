@@ -64,7 +64,7 @@ rules:
       - ["external", "builtin"]
       - ["index", "sibling", "parent", "internal", "object"]
       pathGroups:
-        - pattern: "^[@]((architus)|(docs))/**"
+        - pattern: "^[@]((architus)|(docs)|(app))\/**"
           group: "internal"
       pathGroupsExcludedImportTypes:
         - builtin
@@ -73,7 +73,7 @@ rules:
         order: asc
         caseInsensitive: true
 
-  # Prettier config (all defaults)
+  # Prettier config (uses all defaults)
   # See https://prettier.io/docs/en/options.html
   prettier/prettier: error
 
@@ -82,7 +82,7 @@ overrides:
   - files:
       - "**/jest-config.js"
     rules:
-      "global-require": off
+      "global-require": 0
 
   # Disable TS rules on JS files
   - files:
@@ -90,6 +90,12 @@ overrides:
       - "*.jsx"
     rules:
       "@typescript-eslint/explicit-function-return-type": off
+
+  # Disable unused expression in JSON files
+  - files:
+      - "*.json"
+    rules:
+      no-unused-expressions: 0
 
   # Disable the dev dependency checks on test files
   - files:

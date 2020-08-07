@@ -1,4 +1,10 @@
 import { parseToRgb } from "polished";
+import React from "react";
+import tinycolor, { Instance } from "tinycolor2";
+
+// Re-export tinycolor for convenience
+export const Color = tinycolor;
+export type ColorInstance = Instance;
 
 /**
  * Page-wide color mode (light/dark)
@@ -9,6 +15,19 @@ export enum ColorMode {
 }
 
 export const defaultMode: ColorMode = ColorMode.Dark;
+const nonDefaultModes = Object.values(ColorMode).filter(
+  (m) => m !== defaultMode
+);
+
+export type ColorModeContext = {
+  mode: ColorMode;
+  setMode: (newMode: ColorMode) => void;
+};
+
+export const ColorModeContext = React.createContext<ColorModeContext>({
+  mode: defaultMode,
+  setMode: () => null,
+});
 
 // Dynamic colors that change depending on the theme
 const colors = {
@@ -18,12 +37,13 @@ const colors = {
     textStrong: "rgba(33, 33, 33, 0.85)",
     textFade: "rgba(33, 33, 33, 0.6)",
     textLight: "rgba(33, 33, 33, 0.4)",
+    textReverse: "rgba(244, 246, 249, 0.7)",
     textOverlay: "rgba(33, 33, 33, 0.1)",
     // Background colors
     "bg-40": "hsl(200, 20%, 75%)",
     "bg-30": "hsl(200, 20%, 80%)",
     "bg-20": "hsl(200, 20%, 85%)",
-    "bg-10": "hsl(200, 20%, 93%)",
+    "bg-10": "hsl(200, 19%, 91%)",
     bg: "hsl(200, 20%, 97%)",
     "bg+10": "hsl(200, 20%, 100%)",
     "bg+20": "hsl(200, 20%, 100%)",
@@ -50,6 +70,8 @@ const colors = {
     "secondary+40": "#f5edde",
     // Semantic component colors
     contrastBorder: "rgba(194, 207, 214, 0.9)",
+    border: "rgba(194, 207, 214, 0.8)",
+    inputFocusBorder: "hsl(209, 45%, 55%)",
     shadowLight: "rgba(0, 0, 0, 0.06)",
     shadowMedium: "rgba(0, 0, 0, 0.075)",
     shadowBold: "rgba(0, 0, 0, 0.09)",
@@ -58,7 +80,10 @@ const colors = {
     tooltip: "hsl(220, 15%, 35%)",
     // Same as `dark.bg+20`
     footer: "hsl(220, 13%, 28%)",
-    modalOverlay: "rgba(0, 0, 0, 0.875)",
+    modalOverlay: "rgba(255, 255, 255, 0.7)",
+    hoverOverlay: "rgba(33, 33, 33, 0.05)",
+    activeOverlay: "rgba(33, 33, 33, 0.1)",
+    contrastOverlay: "rgba(0, 0, 0, 0.04)",
   },
   [ColorMode.Dark]: {
     // Foreground colors
@@ -66,6 +91,7 @@ const colors = {
     textStrong: "rgba(244, 246, 249, 0.9)",
     textFade: "rgba(201, 213, 219, 0.7)",
     textLight: "rgba(201, 213, 219, 0.4)",
+    textReverse: "rgba(0, 0, 0, 0.5)",
     textOverlay: "rgba(201, 213, 219, 0.1)",
     // Background colors
     "bg-40": "hsl(220, 19%, 2%)",
@@ -98,6 +124,8 @@ const colors = {
     "secondary+40": "#f6eee2",
     // Semantic component colors
     contrastBorder: "transparent",
+    border: "rgba(246, 248, 249, 0.09)",
+    inputFocusBorder: "transparent",
     shadowLight: "rgba(0, 0, 0, 0.08)",
     shadowMedium: "rgba(0, 0, 0, 0.12)",
     shadowBold: "rgba(0, 0, 0, 0.18)",
@@ -106,7 +134,10 @@ const colors = {
     tooltip: "rgb(11, 12, 15)",
     // Same as `dark.bg`
     footer: "hsl(220, 13%, 18%)",
-    modalOverlay: "rgba(0, 0, 0, 0.8)",
+    modalOverlay: "rgba(0, 0, 0, 0.7)",
+    hoverOverlay: "rgba(201, 213, 219, 0.05)",
+    activeOverlay: "rgba(201, 213, 219, 0.1)",
+    contrastOverlay: "rgba(255, 255, 255, 0.023)",
   },
 };
 
@@ -170,7 +201,7 @@ type MustBeEmpty3 = Exclude<Variant, ColorKey>;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const n3: never = null as MustBeEmpty3;
 
-function toVariable(key: ColorKey): string {
+export function toVariable(key: string): string {
   return `--c-${key.replace("+", "_plus_")}`;
 }
 
@@ -187,32 +218,46 @@ export function color(key: ColorKey): string {
 
 /**
  * Creates variable definition statements for all dynamic colors in a color mode
+ * @param map - source theme/color map
  * @param colorMode - desired color mode from which to use colors
  */
-function makeVariableDefinitions(colorMode: ColorMode): string {
-  return Object.entries(colors[colorMode])
+export function makeVariableDefinitions(
+  map: Record<ColorMode, Record<string, string>>,
+  colorMode: ColorMode
+): string {
+  return Object.entries(map[colorMode])
     .map(([key, value]) => `${toVariable(key as ColorKey)}: ${value};`)
     .join("");
 }
 
 /**
  * Gets the css for use in the global CSS root
+ * @param map - source theme/color map
  */
-export function injectColorGlobals(): string {
-  const definitions =
-    makeVariableDefinitions(defaultMode) +
+export function makeRootDefinitions(
+  map: Record<ColorMode, Record<string, string>>
+): string {
+  return (
+    makeVariableDefinitions(map, defaultMode) +
     Object.values(ColorMode)
       .filter((colorMode) => defaultMode !== colorMode)
       .map(
         (colorMode) =>
-          `&.${colorMode} { ${makeVariableDefinitions(colorMode)} }`
+          `&.${colorMode} { ${makeVariableDefinitions(map, colorMode)} }`
       )
-      .join(" ");
-  return `body { ${definitions} }`;
+      .join(" ")
+  );
 }
 
 /**
- * Gets the (unchanging) string value of the given static color key
+ * Gets the css for use in the global CSS root
+ */
+export function injectColorGlobals(): string {
+  return `body { ${makeRootDefinitions(colors)} }`;
+}
+
+/**
+ * Gets the (unchanging) raw string value of the given static color key
  * @param key - static color key to get the color for
  */
 export function staticColor(key: StaticColorKey): string {
@@ -220,11 +265,11 @@ export function staticColor(key: StaticColorKey): string {
 }
 
 /**
- * Gets the (unchanging) string value of the given dynamic color key
+ * Gets the (unchanging) raw string value of the given dynamic color key
  * under the given color mode (uses `defaultMode` as a fallback).
  * **Will not be reactive to the app's theme**.
  * To use a reactive version, see `color` for CSS
- * and `useThemeColor` (implementation specific) for JavaScript
+ * and `useColorMode` + `hybridColor` for JavaScript
  * @param key - dynamic color key to get the color for
  * @param colorMode - color mode to use when looking up actual value
  */
@@ -240,6 +285,9 @@ export function dynamicColor(
  * @param colorMode - desired color mode
  */
 export function mode(colorMode: ColorMode): string {
+  // Make sure the default mode renders correctly on non-js browsers
+  if (colorMode === defaultMode)
+    return `body${nonDefaultModes.map((m) => `:not(.${m})`).join("")} &`;
   return `body.${colorMode} &`;
 }
 
@@ -254,11 +302,11 @@ export function splitColor(baseColor: string): string {
 }
 
 /**
- * Gets the (unchanging) string value of the given color key
+ * Gets the (unchanging) raw string value of the given color key
  * under the given color mode (uses `defaultMode` as a fallback).
  * **Will not be reactive to the app's theme**.
  * To use a reactive version, see `color` for CSS
- * and `useThemeColor` (implementation specific) for JavaScript
+ * and include `useColorMode` for JavaScript
  * @param key - dynamic color key to get the color for
  * @param colorMode - color mode to use when looking up actual value
  */
@@ -269,5 +317,5 @@ export function hybridColor(
   if (key in staticColors) {
     return staticColors[key as StaticColorKey];
   }
-  return colors[colorMode][key as DynamicColorKey];
+  return (colors[colorMode] ?? colors[defaultMode])[key as DynamicColorKey];
 }

@@ -72,7 +72,7 @@ const Styled = {
       }
     }
 
-    ${up("xxl")} {
+    ${up("xl")} {
       & > *:nth-child(3n + 2) {
         padding-left: ${gap.micro};
       }
@@ -108,11 +108,11 @@ const Styled = {
     top: -2px;
     opacity: 0.9;
 
-    ${up("xxl")} {
+    ${up("xl")} {
       left: -30px;
     }
 
-    ${down("xxl")} {
+    ${down("xl")} {
       right: -28px;
     }
   `,
