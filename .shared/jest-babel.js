@@ -1,6 +1,11 @@
+/* eslint-disable import/no-extraneous-dependencies */
+
 // Configures Babel options for Jest tests
 // If publishing sub-packages in the future and building from source using Babel
 // These presets should be a good starting point
+
+const babelJest = require("babel-jest");
+const path = require("path");
 
 const moduleResolver = [
   "babel-plugin-module-resolver",
@@ -16,7 +21,10 @@ const moduleResolver = [
 ];
 
 const basePlugins = [moduleResolver];
-const basePresets = ["babel-preset-gatsby", "@babel/preset-typescript"];
+const basePresets = [
+  path.join(__dirname, "./gatsby-preset-wrapper.js"),
+  "@babel/preset-typescript",
+];
 
 const babelOptions = {
   plugins: [...basePlugins],
@@ -39,5 +47,4 @@ const babelOptions = {
   ],
 };
 
-// eslint-disable-next-line import/no-extraneous-dependencies
-module.exports = require("babel-jest").createTransformer(babelOptions);
+module.exports = babelJest.createTransformer(babelOptions);
