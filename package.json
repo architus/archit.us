@@ -32,7 +32,6 @@
     "@typescript-eslint/parser": "2.x",
     "babel-eslint": "10.x",
     "babel-jest": "^26.1.0",
-    "babel-plugin-istanbul": "^6.0.0",
     "babel-plugin-module-resolver": "^4.0.0",
     "babel-preset-gatsby": "^0.5.1",
     "eslint": "6.x",

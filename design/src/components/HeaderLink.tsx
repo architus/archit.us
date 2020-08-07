@@ -94,7 +94,7 @@ const activeClass = css`
   }
 `;
 
-type HeaderLinkProps = {
+export type HeaderLinkProps = {
   children: React.ReactNode;
   path: string;
   active: boolean;
