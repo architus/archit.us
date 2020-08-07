@@ -49,12 +49,16 @@ Array [
             <div
               className="Title_t1ev43v5"
             >
-              <svg
-                className="Logotype_l4oeg32"
-                height={20}
+              <div
+                className="VersionWrapper_v1bu6b6h"
               >
-                __svg__
-              </svg>
+                <svg
+                  className="Logotype_l4oeg32"
+                  height={20}
+                >
+                  __svg__
+                </svg>
+              </div>
             </div>
           </div>
         </a>
@@ -409,12 +413,16 @@ Array [
                   <div
                     className="Title_t1ev43v5"
                   >
-                    <svg
-                      className="Logotype_l4oeg32"
-                      height={20}
+                    <div
+                      className="VersionWrapper_v1bu6b6h"
                     >
-                      __svg__
-                    </svg>
+                      <svg
+                        className="Logotype_l4oeg32"
+                        height={20}
+                      >
+                        __svg__
+                      </svg>
+                    </div>
                   </div>
                 </div>
               </div>
