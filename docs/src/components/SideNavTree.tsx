@@ -268,7 +268,11 @@ const CollapsibleItem: React.FC<NavigationTreeNode & { isRoot: boolean }> = ({
         <Styled.ItemLink to={path}>
           <NavLabel text={label} badge={badge} />
         </Styled.ItemLink>
-        <Styled.ItemButton onClick={onClick} open={open}>
+        <Styled.ItemButton
+          onClick={onClick}
+          open={open}
+          aria-label={open ? "Collapse" : "Expand"}
+        >
           <Styled.CollapseIcon />
         </Styled.ItemButton>
       </Styled.ItemRow>

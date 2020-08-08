@@ -62,6 +62,7 @@ const Switch: React.FC<SwitchProps> = ({
         uncheckedIcon={false}
         checkedIcon={false}
         aria-label={isDefined(label) ? label.toString() : undefined}
+        aria-checked={checked}
         height={24}
         width={48}
         onChange={onChange}

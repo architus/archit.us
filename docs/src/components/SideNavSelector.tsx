@@ -14,13 +14,15 @@ import { isDefined } from "@architus/lib/utility";
 import { NavigationTreeNode } from "@docs/build/nav";
 import NavLabel from "@docs/components/NavLabel";
 
-export type SideNavSelectorProps = {
+type SideNavSelectorPropsBase = {
   value: string;
   onChange: (newValue: string) => void;
   items: Map<string, NavigationTreeNode>;
   className?: string;
   style?: React.CSSProperties;
 };
+export type SideNavSelectorProps = SideNavSelectorPropsBase &
+  Omit<React.HTMLAttributes<HTMLDivElement>, keyof SideNavSelectorPropsBase>;
 
 /**
  * Select box to use to change between top-level navigation trees on mobile
@@ -32,13 +34,15 @@ const SideNavSelector: React.FC<SideNavSelectorProps> = ({
   items,
   className,
   style,
+  ...rest
 }) => {
   const mode = useColorMode();
   return (
-    <div className={className} style={style}>
+    <div className={className} style={style} {...rest}>
       <Select<NavigationTreeNode>
         value={items.get(value)}
         options={[...items.values()]}
+        aria-label="Select navigation root"
         onChange={useCallback(
           (option: ValueType<NavigationTreeNode>): void => {
             if (isDefined(option)) {

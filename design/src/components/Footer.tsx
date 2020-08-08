@@ -98,6 +98,13 @@ const Styled = {
     &:hover {
       text-decoration: underline;
     }
+
+    ${down("md")} {
+      font-size: 1.1rem;
+      padding-top: ${gap.pico};
+      padding-bottom: ${gap.pico};
+      margin-bottom: 0;
+    }
   `,
   LinkText: styled.span`
     position: relative;

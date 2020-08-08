@@ -27,6 +27,9 @@ const Styled = {
     top: 2px;
     position: relative;
     white-space: nowrap;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
 
     /* The font size needs to be slightly smaller on very small devices */
     ${down("vs")} {
@@ -35,7 +38,8 @@ const Styled = {
   `,
   BuildTag: styled(BuildTag)`
     margin-left: ${gap.pico};
-    vertical-align: 2px;
+    top: -2px;
+    position: relative;
   `,
   Version: styled.span`
     position: absolute;
@@ -43,6 +47,9 @@ const Styled = {
     left: 0;
     opacity: 0.5;
     font-size: 80%;
+  `,
+  VersionWrapper: styled.div`
+    position: relative;
   `,
 };
 
@@ -72,15 +79,17 @@ const CompositeBrand: React.FC<CompositeBrandProps> = ({
     <Styled.Brand className={className} style={style} withVersion={showVersion}>
       <Styled.Logo height={36} />
       <Styled.SiteTitle>
-        {siteTitle.title}
+        <Styled.VersionWrapper>
+          {siteTitle.title}
+          {showVersion && siteTitle.version.isDefined() && (
+            <Styled.Version>{siteTitle.version.get}</Styled.Version>
+          )}
+        </Styled.VersionWrapper>
         {buildMetadata.isDefined() && showBuildTag && (
           <Styled.BuildTag
             metadata={buildMetadata.get}
             tooltipPlacement={buildTooltipPlacement}
           />
-        )}
-        {showVersion && siteTitle.version.isDefined() && (
-          <Styled.Version>{siteTitle.version.get}</Styled.Version>
         )}
       </Styled.SiteTitle>
     </Styled.Brand>

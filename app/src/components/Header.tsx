@@ -5,6 +5,7 @@ import React from "react";
 import CompositeBrand from "@app/components/CompositeBrand";
 import HeaderLinks from "@app/components/HeaderLinks";
 import SessionControl from "@app/components/SessionControl";
+import { useSEOData } from "@app/data/seo-data";
 import { headerHeight, sitePadding, container } from "@app/layout";
 import { useInitialRender } from "@app/utility";
 import AutoLink from "@architus/facade/components/AutoLink";
@@ -144,10 +145,11 @@ const Header: React.FC<HeaderProps> = ({
   const mode = useColorMode();
   const initialRender = useInitialRender();
   const ssr = typeof window === "undefined" || initialRender;
+  const { title } = useSEOData();
   return (
     <Styled.Header mode={mode} ssr={ssr} className={className} style={style}>
       <Styled.HeaderContent data-container={String(!noContainer)}>
-        <Styled.LogoLink href="/">
+        <Styled.LogoLink href="/" aria-label={title.getOrElse("Site logo")}>
           <CompositeBrand
             buildTooltipPlacement="bottom"
             hideTagBreakpoint="vs"

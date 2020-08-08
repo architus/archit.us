@@ -46,11 +46,16 @@ const Styled = {
     justify-content: center;
 
     padding: ${gap.atto} ${gap.pico};
+
+    ${down("md")} {
+      display: flex;
+      margin-top: ${gap.pico};
+    }
   `,
   TechnologyLink: styled(AutoLink)`
     font-size: 1.3rem;
     color: ${color("light")};
-    padding: ${gap.femto};
+    padding: ${gap.pico} ${gap.femto};
     border-radius: 4px;
     border: none !important;
 
@@ -61,6 +66,11 @@ const Styled = {
 
     & > svg {
       vertical-align: -4px;
+    }
+
+    ${down("md")} {
+      font-size: 1.6rem;
+      padding: ${gap.nano} calc(${gap.pico} + 4px);
     }
   `,
   HeartIcon: styled(FaHeart)`
@@ -150,7 +160,7 @@ export type Technology = {
 
 const Technology: React.FC<Technology> = ({ icon: Icon, link, tooltip }) => (
   <Tooltip placement="top" tooltip={tooltip}>
-    <Styled.TechnologyLink href={link} noIcon>
+    <Styled.TechnologyLink href={link} noIcon aria-label={tooltip}>
       <Icon />
     </Styled.TechnologyLink>
   </Tooltip>

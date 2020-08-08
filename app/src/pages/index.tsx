@@ -557,7 +557,7 @@ const FeatureStyled = {
       margin-bottom: ${gap.micro};
     }
   `,
-  Subheading: styled.h4`
+  Subheading: styled.div`
     font-size: 0.9em;
     text-transform: uppercase;
     letter-spacing: 1px;

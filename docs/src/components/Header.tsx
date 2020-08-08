@@ -17,6 +17,7 @@ import HeaderActionBar, {
 } from "@docs/components/HeaderActionBar";
 import HeaderLinks from "@docs/components/HeaderLinks";
 import { Link } from "@docs/components/Router";
+import { useSEOData } from "@docs/data/seo-data";
 import { headerHeight, sitePadding } from "@docs/layout";
 
 const headerTransparency = 0.06;
@@ -128,9 +129,10 @@ const Header: React.FC<HeaderProps> = ({ activeNavRoot, className, style }) => {
   const mode = useColorMode();
   const initialRender = useInitialRender();
   const ssr = typeof window === "undefined" || initialRender;
+  const { title } = useSEOData();
   return (
     <Styled.Header mode={mode} ssr={ssr} className={className} style={style}>
-      <Styled.LogoLink to="/">
+      <Styled.LogoLink to="/" aria-label={title.getOrElse("Site logo")}>
         <CompositeBrand buildTooltipPlacement="bottom" hideTagBreakpoint="vs" />
       </Styled.LogoLink>
       <Styled.HeaderLinksWrapper>

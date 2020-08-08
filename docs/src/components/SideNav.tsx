@@ -1,8 +1,9 @@
 import { styled } from "linaria/react";
 import React, { useCallback } from "react";
 
+import { useDown } from "@architus/facade/hooks";
 import { color } from "@architus/facade/theme/color";
-import { down, up } from "@architus/facade/theme/media";
+import { down } from "@architus/facade/theme/media";
 import { scrollBarAuto } from "@architus/facade/theme/mixins";
 import { gap } from "@architus/facade/theme/spacing";
 import { Option } from "@architus/lib/option";
@@ -49,10 +50,6 @@ const Styled = {
     padding-left: ${sitePadding};
     padding-right: ${rightPadding};
     cursor: pointer;
-
-    ${up("md")} {
-      display: none;
-    }
   `,
 };
 
@@ -80,6 +77,8 @@ const SideNav: React.FC<SideNavProps> = ({
     navigate(path);
   }, []);
 
+  const useSelector = useDown("md");
+
   return Option.merge(navRootIdOption, navRootOption).match({
     None: () => (
       <Styled.SideNav style={style} className={className}>
@@ -103,6 +102,8 @@ const SideNav: React.FC<SideNavProps> = ({
             onChange={onChangePages}
             value={id}
             items={navTree}
+            aria-hidden={!useSelector}
+            style={!useSelector ? { display: "none" } : {}}
           />
           <Styled.SideNavHeader withBadge={isDefined(navRoot.badge)}>
             <NavLabel text={navRoot.label} badge={navRoot.badge} />
