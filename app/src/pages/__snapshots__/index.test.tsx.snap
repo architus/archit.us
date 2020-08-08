@@ -29,6 +29,7 @@ Array [
         data-container="true"
       >
         <a
+          aria-label="Site logo"
           className="LogoLink_lwue83p baseLinkClass_b190u9vd"
           href="/"
         >
@@ -218,6 +219,7 @@ Array [
                 }
               />
               <input
+                aria-checked={false}
                 aria-label="Dark mode switch"
                 checked={false}
                 disabled={false}
@@ -487,11 +489,11 @@ Array [
                 className="Dots_dp7ga4n"
                 data-side="left"
               >
-                <h4
+                <div
                   className="Subheading_s77ob72"
                 >
                   Have architus listen for predefined phrases
-                </h4>
+                </div>
                 <h3
                   className="Heading_hd7mj8q"
                 >
@@ -641,11 +643,11 @@ Array [
                 className="Dots_dp7ga4n"
                 data-side="right"
               >
-                <h4
+                <div
                   className="Subheading_s77ob72"
                 >
                   Let non-nitro members use unlimited custom emoji
-                </h4>
+                </div>
                 <h3
                   className="Heading_hd7mj8q"
                 >
@@ -786,11 +788,11 @@ Array [
                 className="Dots_dp7ga4n"
                 data-side="left"
               >
-                <h4
+                <div
                   className="Subheading_s77ob72"
                 >
                   Conduct votes or schedule events
-                </h4>
+                </div>
                 <h3
                   className="Heading_hd7mj8q"
                 >
@@ -1235,6 +1237,7 @@ Array [
                 onMouseLeave={[Function]}
               >
                 <a
+                  aria-label="GitHub"
                   className="TechnologyLink_t1gxonyu baseLinkClass_b190u9vd"
                   href="https://github.com/architus/archit.us"
                   rel="noreferrer noopener"
@@ -1265,6 +1268,7 @@ Array [
                 onMouseLeave={[Function]}
               >
                 <a
+                  aria-label="React"
                   className="TechnologyLink_t1gxonyu baseLinkClass_b190u9vd"
                   href="https://reactjs.org/"
                   rel="noreferrer noopener"
@@ -1295,6 +1299,7 @@ Array [
                 onMouseLeave={[Function]}
               >
                 <a
+                  aria-label="Gatsby"
                   className="TechnologyLink_t1gxonyu baseLinkClass_b190u9vd"
                   href="https://www.gatsbyjs.org/"
                   rel="noreferrer noopener"
@@ -1310,6 +1315,7 @@ Array [
                 onMouseLeave={[Function]}
               >
                 <a
+                  aria-label="Linaria"
                   className="TechnologyLink_t1gxonyu baseLinkClass_b190u9vd"
                   href="https://linaria.now.sh/"
                   rel="noreferrer noopener"
@@ -1325,6 +1331,7 @@ Array [
                 onMouseLeave={[Function]}
               >
                 <a
+                  aria-label="GraphQL"
                   className="TechnologyLink_t1gxonyu baseLinkClass_b190u9vd"
                   href="https://graphql.org/"
                   rel="noreferrer noopener"
@@ -1340,6 +1347,7 @@ Array [
                 onMouseLeave={[Function]}
               >
                 <a
+                  aria-label="TypeScript"
                   className="TechnologyLink_t1gxonyu baseLinkClass_b190u9vd"
                   href="http://typescriptlang.org/"
                   rel="noreferrer noopener"

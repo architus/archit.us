@@ -12,6 +12,7 @@ Array [
     }
   >
     <a
+      aria-label="Site logo"
       className="LogoLink_lwue83p"
       href="/"
     >
@@ -32,7 +33,11 @@ Array [
         <h1
           className="SiteTitle_s16u4h4e"
         >
-          Documentation
+          <div
+            className="VersionWrapper_v1ggjwxs"
+          >
+            Documentation
+          </div>
         </h1>
       </div>
     </a>
@@ -100,6 +105,8 @@ Array [
       className="DrawerExpander_dop0li9"
     >
       <button
+        aria-hidden={false}
+        aria-label="Expand drawer"
         onClick={[Function]}
       >
         <svg
@@ -251,7 +258,11 @@ Array [
                   <h1
                     className="SiteTitle_s16u4h4e"
                   >
-                    Documentation
+                    <div
+                      className="VersionWrapper_v1ggjwxs"
+                    >
+                      Documentation
+                    </div>
                   </h1>
                 </div>
               </div>
@@ -295,6 +306,7 @@ Array [
               onMouseLeave={[Function]}
             >
               <a
+                aria-label="GitHub"
                 className="TechnologyLink_t1gxonyu baseLinkClass_b190u9vd"
                 href="https://github.com/architus/archit.us"
                 rel="noreferrer noopener"
@@ -325,6 +337,7 @@ Array [
               onMouseLeave={[Function]}
             >
               <a
+                aria-label="React"
                 className="TechnologyLink_t1gxonyu baseLinkClass_b190u9vd"
                 href="https://reactjs.org/"
                 rel="noreferrer noopener"
@@ -355,6 +368,7 @@ Array [
               onMouseLeave={[Function]}
             >
               <a
+                aria-label="Gatsby"
                 className="TechnologyLink_t1gxonyu baseLinkClass_b190u9vd"
                 href="https://www.gatsbyjs.org/"
                 rel="noreferrer noopener"
@@ -370,6 +384,7 @@ Array [
               onMouseLeave={[Function]}
             >
               <a
+                aria-label="Linaria"
                 className="TechnologyLink_t1gxonyu baseLinkClass_b190u9vd"
                 href="https://linaria.now.sh/"
                 rel="noreferrer noopener"
@@ -385,6 +400,7 @@ Array [
               onMouseLeave={[Function]}
             >
               <a
+                aria-label="GraphQL"
                 className="TechnologyLink_t1gxonyu baseLinkClass_b190u9vd"
                 href="https://graphql.org/"
                 rel="noreferrer noopener"
@@ -400,6 +416,7 @@ Array [
               onMouseLeave={[Function]}
             >
               <a
+                aria-label="TypeScript"
                 className="TechnologyLink_t1gxonyu baseLinkClass_b190u9vd"
                 href="http://typescriptlang.org/"
                 rel="noreferrer noopener"
@@ -415,6 +432,7 @@ Array [
               onMouseLeave={[Function]}
             >
               <a
+                aria-label="Algolia"
                 className="TechnologyLink_t1gxonyu baseLinkClass_b190u9vd"
                 href="https://www.algolia.com/"
                 rel="noreferrer noopener"
