@@ -99,7 +99,7 @@ const DrawerOverlay = styled.div`
   left: 0;
   right: 0;
   cursor: default !important;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: ${color("modalOverlay")};
 
   ${transition(["opacity"])};
   opacity: 0;

@@ -47,7 +47,7 @@ export const siteMetadata = {
             },
           ]
         : []),
-      ...(process.env.SITE_ROOT !== "https://docs.archit.us"
+      ...(process.env.SITE_ROOT !== "https://develop.archit.us"
         ? [
             {
               href: "https://develop.archit.us/",
