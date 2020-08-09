@@ -4,7 +4,7 @@
 
 > Monorepo for all frontend source code under the Architus project. Archit.us provides a web dashboard server administrators and members can use to modify settings, view statistics and logs, and manage custom emoji and auto-responses. Docs.archit.us provides the platform to host a user guide, a changelog, and implementation documentation.
 
-[![Web dashboard](./readme/thumbnail.png)](https://archit.us/app)
+[![Web dashboard](./.github/readme/thumbnail.png)](https://archit.us/app)
 
 ## 🚀 Getting Started
 
