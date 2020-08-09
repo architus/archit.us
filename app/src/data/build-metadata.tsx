@@ -8,6 +8,7 @@ import {
   BuildMetadataEntry,
 } from "@architus/facade/components/BuildDetails";
 import { BuildMetadata } from "@architus/facade/components/BuildTag";
+import NetlifyIcon from "@architus/facade/icons/netlify.svg";
 import { Option, Some, None } from "@architus/lib/option";
 import { isDefined } from "@architus/lib/utility";
 
@@ -55,6 +56,9 @@ export function useBuildMetadata(): Option<BuildMetadata> {
           break;
         case "pull-request":
           icon = <FiGitPullRequest />;
+          break;
+        case "netlify":
+          icon = <NetlifyIcon />;
           break;
       }
 

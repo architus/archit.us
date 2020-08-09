@@ -30,6 +30,7 @@ const EmojiContainer = styled.div`
     margin: 0 0.05em 0 0.1em;
     position: relative;
     top: -1px;
+    vertical-align: middle;
   }
 `;
 

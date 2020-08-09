@@ -110,6 +110,76 @@ function loadBuildMetadata(): Option<NodeInput<GatsbyTypes.BuildMetadata>> {
     });
   }
 
+  if (process.env.NETLIFY === "true" && process.env.CONTEXT !== "production") {
+    // Netlify environment (deploys on Canary)
+    // See https://docs.netlify.com/configure-builds/environment-variables/#build-metadata
+
+    const details: BuildMetadataEntry[] = [makeBuildTimeEntry()];
+
+    details.push({
+      type: "content",
+      label: "Build ID",
+      content: process.env.BUILD_ID ?? "~",
+    });
+    details.push({
+      type: "content",
+      label: "Netlify context",
+      content: process.env.CONTEXT ?? "~",
+    });
+    details.push({
+      type: "optionLink",
+      label: "GitHub repository",
+      href: optionFromString(process.env.REPOSITORY_URL).orUndefined(),
+    });
+    details.push({
+      type: "content",
+      label: "Commit SHA",
+      content: process.env.COMMIT_REF ?? "~",
+    });
+    details.push({
+      type: "optionLink",
+      label: "Commit URL",
+      text: optionFromString(process.env.COMMIT_REF)
+        .map((r) => r.slice(0, 7))
+        .orUndefined(),
+      href: optionFromString(process.env.REPOSITORY_URL)
+        .zip(optionFromString(process.env.COMMIT_REF))
+        .map(([repo, ref]) => `${repo}/commit/${ref}`)
+        .orUndefined(),
+    });
+    details.push({
+      type: "content",
+      label: "Branch",
+      content: process.env.BRANCH ?? "~",
+    });
+    details.push({
+      type: "content",
+      label: "Head",
+      content: process.env.HEAD ?? "~",
+    });
+    details.push({
+      type: "optionLink",
+      label: "Deploy URL",
+      href: optionFromString(process.env.DEPLOY_PRIME_URL).orUndefined(),
+    });
+    details.push({
+      type: "content",
+      label: "Deploy ID",
+      content: process.env.DEPLOY_ID ?? "~",
+    });
+
+    return Some({
+      label: "CANARY",
+      icon: undefined,
+      context: {
+        label: "netlify",
+        message: undefined,
+        icon: "netlify",
+      },
+      details: flatten(details),
+    });
+  }
+
   if (process.env.GITHUB_ACTIONS === "true") {
     // GitHub actions environment (deploys a PR or a commit)
     // https://docs.github.com/en/actions/configuring-and-managing-workflows/using-environment-variables

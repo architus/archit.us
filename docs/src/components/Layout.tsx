@@ -5,6 +5,7 @@ import { FaBars, FaTimes, FaAlgolia } from "react-icons/fa";
 
 import Footer, { FooterContent } from "@architus/facade/components/Footer";
 import SecondaryFooter from "@architus/facade/components/SecondaryFooter";
+import { useDown } from "@architus/facade/hooks";
 import { color, mode, ColorMode } from "@architus/facade/theme/color";
 import { down, mediaMaxWidth, up, between } from "@architus/facade/theme/media";
 import { blankButton } from "@architus/facade/theme/mixins";
@@ -98,7 +99,7 @@ const DrawerOverlay = styled.div`
   left: 0;
   right: 0;
   cursor: default !important;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: ${color("modalOverlay")};
 
   ${transition(["opacity"])};
   opacity: 0;
@@ -232,6 +233,7 @@ const Layout: React.FC<LayoutProps> = ({
 }) => {
   // Ignored on large screens (always visible)
   const [drawerVisible, setDrawerVisible] = useState(false);
+  const smallScreen = useDown("md");
   return (
     <>
       <SEO title={title} description={description} />
@@ -241,7 +243,11 @@ const Layout: React.FC<LayoutProps> = ({
           <SideNav activeNavRoot={activeNavRoot} />
         </Styled.Drawer>
         <Styled.DrawerExpander>
-          <button onClick={(): void => setDrawerVisible(!drawerVisible)}>
+          <button
+            onClick={(): void => setDrawerVisible(!drawerVisible)}
+            aria-label={drawerVisible ? "Collapse drawer" : "Expand drawer"}
+            aria-hidden={smallScreen}
+          >
             {drawerVisible ? <FaTimes /> : <FaBars />}
           </button>
         </Styled.DrawerExpander>

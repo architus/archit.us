@@ -18,6 +18,7 @@ Array [
   >
     <nav
       className="Header_h63g0gq"
+      mode="dark"
       style={
         Object {
           "--h63g0gq-5": "rgba(108,161,209,0.94)",
@@ -29,6 +30,7 @@ Array [
         data-container="true"
       >
         <a
+          aria-label="Site logo"
           className="LogoLink_lwue83p baseLinkClass_b190u9vd"
           href="/"
         >
@@ -105,7 +107,7 @@ Array [
                   Object {
                     "MozTransition": "background 0.25s",
                     "WebkitTransition": "background 0.25s",
-                    "background": "#ecf2f8",
+                    "background": "#294e70",
                     "borderRadius": 14,
                     "cursor": "pointer",
                     "height": 28,
@@ -122,7 +124,7 @@ Array [
                       "MozTransition": "opacity 0.25s",
                       "WebkitTransition": "opacity 0.25s",
                       "height": 28,
-                      "opacity": 0,
+                      "opacity": 1,
                       "pointerEvents": "none",
                       "position": "relative",
                       "transition": "opacity 0.25s",
@@ -158,7 +160,7 @@ Array [
                       "MozTransition": "opacity 0.25s",
                       "WebkitTransition": "opacity 0.25s",
                       "height": 28,
-                      "opacity": 1,
+                      "opacity": 0,
                       "pointerEvents": "none",
                       "position": "absolute",
                       "right": 0,
@@ -211,15 +213,16 @@ Array [
                     "outline": 0,
                     "position": "absolute",
                     "top": 1,
-                    "transform": "translateX(1px)",
+                    "transform": "translateX(29px)",
                     "transition": "background-color 0.25s, transform 0.25s, box-shadow 0.15s",
                     "width": 26,
                   }
                 }
               />
               <input
+                aria-checked={true}
                 aria-label="Dark mode switch"
-                checked={false}
+                checked={true}
                 disabled={false}
                 onBlur={[Function]}
                 onChange={[Function]}
@@ -487,11 +490,11 @@ Array [
                 className="Dots_dp7ga4n"
                 data-side="left"
               >
-                <h4
+                <div
                   className="Subheading_s77ob72"
                 >
                   Have architus listen for predefined phrases
-                </h4>
+                </div>
                 <h3
                   className="Heading_hd7mj8q"
                 >
@@ -641,11 +644,11 @@ Array [
                 className="Dots_dp7ga4n"
                 data-side="right"
               >
-                <h4
+                <div
                   className="Subheading_s77ob72"
                 >
                   Let non-nitro members use unlimited custom emoji
-                </h4>
+                </div>
                 <h3
                   className="Heading_hd7mj8q"
                 >
@@ -786,11 +789,11 @@ Array [
                 className="Dots_dp7ga4n"
                 data-side="left"
               >
-                <h4
+                <div
                   className="Subheading_s77ob72"
                 >
                   Conduct votes or schedule events
-                </h4>
+                </div>
                 <h3
                   className="Heading_hd7mj8q"
                 >
@@ -1235,6 +1238,7 @@ Array [
                 onMouseLeave={[Function]}
               >
                 <a
+                  aria-label="GitHub"
                   className="TechnologyLink_t1gxonyu baseLinkClass_b190u9vd"
                   href="https://github.com/architus/archit.us"
                   rel="noreferrer noopener"
@@ -1265,6 +1269,7 @@ Array [
                 onMouseLeave={[Function]}
               >
                 <a
+                  aria-label="React"
                   className="TechnologyLink_t1gxonyu baseLinkClass_b190u9vd"
                   href="https://reactjs.org/"
                   rel="noreferrer noopener"
@@ -1295,6 +1300,7 @@ Array [
                 onMouseLeave={[Function]}
               >
                 <a
+                  aria-label="Gatsby"
                   className="TechnologyLink_t1gxonyu baseLinkClass_b190u9vd"
                   href="https://www.gatsbyjs.org/"
                   rel="noreferrer noopener"
@@ -1310,6 +1316,7 @@ Array [
                 onMouseLeave={[Function]}
               >
                 <a
+                  aria-label="Linaria"
                   className="TechnologyLink_t1gxonyu baseLinkClass_b190u9vd"
                   href="https://linaria.now.sh/"
                   rel="noreferrer noopener"
@@ -1325,6 +1332,7 @@ Array [
                 onMouseLeave={[Function]}
               >
                 <a
+                  aria-label="GraphQL"
                   className="TechnologyLink_t1gxonyu baseLinkClass_b190u9vd"
                   href="https://graphql.org/"
                   rel="noreferrer noopener"
@@ -1340,6 +1348,7 @@ Array [
                 onMouseLeave={[Function]}
               >
                 <a
+                  aria-label="TypeScript"
                   className="TechnologyLink_t1gxonyu baseLinkClass_b190u9vd"
                   href="http://typescriptlang.org/"
                   rel="noreferrer noopener"

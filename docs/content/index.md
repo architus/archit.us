@@ -18,4 +18,4 @@ To start using architus, it must first be added to a server of your choice. Foll
 - [Commands](/commands)
 - [Patch Notes](/changelog/)
 
-> Note: internal docs on the implementation details of the architus open source project are available [here](/internal)
+> Note: internal docs on the implementation details of the architus open source project are available on the [Implementation Documentation page](/internal)

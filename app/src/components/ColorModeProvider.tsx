@@ -1,7 +1,12 @@
 import { ThemeToggler } from "gatsby-plugin-dark-mode";
 import React from "react";
 
-import { ColorModeContext, ColorMode } from "@architus/facade/theme/color";
+import {
+  ColorModeContext,
+  ColorMode,
+  defaultMode,
+} from "@architus/facade/theme/color";
+import { Nil } from "@architus/lib/types";
 
 /**
  * Context to wrap around the `gatsby-plugin-dark-mode` component,
@@ -13,7 +18,10 @@ const ColorModeProvider: React.FC = ({ children }) => {
       {({ theme, toggleTheme }): React.ReactNode => (
         <ColorModeContext.Provider
           // This relies on "dark" and "light" both being valid `ColorMode`s
-          value={{ mode: theme as ColorMode, setMode: toggleTheme }}
+          value={{
+            mode: (theme as ColorMode | Nil) ?? defaultMode,
+            setMode: toggleTheme,
+          }}
         >
           {children}
         </ColorModeContext.Provider>

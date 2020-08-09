@@ -4,6 +4,7 @@ exports[`<404 /> renders correctly 1`] = `
 Array [
   <nav
     className="Header_h63g0gq"
+    mode="dark"
     style={
       Object {
         "--h63g0gq-10": "var(--c-primary)",
@@ -12,6 +13,7 @@ Array [
     }
   >
     <a
+      aria-label="Site logo"
       className="LogoLink_lwue83p"
       href="/"
     >
@@ -32,7 +34,11 @@ Array [
         <h1
           className="SiteTitle_s16u4h4e"
         >
-          Documentation
+          <div
+            className="VersionWrapper_v1ggjwxs"
+          >
+            Documentation
+          </div>
         </h1>
       </div>
     </a>
@@ -57,12 +63,14 @@ Array [
               "color": undefined,
             }
           }
-          viewBox="0 0 512 512"
+          viewBox="0 0 16 16"
           width="1em"
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            d="M277.3 32h-42.7v64h42.7V32zm129.1 43.7L368 114.1l29.9 29.9 38.4-38.4-29.9-29.9zm-300.8 0l-29.9 29.9 38.4 38.4 29.9-29.9-38.4-38.4zM256 128c-70.4 0-128 57.6-128 128s57.6 128 128 128 128-57.6 128-128-57.6-128-128-128zm224 106.7h-64v42.7h64v-42.7zm-384 0H32v42.7h64v-42.7zM397.9 368L368 397.9l38.4 38.4 29.9-29.9-38.4-38.4zm-283.8 0l-38.4 38.4 29.9 29.9 38.4-38.4-29.9-29.9zm163.2 48h-42.7v64h42.7v-64z"
+            clipRule="evenodd"
+            d="M14.53 10.53a7 7 0 01-9.058-9.058A7.003 7.003 0 008 15a7.002 7.002 0 006.53-4.47z"
+            fillRule="evenodd"
           />
         </svg>
       </button>
@@ -100,6 +108,8 @@ Array [
       className="DrawerExpander_dop0li9"
     >
       <button
+        aria-hidden={false}
+        aria-label="Expand drawer"
         onClick={[Function]}
       >
         <svg
@@ -251,7 +261,11 @@ Array [
                   <h1
                     className="SiteTitle_s16u4h4e"
                   >
-                    Documentation
+                    <div
+                      className="VersionWrapper_v1ggjwxs"
+                    >
+                      Documentation
+                    </div>
                   </h1>
                 </div>
               </div>
@@ -295,6 +309,7 @@ Array [
               onMouseLeave={[Function]}
             >
               <a
+                aria-label="GitHub"
                 className="TechnologyLink_t1gxonyu baseLinkClass_b190u9vd"
                 href="https://github.com/architus/archit.us"
                 rel="noreferrer noopener"
@@ -325,6 +340,7 @@ Array [
               onMouseLeave={[Function]}
             >
               <a
+                aria-label="React"
                 className="TechnologyLink_t1gxonyu baseLinkClass_b190u9vd"
                 href="https://reactjs.org/"
                 rel="noreferrer noopener"
@@ -355,6 +371,7 @@ Array [
               onMouseLeave={[Function]}
             >
               <a
+                aria-label="Gatsby"
                 className="TechnologyLink_t1gxonyu baseLinkClass_b190u9vd"
                 href="https://www.gatsbyjs.org/"
                 rel="noreferrer noopener"
@@ -370,6 +387,7 @@ Array [
               onMouseLeave={[Function]}
             >
               <a
+                aria-label="Linaria"
                 className="TechnologyLink_t1gxonyu baseLinkClass_b190u9vd"
                 href="https://linaria.now.sh/"
                 rel="noreferrer noopener"
@@ -385,6 +403,7 @@ Array [
               onMouseLeave={[Function]}
             >
               <a
+                aria-label="GraphQL"
                 className="TechnologyLink_t1gxonyu baseLinkClass_b190u9vd"
                 href="https://graphql.org/"
                 rel="noreferrer noopener"
@@ -400,6 +419,7 @@ Array [
               onMouseLeave={[Function]}
             >
               <a
+                aria-label="TypeScript"
                 className="TechnologyLink_t1gxonyu baseLinkClass_b190u9vd"
                 href="http://typescriptlang.org/"
                 rel="noreferrer noopener"
@@ -415,6 +435,7 @@ Array [
               onMouseLeave={[Function]}
             >
               <a
+                aria-label="Algolia"
                 className="TechnologyLink_t1gxonyu baseLinkClass_b190u9vd"
                 href="https://www.algolia.com/"
                 rel="noreferrer noopener"
