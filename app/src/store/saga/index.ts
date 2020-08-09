@@ -1,6 +1,5 @@
 import { SagaIterator } from "@redux-saga/core";
-import { delay } from "@redux-saga/core/effects";
-import { takeEvery, put, fork } from "redux-saga/effects";
+import { takeEvery, put, fork, delay } from "redux-saga/effects";
 
 import { navigate } from "@app/components/Router";
 import {
@@ -48,9 +47,22 @@ function* autoHideNotification(
  * Upon sign out, clears session storage, shows a toast, and navigates to the home
  */
 function* handleSignOut(action: ReturnType<typeof signOut>): SagaIterator {
-  navigate("/");
   setLocalStorage(LOCAL_STORAGE_KEY, "");
   if (!action.payload.silent) {
     yield put(showToast({ message: "Signed out" }));
+  }
+
+  const retries = 8;
+  for (let i = 0; i < retries; ++i) {
+    try {
+      navigate("/");
+    } catch (ex) {
+      if (i === retries - 1) {
+        // eslint-disable-next-line no-console
+        console.error(ex);
+        return;
+      }
+      yield delay(250);
+    }
   }
 }

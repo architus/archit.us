@@ -6,6 +6,7 @@ import MigrationAlert from "./MigrationAlert";
 import { AuthorData, Author } from "./types";
 import PageTitle from "@app/components/PageTitle";
 import { getAvatarUrl } from "@app/components/UserDisplay";
+import { appHorizontalPadding, appVerticalPadding } from "@app/layout";
 import { useDispatch } from "@app/store";
 import { useCurrentUser } from "@app/store/actions";
 import { usePool, usePoolEntities } from "@app/store/slices/pools";
@@ -25,10 +26,10 @@ const Styled = {
     flex-direction: column;
     height: 100%;
 
-    padding-top: ${gap.milli};
+    padding-top: ${appVerticalPadding};
   `,
   Header: styled.div`
-    padding: 0 ${gap.milli};
+    padding: 0 ${appHorizontalPadding};
 
     p {
       margin-bottom: ${gap.micro};

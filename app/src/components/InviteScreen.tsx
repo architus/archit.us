@@ -13,8 +13,10 @@ import {
   processIfNotEmptyOrNil,
 } from "@app/utility";
 import { Snowflake } from "@app/utility/types";
+import Empty from "@architus/facade/components/Empty";
 import Spinner from "@architus/facade/components/Spinner";
 import { color } from "@architus/facade/theme/color";
+import { up } from "@architus/facade/theme/media";
 import { scrollBarAuto } from "@architus/facade/theme/mixins";
 import { shadow } from "@architus/facade/theme/shadow";
 import { gap } from "@architus/facade/theme/spacing";
@@ -26,10 +28,10 @@ const Styled = {
     flex-direction: column;
     align-items: stretch;
     padding-top: ${appVerticalPadding};
-    padding-left: ${appHorizontalPadding};
   `,
   Header: styled.div`
     flex-grow: 0;
+    padding-left: ${appHorizontalPadding};
     padding-right: ${appHorizontalPadding};
     margin-bottom: ${gap.micro};
   `,
@@ -43,6 +45,7 @@ const Styled = {
     color: ${color("textFade")};
     font-weight: 300;
     margin-bottom: ${gap.nano};
+    font-size: 1.35rem;
   `,
   LoadingWrapper: styled.div`
     display: flex;
@@ -56,11 +59,22 @@ const Styled = {
     overflow-y: auto;
     overflow-x: hidden;
     ${scrollBarAuto()}
-    border-top-left-radius: 12px;
     flex-grow: 1;
     min-height: 400px;
     box-shadow: ${shadow("inner")(color("shadowHeavy"))};
     padding: ${gap.pico};
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+
+    ${up("md")} {
+      border-top-left-radius: 12px;
+      margin-left: ${appHorizontalPadding};
+    }
+  `,
+  Empty: styled(Empty)`
+    flex-grow: 1;
   `,
 };
 
@@ -114,6 +128,9 @@ const InviteScreen: React.FC<InviteScreenProps> = () => {
               href={inviteUrl(guild.id)}
             />
           ))}
+        {guildsLoaded && guilds.length === 0 && (
+          <Styled.Empty message={"No eligible servers found"} size="large" />
+        )}
         {!guildsLoaded && (
           // Show a spinner if the pool hasn't been completely loaded
           <Styled.LoadingWrapper>
