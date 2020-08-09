@@ -18,6 +18,7 @@ Array [
   >
     <nav
       className="Header_h63g0gq"
+      mode="dark"
       style={
         Object {
           "--h63g0gq-5": "rgba(108,161,209,0.94)",
@@ -106,7 +107,7 @@ Array [
                   Object {
                     "MozTransition": "background 0.25s",
                     "WebkitTransition": "background 0.25s",
-                    "background": "#ecf2f8",
+                    "background": "#294e70",
                     "borderRadius": 14,
                     "cursor": "pointer",
                     "height": 28,
@@ -123,7 +124,7 @@ Array [
                       "MozTransition": "opacity 0.25s",
                       "WebkitTransition": "opacity 0.25s",
                       "height": 28,
-                      "opacity": 0,
+                      "opacity": 1,
                       "pointerEvents": "none",
                       "position": "relative",
                       "transition": "opacity 0.25s",
@@ -159,7 +160,7 @@ Array [
                       "MozTransition": "opacity 0.25s",
                       "WebkitTransition": "opacity 0.25s",
                       "height": 28,
-                      "opacity": 1,
+                      "opacity": 0,
                       "pointerEvents": "none",
                       "position": "absolute",
                       "right": 0,
@@ -212,16 +213,16 @@ Array [
                     "outline": 0,
                     "position": "absolute",
                     "top": 1,
-                    "transform": "translateX(1px)",
+                    "transform": "translateX(29px)",
                     "transition": "background-color 0.25s, transform 0.25s, box-shadow 0.15s",
                     "width": 26,
                   }
                 }
               />
               <input
-                aria-checked={false}
+                aria-checked={true}
                 aria-label="Dark mode switch"
-                checked={false}
+                checked={true}
                 disabled={false}
                 onBlur={[Function]}
                 onChange={[Function]}
