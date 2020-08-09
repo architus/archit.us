@@ -19,6 +19,7 @@ import tabs from "@app/tabs/definitions";
 import { TabDefinition, TabProps, BaseAppProps } from "@app/tabs/types";
 import { useInitialRender } from "@app/utility";
 import { Snowflake } from "@app/utility/types";
+import { up } from "@architus/facade/theme/media";
 import { gap } from "@architus/facade/theme/spacing";
 import { withPathPrefix } from "@architus/lib/path";
 
@@ -29,8 +30,10 @@ const headerClass = css`
 
 const Styled = {
   Layout: styled(Layout)`
-    /* Correct the global site padding */
-    ${sitePaddingVariable}: ${gap.nano} !important;
+    ${up("md")} {
+      /* Correct the global site padding */
+      ${sitePaddingVariable}: ${gap.nano} !important;
+    }
   `,
 };
 

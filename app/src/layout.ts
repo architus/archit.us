@@ -9,7 +9,8 @@ export const sitePaddingVariable = `--site-padding`;
 export const contentWidthVariable = `--content-width`;
 export const sitePadding = `var(${sitePaddingVariable})`;
 export const contentWidth = `var(${contentWidthVariable})`;
-export const appHorizontalPadding = gap.milli;
+export const appHorizontalPaddingVariable = "--app-horizontal-padding";
+export const appHorizontalPadding = `var(${appHorizontalPaddingVariable})`;
 export const appVerticalPadding = gap.milli;
 export const minimizeBreakpoint: BreakpointKey = "md";
 
@@ -18,6 +19,7 @@ export const layoutGlobal = css`
     :root {
       ${sitePaddingVariable}: ${gap.milli};
       ${contentWidthVariable}: 1180px;
+      ${appHorizontalPaddingVariable}: ${gap.milli};
 
       ${down("xl")} {
         ${contentWidthVariable}: 960px;
@@ -29,6 +31,7 @@ export const layoutGlobal = css`
 
       ${down("md")} {
         ${sitePaddingVariable}: ${gap.micro};
+        ${appHorizontalPaddingVariable}: ${sitePadding};
       }
 
       ${down("vs")} {
