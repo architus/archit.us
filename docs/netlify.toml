@@ -6,7 +6,7 @@
   force = true
 
 [build]
-  command = "yarn bootstrap && yarn workspace @architus/docs build"
+  command = "cd .. && yarn bootstrap && yarn workspace @architus/docs build"
   publish = "public/"
 
   # Base environment for production
