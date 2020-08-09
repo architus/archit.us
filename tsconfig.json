@@ -1,20 +1,41 @@
 {
   "compilerOptions": {
+    /* Visit https://www.typescriptlang.org/tsconfig to read more about this file */
+    /* This file is <extended> by each package to reduce duplication */
     "target": "es6",
     "module": "esnext",
-    "lib": ["es6", "dom"],
-    "moduleResolution": "node",
-    "skipLibCheck": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "resolveJsonModule": true,
-    "allowJs": true,
     "jsx": "preserve",
-    "sourceMap": true,
-    "removeComments": false,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+
+    /* Strict Type-Checking Options (all on) */
     "strict": true,
-    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+
+    /* Additional Checks (all on) */
     "noImplicitReturns": true,
-    "baseUrl": "src",
+    "noFallthroughCasesInSwitch": true,
+
+    /* Module Resolution Options */
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "paths": {
+      /* Configure utility absolute base imports */
+      "@docs/*": ["../docs/src/*"],
+      "@app/*": ["../app/src/*"],
+      /* Configure path aliases for non-terminal monorepo packages */
+      "@architus/lib/*": ["../lib/src/*"],
+      "@architus/facade/*": ["../design/src/*"]
+    },
+
+    /* Advanced Options */
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
   }
 }

@@ -1,0 +1,17 @@
+# Redirect default Netlify subdomain to primary domain
+[[redirects]]
+  from = "https://architus-docs.netlify.com/*"
+  to = "https://docs.archit.us/:splat"
+  status = 301
+  force = true
+
+[build]
+  command = "cd .. && yarn bootstrap && yarn workspace @architus/docs build"
+  publish = "public/"
+
+  # Base environment for production
+  [build.environment]
+    SITE_NAME = "Architus Docs"
+    SITE_ROOT = "https://docs.archit.us"
+    BUILD_LOCATION = "remote"
+    NODE_ENV = "production"

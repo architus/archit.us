@@ -1,0 +1,16 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# gatsby files
+.cache/
+public
+recipe-*.log
+
+# Linaria
+.linaria-cache
+
+# Local environment files
+.env
+!.env.example
+
+# Generated files
+src/__generated__

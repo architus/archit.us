@@ -1,0 +1,149 @@
+# Ignore changes to files only in /app
+on:
+  push:
+    paths-ignore:
+      - 'app/**'
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths-ignore:
+      - 'app/**'
+
+# Workflow to run continuous integration builds for each commit/PR,
+# and then upload the artifacts to our staging server
+name: docs-staging
+env:
+  BASE_STAGING_URL: https://staging.archit.us
+  STAGING_NAMESPACE: docs
+  ARCHIVE_NAME: dist.tar.gz
+  WORKING_DIR: ./docs
+  COMMENT_TAG: docs
+defaults:
+  run:
+    working-directory: ./docs
+
+jobs:
+  build:
+    name: Build
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Store build time
+        id: build-time
+        shell: bash
+        run: >-
+          echo "::set-output name=time::$(date --iso-8601=seconds)"
+
+      - name: Add pre comment to PR
+        # Run even on push so we can access outputs for build markers
+        id: staging-comment
+        uses: architus/staging-comment-action@master
+        with:
+          mode: pre
+          job-name: Build
+          tag: ${{ env.COMMENT_TAG }}
+          build-time: ${{ steps.build-time.outputs.time }}
+          base-staging-url: ${{ env.BASE_STAGING_URL }}/${{ env.STAGING_NAMESPACE }}
+          GITHUB_TOKEN: ${{ secrets.ARCHITUS_BOT_TOKEN }}
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Load Yarn cache
+        uses: actions/cache@v1
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install dependencies
+        run: yarn install
+        working-directory: .
+
+      - name: Bootstrap monorepo
+        run: yarn run bootstrap
+        working-directory: .
+
+      - name: Resolve staging URL
+        id: resolve-staging
+        shell: bash
+        run: >-
+          if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
+              ref=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }');
+              event="pr";
+          else
+              ref=$(echo $GITHUB_SHA | cut -c1-7);
+              event="commit";
+          fi;
+          echo "::set-output name=path::${event}/${ref}";
+
+      - name: Build website
+        id: build
+        shell: bash
+        env:
+          NODE_ENV: production
+          SITE_NAME: Architus Docs Staging
+          SITE_ROOT: ${{ env.BASE_STAGING_URL }}
+          SITE_BASE_PATH: docs/${{ steps.resolve-staging.outputs.path }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_BRANCH: ${{ steps.staging-comment.outputs.branch }}
+          # Build environment variables used in the tag
+          BUILD_LOCATION: remote
+          BUILD_PATH: ${{ steps.resolve-staging.outputs.path }}
+          BUILD_RUN_ID: ${{ steps.staging-comment.outputs.runId }}
+          BUILD_JOB_ID: ${{ steps.staging-comment.outputs.jobId }}
+          BUILD_DEPLOY_URL: ${{ steps.staging-comment.outputs.deployUrl }}
+          BUILD_BRANCH: ${{ steps.staging-comment.outputs.branch }}
+          BUILD_SHA: ${{ steps.staging-comment.outputs.sha }}
+          BUILD_COMMIT_URL: ${{ steps.staging-comment.outputs.commitUrl }}
+          BUILD_PR_ID: ${{ steps.staging-comment.outputs.prId }}
+          BUILD_BASE_BRANCH: ${{ steps.staging-comment.outputs.baseBranch }}
+        run: >-
+          T="$(date +%s)";
+
+          yarn build --prefix-paths;
+          exit_code=$?;
+
+          T="$(($(date +%s)-T))";
+          echo "::set-output name=duration::${T}";
+          echo "Build finished in $T seconds with exit code $exit_code";
+          exit $exit_code;
+
+      - name: Create archive
+        run: tar -czvf ../${{ env.ARCHIVE_NAME }} .
+        working-directory: ${{ env.WORKING_DIR }}/public
+
+      - name: Upload built archive to staging API
+        uses: architus/upload-api-action@master
+        with:
+          archive-path: ${{ env.WORKING_DIR }}/${{ env.ARCHIVE_NAME }}
+          api-root: ${{ env.BASE_STAGING_URL }}/api
+          token: ${{ secrets.STAGING_UPLOAD_API_TOKEN }}
+          namespace: ${{ env.STAGING_NAMESPACE }}
+
+      - name: Add post comment to PR
+        uses: architus/staging-comment-action@master
+        if: github.event_name == 'pull_request' && success()
+        with:
+          mode: post
+          job-name: Build
+          tag: ${{ env.COMMENT_TAG }}
+          build-time: ${{ steps.build-time.outputs.time }}
+          build-duration: ${{ steps.build.outputs.duration }}
+          base-staging-url: ${{ env.BASE_STAGING_URL }}/${{ env.STAGING_NAMESPACE }}
+          GITHUB_TOKEN: ${{ secrets.ARCHITUS_BOT_TOKEN }}
+
+      - name: Add failure comment to PR
+        uses: architus/staging-comment-action@master
+        if: github.event_name == 'pull_request' && failure()
+        with:
+          mode: failure
+          job-name: Build
+          tag: ${{ env.COMMENT_TAG }}
+          build-time: ${{ steps.build-time.outputs.time }}
+          base-staging-url: ${{ env.BASE_STAGING_URL }}/${{ env.STAGING_NAMESPACE }}
+          GITHUB_TOKEN: ${{ secrets.ARCHITUS_BOT_TOKEN }}
