@@ -15,3 +15,4 @@
     SITE_ROOT = "https://docs.archit.us"
     BUILD_LOCATION = "remote"
     NODE_ENV = "production"
+    GATSBY_PUBLIC = "true"

@@ -28,4 +28,5 @@
     SITE_NAME = "Architus"
     SITE_ROOT = "https://archit.us"
     PRODUCTION = "true"
+    GATSBY_PUBLIC = "true"
 
