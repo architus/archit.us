@@ -17,17 +17,17 @@ import {
 } from "recharts";
 
 import { appVerticalPadding, appHorizontalPadding } from "@app/layout";
-import { TabProps } from "@app/tabs/types";
-import Card from "@architus/facade/components/Card";
-import { Option } from "@architus/lib/option";
-import { Channel, Member, Snowflake, User } from "@app/utility/types";
-import { isDefined } from "@architus/lib/utility";
-import Logo from "@architus/facade/components/Logo";
-import { down } from "@architus/facade/theme/media";
-import { GuildStatistics } from "@app/store/slices/statistics";
 import { Dispatch } from "@app/store";
-import { gap } from "@architus/facade/theme/spacing";
+import { GuildStatistics } from "@app/store/slices/statistics";
+import { TabProps } from "@app/tabs/types";
+import { Channel, Member, Snowflake, User } from "@app/utility/types";
+import Card from "@architus/facade/components/Card";
+import Logo from "@architus/facade/components/Logo";
 import { color } from "@architus/facade/theme/color";
+import { down } from "@architus/facade/theme/media";
+import { gap } from "@architus/facade/theme/spacing";
+import { Option } from "@architus/lib/option";
+import { isDefined } from "@architus/lib/utility";
 
 const Styled = {
   PageOuter: styled.div`
@@ -46,7 +46,7 @@ const Styled = {
   `,
   Logo: styled(Logo.Symbol)`
     font-size: 2em;
-    color: light;
+    color: ${color("light")};
     padding: 0px 20px;
     display: flex;
     align-items: center;
@@ -82,7 +82,7 @@ const Styled = {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    margin-bottom: nano;
+    margin-bottom: ${gap.nano};
     color: ${color("light")};
   `,
   Description: styled.p`
@@ -147,6 +147,21 @@ type StatisticsDashboardProps = {
   stats: Option<GuildStatistics>;
 } & TabProps;
 
+type ChannelData = {
+  name: string;
+  count: number;
+};
+
+type MemberData = {
+  name: string;
+  count: number;
+};
+
+type PersonalMessageData = {
+  name: string;
+  value: number;
+};
+
 const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
   stats,
   currentUser,
@@ -161,8 +176,8 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
     return stats.isDefined() ? stats.get.messages.count : 0;
   };
 
-  const getChannelData = (): any[] => {
-    const data: any[] = [];
+  const getChannelData = (): ChannelData[] => {
+    const data: ChannelData[] = [];
     if (stats.isDefined()) {
       const channelIds = stats.get.messages.channels;
       Object.entries(channelIds).forEach(([key, value]) => {
@@ -176,8 +191,8 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
     return data;
   };
 
-  const getMemberData = (): any[] => {
-    const data: any[] = [];
+  const getMemberData = (): MemberData[] => {
+    const data: MemberData[] = [];
     if (stats.isDefined()) {
       const memberIds = stats.get.messages.members;
       Object.entries(memberIds).forEach(([key, value]) => {
@@ -191,7 +206,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
     return data;
   };
 
-  const getPersonalMessageData = (): any[] => {
+  const getPersonalMessageData = (): PersonalMessageData[] => {
     if (stats.isDefined()) {
       const total = stats.get.messages.count;
       const userCount = stats.get.messages.members[currentUser.id as string];
@@ -212,9 +227,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
 
   return (
     <Styled.PageOuter>
-      <Styled.Title>
-        Statistics
-      </Styled.Title>
+      <Styled.Title>Statistics</Styled.Title>
       <Styled.HeaderCards>
         <Styled.MessageCard>
           <Styled.ContentContainer>

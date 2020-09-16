@@ -35,11 +35,11 @@ const StatisticsProvider: React.FC<TabProps> = (tabProps) => {
 
   // Load all the members into the pool
   const allMemberIds = useMemo(() => {
-    const ids = [];
+    const ids: Snowflake[] = [];
     if (guildStats.isDefined()) {
-      for (const id in guildStats.get.messages.members) {
+      Object.keys(guildStats.get.messages.members).forEach((id) => {
         ids.push(id as Snowflake);
-      }
+      });
     }
     return ids;
   }, [guildStats]);
