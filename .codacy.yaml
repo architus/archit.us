@@ -1,5 +1,0 @@
----
-engines:
-  duplication:
-    exclude_paths:
-      - src/**/*.stories.js

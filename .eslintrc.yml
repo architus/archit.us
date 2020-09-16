@@ -1,0 +1,136 @@
+---
+# Style configuration
+extends:
+  - airbnb-base
+  - plugin:import/errors
+  - plugin:import/warnings
+  - plugin:import/typescript
+  - react-app
+  - prettier
+  - prettier/react
+  - plugin:@typescript-eslint/recommended
+  - plugin:react/recommended
+plugins:
+  - react
+  - prettier
+  - react-hooks
+  - "@typescript-eslint/eslint-plugin"
+  - eslint-plugin-tsdoc
+  - import
+  - jsx-a11y
+  - graphql
+rules:
+  # Disable this rule; import = is bad anyways
+  "@typescript-eslint/no-var-requires": off
+
+  # Enforce TSdoc syntax (but don't require it)
+  tsdoc/syntax: warn
+
+  # Disable display name, prefer using babel
+  react/display-name: off
+
+  # Enable react hooks checks
+  react-hooks/rules-of-hooks: error
+  react-hooks/exhaustive-deps: warn
+
+  import/no-unresolved: off
+  # Disable some of the import requirements
+  import/default: off
+  import/no-named-as-default: off
+  import/no-named-as-default-member: off
+  import/prefer-default-export: off
+
+  # Enable ++ inside of for loops only
+  no-plusplus:
+    - error
+    - allowForLoopAfterthoughts: true
+
+  # Configure required extensions
+  import/extensions:
+    - warn
+    - js: never
+      ts: never
+      json: always
+      scss: always
+      css: always
+      svg: always
+      woff: always
+      woff2: always
+
+  # Configure import ordering
+  import/order:
+    - error
+    - groups:
+      - ["external", "builtin"]
+      - ["index", "sibling", "parent", "internal", "object"]
+      pathGroups:
+        - pattern: "^[@]((architus)|(docs)|(app))\/**"
+          group: "internal"
+      pathGroupsExcludedImportTypes:
+        - builtin
+      newlines-between: always
+      alphabetize:
+        order: asc
+        caseInsensitive: true
+
+  # Prettier config (uses all defaults)
+  # See https://prettier.io/docs/en/options.html
+  prettier/prettier: error
+
+overrides:
+  # Disable warning `require` on Node-js files
+  - files:
+      - "**/jest-config.js"
+    rules:
+      "global-require": 0
+
+  # Disable TS rules on JS files
+  - files:
+      - "*.js"
+      - "*.jsx"
+    rules:
+      "@typescript-eslint/explicit-function-return-type": off
+
+  # Disable unused expression in JSON files
+  - files:
+      - "*.json"
+    rules:
+      no-unused-expressions: 0
+
+  # Disable the dev dependency checks on test files
+  - files:
+      - "*.test.js"
+      - "*.test.jsx"
+      - "*.test.ts"
+      - "*.test.tsx"
+      - "jest.config.js"
+      - "src/test/**"
+    rules:
+      import/no-extraneous-dependencies: off
+
+  # Don't need prop types with TS
+  - files:
+      - "*.ts"
+      - "*.tsx"
+    rules:
+      react/prop-types: off
+
+# ESLint Project Settings
+settings:
+  react:
+    version: detect
+  import/parsers:
+    "@typescript-eslint/parser":
+      - ".ts"
+      - ".tsx"
+env:
+  es6: true
+  node: true
+parser: "@typescript-eslint/parser"
+parserOptions:
+  ecmaVersion: 2020
+  sourceType: module
+  ecmaFeatures:
+    jsx: true
+    modules: true
+

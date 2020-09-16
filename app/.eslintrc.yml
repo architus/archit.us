@@ -1,0 +1,42 @@
+---
+extends:
+  - "../.eslintrc.yml"
+
+rules:
+  # GraphQL
+  # From https://github.com/cometkim/gatsby-plugin-typegen#eslint
+  graphql/template-strings:
+    - error
+    - env: relay
+      tagName: graphql
+      schemaJsonFilepath: 'src/__generated__/gatsby-introspection.json'
+
+overrides:
+  # Disable warning `require` on build files
+  - files:
+      - gatsby-config.js
+    rules:
+      "@typescript-eslint/no-var-requires": off
+
+  # Disable no-cycle warnings in utility files (unavoidable)
+  - files:
+      - "./src/utility/**/*.ts"
+      - "./src/store/**/*.ts"
+    rules:
+      "import/no-cycle": off
+
+  # Disable no-param-reassign warnings in store slices (using immer.js)
+  - files:
+      - "./src/store/slices/**/*.ts"
+    rules:
+      no-param-reassign: 0
+
+# ESLint Project Settings
+settings:
+  import/resolver:
+    typescript:
+      alwaysTryTypes: true
+      directory": ./tsconfig.json
+
+ignorePatterns:
+  - "src/__generated__/*"

@@ -1,0 +1,10 @@
+---
+extends:
+  - "../.eslintrc.yml"
+
+# ESLint Project Settings
+settings:
+  import/resolver:
+    typescript:
+      alwaysTryTypes: true
+      directory": ./tsconfig.json
