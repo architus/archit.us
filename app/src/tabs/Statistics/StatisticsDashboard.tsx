@@ -1,7 +1,9 @@
 import { styled } from "linaria/react";
+import { css } from "linaria";
 import React from "react";
 import CountUp from "react-countup";
 import { FaComments, FaUsers } from "react-icons/fa";
+import { WordCloud, WordData } from "@app/tabs/Statistics/components";
 import {
   ResponsiveContainer,
   PieChart,
@@ -14,10 +16,11 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
+  Area,
+  AreaChart,
 } from "recharts";
 
 import { appVerticalPadding, appHorizontalPadding } from "@app/layout";
-import { Dispatch } from "@app/store";
 import { GuildStatistics } from "@app/store/slices/statistics";
 import { TabProps } from "@app/tabs/types";
 import { Channel, Member, Snowflake, User } from "@app/utility/types";
@@ -46,7 +49,7 @@ const Styled = {
   `,
   Logo: styled(Logo.Symbol)`
     font-size: 2em;
-    color: ${color("light")};
+    fill: ${color("light")};
     padding: 0px 20px;
     display: flex;
     align-items: center;
@@ -138,12 +141,17 @@ const Styled = {
   `,
 };
 
+const iconClass = css`
+  font-size: 2em;
+  color: ${color("light")};
+  margin: 0px 20px;
+`;
+
 type StatisticsDashboardProps = {
   members: Map<Snowflake, Member>;
   channels: Map<string, Channel>;
   isArchitusAdmin: boolean;
   currentUser: User;
-  dispatch: Dispatch;
   stats: Option<GuildStatistics>;
 } & TabProps;
 
@@ -169,17 +177,21 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
   channels,
 }) => {
   const getMemberCount = (): number => {
-    return stats.isDefined() ? stats.get.members.count : 0;
+    return stats.isDefined() ? stats.get.memberCount : 0;
   };
 
   const getMessageCount = (): number => {
-    return stats.isDefined() ? stats.get.messages.count : 0;
+    return stats.isDefined() ? stats.get.messageCount : 0;
+  };
+
+  const getArchitusMessageCount = (): number => {
+    return stats.isDefined() ? stats.get.architusCount : 0;
   };
 
   const getChannelData = (): ChannelData[] => {
     const data: ChannelData[] = [];
     if (stats.isDefined()) {
-      const channelIds = stats.get.messages.channels;
+      const channelIds = stats.get.channelCounts;
       Object.entries(channelIds).forEach(([key, value]) => {
         const channel = channels.get(key);
         if (isDefined(channel)) {
@@ -194,7 +206,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
   const getMemberData = (): MemberData[] => {
     const data: MemberData[] = [];
     if (stats.isDefined()) {
-      const memberIds = stats.get.messages.members;
+      const memberIds = stats.get.memberCounts;
       Object.entries(memberIds).forEach(([key, value]) => {
         const member = members.get(key as Snowflake);
         if (isDefined(member)) {
@@ -208,8 +220,8 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
 
   const getPersonalMessageData = (): PersonalMessageData[] => {
     if (stats.isDefined()) {
-      const total = stats.get.messages.count;
-      const userCount = stats.get.messages.members[currentUser.id as string];
+      const total = stats.get.messageCount;
+      const userCount = stats.get.memberCounts[currentUser.id as string];
       return [
         { name: "me", value: userCount },
         { name: "not me", value: total - userCount },
@@ -218,12 +230,41 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
     return [];
   };
 
-  const getArchitusMessageCount = (): number => {
+  const getWords = (): Array<WordData> => {
+    const words: Array<WordData> = [];
     if (stats.isDefined()) {
-      return stats.get.messages.members["448940980218101795"];
+      const commonWords = stats.get.commonWords;
+      commonWords.slice(0, 100).forEach((word) => {
+        words.push({text: word[0], value: word[1]})
+      })
     }
-    return 0;
-  };
+    return words;
+  }
+
+  const data = [
+    {
+      name: 'Page A', uv: 4000, pv: 2400, amt: 2400,
+    },
+    {
+      name: 'Page B', uv: 3000, pv: 1398, amt: 2210,
+    },
+    {
+      name: 'Page C', uv: 2000, pv: 9800, amt: 2290,
+    },
+    {
+      name: 'Page D', uv: 2780, pv: 3908, amt: 2000,
+    },
+    {
+      name: 'Page E', uv: 1890, pv: 4800, amt: 2181,
+    },
+    {
+      name: 'Page F', uv: 2390, pv: 3800, amt: 2500,
+    },
+    {
+      name: 'Page G', uv: 3490, pv: 4300, amt: 2100,
+    },
+  ];
+
 
   return (
     <Styled.PageOuter>
@@ -231,7 +272,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
       <Styled.HeaderCards>
         <Styled.MessageCard>
           <Styled.ContentContainer>
-            <FaComments />
+            <FaComments className={iconClass} />
             <Styled.LabelContainer>
               <Styled.CountUp end={getMessageCount()} duration={5} />
               <Styled.Description>Messages Sent</Styled.Description>
@@ -240,7 +281,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
         </Styled.MessageCard>
         <Styled.MemberCard>
           <Styled.ContentContainer>
-            <FaUsers />
+            <FaUsers className={iconClass} />
             <Styled.LabelContainer>
               <Styled.CountUp end={getMemberCount()} duration={5} />
               <Styled.Description>Members</Styled.Description>
@@ -294,6 +335,24 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
         </Styled.Card>
         <Styled.BigCard>
           <h4>Messages over Time</h4>
+          <ResponsiveContainer>
+            <AreaChart
+              width={500}
+              height={400}
+              data={data}
+              margin={{
+                top: 10, right: 30, left: 0, bottom: 0,
+              }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Area type="monotone" dataKey="amt" stackId="1" stroke="#5850ba" fill="#5850ba" />
+              <Area type="monotone" dataKey="uv" stackId="1" stroke="#844ea3" fill="#844ea3" />
+              <Area type="monotone" dataKey="pv" stackId="1" stroke="#ba5095" fill="#ba5095" />
+            </AreaChart>
+          </ResponsiveContainer>
         </Styled.BigCard>
         <Styled.BigCard>
           <h4>Messages by Member</h4>
@@ -342,6 +401,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
         </Styled.Card>
         <Styled.BigCard>
           <h4>Popular Words</h4>
+          <WordCloud words={getWords()} />
         </Styled.BigCard>
       </Styled.CardContainer>
     </Styled.PageOuter>

@@ -7,19 +7,17 @@ import { isDefined } from "@architus/lib/utility";
 /**
  * Stores statistics for the guilds
  */
-interface MemberCount {
-  count: number;
-}
-interface MessageCount {
-  count: number;
-  channels: Record<string, number>;
-  members: Record<string, number>;
-  times: Record<number, number>;
-}
 
 export interface GuildStatistics {
-  members: MemberCount;
-  messages: MessageCount;
+  memberCount: number;
+  messageCount: number;
+  architusCount: number;
+  commonWords: Array<[string, number]>;
+  mentionCounts: Record<string, number>;
+  memberCounts: Record<string, number>;
+  channelCounts: Record<string, number>;
+  timeMemberCounts: Record<number, Record<string, number>>;
+  upToDate: boolean;
 }
 
 export interface Statistics {

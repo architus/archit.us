@@ -112,20 +112,19 @@ export const guilds = makeRoute()({
 });
 
 export type StatisticsResponse = t.TypeOf<typeof StatisticsResponse>;
-export const MemberCount = t.interface({
-  count: t.number,
-});
-export const MessageCount = t.interface({
-  count: t.number,
-  channels: t.record(TSnowflake, t.number),
-  members: t.record(TSnowflake, t.number),
-  times: t.record(TimeFromString, t.number),
-});
 
 export const StatisticsResponse = t.interface({
-  members: MemberCount,
-  messages: MessageCount,
+  memberCount: t.number,
+  messageCount: t.number,
+  architusCount: t.number,
+  commonWords: t.array(t.tuple([t.string, t.number])),
+  mentionCounts: t.record(t.string, t.number),
+  memberCounts: t.record(t.string, t.number),
+  channelCounts: t.record(t.string, t.number),
+  timeMemberCounts: t.record(TimeFromString, t.record(t.string, t.number)),
+  upToDate: t.boolean,
 });
+
 
 /**
  * GET /stats/<guildId>

@@ -19,10 +19,11 @@
     "bootstrap": "lerna bootstrap"
   },
   "dependencies": {
+    "babel-plugin-module-resolver": "^4.0.0",
+    "gatsby-plugin-why-did-you-render": "^2.0.0",
     "graphql": "^14.7.0",
-    "typescript": "^3.9.5",
     "lerna": "^3.22.1",
-    "babel-plugin-module-resolver": "^4.0.0"
+    "typescript": "^3.9.5"
   },
   "devDependencies": {
     "@babel/core": "^7.1.0",

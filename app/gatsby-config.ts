@@ -115,6 +115,7 @@ export const plugins = [
   "gatsby-plugin-dark-mode",
   `gatsby-plugin-react-helmet`,
   `gatsby-plugin-remove-serviceworker`,
+  `gatsby-plugin-why-did-you-render`,
   {
     resolve: `gatsby-plugin-manifest`,
     options: {
