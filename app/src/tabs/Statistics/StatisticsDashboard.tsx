@@ -194,6 +194,10 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
     return stats.isDefined() ? stats.get.architusCount : 0;
   };
 
+  const getLastSeen = (): Date => {
+    return new Date(stats.isDefined() ? stats.get.lastActivity : 1420070400000);
+  };
+
   const getBestEmoji = (): string => {
     if (stats.isDefined()) {
       const popularEmojis = stats.get.popularEmojis;
@@ -354,6 +358,11 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
         </Styled.Card>
         <Styled.Card>
           <h4>Last Activity</h4>
+          {new Intl.DateTimeFormat("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "2-digit",
+          }).format(getLastSeen())}
         </Styled.Card>
         <Styled.BigCard>
           <h3>Messages over Time</h3>
