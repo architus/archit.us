@@ -7,7 +7,7 @@ import { stats } from "@app/store/routes";
 import { usePool, usePoolEntities } from "@app/store/slices/pools";
 import { useCurrentUser } from "@app/store/slices/session";
 import { TabProps } from "@app/tabs/types";
-import { Channel, Member, Snowflake, User } from "@app/utility/types";
+import { Channel, Member, Snowflake, User, CustomEmoji } from "@app/utility/types";
 import { Option } from "@architus/lib/option";
 import { isDefined } from "@architus/lib/utility";
 import whyDidYouRender from "@welldone-software/why-did-you-render";
@@ -37,13 +37,14 @@ const StatisticsProvider: React.FC<TabProps> = (tabProps) => {
     guildId: guild.id,
   });
 
-
+  const { all: emojis } = usePool({
+    type: "customEmoji",
+    guildId: guild.id,
+  });
 
   // Load all the members into the pool
   const allMemberIds = useMemo(() => {
     const ids: Snowflake[] = [];
-    console.log("hello");
-    console.log(guildStats);
     if (guildStats.isDefined()) {
       Object.keys(guildStats.get.memberCounts).forEach((id) => {
         ids.push(id as Snowflake);
@@ -75,11 +76,21 @@ const StatisticsProvider: React.FC<TabProps> = (tabProps) => {
     return map;
   }, [channels]);
 
+  const emojisMap = useMemo(() => {
+    console.log(emojis);
+    const map: Map<string, CustomEmoji> = new Map();
+    for (const emoji of emojis) {
+      map.set(emoji.id as string, emoji);
+    }
+    return map;
+  }, [emojis]);
+
   if (currentUser.isDefined())
     return (
       <StatisticsDashboard
         members={membersMap}
         channels={channelsMap}
+        emojis={emojisMap}
         currentUser={currentUser.get}
         isArchitusAdmin={false}
         stats={guildStats}

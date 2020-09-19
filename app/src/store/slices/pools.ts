@@ -12,6 +12,7 @@ import {
   HoarFrost,
   Member,
   Channel,
+  CustomEmoji,
 } from "@app/utility/types";
 import { Option, None, Some } from "@architus/lib/option";
 
@@ -21,6 +22,7 @@ export type AllPoolTypes = {
   autoResponse: AutoResponse;
   member: Member;
   channel: Channel;
+  customEmoji: CustomEmoji;
 };
 
 // Runtime io-ts types
@@ -30,6 +32,7 @@ export const AllPoolTypes = {
   autoResponse: AutoResponse,
   member: Member,
   channel: Channel,
+  customEmoji: CustomEmoji,
 };
 
 export const guildAgnosticPools = ["user", "guild"] as const;
@@ -37,6 +40,7 @@ export const guildSpecificPools = [
   "autoResponse",
   "member",
   "channel",
+  "customEmoji",
 ] as const;
 export const allPools: PoolType[] = [
   ...guildAgnosticPools,

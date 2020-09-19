@@ -621,3 +621,14 @@ export const Channel = t.type({
   id: TSnowflake,
   name: t.string,
 });
+
+export type CustomEmoji = t.TypeOf<typeof CustomEmoji>;
+export const CustomEmoji = t.type({
+  id: THoarFrost,
+  name: t.string,
+  discordId: TSnowflake,
+  authorId: TSnowflake,
+  url: t.string,
+  numUses: t.number,
+  priority: t.number,
+})

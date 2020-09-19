@@ -123,6 +123,9 @@ export const StatisticsResponse = t.interface({
   channelCounts: t.record(t.string, t.number),
   timeMemberCounts: t.record(TimeFromString, t.record(t.string, t.number)),
   upToDate: t.boolean,
+  forbidden: t.boolean,
+  lastActivity: TimeFromString,
+  popularEmojis: t.array(t.string),
 });
 
 

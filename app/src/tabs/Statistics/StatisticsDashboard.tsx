@@ -3,7 +3,8 @@ import { css } from "linaria";
 import React from "react";
 import CountUp from "react-countup";
 import { FaComments, FaUsers } from "react-icons/fa";
-import { WordCloud, WordData } from "@app/tabs/Statistics/components";
+import { WordCloud, WordData } from "./components";
+import IntegrityAlert from "./IntegrityAlert";
 import {
   ResponsiveContainer,
   PieChart,
@@ -23,7 +24,7 @@ import {
 import { appVerticalPadding, appHorizontalPadding } from "@app/layout";
 import { GuildStatistics } from "@app/store/slices/statistics";
 import { TabProps } from "@app/tabs/types";
-import { Channel, Member, Snowflake, User } from "@app/utility/types";
+import { Channel, CustomEmoji, Member, Snowflake, User } from "@app/utility/types";
 import Card from "@architus/facade/components/Card";
 import Logo from "@architus/facade/components/Logo";
 import { color } from "@architus/facade/theme/color";
@@ -46,6 +47,9 @@ const Styled = {
     color: ${color("textStrong")};
     font-size: 1.9rem;
     font-weight: 300;
+  `,
+  IntegrityAlert: styled(IntegrityAlert)`
+    margin: ${gap.pico}
   `,
   Logo: styled(Logo.Symbol)`
     font-size: 2em;
@@ -126,7 +130,7 @@ const Styled = {
     grid-column: span auto;
     grid-row: span auto;
 
-    & > h5 {
+    & > h4 {
       margin: 0px;
     }
   `,
@@ -150,6 +154,7 @@ const iconClass = css`
 type StatisticsDashboardProps = {
   members: Map<Snowflake, Member>;
   channels: Map<string, Channel>;
+  emojis: Map<string, CustomEmoji>;
   isArchitusAdmin: boolean;
   currentUser: User;
   stats: Option<GuildStatistics>;
@@ -175,6 +180,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
   currentUser,
   members,
   channels,
+  emojis,
 }) => {
   const getMemberCount = (): number => {
     return stats.isDefined() ? stats.get.memberCount : 0;
@@ -187,6 +193,20 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
   const getArchitusMessageCount = (): number => {
     return stats.isDefined() ? stats.get.architusCount : 0;
   };
+
+  const getBestEmoji = (): string => {
+    if (stats.isDefined()) {
+      const popularEmojis = stats.get.popularEmojis;
+      if (popularEmojis.length > 0) {
+        console.log(emojis);
+        const emoji = emojis.get(popularEmojis[0]);
+        if (isDefined(emoji)) {
+          return emoji.url;
+        }
+      }
+    }
+    return "";
+  }
 
   const getChannelData = (): ChannelData[] => {
     const data: ChannelData[] = [];
@@ -269,6 +289,8 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
   return (
     <Styled.PageOuter>
       <Styled.Title>Statistics</Styled.Title>
+      <Styled.IntegrityAlert key="statsForbidden" message="architus does not have permission to access complete data from this server."/>
+      <Styled.IntegrityAlert key="statsCounting" message="architus is still indexing data for this server."/>
       <Styled.HeaderCards>
         <Styled.MessageCard>
           <Styled.ContentContainer>
@@ -302,7 +324,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
       </Styled.HeaderCards>
       <Styled.CardContainer>
         <Styled.Card>
-          <h5>Your Messages</h5>
+          <h4>Your Messages</h4>
           <ResponsiveContainer>
             <PieChart>
               <Pie
@@ -322,19 +344,19 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
           </ResponsiveContainer>
         </Styled.Card>
         <Styled.Card>
-          <h5>Popular Emoji</h5>
+          <h4>Popular Emoji</h4>
           <div>
-            <Styled.Image src="https://cdn.discordapp.com/emojis/482104551902806016.png?v=1" />
+            <Styled.Image src={getBestEmoji()} />
           </div>
         </Styled.Card>
         <Styled.Card>
-          <h5>Mentions</h5>
+          <h4>Mentions</h4>
         </Styled.Card>
         <Styled.Card>
-          <h5>Last Activity</h5>
+          <h4>Last Activity</h4>
         </Styled.Card>
         <Styled.BigCard>
-          <h4>Messages over Time</h4>
+          <h3>Messages over Time</h3>
           <ResponsiveContainer>
             <AreaChart
               width={500}
@@ -355,7 +377,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
           </ResponsiveContainer>
         </Styled.BigCard>
         <Styled.BigCard>
-          <h4>Messages by Member</h4>
+          <h3>Messages by Member</h3>
           <ResponsiveContainer>
             <BarChart
               data={getMemberData()}
@@ -376,7 +398,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
           </ResponsiveContainer>
         </Styled.BigCard>
         <Styled.BigCard>
-          <h4>Messages by Channel</h4>
+          <h3>Messages by Channel</h3>
           <ResponsiveContainer>
             <BarChart
               data={getChannelData()}
@@ -397,10 +419,10 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
           </ResponsiveContainer>
         </Styled.BigCard>
         <Styled.Card>
-          <h5>Member Since</h5>
+          <h4>Member Since</h4>
         </Styled.Card>
         <Styled.BigCard>
-          <h4>Popular Words</h4>
+          <h3>Popular Words</h3>
           <WordCloud words={getWords()} />
         </Styled.BigCard>
       </Styled.CardContainer>

@@ -18,6 +18,9 @@ export interface GuildStatistics {
   channelCounts: Record<string, number>;
   timeMemberCounts: Record<number, Record<string, number>>;
   upToDate: boolean;
+  forbidden: boolean;
+  lastActivity: number;
+  popularEmojis: Array<string>;
 }
 
 export interface Statistics {
