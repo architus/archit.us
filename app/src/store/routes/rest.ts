@@ -10,7 +10,7 @@ import {
   Guild,
   TimeFromString,
   Snowflake,
-  TSnowflake,
+  THoarFrost,
 } from "@app/utility/types";
 
 export type IdentifySessionResponse = t.TypeOf<typeof IdentifySessionResponse>;
@@ -125,7 +125,7 @@ export const StatisticsResponse = t.interface({
   upToDate: t.boolean,
   forbidden: t.boolean,
   lastActivity: TimeFromString,
-  popularEmojis: t.array(t.string),
+  popularEmojis: t.array(THoarFrost),
 });
 
 

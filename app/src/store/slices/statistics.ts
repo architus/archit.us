@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { statsSuccess } from "@app/store/api/rest";
 import { Nil } from "@architus/lib/types";
 import { isDefined } from "@architus/lib/utility";
+import { HoarFrost } from "src/utility/types";
 
 /**
  * Stores statistics for the guilds
@@ -20,7 +21,7 @@ export interface GuildStatistics {
   upToDate: boolean;
   forbidden: boolean;
   lastActivity: number;
-  popularEmojis: Array<string>;
+  popularEmojis: Array<HoarFrost>;
 }
 
 export interface Statistics {

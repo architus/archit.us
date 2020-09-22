@@ -7,7 +7,7 @@ import { stats } from "@app/store/routes";
 import { usePool, usePoolEntities } from "@app/store/slices/pools";
 import { useCurrentUser } from "@app/store/slices/session";
 import { TabProps } from "@app/tabs/types";
-import { Channel, Member, Snowflake, User, CustomEmoji } from "@app/utility/types";
+import { Channel, Member, Snowflake, User, CustomEmoji, HoarFrost } from "@app/utility/types";
 import { Option } from "@architus/lib/option";
 import { isDefined } from "@architus/lib/utility";
 import whyDidYouRender from "@welldone-software/why-did-you-render";
@@ -68,6 +68,21 @@ const StatisticsProvider: React.FC<TabProps> = (tabProps) => {
     return members;
   }, [memberEntries]);
 
+  const emojiEntries = usePoolEntities({
+    type: "customEmoji",
+    guildId: guild.id,
+    ids: guildStats.isDefined() ? guildStats.get.popularEmojis : [],
+  });
+  const emojisMap = useMemo(() => {
+    const emojis: Map<HoarFrost, CustomEmoji> = new Map();
+    for (const emojiEntry of emojiEntries) {
+      if (emojiEntry.isLoaded && emojiEntry.entity.isDefined()) {
+        emojis.set(emojiEntry.entity.get.id, emojiEntry.entity.get);
+      }
+    }
+    return emojis;
+  }, [emojiEntries]);
+
   const channelsMap = useMemo(() => {
     const map: Map<string, Channel> = new Map();
     for (const channel of channels) {
@@ -75,15 +90,6 @@ const StatisticsProvider: React.FC<TabProps> = (tabProps) => {
     }
     return map;
   }, [channels]);
-
-  const emojisMap = useMemo(() => {
-    console.log(emojis);
-    const map: Map<string, CustomEmoji> = new Map();
-    for (const emoji of emojis) {
-      map.set(emoji.id as string, emoji);
-    }
-    return map;
-  }, [emojis]);
 
   if (currentUser.isDefined())
     return (
