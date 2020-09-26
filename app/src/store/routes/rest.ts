@@ -8,7 +8,7 @@ import {
   User,
   Access,
   Guild,
-  TimeFromString,
+  EpochFromString,
   Snowflake,
   THoarFrost,
 } from "@app/utility/types";
@@ -121,10 +121,10 @@ export const StatisticsResponse = t.interface({
   mentionCounts: t.record(t.string, t.number),
   memberCounts: t.record(t.string, t.number),
   channelCounts: t.record(t.string, t.number),
-  timeMemberCounts: t.record(TimeFromString, t.record(t.string, t.number)),
+  timeMemberCounts: t.record(EpochFromString, t.record(t.string, t.number)),
   upToDate: t.boolean,
   forbidden: t.boolean,
-  lastActivity: TimeFromString,
+  lastActivity: EpochFromString,
   popularEmojis: t.array(THoarFrost),
 });
 
