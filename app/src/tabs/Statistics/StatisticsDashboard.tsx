@@ -4,6 +4,7 @@ import React from "react";
 import CountUp from "react-countup";
 import { FaComments, FaUsers } from "react-icons/fa";
 import { WordCloud, WordData, TimeAreaChart } from "./components";
+import { MentionsChart } from "./MentionsChart";
 import IntegrityAlert from "./IntegrityAlert";
 import {
   ResponsiveContainer,
@@ -284,6 +285,20 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
   //<Area type="monotone" dataKey="uv" stackId="1" stroke="#844ea3" fill="#844ea3" />
   //<Area type="monotone" dataKey="pv" stackId="1" stroke="#ba5095" fill="#ba5095" />
 
+  const getMemberChart = () => {
+    if (stats.isDefined()) {
+      const mentioned: Array<Member> = [];
+      Object.entries(stats.get.mentionCounts).forEach(([id, count]) => {
+        if (isDefined(members.get(id as Snowflake))) {
+          mentioned.push(members.get(id as Snowflake) as Member);
+        }
+      });
+
+      return (<MentionsChart members={mentioned} />);
+    }
+    return (<p>no mentions</p>);
+  }
+
 
   return (
     <Styled.PageOuter>
@@ -350,6 +365,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
         </Styled.Card>
         <Styled.Card>
           <h4>Mentions</h4>
+          {getMemberChart()}
         </Styled.Card>
         <Styled.Card>
           <h4>Last Activity</h4>

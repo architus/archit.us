@@ -17,10 +17,10 @@ export interface GuildStatistics {
   mentionCounts: Record<string, number>;
   memberCounts: Record<string, number>;
   channelCounts: Record<string, number>;
-  timeMemberCounts: Record<number, Record<string, number>>;
+  timeMemberCounts: Record<string, Record<string, number>>;
   upToDate: boolean;
   forbidden: boolean;
-  lastActivity: number;
+  lastActivity: string;
   popularEmojis: Array<HoarFrost>;
 }
 
