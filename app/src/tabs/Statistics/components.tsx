@@ -14,6 +14,7 @@ import {
 } from "recharts";
 import { mix } from "polished";
 import { Member, Snowflake } from "src/utility/types";
+import { CustomRechartsTooltip } from "./CustomRechartsTooltip";
 
 export type WordData = {
   text: string;
@@ -34,7 +35,7 @@ const Styled = {
     width: 100%;
   `,
 }
-export const WordCloud = (props: WordCloudProps) => {  
+export const WordCloud = (props: WordCloudProps) => {
 
   const optionss = {
     rotations: 2,
@@ -82,7 +83,7 @@ export const TimeAreaChart = (props: TimeAreaChartProps) => {
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="date" tickFormatter={dateFormatter} />
         <YAxis />
-        <Tooltip />
+        <Tooltip content={<CustomRechartsTooltip />}/>
         {accum}
       </AreaChart>
     </ResponsiveContainer>

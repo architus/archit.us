@@ -278,6 +278,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
         data.push(obj);
       })
     }
+    data.sort((a, b) => a.date - b.date);
     return data;
   }
 
@@ -287,16 +288,9 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
 
   const getMemberChart = () => {
     if (stats.isDefined()) {
-      const mentioned: Array<Member> = [];
-      Object.entries(stats.get.mentionCounts).forEach(([id, count]) => {
-        if (isDefined(members.get(id as Snowflake))) {
-          mentioned.push(members.get(id as Snowflake) as Member);
-        }
-      });
-
-      return (<MentionsChart members={mentioned} />);
+      return (<MentionsChart mentionCounts={stats.get.mentionCounts} members={members} />);
     }
-    return (<p>no mentions</p>);
+    return (<>no mentions</>);
   }
 
 

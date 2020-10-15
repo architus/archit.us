@@ -7,11 +7,11 @@ import { gap } from "@architus/facade/theme/spacing";
 import { OtherColors } from "@app/theme/color";
 import { transparentize } from "polished";
 import ago from "s-ago";
+import { classNames } from "react-select/src/utils";
 
 
 const Styled = {
   Tooltip: styled(Tooltip)`
-
     `,
     TooltipName: styled.strong`
       display: block;
@@ -22,7 +22,7 @@ const Styled = {
     `,
     Avatar: styled.img`
       border-radius: 50%;
-      max-width: 30%;
+      max-width: 70px;
       height: auto;
       margin: ${gap.pico} ${gap.nano} ${gap.pico} 0;
     `,
@@ -52,7 +52,7 @@ const Styled = {
       margin: 0 ${gap.femto} 0 -${gap.pico};
   `,
     Mention: styled.div`
-      max-width: fit-content;
+      max-width: max-content;
       color: ${OtherColors.Discord};
       background-color: ${transparentize(0.85, OtherColors.Discord)};
 
@@ -65,28 +65,38 @@ const Styled = {
 
 type MentionProps = {
     member: Member;
+    className?: string;
+    style?: React.CSSProperties;
 };
-export const Mention = (props: MentionProps) => {
-  let color = props.member.color.isDefined() ? props.member.color.get : "white";
+export const Mention: React.FC<MentionProps> = ({
+  member,
+  style,
+  className,
+  }) => {
+  let color = member.color.isDefined() ? member.color.get : "white";
   if (color === "#000000") {
     // TODO: figure out why color is black when it should be undefined
     color = "white";
   }
   return (
     <Styled.Tooltip
+    //style={{"overflow": "visible !important" } as React.CSSProperties}
+    maxWidth={"auto"}
     tooltip={(
-        <Styled.OuterContainer>
-            <Styled.Avatar src={getAvatarUrl({ user: props.member, size: 64}) ?? undefined} />
-            <Styled.InnerContainer>
-              <Styled.NameContainer color={color}>
-                <Styled.ColoredCircle color={color}/>
-                {props.member.name}#{props.member.discriminator}
-              </Styled.NameContainer>
-              Joined {ago(new Date(props.member.joined_at))}
-            </Styled.InnerContainer>
-        </Styled.OuterContainer>
+      <Styled.OuterContainer>
+        <Styled.Avatar src={getAvatarUrl({ user: member, size: 64}) ?? undefined} />
+        <Styled.InnerContainer>
+          <Styled.NameContainer color={color}>
+            <Styled.ColoredCircle color={color}/>
+            {member.name}#{member.discriminator}
+          </Styled.NameContainer>
+          Joined {ago(new Date(member.joined_at))}
+        </Styled.InnerContainer>
+      </Styled.OuterContainer>
     )}
   >
-    <Styled.Mention>@{props.member.nick.isDefined() ? props.member.nick.get : props.member.name}</Styled.Mention>
+    <Styled.Mention className={className} style={style}>
+      @{member.nick.isDefined() ? member.nick.get : member.name}
+    </Styled.Mention>
   </Styled.Tooltip>
 )}
