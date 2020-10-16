@@ -53,7 +53,7 @@ export const CustomRechartsTooltip: React.FC<CustomTooltipProps> = ({
         sum += entry.value;
         return (
         <>
-          <p style={{color: entry.stroke}}>{entry.name} : {entry.value}</p>
+          <p key={entry.name} style={{color: entry.stroke}}>{entry.name} : {entry.value}</p>
         </>
       )})}
       <p>Total: {sum}</p>

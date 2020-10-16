@@ -13,7 +13,6 @@ const Styled = {
     //justify-content: space-between;
   `,
   Mention: styled(Mention)`
-    max-width: 100%;
   `,
   Dots: styled.div`
     flex: 1;

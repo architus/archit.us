@@ -81,7 +81,7 @@ export const TimeAreaChart = (props: TimeAreaChartProps) => {
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="date" tickFormatter={dateFormatter} />
+        <XAxis dataKey="date" tickFormatter={dateFormatter} type={'number'} scale={'time'} domain={['dataMin','dataMax']}/>
         <YAxis />
         <Tooltip content={<CustomRechartsTooltip />}/>
         {accum}
