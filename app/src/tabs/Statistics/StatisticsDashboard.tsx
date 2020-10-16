@@ -3,9 +3,10 @@ import { css } from "linaria";
 import React from "react";
 import CountUp from "react-countup";
 import { FaComments, FaUsers } from "react-icons/fa";
-import { WordCloud, WordData, TimeAreaChart } from "./components";
+import { WordCloud, WordData, TimeAreaChart, MemberTimeLine } from "./components";
 import { MentionsChart } from "./MentionsChart";
 import IntegrityAlert from "./IntegrityAlert";
+import { Timeline, TimelineItem } from "@app/components/Timeline";
 import {
   ResponsiveContainer,
   PieChart,
@@ -138,6 +139,11 @@ const Styled = {
     grid-column: span 2;
     grid-row: span 2;
   `,
+  TallCard: styled(Card)`
+    margin: 5px;
+    grid-column: span 1;
+    grid-row: span 2;
+`,
   Image: styled.img``,
   CountUp: styled(CountUp)`
     font-size: 2.5em;
@@ -198,6 +204,10 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
   const getLastSeen = (): Date => {
     return new Date(stats.isDefined() ? stats.get.lastActivity : 1420070400000);
   };
+
+  const getJoinDate = (): Date => {
+    return new Date(isDefined(members.get(currentUser.id as Snowflake)) ? members.get(currentUser.id as Snowflake).joined_at : 1420070400000);
+  }
 
   const getBestEmoji = (): string => {
     if (stats.isDefined()) {
@@ -300,12 +310,12 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
     <Styled.PageOuter>
       <Styled.Title>Statistics</Styled.Title>
       <Styled.IntegrityAlert
-        key={`statsForbidden${guild.id}`}
+        sKey={`statsForbidden${guild.id}`}
         message="architus does not have permission to access complete data from this server; some statistics may be inaccurate."
         enabled={stats.isDefined() ? stats.get.forbidden : false}
       />
       <Styled.IntegrityAlert
-        key={`statsCounting${guild.id}`}
+        sKey={`statsCounting${guild.id}`}
         message="architus is still indexing this server; some statistics may be inaccurate."
         enabled={stats.isDefined() ? !stats.get.upToDate : false}
       />
@@ -371,14 +381,17 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
           <h4>Mentions</h4>
           {getMemberChart()}
         </Styled.Card>
-        <Styled.Card>
-          <h4>Last Activity</h4>
-          {new Intl.DateTimeFormat("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "2-digit",
-          }).format(getLastSeen())}
-        </Styled.Card>
+        <Styled.TallCard>
+          <h4>Timeline</h4>
+          <Timeline>
+            <TimelineItem date={getJoinDate()}>
+              You joined {guild.name}
+            </TimelineItem>
+            <TimelineItem date={getLastSeen()}>
+              Last activity
+            </TimelineItem>
+          </Timeline>
+        </Styled.TallCard>
         <Styled.BigCard>
           <h3>Messages over Time</h3>
           <TimeAreaChart members={members} data={getTimeData()} />
@@ -425,9 +438,6 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
             </BarChart>
           </ResponsiveContainer>
         </Styled.BigCard>
-        <Styled.Card>
-          <h4>Member Since</h4>
-        </Styled.Card>
         <Styled.BigCard>
           <h3>Popular Words</h3>
           <WordCloud words={getWords()} />

@@ -3,7 +3,6 @@ import { transparentize } from "polished";
 import React, { useState, useCallback } from "react";
 
 import CloseButton from "@app/components/CloseButton";
-import AutoLink from "@architus/facade/components/AutoLink";
 import { color, staticColor } from "@architus/facade/theme/color";
 import { gap } from "@architus/facade/theme/spacing";
 
@@ -27,7 +26,7 @@ const Styled = {
 };
 
 export type IntegrityAlertProps = {
-  key: string;
+  sKey: string;
   message: string;
   enabled: boolean;
   className?: string;
@@ -38,17 +37,17 @@ export type IntegrityAlertProps = {
  * Shows an integrity alert to users upon their first visit until they dismiss the alert
  */
 const IntegrityAlert: React.FC<IntegrityAlertProps> = ({
-  key,
+  sKey,
   message,
   enabled,
   className,
   style,
 }) => {
-  const initialValue = window.localStorage.getItem(key) !== "true";
+  const initialValue = window.localStorage.getItem(sKey) !== "true";
   const [show, setShow] = useState(initialValue);
   const hide = useCallback((): void => {
     setShow(false);
-    window.localStorage.setItem(key, "true");
+    window.localStorage.setItem(sKey, "true");
   }, [setShow]);
 
   return (
