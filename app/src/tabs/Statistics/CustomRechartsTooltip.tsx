@@ -31,13 +31,10 @@ type CustomTooltipProps = {
 
 
 export const CustomRechartsTooltip: React.FC<CustomTooltipProps> = ({
-  type,
   payload,
-  label
+  label,
+  ...props
 }) => {
-  //console.log(type);
-  //console.log(payload);
-  //console.log(new Date(label));
   let sum = 0;
   return (
     <Styled.Container>
@@ -53,7 +50,7 @@ export const CustomRechartsTooltip: React.FC<CustomTooltipProps> = ({
         sum += entry.value;
         return (
         <>
-          <p key={entry.name} style={{color: entry.stroke}}>{entry.name} : {entry.value}</p>
+          <p key={sum} style={{color: entry.stroke}}>{entry.name} : {entry.value}</p>
         </>
       )})}
       <p>Total: {sum}</p>

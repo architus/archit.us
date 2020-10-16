@@ -106,5 +106,5 @@ const StatisticsProvider: React.FC<TabProps> = (tabProps) => {
 
   return null;
 };
-StatisticsProvider.whyDidYouRender = true;
+// StatisticsProvider.whyDidYouRender = true;
 export default StatisticsProvider;

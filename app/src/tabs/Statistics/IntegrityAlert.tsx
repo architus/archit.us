@@ -29,6 +29,7 @@ const Styled = {
 export type IntegrityAlertProps = {
   key: string;
   message: string;
+  enabled: boolean;
   className?: string;
   style?: React.CSSProperties;
 };
@@ -39,6 +40,7 @@ export type IntegrityAlertProps = {
 const IntegrityAlert: React.FC<IntegrityAlertProps> = ({
   key,
   message,
+  enabled,
   className,
   style,
 }) => {
@@ -51,7 +53,7 @@ const IntegrityAlert: React.FC<IntegrityAlertProps> = ({
 
   return (
     <>
-      {show && (
+      {enabled && show && (
         <Styled.Alert className={className} style={style}>
           <Styled.CloseButton onClick={hide} />
           <strong>Notice</strong>: {message}

@@ -23,7 +23,7 @@ import {
 import { appVerticalPadding, appHorizontalPadding } from "@app/layout";
 import { GuildStatistics } from "@app/store/slices/statistics";
 import { TabProps } from "@app/tabs/types";
-import { Channel, CustomEmoji, Member, Snowflake, User } from "@app/utility/types";
+import { Channel, CustomEmoji, Member, Snowflake, User, Guild } from "@app/utility/types";
 import Card from "@architus/facade/components/Card";
 import Logo from "@architus/facade/components/Logo";
 import { color } from "@architus/facade/theme/color";
@@ -157,6 +157,7 @@ type StatisticsDashboardProps = {
   isArchitusAdmin: boolean;
   currentUser: User;
   stats: Option<GuildStatistics>;
+  guild: Guild;
 } & TabProps;
 
 type ChannelData = {
@@ -180,6 +181,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
   members,
   channels,
   emojis,
+  guild,
 }) => {
   const getMemberCount = (): number => {
     return stats.isDefined() ? stats.get.memberCount : 0;
@@ -201,7 +203,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
     if (stats.isDefined()) {
       const popularEmojis = stats.get.popularEmojis;
       if (popularEmojis.length > 0) {
-        console.log(emojis);
+        // console.log(emojis);
         const emoji = emojis.get(popularEmojis[0]);
         if (isDefined(emoji)) {
           return emoji.url;
@@ -223,7 +225,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
       });
     }
     data.sort((a, b) => (a.count < b.count ? 1 : -1));
-    return data;
+    return data.slice(0, 15);
   };
 
   const getMemberData = (): MemberData[] => {
@@ -238,7 +240,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
       });
     }
     data.sort((a, b) => (a.count < b.count ? 1 : -1));
-    return data;
+    return data.slice(0, 15);
   };
 
   const getPersonalMessageData = (): PersonalMessageData[] => {
@@ -297,8 +299,16 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
   return (
     <Styled.PageOuter>
       <Styled.Title>Statistics</Styled.Title>
-      <Styled.IntegrityAlert key="statsForbidden" message="architus does not have permission to access complete data from this server."/>
-      <Styled.IntegrityAlert key="statsCounting" message="architus is still indexing data for this server."/>
+      <Styled.IntegrityAlert
+        key={`statsForbidden${guild.id}`}
+        message="architus does not have permission to access complete data from this server; some statistics may be inaccurate."
+        enabled={stats.isDefined() ? stats.get.forbidden : false}
+      />
+      <Styled.IntegrityAlert
+        key={`statsCounting${guild.id}`}
+        message="architus is still indexing this server; some statistics may be inaccurate."
+        enabled={stats.isDefined() ? !stats.get.upToDate : false}
+      />
       <Styled.HeaderCards>
         <Styled.MessageCard>
           <Styled.ContentContainer>
