@@ -11,13 +11,22 @@ const Styled = {
   Container: styled.div`
     display: flex;
     //justify-content: space-between;
+    font-size: 0.875rem;
   `,
   Mention: styled(Mention)`
+
   `,
   Dots: styled.div`
     flex: 1;
     //border-bottom: dotted 1px ${color("text")};
     text-align: right;
+    &::before {
+      //content: '....................................';
+      //position: absolute;
+      //left: 10px;
+      //border-bottom: dotted 1px white;
+      //z-index: 0;
+    }
   `,
 };
 
@@ -41,7 +50,7 @@ export const MentionsChart: React.FC<MentionsChartProps> = ({
 
   return (
     <>
-      {counts.slice(0, 4).map(m => (
+      {counts.slice(0, 5).map(m => (
         <Styled.Container key={m.member.id}>
           <Mention member={m.member} />
           <Styled.Dots>{m.count}</Styled.Dots>

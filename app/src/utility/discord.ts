@@ -4,6 +4,7 @@ import { Snowflake, MockUser, Guild } from "./types";
 
 const architusId: Snowflake = "448546825532866560" as Snowflake;
 const architusAvatar = "99de1e495875fb5c27ba9ac7303b45b7";
+const DISCORD_EPOCH = BigInt(1420070400000);
 
 /**
  * Architus bot's mock user to display inside a Discord Mock
@@ -35,4 +36,8 @@ export function isDiscordAdminWithoutArchitus(guild: Guild): boolean {
     !!(guild.permissions & MANAGE_SERVERS) &&
     !guild.has_architus
   );
+}
+
+export function snowflakeToDate(id: Snowflake): Date {
+  return (new Date(Number((BigInt(id) >> BigInt(22)) + DISCORD_EPOCH)))
 }

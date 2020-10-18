@@ -25,6 +25,7 @@ import { appVerticalPadding, appHorizontalPadding } from "@app/layout";
 import { GuildStatistics } from "@app/store/slices/statistics";
 import { TabProps } from "@app/tabs/types";
 import { Channel, CustomEmoji, Member, Snowflake, User, Guild } from "@app/utility/types";
+import { snowflakeToDate } from "@app/utility/discord";
 import Card from "@architus/facade/components/Card";
 import Logo from "@architus/facade/components/Logo";
 import { color } from "@architus/facade/theme/color";
@@ -32,6 +33,7 @@ import { down } from "@architus/facade/theme/media";
 import { gap } from "@architus/facade/theme/spacing";
 import { Option } from "@architus/lib/option";
 import { isDefined } from "@architus/lib/utility";
+import ago from "s-ago";
 
 const Styled = {
   PageOuter: styled.div`
@@ -384,10 +386,13 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
         <Styled.TallCard>
           <h4>Timeline</h4>
           <Timeline>
+            <TimelineItem date={snowflakeToDate(guild.id)}>
+              {guild.name} was created
+            </TimelineItem>
             <TimelineItem date={getJoinDate()}>
               You joined {guild.name}
             </TimelineItem>
-            <TimelineItem date={getLastSeen()}>
+            <TimelineItem date={new Date(getLastSeen().getTime() - 60 * 1000 * getLastSeen().getTimezoneOffset())} dateFormatter={ago}>
               Last activity
             </TimelineItem>
           </Timeline>
