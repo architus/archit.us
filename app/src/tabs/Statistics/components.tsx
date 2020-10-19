@@ -16,6 +16,7 @@ import { mix } from "polished";
 import { Guild, Member, Snowflake } from "src/utility/types";
 import { isDefined } from "@architus/lib/utility";
 import { CustomRechartsTooltip } from "./CustomRechartsTooltip";
+import whyDidYouRender from "@welldone-software/why-did-you-render";
 
 export type WordData = {
   text: string;
@@ -36,8 +37,7 @@ const Styled = {
     width: 100%;
   `,
 }
-export const WordCloud = (props: WordCloudProps) => {
-
+export const WordCloud: React.FC<WordCloudProps> = ({ words }) => {
   const optionss = {
     rotations: 2,
     rotationAngles: [-90, 0],
@@ -46,12 +46,13 @@ export const WordCloud = (props: WordCloudProps) => {
   };
   return (
     <Styled.AutoSizer>
-      {({height, width}) => (
-        <ReactWordcloud options={optionss} size={[width, height]} words={props.words} />
+      {({ height, width }) => (
+        <ReactWordcloud options={optionss} size={[width, height]} words={words} />
       )}
     </Styled.AutoSizer>
   );
 }
+//WordCloud.whyDidYouRender = true;
 
 function gradArray(col1: string, col2: string, n: number): Array<string> {
   const grad = [];
@@ -71,20 +72,21 @@ const tooltipRenderer = (payload: Array<any>, label: string): JSX.Element => {
   return (
     <>
       <p>{new Intl.DateTimeFormat("en-US", {
-          year: "numeric",
-          month: "long",
-          day: "2-digit",
-        }).format(new Date(label ?? 0))}</p>
+        year: "numeric",
+        month: "long",
+        day: "2-digit",
+      }).format(new Date(label ?? 0))}</p>
       {!isDefined(payload) ? null : payload.map(entry => {
-      if (entry.value === 0) {
-        return null;
-      }
-      sum += entry.value;
-      return (
-      <div key={sum}>
-        <p style={{color: entry.stroke}}>{entry.name} : {entry.value}</p>
-      </div>
-      )})}
+        if (entry.value === 0) {
+          return null;
+        }
+        sum += entry.value;
+        return (
+          <div key={sum}>
+            <p style={{ color: entry.stroke }}>{entry.name} : {entry.value}</p>
+          </div>
+        )
+      })}
       <p>Total: {sum}</p>
     </>
   )
@@ -106,9 +108,9 @@ export const TimeAreaChart = (props: TimeAreaChartProps) => {
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="date" tickFormatter={dateFormatter} type={'number'} scale={'time'} domain={['dataMin','dataMax']}/>
+        <XAxis dataKey="date" tickFormatter={dateFormatter} type={'number'} scale={'time'} domain={['dataMin', 'dataMax']} />
         <YAxis />
-        <Tooltip content={<CustomRechartsTooltip renderer={tooltipRenderer}/>}/>
+        <Tooltip content={<CustomRechartsTooltip renderer={tooltipRenderer} />} />
         {accum}
       </AreaChart>
     </ResponsiveContainer>

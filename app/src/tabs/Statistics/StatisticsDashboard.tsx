@@ -30,6 +30,9 @@ import { gap } from "@architus/facade/theme/spacing";
 import { Option } from "@architus/lib/option";
 import { isDefined } from "@architus/lib/utility";
 import ago from "s-ago";
+import StatisticsProvider from "./Statistics";
+import whyDidYouRender from "@welldone-software/why-did-you-render";
+
 
 const Styled = {
   PageOuter: styled.div`
@@ -178,8 +181,12 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
   //emojis,
   guild,
 }) => {
+  //console.count("stats dashboard");
+  //const members = new Map();
+  //const channels = new Map();
+  //const emojis = new Map();
 
-  // Load all the members into the pool
+   // Load all the members into the pool
   const allMemberIds = useMemo(() => {
     const ids: Snowflake[] = [];
     if (stats.isDefined()) {
@@ -295,6 +302,8 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
     }
     return words;
   }
+  // TODO not this
+  const memWords = useMemo(getWords, [stats]);
 
   const getTimeData = (): Array<any> => {
     const data: Array<any> = [];
@@ -433,11 +442,12 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
         </Styled.BigCard>
         <Styled.BigCard>
           <h3>Popular Words</h3>
-          <WordCloud words={getWords()} />
+          <WordCloud words={memWords} />
         </Styled.BigCard>
       </Styled.CardContainer>
     </Styled.PageOuter>
   );
 };
 
+//StatisticsDashboard.whyDidYouRender = true;
 export default StatisticsDashboard;

@@ -14,23 +14,44 @@ import whyDidYouRender from "@welldone-software/why-did-you-render";
 import { Statistics } from "src/store/slices/statistics";
 import { shallowEqualArrays } from "shallow-equal";
 
+import { createSelectorCreator, defaultMemoize } from "reselect";
+
 
 const StatisticsProvider: React.FC<TabProps> = (tabProps) => {
   const dispatch = useDispatch();
   const { guild } = tabProps;
   const currentUser: Option<User> = useCurrentUser();
 
-  const { statistics: storeStatistics } = useSelector((state) => {
-    return state.statistics;
-  }, shallowEqual);
+  const createDeepEqualSelector = createSelectorCreator(
+    defaultMemoize,
+    (a, b) => {
+      return a == b;
+    }
+  )
 
+  const coolSelecter = createDeepEqualSelector(
+    state => state.statistics,
+    statistics => statistics.statistics ? statistics.statistics[guild.id as string] : null,
+  )
+
+/*   const { statistics: storeStatistics } = useSelector((state) => {
+    console.count("inside selector")
+    return state.statistics;
+  }); */
+
+  //const { statistics: storeStatistics } = useSelector(coolSelecter);
+
+  const storeStatistics = useSelector(coolSelecter);
+  //console.log(storeStatistics)
   useEffect(() => {
     dispatch(stats({ routeData: { guildId: guild.id } }));
   }, [dispatch, guild.id]);
 
   const guildStats = Option.from(
-    isDefined(storeStatistics) ? storeStatistics[guild.id as string] : null
+    storeStatistics
+    //isDefined(storeStatistics) ? storeStatistics[guild.id as string] : null
   );
+  //console.count("stats provide");
 
 
 
