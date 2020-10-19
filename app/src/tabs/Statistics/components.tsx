@@ -41,7 +41,7 @@ export const WordCloud: React.FC<WordCloudProps> = React.memo(({ words }) => {
   const options: Partial<Options> = {
     rotations: 2,
     rotationAngles: [-90, 0],
-    fontSizes: [5, 130],
+    fontSizes: [5, 120],
     colors: [color("textStrong")],
   };
   return (

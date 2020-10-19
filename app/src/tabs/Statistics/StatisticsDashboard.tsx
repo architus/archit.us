@@ -188,6 +188,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
 
      // Load all the members into the pool
   const allMemberIds = useMemo(() => {
+    console.count("all member ids")
     const ids: Snowflake[] = [];
     if (stats.isDefined()) {
       Object.keys(stats.get.memberCounts).forEach((id) => {
@@ -203,6 +204,8 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
     ids: allMemberIds,
   });
   const members = useMemo(() => {
+    //console.count("members")
+    //console.log(memberEntries);
     const members: Map<Snowflake, Member> = new Map();
     for (const memberEntry of memberEntries) {
       if (memberEntry.isLoaded && memberEntry.entity.isDefined()) {
@@ -211,6 +214,8 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
     }
     return members;
   }, [memberEntries]);
+  //console.log(allMemberIds);
+  //console.log(members);
 
 
   const { all: channelsPool } = usePool({
