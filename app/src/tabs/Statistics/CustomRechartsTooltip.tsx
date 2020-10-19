@@ -23,37 +23,25 @@ const Styled = {
 }
 
 type CustomTooltipProps = {
-  type: string,
-  payload: Array<any>,
-  label: string,
+  renderer: (payload: Array<any>, label: string) => JSX.Element,
+  type?: string,
+  payload?: Array<any>,
+  label?: string,
+  className?: string;
+  style?: React.CSSProperties;
 }
 
 
 
 export const CustomRechartsTooltip: React.FC<CustomTooltipProps> = ({
+  renderer,
   payload,
   label,
   ...props
 }) => {
-  let sum = 0;
   return (
     <Styled.Container>
-      <p>{new Intl.DateTimeFormat("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "2-digit",
-          }).format(new Date(label ?? 0))}</p>
-      {!isDefined(payload) ? null : payload.map(entry => {
-        if (entry.value === 0) {
-          return null;
-        }
-        sum += entry.value;
-        return (
-        <>
-          <p key={sum} style={{color: entry.stroke}}>{entry.name} : {entry.value}</p>
-        </>
-      )})}
-      <p>Total: {sum}</p>
+      {isDefined(payload) && isDefined(label) ? renderer(payload, label) : null}
     </Styled.Container>
   );
 }

@@ -37,7 +37,7 @@ const Styled = {
       }
       top: 30px;
       bottom: 20px;
-      left: 4.53%;
+      left: 3.75%;
       margin-left: -3px;
   `,
   Container: styled.div`
@@ -49,8 +49,8 @@ const Styled = {
     &::after {
       content: '';
       position: absolute;
-      width: 12px;
-      height: 12px;
+      width: 18px;
+      height: 18px;
       right: 93.5%;
       ${mode(ColorMode.Light)} {
         background-color: #676767;

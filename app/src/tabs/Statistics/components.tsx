@@ -15,6 +15,7 @@ import {
 import { Timeline, TimelineItem } from "@app/components/Timeline";
 import { mix } from "polished";
 import { Guild, Member, Snowflake } from "src/utility/types";
+import { isDefined } from "@architus/lib/utility";
 import { CustomRechartsTooltip } from "./CustomRechartsTooltip";
 
 export type WordData = {
@@ -66,6 +67,30 @@ const dateFormatter = (tick: string): string => {
   return (new Date(tick)).toLocaleDateString('en-US', options);
 }
 
+const tooltipRenderer = (payload: Array<any>, label: string): JSX.Element => {
+  let sum = 0;
+  return (
+    <>
+      <p>{new Intl.DateTimeFormat("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "2-digit",
+        }).format(new Date(label ?? 0))}</p>
+      {!isDefined(payload) ? null : payload.map(entry => {
+      if (entry.value === 0) {
+        return null;
+      }
+      sum += entry.value;
+      return (
+      <>
+        <p key={sum} style={{color: entry.stroke}}>{entry.name} : {entry.value}</p>
+      </>
+      )})}
+      <p>Total: {sum}</p>
+    </>
+  )
+}
+
 export const TimeAreaChart = (props: TimeAreaChartProps) => {
   const colors = gradArray("#ba5095", "#5850ba", props.members.size)
   const accum: React.ReactNode[] = [];
@@ -84,7 +109,7 @@ export const TimeAreaChart = (props: TimeAreaChartProps) => {
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="date" tickFormatter={dateFormatter} type={'number'} scale={'time'} domain={['dataMin','dataMax']}/>
         <YAxis />
-        <Tooltip content={<CustomRechartsTooltip />}/>
+        <Tooltip content={<CustomRechartsTooltip renderer={tooltipRenderer}/>}/>
         {accum}
       </AreaChart>
     </ResponsiveContainer>

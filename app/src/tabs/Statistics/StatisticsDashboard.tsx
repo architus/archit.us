@@ -4,6 +4,8 @@ import React from "react";
 import CountUp from "react-countup";
 import { FaComments, FaUsers } from "react-icons/fa";
 import { WordCloud, WordData, TimeAreaChart, MemberTimeLine } from "./components";
+import { ChannelGraph } from "./ChannelGraph";
+import { MemberGraph } from "./MemberGraph";
 import { MentionsChart } from "./MentionsChart";
 import IntegrityAlert from "./IntegrityAlert";
 import { Timeline, TimelineItem } from "@app/components/Timeline";
@@ -168,15 +170,6 @@ type StatisticsDashboardProps = {
   guild: Guild;
 } & TabProps;
 
-type ChannelData = {
-  name: string;
-  count: number;
-};
-
-type MemberData = {
-  name: string;
-  count: number;
-};
 
 type PersonalMessageData = {
   name: string;
@@ -208,7 +201,10 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
   };
 
   const getJoinDate = (): Date => {
-    return new Date(isDefined(members.get(currentUser.id as Snowflake)) ? members.get(currentUser.id as Snowflake).joined_at : 1420070400000);
+    if (isDefined(currentUser) && members.has(currentUser.id as Snowflake)) {
+      return new Date(members.get(currentUser.id).joined_at);
+    }
+    return new Date(1420070400000)
   }
 
   const getBestEmoji = (): string => {
@@ -224,36 +220,6 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
     }
     return "";
   }
-
-  const getChannelData = (): ChannelData[] => {
-    const data: ChannelData[] = [];
-    if (stats.isDefined()) {
-      const channelIds = stats.get.channelCounts;
-      Object.entries(channelIds).forEach(([key, value]) => {
-        const channel = channels.get(key);
-        if (isDefined(channel)) {
-          data.push({ name: channel.name, count: value });
-        }
-      });
-    }
-    data.sort((a, b) => (a.count < b.count ? 1 : -1));
-    return data.slice(0, 15);
-  };
-
-  const getMemberData = (): MemberData[] => {
-    const data: MemberData[] = [];
-    if (stats.isDefined()) {
-      const memberIds = stats.get.memberCounts;
-      Object.entries(memberIds).forEach(([key, value]) => {
-        const member = members.get(key as Snowflake);
-        if (isDefined(member)) {
-          data.push({ name: member.name, count: value });
-        }
-      });
-    }
-    data.sort((a, b) => (a.count < b.count ? 1 : -1));
-    return data.slice(0, 15);
-  };
 
   const getPersonalMessageData = (): PersonalMessageData[] => {
     if (stats.isDefined()) {
@@ -344,9 +310,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
           <Styled.ContentContainer>
             <Styled.Logo />
             <Styled.LabelContainer>
-              <div>
-                <Styled.CountUp end={getArchitusMessageCount()} duration={5} />
-              </div>
+              <Styled.CountUp end={getArchitusMessageCount()} duration={5} />
               <Styled.Description>Commands Executed</Styled.Description>
             </Styled.LabelContainer>
           </Styled.ContentContainer>
@@ -403,45 +367,17 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
         </Styled.BigCard>
         <Styled.BigCard>
           <h3>Messages by Member</h3>
-          <ResponsiveContainer>
-            <BarChart
-              data={getMemberData()}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="count" fill="#844ea3" />
-            </BarChart>
-          </ResponsiveContainer>
+          <MemberGraph
+            memberCounts={stats.isDefined() ? stats.get.memberCounts : {}}
+            members={members}
+          />
         </Styled.BigCard>
         <Styled.BigCard>
           <h3>Messages by Channel</h3>
-          <ResponsiveContainer>
-            <BarChart
-              data={getChannelData()}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="count" fill="#ba5095" />
-            </BarChart>
-          </ResponsiveContainer>
+          <ChannelGraph
+            channelCounts={stats.isDefined() ? stats.get.channelCounts : {}}
+            channels={channels}
+          />
         </Styled.BigCard>
         <Styled.BigCard>
           <h3>Popular Words</h3>
