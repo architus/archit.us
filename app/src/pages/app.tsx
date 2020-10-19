@@ -142,7 +142,6 @@ const TabRenderer: React.FC<TabRendererProps> = ({ tab, guildId, ...rest }) => {
     },
   });
 };
-
 type PageRendererProps = {
   page: React.ComponentType<BaseAppProps>;
   path: string;

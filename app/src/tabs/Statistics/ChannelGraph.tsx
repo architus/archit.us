@@ -44,7 +44,7 @@ const tooltipRenderer = (payload: Array<any>, label: string): JSX.Element => {
   )
 }
 
-export const ChannelGraph: React.FC<ChannelGraphProps> = ({
+export const ChannelGraph: React.FC<ChannelGraphProps> = React.memo(({
   channelCounts,
   channels,
 }) => (
@@ -66,5 +66,4 @@ export const ChannelGraph: React.FC<ChannelGraphProps> = ({
       <Bar dataKey="count" fill="#ba5095" />
     </BarChart>
   </ResponsiveContainer>
-)
-
+))

@@ -186,7 +186,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
   //const channels = new Map();
   //const emojis = new Map();
 
-   // Load all the members into the pool
+     // Load all the members into the pool
   const allMemberIds = useMemo(() => {
     const ids: Snowflake[] = [];
     if (stats.isDefined()) {
@@ -255,18 +255,18 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
     return stats.isDefined() ? stats.get.architusCount : 0;
   };
 
-  const getLastSeen = (): Date => {
+  const lastSeen = useMemo((): Date => {
     return new Date(stats.isDefined() ? stats.get.lastActivity : 1420070400000);
-  };
+  }, [stats]);
 
-  const getJoinDate = (): Date => {
+  const joinDate = useMemo((): Date => {
     if (isDefined(currentUser) && isDefined(currentUser.id) && members.has(currentUser.id as Snowflake)) {
       return new Date(members.get(currentUser.id as Snowflake).joined_at);
     }
     return new Date(1420070400000)
-  }
+  }, [stats, currentUser])
 
-  const getBestEmoji = (): string => {
+  const bestEmoji = useMemo((): string => {
     if (stats.isDefined()) {
       const popularEmojis = stats.get.popularEmojis;
       if (popularEmojis.length > 0) {
@@ -278,7 +278,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
       }
     }
     return "";
-  }
+  }, [stats, emojis])
 
   const getPersonalMessageData = (): PersonalMessageData[] => {
     if (stats.isDefined()) {
@@ -291,6 +291,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
     }
     return [];
   };
+  const memPersonal = useMemo(getPersonalMessageData, [stats]);
 
   const getWords = (): Array<WordData> => {
     const words: Array<WordData> = [];
@@ -305,7 +306,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
   // TODO not this
   const memWords = useMemo(getWords, [stats]);
 
-  const getTimeData = (): Array<any> => {
+  const timeData = useMemo((): Array<any> => {
     const data: Array<any> = [];
     if (stats.isDefined()) {
       Object.entries(stats.get.timeMemberCounts).forEach(([date, rec]) => {
@@ -321,7 +322,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
     }
     data.sort((a, b) => a.date - b.date);
     return data;
-  }
+  }, [stats, members])
 
   //<Area type="monotone" dataKey="amt" stackId="1" stroke="#5850ba" fill="#5850ba" />
   //<Area type="monotone" dataKey="uv" stackId="1" stroke="#844ea3" fill="#844ea3" />
@@ -383,7 +384,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
           <ResponsiveContainer>
             <PieChart>
               <Pie
-                data={getPersonalMessageData()}
+                data={memPersonal}
                 cx={"50%"}
                 cy={"50%"}
                 innerRadius={"65%"}
@@ -401,7 +402,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
         <Styled.Card>
           <h4>Popular Emoji</h4>
           <div>
-            <Styled.Image src={getBestEmoji()} />
+            <Styled.Image src={bestEmoji} />
           </div>
         </Styled.Card>
         <Styled.Card>
@@ -414,17 +415,17 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
             <TimelineItem date={snowflakeToDate(guild.id)}>
               {guild.name} was created
             </TimelineItem>
-            <TimelineItem date={getJoinDate()}>
+            <TimelineItem date={joinDate}>
               You joined {guild.name}
             </TimelineItem>
-            <TimelineItem date={new Date(getLastSeen().getTime() - 60 * 1000 * getLastSeen().getTimezoneOffset())} dateFormatter={ago}>
+            <TimelineItem date={new Date(lastSeen.getTime() - 60 * 1000 * lastSeen.getTimezoneOffset())} dateFormatter={ago}>
               Last activity
             </TimelineItem>
           </Timeline>
         </Styled.TallCard>
         <Styled.BigCard>
           <h3>Messages over Time</h3>
-          <TimeAreaChart members={members} data={getTimeData()} />
+          <TimeAreaChart members={members} data={timeData} />
         </Styled.BigCard>
         <Styled.BigCard>
           <h3>Messages by Member</h3>
@@ -442,7 +443,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
         </Styled.BigCard>
         <Styled.BigCard>
           <h3>Popular Words</h3>
-          <WordCloud words={memWords} />
+           <WordCloud words={memWords} />
         </Styled.BigCard>
       </Styled.CardContainer>
     </Styled.PageOuter>

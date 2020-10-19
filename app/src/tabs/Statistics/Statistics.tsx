@@ -47,10 +47,11 @@ const StatisticsProvider: React.FC<TabProps> = (tabProps) => {
     dispatch(stats({ routeData: { guildId: guild.id } }));
   }, [dispatch, guild.id]);
 
-  const guildStats = Option.from(
+  const guildStats = useMemo(() =>
+    Option.from(
     storeStatistics
     //isDefined(storeStatistics) ? storeStatistics[guild.id as string] : null
-  );
+  ), [storeStatistics]);
   //console.count("stats provide");
 
 
@@ -71,4 +72,4 @@ const StatisticsProvider: React.FC<TabProps> = (tabProps) => {
   return null;
 };
 //StatisticsProvider.whyDidYouRender = true;
-export default StatisticsProvider;
+export default React.memo(StatisticsProvider);

@@ -44,7 +44,7 @@ const tooltipRenderer = (payload: Array<any>, label: string): JSX.Element => {
   )
 }
 
-export const MemberGraph: React.FC<MemberGraphProps> = ({
+export const MemberGraph: React.FC<MemberGraphProps> = React.memo(({
   memberCounts,
   members,
 }) => (
@@ -66,4 +66,4 @@ export const MemberGraph: React.FC<MemberGraphProps> = ({
     <Bar dataKey="count" fill="#844ea3" />
   </BarChart>
 </ResponsiveContainer>
-)
+))
