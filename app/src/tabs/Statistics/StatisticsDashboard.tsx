@@ -1,9 +1,9 @@
 import { styled } from "linaria/react";
 import { css } from "linaria";
-import React from "react";
+import React, { useMemo } from "react";
 import CountUp from "react-countup";
 import { FaComments, FaUsers } from "react-icons/fa";
-import { WordCloud, WordData, TimeAreaChart, MemberTimeLine } from "./components";
+import { WordCloud, WordData, TimeAreaChart } from "./components";
 import { ChannelGraph } from "./ChannelGraph";
 import { MemberGraph } from "./MemberGraph";
 import { MentionsChart } from "./MentionsChart";
@@ -14,19 +14,13 @@ import {
   PieChart,
   Pie,
   Cell,
-  BarChart,
-  Bar,
-  Legend,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
 } from "recharts";
+import { usePool, usePoolEntities } from "@app/store/slices/pools";
 
 import { appVerticalPadding, appHorizontalPadding } from "@app/layout";
 import { GuildStatistics } from "@app/store/slices/statistics";
 import { TabProps } from "@app/tabs/types";
-import { Channel, CustomEmoji, Member, Snowflake, User, Guild } from "@app/utility/types";
+import { Channel, CustomEmoji, Member, Snowflake, User, Guild, HoarFrost } from "@app/utility/types";
 import { snowflakeToDate } from "@app/utility/discord";
 import Card from "@architus/facade/components/Card";
 import Logo from "@architus/facade/components/Logo";
@@ -161,9 +155,9 @@ const iconClass = css`
 `;
 
 type StatisticsDashboardProps = {
-  members: Map<Snowflake, Member>;
-  channels: Map<string, Channel>;
-  emojis: Map<string, CustomEmoji>;
+  //members: Map<Snowflake, Member>;
+  //channels: Map<string, Channel>;
+  //emojis: Map<string, CustomEmoji>;
   isArchitusAdmin: boolean;
   currentUser: User;
   stats: Option<GuildStatistics>;
@@ -179,11 +173,69 @@ type PersonalMessageData = {
 const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
   stats,
   currentUser,
-  members,
-  channels,
-  emojis,
+  //members,
+  //channels,
+  //emojis,
   guild,
 }) => {
+
+  // Load all the members into the pool
+  const allMemberIds = useMemo(() => {
+    const ids: Snowflake[] = [];
+    if (stats.isDefined()) {
+      Object.keys(stats.get.memberCounts).forEach((id) => {
+        ids.push(id as Snowflake);
+      });
+    }
+    return ids;
+  }, [stats]);
+
+  const memberEntries = usePoolEntities({
+    type: "member",
+    guildId: guild.id,
+    ids: allMemberIds,
+  });
+  const members = useMemo(() => {
+    const members: Map<Snowflake, Member> = new Map();
+    for (const memberEntry of memberEntries) {
+      if (memberEntry.isLoaded && memberEntry.entity.isDefined()) {
+        members.set(memberEntry.entity.get.id, memberEntry.entity.get);
+      }
+    }
+    return members;
+  }, [memberEntries]);
+
+
+  const { all: channelsPool } = usePool({
+    type: "channel",
+    guildId: guild.id,
+  });
+
+
+  const emojiEntries = usePoolEntities({
+    type: "customEmoji",
+    guildId: guild.id,
+    ids: stats.isDefined() ? stats.get.popularEmojis : [],
+  });
+  const emojis = useMemo(() => {
+    const emojis: Map<HoarFrost, CustomEmoji> = new Map();
+    for (const emojiEntry of emojiEntries) {
+      if (emojiEntry.isLoaded && emojiEntry.entity.isDefined()) {
+        emojis.set(emojiEntry.entity.get.id, emojiEntry.entity.get);
+      }
+    }
+    return emojis;
+  }, [emojiEntries]);
+
+  const channels = useMemo(() => {
+    const map: Map<string, Channel> = new Map();
+    for (const channel of channelsPool) {
+      map.set(channel.id as string, channel);
+    }
+    return map;
+  }, [channelsPool]);
+
+
   const getMemberCount = (): number => {
     return stats.isDefined() ? stats.get.memberCount : 0;
   };
@@ -201,8 +253,8 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
   };
 
   const getJoinDate = (): Date => {
-    if (isDefined(currentUser) && members.has(currentUser.id as Snowflake)) {
-      return new Date(members.get(currentUser.id).joined_at);
+    if (isDefined(currentUser) && isDefined(currentUser.id) && members.has(currentUser.id as Snowflake)) {
+      return new Date(members.get(currentUser.id as Snowflake).joined_at);
     }
     return new Date(1420070400000)
   }

@@ -32,71 +32,14 @@ const StatisticsProvider: React.FC<TabProps> = (tabProps) => {
     isDefined(storeStatistics) ? storeStatistics[guild.id as string] : null
   );
 
-  const { all: channels } = usePool({
-    type: "channel",
-    guildId: guild.id,
-  });
 
-  const { all: emojis } = usePool({
-    type: "customEmoji",
-    guildId: guild.id,
-  });
-
-  // Load all the members into the pool
-  const allMemberIds = useMemo(() => {
-    const ids: Snowflake[] = [];
-    if (guildStats.isDefined()) {
-      Object.keys(guildStats.get.memberCounts).forEach((id) => {
-        ids.push(id as Snowflake);
-      });
-    }
-    return ids;
-  }, [guildStats]);
-
-  const memberEntries = usePoolEntities({
-    type: "member",
-    guildId: guild.id,
-    ids: allMemberIds,
-  });
-  const membersMap = useMemo(() => {
-    const members: Map<Snowflake, Member> = new Map();
-    for (const memberEntry of memberEntries) {
-      if (memberEntry.isLoaded && memberEntry.entity.isDefined()) {
-        members.set(memberEntry.entity.get.id, memberEntry.entity.get);
-      }
-    }
-    return members;
-  }, [memberEntries]);
-
-  const emojiEntries = usePoolEntities({
-    type: "customEmoji",
-    guildId: guild.id,
-    ids: guildStats.isDefined() ? guildStats.get.popularEmojis : [],
-  });
-  const emojisMap = useMemo(() => {
-    const emojis: Map<HoarFrost, CustomEmoji> = new Map();
-    for (const emojiEntry of emojiEntries) {
-      if (emojiEntry.isLoaded && emojiEntry.entity.isDefined()) {
-        emojis.set(emojiEntry.entity.get.id, emojiEntry.entity.get);
-      }
-    }
-    return emojis;
-  }, [emojiEntries]);
-
-  const channelsMap = useMemo(() => {
-    const map: Map<string, Channel> = new Map();
-    for (const channel of channels) {
-      map.set(channel.id as string, channel);
-    }
-    return map;
-  }, [channels]);
 
   if (currentUser.isDefined())
     return (
       <StatisticsDashboard
-        members={membersMap}
-        channels={channelsMap}
-        emojis={emojisMap}
+        //members={membersMap}
+        //channels={channelsMap}
+        //emojis={emojisMap}
         currentUser={currentUser.get}
         isArchitusAdmin={false}
         stats={guildStats}
@@ -106,5 +49,5 @@ const StatisticsProvider: React.FC<TabProps> = (tabProps) => {
 
   return null;
 };
-// StatisticsProvider.whyDidYouRender = true;
+//StatisticsProvider.whyDidYouRender = true;
 export default StatisticsProvider;

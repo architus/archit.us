@@ -12,7 +12,6 @@ import {
   Area,
   AreaChart,
 } from "recharts";
-import { Timeline, TimelineItem } from "@app/components/Timeline";
 import { mix } from "polished";
 import { Guild, Member, Snowflake } from "src/utility/types";
 import { isDefined } from "@architus/lib/utility";
@@ -82,9 +81,9 @@ const tooltipRenderer = (payload: Array<any>, label: string): JSX.Element => {
       }
       sum += entry.value;
       return (
-      <>
-        <p key={sum} style={{color: entry.stroke}}>{entry.name} : {entry.value}</p>
-      </>
+      <div key={sum}>
+        <p style={{color: entry.stroke}}>{entry.name} : {entry.value}</p>
+      </div>
       )})}
       <p>Total: {sum}</p>
     </>
@@ -114,30 +113,4 @@ export const TimeAreaChart = (props: TimeAreaChartProps) => {
       </AreaChart>
     </ResponsiveContainer>
   )
-}
-
-type TimeLineProps = {
-  guild: Guild,
-  member: Member,
-  lastActivity: number,
-}
-
-export const MemberTimeLine: React.FC<TimeLineProps> = ({
-  guild,
-  member,
-  lastActivity,
-}) => {
-  return (
-    <Timeline>
-      <TimelineItem>
-        <h3>header</h3>
-        hello
-      </TimelineItem>
-      <TimelineItem>
-        <h3>header</h3>
-        hello2
-      </TimelineItem>
-    </Timeline>
-  )
-
 }
