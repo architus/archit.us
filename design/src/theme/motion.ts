@@ -56,6 +56,14 @@ const animationDefinitions = {
       stroke-dashoffset: -124;
     }
   `,
+  shimmer: `
+    0% {
+      background-position: -1000px 0;
+    }
+    100% {
+      background-position: 1000px 0;
+    }
+  `,
 };
 
 export type AnimationKey = keyof typeof animationDefinitions;

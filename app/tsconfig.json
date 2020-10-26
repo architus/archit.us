@@ -1,20 +1,7 @@
 {
+  /* See /tsconfig.json for actual values */
+  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "target": "es6",
-    "module": "esnext",
-    "lib": ["es6", "dom"],
-    "moduleResolution": "node",
-    "skipLibCheck": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "resolveJsonModule": true,
-    "allowJs": true,
-    "jsx": "preserve",
-    "sourceMap": true,
-    "removeComments": false,
-    "strict": true,
-    "esModuleInterop": true,
-    "noImplicitReturns": true,
-    "baseUrl": "src",
+    "baseUrl": "."
   }
 }

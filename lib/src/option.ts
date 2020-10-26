@@ -1,7 +1,41 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable max-classes-per-file */
+import { Either, either, right, isRight } from "fp-ts/lib/Either";
+import * as t from "io-ts";
+
 import { Nil, Predicate } from "./types";
 import { isDefined, isNil } from "./utility/primitive";
+
+/**
+ * Provides a runtime type wrapper around the given type, using None if the type is null or undefined
+ * @param type - Underlying runtime type
+ * @param preferNull - Whether to prefer null when encoding a None Option<A> to O | Nil
+ */
+export function option<T extends t.Mixed>(
+  type: T,
+  preferNull = true
+): t.Type<Option<t.TypeOf<T>>, t.OutputOf<T> | Nil, unknown> {
+  return new t.Type<Option<t.TypeOf<T>>, t.OutputOf<T> | Nil, unknown>(
+    `Option<${type.name}>`,
+    (u: unknown): u is Option<t.TypeOf<T>> => {
+      if (isNil(u)) return true;
+      return type.is(u);
+    },
+    (u: unknown, c: t.Context) => {
+      if (isNil(u)) return right(None);
+      const decodeResult = type.validate(u, c);
+      return either.chain(
+        decodeResult,
+        (a: t.TypeOf<T>): Either<t.Errors, Option<t.TypeOf<T>>> =>
+          right(Some(a))
+      );
+    },
+    (a: Option<t.TypeOf<T>>): t.OutputOf<T> | Nil => {
+      const outputOption = a.map(type.encode);
+      return preferNull ? outputOption.orNull() : outputOption.orUndefined();
+    }
+  );
+}
 
 export type Unwrap<T> = T extends Option<infer K> ? K : T;
 
@@ -189,6 +223,14 @@ export abstract class Option<A> implements OptionLike<A> {
   }
 
   /**
+   * Drops an either into an option
+   */
+  static drop<A>(e: Either<unknown, A>): Option<A> {
+    if (isRight(e)) return Some(e.right);
+    return None;
+  }
+
+  /**
    * Merges two options together, creating an option of their tuple iff both are
    * defined
    * @param op2 - Option A
@@ -197,6 +239,17 @@ export abstract class Option<A> implements OptionLike<A> {
   static merge<A, B>(op1: Option<A>, op2: Option<B>): Option<[A, B]> {
     if (op1.isDefined() && op2.isDefined()) return Some([op1.get, op2.get]);
     return None;
+  }
+
+  /**
+   * Creates an Option<string> from a source string, which may be Nil or empty;
+   * uses None if the string is empty/Nil
+   * @param source - source string
+   * @param trim - whether to consider strings that are all spaces as None
+   */
+  static fromString(source: string | Nil, trim = false): Option<string> {
+    if (isNil(source) || (trim ? source.trim() : source) === "") return None;
+    return Option.from(source);
   }
 }
 

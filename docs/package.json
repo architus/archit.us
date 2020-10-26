@@ -15,7 +15,7 @@
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json}\" \"gatsby-*.{js,ts}\" && eslint --fix -f unix \"src/**/*.{js,jsx,ts,tsx,json}\" \"gatsby-*.{js,ts}\"",
     "typecheck": "bash -c 'if [ \"$CI\" == \"true\" ]; then yarn run build && yarn run typecheck-base; else yarn run typecheck-base; fi'",
     "typecheck-base": "tsc --noEmit",
-    "clean": "gatsby clean"
+    "clean": "rimraf coverage .cache .linaria-cache public src/__generated__"
   },
   "dependencies": {
     "@architus/facade": "^0.1.0",
@@ -30,7 +30,6 @@
     "@types/react-select": "^3.0.14",
     "@types/underscore.string": "^0.0.38",
     "@types/unist": "^2.0.3",
-    "add": "^2.0.6",
     "copy-to-clipboard": "^3.3.1",
     "core-js": "^3.6.5",
     "dotenv": "^8.2.0",
@@ -40,7 +39,6 @@
     "gatsby-plugin-linaria": "^2.0.0",
     "gatsby-plugin-manifest": "^2.4.14",
     "gatsby-plugin-mdx": "^1.2.18",
-    "gatsby-plugin-offline": "^3.2.12",
     "gatsby-plugin-react-helmet": "^3.3.5",
     "gatsby-plugin-react-svg": "^3.0.0",
     "gatsby-plugin-remove-serviceworker": "^1.0.0",

@@ -1,5 +1,5 @@
 // From https://react-popper-tooltip.netlify.app/readme#quick-start
-import { css } from "linaria";
+import { css, cx } from "linaria";
 import React from "react";
 import TooltipTrigger from "react-popper-tooltip";
 
@@ -8,23 +8,31 @@ import { transition } from "../theme/motion";
 import { ZIndex } from "../theme/order";
 import { shadow } from "../theme/shadow";
 import { gap, SpacingKey } from "../theme/spacing";
+import { isDefined } from "@architus/lib/utility";
 
 const globalPadding = 18;
 
-const tooltipContainerClass = css`
-  --tooltip-color: ${color("tooltip")};
-  --tooltip-arrow: ${color("tooltip")};
-  --tooltip-border: transparent;
+export const tooltipColorVar = `--tooltip-color`;
+export const tooltipArrowColorVar = `--tooltip-arrow`;
+export const tooltipBorderVar = `--tooltip-border`;
+const styles = {
+  tooltip: css`
+    ${tooltipColorVar}: ${color("tooltip")};
+    ${tooltipArrowColorVar}: ${color("tooltip")};
+    ${tooltipBorderVar}: transparent;
+  `,
+};
 
-  background-color: var(--tooltip-color);
-  border: 1px solid var(--tooltip-border);
+const tooltipContainerClass = css`
+  background-color: var(${tooltipColorVar});
+  border: 1px solid var(${tooltipBorderVar});
   box-shadow: ${shadow("z3")};
   border-radius: 4px;
   display: flex;
   color: ${color("light")};
   flex-direction: column;
   ${transition(["opacity"])}
-  font-size: 90%;
+  font-size: 0.9rem;
   z-index: ${ZIndex.Tooltip};
 
   padding: ${gap.femto} ${gap.pico};
@@ -124,7 +132,7 @@ const tooltipArrowClass = css`
 
       &[data-placement*="${placement}"]::before {
         border-color: ${placementFormatters[placement].color(
-          "var(--tooltip-arrow)"
+          `var(${tooltipArrowColorVar})`
         )};
         border-width: ${placementFormatters[placement].width};
         ${placementFormatters[placement].arrowBefore}
@@ -132,7 +140,7 @@ const tooltipArrowClass = css`
 
       &[data-placement*="${placement}"]::after {
         border-color: ${placementFormatters[placement].color(
-          "var(--tooltip-color)"
+          `var(${tooltipColorVar})`
         )};
         border-width: ${placementFormatters[placement].width};
         ${placementFormatters[placement].arrowAfter}
@@ -142,13 +150,23 @@ const tooltipArrowClass = css`
     .join("\n")}
 `;
 
+export type TooltipVariant = "tooltip";
 type BaseTooltipProps = {
   children: React.ReactNode;
   tooltip: React.ReactNode;
+  variant?: TooltipVariant;
   hideArrow?: boolean;
   padding?: SpacingKey;
   maxWidth?: string | number;
   onContentClick?: (e: React.MouseEvent) => void;
+  innerProps?: Partial<React.HTMLAttributes<HTMLSpanElement>>;
+  tooltipClassName?: string;
+  arrowClassName?: string;
+  offset?: number;
+  axisOffset?: number;
+  screenPadding?: number;
+  className?: string;
+  style?: React.CSSProperties;
 };
 
 export type TooltipProps = BaseTooltipProps &
@@ -165,66 +183,94 @@ export type TooltipProps = BaseTooltipProps &
 const Tooltip: React.FC<TooltipProps> = ({
   children,
   tooltip,
+  variant = "tooltip",
   hideArrow = false,
   padding = "atto",
   maxWidth = gap.giga,
+  offset = 8,
+  axisOffset = 0,
+  screenPadding = globalPadding,
   onContentClick,
+  tooltipClassName,
+  arrowClassName,
+  className,
+  style,
+  innerProps = {},
   ...props
-}) => (
-  <TooltipTrigger
-    {...props}
-    modifiers={[
-      {
-        name: "preventOverflow",
-        options: {
-          padding: globalPadding,
+}) =>
+  isDefined(tooltip) ? (
+    <TooltipTrigger
+      {...props}
+      modifiers={[
+        {
+          name: "flip",
+          options: {
+            padding: screenPadding,
+          },
         },
-      },
-      {
-        name: "offset",
-        options: {
-          offset: [0, 8],
+        {
+          name: "preventOverflow",
+          options: {
+            padding: screenPadding,
+            altAxis: true,
+          },
         },
-      },
-    ]}
-    tooltip={({
-      arrowRef,
-      tooltipRef,
-      getArrowProps,
-      getTooltipProps,
-      placement,
-    }): React.ReactNode => (
-      <div
-        {...getTooltipProps({
-          ref: tooltipRef,
-          className: tooltipContainerClass,
-        })}
-        onClick={onContentClick}
-      >
-        {!hideArrow && (
-          <div
-            {...getArrowProps({
-              ref: arrowRef,
-              className: tooltipArrowClass,
-              "data-placement": placement,
-            })}
-          />
-        )}
-        <div style={{ padding: gap(padding), maxWidth, overflow: "auto" }}>
-          {tooltip}
+        {
+          name: "offset",
+          options: {
+            offset: [0, offset],
+          },
+        },
+      ]}
+      tooltip={({
+        arrowRef,
+        tooltipRef,
+        getArrowProps,
+        getTooltipProps,
+        placement,
+      }): React.ReactNode => (
+        <div
+          {...getTooltipProps({
+            ref: tooltipRef,
+            className: cx(
+              tooltipContainerClass,
+              styles[variant],
+              tooltipClassName
+            ),
+          })}
+          onClick={onContentClick}
+        >
+          {!hideArrow && (
+            <div
+              {...getArrowProps({
+                ref: arrowRef,
+                className: cx(tooltipArrowClass, arrowClassName),
+                "data-placement": placement,
+              })}
+            />
+          )}
+          <div style={{ padding: gap(padding), maxWidth, overflow: "auto" }}>
+            {tooltip}
+          </div>
         </div>
-      </div>
-    )}
-  >
-    {({ getTriggerProps, triggerRef }): React.ReactNode => (
-      <span
-        {...getTriggerProps({
-          ref: triggerRef,
-        })}
-      >
-        {children}
-      </span>
-    )}
-  </TooltipTrigger>
-);
+      )}
+    >
+      {({ getTriggerProps, triggerRef }): React.ReactNode => (
+        <span
+          {...getTriggerProps({
+            ref: triggerRef,
+          })}
+          className={className}
+          style={style}
+          {...innerProps}
+        >
+          {children}
+        </span>
+      )}
+    </TooltipTrigger>
+  ) : (
+    <span className={className} style={style} {...innerProps}>
+      {children}
+    </span>
+  );
 export default Tooltip;

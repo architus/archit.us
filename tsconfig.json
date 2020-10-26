@@ -6,6 +6,7 @@
     "module": "esnext",
     "jsx": "preserve",
     "isolatedModules": true,
+    "resolveJsonModule": true,
 
     /* Strict Type-Checking Options (all on) */
     "strict": true,
@@ -27,6 +28,7 @@
     "paths": {
       /* Configure utility absolute base imports */
       "@docs/*": ["../docs/src/*"],
+      "@app/*": ["../app/src/*"],
       /* Configure path aliases for non-terminal monorepo packages */
       "@architus/lib/*": ["../lib/src/*"],
       "@architus/facade/*": ["../design/src/*"]

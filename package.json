@@ -7,18 +7,22 @@
   "workspaces": [
     "docs",
     "design",
-    "lib"
+    "lib",
+    "app"
   ],
   "scripts": {
-    "test": "yarn workspaces run test && cd ./app && yarn run test",
-    "lint": "yarn workspaces run lint && cd ./app && yarn run lint",
-    "format": "yarn workspaces run format && cd ./app && yarn run format",
-    "typecheck": "yarn workspaces run typecheck && cd ./app && yarn run typecheck",
+    "test": "yarn workspaces run test",
+    "lint": "yarn workspaces run lint",
+    "format": "yarn workspaces run format",
+    "typecheck": "yarn workspaces run typecheck",
+    "clean": "yarn workspaces run clean",
     "bootstrap": "lerna bootstrap"
   },
   "dependencies": {
     "graphql": "^14.7.0",
-    "typescript": "^3.9.5"
+    "typescript": "^3.9.5",
+    "lerna": "^3.22.1",
+    "babel-plugin-module-resolver": "^4.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.1.0",
@@ -30,7 +34,6 @@
     "@typescript-eslint/parser": "2.x",
     "babel-eslint": "10.x",
     "babel-jest": "^26.1.0",
-    "babel-plugin-module-resolver": "^4.0.0",
     "babel-preset-gatsby": "^0.5.1",
     "eslint": "6.x",
     "eslint-config-airbnb-base": "^14.2.0",
@@ -48,10 +51,11 @@
     "eslint-plugin-tsdoc": "^0.2.5",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^26.1.0",
-    "lerna": "^3.22.1",
+    "jest-environment-jsdom-fifteen": "^1.0.2",
     "prettier": "2.0.5",
     "react": "^16.13.1",
-    "react-test-renderer": "^16.13.1"
+    "react-test-renderer": "^16.13.1",
+    "rimraf": "^3.0.2"
   },
   "repository": {
     "type": "git",

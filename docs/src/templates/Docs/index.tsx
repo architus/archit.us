@@ -33,7 +33,7 @@ import {
 } from "@docs/layout";
 import { DocsContext } from "@docs/templates/Docs/frontmatter";
 
-import "@docs/one-universal";
+import "@architus/facade/one-universal";
 
 const contentWithToc = css`
   display: flex;
@@ -126,7 +126,7 @@ const Docs: React.FC<PageProps<
 >> = ({ data, pageContext }) => {
   const { id } = pageContext;
   const { page, previous, next } = data;
-  const contentRef = useRef<HTMLElement | null>(null);
+  const contentRef = useRef<HTMLDivElement | null>(null);
 
   if (isNil(page)) {
     const description =

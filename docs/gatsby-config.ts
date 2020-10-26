@@ -72,7 +72,7 @@ export const plugins = [
     options: {
       alias: {
         // Utility absolute base import
-        // Same as ./tsconfig.json
+        // Same as ../tsconfig.json
         "@docs": path.resolve(__dirname, "../docs/src"),
         // Same aliases as /tsconfig.json, used to enable sibling development
         // & hot reloading
@@ -114,17 +114,14 @@ export const plugins = [
     resolve: `gatsby-plugin-manifest`,
     options: {
       name: title,
-      // eslint-disable-next-line @typescript-eslint/camelcase
-      short_name: title,
       description,
-      // eslint-disable-next-line @typescript-eslint/camelcase
+      /* eslint-disable @typescript-eslint/camelcase */
+      short_name: title,
       homepage_url: "https://docs.archit.us",
-      // eslint-disable-next-line @typescript-eslint/camelcase
       start_url: pathPrefix,
-      // eslint-disable-next-line @typescript-eslint/camelcase
       background_color: themeBgColor,
-      // eslint-disable-next-line @typescript-eslint/camelcase
       theme_color: themeColor,
+      /* eslint-enable @typescript-eslint/camelcase */
       display: `minimal-ui`,
       icons: [
         {

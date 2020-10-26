@@ -14,8 +14,7 @@ rules:
 overrides:
   # Disable warning `require` on build files
   - files:
-      - src/build/*
-      - gatsby-*
+      - gatsby-config.js
     rules:
       "@typescript-eslint/no-var-requires": off
 

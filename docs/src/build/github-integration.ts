@@ -1,7 +1,8 @@
 import { CreatePagesArgs, Reporter } from "gatsby";
 
 import { Option, Some, None } from "@architus/lib/option";
-import { isDefined, isNil, withoutLeading } from "@architus/lib/utility";
+import { withoutLeading } from "@architus/lib/path";
+import { isDefined, isNil } from "@architus/lib/utility";
 import { GithubUser } from "@docs/build/github-types";
 import { NavTree } from "@docs/templates/Docs/frontmatter";
 

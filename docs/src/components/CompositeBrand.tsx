@@ -4,15 +4,9 @@ import React from "react";
 import BuildTag from "@architus/facade/components/BuildTag";
 import Logo from "@architus/facade/components/Logo";
 import { TooltipProps } from "@architus/facade/components/Tooltip";
-import {
-  down,
-  BreakpointKey,
-  maxWidth,
-  breakpoint,
-} from "@architus/facade/theme/media";
+import { useUp } from "@architus/facade/hooks";
+import { down, BreakpointKey } from "@architus/facade/theme/media";
 import { gap } from "@architus/facade/theme/spacing";
-import { useMedia } from "@architus/lib/hooks";
-import { isDefined } from "@architus/lib/utility";
 import { useBuildMetadata } from "@docs/data/build-metadata";
 import { useSiteTitle } from "@docs/data/site-title";
 
@@ -33,6 +27,9 @@ const Styled = {
     top: 2px;
     position: relative;
     white-space: nowrap;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
 
     /* The font size needs to be slightly smaller on very small devices */
     ${down("vs")} {
@@ -41,7 +38,8 @@ const Styled = {
   `,
   BuildTag: styled(BuildTag)`
     margin-left: ${gap.pico};
-    vertical-align: 2px;
+    top: -2px;
+    position: relative;
   `,
   Version: styled.span`
     position: absolute;
@@ -49,6 +47,9 @@ const Styled = {
     left: 0;
     opacity: 0.5;
     font-size: 80%;
+  `,
+  VersionWrapper: styled.div`
+    position: relative;
   `,
 };
 
@@ -66,35 +67,29 @@ export type CompositeBrandProps = {
  */
 const CompositeBrand: React.FC<CompositeBrandProps> = ({
   showVersion = false,
-  hideTagBreakpoint,
+  hideTagBreakpoint = "vs",
   buildTooltipPlacement,
   className,
   style,
 }) => {
   const siteTitle = useSiteTitle();
   const buildMetadata = useBuildMetadata();
-
-  let breakpoints: string[] = [];
-  let values: boolean[] = [];
-  if (isDefined(hideTagBreakpoint)) {
-    breakpoints = [maxWidth(breakpoint(hideTagBreakpoint))];
-    values = [false];
-  }
-  const showBuildTag = useMedia(breakpoints, values, true);
-
+  const showBuildTag = useUp(hideTagBreakpoint);
   return (
     <Styled.Brand className={className} style={style} withVersion={showVersion}>
       <Styled.Logo height={36} />
       <Styled.SiteTitle>
-        {siteTitle.title}
+        <Styled.VersionWrapper>
+          {siteTitle.title}
+          {showVersion && siteTitle.version.isDefined() && (
+            <Styled.Version>{siteTitle.version.get}</Styled.Version>
+          )}
+        </Styled.VersionWrapper>
         {buildMetadata.isDefined() && showBuildTag && (
           <Styled.BuildTag
             metadata={buildMetadata.get}
             tooltipPlacement={buildTooltipPlacement}
           />
-        )}
-        {showVersion && siteTitle.version.isDefined() && (
-          <Styled.Version>{siteTitle.version.get}</Styled.Version>
         )}
       </Styled.SiteTitle>
     </Styled.Brand>

@@ -4,18 +4,6 @@
   to = "/app.html"
   status = 200
 
-# Redirect domain aliases to primary domain
-[[redirects]]
-  from = "https://aut-bot.com/*"
-  to = "https://archit.us/:splat"
-  status = 301
-  force = true
-[[redirects]]
-  from = "https://www.aut-bot.com/*"
-  to = "https://archit.us/:splat"
-  status = 301
-  force = true
-
 # Redirect default Netlify subdomain to primary domain
 [[redirects]]
   from = "https://architus.netlify.com/*"
@@ -24,9 +12,9 @@
   force = true
 
 [build]
-  # Disable type checking on building to save time on Netlify
-  command = "yarn build --no-type-check"
-  base = "app/"
+  command = "yarn bootstrap && yarn workspace @architus/app build"
+  publish = "app/public/"
+
   # Base environment for canary and production
   [build.environment]
     SITE_NAME = "Architus Canary"
@@ -35,10 +23,10 @@
     NODE_ENV = "production"
 
 [context.production]
-  command = "yarn build"
   # Overrides for production
   [context.production.environment]
     SITE_NAME = "Architus"
     SITE_ROOT = "https://archit.us"
-    PRODUCTION = "true"
+    GATSBY_PRODUCTION = "true"
+    GATSBY_PUBLIC = "true"
 

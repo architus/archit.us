@@ -9,10 +9,13 @@
     "test": "NODE_ICU_DATA=../node_modules/full-icu jest --coverage",
     "lint": "eslint --max-warnings 0 -f unix \"src/**/*.{js,jsx,ts,tsx,json}\"",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json}\" && eslint --fix -f unix \"src/**/*.{js,jsx,ts,tsx,json}\"",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "clean": "rimraf coverage"
   },
   "dependencies": {
     "@types/shallow-equals": "^1.0.0",
+    "fp-ts": "^2.7.1",
+    "io-ts": "^2.2.9",
     "react": "^16.13.1",
     "shallow-equals": "^1.0.0"
   },

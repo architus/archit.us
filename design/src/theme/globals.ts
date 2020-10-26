@@ -11,20 +11,14 @@ export const globals = css`
     ${injectTypographyGlobals()}
     ${injectMixinGlobals()}
 
-    // Box sizing rules
+    /* Box sizing rules */
     *,
     *::before,
     *::after {
       box-sizing: border-box;
     }
 
-    // Remove default padding
-    ul[class],
-    ol[class] {
-      padding: 0;
-    }
-
-    // Remove default margin
+    /* Remove default margin */
     body,
     h1,
     h2,
@@ -44,7 +38,7 @@ export const globals = css`
       margin: 0;
     }
 
-    // Set core body defaults
+    /* Set core body defaults */
     body {
       margin: 0;
       min-height: 100vh;
@@ -58,13 +52,13 @@ export const globals = css`
       background-color: ${color("bg")};
     }
 
-    // Remove list styles on ul, ol elements with a class attribute
+    /* Remove list styles on ul, ol elements with a class attribute */
     ul[class],
     ol[class] {
       list-style: none;
     }
 
-    // Inherit fonts for inputs and buttons
+    /* Inherit fonts for inputs and buttons */
     input,
     button,
     textarea,
@@ -72,7 +66,7 @@ export const globals = css`
       font: inherit;
     }
 
-    // Remove all animations and transitions for people that prefer not to see them
+    /* Remove all animations and transitions for people that prefer not to see them */
     @media (prefers-reduced-motion: reduce) {
       * {
         animation-duration: 0.01ms !important;

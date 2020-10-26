@@ -2,8 +2,8 @@ import React from "react";
 import { Helmet } from "react-helmet";
 
 import { Option } from "@architus/lib/option";
+import { withPathPrefix } from "@architus/lib/path";
 import { useSEOData } from "@docs/data/seo-data";
-import { withPathPrefix } from "@docs/site";
 
 export type SEOProps = {
   description?: string;
@@ -25,7 +25,7 @@ const SEO: React.FC<SEOProps> = ({ description, meta, title, lang = `en` }) => {
     .or(seoData.description)
     .getOrElse("");
   const pathPrefix = (base: string): string =>
-    withPathPrefix(seoData.pathPrefix.orUndefined(), base);
+    withPathPrefix(base, seoData.pathPrefix.orUndefined());
 
   return (
     <Helmet

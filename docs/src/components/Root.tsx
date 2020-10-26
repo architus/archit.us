@@ -18,7 +18,7 @@ const Root: React.FC = ({ children }) => (
   <ColorModeProvider>
     <AutoLinkContext.Provider value={linkContext}>
       {children}
-    </AutoLinkContext.Provider>{" "}
+    </AutoLinkContext.Provider>
   </ColorModeProvider>
 );
 
