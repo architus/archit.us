@@ -7,14 +7,9 @@ import { WordCloud, WordData, TimeAreaChart } from "./components";
 import { ChannelGraph } from "./ChannelGraph";
 import { MemberGraph } from "./MemberGraph";
 import { MentionsChart } from "./MentionsChart";
+import { PersonalMessagesChart } from "./PersonalMessagesChart";
 import IntegrityAlert from "./IntegrityAlert";
 import { Timeline, TimelineItem } from "@app/components/Timeline";
-import {
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-} from "recharts";
 import { usePool, usePoolEntities } from "@app/store/slices/pools";
 
 import { appVerticalPadding, appHorizontalPadding } from "@app/layout";
@@ -248,20 +243,24 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
   }, [channelsPool]);
 
 
-  const getMemberCount = (): number => {
+  const memberCount = useMemo((): number => {
     return stats.isDefined() ? stats.get.memberCount : 0;
-  };
+  }, [stats]);
 
-  const getMessageCount = (): number => {
+  const messageCount = useMemo((): number => {
     return stats.isDefined() ? stats.get.messageCount : 0;
-  };
+  }, [stats]);
 
-  const getArchitusMessageCount = (): number => {
+  const architusMessageCount = useMemo((): number => {
     return stats.isDefined() ? stats.get.architusCount : 0;
-  };
+  }, [stats]);
 
   const lastSeen = useMemo((): Date => {
     return new Date(stats.isDefined() ? stats.get.lastActivity : 1420070400000);
+  }, [stats]);
+
+  const memberCounts = useMemo(() => {
+    return stats.isDefined() ? stats.get.memberCounts : {};
   }, [stats]);
 
   const joinDate = useMemo((): Date => {
@@ -285,19 +284,6 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
     return "";
   }, [stats, emojis])
 
-  const getPersonalMessageData = (): PersonalMessageData[] => {
-    if (stats.isDefined()) {
-      const total = stats.get.messageCount;
-      const userCount = stats.get.memberCounts[currentUser.id as string];
-      return [
-        { name: "me", value: userCount },
-        { name: "not me", value: total - userCount },
-      ];
-    }
-    return [];
-  };
-  const memPersonal = useMemo(getPersonalMessageData, [stats]);
-
   const getWords = (): Array<WordData> => {
     const words: Array<WordData> = [];
     if (stats.isDefined()) {
@@ -308,7 +294,6 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
     }
     return words;
   }
-  // TODO not this
   const memWords = useMemo(getWords, [stats]);
 
   const timeData = useMemo((): Array<any> => {
@@ -359,7 +344,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
           <Styled.ContentContainer>
             <FaComments className={iconClass} />
             <Styled.LabelContainer>
-              <Styled.CountUp end={getMessageCount()} duration={5} />
+              <Styled.CountUp end={messageCount} duration={5} />
               <Styled.Description>Messages Sent</Styled.Description>
             </Styled.LabelContainer>
           </Styled.ContentContainer>
@@ -368,7 +353,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
           <Styled.ContentContainer>
             <FaUsers className={iconClass} />
             <Styled.LabelContainer>
-              <Styled.CountUp end={getMemberCount()} duration={5} />
+              <Styled.CountUp end={memberCount} duration={5} />
               <Styled.Description>Members</Styled.Description>
             </Styled.LabelContainer>
           </Styled.ContentContainer>
@@ -377,7 +362,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
           <Styled.ContentContainer>
             <Styled.Logo />
             <Styled.LabelContainer>
-              <Styled.CountUp end={getArchitusMessageCount()} duration={5} />
+              <Styled.CountUp end={architusMessageCount} duration={5} />
               <Styled.Description>Commands Executed</Styled.Description>
             </Styled.LabelContainer>
           </Styled.ContentContainer>
@@ -386,23 +371,11 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
       <Styled.CardContainer>
         <Styled.Card>
           <h4>Your Messages</h4>
-          <ResponsiveContainer>
-            <PieChart>
-              <Pie
-                data={memPersonal}
-                cx={"50%"}
-                cy={"50%"}
-                innerRadius={"65%"}
-                outerRadius={"90%"}
-                fill="#844EA3"
-                paddingAngle={5}
-                dataKey="value"
-              >
-                <Cell key="cell-0" fill="#ba5095" strokeWidth={0} />
-                <Cell key="cell-1" fill="#844EA3" strokeWidth={0} />
-              </Pie>
-            </PieChart>
-          </ResponsiveContainer>
+{/*           <PersonalMessagesChart
+            total={memberCount}
+            memberCounts={memberCounts}
+            members={members}
+          /> */}
         </Styled.Card>
         <Styled.Card>
           <h4>Popular Emoji</h4>
@@ -417,6 +390,9 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
         <Styled.TallCard>
           <h4>Timeline</h4>
           <Timeline>
+            <TimelineItem date={snowflakeToDate(currentUser.id)}>
+              You joined discord
+            </TimelineItem>
             <TimelineItem date={snowflakeToDate(guild.id)}>
               {guild.name} was created
             </TimelineItem>
@@ -424,7 +400,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
               You joined {guild.name}
             </TimelineItem>
             <TimelineItem date={new Date(lastSeen.getTime() - 60 * 1000 * lastSeen.getTimezoneOffset())} dateFormatter={ago}>
-              Last activity
+              Last activity in {guild.name}
             </TimelineItem>
           </Timeline>
         </Styled.TallCard>
@@ -435,7 +411,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
         <Styled.BigCard>
           <h3>Messages by Member</h3>
           <MemberGraph
-            memberCounts={stats.isDefined() ? stats.get.memberCounts : {}}
+            memberCounts={memberCounts}
             members={members}
           />
         </Styled.BigCard>
