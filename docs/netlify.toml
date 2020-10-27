@@ -16,4 +16,5 @@
     BUILD_LOCATION = "remote"
     NODE_ENV = "production"
     GATSBY_PUBLIC = "true"
+    UMAMI_BASE_URL = "https://umami.archit.us"
     UMAMI_WEBSITE_ID = "410143ac-62d7-4200-a4f5-3895fd36c182"

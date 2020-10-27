@@ -23,11 +23,6 @@ export const siteMetadata = {
   siteUrl: process.env.SITE_ROOT ?? "https://docs.archit.us",
   themeColor,
   msTileColor,
-  // Configures Umami (analytics) settings
-  umami: {
-    websiteId: process.env.UMAMI_WEBSITE_ID ?? null,
-    base: "https://umami.archit.us",
-  },
   github: {
     owner: "architus",
     name: "archit.us",

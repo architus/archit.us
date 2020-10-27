@@ -1,7 +1,6 @@
 import { GatsbySSR, RenderBodyArgs, WrapRootElementNodeArgs } from "gatsby";
 import React from "react";
 
-import { siteMetadata } from "@app/../gatsby-config";
 import Root from "@app/components/Root";
 import { isDefined } from "@architus/lib/utility";
 
@@ -18,15 +17,16 @@ WrapRootElementNodeArgs): any => {
 export const onRenderBody: GatsbySSR["onRenderBody"] = ({
   setHeadComponents,
 }: RenderBodyArgs): Promise<null> => {
-  const { umami } = siteMetadata;
-  if (isDefined(umami.websiteId)) {
+  const umamiBase = process.env.UMAMI_BASE_URL;
+  const websiteId = process.env.UMAMI_WEBSITE_ID;
+  if (isDefined(websiteId) && isDefined(umamiBase)) {
     setHeadComponents([
       <script
         async
         defer
         key="umami"
-        data-website-id={umami.websiteId}
-        src={`${umami.base}/umami.js`}
+        data-website-id={websiteId}
+        src={`${umamiBase}/umami.js`}
       ></script>,
     ]);
   }
