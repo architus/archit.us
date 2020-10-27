@@ -14,12 +14,6 @@ const description = `General purpose Discord bot supporting advanced role manage
 
 export const pathPrefix = process.env.SITE_BASE_PATH ?? "/";
 
-// Configures Umami (analytics) settings
-export const umami = {
-  websiteId: process.env.UMAMI_WEBSITE_ID ?? null,
-  base: "https://umami.archit.us",
-};
-
 export const siteMetadata = {
   title,
   description,
@@ -28,6 +22,11 @@ export const siteMetadata = {
   siteUrl: process.env.SITE_ROOT ?? "https://archit.us",
   themeColor,
   msTileColor,
+  // Configures Umami (analytics) settings
+  umami: {
+    websiteId: process.env.UMAMI_WEBSITE_ID ?? null,
+    base: "https://umami.archit.us",
+  },
   footer: {
     about: `This site contains implementation documentation for the architus ecosystem, including the microservice-based backend application as well as the React-based web dashboard.`,
     links: [

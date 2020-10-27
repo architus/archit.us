@@ -2,7 +2,7 @@ import { GatsbySSR, RenderBodyArgs, WrapRootElementNodeArgs } from "gatsby";
 import React from "react";
 
 import { isDefined } from "@architus/lib/utility";
-import { umami } from "@docs/../gatsby-config";
+import { siteMetadata } from "@docs/../gatsby-config";
 import Root from "@docs/components/Root";
 
 // Adds our custom root component to the page
@@ -18,6 +18,7 @@ WrapRootElementNodeArgs): any => {
 export const onRenderBody: GatsbySSR["onRenderBody"] = ({
   setHeadComponents,
 }: RenderBodyArgs): Promise<null> => {
+  const { umami } = siteMetadata;
   if (isDefined(umami.websiteId)) {
     setHeadComponents([
       <script
