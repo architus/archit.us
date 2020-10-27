@@ -18,7 +18,7 @@ export const siteMetadata = {
   title,
   description,
   author: `architus`,
-  version: "v0.2.1",
+  version: "v0.2.2",
   siteUrl: process.env.SITE_ROOT ?? "https://archit.us",
   themeColor,
   msTileColor,
