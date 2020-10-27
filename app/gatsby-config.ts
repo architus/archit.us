@@ -24,7 +24,7 @@ export const siteMetadata = {
   msTileColor,
   // Configures Umami (analytics) settings
   umami: {
-    websiteId: process.env.UMAMI_WEBSITE_ID ?? null,
+    websiteId: process.env.UMAMI_WEBSITE_ID ?? "",
     base: "https://umami.archit.us",
   },
   footer: {
