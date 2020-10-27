@@ -1,8 +1,8 @@
 import { GatsbySSR, RenderBodyArgs, WrapRootElementNodeArgs } from "gatsby";
 import React from "react";
 
+import Analytics from "@app/components/Analytics";
 import Root from "@app/components/Root";
-import { isDefined } from "@architus/lib/utility";
 
 // Adds our custom root component to the page
 export const wrapRootElement: GatsbySSR["wrapRootElement"] = ({
@@ -17,19 +17,7 @@ WrapRootElementNodeArgs): any => {
 export const onRenderBody: GatsbySSR["onRenderBody"] = ({
   setHeadComponents,
 }: RenderBodyArgs): Promise<null> => {
-  const umamiBase = process.env.UMAMI_BASE_URL;
-  const websiteId = process.env.UMAMI_WEBSITE_ID;
-  if (isDefined(websiteId) && isDefined(umamiBase)) {
-    setHeadComponents([
-      <script
-        async
-        defer
-        key="umami"
-        data-website-id={websiteId}
-        src={`${umamiBase}/umami.js`}
-      ></script>,
-    ]);
-  }
+  setHeadComponents([<Analytics key="umami" />]);
 
   // Some value needed for type
   // See https://github.com/gatsbyjs/gatsby/issues/23296

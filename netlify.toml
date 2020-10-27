@@ -21,7 +21,6 @@
     SITE_ROOT = "https://develop.archit.us"
     BUILD_LOCATION = "remote"
     NODE_ENV = "production"
-    UMAMI_BASE_URL = "https://umami.archit.us"
     UMAMI_WEBSITE_ID = "284b0f8e-b21e-463a-a5c8-5f080094e0b0"
 
 [context.production]
