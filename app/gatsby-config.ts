@@ -14,6 +14,12 @@ const description = `General purpose Discord bot supporting advanced role manage
 
 export const pathPrefix = process.env.SITE_BASE_PATH ?? "/";
 
+// Configures Umami (analytics) settings
+export const umami = {
+  websiteId: process.env.UMAMI_WEBSITE_ID ?? null,
+  base: "https://umami.archit.us",
+};
+
 export const siteMetadata = {
   title,
   description,
