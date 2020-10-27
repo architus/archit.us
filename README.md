@@ -1,10 +1,10 @@
-<h1><a href="https://archit.us/"><img alt="Architus" width="340" src="https://raw.githubusercontent.com/architus/archit.us/develop/.shared/readme-logo.svg" /></a></h1>
+<h1><a href="https://archit.us/"><img alt="Architus" width="340" src="https://raw.githubusercontent.com/architus/archit.us/develop/.github/readme/logo.svg" /></a></h1>
 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Farchitus%2Farchit.us.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Farchitus%2Farchit.us?ref=badge_shield) [![Website Uptime](https://img.shields.io/uptimerobot/ratio/7/m782992402-55108abd64186f416df0be18.svg?label=website%20uptime)](https://status.archit.us/) [![API Uptime](https://img.shields.io/uptimerobot/ratio/7/m782992399-3443671051db8aeaecfe7434.svg?label=API%20uptime)](https://status.archit.us/) [![Netlify Status](https://api.netlify.com/api/v1/badges/bbdc33fe-8cac-4466-beaa-97ea193d92f9/deploy-status)](https://app.netlify.com/sites/architus/deploys)  [![Discord Server](https://img.shields.io/discord/607637793107345431?color=7289DA&logo=discord&logoColor=white)](https://discord.gg/FpyhED)
 
 > Monorepo for all frontend source code under the Architus project. Archit.us provides a web dashboard server administrators and members can use to modify settings, view statistics and logs, and manage custom emoji and auto-responses. Docs.archit.us provides the platform to host a user guide, a changelog, and implementation documentation.
 
-[![Web dashboard](./.shared/readme-thumbnail.png)](https://archit.us/app)
+[![Web dashboard](./.github/readme/thumbnail.png)](https://archit.us/app)
 
 ## 🚀 Getting Started
 
