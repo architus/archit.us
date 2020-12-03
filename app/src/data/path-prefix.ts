@@ -14,5 +14,5 @@ export function usePathPrefix(): Option<string> {
     }
   `);
 
-  return Option.from(queryResult.site?.pathPrefix);
+  return Option.fromString(queryResult.site?.pathPrefix);
 }
