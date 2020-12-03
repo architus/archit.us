@@ -4,7 +4,7 @@ import * as t from "io-ts";
 import { makeRoute } from "@app/store/api/rest";
 import { Errors } from "@app/store/api/rest/types";
 import { HttpVerbs } from "@app/utility";
-import { User, Access, Guild } from "@app/utility/types";
+import { User, Access, Guild, Snowflake, HoarFrost } from "@app/utility/types";
 
 export type IdentifySessionResponse = t.TypeOf<typeof IdentifySessionResponse>;
 export const IdentifySessionResponse = t.interface({
@@ -102,4 +102,37 @@ export const guilds = makeRoute()({
   auth: true,
   decode: (response: unknown): Either<Errors, GuildsListResponse> =>
     either.chain(t.object.decode(response), GuildsListResponse.decode),
+});
+
+/**
+ * POST /emojis/[guild_id]/[hoar_frost]
+ */
+export const loadCustomEmoji = makeRoute()({
+  label: "custEmoji/load",
+  route: ({ guildID, emojiID }: { guildID: Snowflake; emojiID: HoarFrost }) =>
+    `/emojis/${guildID}/${emojiID}`,
+  method: HttpVerbs.POST,
+  auth: true,
+});
+
+/**
+ * PATCH /emojis/[guild_id]/[hoar_frost]
+ */
+export const cacheCustomEmoji = makeRoute()({
+  label: "custEmoji/cache",
+  route: ({ guildID, emojiID }: { guildID: Snowflake; emojiID: HoarFrost }) =>
+    `/emojis/${guildID}/${emojiID}`,
+  method: HttpVerbs.PATCH,
+  auth: true,
+});
+
+/**
+ * DELETE /emojis/[guild_id]/[hoar_frost]
+ */
+export const deleteCustomEmoji = makeRoute()({
+  label: "custEmoji/delete",
+  route: ({ guildID, emojiID }: { guildID: Snowflake; emojiID: HoarFrost }) =>
+    `/emojis/${guildID}/${emojiID}`,
+  method: HttpVerbs.DELETE,
+  auth: true,
 });
