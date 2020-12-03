@@ -618,3 +618,15 @@ export const Role = t.type({});
 
 export type Channel = t.TypeOf<typeof Channel>;
 export const Channel = t.type({});
+
+const TCustomEmoji = t.type({
+  id: THoarFrost,
+  name: t.string,
+  authorId: option(TSnowflake),
+  numUses: t.number,
+  discordId: option(TSnowflake),
+  priority: t.number,
+  url: t.string,
+});
+export interface CustomEmoji extends t.TypeOf<typeof TCustomEmoji> {}
+export const CustomEmoji = alias(TCustomEmoji)<CustomEmoji>();
