@@ -264,11 +264,13 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
   }, [stats]);
 
   const joinDate = useMemo((): Date => {
-    if (isDefined(currentUser) && isDefined(currentUser.id) && members.has(currentUser.id as Snowflake)) {
-      return new Date(members.get(currentUser.id as Snowflake).joined_at);
+    if (isDefined(currentUser) && isDefined(currentUser.id)) {
+      const member = members.get(currentUser.id as Snowflake)
+      if (isDefined(member))
+        return new Date(member.joined_at);
     }
     return new Date(1420070400000)
-  }, [stats, currentUser])
+  }, [stats, currentUser, members])
 
   const bestEmoji = useMemo((): string => {
     if (stats.isDefined()) {
@@ -371,11 +373,11 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
       <Styled.CardContainer>
         <Styled.Card>
           <h4>Your Messages</h4>
-{/*           <PersonalMessagesChart
-            total={memberCount}
+           <PersonalMessagesChart
+            currentUser={currentUser}
+            totalMessages={messageCount}
             memberCounts={memberCounts}
-            members={members}
-          /> */}
+          />
         </Styled.Card>
         <Styled.Card>
           <h4>Popular Emoji</h4>
