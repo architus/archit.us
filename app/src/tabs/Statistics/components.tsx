@@ -102,13 +102,10 @@ export const TimeAreaChart = React.memo((props: TimeAreaChartProps) => {
     <ResponsiveContainer>
       <AreaChart
         data={props.data}
-        margin={{
-          top: 10, right: 30, left: 0, bottom: 0,
-        }}
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="date" tickFormatter={dateFormatter} type={'number'} scale={'time'} domain={['dataMin', 'dataMax']} />
-        <YAxis />
+        <YAxis scale="sqrt" />
         <Tooltip content={<CustomRechartsTooltip renderer={tooltipRenderer} />} />
         {accum}
       </AreaChart>

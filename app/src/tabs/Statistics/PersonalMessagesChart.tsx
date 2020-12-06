@@ -6,7 +6,7 @@ import { isDefined } from "@architus/lib/utility";
 
 const Styled = {
   OuterContainer: styled.div`
-    width: 100%;
+    max-width: 100%;
     height: 100%;
     display: flex;
   `,
@@ -15,8 +15,12 @@ const Styled = {
     flex-direction: column;
     justify-content: space-evenly;
     position: relative;
+    max-width: 100%;
+    //flex: 1 0 auto;
 
     & > * {
+      max-width: 100%;
+      text-overflow: ellipsis;
       &::before {
         content: "";
         text-align: center;
@@ -72,7 +76,7 @@ export const PersonalMessagesChart: React.FC<PersonalMessagesChartProps> = React
         <PieChart>
           <Pie
             data={data}
-            cx={"40%"}
+            cx={"35%"}
             cy={"50%"}
             innerRadius={"65%"}
             outerRadius={"90%"}

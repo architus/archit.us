@@ -6,6 +6,7 @@ import { FaComments, FaUsers } from "react-icons/fa";
 import { WordCloud, WordData, TimeAreaChart } from "./components";
 import { ChannelGraph } from "./ChannelGraph";
 import { MemberGraph } from "./MemberGraph";
+import { GrowthChart } from "./GrowthChart";
 import { MentionsChart } from "./MentionsChart";
 import { PersonalMessagesChart } from "./PersonalMessagesChart";
 import IntegrityAlert from "./IntegrityAlert";
@@ -139,7 +140,12 @@ const Styled = {
     margin: 5px;
     grid-column: span 1;
     grid-row: span 2;
-`,
+  `,
+  LongCard: styled(Card)`
+    margin: 5px;
+    grid-column: span 2;
+    grid-row: span 1;
+  `,
   Image: styled.img`
     width: 100px;
     height: auto;
@@ -273,7 +279,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
         return new Date(member.joined_at);
     }
     return new Date(1420070400000)
-  }, [stats, currentUser, members])
+  }, [currentUser, members])
 
   const bestEmoji = useMemo((): string => {
     if (stats.isDefined()) {
@@ -306,7 +312,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
     if (stats.isDefined()) {
       Object.entries(stats.get.timeMemberCounts).forEach(([date, rec]) => {
         let obj = {date: Date.parse(date)};
-        if (obj.date < (new Date).getTime() - 90 * 86400000) {
+        if (obj.date < (new Date).getTime() - 60 * 86400000) {
           return;
         }
         members.forEach((member) => {
@@ -318,10 +324,6 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
     data.sort((a, b) => a.date - b.date);
     return data;
   }, [stats, members])
-
-  //<Area type="monotone" dataKey="amt" stackId="1" stroke="#5850ba" fill="#5850ba" />
-  //<Area type="monotone" dataKey="uv" stackId="1" stroke="#844ea3" fill="#844ea3" />
-  //<Area type="monotone" dataKey="pv" stackId="1" stroke="#ba5095" fill="#ba5095" />
 
   const getMemberChart = () => {
     if (stats.isDefined()) {
@@ -388,10 +390,17 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
             <Styled.Image src={bestEmoji} />
           </div>
         </Styled.Card>
-        <Styled.Card>
-          <h4>Mentions</h4>
-          {getMemberChart()}
-        </Styled.Card>
+        <Styled.BigCard>
+          <h3>Messages over Time</h3>
+          <TimeAreaChart members={members} data={timeData} />
+        </Styled.BigCard>
+        <Styled.BigCard>
+          <h3>Messages by Member</h3>
+          <MemberGraph
+            memberCounts={memberCounts}
+            members={members}
+          />
+        </Styled.BigCard>
         <Styled.TallCard>
           <h4>Timeline</h4>
           <Timeline>
@@ -409,17 +418,17 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
             </TimelineItem>
           </Timeline>
         </Styled.TallCard>
-        <Styled.BigCard>
-          <h3>Messages over Time</h3>
-          <TimeAreaChart members={members} data={timeData} />
-        </Styled.BigCard>
-        <Styled.BigCard>
-          <h3>Messages by Member</h3>
-          <MemberGraph
-            memberCounts={memberCounts}
-            members={members}
-          />
-        </Styled.BigCard>
+
+        <Styled.Card>
+          <h4>Server Growth</h4>
+          <GrowthChart members={members} />
+        </Styled.Card>
+
+        <Styled.Card>
+          <h4>Mentions</h4>
+          {getMemberChart()}
+        </Styled.Card>
+
         <Styled.BigCard>
           <h3>Messages by Channel</h3>
           <ChannelGraph
