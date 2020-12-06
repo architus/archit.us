@@ -140,7 +140,10 @@ const Styled = {
     grid-column: span 1;
     grid-row: span 2;
 `,
-  Image: styled.img``,
+  Image: styled.img`
+    width: 100px;
+    height: auto;
+  `,
   CountUp: styled(CountUp)`
     font-size: 2.5em;
   `,
