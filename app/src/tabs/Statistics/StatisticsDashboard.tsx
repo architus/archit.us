@@ -1,6 +1,6 @@
 import { styled } from "linaria/react";
 import { css } from "linaria";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import CountUp from "react-countup";
 import { FaComments, FaUsers } from "react-icons/fa";
 import { WordCloud, WordData, TimeAreaChart } from "./components";
@@ -23,6 +23,7 @@ import Logo from "@architus/facade/components/Logo";
 import { color } from "@architus/facade/theme/color";
 import { down } from "@architus/facade/theme/media";
 import { gap } from "@architus/facade/theme/spacing";
+import { animation } from "@architus/facade/theme/motion";
 import { Option } from "@architus/lib/option";
 import { isDefined } from "@architus/lib/utility";
 import ago from "s-ago";
@@ -80,6 +81,13 @@ const Styled = {
     display: flex;
     align-items: center;
     flex-direction: row;
+    opacity: 0;
+
+    ${animation("fadeIn")}
+    animation: fadeIn 2s 1s linear forwards;
+  `,
+  FadeIn: css`
+    animation: fadeIn 2s linear forwards;
   `,
   LabelContainer: styled.div`
     position: relative;
@@ -312,6 +320,8 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
   const memWords = useMemo(getWords, [stats]);
 
   const timeData = useMemo((): Array<any> => {
+    console.profile("time data")
+    console.time("time data")
     const data: Array<any> = [];
     if (stats.isDefined() && members.size > 0) {
 
@@ -331,6 +341,8 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
     }
     data.sort((a, b) => a.date - b.date);
     //console.log(data)
+    console.timeEnd("time data")
+    console.profileEnd()
     return data;
   }, [stats, members])
 
@@ -341,6 +353,8 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
     return (<>no mentions</>);
   }
 
+  const showAnimation = useState(false);
+  const classes = showAnimation ? Styled.FadeIn : "";
 
   return (
     <Styled.PageOuter>
@@ -365,6 +379,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
             </Styled.LabelContainer>
           </Styled.ContentContainer>
         </Styled.MessageCard>
+
         <Styled.MemberCard>
           <Styled.ContentContainer>
             <FaUsers className={iconClass} />
@@ -374,6 +389,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
             </Styled.LabelContainer>
           </Styled.ContentContainer>
         </Styled.MemberCard>
+
         <Styled.ArchitusCard>
           <Styled.ContentContainer>
             <Styled.Logo />
@@ -384,6 +400,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
           </Styled.ContentContainer>
         </Styled.ArchitusCard>
       </Styled.HeaderCards>
+
       <Styled.CardContainer>
         <Styled.Card>
           <h4>Your Messages</h4>
@@ -393,16 +410,19 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
             memberCounts={memberCounts}
           />
         </Styled.Card>
+
         <Styled.Card>
           <h4>Popular Emoji</h4>
           <div>
             <Styled.Image src={bestEmoji} />
           </div>
         </Styled.Card>
+
         <Styled.BigCard>
           <h3>Messages over Time</h3>
           <TimeAreaChart members={members} data={timeData} />
         </Styled.BigCard>
+
         <Styled.BigCard>
           <h3>Messages by Member</h3>
           <MemberGraph
@@ -410,6 +430,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
             members={members}
           />
         </Styled.BigCard>
+
         <Styled.TallCard>
           <h4>Timeline</h4>
           <Timeline>
