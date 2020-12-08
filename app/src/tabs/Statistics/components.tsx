@@ -68,6 +68,27 @@ const dateFormatter = (tick: string): string => {
 
 const tooltipRenderer = (payload: Array<any>, label: string): JSX.Element => {
   let sum = 0;
+  const size = isDefined(payload) ? payload.length : 0;
+  const names = []
+  for (let i = 0; i < size; i++) {
+    if (payload[i].value === 0) {
+      continue
+    }
+    sum += payload[i].value;
+    names.push((
+      <div key={sum}>
+        <p style={{ color: payload[i].stroke }}>{payload[i].name} : {payload[i].value}</p>
+      </div>
+    ))
+    if (i > 10) {
+      names.push((
+        <div key="msg">
+          <i style={{ color: payload[size - 1].stroke }}>{size - i} more not shown...</i>
+        </div>
+      ))
+      break
+    }
+  }
   return (
     <>
       <p>{new Intl.DateTimeFormat("en-US", {
@@ -75,17 +96,7 @@ const tooltipRenderer = (payload: Array<any>, label: string): JSX.Element => {
         month: "long",
         day: "2-digit",
       }).format(new Date(label ?? 0))}</p>
-      {!isDefined(payload) ? null : payload.map(entry => {
-        if (entry.value === 0) {
-          return null;
-        }
-        sum += entry.value;
-        return (
-          <div key={sum}>
-            <p style={{ color: entry.stroke }}>{entry.name} : {entry.value}</p>
-          </div>
-        )
-      })}
+      {names}
       <p>Total: {sum}</p>
     </>
   )

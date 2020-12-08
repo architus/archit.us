@@ -334,12 +334,12 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
     return data;
   }, [stats, members])
 
-  const mentionsChart = useMemo(() => {
+  const getMentionsChart = () => {
     if (stats.isDefined()) {
       return (<MentionsChart mentionCounts={stats.get.mentionCounts} members={members} />);
     }
     return (<>no mentions</>);
-  }, [stats])
+  }
 
 
   return (
@@ -435,7 +435,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
 
         <Styled.Card>
           <h4>Mentions</h4>
-          {mentionsChart}
+          {getMentionsChart()}
         </Styled.Card>
 
         <Styled.BigCard>
