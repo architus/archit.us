@@ -117,6 +117,12 @@ const Styled = {
     & > : nth-child(7) {
       animation: fadeIn .5s 1s linear forwards;
     }
+    & > : nth-child(8) {
+      animation: fadeIn .5s 1.1s linear forwards;
+    }
+    & > : nth-child(9) {
+      animation: fadeIn .5s 1.2s linear forwards;
+    }
   `,
   ContentContainer: styled.div`
     position: relative;
