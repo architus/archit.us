@@ -64,8 +64,6 @@ export const PersonalMessagesChart: React.FC<PersonalMessagesChartProps> = React
   memberCounts,
 }) => {
   const me = memberCounts[currentUser.id as string];
-  console.log(me);
-  console.log(totalMessages);
   const data = [
     { name: "me", value: me},
     { name: "not me", value: totalMessages - me}

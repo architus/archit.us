@@ -192,7 +192,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
 
      // Load all the members into the pool
   const allMemberIds = useMemo(() => {
-    console.count("all member ids")
+    //console.count("all member ids")
     const ids: Snowflake[] = [];
     if (stats.isDefined()) {
       Object.keys(stats.get.memberCounts).forEach((id) => {
@@ -272,6 +272,10 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
     return stats.isDefined() ? stats.get.memberCounts : {};
   }, [stats]);
 
+  const channelCounts = useMemo(() => {
+    return stats.isDefined() ? stats.get.channelCounts : {};
+  }, [stats])
+
   const joinDate = useMemo((): Date => {
     if (isDefined(currentUser) && isDefined(currentUser.id)) {
       const member = members.get(currentUser.id as Snowflake)
@@ -309,28 +313,33 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
 
   const timeData = useMemo((): Array<any> => {
     const data: Array<any> = [];
-    if (stats.isDefined()) {
+    if (stats.isDefined() && members.size > 0) {
+
       Object.entries(stats.get.timeMemberCounts).forEach(([date, rec]) => {
         let obj = {date: Date.parse(date)};
         if (obj.date < (new Date).getTime() - 60 * 86400000) {
           return;
         }
-        members.forEach((member) => {
-          obj[member.name] = isDefined(rec[member.id]) ? rec[member.id] : 0;
+        Object.entries(rec).forEach(([id, count]) => {
+          const member = members.get(id as Snowflake);
+          if (isDefined(member)) {
+            obj[member.name] = count;
+          }
         })
         data.push(obj);
       })
     }
     data.sort((a, b) => a.date - b.date);
+    //console.log(data)
     return data;
   }, [stats, members])
 
-  const getMemberChart = () => {
+  const mentionsChart = useMemo(() => {
     if (stats.isDefined()) {
       return (<MentionsChart mentionCounts={stats.get.mentionCounts} members={members} />);
     }
     return (<>no mentions</>);
-  }
+  }, [stats])
 
 
   return (
@@ -426,13 +435,13 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
 
         <Styled.Card>
           <h4>Mentions</h4>
-          {getMemberChart()}
+          {mentionsChart}
         </Styled.Card>
 
         <Styled.BigCard>
           <h3>Messages by Channel</h3>
           <ChannelGraph
-            channelCounts={stats.isDefined() ? stats.get.channelCounts : {}}
+            channelCounts={channelCounts}
             channels={channels}
           />
         </Styled.BigCard>
