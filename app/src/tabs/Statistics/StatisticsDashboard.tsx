@@ -65,6 +65,21 @@ const Styled = {
     ${down("md")} {
       flex-wrap: wrap;
     }
+
+
+    & > * {
+      opacity 0;
+      ${animation("fadeIn")}
+    }
+    & : nth-child(1) {
+      animation: fadeIn 0.5s .1s linear forwards;
+    }
+    & : nth-child(2) {
+      animation: fadeIn .5s .2s linear forwards;
+    }
+    & : nth-child(3) {
+      animation: fadeIn .5s .3s linear forwards;
+    }
   `,
   CardContainer: styled.div`
     display: grid;
@@ -75,6 +90,33 @@ const Styled = {
     grid-auto-flow: dense;
     gap: ${gap.pico};
     justify-items: stretch;
+
+    & > * {
+      opacity: 0;
+      ${animation("fadeIn")}
+    }
+
+    & : nth-child(1) {
+      animation: fadeIn 0.5s .4s linear forwards;
+    }
+    & : nth-child(2) {
+      animation: fadeIn .5s .5s linear forwards;
+    }
+    & : nth-child(3) {
+      animation: fadeIn .5s .6s linear forwards;
+    }
+    & : nth-child(4) {
+      animation: fadeIn .5s .7s linear forwards;
+    }
+    & : nth-child(5) {
+      animation: fadeIn .5s .8s linear forwards;
+    }
+    & : nth-child(6) {
+      animation: fadeIn .5s .9s linear forwards;
+    }
+    & : nth-child(7) {
+      animation: fadeIn .5s 1s linear forwards;
+    }
   `,
   ContentContainer: styled.div`
     position: relative;
@@ -82,9 +124,6 @@ const Styled = {
     align-items: center;
     flex-direction: row;
     opacity: 0;
-
-    ${animation("fadeIn")}
-    animation: fadeIn 2s 1s linear forwards;
   `,
   FadeIn: css`
     animation: fadeIn 2s linear forwards;
