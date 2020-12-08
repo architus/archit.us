@@ -96,25 +96,25 @@ const Styled = {
       ${animation("fadeIn")}
     }
 
-    & : nth-child(1) {
+    & > : nth-child(1) {
       animation: fadeIn 0.5s .4s linear forwards;
     }
-    & : nth-child(2) {
+    & > : nth-child(2) {
       animation: fadeIn .5s .5s linear forwards;
     }
-    & : nth-child(3) {
+    & > : nth-child(3) {
       animation: fadeIn .5s .6s linear forwards;
     }
-    & : nth-child(4) {
+    & > : nth-child(4) {
       animation: fadeIn .5s .7s linear forwards;
     }
-    & : nth-child(5) {
+    & > : nth-child(5) {
       animation: fadeIn .5s .8s linear forwards;
     }
-    & : nth-child(6) {
+    & > : nth-child(6) {
       animation: fadeIn .5s .9s linear forwards;
     }
-    & : nth-child(7) {
+    & > : nth-child(7) {
       animation: fadeIn .5s 1s linear forwards;
     }
   `,
