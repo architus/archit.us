@@ -158,7 +158,7 @@ const Styled = {
     width: 100px;
     height: auto;
   `,
-  CountUp: styled(CountUp)`
+  CountUp: styled.p`
     font-size: 2.5em;
   `,
 };
@@ -374,7 +374,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
           <Styled.ContentContainer>
             <FaComments className={iconClass} />
             <Styled.LabelContainer>
-              <Styled.CountUp end={messageCount} duration={5} />
+              <Styled.CountUp>{messageCount}</Styled.CountUp>
               <Styled.Description>Messages Sent</Styled.Description>
             </Styled.LabelContainer>
           </Styled.ContentContainer>
@@ -384,7 +384,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
           <Styled.ContentContainer>
             <FaUsers className={iconClass} />
             <Styled.LabelContainer>
-              <Styled.CountUp end={memberCount} duration={5} />
+              <Styled.CountUp>{memberCount}</Styled.CountUp>
               <Styled.Description>Members</Styled.Description>
             </Styled.LabelContainer>
           </Styled.ContentContainer>
@@ -394,7 +394,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
           <Styled.ContentContainer>
             <Styled.Logo />
             <Styled.LabelContainer>
-              <Styled.CountUp end={architusMessageCount} duration={5} />
+              <Styled.CountUp>{architusMessageCount}</Styled.CountUp>
               <Styled.Description>Commands Executed</Styled.Description>
             </Styled.LabelContainer>
           </Styled.ContentContainer>
