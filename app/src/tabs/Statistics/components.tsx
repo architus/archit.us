@@ -14,7 +14,7 @@ import {
 } from "recharts";
 
 import { CustomRechartsTooltip } from "./CustomRechartsTooltip";
-import { color, Color } from "@architus/facade/theme/color";
+import { color } from "@architus/facade/theme/color";
 import { isDefined } from "@architus/lib/utility";
 import { Guild, Member, Snowflake } from "src/utility/types";
 
