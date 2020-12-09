@@ -46,6 +46,11 @@ export const WordCloud: React.FC<WordCloudProps> = React.memo(({ words }) => {
     rotations: 2,
     rotationAngles: [-90, 0],
     fontSizes: [5, 120],
+    enableOptimizations: true,
+    // enableTooltip: false,
+    // fontFamily: "Renner*",
+    // padding: 10,
+    // transitionDuration: 0,
     colors: [color("textStrong")],
   };
   return (
@@ -89,7 +94,7 @@ export const TimeAreaChart: React.FC<TimeAreaChartProps> = React.memo(
           stroke={colors[i]}
           // eslint-disable-next-line no-plusplus
           fill={colors[i++]}
-          // animationDuration={750}
+          isAnimationActive={false}
         />
       );
     });
@@ -100,9 +105,12 @@ export const TimeAreaChart: React.FC<TimeAreaChartProps> = React.memo(
       const names = [];
       for (let i = 0; i < size; i++) {
         if (payload[i].value === 0) {
+          // eslint-disable-next-line no-continue
           continue;
         }
-        const name = isDefined(members(payload[i].name)) ? members(payload[i].name)?.name : payload[i].name;
+        const name = isDefined(members(payload[i].name))
+          ? members(payload[i].name)?.name
+          : payload[i].name;
         sum += payload[i].value;
         names.push(
           <div key={sum}>

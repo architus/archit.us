@@ -9,11 +9,11 @@ import {
   CartesianGrid,
   Tooltip,
 } from "recharts";
-import { Member, Snowflake } from "@app/utility/types";
-import { isDefined } from "@architus/lib/utility";
+
 import { CustomRechartsTooltip } from "./CustomRechartsTooltip";
 import CustomResponsiveContainer from "./CustomResponsiveContainer";
-
+import { Member, Snowflake } from "@app/utility/types";
+import { isDefined } from "@architus/lib/utility";
 
 type MemberData = {
   name: string;
@@ -21,50 +21,49 @@ type MemberData = {
 };
 type MemberGraphProps = {
   memberCounts: Record<string, number>;
-  members: Map<Snowflake, Member>;
-}
+  members: (id: string) => Member | undefined;
+};
 
-const getMemberData = (memberCounts: Record<string, number>, members: Map<Snowflake, Member>): MemberData[] => {
+const getMemberData = (memberCounts: Record<string, number>): MemberData[] => {
   const data: MemberData[] = [];
   Object.entries(memberCounts).forEach(([key, value]) => {
-    const member = members.get(key as Snowflake);
-    if (isDefined(member)) {
-      data.push({ name: member.name, count: value });
-    }
+    data.push({ name: key, count: value });
   });
   data.sort((a, b) => (a.count < b.count ? 1 : -1));
   return data.slice(0, 15);
 };
 
-const tooltipRenderer = (payload: Array<any>, label: string): JSX.Element => {
-  return (
-    <>
-      <p>@{label}</p>
-      {!isDefined(payload) ? 0 : payload.map(entry => (entry.value))} messages
-    </>
-  )
-}
+export const MemberGraph: React.FC<MemberGraphProps> = React.memo(
+  ({ memberCounts, members }) => {
 
-export const MemberGraph: React.FC<MemberGraphProps> = React.memo(({
-  memberCounts,
-  members,
-}) => (
-  <CustomResponsiveContainer>
-  <BarChart
-    data={getMemberData(memberCounts, members)}
-    margin={{
-      top: 5,
-      right: 30,
-      left: 20,
-      bottom: 5,
-    }}
-  >
-    <CartesianGrid strokeDasharray="3 3" />
-    <XAxis dataKey="name" />
-    <YAxis />
-    <Tooltip content={<CustomRechartsTooltip renderer={tooltipRenderer}/>}/>
-    <Legend />
-    <Bar dataKey="count" fill="#844ea3" />
-  </BarChart>
-</CustomResponsiveContainer>
-))
+    const tooltipRenderer = (
+      payload: Array<any>,
+      label: string
+    ): JSX.Element => {
+      return (
+        <>
+          <p>@{isDefined(members(label)) ? members(label).name : label}</p>
+          {!isDefined(payload) ? 0 : payload.map((entry) => entry.value)}{" "}
+          messages
+        </>
+      );
+    };
+    const tickFormatter = (tick: string): string => {
+      return isDefined(members(tick)) ? members(tick).name : tick;
+    };
+    return (
+      <CustomResponsiveContainer>
+        <BarChart data={getMemberData(memberCounts)}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" tickFormatter={tickFormatter} />
+          <YAxis />
+          <Tooltip
+            content={<CustomRechartsTooltip renderer={tooltipRenderer} />}
+          />
+          <Legend />
+          <Bar dataKey="count" fill="#844ea3" isAnimationActive={false} />
+        </BarChart>
+      </CustomResponsiveContainer>
+    );
+  }
+);

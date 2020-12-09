@@ -1,5 +1,6 @@
 import { css } from "linaria";
 import { styled } from "linaria/react";
+import { emoji } from "node-emoji";
 import React, { useMemo, useState } from "react";
 // import CountUp from "react-countup";
 import { FaComments, FaUsers } from "react-icons/fa";
@@ -11,8 +12,8 @@ import { GrowthChart } from "./GrowthChart";
 import IntegrityAlert from "./IntegrityAlert";
 import { MemberGraph } from "./MemberGraph";
 import { MentionsChart } from "./MentionsChart";
-import { CustomEmojiIcon } from "@app/components/CustomEmoji";
 import { PersonalMessagesChart } from "./PersonalMessagesChart";
+import { CustomEmojiIcon } from "@app/components/CustomEmoji";
 // import StatisticsProvider from "./Statistics";
 import { Timeline, TimelineItem } from "@app/components/Timeline";
 import { appVerticalPadding, appHorizontalPadding } from "@app/layout";
@@ -37,7 +38,6 @@ import { animation } from "@architus/facade/theme/motion";
 import { gap } from "@architus/facade/theme/spacing";
 import { Option } from "@architus/lib/option";
 import { isDefined } from "@architus/lib/utility";
-import { emoji } from "node-emoji";
 
 // import whyDidYouRender from "@welldone-software/why-did-you-render";
 
@@ -256,6 +256,10 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
     }
     return members;
   }, [memberEntries]);
+
+  const membersClosure = (id: string): Member | undefined => {
+    return members.get(id as Snowflake);
+  };
   // console.log(allMemberIds);
   // console.log(members);
 
@@ -350,7 +354,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
     const data: Array<any> = [];
     const ids: Set<string> = new Set();
     if (stats.isDefined()) {
-      //console.log(stats.get.timeMemberCounts);
+      // console.log(stats.get.timeMemberCounts);
 
       Object.entries(stats.get.timeMemberCounts).forEach(([date, rec]) => {
         const obj = { date: Date.parse(date) };
@@ -360,11 +364,11 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
         Object.entries(rec).forEach(([id, count]) => {
           obj[id] = count;
           ids.add(id);
-          //const member = members.get(id as Snowflake);
+          // const member = members.get(id as Snowflake);
           // console.log(count)
-          //if (isDefined(member)) {
+          // if (isDefined(member)) {
           //  obj[member.name] = count;
-          //}
+          // }
         });
         data.push(obj);
       });
@@ -387,10 +391,6 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
 
   const showAnimation = useState(false);
   const classes = showAnimation ? Styled.FadeIn : "";
-
-  const membersClosure = (id: string) => {
-    return members.get(id as Snowflake);
-  };
 
   return (
     <Styled.PageOuter>
@@ -462,12 +462,16 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
 
         <Styled.BigCard>
           <h3>Messages over Time</h3>
-          <TimeAreaChart ids={timeData[1]} data={timeData[0]} members={membersClosure} />
+          <TimeAreaChart
+            ids={timeData[1]}
+            data={timeData[0]}
+            members={membersClosure}
+          />
         </Styled.BigCard>
 
         <Styled.BigCard>
           <h3>Messages by Member</h3>
-          <MemberGraph memberCounts={memberCounts} members={members} />
+          <MemberGraph memberCounts={memberCounts} members={membersClosure} />
         </Styled.BigCard>
 
         <Styled.TallCard>
