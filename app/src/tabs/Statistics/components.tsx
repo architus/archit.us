@@ -30,7 +30,8 @@ type WordCloudProps = {
 };
 
 type TimeAreaChartProps = {
-  members: Map<Snowflake, Member>;
+  //members: Map<Snowflake, Member>;
+  ids: Set<string>;
   data: Array<any>;
 };
 
@@ -115,15 +116,15 @@ const tooltipRenderer = (payload: Array<any>, label: string): JSX.Element => {
 };
 
 export const TimeAreaChart = React.memo((props: TimeAreaChartProps) => {
-  const colors = gradArray("#ba5095", "#5850ba", props.members.size);
+  const colors = gradArray("#ba5095", "#5850ba", props.ids.size);
   const accum: React.ReactNode[] = [];
   let i = 0;
-  props.members.forEach((member) => {
+  props.ids.forEach((member) => {
     accum.push(
       <Area
         type="monotone"
-        dataKey={member.id}
-        key={member.id}
+        dataKey={member}
+        key={member}
         stackId="1"
         stroke={colors[i]}
         // eslint-disable-next-line no-plusplus

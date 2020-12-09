@@ -348,6 +348,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
 
   const timeData = useMemo((): Array<any> => {
     const data: Array<any> = [];
+    const ids: Set<string> = new Set();
     if (stats.isDefined()) {
       //console.log(stats.get.timeMemberCounts);
 
@@ -358,6 +359,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
         }
         Object.entries(rec).forEach(([id, count]) => {
           obj[id] = count;
+          ids.add(id);
           //const member = members.get(id as Snowflake);
           // console.log(count)
           //if (isDefined(member)) {
@@ -368,7 +370,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
       });
     }
     data.sort((a, b) => a.date - b.date);
-    return data;
+    return [data, ids];
   }, [stats]);
 
   const getMentionsChart = () => {
@@ -456,7 +458,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
 
         <Styled.BigCard>
           <h3>Messages over Time</h3>
-          <TimeAreaChart members={members} data={timeData} />
+          <TimeAreaChart ids={timeData[1]} data={timeData[0]} />
         </Styled.BigCard>
 
         <Styled.BigCard>
