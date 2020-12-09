@@ -11,6 +11,7 @@ import { GrowthChart } from "./GrowthChart";
 import IntegrityAlert from "./IntegrityAlert";
 import { MemberGraph } from "./MemberGraph";
 import { MentionsChart } from "./MentionsChart";
+import { CustomEmojiIcon } from "@app/components/CustomEmoji";
 import { PersonalMessagesChart } from "./PersonalMessagesChart";
 // import StatisticsProvider from "./Statistics";
 import { Timeline, TimelineItem } from "@app/components/Timeline";
@@ -36,6 +37,7 @@ import { animation } from "@architus/facade/theme/motion";
 import { gap } from "@architus/facade/theme/spacing";
 import { Option } from "@architus/lib/option";
 import { isDefined } from "@architus/lib/utility";
+import { emoji } from "node-emoji";
 
 // import whyDidYouRender from "@welldone-software/why-did-you-render";
 
@@ -181,16 +183,13 @@ const Styled = {
     grid-row: span 1;
   `,
   EmojiContainer: styled.div`
+    margin-top: ${gap.nano};
     display: grid;
     max-width: 100%;
     max-height: 100%;
-    grid-template-rows: auto;
-    grid-template-columns: 48px 48px 48px;
+    grid-template-rows: 48px 48px;
+    grid-template-columns: minmax(48px, 1fr) minmax(48px, 1fr) minmax(48px, 1fr);
     gap: ${gap.nano};
-    & > img {
-      width: 100%;
-      height: auto;
-    }
   `,
   Image: styled.img`
     width: 100px;
@@ -216,11 +215,6 @@ type StatisticsDashboardProps = {
   stats: Option<GuildStatistics>;
   guild: Guild;
 } & TabProps;
-
-type PersonalMessageData = {
-  name: string;
-  value: number;
-};
 
 const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
   stats,
@@ -325,7 +319,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
     return new Date(1420070400000);
   }, [currentUser, members]);
 
-  const bestEmoji = useMemo((): string[] => {
+  const bestEmoji = useMemo((): CustomEmoji[] => {
     const urls = [];
     if (stats.isDefined()) {
       const { popularEmojis } = stats.get;
@@ -333,7 +327,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
         // console.log(emojis);
         const emoji = emojis.get(popularEmojis[i]);
         if (isDefined(emoji)) {
-          urls.push(emoji.url);
+          urls.push(emoji);
         }
       }
     }
@@ -359,7 +353,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
 
       Object.entries(stats.get.timeMemberCounts).forEach(([date, rec]) => {
         const obj = { date: Date.parse(date) };
-        if (obj.date < new Date().getTime() - 60 * 86400000) {
+        if (obj.date < new Date().getTime() - 30 * 86400000) {
           return;
         }
         Object.entries(rec).forEach(([id, count]) => {
@@ -449,12 +443,13 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
         <Styled.Card>
           <h4>Popular Emoji</h4>
           <Styled.EmojiContainer>
-            <img src={bestEmoji[0]} />
-            <img src={bestEmoji[1]} />
-            <img src={bestEmoji[2]} />
-            <img src={bestEmoji[3]} />
-            <img src={bestEmoji[4]} />
-            <img src={bestEmoji[5]} />
+            {bestEmoji.map((e) => (
+              <CustomEmojiIcon
+                emoji={e}
+                author={members.get(e.authorId)}
+                key={e.id}
+              />
+            ))}
           </Styled.EmojiContainer>
         </Styled.Card>
 

@@ -33,3 +33,18 @@ export function formatDateShort(date: Date, separator = "at"): string {
   });
   return `${dateString} ${separator} ${timeString}`;
 }
+
+/**
+ * Pretty-prints a date using locale-aware formatting
+ * @param date - Source date to format
+ */
+export function formatDateExtraShort(date: Date): string {
+  const lang =
+    typeof window === "undefined" ? "en-US" : window.navigator.languages[0];
+  const dateString = date.toLocaleDateString(lang, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+  return dateString;
+}
