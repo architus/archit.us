@@ -122,12 +122,13 @@ export const TimeAreaChart = React.memo((props: TimeAreaChartProps) => {
     accum.push(
       <Area
         type="monotone"
-        dataKey={member.name}
+        dataKey={member.id}
         key={member.id}
         stackId="1"
         stroke={colors[i]}
+        // eslint-disable-next-line no-plusplus
         fill={colors[i++]}
-        animationDuration={750}
+        // animationDuration={750}
       />
     );
   });

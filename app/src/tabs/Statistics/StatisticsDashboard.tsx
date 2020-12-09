@@ -348,8 +348,8 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
 
   const timeData = useMemo((): Array<any> => {
     const data: Array<any> = [];
-    if (stats.isDefined() && members.size > 0) {
-      console.log(stats.get.timeMemberCounts);
+    if (stats.isDefined()) {
+      //console.log(stats.get.timeMemberCounts);
 
       Object.entries(stats.get.timeMemberCounts).forEach(([date, rec]) => {
         const obj = { date: Date.parse(date) };
@@ -357,18 +357,19 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
           return;
         }
         Object.entries(rec).forEach(([id, count]) => {
-          const member = members.get(id as Snowflake);
+          obj[id] = count;
+          //const member = members.get(id as Snowflake);
           // console.log(count)
-          if (isDefined(member)) {
-            obj[member.name] = count;
-          }
+          //if (isDefined(member)) {
+          //  obj[member.name] = count;
+          //}
         });
         data.push(obj);
       });
     }
     data.sort((a, b) => a.date - b.date);
     return data;
-  }, [stats, members]);
+  }, [stats]);
 
   const getMentionsChart = () => {
     if (stats.isDefined()) {
