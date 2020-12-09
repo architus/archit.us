@@ -63,12 +63,18 @@ export const GrowthChart: React.FC<GrowthChartProps> = ({ members }) => {
 
     // Determine the adaptive bin width,
     // and pack the year/month/day of the start of the bin into a single number
+    // Additionally, add a zero bin at the beginning of the guild's history
     let toBin: (day: Date) => number;
+    let makeZeroBin: (day: Date) => number;
     if (range <= 2_419_200_000) {
       // range <= 4 weeks as milliseconds: bin by day
       // use arbitrary numbers to avoid collisions
       toBin = (day: Date): number =>
         packBin(day.getUTCFullYear(), day.getUTCMonth(), day.getUTCDate());
+      makeZeroBin = (firstTimestamp: Date): number => {
+        firstTimestamp.setDate(firstTimestamp.getDate() - 1);
+        return toBin(firstTimestamp);
+      };
     } else if (range <= 10_368_000_000) {
       // range <= 4 months as milliseconds: bin by week
       toBin = (day: Date): number =>
@@ -78,11 +84,19 @@ export const GrowthChart: React.FC<GrowthChartProps> = ({ members }) => {
           // Create 1-based day-of-month for the start of the week bin
           Math.floor((day.getUTCDate() - 1) / 7) * 7 + 1
         );
+      makeZeroBin = (firstTimestamp: Date): number => {
+        firstTimestamp.setDate(firstTimestamp.getDate() - 7);
+        return toBin(firstTimestamp);
+      };
     } else {
       // bin by month
       toBin = (day: Date): number =>
         // The start of the bin is always the start of the month
         packBin(day.getUTCFullYear(), day.getUTCMonth(), 1);
+      makeZeroBin = (firstTimestamp: Date): number => {
+        firstTimestamp.setMonth(firstTimestamp.getMonth() - 1);
+        return toBin(firstTimestamp);
+      };
     }
 
     // Bin the data points by the adaptive bin width
@@ -97,6 +111,10 @@ export const GrowthChart: React.FC<GrowthChartProps> = ({ members }) => {
     memberBins.forEach((count, bin) => {
       dataPoints.push({ count, date: unpackBin(bin) });
     });
+
+    // Add the zero bin-value
+    const zeroDate = unpackBin(makeZeroBin(new Date(minJoinedAt ?? 0)));
+    dataPoints.push({ count: 0, date: zeroDate });
 
     // Sort the data points by date
     dataPoints.sort((a, b) => a.date - b.date);

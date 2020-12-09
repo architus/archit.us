@@ -46,7 +46,6 @@ const Styled = {
     justify-content: stretch;
     align-items: stretch;
     flex-direction: column;
-    height: 100%;
     padding: ${appVerticalPadding} ${appHorizontalPadding};
   `,
   Title: styled.h2`
@@ -99,7 +98,7 @@ const Styled = {
     grid-auto-flow: dense;
     gap: calc(2 * ${gap.pico});
     justify-items: stretch;
-    margin: ${gap.pico} 0;
+    margin: ${gap.pico} 0 0;
 
     & > * {
       opacity: 0;
