@@ -816,7 +816,6 @@ export function usePoolEntities<T extends PoolType>(
       }
     }
 
-    anyNew = true;
     return newProvider;
   });
 
