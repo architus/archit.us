@@ -107,7 +107,7 @@ export const TimeAreaChart = React.memo((props: TimeAreaChartProps) => {
   const accum: React.ReactNode[] = [];
   let i = 0;
   props.members.forEach((member) => {
-    accum.push(<Area type="monotone" dataKey={member.name} key={member.id} stackId="1" stroke={colors[i]} fill={colors[i++]} />)
+    accum.push(<Area type="monotone" dataKey={member.name}  key={member.id} stackId="1" stroke={colors[i]} fill={colors[i++]} animationDuration={750} />)
   })
   return (
     <ResponsiveContainer>

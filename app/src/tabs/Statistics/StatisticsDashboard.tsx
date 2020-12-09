@@ -72,13 +72,13 @@ const Styled = {
       ${animation("fadeIn")}
     }
     & : nth-child(1) {
-      animation: fadeIn 0.5s .1s linear forwards;
+      animation: fadeIn 0.5s .05s linear forwards;
     }
     & : nth-child(2) {
-      animation: fadeIn .5s .2s linear forwards;
+      animation: fadeIn .5s .1s linear forwards;
     }
     & : nth-child(3) {
-      animation: fadeIn .5s .3s linear forwards;
+      animation: fadeIn .5s .15s linear forwards;
     }
   `,
   CardContainer: styled.div`
@@ -97,31 +97,31 @@ const Styled = {
     }
 
     & > : nth-child(1) {
-      animation: fadeIn 0.5s .4s linear forwards;
+      animation: fadeIn 0.5s .2s linear forwards;
     }
     & > : nth-child(2) {
-      animation: fadeIn .5s .5s linear forwards;
+      animation: fadeIn .5s .25s linear forwards;
     }
     & > : nth-child(3) {
-      animation: fadeIn .5s .6s linear forwards;
+      animation: fadeIn .5s .3s linear forwards;
     }
     & > : nth-child(4) {
-      animation: fadeIn .5s .7s linear forwards;
+      animation: fadeIn .5s .35s linear forwards;
     }
     & > : nth-child(5) {
-      animation: fadeIn .5s .8s linear forwards;
+      animation: fadeIn .5s .4s linear forwards;
     }
     & > : nth-child(6) {
-      animation: fadeIn .5s .9s linear forwards;
+      animation: fadeIn .5s .45s linear forwards;
     }
     & > : nth-child(7) {
-      animation: fadeIn .5s 1s linear forwards;
+      animation: fadeIn .5s .5s linear forwards;
     }
     & > : nth-child(8) {
-      animation: fadeIn .5s 1.1s linear forwards;
+      animation: fadeIn .5s .55s linear forwards;
     }
     & > : nth-child(9) {
-      animation: fadeIn .5s 1.2s linear forwards;
+      animation: fadeIn .5s .6s linear forwards;
     }
   `,
   ContentContainer: styled.div`
@@ -198,6 +198,18 @@ const Styled = {
     margin: 5px;
     grid-column: span 2;
     grid-row: span 1;
+  `,
+  EmojiContainer: styled.div`
+    display: grid;
+    max-width: 100%;
+    max-height: 100%;
+    grid-template-rows: auto;
+    grid-template-columns: 48px 48px 48px;
+    gap: ${gap.nano};
+    & > img {
+      width: 100%;
+      height: auto;
+    }
   `,
   Image: styled.img`
     width: 100px;
@@ -338,18 +350,19 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
     return new Date(1420070400000)
   }, [currentUser, members])
 
-  const bestEmoji = useMemo((): string => {
+  const bestEmoji = useMemo((): string[] => {
+    const urls = [];
     if (stats.isDefined()) {
       const popularEmojis = stats.get.popularEmojis;
-      if (popularEmojis.length > 0) {
+      for (let i = 0; i < 6; i++) {
         // console.log(emojis);
-        const emoji = emojis.get(popularEmojis[0]);
+        const emoji = emojis.get(popularEmojis[i]);
         if (isDefined(emoji)) {
-          return emoji.url;
+          urls.push(emoji.url);
         }
       }
     }
-    return "";
+      return urls;
   }, [stats, emojis])
 
   const getWords = (): Array<WordData> => {
@@ -365,10 +378,9 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
   const memWords = useMemo(getWords, [stats]);
 
   const timeData = useMemo((): Array<any> => {
-    console.profile("time data")
-    console.time("time data")
     const data: Array<any> = [];
     if (stats.isDefined() && members.size > 0) {
+      console.log(stats.get.timeMemberCounts)
 
       Object.entries(stats.get.timeMemberCounts).forEach(([date, rec]) => {
         let obj = {date: Date.parse(date)};
@@ -377,6 +389,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
         }
         Object.entries(rec).forEach(([id, count]) => {
           const member = members.get(id as Snowflake);
+          //console.log(count)
           if (isDefined(member)) {
             obj[member.name] = count;
           }
@@ -385,9 +398,6 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
       })
     }
     data.sort((a, b) => a.date - b.date);
-    //console.log(data)
-    console.timeEnd("time data")
-    console.profileEnd()
     return data;
   }, [stats, members])
 
@@ -458,9 +468,14 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
 
         <Styled.Card>
           <h4>Popular Emoji</h4>
-          <div>
-            <Styled.Image src={bestEmoji} />
-          </div>
+          <Styled.EmojiContainer>
+            <img src={bestEmoji[0]} />
+            <img src={bestEmoji[1]} />
+            <img src={bestEmoji[2]} />
+            <img src={bestEmoji[3]} />
+            <img src={bestEmoji[4]} />
+            <img src={bestEmoji[5]} />
+          </Styled.EmojiContainer>
         </Styled.Card>
 
         <Styled.BigCard>

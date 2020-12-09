@@ -22,7 +22,7 @@ const definitions: TabDefinition[] = [
     name: "Statistics",
     icon: StatisticsIcon,
     component: Statistics,
-    tooltip: "Coming soon",
+    tooltip: "View statistics dashboard",
   },
   {
     path: "responses",
