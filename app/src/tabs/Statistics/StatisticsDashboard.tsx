@@ -388,6 +388,10 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
   const showAnimation = useState(false);
   const classes = showAnimation ? Styled.FadeIn : "";
 
+  const membersClosure = (id: string) => {
+    return members.get(id as Snowflake);
+  };
+
   return (
     <Styled.PageOuter>
       <Styled.Title>Statistics</Styled.Title>
@@ -458,7 +462,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
 
         <Styled.BigCard>
           <h3>Messages over Time</h3>
-          <TimeAreaChart ids={timeData[1]} data={timeData[0]} />
+          <TimeAreaChart ids={timeData[1]} data={timeData[0]} members={membersClosure} />
         </Styled.BigCard>
 
         <Styled.BigCard>
