@@ -3,6 +3,7 @@ import { styled } from "linaria/react";
 import { ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { Snowflake, Member, User } from "@app/utility/types";
 import { isDefined } from "@architus/lib/utility";
+import CustomResponsiveContainer from "./CustomResponsiveContainer";
 
 const Styled = {
   OuterContainer: styled.div`
@@ -70,7 +71,7 @@ export const PersonalMessagesChart: React.FC<PersonalMessagesChartProps> = React
   ];
   return (
     <Styled.OuterContainer>
-      <ResponsiveContainer>
+      <CustomResponsiveContainer>
         <PieChart>
           <Pie
             data={data}
@@ -86,7 +87,7 @@ export const PersonalMessagesChart: React.FC<PersonalMessagesChartProps> = React
             <Cell key="cell-1" fill="#844EA3" strokeWidth={0} />
           </Pie>
         </PieChart>
-      </ResponsiveContainer>
+      </CustomResponsiveContainer>
       <Styled.LabelContainer>
         <p>{currentUser.username}</p>
         <p>other</p>

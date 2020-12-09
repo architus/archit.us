@@ -12,6 +12,7 @@ import {
 import { Member, Snowflake } from "@app/utility/types";
 import { isDefined } from "@architus/lib/utility";
 import { CustomRechartsTooltip } from "./CustomRechartsTooltip";
+import CustomResponsiveContainer from "./CustomResponsiveContainer";
 
 
 type MemberData = {
@@ -48,7 +49,7 @@ export const MemberGraph: React.FC<MemberGraphProps> = React.memo(({
   memberCounts,
   members,
 }) => (
-  <ResponsiveContainer>
+  <CustomResponsiveContainer>
   <BarChart
     data={getMemberData(memberCounts, members)}
     margin={{
@@ -65,5 +66,5 @@ export const MemberGraph: React.FC<MemberGraphProps> = React.memo(({
     <Legend />
     <Bar dataKey="count" fill="#844ea3" />
   </BarChart>
-</ResponsiveContainer>
+</CustomResponsiveContainer>
 ))

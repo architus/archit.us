@@ -137,10 +137,10 @@ const slice = createSlice({
       const pool = isAgnostic(type)
         ? state.agnostic[type]
         : getSpecificPool(
-          state,
-          type,
-          (action.payload as { guildId: Snowflake }).guildId
-        );
+            state,
+            type,
+            (action.payload as { guildId: Snowflake }).guildId
+          );
 
       effectiveIds.forEach((i) => {
         pool.pressuredIdsSet[i] = null;
@@ -156,10 +156,10 @@ const slice = createSlice({
       const pool = isAgnostic(type)
         ? state.agnostic[type]
         : getSpecificPool(
-          state,
-          type,
-          (action.payload as { guildId: Snowflake }).guildId
-        );
+            state,
+            type,
+            (action.payload as { guildId: Snowflake }).guildId
+          );
       pool.pressuredIdsSet = {};
       pool.loadingSets[requestId] = ids;
       ids.forEach((id: Snowflake | HoarFrost) => {
@@ -175,10 +175,10 @@ const slice = createSlice({
       const pool = isAgnostic(type)
         ? state.agnostic[type]
         : getSpecificPool(
-          state,
-          type,
-          (action.payload as { guildId: Snowflake }).guildId
-        );
+            state,
+            type,
+            (action.payload as { guildId: Snowflake }).guildId
+          );
       pool.allLoading = true;
       // Clear the pressured ids to prevent future loading of specific pool entities
       pool.pressuredIdsSet = {};
@@ -198,10 +198,10 @@ const slice = createSlice({
       const pool = isAgnostic(type)
         ? state.agnostic[type]
         : getSpecificPool(
-          state,
-          type,
-          (action.payload as { guildId: Snowflake }).guildId
-        );
+            state,
+            type,
+            (action.payload as { guildId: Snowflake }).guildId
+          );
 
       entities.forEach((entity: AllPoolTypes[PoolType]) => {
         pool.pool[entity.id] = entity;
@@ -374,8 +374,8 @@ export function tryGetPool<T extends PoolType>(
   return isAgnostic(type)
     ? (Some(state.agnostic[type]) as Option<Pool<T>>)
     : (Option.from(
-      tryGetSpecificPool(state, type, guildId as Snowflake)
-    ) as Option<Pool<T>>);
+        tryGetSpecificPool(state, type, guildId as Snowflake)
+      ) as Option<Pool<T>>);
 }
 
 // ? =================
@@ -435,10 +435,10 @@ export function usePool<T extends PoolType>(
     const pool: Pool<T> | undefined = isAgnostic(type)
       ? (store.pools.agnostic[type] as Pool<T>)
       : (tryGetSpecificPool(
-        store.pools,
-        type as keyof SpecificPools,
-        guildId
-      ) as Pool<T> | undefined);
+          store.pools,
+          type as keyof SpecificPools,
+          guildId
+        ) as Pool<T> | undefined);
 
     let loading: boolean;
     let isLoaded: boolean;
@@ -553,10 +553,10 @@ export function usePoolEntity<T extends PoolType>(
     const pool: Pool<T> | undefined = isAgnostic(type)
       ? (store.pools.agnostic[type] as Pool<T>)
       : (tryGetSpecificPool(
-        store.pools,
-        type as keyof SpecificPools,
-        guildId
-      ) as Pool<T> | undefined);
+          store.pools,
+          type as keyof SpecificPools,
+          guildId
+        ) as Pool<T> | undefined);
 
     let pressured: boolean;
     let loading: boolean;
@@ -623,14 +623,14 @@ export function usePoolEntity<T extends PoolType>(
         applyPressure(
           isAgnostic(type)
             ? {
-              id: id as AllPoolTypes[keyof AgnosticPools]["id"],
-              type: type as keyof AgnosticPools,
-            }
+                id: id as AllPoolTypes[keyof AgnosticPools]["id"],
+                type: type as keyof AgnosticPools,
+              }
             : {
-              id: id as AllPoolTypes[keyof SpecificPools]["id"],
-              type: type as keyof SpecificPools,
-              guildId,
-            }
+                id: id as AllPoolTypes[keyof SpecificPools]["id"],
+                type: type as keyof SpecificPools,
+                guildId,
+              }
         )
       );
     }
@@ -699,10 +699,10 @@ export function usePoolEntities<T extends PoolType>(
     const pool: Pool<T> | undefined = isAgnostic(type)
       ? (store.pools.agnostic[type] as Pool<T>)
       : (tryGetSpecificPool(
-        store.pools,
-        type as keyof SpecificPools,
-        guildId
-      ) as Pool<T> | undefined);
+          store.pools,
+          type as keyof SpecificPools,
+          guildId
+        ) as Pool<T> | undefined);
 
     let loadingIds: Set<AllPoolTypes[T]["id"]>;
     let nonexistantIds: Set<AllPoolTypes[T]["id"]>;
@@ -781,14 +781,14 @@ export function usePoolEntities<T extends PoolType>(
         applyPressure(
           isAgnostic(type)
             ? {
-              ids: toPressure as AllPoolTypes[keyof AgnosticPools]["id"][],
-              type: type as keyof AgnosticPools,
-            }
+                ids: toPressure as AllPoolTypes[keyof AgnosticPools]["id"][],
+                type: type as keyof AgnosticPools,
+              }
             : {
-              ids: toPressure as AllPoolTypes[keyof SpecificPools]["id"][],
-              type: type as keyof SpecificPools,
-              guildId,
-            }
+                ids: toPressure as AllPoolTypes[keyof SpecificPools]["id"][],
+                type: type as keyof SpecificPools,
+                guildId,
+              }
         )
       );
     }
@@ -806,17 +806,27 @@ export function usePoolEntities<T extends PoolType>(
     };
 
     // Return the previous provider if it's the same
-    return previousProvidersRef.current.isDefined() &&
-      shallowEqual(previousProvidersRef.current.get[index], newProvider)
-      ? previousProvidersRef.current.get[index]
-      : newProvider;
+    if (previousProvidersRef.current.isDefined()) {
+      const previousProviders = previousProvidersRef.current.get;
+      if (index < previousProviders.length) {
+        const previousProvider = previousProviders[index];
+        if (shallowEqual(previousProvider, newProvider)) {
+          return previousProvider;
+        }
+      }
+    }
+
+    anyNew = true;
+    return newProvider;
   });
 
   // Return the entire old providers array if every element is the same
   // (effectively ensures the same array is returned if there are no changes)
 
-  if (previousProvidersRef.current.isDefined() &&
-    shallowEqual(previousProvidersRef.current.get, providers)) {
+  if (
+    previousProvidersRef.current.isDefined() &&
+    shallowEqual(previousProvidersRef.current.get, providers)
+  ) {
     return previousProvidersRef.current.get;
   }
   previousProvidersRef.current = Option.from(providers);

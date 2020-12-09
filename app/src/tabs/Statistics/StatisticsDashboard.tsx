@@ -1,35 +1,43 @@
-import { styled } from "linaria/react";
 import { css } from "linaria";
+import { styled } from "linaria/react";
 import React, { useMemo, useState } from "react";
-import CountUp from "react-countup";
+// import CountUp from "react-countup";
 import { FaComments, FaUsers } from "react-icons/fa";
-import { WordCloud, WordData, TimeAreaChart } from "./components";
+import ago from "s-ago";
+
 import { ChannelGraph } from "./ChannelGraph";
-import { MemberGraph } from "./MemberGraph";
+import { WordCloud, WordData, TimeAreaChart } from "./components";
 import { GrowthChart } from "./GrowthChart";
+import IntegrityAlert from "./IntegrityAlert";
+import { MemberGraph } from "./MemberGraph";
 import { MentionsChart } from "./MentionsChart";
 import { PersonalMessagesChart } from "./PersonalMessagesChart";
-import IntegrityAlert from "./IntegrityAlert";
+// import StatisticsProvider from "./Statistics";
 import { Timeline, TimelineItem } from "@app/components/Timeline";
-import { usePool, usePoolEntities } from "@app/store/slices/pools";
-
 import { appVerticalPadding, appHorizontalPadding } from "@app/layout";
+import { usePool, usePoolEntities } from "@app/store/slices/pools";
 import { GuildStatistics } from "@app/store/slices/statistics";
 import { TabProps } from "@app/tabs/types";
-import { Channel, CustomEmoji, Member, Snowflake, User, Guild, HoarFrost } from "@app/utility/types";
 import { snowflakeToDate } from "@app/utility/discord";
+import {
+  Channel,
+  CustomEmoji,
+  Member,
+  Snowflake,
+  User,
+  Guild,
+  HoarFrost,
+} from "@app/utility/types";
 import Card from "@architus/facade/components/Card";
 import Logo from "@architus/facade/components/Logo";
 import { color } from "@architus/facade/theme/color";
 import { down } from "@architus/facade/theme/media";
-import { gap } from "@architus/facade/theme/spacing";
 import { animation } from "@architus/facade/theme/motion";
+import { gap } from "@architus/facade/theme/spacing";
 import { Option } from "@architus/lib/option";
 import { isDefined } from "@architus/lib/utility";
-import ago from "s-ago";
-import StatisticsProvider from "./Statistics";
-import whyDidYouRender from "@welldone-software/why-did-you-render";
 
+// import whyDidYouRender from "@welldone-software/why-did-you-render";
 
 const Styled = {
   PageOuter: styled.div`
@@ -45,9 +53,10 @@ const Styled = {
     color: ${color("textStrong")};
     font-size: 1.9rem;
     font-weight: 300;
+    margin-bottom: ${gap.nano};
   `,
   IntegrityAlert: styled(IntegrityAlert)`
-    margin: ${gap.pico}
+    margin: ${gap.pico} 0;
   `,
   Logo: styled(Logo.Symbol)`
     font-size: 2em;
@@ -61,25 +70,25 @@ const Styled = {
     justify-content: space-around;
     align-items: stretch;
     flex-direction: row;
+    margin: ${gap.pico} 0;
+    gap: calc(2 * ${gap.pico});
 
     ${down("md")} {
       flex-wrap: wrap;
     }
 
-
     & > * {
-      opacity 0;
+      opacity: 0;
       ${animation("fadeIn")}
     }
-    & : nth-child(1) {
-      animation: fadeIn 0.5s .05s linear forwards;
-    }
-    & : nth-child(2) {
-      animation: fadeIn .5s .1s linear forwards;
-    }
-    & : nth-child(3) {
-      animation: fadeIn .5s .15s linear forwards;
-    }
+
+    ${[...Array(3)]
+      .map(
+        (_, i) => `& > :nth-child(${i + 1}) {
+          animation: fadeIn 0.5s ${i * 0.05 + 0.05}s linear forwards;
+        }`
+      )
+      .join("\n")}
   `,
   CardContainer: styled.div`
     display: grid;
@@ -88,48 +97,28 @@ const Styled = {
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     grid-auto-rows: 200px;
     grid-auto-flow: dense;
-    gap: ${gap.pico};
+    gap: calc(2 * ${gap.pico});
     justify-items: stretch;
+    margin: ${gap.pico} 0;
 
     & > * {
       opacity: 0;
       ${animation("fadeIn")}
     }
 
-    & > : nth-child(1) {
-      animation: fadeIn 0.5s .2s linear forwards;
-    }
-    & > : nth-child(2) {
-      animation: fadeIn .5s .25s linear forwards;
-    }
-    & > : nth-child(3) {
-      animation: fadeIn .5s .3s linear forwards;
-    }
-    & > : nth-child(4) {
-      animation: fadeIn .5s .35s linear forwards;
-    }
-    & > : nth-child(5) {
-      animation: fadeIn .5s .4s linear forwards;
-    }
-    & > : nth-child(6) {
-      animation: fadeIn .5s .45s linear forwards;
-    }
-    & > : nth-child(7) {
-      animation: fadeIn .5s .5s linear forwards;
-    }
-    & > : nth-child(8) {
-      animation: fadeIn .5s .55s linear forwards;
-    }
-    & > : nth-child(9) {
-      animation: fadeIn .5s .6s linear forwards;
-    }
+    ${[...Array(9)]
+      .map(
+        (_, i) => `& > :nth-child(${i + 1}) {
+          animation: fadeIn 0.5s ${0.05 * i + 0.2}s linear forwards;
+        }`
+      )
+      .join("\n")}
   `,
   ContentContainer: styled.div`
     position: relative;
     display: flex;
     align-items: center;
     flex-direction: row;
-    opacity: 0;
   `,
   FadeIn: css`
     animation: fadeIn 2s linear forwards;
@@ -149,7 +138,6 @@ const Styled = {
     color: ${color("light")} !important;
   `,
   MessageCard: styled(Card)`
-    margin: ${gap.pico};
     width: 100%;
     border: none;
     flex: 1 1 0px;
@@ -158,7 +146,6 @@ const Styled = {
     padding: 16px;
   `,
   ArchitusCard: styled(Card)`
-    margin: ${gap.pico};
     width: 100%;
     border: none;
     padding: 16px;
@@ -167,7 +154,6 @@ const Styled = {
     background-image: linear-gradient(62deg, #ba5095 0%, #ffbfa7 100%);
   `,
   MemberCard: styled(Card)`
-    margin: ${gap.pico};
     width: 100%;
     border: none;
     padding: 16px;
@@ -176,7 +162,6 @@ const Styled = {
     background-image: linear-gradient(62deg, #844ea3 0%, #ba5095 100%);
   `,
   Card: styled(Card)`
-    margin: 5px;
     grid-column: span auto;
     grid-row: span auto;
 
@@ -185,17 +170,14 @@ const Styled = {
     }
   `,
   BigCard: styled(Card)`
-    margin: 5px;
     grid-column: span 2;
     grid-row: span 2;
   `,
   TallCard: styled(Card)`
-    margin: 5px;
     grid-column: span 1;
     grid-row: span 2;
   `,
   LongCard: styled(Card)`
-    margin: 5px;
     grid-column: span 2;
     grid-row: span 1;
   `,
@@ -227,15 +209,14 @@ const iconClass = css`
 `;
 
 type StatisticsDashboardProps = {
-  //members: Map<Snowflake, Member>;
-  //channels: Map<string, Channel>;
-  //emojis: Map<string, CustomEmoji>;
+  // members: Map<Snowflake, Member>;
+  // channels: Map<string, Channel>;
+  // emojis: Map<string, CustomEmoji>;
   isArchitusAdmin: boolean;
   currentUser: User;
   stats: Option<GuildStatistics>;
   guild: Guild;
 } & TabProps;
-
 
 type PersonalMessageData = {
   name: string;
@@ -245,19 +226,18 @@ type PersonalMessageData = {
 const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
   stats,
   currentUser,
-  //members,
-  //channels,
-  //emojis,
+  // members,
+  // channels,
+  // emojis,
   guild,
 }) => {
-  //console.count("stats dashboard");
-  //const members = new Map();
-  //const channels = new Map();
-  //const emojis = new Map();
+  // console.count("stats dashboard");
+  // const members = new Map();
+  // const channels = new Map();
+  // const emojis = new Map();
 
-     // Load all the members into the pool
+  // Load all the members into the pool
   const allMemberIds = useMemo(() => {
-    //console.count("all member ids")
     const ids: Snowflake[] = [];
     if (stats.isDefined()) {
       Object.keys(stats.get.memberCounts).forEach((id) => {
@@ -273,8 +253,8 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
     ids: allMemberIds,
   });
   const members = useMemo(() => {
-    //console.count("members")
-    //console.log(memberEntries);
+    // console.count("members");
+    // console.log(memberEntries.length);
     const members: Map<Snowflake, Member> = new Map();
     for (const memberEntry of memberEntries) {
       if (memberEntry.isLoaded && memberEntry.entity.isDefined()) {
@@ -283,15 +263,13 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
     }
     return members;
   }, [memberEntries]);
-  //console.log(allMemberIds);
-  //console.log(members);
-
+  // console.log(allMemberIds);
+  // console.log(members);
 
   const { all: channelsPool } = usePool({
     type: "channel",
     guildId: guild.id,
   });
-
 
   const emojiEntries = usePoolEntities({
     type: "customEmoji",
@@ -316,7 +294,6 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
     return map;
   }, [channelsPool]);
 
-
   const memberCount = useMemo((): number => {
     return stats.isDefined() ? stats.get.memberCount : 0;
   }, [stats]);
@@ -339,21 +316,20 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
 
   const channelCounts = useMemo(() => {
     return stats.isDefined() ? stats.get.channelCounts : {};
-  }, [stats])
+  }, [stats]);
 
   const joinDate = useMemo((): Date => {
     if (isDefined(currentUser) && isDefined(currentUser.id)) {
-      const member = members.get(currentUser.id as Snowflake)
-      if (isDefined(member))
-        return new Date(member.joined_at);
+      const member = members.get(currentUser.id as Snowflake);
+      if (isDefined(member)) return new Date(member.joined_at);
     }
-    return new Date(1420070400000)
-  }, [currentUser, members])
+    return new Date(1420070400000);
+  }, [currentUser, members]);
 
   const bestEmoji = useMemo((): string[] => {
     const urls = [];
     if (stats.isDefined()) {
-      const popularEmojis = stats.get.popularEmojis;
+      const { popularEmojis } = stats.get;
       for (let i = 0; i < 6; i++) {
         // console.log(emojis);
         const emoji = emojis.get(popularEmojis[i]);
@@ -362,51 +338,56 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
         }
       }
     }
-      return urls;
-  }, [stats, emojis])
+    return urls;
+  }, [stats, emojis]);
 
   const getWords = (): Array<WordData> => {
     const words: Array<WordData> = [];
     if (stats.isDefined()) {
-      const commonWords = stats.get.commonWords;
+      const { commonWords } = stats.get;
       commonWords.slice(0, 100).forEach((word) => {
-        words.push({text: word[0], value: word[1]})
-      })
+        words.push({ text: word[0], value: word[1] });
+      });
     }
     return words;
-  }
+  };
   const memWords = useMemo(getWords, [stats]);
 
   const timeData = useMemo((): Array<any> => {
     const data: Array<any> = [];
     if (stats.isDefined() && members.size > 0) {
-      console.log(stats.get.timeMemberCounts)
+      console.log(stats.get.timeMemberCounts);
 
       Object.entries(stats.get.timeMemberCounts).forEach(([date, rec]) => {
-        let obj = {date: Date.parse(date)};
-        if (obj.date < (new Date).getTime() - 60 * 86400000) {
+        const obj = { date: Date.parse(date) };
+        if (obj.date < new Date().getTime() - 60 * 86400000) {
           return;
         }
         Object.entries(rec).forEach(([id, count]) => {
           const member = members.get(id as Snowflake);
-          //console.log(count)
+          // console.log(count)
           if (isDefined(member)) {
             obj[member.name] = count;
           }
-        })
+        });
         data.push(obj);
-      })
+      });
     }
     data.sort((a, b) => a.date - b.date);
     return data;
-  }, [stats, members])
+  }, [stats, members]);
 
   const getMentionsChart = () => {
     if (stats.isDefined()) {
-      return (<MentionsChart mentionCounts={stats.get.mentionCounts} members={members} />);
+      return (
+        <MentionsChart
+          mentionCounts={stats.get.mentionCounts}
+          members={members}
+        />
+      );
     }
-    return (<>no mentions</>);
-  }
+    return <>no mentions</>;
+  };
 
   const showAnimation = useState(false);
   const classes = showAnimation ? Styled.FadeIn : "";
@@ -459,7 +440,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
       <Styled.CardContainer>
         <Styled.Card>
           <h4>Your Messages</h4>
-           <PersonalMessagesChart
+          <PersonalMessagesChart
             currentUser={currentUser}
             totalMessages={messageCount}
             memberCounts={memberCounts}
@@ -485,10 +466,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
 
         <Styled.BigCard>
           <h3>Messages by Member</h3>
-          <MemberGraph
-            memberCounts={memberCounts}
-            members={members}
-          />
+          <MemberGraph memberCounts={memberCounts} members={members} />
         </Styled.BigCard>
 
         <Styled.TallCard>
@@ -500,10 +478,15 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
             <TimelineItem date={snowflakeToDate(guild.id)}>
               {guild.name} was created
             </TimelineItem>
-            <TimelineItem date={joinDate}>
-              You joined {guild.name}
-            </TimelineItem>
-            <TimelineItem date={new Date(lastSeen.getTime() - 60 * 1000 * lastSeen.getTimezoneOffset())} dateFormatter={ago}>
+            <TimelineItem date={joinDate}>You joined {guild.name}</TimelineItem>
+            <TimelineItem
+              date={
+                new Date(
+                  lastSeen.getTime() - 60 * 1000 * lastSeen.getTimezoneOffset()
+                )
+              }
+              dateFormatter={ago}
+            >
               Last activity in {guild.name}
             </TimelineItem>
           </Timeline>
@@ -521,19 +504,16 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
 
         <Styled.BigCard>
           <h3>Messages by Channel</h3>
-          <ChannelGraph
-            channelCounts={channelCounts}
-            channels={channels}
-          />
+          <ChannelGraph channelCounts={channelCounts} channels={channels} />
         </Styled.BigCard>
         <Styled.BigCard>
           <h3>Popular Words</h3>
-           <WordCloud words={memWords} />
+          <WordCloud words={memWords} />
         </Styled.BigCard>
       </Styled.CardContainer>
     </Styled.PageOuter>
   );
 };
 
-//StatisticsDashboard.whyDidYouRender = true;
+// StatisticsDashboard.whyDidYouRender = true;
 export default StatisticsDashboard;

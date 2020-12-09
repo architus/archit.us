@@ -12,6 +12,7 @@ import {
 import { Channel } from "@app/utility/types";
 import { isDefined } from "@architus/lib/utility";
 import { CustomRechartsTooltip } from "./CustomRechartsTooltip";
+import CustomResponsiveContainer from "./CustomResponsiveContainer";
 
 
 type ChannelData = {
@@ -48,7 +49,7 @@ export const ChannelGraph: React.FC<ChannelGraphProps> = React.memo(({
   channelCounts,
   channels,
 }) => (
-  <ResponsiveContainer>
+  <CustomResponsiveContainer>
     <BarChart
       data={getChannelData(channelCounts, channels)}
       margin={{
@@ -65,5 +66,5 @@ export const ChannelGraph: React.FC<ChannelGraphProps> = React.memo(({
       <Legend />
       <Bar dataKey="count" fill="#ba5095" />
     </BarChart>
-  </ResponsiveContainer>
+  </CustomResponsiveContainer>
 ))
