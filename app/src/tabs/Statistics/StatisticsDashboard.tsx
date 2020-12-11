@@ -37,7 +37,7 @@ import { down } from "@architus/facade/theme/media";
 import { animation } from "@architus/facade/theme/motion";
 import { gap } from "@architus/facade/theme/spacing";
 import { Option } from "@architus/lib/option";
-import { isDefined } from "@architus/lib/utility";
+import { isDefined, formatNum } from "@architus/lib/utility";
 
 // import whyDidYouRender from "@welldone-software/why-did-you-render";
 
@@ -410,7 +410,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
           <Styled.ContentContainer>
             <FaComments className={iconClass} />
             <Styled.LabelContainer>
-              <Styled.CountUp>{messageCount}</Styled.CountUp>
+              <Styled.CountUp>{formatNum(messageCount)}</Styled.CountUp>
               <Styled.Description>Messages Sent</Styled.Description>
             </Styled.LabelContainer>
           </Styled.ContentContainer>
@@ -420,7 +420,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
           <Styled.ContentContainer>
             <FaUsers className={iconClass} />
             <Styled.LabelContainer>
-              <Styled.CountUp>{memberCount}</Styled.CountUp>
+              <Styled.CountUp>{formatNum(memberCount)}</Styled.CountUp>
               <Styled.Description>Members</Styled.Description>
             </Styled.LabelContainer>
           </Styled.ContentContainer>
@@ -430,7 +430,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
           <Styled.ContentContainer>
             <Styled.Logo />
             <Styled.LabelContainer>
-              <Styled.CountUp>{architusMessageCount}</Styled.CountUp>
+              <Styled.CountUp>{formatNum(architusMessageCount)}</Styled.CountUp>
               <Styled.Description>Commands Executed</Styled.Description>
             </Styled.LabelContainer>
           </Styled.ContentContainer>

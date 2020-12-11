@@ -1,6 +1,8 @@
 import { styled } from "linaria/react";
 import React, { useState } from "react";
-import { ResponsiveContainer, PieChart, Pie, Cell, Legend, Tooltip, LegendProps } from "recharts";
+import { ResponsiveContainer, PieChart, Pie, Cell, Legend, Tooltip, LegendProps, Sector } from "recharts";
+
+import { lighten } from "polished";
 
 import { User } from "@app/utility/types";
 import { isDefined } from "@architus/lib/utility";
@@ -11,6 +13,10 @@ const Styled = {
     max-width: 100%;
     height: 100%;
     display: flex;
+  `,
+  Label: styled.span`
+    //margin: 30px 0;
+    //padding: 30px 0;
   `,
   LabelContainer: styled.div`
     display: flex;
@@ -66,6 +72,55 @@ const renderLegend = (props: LegendProps): JSX.Element => {
   );
 };
 
+const renderActiveShape = (props) => {
+  const {
+    cx,
+    cy,
+    midAngle,
+    innerRadius,
+    outerRadius,
+    startAngle,
+    endAngle,
+    fill,
+    payload,
+    percent,
+    value,
+  } = props;
+  return (
+    <g>
+      <text
+        style={{ fontWeight: "bold", fontSize: "0.75em", textShadow: "0 0 2px rgba(0, 0, 30, 0.6)" }}
+        x={cx}
+        y={cy}
+        dy={-4}
+        textAnchor="middle"
+        fill={lighten(0.05, "#ba5095")}
+      >
+        47,251
+      </text>
+      <text
+        style={{ fontWeight: "bold", fontSize: "0.75em", textShadow: "0 0 2px rgba(0, 0, 30, 0.6)" }}
+        x={cx}
+        y={cy}
+        dy={12}
+        textAnchor="middle"
+        fill={lighten(0.05, "#844EA3")}
+      >
+        750,020
+      </text>
+      <Sector
+        cx={cx}
+        cy={cy}
+        innerRadius={innerRadius}
+        outerRadius={outerRadius}
+        startAngle={startAngle}
+        endAngle={endAngle}
+        fill={fill}
+      />
+    </g>
+  );
+};
+
 export const PersonalMessagesChart: React.FC<PersonalMessagesChartProps> = React.memo(
   ({ currentUser, totalMessages, memberCounts }) => {
     const me = memberCounts[currentUser.id as string];
@@ -73,28 +128,39 @@ export const PersonalMessagesChart: React.FC<PersonalMessagesChartProps> = React
       { name: currentUser.username, value: me },
       { name: "other", value: totalMessages - me },
     ];
-    const [opacity, setState] = useState({ [currentUser.username]: 1, other: 1 });
+    const [state, setState] = useState({ activeIndex: 0 });
+
+    const formatter = (value, entry) => {
+      return <Styled.Label>{value}</Styled.Label>;
+    };
+
+    const onPieEnter = (data, index) => {
+      console.log(data);
+      console.log(index);
+      setState((s) => ({
+        ...s,
+        activeIndex: index,
+      }));
+    };
 
     const onMouseLeave = (o) => {
-      console.log(opacity)
-
-      setState((opac) => ({
-        ...opac,
-        [o.value]: 1,
+      setState((s) => ({
+        ...s,
+        activeIndex: 0,
       }));
     };
     const onMouseEnter = (o) => {
-      console.log(o)
-      console.log(opacity)
-      setState((opac) => ({
-        ...opac,
-        [o.value]: .5,
-      }));
+       setState((s) => ({ ...s, activeIndex: 0 }));
     };
     return (
       <ResponsiveContainer>
         <PieChart>
           <Pie
+            activeShape={renderActiveShape}
+            activeIndex={state.activeIndex}
+            // label={true}
+            // labelLine={true}
+            onMouseEnter={onPieEnter}
             data={data}
             innerRadius={"65%"}
             outerRadius={"90%"}
@@ -106,13 +172,13 @@ export const PersonalMessagesChart: React.FC<PersonalMessagesChartProps> = React
               key="me"
               fill="#ba5095"
               strokeWidth={0}
-              opacity={opacity[currentUser.username]}
+              opacity={1}
             />
             <Cell
               key="other"
               fill="#844EA3"
               strokeWidth={0}
-              opacity={opacity.other}
+              opacity={1}
             />
           </Pie>
           <Legend
@@ -122,6 +188,7 @@ export const PersonalMessagesChart: React.FC<PersonalMessagesChartProps> = React
             layout="vertical"
             verticalAlign="middle"
             align="right"
+            formatter={formatter}
             iconType="circle"
           />
         </PieChart>

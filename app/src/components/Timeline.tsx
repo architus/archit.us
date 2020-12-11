@@ -1,11 +1,11 @@
 import { styled } from "linaria/react";
 import React from "react";
 import { FaDotCircle } from "react-icons/fa";
-
-import { color, mode, ColorMode } from "@architus/facade/theme/color";
-import { formatDateExtraShort } from "@architus/lib/utility";
 import { IconType } from "react-icons/lib";
 
+import Tooltip from "@architus/facade/components/Tooltip";
+import { mode, ColorMode } from "@architus/facade/theme/color";
+import { formatDate, formatDateExtraShort } from "@architus/lib/utility";
 
 type TimelineProps = {
   className?: string;
@@ -110,8 +110,8 @@ const Styled = {
       //height: 12px;
       left: 36px;
       ${mode(ColorMode.Light)} {
-        //background-color: #676767;
-        border: 3px solid #ffffff;
+        background-color: #ffffff;
+        outline: 4px solid #ffffff;
       }
       ${mode(ColorMode.Dark)} {
         background-color: #31363f;
@@ -165,8 +165,10 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
     <Styled.Container>
       <Styled.IconContainer>{iconElem}</Styled.IconContainer>
       <Styled.Content className={className} style={style} {...innerProps}>
-        <h4>{dateFormatter(date)}</h4>
-        {children}
+        <Tooltip maxWidth={"auto"} tooltip={<p>{formatDate(date)}</p>}>
+          <h4>{dateFormatter(date)}</h4>
+          {children}
+        </Tooltip>
       </Styled.Content>
     </Styled.Container>
   );
