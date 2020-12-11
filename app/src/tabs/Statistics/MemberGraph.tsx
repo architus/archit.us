@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  ResponsiveContainer,
   BarChart,
   Bar,
   Legend,
@@ -12,7 +11,7 @@ import {
 
 import { CustomRechartsTooltip } from "./CustomRechartsTooltip";
 import CustomResponsiveContainer from "./CustomResponsiveContainer";
-import { Member, Snowflake } from "@app/utility/types";
+import { Member } from "@app/utility/types";
 import { isDefined } from "@architus/lib/utility";
 
 type MemberData = {
@@ -35,7 +34,6 @@ const getMemberData = (memberCounts: Record<string, number>): MemberData[] => {
 
 export const MemberGraph: React.FC<MemberGraphProps> = React.memo(
   ({ memberCounts, members }) => {
-
     const tooltipRenderer = (
       payload: Array<any>,
       label: string

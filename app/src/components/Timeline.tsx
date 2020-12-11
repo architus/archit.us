@@ -1,7 +1,10 @@
-import React from "react";
 import { styled } from "linaria/react";
+import React from "react";
+import { FaDotCircle } from "react-icons/fa";
+
 import { color, mode, ColorMode } from "@architus/facade/theme/color";
-import { formatDateShort } from "@architus/lib/utility";
+import { formatDateExtraShort } from "@architus/lib/utility";
+import { IconType } from "react-icons/lib";
 
 
 type TimelineProps = {
@@ -12,11 +15,12 @@ type TimelineProps = {
 
 type TimelineItemProps = {
   date: Date;
+  icon?: IconType;
   dateFormatter?: (date: Date) => string;
   className?: string;
   style?: React.CSSProperties;
   innerProps?: Partial<React.HTMLAttributes<HTMLSpanElement>>;
-}
+};
 
 const Styled = {
   Timeline: styled.div`
@@ -24,19 +28,10 @@ const Styled = {
     display: flex;
     height: 100%;
     padding: 20px 0;
-
   `,
   Line: styled.div`
-    content: '';
     width: 2px;
     margin: 15px 10px 36px 10px;
-    ${mode(ColorMode.Light)} {
-      background-color: #676767;
-    }
-
-    ${mode(ColorMode.Dark)} {
-      background-color: #767e87;
-    }
   `,
   List: styled.div`
     //position: relative;
@@ -46,7 +41,6 @@ const Styled = {
     justify-content: space-between;
     height: 100%;
     flex-direction: column;
-
   `,
   Container: styled.div`
     padding: 10px 10px;
@@ -56,6 +50,36 @@ const Styled = {
     //width: 50%;
 
     //left: 0;
+
+    &:first-child::after {
+      position: absolute;
+      left: 43px;
+      content: "";
+      display: block;
+      height: 170px;
+      width: 2px;
+      ${mode(ColorMode.Light)} {
+        background-color: #676767;
+      }
+      ${mode(ColorMode.Dark)} {
+        background-color: #767e87;
+      }
+    }
+    &:last-child::after {
+      position: absolute;
+      left: 43px;
+      transform: translateY(-160px);
+      content: "";
+      display: block;
+      height: 170px;
+      width: 2px;
+      ${mode(ColorMode.Light)} {
+        background-color: #676767;
+      }
+      ${mode(ColorMode.Dark)} {
+        background-color: #767e87;
+      }
+    }
   `,
   Dot: styled.div`
     content: '';
@@ -76,6 +100,26 @@ const Styled = {
     border-radius: 50%;
     z-index: 1;
   `,
+  IconContainer: styled.div`
+    & > * {
+      z-index: 1;
+      //content: '';
+      //flex 0 0 auto;
+      position: absolute;
+      //width: 12px;
+      //height: 12px;
+      left: 36px;
+      ${mode(ColorMode.Light)} {
+        //background-color: #676767;
+        border: 3px solid #ffffff;
+      }
+      ${mode(ColorMode.Dark)} {
+        background-color: #31363f;
+        outline: 4px solid #31363f;
+        //outline-offset: 3px;
+      }
+    }
+  `,
   Content: styled.div`
     max-width: fit-content;
     //padding: 10px 5px;
@@ -83,12 +127,8 @@ const Styled = {
     //position: relative;
     //border-radius: 6px;
     font-size: 0.875rem;
-
-    &::before {
-
-    }
   `,
-}
+};
 
 export const Timeline: React.FC<TimelineProps> = ({
   style,
@@ -97,13 +137,12 @@ export const Timeline: React.FC<TimelineProps> = ({
   innerProps = {},
 }) => {
   return (
-  <Styled.Timeline className={className} style={style} {...innerProps}>
-    <Styled.Line/>
-    <Styled.List>
-      {children}
-    </Styled.List>
-  </Styled.Timeline>);
-}
+    <Styled.Timeline className={className} style={style} {...innerProps}>
+      <Styled.Line />
+      <Styled.List>{children}</Styled.List>
+    </Styled.Timeline>
+  );
+};
 /*
 {new Intl.DateTimeFormat("en-US", {
   year: "numeric",
@@ -115,19 +154,20 @@ export const Timeline: React.FC<TimelineProps> = ({
 export const TimelineItem: React.FC<TimelineItemProps> = ({
   date,
   style,
-  dateFormatter = formatDateShort,
+  icon = FaDotCircle,
+  dateFormatter = formatDateExtraShort,
   className,
   children,
   innerProps = {},
 }) => {
+  const iconElem = React.createElement(icon, {});
   return (
     <Styled.Container>
-      <Styled.Dot />
+      <Styled.IconContainer>{iconElem}</Styled.IconContainer>
       <Styled.Content className={className} style={style} {...innerProps}>
-        <h4>
-          {dateFormatter(date)}
-        </h4>
+        <h4>{dateFormatter(date)}</h4>
         {children}
       </Styled.Content>
-    </Styled.Container>);
-}
+    </Styled.Container>
+  );
+};

@@ -3,7 +3,7 @@ import { styled } from "linaria/react";
 import { emoji } from "node-emoji";
 import React, { useMemo, useState } from "react";
 // import CountUp from "react-countup";
-import { FaComments, FaUsers } from "react-icons/fa";
+import { FaComments, FaUsers, FaDiscord, FaPlus, FaUserPlus } from "react-icons/fa";
 import ago from "s-ago";
 
 import { ChannelGraph } from "./ChannelGraph";
@@ -477,14 +477,21 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
         <Styled.TallCard>
           <h4>Timeline</h4>
           <Timeline>
-            <TimelineItem date={snowflakeToDate(currentUser.id)}>
+            <TimelineItem
+              icon={FaDiscord}
+              date={snowflakeToDate(currentUser.id)}
+            >
               You joined discord
             </TimelineItem>
-            <TimelineItem date={snowflakeToDate(guild.id)}>
+            <TimelineItem
+              icon={FaPlus}
+              date={snowflakeToDate(guild.id)}
+            >
               {guild.name} was created
             </TimelineItem>
-            <TimelineItem date={joinDate}>You joined {guild.name}</TimelineItem>
+            <TimelineItem icon={FaUserPlus} date={joinDate}>You joined {guild.name}</TimelineItem>
             <TimelineItem
+              icon={FaComments}
               date={
                 new Date(
                   lastSeen.getTime() - 60 * 1000 * lastSeen.getTimezoneOffset()

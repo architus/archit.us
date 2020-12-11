@@ -44,7 +44,7 @@ const Styled = {
 
     & : nth-child(2) {
       &::before {
-        background-color: #844EA3;
+        background-color: #844ea3;
       }
     }
 
@@ -65,8 +65,8 @@ export const PersonalMessagesChart: React.FC<PersonalMessagesChartProps> = React
 }) => {
   const me = memberCounts[currentUser.id as string];
   const data = [
-    { name: "me", value: me},
-    { name: "not me", value: totalMessages - me}
+    { name: "me", value: me },
+    { name: "not me", value: totalMessages - me }
   ];
   return (
     <Styled.OuterContainer>
