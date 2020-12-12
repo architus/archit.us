@@ -13,7 +13,7 @@ import {
 import { CustomRechartsTooltip } from "./CustomRechartsTooltip";
 import CustomResponsiveContainer from "./CustomResponsiveContainer";
 import { Channel } from "@app/utility/types";
-import { isDefined } from "@architus/lib/utility";
+import { isDefined, formatNum } from "@architus/lib/utility";
 
 type ChannelData = {
   name: string;
@@ -43,7 +43,10 @@ const tooltipRenderer = (payload: Array<any>, label: string): JSX.Element => {
   return (
     <>
       <p>#{label}</p>
-      {!isDefined(payload) ? 0 : payload.map((entry) => entry.value)} messages
+      {formatNum(
+        !isDefined(payload) ? 0 : payload.map((entry) => entry.value)
+      )}{" "}
+      messages
     </>
   );
 };

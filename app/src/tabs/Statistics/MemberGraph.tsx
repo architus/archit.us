@@ -12,7 +12,7 @@ import {
 import { CustomRechartsTooltip } from "./CustomRechartsTooltip";
 import CustomResponsiveContainer from "./CustomResponsiveContainer";
 import { Member } from "@app/utility/types";
-import { isDefined } from "@architus/lib/utility";
+import { formatNum, isDefined } from "@architus/lib/utility";
 
 type MemberData = {
   name: string;
@@ -40,8 +40,10 @@ export const MemberGraph: React.FC<MemberGraphProps> = React.memo(
     ): JSX.Element => {
       return (
         <>
-          <p>@{isDefined(members(label)) ? members(label).name : label}</p>
-          {!isDefined(payload) ? 0 : payload.map((entry) => entry.value)}{" "}
+          <p>@{isDefined(members(label)) ? members(label)?.name : label}</p>
+          {formatNum(
+            !isDefined(payload) ? 0 : payload.map((entry) => entry.value)
+          )}{" "}
           messages
         </>
       );

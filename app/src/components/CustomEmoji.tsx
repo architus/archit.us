@@ -6,8 +6,11 @@ import { OtherColors } from "@app/theme/color";
 import { snowflakeToDate } from "@app/utility/discord";
 import { CustomEmoji, Member, Snowflake } from "@app/utility/types";
 import Tooltip from "@architus/facade/components/Tooltip";
-import { gap } from "@architus/facade/theme/spacing";
-import { isDefined, formatDateExtraShort } from "@architus/lib/utility";
+import {
+  isDefined,
+  formatDateExtraShort,
+  formatNum,
+} from "@architus/lib/utility";
 
 const Styled = {
   TooltipName: styled.strong`
@@ -32,7 +35,6 @@ const Styled = {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
-    //height: auto;
   `,
   Mention: styled.div`
     max-width: max-content;
@@ -83,7 +85,9 @@ export const CustomEmojiIcon: React.FC<CustomEmojiProps> = ({
           <Styled.TooltipName>:{emoji.name}:</Styled.TooltipName>
           {authorName}
           <Styled.TooltipElevated>{date}</Styled.TooltipElevated>
-          <Styled.TooltipElevated>uses: {emoji.numUses}</Styled.TooltipElevated>
+          <Styled.TooltipElevated>
+            uses: {formatNum(emoji.numUses)}
+          </Styled.TooltipElevated>
         </Styled.OuterContainer>
       }
     >

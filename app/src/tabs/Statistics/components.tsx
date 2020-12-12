@@ -103,28 +103,26 @@ export const TimeAreaChart: React.FC<TimeAreaChartProps> = React.memo(
       let sum = 0;
       const size = isDefined(payload) ? payload.length : 0;
       const names = [];
-      for (let i = 0; i < size; i++) {
-        if (payload[i].value === 0) {
+      for (let j = size - 1; j > 0; j--) {
+        if (payload[j].value === 0) {
           // eslint-disable-next-line no-continue
           continue;
         }
-        const name = isDefined(members(payload[i].name))
-          ? members(payload[i].name)?.name
-          : payload[i].name;
-        sum += payload[i].value;
+        const name = isDefined(members(payload[j].name))
+          ? members(payload[j].name)?.name
+          : payload[j].name;
+        sum += payload[j].value;
         names.push(
           <div key={sum}>
-            <p style={{ color: payload[i].stroke }}>
-              {name} : {payload[i].value}
+            <p style={{ color: payload[j].stroke }}>
+              {name} : {payload[j].value}
             </p>
           </div>
         );
-        if (i > 10) {
+        if (j < size - 11) {
           names.push(
             <div key="msg">
-              <i style={{ color: payload[size - 1].stroke }}>
-                {size - i} more not shown...
-              </i>
+              <i style={{ color: payload[0].stroke }}>{j} more not shown...</i>
             </div>
           );
           break;

@@ -125,7 +125,6 @@ export const PersonalMessagesChart: React.FC<PersonalMessagesChartProps> = React
     };
 
     const onPieEnter = (data, index) => {
-      console.log(data);
       setState((s) => ({
         ...s,
         activeIndex: index,

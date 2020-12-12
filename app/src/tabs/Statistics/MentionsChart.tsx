@@ -6,7 +6,7 @@ import { Mention } from "@app/components/Mention";
 import { GuildStatistics } from "@app/store/slices/statistics";
 import { Member, Snowflake } from "@app/utility/types";
 import { color } from "@architus/facade/theme/color";
-import { isDefined } from "@architus/lib/utility";
+import { isDefined, formatNum } from "@architus/lib/utility";
 
 const Styled = {
   Container: styled.div`
@@ -52,7 +52,7 @@ export const MentionsChart: React.FC<MentionsChartProps> = ({
       {counts.slice(0, 5).map((m) => (
         <Styled.Container key={m.member.id}>
           <Mention member={m.member} />
-          <Styled.Dots>{m.count}</Styled.Dots>
+          <Styled.Dots>{formatNum(m.count)}</Styled.Dots>
         </Styled.Container>
       ))}
     </>

@@ -4,7 +4,7 @@ import { AreaChart, Area, XAxis, Tooltip } from "recharts";
 import { CustomRechartsTooltip } from "./CustomRechartsTooltip";
 import CustomResponsiveContainer from "./CustomResponsiveContainer";
 import { Snowflake, Member } from "@app/utility/types";
-import { isDefined } from "@architus/lib/utility";
+import { isDefined, formatNum } from "@architus/lib/utility";
 
 type GrowthChartProps = {
   members: Map<Snowflake, Member>;
@@ -20,7 +20,7 @@ const tooltipRenderer = (payload: Array<any>, label: string): JSX.Element => {
           day: "2-digit",
         }).format(new Date(label ?? 0))}
       </p>
-      {!isDefined(payload) ? 0 : payload.map((entry) => entry.value)} members
+      {formatNum(!isDefined(payload) ? 0 : payload.map((entry) => entry.value))} members
     </>
   );
 };
