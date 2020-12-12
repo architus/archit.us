@@ -126,6 +126,7 @@ const Styled = {
   `,
   LabelContainer: styled.div`
     position: relative;
+    font-variant: smallcaps;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -246,8 +247,6 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
     ids: allMemberIds,
   });
   const members = useMemo(() => {
-    // console.count("members");
-    // console.log(memberEntries.length);
     const members: Map<Snowflake, Member> = new Map();
     for (const memberEntry of memberEntries) {
       if (memberEntry.isLoaded && memberEntry.entity.isDefined()) {
@@ -364,11 +363,6 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
         Object.entries(rec).forEach(([id, count]) => {
           obj[id] = count;
           ids.add(id);
-          // const member = members.get(id as Snowflake);
-          // console.log(count)
-          // if (isDefined(member)) {
-          //  obj[member.name] = count;
-          // }
         });
         data.push(obj);
       });
@@ -388,9 +382,6 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
     }
     return <>no mentions</>;
   };
-
-  const showAnimation = useState(false);
-  const classes = showAnimation ? Styled.FadeIn : "";
 
   return (
     <Styled.PageOuter>
@@ -483,13 +474,12 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
             >
               You joined discord
             </TimelineItem>
-            <TimelineItem
-              icon={FaPlus}
-              date={snowflakeToDate(guild.id)}
-            >
+            <TimelineItem icon={FaPlus} date={snowflakeToDate(guild.id)}>
               {guild.name} was created
             </TimelineItem>
-            <TimelineItem icon={FaUserPlus} date={joinDate}>You joined {guild.name}</TimelineItem>
+            <TimelineItem icon={FaUserPlus} date={joinDate}>
+              You joined {guild.name}
+            </TimelineItem>
             <TimelineItem
               icon={FaComments}
               date={

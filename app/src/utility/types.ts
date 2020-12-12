@@ -637,9 +637,9 @@ export type CustomEmoji = t.TypeOf<typeof CustomEmoji>;
 export const CustomEmoji = t.type({
   id: THoarFrost,
   name: t.string,
-  discordId: TSnowflake,
+  discordId: option(TSnowflake),
   authorId: TSnowflake,
   url: t.string,
   numUses: t.number,
   priority: t.number,
-})
+});

@@ -166,7 +166,7 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
       <Styled.IconContainer>{iconElem}</Styled.IconContainer>
       <Styled.Content className={className} style={style} {...innerProps}>
         <Tooltip maxWidth={"auto"} tooltip={<p>{formatDate(date)}</p>}>
-          <h4>{dateFormatter(date)}</h4>
+          <h4 style={{ textTransform: "capitalize" }}>{dateFormatter(date)}</h4>
           {children}
         </Tooltip>
       </Styled.Content>

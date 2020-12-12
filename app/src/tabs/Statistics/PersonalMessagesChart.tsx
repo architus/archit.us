@@ -5,7 +5,7 @@ import { ResponsiveContainer, PieChart, Pie, Cell, Legend, Tooltip, LegendProps,
 import { lighten } from "polished";
 
 import { User } from "@app/utility/types";
-import { isDefined } from "@architus/lib/utility";
+import { formatNum } from "@architus/lib/utility";
 import { CustomRechartsTooltip } from "./CustomRechartsTooltip";
 
 const Styled = {
@@ -89,24 +89,14 @@ const renderActiveShape = (props) => {
   return (
     <g>
       <text
-        style={{ fontWeight: "bold", fontSize: "0.75em", textShadow: "0 0 2px rgba(0, 0, 30, 0.6)" }}
+        style={{ fontWeight: "bold", fontSize: "0.75em", textShadow: "0 0 2px rgba(0, 0, 20, 0.5)" }}
         x={cx}
         y={cy}
-        dy={-4}
+        dy={4}
         textAnchor="middle"
-        fill={lighten(0.05, "#ba5095")}
+        fill={lighten(0.05, fill)}
       >
-        47,251
-      </text>
-      <text
-        style={{ fontWeight: "bold", fontSize: "0.75em", textShadow: "0 0 2px rgba(0, 0, 30, 0.6)" }}
-        x={cx}
-        y={cy}
-        dy={12}
-        textAnchor="middle"
-        fill={lighten(0.05, "#844EA3")}
-      >
-        750,020
+        {formatNum(value)}
       </text>
       <Sector
         cx={cx}
@@ -128,7 +118,7 @@ export const PersonalMessagesChart: React.FC<PersonalMessagesChartProps> = React
       { name: currentUser.username, value: me },
       { name: "other", value: totalMessages - me },
     ];
-    const [state, setState] = useState({ activeIndex: 0 });
+    const [state, setState] = useState({ activeIndex: -1 });
 
     const formatter = (value, entry) => {
       return <Styled.Label>{value}</Styled.Label>;
@@ -136,7 +126,6 @@ export const PersonalMessagesChart: React.FC<PersonalMessagesChartProps> = React
 
     const onPieEnter = (data, index) => {
       console.log(data);
-      console.log(index);
       setState((s) => ({
         ...s,
         activeIndex: index,
@@ -146,11 +135,11 @@ export const PersonalMessagesChart: React.FC<PersonalMessagesChartProps> = React
     const onMouseLeave = (o) => {
       setState((s) => ({
         ...s,
-        activeIndex: 0,
+        activeIndex: -1,
       }));
     };
     const onMouseEnter = (o) => {
-       setState((s) => ({ ...s, activeIndex: 0 }));
+      setState((s) => ({ ...s, activeIndex: o.value === "other" ? 1 : 0 }));
     };
     return (
       <ResponsiveContainer>
@@ -161,6 +150,7 @@ export const PersonalMessagesChart: React.FC<PersonalMessagesChartProps> = React
             // label={true}
             // labelLine={true}
             onMouseEnter={onPieEnter}
+            onMouseLeave={onMouseLeave}
             data={data}
             innerRadius={"65%"}
             outerRadius={"90%"}
@@ -172,13 +162,13 @@ export const PersonalMessagesChart: React.FC<PersonalMessagesChartProps> = React
               key="me"
               fill="#ba5095"
               strokeWidth={0}
-              opacity={1}
+              opacity={state.activeIndex === 1 ? 0.5 : 1}
             />
             <Cell
               key="other"
               fill="#844EA3"
               strokeWidth={0}
-              opacity={1}
+              opacity={state.activeIndex === 0 ? 0.5 : 1}
             />
           </Pie>
           <Legend

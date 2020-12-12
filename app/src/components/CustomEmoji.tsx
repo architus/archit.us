@@ -1,13 +1,13 @@
-import React from "react";
 import { styled } from "linaria/react";
-import Tooltip from "@architus/facade/components/Tooltip";
-import { CustomEmoji, Member, Snowflake } from "@app/utility/types";
-import { gap } from "@architus/facade/theme/spacing";
-import { OtherColors } from "@app/theme/color";
 import { transparentize } from "polished";
-import { isDefined, formatDateExtraShort } from "@architus/lib/utility";
-import { snowflakeToDate } from "@app/utility/discord";
+import React from "react";
 
+import { OtherColors } from "@app/theme/color";
+import { snowflakeToDate } from "@app/utility/discord";
+import { CustomEmoji, Member, Snowflake } from "@app/utility/types";
+import Tooltip from "@architus/facade/components/Tooltip";
+import { gap } from "@architus/facade/theme/spacing";
+import { isDefined, formatDateExtraShort } from "@architus/lib/utility";
 
 const Styled = {
   TooltipName: styled.strong`
@@ -67,8 +67,12 @@ export const CustomEmojiIcon: React.FC<CustomEmojiProps> = ({
     );
   }
   const architusDate = snowflakeToDate((emoji.id as string) as Snowflake);
-  const discordDate = isDefined(emoji.discordId) ? snowflakeToDate(emoji.discordId) : new Date(8640000000000000);
-  const date = formatDateExtraShort(architusDate < discordDate ? architusDate : discordDate);
+  const discordDate = emoji.discordId.isDefined()
+    ? snowflakeToDate(emoji.discordId.get)
+    : new Date(8640000000000000);
+  const date = formatDateExtraShort(
+    architusDate < discordDate ? architusDate : discordDate
+  );
 
   return (
     <Tooltip
