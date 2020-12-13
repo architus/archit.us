@@ -1,9 +1,13 @@
 import { css } from "linaria";
 import { styled } from "linaria/react";
-import { emoji } from "node-emoji";
-import React, { useMemo, useState } from "react";
-// import CountUp from "react-countup";
-import { FaComments, FaUsers, FaDiscord, FaPlus, FaUserPlus } from "react-icons/fa";
+import React, { useMemo } from "react";
+import {
+  FaComments,
+  FaUsers,
+  FaDiscord,
+  FaPlus,
+  FaUserPlus,
+} from "react-icons/fa";
 import ago from "s-ago";
 
 import { ChannelGraph } from "./ChannelGraph";
@@ -14,7 +18,6 @@ import { MemberGraph } from "./MemberGraph";
 import { MentionsChart } from "./MentionsChart";
 import { PersonalMessagesChart } from "./PersonalMessagesChart";
 import { CustomEmojiIcon } from "@app/components/CustomEmoji";
-// import StatisticsProvider from "./Statistics";
 import { Timeline, TimelineItem } from "@app/components/Timeline";
 import { appVerticalPadding, appHorizontalPadding } from "@app/layout";
 import { usePool, usePoolEntities } from "@app/store/slices/pools";
@@ -107,6 +110,7 @@ const Styled = {
       ${animation("fadeIn")}
     }
 
+    // THIS MUST BE INCREASED IF NEW CARDS ARE ADDED
     ${[...Array(9)]
       .map(
         (_, i) => `& > :nth-child(${i + 1}) {
@@ -208,9 +212,6 @@ const iconClass = css`
 `;
 
 type StatisticsDashboardProps = {
-  // members: Map<Snowflake, Member>;
-  // channels: Map<string, Channel>;
-  // emojis: Map<string, CustomEmoji>;
   isArchitusAdmin: boolean;
   currentUser: User;
   stats: Option<GuildStatistics>;
@@ -220,47 +221,28 @@ type StatisticsDashboardProps = {
 const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
   stats,
   currentUser,
-  // members,
-  // channels,
-  // emojis,
   guild,
 }) => {
-  // console.count("stats dashboard");
-  // const members = new Map();
-  // const channels = new Map();
-  // const emojis = new Map();
-
-  // Load all the members into the pool
-  const allMemberIds = useMemo(() => {
-    const ids: Snowflake[] = [];
-    if (stats.isDefined()) {
-      Object.keys(stats.get.memberCounts).forEach((id) => {
-        ids.push(id as Snowflake);
-      });
-    }
-    return ids;
-  }, [stats]);
-
   const memberEntries = usePoolEntities({
     type: "member",
     guildId: guild.id,
-    ids: allMemberIds,
+    ids: stats.isDefined()
+      ? Object.keys(stats.get.memberCounts).map((id) => id as Snowflake)
+      : [],
   });
   const members = useMemo(() => {
-    const members: Map<Snowflake, Member> = new Map();
+    const membersMap: Map<Snowflake, Member> = new Map();
     for (const memberEntry of memberEntries) {
       if (memberEntry.isLoaded && memberEntry.entity.isDefined()) {
-        members.set(memberEntry.entity.get.id, memberEntry.entity.get);
+        membersMap.set(memberEntry.entity.get.id, memberEntry.entity.get);
       }
     }
-    return members;
+    return membersMap;
   }, [memberEntries]);
 
   const membersClosure = (id: string): Member | undefined => {
     return members.get(id as Snowflake);
   };
-  // console.log(allMemberIds);
-  // console.log(members);
 
   const { all: channelsPool } = usePool({
     type: "channel",
@@ -273,13 +255,13 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
     ids: stats.isDefined() ? stats.get.popularEmojis : [],
   });
   const emojis = useMemo(() => {
-    const emojis: Map<HoarFrost, CustomEmoji> = new Map();
+    const emojisMap: Map<HoarFrost, CustomEmoji> = new Map();
     for (const emojiEntry of emojiEntries) {
       if (emojiEntry.isLoaded && emojiEntry.entity.isDefined()) {
-        emojis.set(emojiEntry.entity.get.id, emojiEntry.entity.get);
+        emojisMap.set(emojiEntry.entity.get.id, emojiEntry.entity.get);
       }
     }
-    return emojis;
+    return emojisMap;
   }, [emojiEntries]);
 
   const channels = useMemo(() => {
@@ -319,18 +301,17 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
       const member = members.get(currentUser.id as Snowflake);
       if (isDefined(member)) return new Date(member.joined_at);
     }
-    return new Date(1420070400000);
-  }, [currentUser, members]);
+    return snowflakeToDate(guild.id);
+  }, [currentUser, members, guild]);
 
   const bestEmoji = useMemo((): CustomEmoji[] => {
     const urls = [];
     if (stats.isDefined()) {
       const { popularEmojis } = stats.get;
       for (let i = 0; i < 6; i++) {
-        // console.log(emojis);
-        const emoji = emojis.get(popularEmojis[i]);
-        if (isDefined(emoji)) {
-          urls.push(emoji);
+        const e = emojis.get(popularEmojis[i]);
+        if (isDefined(e)) {
+          urls.push(e);
         }
       }
     }
@@ -338,14 +319,11 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
   }, [stats, emojis]);
 
   const getWords = (): Array<WordData> => {
-    const words: Array<WordData> = [];
-    if (stats.isDefined()) {
-      const { commonWords } = stats.get;
-      commonWords.slice(0, 100).forEach((word) => {
-        words.push({ text: word[0], value: word[1] });
-      });
-    }
-    return words;
+    return stats.isDefined()
+      ? stats.get.commonWords.map((word) => {
+          return { text: word[0], value: word[1] };
+        })
+      : [];
   };
   const memWords = useMemo(getWords, [stats]);
 
@@ -353,8 +331,6 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
     const data: Array<any> = [];
     const ids: Set<string> = new Set();
     if (stats.isDefined()) {
-      // console.log(stats.get.timeMemberCounts);
-
       Object.entries(stats.get.timeMemberCounts).forEach(([date, rec]) => {
         const obj = { date: Date.parse(date) };
         if (obj.date < new Date().getTime() - 30 * 86400000) {
@@ -371,7 +347,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
     return [data, ids];
   }, [stats]);
 
-  const getMentionsChart = () => {
+  const mentionsChart = useMemo(() => {
     if (stats.isDefined()) {
       return (
         <MentionsChart
@@ -381,7 +357,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
       );
     }
     return <>no mentions</>;
-  };
+  }, [stats, members]);
 
   return (
     <Styled.PageOuter>
@@ -501,7 +477,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
 
         <Styled.Card>
           <h4>Mentions</h4>
-          {getMentionsChart()}
+          {mentionsChart}
         </Styled.Card>
 
         <Styled.BigCard>
