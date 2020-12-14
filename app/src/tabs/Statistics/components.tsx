@@ -14,9 +14,10 @@ import {
 } from "recharts";
 
 import { CustomRechartsTooltip } from "./CustomRechartsTooltip";
-import { color } from "@architus/facade/theme/color";
+import { useColorMode } from "@architus/facade/hooks";
+import { ColorMode, color } from "@architus/facade/theme/color";
 import { isDefined } from "@architus/lib/utility";
-import { Guild, Member, Snowflake } from "src/utility/types";
+import { NormalizedUserLike } from "src/utility/types";
 
 // import whyDidYouRender from "@welldone-software/why-did-you-render";
 
@@ -30,10 +31,9 @@ type WordCloudProps = {
 };
 
 type TimeAreaChartProps = {
-  //members: Map<Snowflake, Member>;
   ids: Set<string>;
   data: Array<any>;
-  members: (id: string) => Member | undefined;
+  members: (id: string) => NormalizedUserLike | undefined;
 };
 
 const Styled = {
@@ -55,7 +55,7 @@ export const WordCloud: React.FC<WordCloudProps> = React.memo(({ words }) => {
   };
   return (
     <Styled.AutoSizer>
-      {({ height, width }) => (
+      {({ height, width }): JSX.Element => (
         <ReactWordcloud
           options={options}
           size={[width, height]}
@@ -83,6 +83,7 @@ export const TimeAreaChart: React.FC<TimeAreaChartProps> = React.memo(
   ({ ids, data, members }) => {
     const colors = gradArray("#ba5095", "#5850ba", ids.size);
     const accum: React.ReactNode[] = [];
+    const lightMode = useColorMode() === ColorMode.Light;
     let i = 0;
     ids.forEach((member) => {
       accum.push(
@@ -99,30 +100,46 @@ export const TimeAreaChart: React.FC<TimeAreaChartProps> = React.memo(
       );
     });
 
-    const tooltipRenderer = (payload: Array<any>, label: string): JSX.Element => {
+    const tooltipRenderer = (
+      payload: Array<{ value: number; stroke: string; name: string }>,
+      label: string
+    ): JSX.Element => {
       let sum = 0;
       const size = isDefined(payload) ? payload.length : 0;
       const names = [];
+      const large = size > 10;
+      if (large) {
+        payload.sort((a, b) => a.value - b.value);
+      }
       for (let j = size - 1; j > 0; j--) {
-        if (payload[j].value === 0) {
+        const item = payload[j];
+        const member = members(item.name);
+        if (item.value === 0 || !isDefined(member)) {
           // eslint-disable-next-line no-continue
           continue;
         }
-        const name = isDefined(members(payload[j].name))
-          ? members(payload[j].name)?.name
-          : payload[j].name;
         sum += payload[j].value;
         names.push(
           <div key={sum}>
-            <p style={{ color: payload[j].stroke }}>
-              {name} : {payload[j].value}
+            <p
+              style={
+                large || lightMode ? { opacity: 0.6 } : { color: item.stroke }
+              }
+            >
+              {member.username} : {item.value}
             </p>
           </div>
         );
         if (j < size - 11) {
           names.push(
             <div key="msg">
-              <i style={{ color: payload[0].stroke }}>{j} more not shown...</i>
+              <i
+                style={{
+                  color: large || lightMode ? "white" : payload[0].stroke,
+                }}
+              >
+                {j} more not shown...
+              </i>
             </div>
           );
           break;

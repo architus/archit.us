@@ -32,6 +32,8 @@ import {
   User,
   Guild,
   HoarFrost,
+  NormalizedUserLike,
+  normalizeUserLike,
 } from "@app/utility/types";
 import Card from "@architus/facade/components/Card";
 import Logo from "@architus/facade/components/Logo";
@@ -240,8 +242,25 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
     return membersMap;
   }, [memberEntries]);
 
-  const membersClosure = (id: string): Member | undefined => {
-    return members.get(id as Snowflake);
+  const userEntries = usePoolEntities({
+    type: "user",
+    ids: memberEntries.filter((m) => m.nonexistant).map((m) => m.id),
+  });
+
+  const users = useMemo(() => {
+    const usersMap: Map<Snowflake, User> = new Map();
+    for (const userEntry of userEntries) {
+      if (userEntry.isLoaded && userEntry.entity.isDefined()) {
+        usersMap.set(userEntry.entity.get.id, userEntry.entity.get);
+      }
+    }
+    return usersMap;
+  }, [userEntries]);
+
+  const membersClosure = (id: string): NormalizedUserLike | undefined => {
+    let member: Member | User | undefined = members.get(id as Snowflake);
+    member = member ?? users.get(id as Snowflake);
+    return isDefined(member) ? normalizeUserLike(member) : undefined;
   };
 
   const { all: channelsPool } = usePool({

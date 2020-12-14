@@ -40,7 +40,7 @@ export const MemberGraph: React.FC<MemberGraphProps> = React.memo(
     ): JSX.Element => {
       return (
         <>
-          <p>@{isDefined(members(label)) ? members(label)?.name : label}</p>
+          <p>@{isDefined(members(label)) ? members(label)?.username : label}</p>
           {formatNum(
             !isDefined(payload) ? 0 : payload.map((entry) => entry.value)
           )}{" "}
@@ -49,7 +49,7 @@ export const MemberGraph: React.FC<MemberGraphProps> = React.memo(
       );
     };
     const tickFormatter = (tick: string): string => {
-      return isDefined(members(tick)) ? members(tick).name : tick;
+      return isDefined(members(tick)) ? members(tick).username : tick;
     };
     return (
       <CustomResponsiveContainer>
