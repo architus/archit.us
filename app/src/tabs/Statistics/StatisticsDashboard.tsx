@@ -38,7 +38,7 @@ import {
 import Card from "@architus/facade/components/Card";
 import Logo from "@architus/facade/components/Logo";
 import { color } from "@architus/facade/theme/color";
-import { down } from "@architus/facade/theme/media";
+import { down, up } from "@architus/facade/theme/media";
 import { animation } from "@architus/facade/theme/motion";
 import { gap } from "@architus/facade/theme/spacing";
 import { Option } from "@architus/lib/option";
@@ -54,6 +54,9 @@ const Styled = {
     align-items: stretch;
     flex-direction: column;
     padding: ${appVerticalPadding} ${appHorizontalPadding};
+    ${down("md")} {
+      padding: ${gap.nano} ${gap.nano};
+    }
   `,
   Title: styled.h2`
     color: ${color("textStrong")};
@@ -107,6 +110,12 @@ const Styled = {
     justify-items: stretch;
     margin: ${gap.pico} 0 0;
 
+    ${down("md")} {
+      grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+      grid-auto-rows: 150px;
+      gap: ${gap.femto};
+    }
+
     & > * {
       opacity: 0;
       ${animation("fadeIn")}
@@ -146,32 +155,33 @@ const Styled = {
     color: ${color("light")} !important;
   `,
   MessageCard: styled(Card)`
-    width: 100%;
     border: none;
-    flex: 1 1 0px;
+    flex: 1 1 100%;
     background-color: #5850ba;
     background-image: linear-gradient(62deg, #5850ba 0%, #844ea3 100%);
     padding: 16px;
   `,
   ArchitusCard: styled(Card)`
-    width: 100%;
     border: none;
     padding: 16px;
-    flex: 1 1 0px;
+    flex: 1 1 100%;
     background-color: #ba5095;
     background-image: linear-gradient(62deg, #ba5095 0%, #ffbfa7 100%);
   `,
   MemberCard: styled(Card)`
-    width: 100%;
     border: none;
     padding: 16px;
-    flex: 1 1 0px;
+    flex: 1 1 100%;
     background-color: #844ea3;
     background-image: linear-gradient(62deg, #844ea3 0%, #ba5095 100%);
   `,
   Card: styled(Card)`
     grid-column: span auto;
     grid-row: span auto;
+
+    ${down("md")} {
+      padding: ${gap.micro};
+    }
 
     & > h4 {
       margin: 0px;
@@ -180,14 +190,23 @@ const Styled = {
   BigCard: styled(Card)`
     grid-column: span 2;
     grid-row: span 2;
+    ${down("md")} {
+      padding: ${gap.micro};
+    }
   `,
   TallCard: styled(Card)`
     grid-column: span 1;
     grid-row: span 2;
+    ${down("md")} {
+      padding: ${gap.micro};
+    }
   `,
   LongCard: styled(Card)`
     grid-column: span 2;
     grid-row: span 1;
+    ${down("md")} {
+      padding: ${gap.micro};
+    }
   `,
   EmojiContainer: styled.div`
     margin-top: ${gap.nano};
