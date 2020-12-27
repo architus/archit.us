@@ -66,6 +66,9 @@ const Styled = {
   `,
   IntegrityAlert: styled(IntegrityAlert)`
     margin: ${gap.pico} 0;
+    ${down("md")} {
+      margin: ${gap.femto} 0;
+    }
   `,
   Logo: styled(Logo.Symbol)`
     font-size: 2em;
@@ -81,6 +84,9 @@ const Styled = {
     flex-direction: row;
     margin: ${gap.pico} 0;
     gap: calc(2 * ${gap.pico});
+    ${down("md")} {
+      gap: ${gap.femto};
+    }
 
     ${down("md")} {
       flex-wrap: wrap;
@@ -111,6 +117,7 @@ const Styled = {
     margin: ${gap.pico} 0 0;
 
     ${down("md")} {
+      margin: 0;
       grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
       grid-auto-rows: 150px;
       gap: ${gap.femto};
@@ -159,18 +166,18 @@ const Styled = {
     flex: 1 1 100%;
     background-color: #5850ba;
     background-image: linear-gradient(62deg, #5850ba 0%, #844ea3 100%);
-    padding: 16px;
+    padding: ${gap.nano};
   `,
   ArchitusCard: styled(Card)`
     border: none;
-    padding: 16px;
+    padding: ${gap.nano};
     flex: 1 1 100%;
     background-color: #ba5095;
     background-image: linear-gradient(62deg, #ba5095 0%, #ffbfa7 100%);
   `,
   MemberCard: styled(Card)`
     border: none;
-    padding: 16px;
+    padding: ${gap.nano};
     flex: 1 1 100%;
     background-color: #844ea3;
     background-image: linear-gradient(62deg, #844ea3 0%, #ba5095 100%);
@@ -216,6 +223,11 @@ const Styled = {
     grid-template-rows: 48px 48px;
     grid-template-columns: minmax(48px, 1fr) minmax(48px, 1fr) minmax(48px, 1fr);
     gap: ${gap.nano};
+    ${down("md")} {
+      grid-template-rows: 36px 36px;
+      grid-template-columns: minmax(36px, 1fr) minmax(36px, 1fr) minmax(36px, 1fr);
+      gap: ${gap.femto};
+    }
   `,
   Image: styled.img`
     width: 100px;
