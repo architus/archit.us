@@ -136,10 +136,13 @@ export const Timeline: React.FC<TimelineProps> = ({
   children,
   innerProps = {},
 }) => {
+  const childrenArray = React.Children.toArray(children);
   return (
     <Styled.Timeline className={className} style={style} {...innerProps}>
       <Styled.Line />
-      <Styled.List>{children}</Styled.List>
+      <Styled.List>
+        {childrenArray.sort((a, b) => a.props.date - b.props.date)}
+      </Styled.List>
     </Styled.Timeline>
   );
 };

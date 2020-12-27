@@ -462,7 +462,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
 
         <Styled.TallCard>
           <h4>Timeline</h4>
-          <Timeline>
+          <Timeline autoSort>
             <TimelineItem
               icon={FaDiscord}
               date={snowflakeToDate(currentUser.id)}
