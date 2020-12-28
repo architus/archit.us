@@ -88,7 +88,7 @@ const Styled = {
       gap: ${gap.femto};
     }
 
-    ${down("md")} {
+    ${down("lg")} {
       flex-wrap: wrap;
     }
 
@@ -174,6 +174,12 @@ const Styled = {
     flex: 1 1 100%;
     background-color: #ba5095;
     background-image: linear-gradient(62deg, #ba5095 0%, #ffbfa7 100%);
+    ${down("lg")} {
+      flex-basis: 40%;
+    }
+    ${down("md")} {
+      flex-basis: 100%;
+    }
   `,
   MemberCard: styled(Card)`
     border: none;
@@ -181,6 +187,12 @@ const Styled = {
     flex: 1 1 100%;
     background-color: #844ea3;
     background-image: linear-gradient(62deg, #844ea3 0%, #ba5095 100%);
+    ${down("lg")} {
+      flex-basis: 40%;
+    }
+    ${down("md")} {
+      flex-basis: 100%;
+    }
   `,
   Card: styled(Card)`
     grid-column: span auto;
