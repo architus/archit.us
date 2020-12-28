@@ -283,7 +283,7 @@ const Lead: React.FC<LeadProps> = ({ guildCount, userCount }) => (
 
 const FeaturesStyled = {
   Outer: styled.div`
-    color: text;
+    color: ${color("text")};
     background-color: ${color("bg")};
     border-top: 1px solid ${color("contrastBorder")};
     position: relative;

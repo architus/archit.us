@@ -19,7 +19,7 @@ export type GlassCardProps = React.ComponentProps<typeof GlassCard>;
  */
 const GlassCard = styled.aside<GlassParameters>`
   position: relative;
-  color: text;
+  color: ${color("text")};
   padding: ${gap.milli};
   box-shadow: ${shadow("z1")};
   border-radius: 6px;

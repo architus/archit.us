@@ -37,7 +37,7 @@ const EmojiContainer = styled.div`
 const Styled = {
   Name: styled.span`
     margin-left: ${gap.femto};
-    color: text;
+    color: ${color("text")};
     font-weight: 600;
   `,
   Discriminator: styled.span`
