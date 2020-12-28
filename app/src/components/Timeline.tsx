@@ -6,6 +6,7 @@ import { IconType } from "react-icons/lib";
 import Tooltip from "@architus/facade/components/Tooltip";
 import { mode, ColorMode } from "@architus/facade/theme/color";
 import { formatDate, formatDateExtraShort } from "@architus/lib/utility";
+import { down } from "@architus/facade/theme/media";
 
 type TimelineProps = {
   className?: string;
@@ -42,6 +43,9 @@ const Styled = {
   `,
   Container: styled.div`
     padding: 10px 10px;
+    ${down("md")} {
+      padding: 5px 10px;
+    }
     display: flex;
 
     &:first-child::after {
