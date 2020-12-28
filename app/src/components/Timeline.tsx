@@ -34,8 +34,6 @@ const Styled = {
     margin: 15px 10px 36px 10px;
   `,
   List: styled.div`
-    //position: relative;
-    //margin: 0 auto;
     flex: 1 1 auto;
     display: flex;
     justify-content: space-between;
@@ -44,12 +42,7 @@ const Styled = {
   `,
   Container: styled.div`
     padding: 10px 10px;
-    //position: relative;
-    //background-color: inherit;
     display: flex;
-    //width: 50%;
-
-    //left: 0;
 
     &:first-child::after {
       position: absolute;
@@ -96,18 +89,13 @@ const Styled = {
       background-color: #767e87;
       border: 3px solid #31363f;
     }
-    //top: 27px;
     border-radius: 50%;
     z-index: 1;
   `,
   IconContainer: styled.div`
     & > * {
       z-index: 1;
-      //content: '';
-      //flex 0 0 auto;
       position: absolute;
-      //width: 12px;
-      //height: 12px;
       left: 36px;
       ${mode(ColorMode.Light)} {
         background-color: #ffffff;
@@ -116,16 +104,11 @@ const Styled = {
       ${mode(ColorMode.Dark)} {
         background-color: #31363f;
         outline: 4px solid #31363f;
-        //outline-offset: 3px;
       }
     }
   `,
   Content: styled.div`
     max-width: fit-content;
-    //padding: 10px 5px;
-    //background-color: white;
-    //position: relative;
-    //border-radius: 6px;
     font-size: 0.875rem;
   `,
 };
@@ -136,7 +119,9 @@ export const Timeline: React.FC<TimelineProps> = ({
   children,
   innerProps = {},
 }) => {
-  const childrenArray = React.Children.toArray(children);
+  const childrenArray = React.Children.toArray(
+    children
+  ) as React.ReactElement[];
   return (
     <Styled.Timeline className={className} style={style} {...innerProps}>
       <Styled.Line />
@@ -146,13 +131,6 @@ export const Timeline: React.FC<TimelineProps> = ({
     </Styled.Timeline>
   );
 };
-/*
-{new Intl.DateTimeFormat("en-US", {
-  year: "numeric",
-  month: "numeric",
-  day: "2-digit",
-  hour: "2-digit",
-}).format(date)} */
 
 export const TimelineItem: React.FC<TimelineItemProps> = ({
   date,

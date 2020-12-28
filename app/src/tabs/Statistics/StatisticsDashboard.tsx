@@ -237,7 +237,10 @@ const Styled = {
     gap: ${gap.nano};
     ${down("md")} {
       grid-template-rows: 36px 36px;
-      grid-template-columns: minmax(36px, 1fr) minmax(36px, 1fr) minmax(36px, 1fr);
+      grid-template-columns: minmax(36px, 1fr) minmax(36px, 1fr) minmax(
+          36px,
+          1fr
+        );
       gap: ${gap.femto};
     }
   `,
@@ -389,12 +392,14 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
   };
   const memWords = useMemo(getWords, [stats]);
 
-  const timeData = useMemo((): Array<any> => {
-    const data: Array<any> = [];
+  const timeData = useMemo((): Array<
+    Array<{ [key: string]: number }> | Set<string>
+  > => {
+    const data: Array<{ [key: string]: number }> = [];
     const ids: Set<string> = new Set();
     if (stats.isDefined()) {
       Object.entries(stats.get.timeMemberCounts).forEach(([date, rec]) => {
-        const obj = { date: Date.parse(date) };
+        const obj: { [key: string]: number } = { date: Date.parse(date) };
         if (obj.date < new Date().getTime() - 30 * 86400000) {
           return;
         }
@@ -505,7 +510,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
 
         <Styled.TallCard>
           <h4>Timeline</h4>
-          <Timeline autoSort>
+          <Timeline>
             <TimelineItem
               icon={FaDiscord}
               date={snowflakeToDate(currentUser.id)}
@@ -555,5 +560,4 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
   );
 };
 
-// StatisticsDashboard.whyDidYouRender = true;
 export default StatisticsDashboard;

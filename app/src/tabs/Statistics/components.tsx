@@ -19,8 +19,6 @@ import { ColorMode, color } from "@architus/facade/theme/color";
 import { isDefined } from "@architus/lib/utility";
 import { NormalizedUserLike } from "src/utility/types";
 
-// import whyDidYouRender from "@welldone-software/why-did-you-render";
-
 export type WordData = {
   text: string;
   value: number;
@@ -47,7 +45,7 @@ export const WordCloud: React.FC<WordCloudProps> = React.memo(({ words }) => {
     rotationAngles: [-90, 0],
     fontSizes: [5, 120],
     enableOptimizations: true,
-    // enableTooltip: false,
+    enableTooltip: false,
     // fontFamily: "Renner*",
     // padding: 10,
     // transitionDuration: 0,
