@@ -5,7 +5,7 @@ import { ResponsiveContainer, PieChart, Pie, Cell, Legend, Tooltip, LegendProps,
 import { lighten } from "polished";
 
 import { User } from "@app/utility/types";
-import { formatNum } from "@architus/lib/utility";
+import { formatNum, isDefined } from "@architus/lib/utility";
 import { CustomRechartsTooltip } from "./CustomRechartsTooltip";
 
 const Styled = {
@@ -29,7 +29,7 @@ const Styled = {
     //flex: 1 0 auto;
 
     & > * {
-      max-width: 100%;
+      max-width: 50px;
       //text-overflow: ellipsis;
       &::before {
         content: "";
@@ -66,7 +66,9 @@ const renderLegend = (props: LegendProps): JSX.Element => {
   return (
     <Styled.LabelContainer>
       {payload.map((entry, index) => (
-        <p key={index}>{entry.value}</p>
+        <p key={index} style={{ width: "100%", maxWidth: "15px", textOverflow: "ellipsis" }}>
+          {entry.value}
+        </p>
       ))}
     </Styled.LabelContainer>
   );
@@ -113,7 +115,7 @@ const renderActiveShape = (props) => {
 
 export const PersonalMessagesChart: React.FC<PersonalMessagesChartProps> = React.memo(
   ({ currentUser, totalMessages, memberCounts }) => {
-    const me = memberCounts[currentUser.id as string];
+    const me = memberCounts[currentUser.id as string] ?? 0;
     const data = [
       { name: currentUser.username, value: me },
       { name: "other", value: totalMessages - me },
@@ -146,8 +148,6 @@ export const PersonalMessagesChart: React.FC<PersonalMessagesChartProps> = React
           <Pie
             activeShape={renderActiveShape}
             activeIndex={state.activeIndex}
-            // label={true}
-            // labelLine={true}
             onMouseEnter={onPieEnter}
             onMouseLeave={onMouseLeave}
             data={data}
@@ -173,7 +173,6 @@ export const PersonalMessagesChart: React.FC<PersonalMessagesChartProps> = React
           <Legend
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
-            //content={renderLegend}
             layout="vertical"
             verticalAlign="middle"
             align="right"

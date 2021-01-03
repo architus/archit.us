@@ -5,8 +5,8 @@ import { IconType } from "react-icons/lib";
 
 import Tooltip from "@architus/facade/components/Tooltip";
 import { mode, ColorMode } from "@architus/facade/theme/color";
-import { formatDate, formatDateExtraShort } from "@architus/lib/utility";
 import { down } from "@architus/facade/theme/media";
+import { formatDate, formatDateExtraShort } from "@architus/lib/utility";
 
 type TimelineProps = {
   className?: string;

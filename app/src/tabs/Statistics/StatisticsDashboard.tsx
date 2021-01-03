@@ -65,9 +65,9 @@ const Styled = {
     margin-bottom: ${gap.nano};
   `,
   IntegrityAlert: styled(IntegrityAlert)`
-    margin: ${gap.pico} 0;
+    //margin: ${gap.pico} 0;
     ${down("md")} {
-      margin: ${gap.femto} 0;
+      //margin: ${gap.femto} 0;
     }
   `,
   Logo: styled(Logo.Symbol)`
@@ -82,17 +82,19 @@ const Styled = {
     justify-content: space-around;
     align-items: stretch;
     flex-direction: row;
-    margin: ${gap.pico} 0;
-    gap: calc(2 * ${gap.pico});
-    ${down("md")} {
-      gap: ${gap.femto};
-    }
+    //margin: ${gap.pico} 0;
+    //gap: calc(2 * ${gap.pico});
 
     ${down("lg")} {
       flex-wrap: wrap;
     }
 
     & > * {
+      margin-top: calc(2 * ${gap.pico});
+      ${down("md")} {
+        margin-top: ${gap.femto};
+      }
+
       opacity: 0;
       ${animation("fadeIn")}
     }
@@ -114,10 +116,10 @@ const Styled = {
     grid-auto-flow: dense;
     gap: calc(2 * ${gap.pico});
     justify-items: stretch;
-    margin: ${gap.pico} 0 0;
+    margin: calc(2 * ${gap.pico}) 0 0;
 
     ${down("md")} {
-      margin: 0;
+      margin: ${gap.femto} 0 0;
       grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
       grid-auto-rows: 150px;
       gap: ${gap.femto};
@@ -162,6 +164,9 @@ const Styled = {
     color: ${color("light")} !important;
   `,
   MessageCard: styled(Card)`
+    ${up("lg")} {
+      margin-right: calc(2 * ${gap.pico});
+    }
     border: none;
     flex: 1 1 100%;
     background-color: #5850ba;
@@ -182,6 +187,9 @@ const Styled = {
     }
   `,
   MemberCard: styled(Card)`
+    ${up("md")} {
+      margin-right: calc(2 * ${gap.pico});
+    }
     border: none;
     padding: ${gap.nano};
     flex: 1 1 100%;
