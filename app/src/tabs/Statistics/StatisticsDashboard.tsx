@@ -62,12 +62,11 @@ const Styled = {
     color: ${color("textStrong")};
     font-size: 1.9rem;
     font-weight: 300;
-    margin-bottom: ${gap.nano};
   `,
   IntegrityAlert: styled(IntegrityAlert)`
-    //margin: ${gap.pico} 0;
+    margin: calc(2 * ${gap.pico}) 0 0;
     ${down("md")} {
-      //margin: ${gap.femto} 0;
+      margin: ${gap.femto} 0 0;
     }
   `,
   Logo: styled(Logo.Symbol)`
