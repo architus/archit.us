@@ -489,7 +489,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
         </Styled.Card>
 
         <Styled.Card>
-          <h4>Popular Emoji</h4>
+          <h4>Popular Custom Emoji</h4>
           <Styled.EmojiContainer>
             {bestEmoji.map((e) => (
               <CustomEmojiIcon

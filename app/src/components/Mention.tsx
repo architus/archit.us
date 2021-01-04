@@ -50,9 +50,13 @@ const Styled = {
     margin: 0 ${gap.femto} 0 -${gap.pico};
   `,
   Mention: styled.div`
-    max-width: max-content;
+    max-width: 100%;
     color: ${OtherColors.Discord};
     background-color: ${transparentize(0.85, OtherColors.Discord)};
+
+    & > p {
+      max-width: 100%;
+    }
 
     &:hover {
       color: white;
@@ -95,8 +99,10 @@ export const Mention: React.FC<MentionProps> = ({
         </Styled.OuterContainer>
       }
     >
-      <Styled.Mention className={className} style={style}>
-        @{member.nick.isDefined() ? member.nick.get : member.name}
+      <Styled.Mention>
+        <p className={className} style={style}>
+          @{member.nick.isDefined() ? member.nick.get : member.name}
+        </p>
       </Styled.Mention>
     </Styled.Tooltip>
   );

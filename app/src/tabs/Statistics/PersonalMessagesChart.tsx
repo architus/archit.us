@@ -1,12 +1,18 @@
 import { styled } from "linaria/react";
-import React, { useState } from "react";
-import { ResponsiveContainer, PieChart, Pie, Cell, Legend, Tooltip, LegendProps, Sector } from "recharts";
-
 import { lighten } from "polished";
+import React, { useState } from "react";
+import {
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
+  Sector,
+} from "recharts";
 
 import { User } from "@app/utility/types";
-import { formatNum, isDefined } from "@architus/lib/utility";
-import { CustomRechartsTooltip } from "./CustomRechartsTooltip";
+import { mode, ColorMode } from "@architus/facade/theme/color";
+import { formatNum } from "@architus/lib/utility";
 
 const Styled = {
   OuterContainer: styled.div`
@@ -15,41 +21,18 @@ const Styled = {
     display: flex;
   `,
   Label: styled.span`
-    //margin: 30px 0;
-    //padding: 30px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    //display: inline-block;
+    max-width: 75%;
   `,
-  LabelContainer: styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    position: relative;
-    max-width: 100%;
-    margin: 15px;
-    //height: 100%;
-    //flex: 1 0 auto;
-
-    & > * {
-      max-width: 50px;
-      //text-overflow: ellipsis;
-      &::before {
-        content: "";
-        text-align: center;
-        display: block;
-        position: absolute;
-        left: -15px;
-        margin-top: 9.5px;
-        width: 10px;
-        height: 10px;
-        z-index: 1;
-        border-radius: 50%;
-      }
-    }
-
-    & > :first-child::before {
-      background-color: #ba5095;
-    }
-    & > :nth-child(2)::before {
-      background-color: #844ea3;
+  Tooltip: styled.text`
+    font-weight: bold;
+    font-size: 0.75em;
+    ${mode(ColorMode.Dark)} {
+      text-shadow: 0 0 2px rgba(0, 0, 50, 0.5);
     }
   `,
 };
@@ -60,38 +43,20 @@ export type PersonalMessagesChartProps = {
   memberCounts: Record<string, number>;
 };
 
-const renderLegend = (props: LegendProps): JSX.Element => {
-  const { payload } = props;
-  console.log(payload)
-  return (
-    <Styled.LabelContainer>
-      {payload.map((entry, index) => (
-        <p key={index} style={{ width: "100%", maxWidth: "15px", textOverflow: "ellipsis" }}>
-          {entry.value}
-        </p>
-      ))}
-    </Styled.LabelContainer>
-  );
-};
-
 const renderActiveShape = (props) => {
   const {
     cx,
     cy,
-    midAngle,
     innerRadius,
     outerRadius,
     startAngle,
     endAngle,
     fill,
-    payload,
-    percent,
     value,
   } = props;
   return (
     <g>
-      <text
-        style={{ fontWeight: "bold", fontSize: "0.75em", textShadow: "0 0 2px rgba(0, 0, 20, 0.5)" }}
+      <Styled.Tooltip
         x={cx}
         y={cy}
         dy={4}
@@ -99,7 +64,7 @@ const renderActiveShape = (props) => {
         fill={lighten(0.05, fill)}
       >
         {formatNum(value)}
-      </text>
+      </Styled.Tooltip>
       <Sector
         cx={cx}
         cy={cy}

@@ -14,7 +14,12 @@ const Styled = {
     //justify-content: space-between;
     font-size: 0.875rem;
   `,
-  Mention: styled(Mention)``,
+  Mention: styled(Mention)`
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 85%;
+    overflow: hidden;
+  `,
   Dots: styled.div`
     flex: 1;
     //border-bottom: dotted 1px ${color("text")};
@@ -51,7 +56,9 @@ export const MentionsChart: React.FC<MentionsChartProps> = ({
     <>
       {counts.slice(0, 5).map((m) => (
         <Styled.Container key={m.member.id}>
-          <Mention member={m.member} />
+          <div style={{"maxWidth": "85%"}}>
+            <Styled.Mention member={m.member} />
+          </div>
           <Styled.Dots>{formatNum(m.count)}</Styled.Dots>
         </Styled.Container>
       ))}
