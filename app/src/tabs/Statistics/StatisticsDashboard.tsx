@@ -64,7 +64,7 @@ const Styled = {
     font-weight: 300;
   `,
   IntegrityAlert: styled(IntegrityAlert)`
-    margin: calc(2 * ${gap.pico}) 0 0;
+    margin: ${gap.nano} 0 0;
     ${down("md")} {
       margin: ${gap.femto} 0 0;
     }
@@ -82,14 +82,14 @@ const Styled = {
     align-items: stretch;
     flex-direction: row;
     //margin: ${gap.pico} 0;
-    //gap: calc(2 * ${gap.pico});
+    //gap: ${gap.nano};
 
     ${down("lg")} {
       flex-wrap: wrap;
     }
 
     & > * {
-      margin-top: calc(2 * ${gap.pico});
+      margin-top: ${gap.nano};
       ${down("md")} {
         margin-top: ${gap.femto};
       }
@@ -113,9 +113,9 @@ const Styled = {
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     grid-auto-rows: 200px;
     grid-auto-flow: dense;
-    gap: calc(2 * ${gap.pico});
+    gap: ${gap.nano};
     justify-items: stretch;
-    margin: calc(2 * ${gap.pico}) 0 0;
+    margin: ${gap.nano} 0 0;
 
     ${down("md")} {
       margin: ${gap.femto} 0 0;
@@ -164,7 +164,7 @@ const Styled = {
   `,
   MessageCard: styled(Card)`
     ${up("lg")} {
-      margin-right: calc(2 * ${gap.pico});
+      margin-right: ${gap.nano};
     }
     border: none;
     flex: 1 1 100%;
@@ -187,7 +187,7 @@ const Styled = {
   `,
   MemberCard: styled(Card)`
     ${up("md")} {
-      margin-right: calc(2 * ${gap.pico});
+      margin-right: ${gap.nano};
     }
     border: none;
     padding: ${gap.nano};
