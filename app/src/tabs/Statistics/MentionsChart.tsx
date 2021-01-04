@@ -1,9 +1,7 @@
 import { styled } from "linaria/react";
 import React from "react";
-import ReactDataGrid from "react-data-grid";
 
 import { Mention } from "@app/components/Mention";
-import { GuildStatistics } from "@app/store/slices/statistics";
 import { Member, Snowflake } from "@app/utility/types";
 import { color } from "@architus/facade/theme/color";
 import { isDefined, formatNum } from "@architus/lib/utility";
@@ -56,7 +54,7 @@ export const MentionsChart: React.FC<MentionsChartProps> = ({
     <>
       {counts.slice(0, 5).map((m) => (
         <Styled.Container key={m.member.id}>
-          <div style={{"maxWidth": "85%"}}>
+          <div style={{ maxWidth: "85%" }}>
             <Styled.Mention member={m.member} />
           </div>
           <Styled.Dots>{formatNum(m.count)}</Styled.Dots>

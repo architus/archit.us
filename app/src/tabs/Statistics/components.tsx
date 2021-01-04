@@ -30,7 +30,7 @@ type WordCloudProps = {
 
 type TimeAreaChartProps = {
   ids: Set<string>;
-  data: Array<any>;
+  data: Array<{ [key: string]: number }>;
   members: (id: string) => NormalizedUserLike | undefined;
 };
 

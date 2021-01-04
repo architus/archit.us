@@ -22,9 +22,12 @@ const Styled = {
 };
 
 type CustomTooltipProps = {
-  renderer: (payload: Array<any>, label: string) => JSX.Element;
+  renderer: (
+    payload: Array<{ value: number; stroke: string; name: string }>,
+    label: string
+  ) => JSX.Element;
   type?: string;
-  payload?: Array<any>;
+  payload?: Array<{ value: number; stroke: string; name: string }>;
   label?: string;
   className?: string;
   style?: React.CSSProperties;

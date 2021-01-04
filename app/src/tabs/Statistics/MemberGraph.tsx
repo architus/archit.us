@@ -11,7 +11,7 @@ import {
 
 import { CustomRechartsTooltip } from "./CustomRechartsTooltip";
 import CustomResponsiveContainer from "./CustomResponsiveContainer";
-import { Member } from "@app/utility/types";
+import { NormalizedUserLike } from "@app/utility/types";
 import { formatNum, isDefined } from "@architus/lib/utility";
 
 type MemberData = {
@@ -20,7 +20,7 @@ type MemberData = {
 };
 type MemberGraphProps = {
   memberCounts: Record<string, number>;
-  members: (id: string) => Member | undefined;
+  members: (id: string) => NormalizedUserLike | undefined;
 };
 
 const getMemberData = (memberCounts: Record<string, number>): MemberData[] => {
@@ -35,21 +35,19 @@ const getMemberData = (memberCounts: Record<string, number>): MemberData[] => {
 export const MemberGraph: React.FC<MemberGraphProps> = React.memo(
   ({ memberCounts, members }) => {
     const tooltipRenderer = (
-      payload: Array<any>,
+      payload: Array<{ value: number }>,
       label: string
     ): JSX.Element => {
       return (
         <>
           <p>@{isDefined(members(label)) ? members(label)?.username : label}</p>
-          {formatNum(
-            !isDefined(payload) ? 0 : payload.map((entry) => entry.value)
-          )}{" "}
-          messages
+          {formatNum(payload.length > 0 ? payload[0].value : 0)} messages
         </>
       );
     };
     const tickFormatter = (tick: string): string => {
-      return isDefined(members(tick)) ? members(tick).username : tick;
+      const member = members(tick);
+      return isDefined(member) ? member.username : tick;
     };
     return (
       <CustomResponsiveContainer>
