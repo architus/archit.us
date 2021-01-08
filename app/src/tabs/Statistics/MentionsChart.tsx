@@ -3,13 +3,11 @@ import React from "react";
 
 import { Mention } from "@app/components/Mention";
 import { Member, Snowflake } from "@app/utility/types";
-import { color } from "@architus/facade/theme/color";
 import { isDefined, formatNum } from "@architus/lib/utility";
 
 const Styled = {
   Container: styled.div`
     display: flex;
-    //justify-content: space-between;
     font-size: 0.875rem;
   `,
   Mention: styled(Mention)`
@@ -20,15 +18,7 @@ const Styled = {
   `,
   Dots: styled.div`
     flex: 1;
-    //border-bottom: dotted 1px ${color("text")};
     text-align: right;
-    &::before {
-      //content: '....................................';
-      //position: absolute;
-      //left: 10px;
-      //border-bottom: dotted 1px white;
-      //z-index: 0;
-    }
   `,
 };
 
@@ -45,7 +35,7 @@ export const MentionsChart: React.FC<MentionsChartProps> = ({
   const counts: Array<{ member: Member; count: number }> = [];
   Object.entries(mentionCounts).forEach(([id, count]) => {
     if (isDefined(members.get(id as Snowflake))) {
-      counts.push({ member: members.get(id as Snowflake), count });
+      counts.push({ member: members.get(id as Snowflake) as Member, count });
     }
   });
   counts.sort((a, b) => b.count - a.count);
