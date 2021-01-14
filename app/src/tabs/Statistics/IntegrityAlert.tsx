@@ -48,7 +48,7 @@ const IntegrityAlert: React.FC<IntegrityAlertProps> = ({
   const hide = useCallback((): void => {
     setShow(false);
     window.localStorage.setItem(sKey, "true");
-  }, [setShow]);
+  }, [setShow, sKey]);
 
   return (
     <>

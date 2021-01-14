@@ -109,7 +109,7 @@ export const TimeAreaChart: React.FC<TimeAreaChartProps> = React.memo(
       if (large) {
         payload.sort((a, b) => a.value - b.value);
       }
-      for (let j = size - 1; j > 0; j--) {
+      for (let j = size - 1; j >= 0; j--) {
         const item = payload[j];
         const member = members(item.name);
         if (item.value === 0 || !isDefined(member)) {
