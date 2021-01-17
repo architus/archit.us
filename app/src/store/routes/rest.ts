@@ -128,7 +128,6 @@ export const StatisticsResponse = t.interface({
   popularEmojis: t.array(THoarFrost),
 });
 
-
 /**
  * GET /stats/<guildId>
  */

@@ -7,7 +7,6 @@ import Tooltip from "@architus/facade/components/Tooltip";
 import { mode, ColorMode } from "@architus/facade/theme/color";
 import { down } from "@architus/facade/theme/media";
 import { formatDate, formatDateExtraShort } from "@architus/lib/utility";
-import { gap } from "@architus/facade/theme/spacing";
 
 type TimelineProps = {
   className?: string;

@@ -39,5 +39,6 @@ export function isDiscordAdminWithoutArchitus(guild: Guild): boolean {
 }
 
 export function snowflakeToDate(id: Snowflake): Date {
-  return (new Date(Number((BigInt(id) >> BigInt(22)) + DISCORD_EPOCH)))
+  // eslint-disable-next-line no-bitwise
+  return new Date(Number((BigInt(id) >> BigInt(22)) + DISCORD_EPOCH));
 }
