@@ -43,7 +43,18 @@ export type PersonalMessagesChartProps = {
   memberCounts: Record<string, number>;
 };
 
-const renderActiveShape = (props) => {
+type renderActiveShapeProps = {
+  cx: number;
+  cy: number;
+  innerRadius: number;
+  outerRadius: number;
+  startAngle: number;
+  endAngle: number;
+  fill: string;
+  value: number;
+};
+
+const renderActiveShape = (props: renderActiveShapeProps): JSX.Element => {
   const {
     cx,
     cy,
@@ -87,24 +98,24 @@ export const PersonalMessagesChart: React.FC<PersonalMessagesChartProps> = React
     ];
     const [state, setState] = useState({ activeIndex: -1 });
 
-    const formatter = (value, entry) => {
+    const formatter = (value: string, _: unknown): JSX.Element => {
       return <Styled.Label>{value}</Styled.Label>;
     };
 
-    const onPieEnter = (data, index) => {
+    const onPieEnter = (_: unknown, index: number): void => {
       setState((s) => ({
         ...s,
         activeIndex: index,
       }));
     };
 
-    const onMouseLeave = (o) => {
+    const onMouseLeave = (_: unknown): void => {
       setState((s) => ({
         ...s,
         activeIndex: -1,
       }));
     };
-    const onMouseEnter = (o) => {
+    const onMouseEnter = (o: { value: string }): void => {
       setState((s) => ({ ...s, activeIndex: o.value === "other" ? 1 : 0 }));
     };
     return (

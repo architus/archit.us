@@ -11,12 +11,13 @@ import {
 import ago from "s-ago";
 
 import { ChannelGraph } from "./ChannelGraph";
-import { WordCloud, WordData, TimeAreaChart } from "./components";
 import { GrowthChart } from "./GrowthChart";
 import IntegrityAlert from "./IntegrityAlert";
 import { MemberGraph } from "./MemberGraph";
 import { MentionsChart } from "./MentionsChart";
 import { PersonalMessagesChart } from "./PersonalMessagesChart";
+import { TimeAreaChart } from "./TimeAreaChart";
+import { WordCloud, WordData } from "./WordCloud";
 import { CustomEmojiIcon } from "@app/components/CustomEmoji";
 import { Timeline, TimelineItem } from "@app/components/Timeline";
 import { appVerticalPadding, appHorizontalPadding } from "@app/layout";
@@ -43,8 +44,6 @@ import { animation } from "@architus/facade/theme/motion";
 import { gap } from "@architus/facade/theme/spacing";
 import { Option } from "@architus/lib/option";
 import { isDefined, formatNum } from "@architus/lib/utility";
-
-// import whyDidYouRender from "@welldone-software/why-did-you-render";
 
 const Styled = {
   PageOuter: styled.div`
@@ -399,9 +398,10 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
   };
   const memWords = useMemo(getWords, [stats]);
 
-  const timeData = useMemo((): Array<
-    Array<{ [key: string]: number }> | Set<string>
-  > => {
+  const timeData = useMemo((): {
+    data: Array<{ [key: string]: number }>;
+    ids: Set<string>;
+  } => {
     const data: Array<{ [key: string]: number }> = [];
     const ids: Set<string> = new Set();
     if (stats.isDefined()) {
@@ -418,7 +418,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
       });
     }
     data.sort((a, b) => a.date - b.date);
-    return [data, ids];
+    return { data, ids };
   }, [stats]);
 
   const mentionsChart = useMemo(() => {
@@ -504,8 +504,8 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
         <Styled.BigCard>
           <h3>Messages over Time</h3>
           <TimeAreaChart
-            ids={timeData[1]}
-            data={timeData[0]}
+            ids={timeData.ids}
+            data={timeData.data}
             members={membersClosure}
           />
         </Styled.BigCard>

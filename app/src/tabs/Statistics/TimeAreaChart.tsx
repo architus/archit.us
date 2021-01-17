@@ -1,8 +1,5 @@
-import { styled } from "linaria/react";
 import { mix } from "polished";
 import React from "react";
-import AutoSizer from "react-virtualized-auto-sizer";
-import ReactWordcloud, { Options } from "react-wordcloud";
 import {
   ResponsiveContainer,
   XAxis,
@@ -15,54 +12,15 @@ import {
 
 import { CustomRechartsTooltip } from "./CustomRechartsTooltip";
 import { useColorMode } from "@architus/facade/hooks";
-import { ColorMode, color } from "@architus/facade/theme/color";
+import { ColorMode } from "@architus/facade/theme/color";
 import { isDefined } from "@architus/lib/utility";
 import { NormalizedUserLike } from "src/utility/types";
-
-export type WordData = {
-  text: string;
-  value: number;
-};
-
-type WordCloudProps = {
-  words: Array<WordData>;
-};
 
 type TimeAreaChartProps = {
   ids: Set<string>;
   data: Array<{ [key: string]: number }>;
   members: (id: string) => NormalizedUserLike | undefined;
 };
-
-const Styled = {
-  AutoSizer: styled(AutoSizer)`
-    width: 100%;
-  `,
-};
-export const WordCloud: React.FC<WordCloudProps> = React.memo(({ words }) => {
-  const options: Partial<Options> = {
-    rotations: 2,
-    rotationAngles: [-90, 0],
-    fontSizes: [5, 120],
-    enableOptimizations: true,
-    enableTooltip: false,
-    // fontFamily: "Renner*",
-    // padding: 10,
-    // transitionDuration: 0,
-    colors: [color("textStrong")],
-  };
-  return (
-    <Styled.AutoSizer>
-      {({ height, width }): JSX.Element => (
-        <ReactWordcloud
-          options={options}
-          size={[width, height]}
-          words={words}
-        />
-      )}
-    </Styled.AutoSizer>
-  );
-});
 
 function gradArray(col1: string, col2: string, n: number): Array<string> {
   const grad = [];

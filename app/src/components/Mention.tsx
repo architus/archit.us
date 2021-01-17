@@ -34,17 +34,17 @@ const Styled = {
     white-space: nowrap;
     text-align: left;
   `,
-  NameContainer: styled.div`
-    border: 1px solid ${(props) => props.color};
+  NameContainer: styled.div<{ color: string }>`
+    border: 1px solid ${(props): string => props.color};
     border-radius: 10px;
     width: fit-content;
     padding: 0 ${gap.femto} 0 ${gap.nano};
     margin-bottom: ${gap.femto};
   `,
-  ColoredCircle: styled.div`
+  ColoredCircle: styled.div<{ color: string }>`
     height: 10px;
     width: 10px;
-    background-color: ${(props) => props.color};
+    background-color: ${(props): string => props.color};
     border-radius: 50%;
     display: inline-block;
     margin: 0 ${gap.femto} 0 -${gap.pico};
