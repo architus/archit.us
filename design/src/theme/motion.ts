@@ -71,7 +71,7 @@ const animationDefinitions = {
     100% {
       opacity: 1;
     }
-  `
+  `,
 };
 
 export type AnimationKey = keyof typeof animationDefinitions;

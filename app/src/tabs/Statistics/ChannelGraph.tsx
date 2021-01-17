@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  ResponsiveContainer,
   BarChart,
   Bar,
   Legend,
@@ -39,14 +38,14 @@ const getChannelData = (
   return data.slice(0, 15);
 };
 
-const tooltipRenderer = (payload: Array<any>, label: string): JSX.Element => {
+const tooltipRenderer = (
+  payload: Array<{ value: number }>,
+  label: string
+): JSX.Element => {
   return (
     <>
       <p>#{label}</p>
-      {formatNum(
-        !isDefined(payload) ? 0 : payload.map((entry) => entry.value)
-      )}{" "}
-      messages
+      {formatNum(payload.length > 0 ? payload[0].value : 0)} messages
     </>
   );
 };
