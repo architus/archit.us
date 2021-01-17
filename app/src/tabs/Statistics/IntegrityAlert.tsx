@@ -53,7 +53,10 @@ const IntegrityAlert: React.FC<IntegrityAlertProps> = ({
   return (
     <>
       {enabled && show && (
-        <Styled.Alert className={className} style={style}>
+        <Styled.Alert
+          className={className}
+          style={(style as unknown) as React.CSSProperties}
+        >
           <Styled.CloseButton onClick={hide} />
           <strong>Notice</strong>: {message}
         </Styled.Alert>
