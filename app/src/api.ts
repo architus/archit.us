@@ -3,14 +3,14 @@ import { withPathPrefix } from "@architus/lib/path";
 /**
  * Gets the RESTful API base URL to use
  */
-export const API_BASE: string = process.env.PRODUCTION
+export const API_BASE: string = process.env.GATSBY_PRODUCTION
   ? "https://api.archit.us"
   : "https://api.develop.archit.us";
 
 /**
  * Gets the Gateway API base URL to use
  */
-export const GATEWAY_API_BASE: string = process.env.PRODUCTION
+export const GATEWAY_API_BASE: string = process.env.GATSBY_PRODUCTION
   ? "https://gateway.archit.us"
   : "https://gateway.develop.archit.us";
 

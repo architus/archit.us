@@ -21,12 +21,14 @@
     SITE_ROOT = "https://develop.archit.us"
     BUILD_LOCATION = "remote"
     NODE_ENV = "production"
+    UMAMI_WEBSITE_ID = "284b0f8e-b21e-463a-a5c8-5f080094e0b0"
 
 [context.production]
   # Overrides for production
   [context.production.environment]
     SITE_NAME = "Architus"
     SITE_ROOT = "https://archit.us"
-    PRODUCTION = "true"
+    GATSBY_PRODUCTION = "true"
     GATSBY_PUBLIC = "true"
+    UMAMI_WEBSITE_ID = "ef98a5a5-43b7-4216-ae59-958f9e24ca55"
 

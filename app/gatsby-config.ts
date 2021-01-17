@@ -18,10 +18,15 @@ export const siteMetadata = {
   title,
   description,
   author: `architus`,
-  version: "v0.2.1",
+  version: "v0.2.2",
   siteUrl: process.env.SITE_ROOT ?? "https://archit.us",
   themeColor,
   msTileColor,
+  // Configures Umami (analytics) settings
+  umami: {
+    websiteId: process.env.UMAMI_WEBSITE_ID ?? "",
+    base: "https://umami.archit.us",
+  },
   footer: {
     about: `This site contains implementation documentation for the architus ecosystem, including the microservice-based backend application as well as the React-based web dashboard.`,
     links: [
