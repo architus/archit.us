@@ -41,7 +41,6 @@
     "gatsby-plugin-react-svg": "^3.0.0",
     "gatsby-plugin-remove-serviceworker": "^1.0.0",
     "gatsby-plugin-typegen": "^2.2.0",
-    "gatsby-plugin-why-did-you-render": "^2.0.0",
     "io-ts": "^2.2.9",
     "linaria": "^1.4.0-beta.3",
     "marked": "^1.1.1",

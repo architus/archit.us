@@ -15,7 +15,7 @@ export const GATEWAY_API_BASE: string = process.env.PRODUCTION
   : "https://gateway.develop.archit.us";
 
 /**
- * resolves a path with he  base path
+ * resolves a path with the optional base path
  * @param path - base path with leading /
  */
 export function withBasePath(path: string): string {
