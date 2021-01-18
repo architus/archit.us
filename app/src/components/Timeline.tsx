@@ -1,5 +1,5 @@
 import { styled } from "linaria/react";
-import React from "react";
+import React, { useMemo } from "react";
 import { FaDotCircle } from "react-icons/fa";
 import { IconType } from "react-icons/lib";
 
@@ -127,15 +127,17 @@ export const Timeline: React.FC<TimelineProps> = ({
   children,
   innerProps = {},
 }) => {
-  const childrenArray = React.Children.toArray(
-    children
-  ) as React.ReactElement[];
+  const childrenArray = useMemo(
+    () =>
+      (React.Children.toArray(children) as React.ReactElement[]).sort(
+        (a, b) => a.props.date - b.props.date
+      ),
+    [children]
+  );
   return (
     <Styled.Timeline className={className} style={style} {...innerProps}>
       <Styled.Line />
-      <Styled.List>
-        {childrenArray.sort((a, b) => a.props.date - b.props.date)}
-      </Styled.List>
+      <Styled.List>{childrenArray}</Styled.List>
     </Styled.Timeline>
   );
 };
