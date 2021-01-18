@@ -54,6 +54,10 @@ type CustomEmojiProps = {
   className?: string;
   style?: React.CSSProperties;
 };
+
+/**
+ * Wraps a CustomEmoji object in a formatted tooltip showing name, author name, creation date, and usage.
+ */
 export const CustomEmojiIcon: React.FC<CustomEmojiProps> = ({
   emoji,
   author,
@@ -78,7 +82,6 @@ export const CustomEmojiIcon: React.FC<CustomEmojiProps> = ({
 
   return (
     <Tooltip
-      // style={{"overflow": "visible !important" } as React.CSSProperties}
       maxWidth={"auto"}
       tooltip={
         <Styled.OuterContainer>

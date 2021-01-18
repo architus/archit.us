@@ -32,6 +32,9 @@ const getMemberData = (memberCounts: Record<string, number>): MemberData[] => {
   return data.slice(0, 15);
 };
 
+/**
+ * Display a bar chart of the top 15 most active message senders.
+ */
 export const MemberGraph: React.FC<MemberGraphProps> = React.memo(
   ({ memberCounts, members }) => {
     const tooltipRenderer = (

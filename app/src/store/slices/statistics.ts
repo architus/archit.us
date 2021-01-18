@@ -8,7 +8,6 @@ import { HoarFrost } from "src/utility/types";
 /**
  * Stores statistics for the guilds
  */
-
 export interface GuildStatistics {
   memberCount: number;
   messageCount: number;

@@ -49,6 +49,10 @@ const unpackBin = (bin: number): number =>
     (bin % 500) % 40
   ).getTime();
 
+/**
+ * A simple area chart which displays the cumulative number of members of a guild at any point.
+ * Bins the data points to hasten rendering.
+ */
 export const GrowthChart: React.FC<GrowthChartProps> = ({ members }) => {
   const data = useMemo<GrowthDataPoint[]>(() => {
     if (members.size === 0) {

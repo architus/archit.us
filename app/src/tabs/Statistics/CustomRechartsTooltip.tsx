@@ -33,6 +33,9 @@ type CustomTooltipProps = {
   style?: React.CSSProperties;
 };
 
+/**
+ * Architus-style tooltip to be plugged into various rechart components.
+ */
 export const CustomRechartsTooltip: React.FC<CustomTooltipProps> = ({
   renderer,
   payload,

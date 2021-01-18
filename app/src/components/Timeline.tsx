@@ -8,21 +8,6 @@ import { mode, ColorMode } from "@architus/facade/theme/color";
 import { down } from "@architus/facade/theme/media";
 import { formatDate, formatDateExtraShort } from "@architus/lib/utility";
 
-type TimelineProps = {
-  className?: string;
-  style?: React.CSSProperties;
-  innerProps?: Partial<React.HTMLAttributes<HTMLSpanElement>>;
-};
-
-type TimelineItemProps = {
-  date: Date;
-  icon?: IconType;
-  dateFormatter?: (date: Date) => string;
-  className?: string;
-  style?: React.CSSProperties;
-  innerProps?: Partial<React.HTMLAttributes<HTMLSpanElement>>;
-};
-
 const Styled = {
   Timeline: styled.div`
     max-width: 100%;
@@ -118,6 +103,24 @@ const Styled = {
   `,
 };
 
+type TimelineProps = {
+  className?: string;
+  style?: React.CSSProperties;
+  innerProps?: Partial<React.HTMLAttributes<HTMLSpanElement>>;
+};
+
+type TimelineItemProps = {
+  date: Date;
+  icon?: IconType;
+  dateFormatter?: (date: Date) => string;
+  className?: string;
+  style?: React.CSSProperties;
+  innerProps?: Partial<React.HTMLAttributes<HTMLSpanElement>>;
+};
+
+/**
+ * Display a list of TimelineItem ordered by their date.
+ */
 export const Timeline: React.FC<TimelineProps> = ({
   style,
   className,
@@ -137,6 +140,10 @@ export const Timeline: React.FC<TimelineProps> = ({
   );
 };
 
+/**
+ * The child of Timeline; takes a date to display as the header and determine order.
+ * Also takes an icon to show on the line and may display a short description.
+ */
 export const TimelineItem: React.FC<TimelineItemProps> = ({
   date,
   style,

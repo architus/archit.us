@@ -50,6 +50,9 @@ const tooltipRenderer = (
   );
 };
 
+/**
+ * Render a bar graph displaying the total message count of each channel.
+ */
 export const ChannelGraph: React.FC<ChannelGraphProps> = React.memo(
   ({ channelCounts, channels }) => (
     <CustomResponsiveContainer>

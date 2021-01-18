@@ -70,6 +70,11 @@ type MentionProps = {
   className?: string;
   style?: React.CSSProperties;
 };
+
+/**
+ * Render a Member object in the style of a discord mention in light or dark mode.
+ * Also wraps in a tooltip showing avatar, username, and join date.
+ */
 export const Mention: React.FC<MentionProps> = ({
   member,
   style,
@@ -77,12 +82,11 @@ export const Mention: React.FC<MentionProps> = ({
 }) => {
   let color = member.color.isDefined() ? member.color.get : "white";
   if (color === "#000000") {
-    // TODO: figure out why color is black when it should be undefined
+    // because discord uses black instead of 'undefined'
     color = "white";
   }
   return (
     <Styled.Tooltip
-      // style={{"overflow": "visible !important" } as React.CSSProperties}
       maxWidth={"auto"}
       tooltip={
         <Styled.OuterContainer>

@@ -27,6 +27,10 @@ type MentionsChartProps = {
   members: Map<Snowflake, Member>;
 };
 
+/**
+ * Takes a map of members and their mention counts and renders the
+ * top 6 in a table as Mention components along with their count.
+ */
 export const MentionsChart: React.FC<MentionsChartProps> = ({
   mentionCounts,
   members,
