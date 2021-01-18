@@ -10,6 +10,10 @@ import { User } from "@app/utility/types";
 import { Option } from "@architus/lib/option";
 import { Statistics } from "src/store/slices/statistics";
 
+/**
+ * Bootstrap StatisticsDashboard.
+ * Does a bit of garbage to pull the statistics data and memoize it, etc.
+ */
 const StatisticsProvider: React.FC<TabProps> = (tabProps) => {
   const dispatch = useDispatch();
   const { guild } = tabProps;

@@ -35,6 +35,9 @@ const dateFormatter = (tick: string): string => {
   return new Date(tick).toLocaleDateString("en-US", options);
 };
 
+/**
+ * Display a pretty stacked area chart of members and their message counts over time.
+ */
 export const TimeAreaChart: React.FC<TimeAreaChartProps> = React.memo(
   ({ ids, data, members }) => {
     const colors = gradArray("#ba5095", "#5850ba", ids.size);

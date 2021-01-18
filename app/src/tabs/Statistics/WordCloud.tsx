@@ -19,6 +19,10 @@ const Styled = {
     width: 100%;
   `,
 };
+
+/**
+ * 90-degree word cloud wrapped in an auto sizer. That's pretty much it.
+ */
 export const WordCloud: React.FC<WordCloudProps> = React.memo(({ words }) => {
   const options: Partial<Options> = {
     rotations: 2,
@@ -26,9 +30,8 @@ export const WordCloud: React.FC<WordCloudProps> = React.memo(({ words }) => {
     fontSizes: [5, 120],
     enableOptimizations: true,
     enableTooltip: false,
+    // I would like to use Renner* at some point but it's broken for now.
     // fontFamily: "Renner*",
-    // padding: 10,
-    // transitionDuration: 0,
     colors: [color("textStrong")],
   };
   return (
