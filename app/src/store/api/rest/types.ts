@@ -1,13 +1,7 @@
 import * as t from "io-ts";
 
-import { StatisticsResponse } from "@app/store/routes";
 import { HttpVerbs } from "@app/utility";
-import {
-  ConditionalWrap,
-  Omitted,
-  ErrorContents,
-  Snowflake,
-} from "@app/utility/types";
+import { ConditionalWrap, Omitted, ErrorContents } from "@app/utility/types";
 
 export type Errors = t.Errors;
 
@@ -142,14 +136,6 @@ export interface RestSuccess<
     start: number;
     end: number;
   };
-}
-
-/**
- * Stats response with guildId
- */
-export interface StatsSuccess {
-  guildId: Snowflake;
-  response: StatisticsResponse;
 }
 
 /**

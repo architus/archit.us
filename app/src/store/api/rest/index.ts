@@ -17,7 +17,6 @@ import {
   RestFailure,
   RestStart,
   ApiRequest,
-  StatsSuccess,
 } from "@app/store/api/rest/types";
 import { HttpVerbs, isDefined, toJSON, log, warn } from "@app/utility";
 import { Omitted, OrEmpty } from "@app/utility/types";
@@ -26,7 +25,6 @@ import { Option, Some, None } from "@architus/lib/option";
 export const restDispatch = createAction<RestDispatch>("api/restDispatch");
 export const restStart = createAction<RestStart>("api/restStart");
 export const restSuccess = createAction<RestSuccess>("api/restSuccess");
-export const statsSuccess = createAction<StatsSuccess>("api/statsSuccess");
 export const restFailure = createAction<RestFailure>("api/restFailure");
 
 /**

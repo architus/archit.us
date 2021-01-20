@@ -131,7 +131,7 @@ export const StatisticsResponse = t.interface({
 /**
  * GET /stats/<guildId>
  */
-export const stats = makeRoute()({
+export const fetchStats = makeRoute()({
   label: "stats",
   route: ({ guildId }: { guildId: Snowflake }) => `/stats/${guildId}`,
   method: HttpVerbs.GET,

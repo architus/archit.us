@@ -1,5 +1,5 @@
 import { SagaIterator } from "@redux-saga/core";
-import { delay, race, take } from "@redux-saga/core/effects";
+import { delay } from "@redux-saga/core/effects";
 import { takeEvery, put, fork } from "redux-saga/effects";
 
 import { navigate } from "@app/components/Router";
@@ -9,15 +9,12 @@ import {
   signOut,
   showNotification,
 } from "@app/store/actions";
-import { restDispatch, statsSuccess } from "@app/store/api/rest";
-import { stats, StatisticsResponse } from "@app/store/routes";
 import gatewayFlow from "@app/store/saga/gateway";
 import interpret from "@app/store/saga/interpret";
 import pools from "@app/store/saga/pools";
 import sessionFlow from "@app/store/saga/session";
 import { LOCAL_STORAGE_KEY } from "@app/store/slices/session";
 import { setLocalStorage } from "@app/utility";
-import { isDefined } from "@architus/lib/utility";
 
 /**
  * Root saga
@@ -28,32 +25,8 @@ export default function* saga(): SagaIterator {
   yield fork(interpret);
   yield fork(pools);
 
-  yield takeEvery(stats.matchDispatch, handleFetchStatistics);
   yield takeEvery(signOut.type, handleSignOut);
   yield takeEvery(showNotification.type, autoHideNotification);
-}
-
-/**
- * Special saga for the statistics route to inject the guildId into the action.
- * Should probably be generalized.
- * @param action - the satistics respones action dispatched upon receiving a response from the api
- */
-function* handleFetchStatistics(
-  action: ReturnType<typeof restDispatch>
-): SagaIterator {
-  if (stats.matchDispatch(action)) {
-    const { guildId } = action.payload.routeData;
-    const { success } = yield race({
-      success: take(stats.match),
-      failure: take(stats.matchError),
-      timeout: delay(10000),
-    });
-
-    if (isDefined(success) && stats.match(success)) {
-      const response = success.payload.response as StatisticsResponse;
-      yield put(statsSuccess({ guildId, response }));
-    }
-  }
 }
 
 /**

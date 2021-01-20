@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { statsSuccess } from "@app/store/api/rest";
+import { restSuccess } from "@app/store/api/rest";
+import { fetchStats } from "@app/store/routes";
 import { Nil } from "@architus/lib/types";
 import { isDefined } from "@architus/lib/utility";
 import { HoarFrost } from "src/utility/types";
@@ -37,13 +38,16 @@ const slice = createSlice({
   initialState,
   reducers: {},
   extraReducers: {
-    [statsSuccess.type]: (state, action): Statistics => {
-      if (statsSuccess.match(action)) {
-        const { guildId, response } = action.payload;
-        if (isDefined(state.statistics)) {
-          state.statistics[guildId as string] = response;
-        } else {
-          return { statistics: { [guildId]: response } };
+    [restSuccess.type]: (state, action): Statistics => {
+      if (fetchStats.match(action)) {
+        const { guildId } = action.payload.routeData;
+        const decoded = fetchStats.decode(action.payload);
+        if (decoded.isDefined()) {
+          if (isDefined(state.statistics)) {
+            state.statistics[guildId as string] = decoded.get;
+          } else {
+            return { statistics: { [guildId]: decoded.get } };
+          }
         }
       }
       return state;

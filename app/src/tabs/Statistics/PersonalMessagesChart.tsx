@@ -54,6 +54,9 @@ type renderActiveShapeProps = {
   value: number;
 };
 
+/**
+ * Custom render component for the inside of recharts PieChart to display an absolute value in the center.
+ */
 const renderActiveShape = (props: renderActiveShapeProps): JSX.Element => {
   const {
     cx,
@@ -89,6 +92,10 @@ const renderActiveShape = (props: renderActiveShapeProps): JSX.Element => {
   );
 };
 
+/**
+ * Create a cute little pie chart to display the ratio of the user's messages to the guild's total
+ * Displays the actual values in the middle on mouseover.
+ */
 export const PersonalMessagesChart: React.FC<PersonalMessagesChartProps> = React.memo(
   ({ currentUser, totalMessages, memberCounts }) => {
     const me = memberCounts[currentUser.id as string] ?? 0;

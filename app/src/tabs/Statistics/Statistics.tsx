@@ -3,7 +3,7 @@ import { createSelectorCreator, defaultMemoize } from "reselect";
 
 import StatisticsDashboard from "./StatisticsDashboard";
 import { useDispatch, useSelector } from "@app/store/hooks";
-import { stats } from "@app/store/routes";
+import { fetchStats } from "@app/store/routes";
 import { useCurrentUser } from "@app/store/slices/session";
 import { TabProps } from "@app/tabs/types";
 import { User } from "@app/utility/types";
@@ -35,7 +35,7 @@ const StatisticsProvider: React.FC<TabProps> = (tabProps) => {
 
   const storeStatistics = useSelector(coolSelecter);
   useEffect(() => {
-    dispatch(stats({ routeData: { guildId: guild.id } }));
+    dispatch(fetchStats({ routeData: { guildId: guild.id } }));
   }, [dispatch, guild.id]);
 
   const guildStats = useMemo(() => {
