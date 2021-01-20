@@ -7,6 +7,7 @@ import Loading from "@app/store/slices/loading";
 import Notifications from "@app/store/slices/notifications";
 import Pools from "@app/store/slices/pools";
 import Session from "@app/store/slices/session";
+import Statistics from "@app/store/slices/statistics";
 
 const rootReducer = combineReducers({
   session: Session,
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
   interpret: Interpret,
   gateway: Gateway,
   pools: Pools,
+  statistics: Statistics,
 });
 
 export default rootReducer;

@@ -139,7 +139,7 @@ export interface RestSuccess<
 }
 
 /**
- * Rest success action payload
+ * Rest failure action payload
  */
 export interface RestFailure<
   TData extends Record<string, unknown> = Record<string, unknown>,

@@ -164,6 +164,17 @@ export const TimeFromString = new t.Type<number, string, unknown>(
   (a) => new Date(a).toISOString()
 );
 
+export const EpochFromString = new t.Type<string, number, unknown>(
+  "EpochFromString",
+  (u): u is string => typeof u === "string",
+  (u, c) =>
+    either.chain(t.string.validate(u, c), (n) => {
+      const d = new Date(n);
+      return isNaN(d.getTime()) ? t.failure(u, c) : t.success(d.toISOString());
+    }),
+  (s) => Date.parse(s)
+);
+
 /**
  * Represents a NodeJS module with HMR enabled
  */
@@ -617,4 +628,18 @@ export type Role = t.TypeOf<typeof Role>;
 export const Role = t.type({});
 
 export type Channel = t.TypeOf<typeof Channel>;
-export const Channel = t.type({});
+export const Channel = t.type({
+  id: TSnowflake,
+  name: t.string,
+});
+
+export type CustomEmoji = t.TypeOf<typeof CustomEmoji>;
+export const CustomEmoji = t.type({
+  id: THoarFrost,
+  name: t.string,
+  discordId: option(TSnowflake),
+  authorId: TSnowflake,
+  url: t.string,
+  numUses: t.number,
+  priority: t.number,
+});

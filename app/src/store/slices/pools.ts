@@ -11,6 +11,8 @@ import {
   AutoResponse,
   HoarFrost,
   Member,
+  Channel,
+  CustomEmoji,
 } from "@app/utility/types";
 import { Option, None, Some } from "@architus/lib/option";
 
@@ -19,6 +21,8 @@ export type AllPoolTypes = {
   user: User;
   autoResponse: AutoResponse;
   member: Member;
+  channel: Channel;
+  customEmoji: CustomEmoji;
 };
 
 // Runtime io-ts types
@@ -27,10 +31,17 @@ export const AllPoolTypes = {
   user: User,
   autoResponse: AutoResponse,
   member: Member,
+  channel: Channel,
+  customEmoji: CustomEmoji,
 };
 
 export const guildAgnosticPools = ["user", "guild"] as const;
-export const guildSpecificPools = ["autoResponse", "member"] as const;
+export const guildSpecificPools = [
+  "autoResponse",
+  "member",
+  "channel",
+  "customEmoji",
+] as const;
 export const allPools: PoolType[] = [
   ...guildAgnosticPools,
   ...guildSpecificPools,
@@ -795,16 +806,28 @@ export function usePoolEntities<T extends PoolType>(
     };
 
     // Return the previous provider if it's the same
-    return previousProvidersRef.current.isDefined() &&
-      shallowEqual(previousProvidersRef.current.get[index], newProvider)
-      ? previousProvidersRef.current.get[index]
-      : newProvider;
+    if (previousProvidersRef.current.isDefined()) {
+      const previousProviders = previousProvidersRef.current.get;
+      if (index < previousProviders.length) {
+        const previousProvider = previousProviders[index];
+        if (shallowEqual(previousProvider, newProvider)) {
+          return previousProvider;
+        }
+      }
+    }
+
+    return newProvider;
   });
 
   // Return the entire old providers array if every element is the same
   // (effectively ensures the same array is returned if there are no changes)
-  return previousProvidersRef.current.isDefined() &&
+
+  if (
+    previousProvidersRef.current.isDefined() &&
     shallowEqual(previousProvidersRef.current.get, providers)
-    ? previousProvidersRef.current.get
-    : providers;
+  ) {
+    return previousProvidersRef.current.get;
+  }
+  previousProvidersRef.current = Option.from(providers);
+  return providers;
 }
