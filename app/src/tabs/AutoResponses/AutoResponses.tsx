@@ -85,8 +85,7 @@ const AutoResponses: React.FC<TabProps> = (pageProps) => {
     return Array.from(ids);
   }, [commands]);
   const authorEntries = usePoolEntities({
-    type: "member",
-    guildId: guild.id,
+    type: "user",
     ids: allAuthorIds,
   });
   const authorsMap = useMemo(() => {
@@ -161,11 +160,11 @@ function foldAuthorData(
   const id = autoResponse.authorId;
   const authorOption = id.flatMapNil((i) => authors.get(i));
   if (authorOption.isDefined()) {
-    const { name, discriminator } = authorOption.get;
+    const { username, discriminator } = authorOption.get;
     return {
-      author: `${name}#${discriminator}|${id}`,
+      author: `${username}#${discriminator}|${id}`,
       avatarUrl: getAvatarUrl({ user: authorOption.get }) ?? "",
-      username: name,
+      username,
       discriminator,
     };
   }

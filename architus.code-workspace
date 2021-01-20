@@ -19,6 +19,9 @@
       {
         "name": ".shared",
         "path": ".shared"
+      },
+      {
+        "path": ".github"
       }
     ]
 }

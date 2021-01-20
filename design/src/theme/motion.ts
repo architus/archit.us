@@ -64,6 +64,14 @@ const animationDefinitions = {
       background-position: 1000px 0;
     }
   `,
+  fadeIn: `
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  `,
 };
 
 export type AnimationKey = keyof typeof animationDefinitions;
