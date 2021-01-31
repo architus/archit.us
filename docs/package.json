@@ -6,7 +6,7 @@
   "license": "MIT",
   "author": "architus",
   "scripts": {
-    "start": "gatsby develop",
+    "start": "gatsby develop --open",
     "test": "jest --coverage",
     "build": "gatsby build",
     "serve": "gatsby serve",

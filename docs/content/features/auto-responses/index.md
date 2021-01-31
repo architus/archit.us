@@ -81,6 +81,14 @@ substituted with the [captured text](/features/auto-responses/#capture-groups) t
 
 ![capture](./capture_demo.png)
 
+#### \[e script\]
+
+substituted with whatever is printed from the the starlark script that comes after the e.
+
+![eval](./eval_demo.png)
+
+See [here](/features/auto-responses/#starlark) for more information on what can go into a script and how to write them.
+
 ### Errors
 
 If architus is unable to parse your response, it will display an error along with the position of the character that confused it.
@@ -179,6 +187,108 @@ In the event that architus is unable to parse your trigger regex, it will give a
 
 Non-admin users will not be able to set regex triggers unless they are allowed in `settings`
 </Alert>
+
+## Starlark
+Architus uses the [starlark](https://github.com/bazelbuild/starlark) language as its scripting language for auto-responses. A detailed specification of everything you can do in the language can be found [here](https://github.com/bazelbuild/starlark/blob/master/spec.md).
+
+Starlark is a stripped down dialect of Python. This means that most simple Python scripts will produce the exact same behavior in Starlark.
+
+### Usage
+The script is set up so that any strings that are printed out by the script will replace the script block in the auto-response.
+
+To print from starlark, the standard `print` function can be called. In addition, a shorthand, `p`, has been added to decrease the length of user scripts.
+
+Starlark has some peculiarities about it that make it more difficult to use when coming from Python. One such peculiarity is that strings are not iterable in Starlark, only lists. To iterate over a string you have to call the `elems` method on the string. This returns a list of the strings elements which is iterable.
+
+As an example:
+```py
+print([a for a in "aoua".elems()])
+```
+will print `["a", "o", "u", "a"]`.
+
+### Architus Specifics
+To improve user experience, some changes to the Starlark language have been made. Specifically:
+- Python style `while` loops have been added
+- Top level `if` statements are allowed
+- Global variables are mutable
+- Recursive function calls are allowed
+- Function declarations can be nested
+
+### Builtin Functions
+The architus implementation of Starlark adds in a few extra builtins to improve user experience. They are called the same as any other Python builtin with the same behavior.
+
+#### Random
+The `random` function can be called with no arguments to return a random float in the range \[0,1\).
+
+For example:
+```py
+print(random())
+```
+may print `0.686645146372598`.
+
+#### Randint
+The `randint` function can be called with a high and low parameter to return a random integer in that range. For instance, `randint(lo, hi)` will return an integer in the range \[lo, hi\).
+
+#### Choice
+The `choice` function will return a random element from a list. It accepts a single list element as an argument and its return type can be any of the types in the list.
+
+For example:
+```py
+print(choice(["hello", 'a', 1, 1.2345, randint]))
+```
+may print `a`.
+
+#### Sine
+The `sin` function is the standard trigonometric sine function. It accepts radians as an argument and will return a float in the range \[0, 1\].
+
+#### Struct
+The `struct` function will produce a class like data structure that can be used to store data. Unlike Python, Starlark does not support classes and objects. To make up for this, our implementation of Starlark adds in a struct datatype that can be used in a similar manner.
+
+A struct is purely a data structure and does not support any methods that can act on the structure. The function will take some number of keyword arguments and return a struct where each keyword is a member of the struct and the argument passed to that keyword is the value associated with that member.
+
+Example:
+```py
+book = struct(author="Frank Herbert", title="Dune", pages=818, reviews=["great", "amazing"])
+assert(book.author=="Frank Herbert")
+assert(book.pages==818)
+```
+
+#### Sum
+The `sum` function will sum all of the elements of an iterable. It accepts a single parameter that is the iterable value to sum over. `sum` requires that the parameter passed in is solely composed of numbers: integers, floats, or both. If only integers are in the iterable, it will return an integer. However, if the iterable is composed of floats or integers and floats, it will return a float value. The sum will always start at 0 and sum from there.
+
+Example:
+```py
+nums = range(1,101)
+values = [1,1.5,3,4.5]
+assert(sum(nums) == 5050)
+assert(sum(values) == 10)
+```
+
+### Global Variables
+Architus adds several global variables to the script environment to allow users to access information about the message, author, and channel that triggered the auto-response.
+
+`message` is a struct with members:
+- id: an integer that represents the discord id of the triggering message
+- content: a string that represents the raw content of the triggering message
+- clean: a string that is the clean content of the triggering message (this is much closer to how users see a message)
+
+`author` is a struct with members:
+- id: an integer that is the discord id of the author that wrote the triggering message
+- avatar\_url: a string that is a url for the author's avatar image
+- color: a string that is the color that the author's name is displayed using
+- discrim: an integer that is the discriminator part of the author's username
+- roles: a list of strings that contains the integer id values of each role the author is a part of
+- name: a string value of the author's username (does not include the discriminator)
+- nick: a string that is the author's nickname in the server in which the triggering message was sent
+- disp: a string that is the author's display name in the server in which the triggering message was sent
+
+`channel` is a struct with members:
+- id: an integer that is the discord id of the channel in which the triggering message was sent
+- name: a string that is the name of the channel in which the triggering message was sent
+
+`count` is a global variable that is just an integer of how many times the auto response has been triggered.
+
+`caps` is an array of strings that contain all of the capture groups defined in the regular expression trigger of the auto response. The order of the capture groups will be in the same order in which they were defined in the regex.
 
 ## Settings
 

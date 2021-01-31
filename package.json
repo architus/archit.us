@@ -22,7 +22,8 @@
     "babel-plugin-module-resolver": "^4.0.0",
     "graphql": "^14.7.0",
     "lerna": "^3.22.1",
-    "typescript": "^3.9.5"
+    "typescript": "^3.9.5",
+    "yarn": "^1.22.10"
   },
   "devDependencies": {
     "@babel/core": "^7.1.0",
