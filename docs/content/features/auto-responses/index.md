@@ -81,9 +81,9 @@ substituted with the [captured text](/features/auto-responses/#capture-groups) t
 
 ![capture](./capture_demo.png)
 
-#### \[e script\]
+#### \[eval script\]
 
-substituted with whatever is printed from the the starlark script that comes after the e.
+substituted with whatever is printed from the the starlark script that comes after the eval. Can also use `e` as a shorthand for `eval`.
 
 ![eval](./eval_demo.png)
 
@@ -188,7 +188,7 @@ In the event that architus is unable to parse your trigger regex, it will give a
 Non-admin users will not be able to set regex triggers unless they are allowed in `settings`
 </Alert>
 
-## Starlark
+## Eval
 Architus uses the [starlark](https://github.com/bazelbuild/starlark) language as its scripting language for auto-responses. A detailed specification of everything you can do in the language can be found [here](https://github.com/bazelbuild/starlark/blob/master/spec.md).
 
 Starlark is a stripped down dialect of Python. This means that most simple Python scripts will produce the exact same behavior in Starlark.
@@ -241,50 +241,49 @@ may print `a`.
 #### Sine
 The `sin` function is the standard trigonometric sine function. It accepts radians as an argument and will return a float in the range \[0, 1\].
 
-#### Struct
-The `struct` function will produce a class like data structure that can be used to store data. Unlike Python, Starlark does not support classes and objects. To make up for this, our implementation of Starlark adds in a struct datatype that can be used in a similar manner.
-
-A struct is purely a data structure and does not support any methods that can act on the structure. The function will take some number of keyword arguments and return a struct where each keyword is a member of the struct and the argument passed to that keyword is the value associated with that member.
-
-Example:
-```py
-book = struct(author="Frank Herbert", title="Dune", pages=818, reviews=["great", "amazing"])
-assert(book.author=="Frank Herbert")
-assert(book.pages==818)
-```
-
 #### Sum
-The `sum` function will sum all of the elements of an iterable. It accepts a single parameter that is the iterable value to sum over. `sum` requires that the parameter passed in is solely composed of numbers: integers, floats, or both. If only integers are in the iterable, it will return an integer. However, if the iterable is composed of floats or integers and floats, it will return a float value. The sum will always start at 0 and sum from there.
+The `sum` function will sum all of the elements in a list. The sum will always start at zero and all of the elements of the list must be a number.
 
 Example:
 ```py
 nums = range(1,101)
 values = [1,1.5,3,4.5]
 assert(sum(nums) == 5050)
-assert(sum(values) == 10)
+assert(sum(values) == 10.0)
 ```
 
 ### Global Variables
 Architus adds several global variables to the script environment to allow users to access information about the message, author, and channel that triggered the auto-response.
 
-`message` is a struct with members:
-- id: an integer that represents the discord id of the triggering message
-- content: a string that represents the raw content of the triggering message
-- clean: a string that is the clean content of the triggering message (this is much closer to how users see a message)
+Some global variables are structs wich member values. To access the `name` member of an `author` struct you can just do `author.name` to get the name of the author.
 
-`author` is a struct with members:
-- id: an integer that is the discord id of the author that wrote the triggering message
-- avatar\_url: a string that is a url for the author's avatar image
-- color: a string that is the color that the author's name is displayed using
-- discrim: an integer that is the discriminator part of the author's username
-- roles: a list of strings that contains the integer id values of each role the author is a part of
-- name: a string value of the author's username (does not include the discriminator)
-- nick: a string that is the author's nickname in the server in which the triggering message was sent
-- disp: a string that is the author's display name in the server in which the triggering message was sent
+`message` struct (refers to triggering message):
+| Member name   | Type      | Description                  |
+|---------------|-----------|------------------------------|
+| id            | integer   | Discord id of the message    |
+| content       | string    | Raw content of the message   |
+| clean         | string    | Clean content of the message |
+This struct has an alias `msg`.
 
-`channel` is a struct with members:
-- id: an integer that is the discord id of the channel in which the triggering message was sent
-- name: a string that is the name of the channel in which the triggering message was sent
+`author` struct (refers to author of triggering message):
+| Member name   | Type              | Description                                               |
+|---------------|-------------------|-----------------------------------------------------------|
+| id            | integer           | Discord id of author                                      |
+| avatar\_url   | string            | Url for author's avatar                                   |
+| color         | string            | The color the author's name is displayed as               |
+| discrim       | integer           | The discriminator part of the author's username           |
+| roles         | list of integers  | Contains the discord ids for each role the author is in   |
+| name          | string            | Author's username with no discriminator                   |
+| nick          | string            | Author's nickname in the server                           |
+| disp          | string            | Author's display name in the server                       |
+This struct has an alias `a`.
+
+`channel` struct (refers to channel where triggering message was sent):
+| Member name   | Type              | Description                   |
+|---------------|-------------------|-------------------------------|
+| id            | integer           | Discord id of the channel     |
+| name          | string            | Name of the channel           |
+This struct has an alias `ch`.
 
 `count` is a global variable that is just an integer of how many times the auto response has been triggered.
 
@@ -306,6 +305,8 @@ The auto response settings pane can be accessed by the `settings responses` comm
 | Response Response Length | int | the maximum length of responses that users may set |
 | Allow Trigger Collisions | bool | whether setting triggers that overshaddow each other is allowed |
 | Restrict Remove | bool | whether anyone may remove an auto response or just the author |
+| Allow Embeds | bool | If false, architus will escape links in an auto response to prevent discord from embedding them |
+| Allow Newlines | bool | Toggles whether or not architus will strip new lines in auto response outputs |
 
 <Alert type="info">
 
