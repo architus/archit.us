@@ -258,16 +258,18 @@ Architus adds several global variables to the script environment to allow users 
 Some global variables are structs wich member values. To access the `name` member of an `author` struct you can just do `author.name` to get the name of the author.
 
 `message` struct (refers to triggering message):
+
 | Member name   | Type      | Description                  |
-|---------------|-----------|------------------------------|
+| ------------- | --------- | ---------------------------- |
 | id            | integer   | Discord id of the message    |
 | content       | string    | Raw content of the message   |
 | clean         | string    | Clean content of the message |
 This struct has an alias `msg`.
 
 `author` struct (refers to author of triggering message):
+
 | Member name   | Type              | Description                                               |
-|---------------|-------------------|-----------------------------------------------------------|
+| ------------- | ----------------- | --------------------------------------------------------- |
 | id            | integer           | Discord id of author                                      |
 | avatar\_url   | string            | Url for author's avatar                                   |
 | color         | string            | The color the author's name is displayed as               |
@@ -279,8 +281,9 @@ This struct has an alias `msg`.
 This struct has an alias `a`.
 
 `channel` struct (refers to channel where triggering message was sent):
+
 | Member name   | Type              | Description                   |
-|---------------|-------------------|-------------------------------|
+| ------------- | ----------------- | ----------------------------- |
 | id            | integer           | Discord id of the channel     |
 | name          | string            | Name of the channel           |
 This struct has an alias `ch`.
