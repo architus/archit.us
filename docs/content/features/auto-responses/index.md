@@ -264,7 +264,6 @@ Some global variables are structs wich member values. To access the `name` membe
 | id            | integer   | Discord id of the message    |
 | content       | string    | Raw content of the message   |
 | clean         | string    | Clean content of the message |
-This struct has an alias `msg`.
 
 `author` struct (refers to author of triggering message):
 
@@ -278,7 +277,6 @@ This struct has an alias `msg`.
 | name          | string            | Author's username with no discriminator                   |
 | nick          | string            | Author's nickname in the server                           |
 | disp          | string            | Author's display name in the server                       |
-This struct has an alias `a`.
 
 `channel` struct (refers to channel where triggering message was sent):
 
@@ -286,11 +284,19 @@ This struct has an alias `a`.
 | ------------- | ----------------- | ----------------------------- |
 | id            | integer           | Discord id of the channel     |
 | name          | string            | Name of the channel           |
-This struct has an alias `ch`.
 
 `count` is a global variable that is just an integer of how many times the auto response has been triggered.
 
 `caps` is an array of strings that contain all of the capture groups defined in the regular expression trigger of the auto response. The order of the capture groups will be in the same order in which they were defined in the regex.
+
+#### Aliases
+For ease of use, there are shorter ways to refer to some of the global variables in the environment.
+
+| Variable  | Alias |
+| --------  | ----- |
+| `message` | `msg` |
+| `channel` | `ch`  |
+| `author`  | `a`   |
 
 ## Settings
 
