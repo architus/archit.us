@@ -87,7 +87,7 @@ substituted with whatever is printed from the the starlark script that comes aft
 
 ![eval](./eval_demo.png)
 
-See [here](/features/auto-responses/#starlark) for more information on what can go into a script and how to write them.
+See [here](/features/auto-responses/#eval) for more information on what can go into a script and how to write them.
 
 ### Errors
 
@@ -198,13 +198,21 @@ The script is set up so that any strings that are printed out by the script will
 
 To print from starlark, the standard `print` function can be called. In addition, a shorthand, `p`, has been added to decrease the length of user scripts.
 
+<Alert type="info">
+
 Starlark has some peculiarities about it that make it more difficult to use when coming from Python. One such peculiarity is that strings are not iterable in Starlark, only lists. To iterate over a string you have to call the `elems` method on the string. This returns a list of the strings elements which is iterable.
 
-As an example:
+<Collapse>
+
+Example:
 ```py
 print([a for a in "aoua".elems()])
 ```
 will print `["a", "o", "u", "a"]`.
+
+</Collapse>
+
+</Alert>
 
 ### Architus Specifics
 To improve user experience, some changes to the Starlark language have been made. Specifically:
@@ -257,7 +265,7 @@ Architus adds several global variables to the script environment to allow users 
 
 Some global variables are structs wich member values. To access the `name` member of an `author` struct you can just do `author.name` to get the name of the author.
 
-`message` struct (refers to triggering message):
+###### `message` struct (refers to triggering message):
 
 | Member name   | Type      | Description                  |
 | ------------- | --------- | ---------------------------- |
@@ -265,7 +273,7 @@ Some global variables are structs wich member values. To access the `name` membe
 | content       | string    | Raw content of the message   |
 | clean         | string    | Clean content of the message |
 
-`author` struct (refers to author of triggering message):
+###### `author` struct (refers to author of triggering message):
 
 | Member name   | Type              | Description                                               |
 | ------------- | ----------------- | --------------------------------------------------------- |
@@ -278,7 +286,7 @@ Some global variables are structs wich member values. To access the `name` membe
 | nick          | string            | Author's nickname in the server                           |
 | disp          | string            | Author's display name in the server                       |
 
-`channel` struct (refers to channel where triggering message was sent):
+###### `channel` struct (refers to channel where triggering message was sent):
 
 | Member name   | Type              | Description                   |
 | ------------- | ----------------- | ----------------------------- |
