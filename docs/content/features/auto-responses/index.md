@@ -1,6 +1,7 @@
 ---
 title: Automatic Responses
 shortTitle: Auto Responses
+TOCDepth: 1
 ---
 
 Auto responses allow users to configure architus to listen for and respond to message patterns using an extensive syntax explained below.
@@ -194,65 +195,43 @@ Architus uses the [starlark](https://github.com/bazelbuild/starlark) language as
 Starlark is a stripped down dialect of Python. This means that most simple Python scripts will produce the exact same behavior in Starlark.
 
 ### Usage
-The script is set up so that any strings that are printed out by the script will replace the script block in the auto-response.
+Anything printed in the script will appear in the response content.
 
-To print from starlark, the standard `print` function can be called. In addition, a shorthand, `p`, has been added to decrease the length of user scripts.
+To print from starlark, the standard `print` function can be called. In addition, eval accepts a shorthand, `p`, to decrease the length of user scripts.
 
 <Alert type="info">
 
-Starlark has some peculiarities about it that make it more difficult to use when coming from Python. One such peculiarity is that strings are not iterable in Starlark, only lists. To iterate over a string you have to call the `elems` method on the string. This returns a list of the strings elements which is iterable.
+Starlark has some peculiarities about it that make it more difficult to use when coming from Python. For example, strings are not iterable in Starlark, only lists. To iterate over a string you must call the `elems` method on it:
 
-<Collapse>
-
-Example:
 ```py
-print([a for a in "aoua".elems()])
+print([a for a in "aoua".elems()])  # prints: ["a", "o", "u", "a"]
 ```
-will print `["a", "o", "u", "a"]`.
-
-</Collapse>
 
 </Alert>
-
-### Architus Specifics
-To improve user experience, some changes to the Starlark language have been made. Specifically:
-- Python style `while` loops have been added
-- Top level `if` statements are allowed
-- Global variables are mutable
-- Recursive function calls are allowed
-- Function declarations can be nested
 
 ### Builtin Functions
 The architus implementation of Starlark adds in a few extra builtins to improve user experience. They are called the same as any other Python builtin with the same behavior.
 
 #### Random
-The `random` function can be called with no arguments to return a random float in the range \[0,1\).
-
-For example:
+The `random` function can be called with no arguments to return a random float in the range `[0,1)`:
 ```py
-print(random())
+print(random())  # ex: 0.686645146372598
 ```
-may print `0.686645146372598`.
 
 #### Randint
-The `randint` function can be called with a high and low parameter to return a random integer in that range. For instance, `randint(lo, hi)` will return an integer in the range \[lo, hi\).
+The `randint` function can be called with a high and low parameter to return a random integer in that range. For instance, `randint(lo, hi)` will return an integer in the range `[lo, hi)`.
 
 #### Choice
-The `choice` function will return a random element from a list. It accepts a single list element as an argument and its return type can be any of the types in the list.
-
-For example:
+The `choice` function will return a random element from a list. It accepts a single list element as an argument and its return type can be any of the types in the list:
 ```py
-print(choice(["hello", 'a', 1, 1.2345, randint]))
+print(choice(["hello", 'a', 1, 1.2345, randint]))  # ex: hello
 ```
-may print `a`.
 
 #### Sine
-The `sin` function is the standard trigonometric sine function. It accepts radians as an argument and will return a float in the range \[0, 1\].
+The `sin` function is the standard trigonometric sine function. It accepts radians as an argument and will return a float in the range `[0, 1]`.
 
 #### Sum
-The `sum` function will sum all of the elements in a list. The sum will always start at zero and all of the elements of the list must be a number.
-
-Example:
+The `sum` function will sum all of the elements in a list. The sum will always start at zero and all of the elements of the list must be a number:
 ```py
 nums = range(1,101)
 values = [1,1.5,3,4.5]
@@ -261,11 +240,17 @@ assert(sum(values) == 10.0)
 ```
 
 ### Global Variables
-Architus adds several global variables to the script environment to allow users to access information about the message, author, and channel that triggered the auto-response.
+Architus adds several global variables to the script environment to allow users to access information about the message, author, and channel that triggered the auto-response:
 
-Some global variables are structs wich member values. To access the `name` member of an `author` struct you can just do `author.name` to get the name of the author.
+* [message (msg)](#message)
+* [author (a)](#author-1)
+* [channel (ch)](#channel)
+* [count](#count)
+* [caps](#caps)
 
-###### `message` struct (refers to triggering message):
+Some global variables are objects. To access the `name` member of an `author` you can just use `author.name`.
+
+###### message
 
 | Member name   | Type      | Description                  |
 | ------------- | --------- | ---------------------------- |
@@ -273,7 +258,7 @@ Some global variables are structs wich member values. To access the `name` membe
 | content       | string    | Raw content of the message   |
 | clean         | string    | Clean content of the message |
 
-###### `author` struct (refers to author of triggering message):
+###### author
 
 | Member name   | Type              | Description                                               |
 | ------------- | ----------------- | --------------------------------------------------------- |
@@ -286,25 +271,19 @@ Some global variables are structs wich member values. To access the `name` membe
 | nick          | string            | Author's nickname in the server                           |
 | disp          | string            | Author's display name in the server                       |
 
-###### `channel` struct (refers to channel where triggering message was sent):
+###### channel
 
 | Member name   | Type              | Description                   |
 | ------------- | ----------------- | ----------------------------- |
 | id            | integer           | Discord id of the channel     |
 | name          | string            | Name of the channel           |
 
-`count` is a global variable that is just an integer of how many times the auto response has been triggered.
+##### count
+The number of times this auto response has been triggered.
 
-`caps` is an array of strings that contain all of the capture groups defined in the regular expression trigger of the auto response. The order of the capture groups will be in the same order in which they were defined in the regex.
+##### caps
+An array of strings that contain all of the capture groups defined in the [regular expression trigger](#regex-triggers) of the auto response.
 
-#### Aliases
-For ease of use, there are shorter ways to refer to some of the global variables in the environment.
-
-| Variable  | Alias |
-| --------  | ----- |
-| `message` | `msg` |
-| `channel` | `ch`  |
-| `author`  | `a`   |
 
 ## Settings
 

@@ -73,6 +73,7 @@ export type TableOfContentsNode = {
 
 export type TableOfContentsProps = {
   items: TableOfContentsNode[];
+  maxDepth: number;
   className?: string;
   style?: React.CSSProperties;
 };
@@ -82,6 +83,7 @@ export type TableOfContentsProps = {
  */
 const TableOfContents: React.FC<TableOfContentsProps> = ({
   items,
+  maxDepth,
   className,
   style,
 }) => {
@@ -91,7 +93,7 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({
       <Article>
         <nav>
           <ul>
-            <TocItems items={items} />
+            <TocItems items={items} maxDepth={maxDepth} />
           </ul>
         </nav>
       </Article>
@@ -105,14 +107,22 @@ export default TableOfContents;
 // ? Helper components
 // ? =================
 
-const TocItems: React.FC<{ items: TableOfContentsNode[] }> = ({ items }) => (
+const TocItems: React.FC<{
+  items: TableOfContentsNode[];
+  maxDepth: number;
+  currentDepth?: number;
+}> = ({ items, maxDepth, currentDepth = 0 }) => (
   <>
     {items.map((item, i) => (
       <li key={`${item.url}-${i}`}>
         <a href={item.url}>{item.title}</a>
-        {isDefined(item.items) ? (
+        {isDefined(item.items) && currentDepth < maxDepth ? (
           <ul>
-            <TocItems items={item.items} />
+            <TocItems
+              items={item.items}
+              maxDepth={maxDepth}
+              currentDepth={currentDepth + 1}
+            />
           </ul>
         ) : null}
       </li>
