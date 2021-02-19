@@ -1,6 +1,7 @@
 ---
 title: Automatic Responses
 shortTitle: Auto Responses
+TOCDepth: 1
 ---
 
 Auto responses allow users to configure architus to listen for and respond to message patterns using an extensive syntax explained below.
@@ -80,6 +81,14 @@ substituted with one of the options. The options are seperated by commas.
 substituted with the [captured text](/features/auto-responses/#capture-groups) taken from the trigger message.
 
 ![capture](./capture_demo.png)
+
+#### \[eval script\]
+
+substituted with whatever is printed from the the starlark script that comes after the eval. Can also use `e` as a shorthand for `eval`.
+
+![eval](./eval_demo.png)
+
+See [here](/features/auto-responses/#eval) for more information on what can go into a script and how to write them.
 
 ### Errors
 
@@ -180,6 +189,102 @@ In the event that architus is unable to parse your trigger regex, it will give a
 Non-admin users will not be able to set regex triggers unless they are allowed in `settings`
 </Alert>
 
+## Eval
+Architus uses the [starlark](https://github.com/bazelbuild/starlark) language as its scripting language for auto-responses. A detailed specification of everything you can do in the language can be found [here](https://github.com/bazelbuild/starlark/blob/master/spec.md).
+
+Starlark is a stripped down dialect of Python. This means that most simple Python scripts will produce the exact same behavior in Starlark.
+
+### Usage
+Anything printed in the script will appear in the response content.
+
+To print from starlark, the standard `print` function can be called. In addition, eval accepts a shorthand, `p`, to decrease the length of user scripts.
+
+<Alert type="info">
+
+Starlark has some peculiarities about it that make it more difficult to use when coming from Python. For example, strings are not iterable in Starlark, only lists. To iterate over a string you must call the `elems` method on it:
+
+```py
+print([a for a in "aoua".elems()])  # prints: ["a", "o", "u", "a"]
+```
+
+</Alert>
+
+### Builtin Functions
+The architus implementation of Starlark adds in a few extra builtins to improve user experience. They are called the same as any other Python builtin with the same behavior.
+
+#### Random
+The `random` function can be called with no arguments to return a random float in the range `[0,1)`:
+```py
+print(random())  # ex: 0.686645146372598
+```
+
+#### Randint
+The `randint` function can be called with a high and low parameter to return a random integer in that range. For instance, `randint(lo, hi)` will return an integer in the range `[lo, hi)`.
+
+#### Choice
+The `choice` function will return a random element from a list. It accepts a single list element as an argument and its return type can be any of the types in the list:
+```py
+print(choice(["hello", 'a', 1, 1.2345, randint]))  # ex: hello
+```
+
+#### Sine
+The `sin` function is the standard trigonometric sine function. It accepts radians as an argument and will return a float in the range `[0, 1]`.
+
+#### Sum
+The `sum` function will sum all of the elements in a list. The sum will always start at zero and all of the elements of the list must be a number:
+```py
+nums = range(1,101)
+values = [1,1.5,3,4.5]
+assert(sum(nums) == 5050)
+assert(sum(values) == 10.0)
+```
+
+### Global Variables
+Architus adds several global variables to the script environment to allow users to access information about the message, author, and channel that triggered the auto-response:
+
+* [message (msg)](#message)
+* [author (a)](#author-1)
+* [channel (ch)](#channel)
+* [count](#count)
+* [caps](#caps)
+
+Some global variables are objects. To access the `name` member of an `author` you can just use `author.name`.
+
+###### message
+
+| Member name   | Type      | Description                  |
+| ------------- | --------- | ---------------------------- |
+| id            | integer   | Discord id of the message    |
+| content       | string    | Raw content of the message   |
+| clean         | string    | Clean content of the message |
+
+###### author
+
+| Member name   | Type              | Description                                               |
+| ------------- | ----------------- | --------------------------------------------------------- |
+| id            | integer           | Discord id of author                                      |
+| avatar\_url   | string            | Url for author's avatar                                   |
+| color         | string            | The color the author's name is displayed as               |
+| discrim       | integer           | The discriminator part of the author's username           |
+| roles         | list of integers  | Contains the discord ids for each role the author is in   |
+| name          | string            | Author's username with no discriminator                   |
+| nick          | string            | Author's nickname in the server                           |
+| disp          | string            | Author's display name in the server                       |
+
+###### channel
+
+| Member name   | Type              | Description                   |
+| ------------- | ----------------- | ----------------------------- |
+| id            | integer           | Discord id of the channel     |
+| name          | string            | Name of the channel           |
+
+##### count
+The number of times this auto response has been triggered.
+
+##### caps
+An array of strings that contain all of the capture groups defined in the [regular expression trigger](#regex-triggers) of the auto response.
+
+
 ## Settings
 
 The auto response settings pane can be accessed by the `settings responses` command
@@ -196,6 +301,8 @@ The auto response settings pane can be accessed by the `settings responses` comm
 | Response Response Length | int | the maximum length of responses that users may set |
 | Allow Trigger Collisions | bool | whether setting triggers that overshaddow each other is allowed |
 | Restrict Remove | bool | whether anyone may remove an auto response or just the author |
+| Allow Embeds | bool | If false, architus will escape links in an auto response to prevent discord from embedding them |
+| Allow Newlines | bool | Toggles whether or not architus will strip new lines in auto response outputs |
 
 <Alert type="info">
 

@@ -242,6 +242,7 @@ export const createPages: GatsbyNode["createPages"] = async ({
         breadcrumb,
         title,
         shortTitle,
+        TOCDepth: passthrough?.TOCDepth ?? 4,
         isOrphan: isNil(originalPath),
         noTOC: passthrough?.noTOC ?? false,
         noSequenceLinks: passthrough?.noSequenceLinks ?? false,
