@@ -145,6 +145,7 @@ const Docs: React.FC<PageProps<
   const {
     title,
     shortTitle,
+    TOCDepth,
     badge,
     isOrphan,
     noTOC,
@@ -206,7 +207,7 @@ const Docs: React.FC<PageProps<
             </ImageHandler>
             {!noTOC && tableOfContents.length > 0 && (
               <Styled.TableOfContentsWrapper>
-                <TableOfContents items={tableOfContents} />
+                <TableOfContents items={tableOfContents} maxDepth={TOCDepth} />
               </Styled.TableOfContentsWrapper>
             )}
           </div>
@@ -225,6 +226,7 @@ export const query = graphql`
     page: docsPage(id: { eq: $id }) {
       title
       shortTitle
+      TOCDepth
       badge
       isOrphan
       noTOC
