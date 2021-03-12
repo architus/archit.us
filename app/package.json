@@ -53,6 +53,7 @@
     "react-dom": "^16.12.0",
     "react-helmet": "^6.1.0",
     "react-icons": "^3.10.0",
+    "react-jinke-music-player": "^4.22.1",
     "react-overlays": "^4.1.0",
     "react-redux": "^7.2.0",
     "react-switch": "^5.0.1",
