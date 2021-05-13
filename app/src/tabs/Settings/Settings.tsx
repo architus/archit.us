@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import BoolSetting from "./BoolSetting";
 import GlassCard from "@app/components/GlassCard";
 import HelpTooltip from "@app/components/HelpTooltip";
+import AppNavigation from "@app/components/AppNavigation"
 import Switch from "@app/components/Switch";
 import { appVerticalPadding, appHorizontalPadding } from "@app/layout";
 import { TabProps } from "@app/tabs/types";
@@ -24,11 +25,12 @@ const Styled = {
     display: grid;
     height: 100%;
     width: 100%;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    grid-auto-rows: 260px;
-    grid-auto-flow: dense;
+    grid-template-columns: repeat(4, minmax(400px, 1fr));
+    grid-template-rows: 1fr;
+    grid-auto-flow: column;
     gap: ${gap.nano};
-    justify-items: stretch;
+    justify-items: start;
+    align-items: start;
     margin: ${gap.nano} 0 0;
 
     .rdg-filter-container {
@@ -69,41 +71,90 @@ const Styled = {
     }
   `,
   SettingsContainer: styled.div`
-    display: grid;
-    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-items: stretch;
     width: 100%;
-    grid-template-columns: repeat(auto-fit, minmax(${gap.mega}, 1fr));
-    grid-auto-rows: 100px;
-    grid-auto-flow: dense;
-    gap: ${gap.pico};
-    margin: ${gap.pico} 0;
+    height: 100%;
+    gap: ${gap.nano}; // TODO not this
+
   `,
 };
 
 const Settings: React.FC<TabProps> = () => {
+  const onAddGuild = () => true;
+  const tabs = [];
   return (
-    <Styled.Layout>
-      <Styled.Title></Styled.Title>
-      <Styled.OuterContainer>
-        <GlassCard>
-          General
-          <div className="rdg-filter-container">
-            <input placeholder="test" className="rdg-filter" />
-          </div>
-        </GlassCard>
-        <GlassCard>
-          Auto Responses
+    <AppNavigation tabs={tabs} prefix="/app" onOpenAddGuildModal={onAddGuild}>
+      <Styled.Layout>
+        <Styled.OuterContainer>
           <Styled.SettingsContainer>
-            <BoolSetting name="Enable Auto Responses" />
-            <BoolSetting name="Allow Trigger Regexes" />
-            <BoolSetting name="Allow Trigger Collisions" />
-            <BoolSetting name="Restrict Remove" />
-            <BoolSetting name="Expand Links" />
-            <BoolSetting name="Allow Newlines" />
+            <Styled.Title>Personal</Styled.Title>
+            <GlassCard>
+              <div className="rdg-filter-container">
+                <input placeholder="test" className="rdg-filter" />
+              </div>
+            </GlassCard>
+            <GlassCard>
+              <div className="rdg-filter-container">
+                <input placeholder="test" className="rdg-filter" />
+              </div>
+            </GlassCard>
+            <Styled.Title>Auto Responses</Styled.Title>
+            <GlassCard>
+              <BoolSetting name="Enable Music" />
+            </GlassCard>
           </Styled.SettingsContainer>
-        </GlassCard>
-      </Styled.OuterContainer>
-    </Styled.Layout>
+          <Styled.SettingsContainer>
+            <Styled.Title>General</Styled.Title>
+            <GlassCard>
+              <BoolSetting name="Enable Auto Responses" />
+              <BoolSetting name="Allow Trigger Regexes" />
+            </GlassCard>
+            <GlassCard>
+              <BoolSetting name="Enable Auto Responses" />
+              <BoolSetting name="Allow Trigger Regexes" />
+            </GlassCard>
+            <GlassCard>
+              <BoolSetting name="Enable Auto Responses" />
+              <BoolSetting name="Allow Trigger Regexes" />
+            </GlassCard>
+            <Styled.Title>Role Management</Styled.Title>
+            <GlassCard>
+              <BoolSetting name="Enable Auto Responses" />
+              <BoolSetting name="Allow Trigger Regexes" />
+            </GlassCard>
+          </Styled.SettingsContainer>
+          <Styled.SettingsContainer>
+            <Styled.Title>Gulag</Styled.Title>
+            <GlassCard>
+              <BoolSetting name="Allow Trigger Collisions" />
+            </GlassCard>
+            <Styled.Title>Twitch</Styled.Title>
+            <GlassCard>
+              <BoolSetting name="Allow Trigger Collisions" />
+            </GlassCard>
+            <Styled.Title>Emoji</Styled.Title>
+            <GlassCard>
+              <BoolSetting name="Allow Trigger Collisions" />
+            </GlassCard>
+          </Styled.SettingsContainer>
+          <Styled.SettingsContainer>
+            <Styled.Title>Pugs</Styled.Title>
+            <GlassCard>
+              <BoolSetting name="Expand Links" />
+              <BoolSetting name="Allow Newlines" />
+            </GlassCard>
+            <Styled.Title>Music</Styled.Title>
+            <GlassCard>
+              <BoolSetting name="Expand Links" />
+              <BoolSetting name="Allow Newlines" />
+            </GlassCard>
+          </Styled.SettingsContainer>
+        </Styled.OuterContainer>
+      </Styled.Layout>
+    </AppNavigation>
   );
 };
 
