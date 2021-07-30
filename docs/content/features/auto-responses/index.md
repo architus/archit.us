@@ -239,6 +239,26 @@ assert(sum(nums) == 5050)
 assert(sum(values) == 10.0)
 ```
 
+#### Get
+The `get` function acts as an HTTP get request. It requires a url as a parameter and can optionally take a dict of headers.
+
+```py
+resp = get("https://my-api.host.com/endpoint", headers={"my-header": "my-data"})
+```
+
+#### Post
+The `post` function acts as an HTTP post request. It requires a url as a parameter and can optionally take a dict of headers, a dict of json data, or raw data as keyword parameters. The keywords are "headers", "json", and "data" respectively.
+
+<Alert type="info">
+
+Only one of the json or headers keyword parameters can be used at a time. If they are both passed to the function, json will take priority and data will be ignored.
+
+</Alert>
+
+```py
+resp = post("https://api.archit.us/guild-count", headers={"custom-header": "value"}, json={"data": 1234})
+```
+
 ### Global Variables
 Architus adds several global variables to the script environment to allow users to access information about the message, author, and channel that triggered the auto-response:
 
