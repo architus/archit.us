@@ -5,16 +5,19 @@ import { useDispatch } from "react-redux";
 import DataGrid from "@app/components/DataGrid";
 import { appVerticalPadding, appHorizontalPadding } from "@app/layout";
 import { Dispatch } from "@app/store";
+import { FaDownload, FaCheckCircle, FaUpload, FaTrash } from "react-icons/fa";
+import AutoLink from "@architus/facade/components/AutoLink";
 import { cacheCustomEmoji, loadCustomEmoji } from "@app/store/routes";
 import { TabProps } from "@app/tabs/types";
 import { HoarFrost, Snowflake, CustomEmoji } from "@app/utility/types";
-import Button from "@architus/facade/components/Button";
 import { color } from "@architus/facade/theme/color";
-import { AuthorData, Author } from "./AutoResponses/types";
+import { AuthorData, Author } from "../AutoResponses/types";
 import { getAvatarUrl } from "@app/components/UserDisplay";
 import { usePool, usePoolEntities } from "@app/store/slices/pools";
 import UserDisplay from "@app/components/UserDisplay";
 import { gap } from "@architus/facade/theme/spacing";
+import { up } from "@architus/facade/theme/media";
+import GridHeader from "./GridHeader";
 
 const Styled = {
   Layout: styled.div`
@@ -24,6 +27,7 @@ const Styled = {
     color: ${color("textStrong")};
     font-size: 1.9rem;
     font-weight: 300;
+    margin-bottom: ${gap.nano};
   `,
   PageOuter: styled.div`
     position: relative;
@@ -32,32 +36,58 @@ const Styled = {
     align-items: stretch;
     flex-direction: column;
     height: 100%;
+
+    padding-top: ${gap.milli};
   `,
   Header: styled.div`
-    padding: 6 milli;
-    padding-left: 0 milli;
+    padding: 0 ${gap.milli};
+
+    p {
+      margin-bottom: ${gap.micro};
+    }
   `,
   DataGridWrapper: styled.div`
     position: relative;
-    display: flex;
-    align-items: stretch;
-    justify-content: stretch;
     flex-grow: 1;
+    display: flex;
+    justify-content: stretch;
+    align-items: stretch;
+    flex-direction: column;
+    background-color: ${color("bg")};
+    overflow: hidden;
+
+    ${up("md")} {
+      margin-left: ${gap.milli};
+      border-top-left-radius: 1rem;
+    }
   `,
-    AuthorWrapper: styled.div`
+  AuthorWrapper: styled.div`
     display: flex;
     align-items: center;
     height: 100%;
   `,
-    Avatar: styled(UserDisplay.Avatar)`
+  Avatar: styled(UserDisplay.Avatar)`
     position: relative;
     display: flex;
     align-items: center;
     `,
-    Name: styled.span`
+  Name: styled.span`
     margin-left: ${gap.femto};
     color: text;
     font-weight: 600;
+  `,
+  ButtonWrapper: styled.div`
+    max-height: 50%;
+    margin: 3px 0;
+    font-size: 2em;
+  `,
+  IconWrapper: styled.div`
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    color: ${color("success")};
+    font-size: 1.5em;
   `,
 };
 
@@ -69,33 +99,33 @@ function creatBtn(
 ) {
   if (x == true) {
     return (
-      <Button
-        variant="primary"
+      <Styled.ButtonWrapper>
+      <FaUpload
+        color={color('info')}
         onClick={() =>
           dispatch(cacheCustomEmoji({ routeData: { guildID, emojiID } }))
         }
-      >
-        Cache
-      </Button>
+      />
+    </Styled.ButtonWrapper>
     );
   }
   return (
-    <Button
-      variant="primary"
-      onClick={() =>
-        dispatch(loadCustomEmoji({ routeData: { guildID, emojiID } }))
-      }
-    >
-      Load
-    </Button>
+    <Styled.ButtonWrapper>
+      <FaDownload
+        color={color('success')}
+        onClick={() =>
+          dispatch(loadCustomEmoji({ routeData: { guildID, emojiID } }))
+        }
+      />
+    </Styled.ButtonWrapper>
   );
 }
 
 function loadedYN(x: boolean) {
   if (x == true) {
-    return "Loaded";
+    return <Styled.IconWrapper><FaCheckCircle/></Styled.IconWrapper>
   }
-  return "Cached";
+  return <></>;
 }
 
 const EmojiManager: React.FC<TabProps> = ({ guild }) => {
@@ -132,15 +162,32 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
   }, [authorEntries]);
 
   const columns = [
-    { key: "id", name: "ID" },
-    { key: "name", name: "NAME" },
+    {
+      key: "loaded ",
+      name: "LOADED",
+      width: 10,
+      formatter: ({ row }: { row: CustomEmoji }) => (
+        <> {loadedYN(row.discordId.isDefined())}</>
+      ),
+    },
     {
       key: "url",
       name: "IMAGE",
       formatter: ({ row }: { row: CustomEmoji }) => (
-        <img src={row.url} width="32" />
+        <img src={row.url} width="60px" />
       ),
     },
+    {
+      key: "download",
+      name: "DOWNLOAD",
+      formatter: ({ row }: { row: CustomEmoji }) => (
+        <>
+          <AutoLink href={row.url} target="_blank">{row.name}</AutoLink>
+        </>
+      ),
+    },
+    { key: "numUses", name: "USES" },
+
     {
       key: "authorId",
       name: "AUTHOR",
@@ -152,20 +199,23 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
       ),
     },
     {
-      key: "loaded ",
-      name: "LOADED",
-      formatter: ({ row }: { row: CustomEmoji }) => (
-        <> {loadedYN(row.discordId.isDefined())}</>
-      ),
-    },
-    { key: "numUses", name: "USES" },
-    {
       key: "btns",
-      name: "CHANGE",
+      name: "MANAGE",
       formatter: ({ row }: { row: CustomEmoji }) => (
         <>
           {" "}
           {creatBtn(row.discordId.isDefined(), useDispatch(), row.id, guild.id)}
+        </>
+      ),
+    },
+    {
+      key: "delete",
+      name: "DELETE",
+      formatter: ({ row }: { row: CustomEmoji }) => (
+        <>
+          <Styled.IconWrapper>
+            <FaTrash color={color("danger")}/>
+          </Styled.IconWrapper>
         </>
       ),
     },
@@ -186,7 +236,15 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
           </p>
         </Styled.Header>
         <Styled.DataGridWrapper>
+          <GridHeader
+            viewMode={"Comfy"}
+            setViewMode={(newMode: "Compact" | "Comfy" | "Sparse"): void => {}}
+            filterSelfAuthored={false}
+            onChangeFilterSelfAuthored={(newShow: boolean) => {}}
+            addNewRowEnable={true}
+          />
           <DataGrid<CustomEmoji, "id", {}>
+            rowHeight={65}
             rows={emojiList || []}
             columns={columns}
             rowKey="id"

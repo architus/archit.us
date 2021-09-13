@@ -15,6 +15,7 @@ export const frontmatterType = `
     noBreadcrumb: Boolean
 
     # Passthrough props (add additional fields here)
+    TOCDepth: Int
     noTOC: Boolean
     badge: String
     noSequenceLinks: Boolean
@@ -34,6 +35,7 @@ export const frontmatterFragment = `
   noBreadcrumb
 
   # Passthrough props (add additional fields here)
+  TOCDepth
   noTOC
   badge
   noSequenceLinks
@@ -65,6 +67,7 @@ export type DocsPassthroughProps = {
   noTOC?: boolean;
   noSequenceLinks?: boolean;
   badge?: string;
+  TOCDepth?: number;
 };
 
 /**
@@ -111,6 +114,7 @@ export type DocsPage = {
   breadcrumb: BreadcrumbSegment[] | Nil;
   title: string;
   shortTitle: string;
+  TOCDepth: number;
   isOrphan: boolean;
   noTOC: boolean;
   noSequenceLinks: boolean;
@@ -125,6 +129,7 @@ export const docsPageType = `
     breadcrumb: [BreadcrumbSegment!]
     title: String!
     shortTitle: String!
+    TOCDepth: Int!
     isOrphan: Boolean!
     noTOC: Boolean!
     noSequenceLinks: Boolean!

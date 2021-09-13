@@ -12,20 +12,23 @@ export type UmamiAnalytics = {
  * Gets the site's Umami analytics parameters if they exist
  */
 export function useUmamiAnalytics(): Option<UmamiAnalytics> {
-  // const queryResult = useStaticQuery<
-  //   GatsbyTypes.UseUmamiAnalyticsQuery
-  // >(graphql`
-  //   query UseUmamiAnalytics {
-  //     site {
-  //       siteMetadata {
-  //         umami {
-  //           websiteId
-  //           base
-  //         }
-  //       }
-  //     }
-  //   }
-  // `);
+  // this seems to be required due to a bug with useStaticQuery in gatsby v2.23.11
+  if (process.env.NODE_ENV !== "production") return None;
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const queryResult = useStaticQuery<
+    GatsbyTypes.UseUmamiAnalyticsQuery
+  >(graphql`
+    query UseUmamiAnalytics {
+      site {
+        siteMetadata {
+          umami {
+            websiteId
+            base
+          }
+        }
+      }
+    }
+  `);
 
   // const umami = queryResult.site?.siteMetadata?.umami;
   // if (

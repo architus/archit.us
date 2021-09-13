@@ -4,7 +4,15 @@ import * as t from "io-ts";
 import { makeRoute } from "@app/store/api/rest";
 import { Errors } from "@app/store/api/rest/types";
 import { HttpVerbs } from "@app/utility";
-import { User, Access, Guild, Snowflake, HoarFrost } from "@app/utility/types";
+import {
+  User,
+  Access,
+  Guild,
+  EpochFromString,
+  Snowflake,
+  HoarFrost,
+  THoarFrost,
+} from "@app/utility/types";
 
 export type IdentifySessionResponse = t.TypeOf<typeof IdentifySessionResponse>;
 export const IdentifySessionResponse = t.interface({
@@ -135,4 +143,33 @@ export const deleteCustomEmoji = makeRoute()({
     `/emojis/${guildID}/${emojiID}`,
   method: HttpVerbs.DELETE,
   auth: true,
+});
+
+export type StatisticsResponse = t.TypeOf<typeof StatisticsResponse>;
+
+export const StatisticsResponse = t.interface({
+  memberCount: t.number,
+  messageCount: t.number,
+  architusCount: t.number,
+  commonWords: t.array(t.tuple([t.string, t.number])),
+  mentionCounts: t.record(t.string, t.number),
+  memberCounts: t.record(t.string, t.number),
+  channelCounts: t.record(t.string, t.number),
+  timeMemberCounts: t.record(EpochFromString, t.record(t.string, t.number)),
+  upToDate: t.boolean,
+  forbidden: t.boolean,
+  lastActivity: EpochFromString,
+  popularEmojis: t.array(THoarFrost),
+});
+
+/**
+ * GET /stats/<guildId>
+ */
+export const fetchStats = makeRoute()({
+  label: "stats",
+  route: ({ guildId }: { guildId: Snowflake }) => `/stats/${guildId}`,
+  method: HttpVerbs.GET,
+  auth: true,
+  decode: (response: unknown): Either<Errors, StatisticsResponse> =>
+    either.chain(t.object.decode(response), StatisticsResponse.decode),
 });
