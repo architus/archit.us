@@ -84,7 +84,7 @@ const Styled = {
     position: relative;
     display: flex;
     align-items: center;
-    `,
+  `,
   Name: styled.span`
     margin-left: ${gap.femto};
     color: text;
@@ -122,7 +122,7 @@ function creatBtn(
         <Button type="ghost" disabled={!author && x}>
           <Styled.IconWrapper>
             <FaUpload
-              color={color('info')}
+              color={color("info")}
               onClick={() =>
                 dispatch(cacheCustomEmoji({ routeData: { guildID, emojiID } }))
               }
@@ -130,7 +130,6 @@ function creatBtn(
           </Styled.IconWrapper>
         </Button>
       </Styled.ButtonWrapper>
-
     );
   }
   return (
@@ -138,7 +137,7 @@ function creatBtn(
       <Button type="ghost" disabled={!author && x}>
         <Styled.IconWrapper>
           <FaDownload
-            color={color('success')}
+            color={color("success")}
             onClick={() =>
               dispatch(loadCustomEmoji({ routeData: { guildID, emojiID } }))
             }
@@ -146,13 +145,16 @@ function creatBtn(
         </Styled.IconWrapper>
       </Button>
     </Styled.ButtonWrapper>
-
   );
 }
 
 function loadedYN(x: boolean) {
   if (x == true) {
-    return <Styled.IconWrapper><FaCheckCircle /></Styled.IconWrapper>
+    return (
+      <Styled.IconWrapper>
+        <FaCheckCircle />
+      </Styled.IconWrapper>
+    );
   }
   return <></>;
 }
@@ -224,10 +226,9 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
       width: 100,
       formatter: ({ row }: { row: CustomEmoji }) => (
         <>
-        <Styled.ButtonWrapper>
-        <p>{row.numUses}</p>
-
-        </Styled.ButtonWrapper>
+          <Styled.ButtonWrapper>
+            <p>{row.numUses}</p>
+          </Styled.ButtonWrapper>
         </>
       ),
     },
@@ -236,7 +237,9 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
       name: "DOWNLOAD",
       formatter: ({ row }: { row: CustomEmoji }) => (
         <>
-          <AutoLink href={row.url} target="_blank">{row.name}</AutoLink>
+          <AutoLink href={row.url} target="_blank">
+            {row.name}
+          </AutoLink>
         </>
       ),
     },
@@ -245,7 +248,11 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
       name: "AUTHOR",
       formatter: ({ row }: { row: CustomEmoji }) => (
         <Styled.AuthorWrapper>
-          <Styled.Avatar avatarUrl={foldAuthorData(row, authorsMap).avatarUrl} circle size={28} />
+          <Styled.Avatar
+            avatarUrl={foldAuthorData(row, authorsMap).avatarUrl}
+            circle
+            size={28}
+          />
           <Styled.Name>{foldAuthorData(row, authorsMap).author}</Styled.Name>
         </Styled.AuthorWrapper>
       ),
@@ -256,7 +263,13 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
       width: 100,
       formatter: ({ row }: { row: CustomEmoji }) => (
         <>
-          {creatBtn(row.discordId.isDefined(), isAuthor(currentUser, row), useDispatch(), row.id, guild.id)}
+          {creatBtn(
+            row.discordId.isDefined(),
+            isAuthor(currentUser, row),
+            useDispatch(),
+            row.id,
+            guild.id
+          )}
         </>
       ),
     },
@@ -265,20 +278,17 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
       name: "DELETE",
       width: 100,
       formatter: ({ row }: { row: CustomEmoji }) => {
-
         return (
           <>
             <Styled.ButtonWrapper>
-
-              <Button disabled={!isAuthor(currentUser, row)} type='ghost'>
+              <Button disabled={!isAuthor(currentUser, row)} type="ghost">
                 <Styled.IconWrapper>
                   <FaTrash color={color("danger")} />
                 </Styled.IconWrapper>
               </Button>
             </Styled.ButtonWrapper>
-
           </>
-        )
+        );
       },
     },
   ];
@@ -296,15 +306,22 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
         <Styled.Header>
           <h2>Emoji Manager</h2>
         </Styled.Header>
-        <ManagerJumbotron/>
+        <ManagerJumbotron
+          enabled={true}
+          current={5}
+          discordLimit={6}
+          architusLimit={8}
+          docsLink="https://docs.archit.us/"
+          onChangeEnabled={(): void => undefined}
+        />
         <Styled.DataGridWrapper>
           <GridHeader
             viewMode={viewMode}
             setViewMode={setViewMode}
             filterSelfAuthored={false}
-            onChangeFilterSelfAuthored={(newShow: boolean) => { }}
+            onChangeFilterSelfAuthored={(newShow: boolean) => {}}
             addNewRowEnable={false}
-            onAddNewRow={() => { }}
+            onAddNewRow={() => {}}
           />
           <DataGrid<CustomEmoji, "id", {}>
             rowHeight={viewModes[viewMode].height}
@@ -319,8 +336,6 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
 };
 
 export default EmojiManager;
-
-
 
 /**
  * Performs the row transformation operation, resolving auto responses to the necessary
@@ -351,5 +366,3 @@ function foldAuthorData(
     avatarUrl: "/img/unknown.png",
   };
 }
-
-
