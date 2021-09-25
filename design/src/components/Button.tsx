@@ -92,6 +92,11 @@ const typeClasses = {
     &:active {
       background-color: var(--button-active-color);
     }
+
+    &:disabled {
+      opacity: 0.25;
+      pointer-events: none;
+    }
   `,
   outline: css`
     border: 2px solid var(--button-color);
@@ -108,6 +113,11 @@ const typeClasses = {
     &:active {
       color: var(--button-foreground);
       background-color: var(--button-active-color);
+    }
+
+    &:disabled {
+      opacity: 0.25;
+      pointer-events: none;
     }
   `,
   ghost: css`
