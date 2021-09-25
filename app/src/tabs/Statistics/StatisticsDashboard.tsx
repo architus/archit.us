@@ -44,6 +44,7 @@ import { animation } from "@architus/facade/theme/motion";
 import { gap } from "@architus/facade/theme/spacing";
 import { Option } from "@architus/lib/option";
 import { isDefined, formatNum } from "@architus/lib/utility";
+import PageTitle from "@app/components/PageTitle";
 
 const Styled = {
   PageOuter: styled.div`
@@ -435,6 +436,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
 
   return (
     <Styled.PageOuter>
+      <PageTitle title="Statistics" />
       <Styled.Title>Statistics</Styled.Title>
       <Styled.IntegrityAlert
         sKey={`statsForbidden${guild.id}`}

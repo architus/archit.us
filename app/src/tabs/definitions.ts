@@ -36,7 +36,7 @@ const definitions: TabDefinition[] = [
     name: "Emoji Manager",
     icon: EmojiManagerIcon,
     component: EmojiManager,
-    tooltip: "Coming soon",
+    tooltip: "View and manage custom emoji",
   },
   {
     path: "logs",

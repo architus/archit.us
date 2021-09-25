@@ -86,9 +86,9 @@ const Styled = {
 export type ViewMode = keyof typeof viewModes;
 const viewModeOrder: ViewMode[] = ["Sparse", "Comfy", "Compact"];
 export const viewModes = {
-  Compact: { icon: Compact, label: "Compact", height: 28 },
-  Comfy: { icon: Comfy, label: "Comfy", height: 36 },
-  Sparse: { icon: Sparse, label: "Sparse", height: 44 },
+  Compact: { icon: Compact, label: "Compact", height: 44 },
+  Comfy: { icon: Comfy, label: "Comfy", height: 52 },
+  Sparse: { icon: Sparse, label: "Sparse", height: 60 },
 } as const;
 
 export type GridHeaderProps = {
@@ -125,7 +125,7 @@ const GridHeader: React.FC<GridHeaderProps> = ({
           </Styled.SelfAuthorLabel>
           <HelpTooltip
             placement="top"
-            tooltip="When selected, only show auto responses you have authored"
+            tooltip="When selected, only show emoji you uploaded."
           />
         </>
       }

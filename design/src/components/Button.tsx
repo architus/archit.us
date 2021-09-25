@@ -131,6 +131,11 @@ const typeClasses = {
     &:active {
       background-color: var(--overlay-active);
     }
+
+    &:disabled {
+      opacity: 0.25;
+      pointer-events: none;
+    }
   `,
 } as const;
 

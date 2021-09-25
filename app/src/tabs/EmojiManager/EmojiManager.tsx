@@ -1,5 +1,5 @@
 import { styled } from "linaria/react";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 
 import DataGrid from "@app/components/DataGrid";
@@ -9,7 +9,7 @@ import { FaDownload, FaCheckCircle, FaUpload, FaTrash } from "react-icons/fa";
 import AutoLink from "@architus/facade/components/AutoLink";
 import { cacheCustomEmoji, loadCustomEmoji } from "@app/store/routes";
 import { TabProps } from "@app/tabs/types";
-import { HoarFrost, Snowflake, CustomEmoji } from "@app/utility/types";
+import { HoarFrost, Snowflake, CustomEmoji, User } from "@app/utility/types";
 import { color } from "@architus/facade/theme/color";
 import { AuthorData, Author } from "../AutoResponses/types";
 import { getAvatarUrl } from "@app/components/UserDisplay";
@@ -17,7 +17,15 @@ import { usePool, usePoolEntities } from "@app/store/slices/pools";
 import UserDisplay from "@app/components/UserDisplay";
 import { gap } from "@architus/facade/theme/spacing";
 import { up } from "@architus/facade/theme/media";
-import GridHeader from "./GridHeader";
+import GridHeader, { ViewMode } from "./GridHeader";
+import ManagerJumbotron from "./ManagerJumbotron";
+import { Option } from "@architus/lib/option";
+import { useCurrentUser } from "@app/store/slices/session";
+import { isDefined } from "@architus/lib/utility";
+import Button from "@architus/facade/components/Button";
+import { viewModes } from "./GridHeader";
+import PageTitle from "@app/components/PageTitle";
+import { boolean } from "fp-ts";
 
 const Styled = {
   Layout: styled.div`
@@ -41,6 +49,12 @@ const Styled = {
   `,
   Header: styled.div`
     padding: 0 ${gap.milli};
+    h2 {
+      color: ${color("textStrong")};
+      font-size: 1.9rem;
+      font-weight: 300;
+      margin-bottom: ${gap.nano};
+    }
 
     p {
       margin-bottom: ${gap.micro};
@@ -77,9 +91,13 @@ const Styled = {
     font-weight: 600;
   `,
   ButtonWrapper: styled.div`
-    max-height: 50%;
-    margin: 3px 0;
-    font-size: 2em;
+    display: flex;
+    align-content: center;
+    height: 100%;
+    p {
+      font-size: 1.5em;
+      font-style: bold;
+    }
   `,
   IconWrapper: styled.div`
     display: flex;
@@ -93,6 +111,7 @@ const Styled = {
 
 function creatBtn(
   x: boolean,
+  author: boolean,
   dispatch: Dispatch,
   emojiID: HoarFrost,
   guildID: Snowflake
@@ -100,32 +119,49 @@ function creatBtn(
   if (x == true) {
     return (
       <Styled.ButtonWrapper>
-      <FaUpload
-        color={color('info')}
-        onClick={() =>
-          dispatch(cacheCustomEmoji({ routeData: { guildID, emojiID } }))
-        }
-      />
-    </Styled.ButtonWrapper>
+        <Button type="ghost" disabled={!author && x}>
+          <Styled.IconWrapper>
+            <FaUpload
+              color={color('info')}
+              onClick={() =>
+                dispatch(cacheCustomEmoji({ routeData: { guildID, emojiID } }))
+              }
+            />
+          </Styled.IconWrapper>
+        </Button>
+      </Styled.ButtonWrapper>
+
     );
   }
   return (
     <Styled.ButtonWrapper>
-      <FaDownload
-        color={color('success')}
-        onClick={() =>
-          dispatch(loadCustomEmoji({ routeData: { guildID, emojiID } }))
-        }
-      />
+      <Button type="ghost" disabled={!author && x}>
+        <Styled.IconWrapper>
+          <FaDownload
+            color={color('success')}
+            onClick={() =>
+              dispatch(loadCustomEmoji({ routeData: { guildID, emojiID } }))
+            }
+          />
+        </Styled.IconWrapper>
+      </Button>
     </Styled.ButtonWrapper>
+
   );
 }
 
 function loadedYN(x: boolean) {
   if (x == true) {
-    return <Styled.IconWrapper><FaCheckCircle/></Styled.IconWrapper>
+    return <Styled.IconWrapper><FaCheckCircle /></Styled.IconWrapper>
   }
   return <></>;
+}
+
+function isAuthor(currentUser: Option<User>, row: CustomEmoji): boolean {
+  if (currentUser.isDefined()) {
+    return currentUser.get.id === row.authorId.getOrElse(-1);
+  }
+  return false;
 }
 
 const EmojiManager: React.FC<TabProps> = ({ guild }) => {
@@ -133,6 +169,8 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
     type: "customEmoji",
     guildId: guild.id,
   });
+
+  const currentUser: Option<User> = useCurrentUser();
 
   // Load the authors from the commands (call the pool in a staggered manner)
   const allAuthorIds = useMemo(() => {
@@ -161,6 +199,8 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
     return authors;
   }, [authorEntries]);
 
+  let mayManageEmojis = !!(guild.permissions & 1073741824);
+
   const columns = [
     {
       key: "loaded ",
@@ -173,8 +213,22 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
     {
       key: "url",
       name: "IMAGE",
+      width: 100,
       formatter: ({ row }: { row: CustomEmoji }) => (
         <img src={row.url} width="60px" />
+      ),
+    },
+    {
+      key: "numUses",
+      name: "USES",
+      width: 100,
+      formatter: ({ row }: { row: CustomEmoji }) => (
+        <>
+        <Styled.ButtonWrapper>
+        <p>{row.numUses}</p>
+
+        </Styled.ButtonWrapper>
+        </>
       ),
     },
     {
@@ -186,38 +240,46 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
         </>
       ),
     },
-    { key: "numUses", name: "USES" },
-
     {
       key: "authorId",
       name: "AUTHOR",
       formatter: ({ row }: { row: CustomEmoji }) => (
-          <Styled.AuthorWrapper>
-            <Styled.Avatar avatarUrl={foldAuthorData(row, authorsMap).avatarUrl} circle size={28} />
-            <Styled.Name>{foldAuthorData(row, authorsMap).author}</Styled.Name>
-          </Styled.AuthorWrapper>
+        <Styled.AuthorWrapper>
+          <Styled.Avatar avatarUrl={foldAuthorData(row, authorsMap).avatarUrl} circle size={28} />
+          <Styled.Name>{foldAuthorData(row, authorsMap).author}</Styled.Name>
+        </Styled.AuthorWrapper>
       ),
     },
     {
       key: "btns",
       name: "MANAGE",
+      width: 100,
       formatter: ({ row }: { row: CustomEmoji }) => (
         <>
-          {" "}
-          {creatBtn(row.discordId.isDefined(), useDispatch(), row.id, guild.id)}
+          {creatBtn(row.discordId.isDefined(), isAuthor(currentUser, row), useDispatch(), row.id, guild.id)}
         </>
       ),
     },
     {
       key: "delete",
       name: "DELETE",
-      formatter: ({ row }: { row: CustomEmoji }) => (
-        <>
-          <Styled.IconWrapper>
-            <FaTrash color={color("danger")}/>
-          </Styled.IconWrapper>
-        </>
-      ),
+      width: 100,
+      formatter: ({ row }: { row: CustomEmoji }) => {
+
+        return (
+          <>
+            <Styled.ButtonWrapper>
+
+              <Button disabled={!isAuthor(currentUser, row)} type='ghost'>
+                <Styled.IconWrapper>
+                  <FaTrash color={color("danger")} />
+                </Styled.IconWrapper>
+              </Button>
+            </Styled.ButtonWrapper>
+
+          </>
+        )
+      },
     },
   ];
 
@@ -226,25 +288,26 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
     guildId: guild.id,
   });
 
+  const [viewMode, setViewMode] = useState("Comfy" as ViewMode);
   return (
     <>
       <Styled.PageOuter>
+        <PageTitle title="Emoji Manager" />
         <Styled.Header>
           <h2>Emoji Manager</h2>
-          <p className="hide-mobile">
-            Manage the cached and loaded emojis on the server.
-          </p>
         </Styled.Header>
+        <ManagerJumbotron/>
         <Styled.DataGridWrapper>
           <GridHeader
-            viewMode={"Comfy"}
-            setViewMode={(newMode: "Compact" | "Comfy" | "Sparse"): void => {}}
+            viewMode={viewMode}
+            setViewMode={setViewMode}
             filterSelfAuthored={false}
-            onChangeFilterSelfAuthored={(newShow: boolean) => {}}
-            addNewRowEnable={true}
+            onChangeFilterSelfAuthored={(newShow: boolean) => { }}
+            addNewRowEnable={false}
+            onAddNewRow={() => { }}
           />
           <DataGrid<CustomEmoji, "id", {}>
-            rowHeight={65}
+            rowHeight={viewModes[viewMode].height}
             rows={emojiList || []}
             columns={columns}
             rowKey="id"
@@ -265,7 +328,7 @@ export default EmojiManager;
  * @param customEmoji - Current row auto response object
  * @param authors - Map of IDs to User objects to use for fast lookup
  */
- function foldAuthorData(
+function foldAuthorData(
   customEmoji: CustomEmoji,
   authors: Map<Snowflake, Author>
 ): AuthorData {
