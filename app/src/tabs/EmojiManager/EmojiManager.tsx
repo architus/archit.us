@@ -1,31 +1,30 @@
+import { boolean } from "fp-ts";
 import { styled } from "linaria/react";
 import React, { useMemo, useState } from "react";
+import { FaDownload, FaCheckCircle, FaUpload, FaTrash } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 
+import { AuthorData, Author } from "../AutoResponses/types";
+import GridHeader, { ViewMode, viewModes } from "./GridHeader";
+import ManagerJumbotron from "./ManagerJumbotron";
 import DataGrid from "@app/components/DataGrid";
+import PageTitle from "@app/components/PageTitle";
+import UserDisplay, { getAvatarUrl } from "@app/components/UserDisplay";
 import { appVerticalPadding, appHorizontalPadding } from "@app/layout";
 import { Dispatch } from "@app/store";
-import { FaDownload, FaCheckCircle, FaUpload, FaTrash } from "react-icons/fa";
-import AutoLink from "@architus/facade/components/AutoLink";
 import { cacheCustomEmoji, loadCustomEmoji } from "@app/store/routes";
+import { usePool, usePoolEntities } from "@app/store/slices/pools";
+import { useCurrentUser } from "@app/store/slices/session";
 import { TabProps } from "@app/tabs/types";
 import { HoarFrost, Snowflake, CustomEmoji, User } from "@app/utility/types";
-import { color } from "@architus/facade/theme/color";
-import { AuthorData, Author } from "../AutoResponses/types";
-import { getAvatarUrl } from "@app/components/UserDisplay";
-import { usePool, usePoolEntities } from "@app/store/slices/pools";
-import UserDisplay from "@app/components/UserDisplay";
-import { gap } from "@architus/facade/theme/spacing";
-import { up } from "@architus/facade/theme/media";
-import GridHeader, { ViewMode } from "./GridHeader";
-import ManagerJumbotron from "./ManagerJumbotron";
-import { Option } from "@architus/lib/option";
-import { useCurrentUser } from "@app/store/slices/session";
-import { isDefined } from "@architus/lib/utility";
+import AutoLink from "@architus/facade/components/AutoLink";
 import Button from "@architus/facade/components/Button";
-import { viewModes } from "./GridHeader";
-import PageTitle from "@app/components/PageTitle";
-import { boolean } from "fp-ts";
+import { useColorMode } from "@architus/facade/hooks";
+import { Color, color, hybridColor } from "@architus/facade/theme/color";
+import { up } from "@architus/facade/theme/media";
+import { gap } from "@architus/facade/theme/spacing";
+import { Option } from "@architus/lib/option";
+import { isDefined } from "@architus/lib/utility";
 
 const Styled = {
   Layout: styled.div`
@@ -84,6 +83,7 @@ const Styled = {
     position: relative;
     display: flex;
     align-items: center;
+    flex-shrink: 0;
   `,
   Name: styled.span`
     margin-left: ${gap.femto};
@@ -92,11 +92,20 @@ const Styled = {
   `,
   ButtonWrapper: styled.div`
     display: flex;
-    align-content: center;
+    align-items: center;
+    height: 100%;
+    & > :not(:last-child) {
+      margin-right: ${gap("femto")};
+    }
+  `,
+  UsesWrapper: styled.div`
+    display: flex;
+    justify-content: right;
     height: 100%;
     p {
       font-size: 1.5em;
       font-style: bold;
+      text-align: right;
     }
   `,
   IconWrapper: styled.div`
@@ -105,7 +114,8 @@ const Styled = {
     align-items: center;
     justify-content: center;
     color: ${color("success")};
-    font-size: 1.5em;
+    font-size: 1.2em;
+    padding: 4px 0;
   `,
 };
 
@@ -116,35 +126,42 @@ function creatBtn(
   emojiID: HoarFrost,
   guildID: Snowflake
 ) {
+  const colorMode = useColorMode();
   if (x == true) {
     return (
-      <Styled.ButtonWrapper>
-        <Button type="ghost" disabled={!author && x}>
-          <Styled.IconWrapper>
-            <FaUpload
-              color={color("info")}
-              onClick={() =>
-                dispatch(cacheCustomEmoji({ routeData: { guildID, emojiID } }))
-              }
-            />
-          </Styled.IconWrapper>
-        </Button>
-      </Styled.ButtonWrapper>
-    );
-  }
-  return (
-    <Styled.ButtonWrapper>
-      <Button type="ghost" disabled={!author && x}>
+      <Button
+        type="solid"
+        size="compact"
+        disabled={!author && x}
+        color={hybridColor("bg", colorMode)}
+      >
         <Styled.IconWrapper>
-          <FaDownload
-            color={color("success")}
+          <FaUpload
+            color={color("info")}
             onClick={() =>
-              dispatch(loadCustomEmoji({ routeData: { guildID, emojiID } }))
+              dispatch(cacheCustomEmoji({ routeData: { guildID, emojiID } }))
             }
           />
         </Styled.IconWrapper>
       </Button>
-    </Styled.ButtonWrapper>
+    );
+  }
+  return (
+    <Button
+      type="solid"
+      size="compact"
+      disabled={!author && x}
+      color={hybridColor("bg", colorMode)}
+    >
+      <Styled.IconWrapper>
+        <FaDownload
+          color={color("success")}
+          onClick={() =>
+            dispatch(loadCustomEmoji({ routeData: { guildID, emojiID } }))
+          }
+        />
+      </Styled.IconWrapper>
+    </Button>
   );
 }
 
@@ -201,7 +218,8 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
     return authors;
   }, [authorEntries]);
 
-  let mayManageEmojis = !!(guild.permissions & 1073741824);
+  const mayManageEmojis = !!(guild.permissions & 1073741824);
+  const colorMode = useColorMode();
 
   const columns = [
     {
@@ -226,9 +244,9 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
       width: 100,
       formatter: ({ row }: { row: CustomEmoji }) => (
         <>
-          <Styled.ButtonWrapper>
+          <Styled.UsesWrapper>
             <p>{row.numUses}</p>
-          </Styled.ButtonWrapper>
+          </Styled.UsesWrapper>
         </>
       ),
     },
@@ -260,36 +278,31 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
     {
       key: "btns",
       name: "MANAGE",
-      width: 100,
+      width: 150,
       formatter: ({ row }: { row: CustomEmoji }) => (
         <>
-          {creatBtn(
-            row.discordId.isDefined(),
-            isAuthor(currentUser, row),
-            useDispatch(),
-            row.id,
-            guild.id
-          )}
+          <Styled.ButtonWrapper>
+            {creatBtn(
+              row.discordId.isDefined(),
+              isAuthor(currentUser, row),
+              useDispatch(),
+              row.id,
+              guild.id
+            )}
+
+            <Button
+              disabled={!isAuthor(currentUser, row)}
+              size="compact"
+              type="solid"
+              color={hybridColor("bg", colorMode)}
+            >
+              <Styled.IconWrapper>
+                <FaTrash color={color("danger")} />
+              </Styled.IconWrapper>
+            </Button>
+          </Styled.ButtonWrapper>
         </>
       ),
-    },
-    {
-      key: "delete",
-      name: "DELETE",
-      width: 100,
-      formatter: ({ row }: { row: CustomEmoji }) => {
-        return (
-          <>
-            <Styled.ButtonWrapper>
-              <Button disabled={!isAuthor(currentUser, row)} type="ghost">
-                <Styled.IconWrapper>
-                  <FaTrash color={color("danger")} />
-                </Styled.IconWrapper>
-              </Button>
-            </Styled.ButtonWrapper>
-          </>
-        );
-      },
     },
   ];
 
@@ -298,7 +311,6 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
     guildId: guild.id,
   });
 
-  const [viewMode, setViewMode] = useState("Comfy" as ViewMode);
   return (
     <>
       <Styled.PageOuter>
@@ -316,15 +328,13 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
         />
         <Styled.DataGridWrapper>
           <GridHeader
-            viewMode={viewMode}
-            setViewMode={setViewMode}
             filterSelfAuthored={false}
             onChangeFilterSelfAuthored={(newShow: boolean) => {}}
             addNewRowEnable={false}
             onAddNewRow={() => {}}
           />
           <DataGrid<CustomEmoji, "id", {}>
-            rowHeight={viewModes[viewMode].height}
+            rowHeight={52}
             rows={emojiList || []}
             columns={columns}
             rowKey="id"

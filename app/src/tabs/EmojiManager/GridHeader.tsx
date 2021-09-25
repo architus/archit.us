@@ -83,17 +83,7 @@ const Styled = {
   `,
 };
 
-export type ViewMode = keyof typeof viewModes;
-const viewModeOrder: ViewMode[] = ["Sparse", "Comfy", "Compact"];
-export const viewModes = {
-  Compact: { icon: Compact, label: "Compact", height: 44 },
-  Comfy: { icon: Comfy, label: "Comfy", height: 52 },
-  Sparse: { icon: Sparse, label: "Sparse", height: 60 },
-} as const;
-
 export type GridHeaderProps = {
-  viewMode: ViewMode;
-  setViewMode: (newMode: ViewMode) => void;
   filterSelfAuthored: boolean;
   onChangeFilterSelfAuthored: (newShow: boolean) => void;
   addNewRowEnable: boolean;
@@ -107,8 +97,6 @@ export type GridHeaderProps = {
  * providing a set of options
  */
 const GridHeader: React.FC<GridHeaderProps> = ({
-  viewMode,
-  setViewMode,
   filterSelfAuthored,
   onChangeFilterSelfAuthored,
   className,
@@ -130,27 +118,6 @@ const GridHeader: React.FC<GridHeaderProps> = ({
         </>
       }
     />
-    <Styled.ViewModeButtonGroup>
-      {viewModeOrder.map((key) => {
-        const Icon = viewModes[key].icon;
-        return (
-          <Styled.ViewModeTooltip
-            placement="top"
-            tooltip={viewModes[key].label}
-            key={key}
-          >
-            <Styled.ViewModeButton
-              type="ghost"
-              size="compact"
-              onClick={(): void => setViewMode(key as ViewMode)}
-              data-active={viewMode === key ? "true" : undefined}
-            >
-              <Icon />
-            </Styled.ViewModeButton>
-          </Styled.ViewModeTooltip>
-        );
-      })}
-    </Styled.ViewModeButtonGroup>
   </Styled.GridHeader>
 );
 

@@ -265,4 +265,3 @@ export const CountFormatter: React.FC<FormatterProps<
   TransformedAutoResponse,
   {}
 >> = ({ row }) => <Styled.Count>{row.count.toLocaleString()}</Styled.Count>;
-

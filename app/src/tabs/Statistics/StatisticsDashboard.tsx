@@ -19,6 +19,7 @@ import { PersonalMessagesChart } from "./PersonalMessagesChart";
 import { TimeAreaChart } from "./TimeAreaChart";
 import { WordCloud, WordData } from "./WordCloud";
 import { CustomEmojiIcon } from "@app/components/CustomEmoji";
+import PageTitle from "@app/components/PageTitle";
 import { Timeline, TimelineItem } from "@app/components/Timeline";
 import { appVerticalPadding, appHorizontalPadding } from "@app/layout";
 import { usePool, usePoolEntities } from "@app/store/slices/pools";
@@ -44,7 +45,6 @@ import { animation } from "@architus/facade/theme/motion";
 import { gap } from "@architus/facade/theme/spacing";
 import { Option } from "@architus/lib/option";
 import { isDefined, formatNum } from "@architus/lib/utility";
-import PageTitle from "@app/components/PageTitle";
 
 const Styled = {
   PageOuter: styled.div`
