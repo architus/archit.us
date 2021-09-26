@@ -101,7 +101,7 @@ export type ManagerJumbotronProps = {
   onChangeEnabled: (next: boolean) => boolean;
   current: number;
   discordLimit: number;
-  architusLimit: number | "infinity";
+  architusLimit: number | "unlimited";
 };
 
 /**

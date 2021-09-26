@@ -1,6 +1,6 @@
 import { boolean } from "fp-ts";
 import { styled } from "linaria/react";
-import React, { useMemo, useState } from "react";
+import React, { MutableRefObject, useMemo, useState } from "react";
 import { FaDownload, FaCheckCircle, FaUpload, FaTrash } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 
@@ -25,6 +25,8 @@ import { up } from "@architus/facade/theme/media";
 import { gap } from "@architus/facade/theme/spacing";
 import { Option } from "@architus/lib/option";
 import { isDefined } from "@architus/lib/utility";
+import { Column } from "react-data-grid";
+import { padding } from "polished";
 
 const Styled = {
   Layout: styled.div`
@@ -35,6 +37,18 @@ const Styled = {
     font-size: 1.9rem;
     font-weight: 300;
     margin-bottom: ${gap.nano};
+  `,
+  ImageWrapper: styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    img {
+      max-width: 48px;
+      max-height: 48px;
+      width: auto;
+      height: auto;
+    }
   `,
   PageOuter: styled.div`
     position: relative;
@@ -102,6 +116,7 @@ const Styled = {
     display: flex;
     justify-content: right;
     height: 100%;
+    padding-right: ${gap('femto')};
     p {
       font-size: 1.5em;
       font-style: bold;
@@ -119,6 +134,29 @@ const Styled = {
   `,
 };
 
+function centerHeader(item) {
+  return (
+    <div style={{
+      textAlign: "center"
+    }}
+    >
+      {item.column.name}
+    </div>
+  );
+}
+
+function rightHeader(item: MutableRefObject<CustomEmoji>) {
+  return (
+    <div style={{
+      textAlign: "right",
+      paddingRight: gap('femto'),
+    }}
+    >
+      {item.column.name}
+    </div>
+  );
+}
+
 function creatBtn(
   x: boolean,
   author: boolean,
@@ -133,7 +171,7 @@ function creatBtn(
         type="solid"
         size="compact"
         disabled={!author && x}
-        color={hybridColor("bg", colorMode)}
+        color={hybridColor("bg+10", colorMode)}
       >
         <Styled.IconWrapper>
           <FaUpload
@@ -151,7 +189,7 @@ function creatBtn(
       type="solid"
       size="compact"
       disabled={!author && x}
-      color={hybridColor("bg", colorMode)}
+      color={hybridColor("bg+10", colorMode)}
     >
       <Styled.IconWrapper>
         <FaDownload
@@ -221,11 +259,12 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
   const mayManageEmojis = !!(guild.permissions & 1073741824);
   const colorMode = useColorMode();
 
-  const columns = [
+  const columns: Column<CustomEmoji>[] = [
     {
       key: "loaded ",
       name: "LOADED",
       width: 10,
+      headerRenderer: centerHeader,
       formatter: ({ row }: { row: CustomEmoji }) => (
         <> {loadedYN(row.discordId.isDefined())}</>
       ),
@@ -234,25 +273,17 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
       key: "url",
       name: "IMAGE",
       width: 100,
+      headerRenderer: centerHeader,
       formatter: ({ row }: { row: CustomEmoji }) => (
-        <img src={row.url} width="60px" />
-      ),
-    },
-    {
-      key: "numUses",
-      name: "USES",
-      width: 100,
-      formatter: ({ row }: { row: CustomEmoji }) => (
-        <>
-          <Styled.UsesWrapper>
-            <p>{row.numUses}</p>
-          </Styled.UsesWrapper>
-        </>
+        <Styled.ImageWrapper>
+          <img src={row.url} />
+        </Styled.ImageWrapper>
       ),
     },
     {
       key: "download",
       name: "DOWNLOAD",
+      sortable: true,
       formatter: ({ row }: { row: CustomEmoji }) => (
         <>
           <AutoLink href={row.url} target="_blank">
@@ -264,6 +295,7 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
     {
       key: "authorId",
       name: "AUTHOR",
+      sortable: true,
       formatter: ({ row }: { row: CustomEmoji }) => (
         <Styled.AuthorWrapper>
           <Styled.Avatar
@@ -276,40 +308,65 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
       ),
     },
     {
-      key: "btns",
-      name: "MANAGE",
-      width: 150,
+      key: "numUses",
+      name: "USES",
+      sortable: true,
+      width: 10,
+      headerRenderer: rightHeader,
       formatter: ({ row }: { row: CustomEmoji }) => (
         <>
-          <Styled.ButtonWrapper>
-            {creatBtn(
-              row.discordId.isDefined(),
-              isAuthor(currentUser, row),
-              useDispatch(),
-              row.id,
-              guild.id
-            )}
-
-            <Button
-              disabled={!isAuthor(currentUser, row)}
-              size="compact"
-              type="solid"
-              color={hybridColor("bg", colorMode)}
-            >
-              <Styled.IconWrapper>
-                <FaTrash color={color("danger")} />
-              </Styled.IconWrapper>
-            </Button>
-          </Styled.ButtonWrapper>
+          <Styled.UsesWrapper>
+            <p>{row.numUses}</p>
+          </Styled.UsesWrapper>
         </>
       ),
     },
   ];
+  if (mayManageEmojis) {
+    columns.push(
+      {
+        key: "btns",
+        name: "MANAGE",
+        width: 150,
+        formatter: ({ row }: { row: CustomEmoji }) => (
+          <>
+            <Styled.ButtonWrapper>
+              {creatBtn(
+                row.discordId.isDefined(),
+                isAuthor(currentUser, row),
+                useDispatch(),
+                row.id,
+                guild.id
+              )}
+
+              <Button
+                disabled={!isAuthor(currentUser, row)}
+                size="compact"
+                type="solid"
+                color={hybridColor("bg+10", colorMode)}
+              >
+                <Styled.IconWrapper>
+                  <FaTrash color={color("danger")} />
+                </Styled.IconWrapper>
+              </Button>
+            </Styled.ButtonWrapper>
+          </>
+        ),
+      })
+  }
 
   const { all: emojiList } = usePool({
     type: "customEmoji",
     guildId: guild.id,
   });
+
+  const [filterSelfAuthored, setFilterSelfAuthored] = useState(false);
+
+  const filteredList = useMemo(() => {
+    return emojiList.filter((value: CustomEmoji, index: number) => {
+      return !filterSelfAuthored || value.authorId.getOrElse(undefined) === currentUser.getOrElse(undefined)?.id;
+    });
+  }, [emojiList, filterSelfAuthored]);
 
   return (
     <>
@@ -320,23 +377,23 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
         </Styled.Header>
         <ManagerJumbotron
           enabled={true}
-          current={5}
-          discordLimit={6}
-          architusLimit={8}
+          current={emojiList.length}
+          discordLimit={50}
+          architusLimit={"unlimited"}
           docsLink="https://docs.archit.us/"
           onChangeEnabled={(): void => undefined}
         />
         <Styled.DataGridWrapper>
           <GridHeader
-            filterSelfAuthored={false}
-            onChangeFilterSelfAuthored={(newShow: boolean) => {}}
+            filterSelfAuthored={filterSelfAuthored}
+            onChangeFilterSelfAuthored={setFilterSelfAuthored}
             addNewRowEnable={false}
-            onAddNewRow={() => {}}
+            onAddNewRow={() => { }}
           />
           <DataGrid<CustomEmoji, "id", {}>
             rowHeight={52}
-            rows={emojiList || []}
-            columns={columns}
+            rows={filteredList || []}
+            columns={columns as readonly Column<CustomEmoji, {}>[]}
             rowKey="id"
           />
         </Styled.DataGridWrapper>
