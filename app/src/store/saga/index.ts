@@ -8,13 +8,20 @@ import {
   showToast,
   signOut,
   showNotification,
+  load,
+  LoadPayload,
 } from "@app/store/actions";
+import { restSuccess } from "@app/store/api/rest";
+import { cacheCustomEmoji, loadCustomEmoji } from "@app/store/routes";
 import gatewayFlow from "@app/store/saga/gateway";
 import interpret from "@app/store/saga/interpret";
 import pools from "@app/store/saga/pools";
 import sessionFlow from "@app/store/saga/session";
 import { LOCAL_STORAGE_KEY } from "@app/store/slices/session";
 import { setLocalStorage } from "@app/utility";
+import { CustomEmoji } from "@app/utility/types";
+import { isRight } from "fp-ts/lib/Either";
+import { Errors } from "io-ts";
 
 /**
  * Root saga
@@ -27,6 +34,7 @@ export default function* saga(): SagaIterator {
 
   yield takeEvery(signOut.type, handleSignOut);
   yield takeEvery(showNotification.type, autoHideNotification);
+  yield takeEvery(restSuccess.type, testSaga)
 }
 
 /**
@@ -52,5 +60,27 @@ function* handleSignOut(action: ReturnType<typeof signOut>): SagaIterator {
   setLocalStorage(LOCAL_STORAGE_KEY, "");
   if (!action.payload.silent) {
     yield put(showToast({ message: "Signed out" }));
+  }
+}
+
+function* testSaga(action: ReturnType<typeof restSuccess>): SagaIterator {
+  console.log("test");
+  if (loadCustomEmoji.match(action) || cacheCustomEmoji.match(action)) {
+    console.log(action.payload.response.emoji);
+    const decodeResult = CustomEmoji.decode(action.payload.response.emoji);
+    const entities = [];
+    if (isRight<Errors, CustomEmoji>(decodeResult)) {
+      entities.push(decodeResult.right as CustomEmoji);
+    } 
+    yield put(load({
+      type: 'customEmoji',
+      guildId: action.payload.routeData.guildId,
+      finished: true,
+      nonexistant: [],
+      entities: entities,
+      method: 'partial',
+      requestId: 200,
+    } as LoadPayload))
+    //yield put(load(action.payload.emoji));
   }
 }

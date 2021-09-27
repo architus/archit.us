@@ -117,8 +117,8 @@ export const guilds = makeRoute()({
  */
 export const loadCustomEmoji = makeRoute()({
   label: "custEmoji/load",
-  route: ({ guildID, emojiID }: { guildID: Snowflake; emojiID: HoarFrost }) =>
-    `/emojis/${guildID}/${emojiID}`,
+  route: ({ guildId, emojiId }: { guildId: Snowflake; emojiId: HoarFrost }) =>
+    `/emojis/${guildId}/${emojiId}`,
   method: HttpVerbs.POST,
   auth: true,
 });
@@ -128,8 +128,8 @@ export const loadCustomEmoji = makeRoute()({
  */
 export const cacheCustomEmoji = makeRoute()({
   label: "custEmoji/cache",
-  route: ({ guildID, emojiID }: { guildID: Snowflake; emojiID: HoarFrost }) =>
-    `/emojis/${guildID}/${emojiID}`,
+  route: ({ guildId, emojiId }: { guildId: Snowflake; emojiId: HoarFrost }) =>
+    `/emojis/${guildId}/${emojiId}`,
   method: HttpVerbs.PATCH,
   auth: true,
 });
@@ -139,8 +139,8 @@ export const cacheCustomEmoji = makeRoute()({
  */
 export const deleteCustomEmoji = makeRoute()({
   label: "custEmoji/delete",
-  route: ({ guildID, emojiID }: { guildID: Snowflake; emojiID: HoarFrost }) =>
-    `/emojis/${guildID}/${emojiID}`,
+  route: ({ guildId, emojiId }: { guildId: Snowflake; emojiId: HoarFrost }) =>
+    `/emojis/${guildId}/${emojiId}`,
   method: HttpVerbs.DELETE,
   auth: true,
 });

@@ -8,6 +8,7 @@ import Notifications from "@app/store/slices/notifications";
 import Pools from "@app/store/slices/pools";
 import Session from "@app/store/slices/session";
 import Statistics from "@app/store/slices/statistics";
+//import EmojiManager from "@app/store/slices/emojiManager"
 
 const rootReducer = combineReducers({
   session: Session,
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
   gateway: Gateway,
   pools: Pools,
   statistics: Statistics,
+//  emojiManager: EmojiManager,
 });
 
 export default rootReducer;

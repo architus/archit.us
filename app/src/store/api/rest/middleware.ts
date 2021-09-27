@@ -37,7 +37,10 @@ const RestMiddleware: Middleware<{}, Store, ReduxDispatch<AnyAction>> = ({
       .then((result) => {
         const end = performance.now();
         const duration = end - start;
+        console.log("hello1");
         const { data: response } = result;
+        console.log("hello2");
+        console.log(route);
         dispatch(
           restSuccess({
             ...action.payload,
@@ -45,8 +48,10 @@ const RestMiddleware: Middleware<{}, Store, ReduxDispatch<AnyAction>> = ({
             timing: { start, end, duration },
           })
         );
+        console.log("hello3");
       })
       .catch((e) => {
+        console.log(e);
         const end = performance.now();
         const duration = start - end;
         let error: ApiError;

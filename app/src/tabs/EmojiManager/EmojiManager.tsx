@@ -1,6 +1,6 @@
 import { boolean } from "fp-ts";
 import { styled } from "linaria/react";
-import React, { MutableRefObject, useMemo, useState } from "react";
+import React, { MutableRefObject, useEffect, useMemo, useState } from "react";
 import { FaDownload, FaCheckCircle, FaUpload, FaTrash } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 
@@ -23,10 +23,11 @@ import { useColorMode } from "@architus/facade/hooks";
 import { Color, color, hybridColor } from "@architus/facade/theme/color";
 import { up } from "@architus/facade/theme/media";
 import { gap } from "@architus/facade/theme/spacing";
-import { Option } from "@architus/lib/option";
+import { None, Option, Some } from "@architus/lib/option";
 import { isDefined } from "@architus/lib/utility";
-import { Column } from "react-data-grid";
+import { Column, SortDirection } from "react-data-grid";
 import { padding } from "polished";
+import { API_BASE } from "@app/api";
 
 const Styled = {
   Layout: styled.div`
@@ -124,14 +125,14 @@ const Styled = {
     }
   `,
   IconWrapper: styled.div`
-    display: flex;
-    height: 100%;
-    align-items: center;
-    justify-content: center;
-    color: ${color("success")};
-    font-size: 1.2em;
-    padding: 4px 0;
-  `,
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  color: ${color("success")};
+  font-size: 1.2em;
+  padding: 4px 0;
+`,
 };
 
 function centerHeader(item) {
@@ -161,8 +162,8 @@ function creatBtn(
   x: boolean,
   author: boolean,
   dispatch: Dispatch,
-  emojiID: HoarFrost,
-  guildID: Snowflake
+  emojiId: HoarFrost,
+  guildId: Snowflake
 ) {
   const colorMode = useColorMode();
   if (x == true) {
@@ -172,13 +173,16 @@ function creatBtn(
         size="compact"
         disabled={!author && x}
         color={hybridColor("bg+10", colorMode)}
+        onClick={() => {
+          console.log("dispatch cache")
+          dispatch(cacheCustomEmoji({ routeData: { guildId, emojiId } }))
+        }
+        }
       >
         <Styled.IconWrapper>
           <FaUpload
             color={color("info")}
-            onClick={() =>
-              dispatch(cacheCustomEmoji({ routeData: { guildID, emojiID } }))
-            }
+
           />
         </Styled.IconWrapper>
       </Button>
@@ -190,13 +194,16 @@ function creatBtn(
       size="compact"
       disabled={!author && x}
       color={hybridColor("bg+10", colorMode)}
+      onClick={() => {
+        console.log("dispatch load")
+        dispatch(loadCustomEmoji({ routeData: { guildId, emojiId } }))
+      }
+      }
     >
       <Styled.IconWrapper>
         <FaDownload
           color={color("success")}
-          onClick={() =>
-            dispatch(loadCustomEmoji({ routeData: { guildID, emojiID } }))
-          }
+
         />
       </Styled.IconWrapper>
     </Button>
@@ -261,9 +268,10 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
 
   const columns: Column<CustomEmoji>[] = [
     {
-      key: "loaded ",
+      key: "loaded",
       name: "LOADED",
       width: 10,
+      sortable: true,
       headerRenderer: centerHeader,
       formatter: ({ row }: { row: CustomEmoji }) => (
         <> {loadedYN(row.discordId.isDefined())}</>
@@ -322,6 +330,7 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
       ),
     },
   ];
+  const dispatch = useDispatch();
   if (mayManageEmojis) {
     columns.push(
       {
@@ -334,7 +343,7 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
               {creatBtn(
                 row.discordId.isDefined(),
                 isAuthor(currentUser, row),
-                useDispatch(),
+                dispatch,
                 row.id,
                 guild.id
               )}
@@ -368,6 +377,65 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
     });
   }, [emojiList, filterSelfAuthored]);
 
+  type ColumnKey = "loaded" | "download" | "authorId" | "numUses" | "priority";
+
+  interface Sort {
+    column: ColumnKey;
+    direction: SortDirection;
+  }
+  const [sort, setSort] = useState<Option<Sort>>(Some({ column: "priority", direction: "ASC" }));
+  const getSortedRows = useMemo(() => {
+    if (sort.isDefined()) {
+      let sortedRows: CustomEmoji[] = [...filteredList];
+      const { column } = sort.get;
+      switch (column) {
+        case "download":
+          sortedRows = sortedRows.sort((a, b) => a.name.localeCompare(b.name));
+          break;
+        case "loaded":
+          sortedRows = sortedRows.sort((a, b) => a.discordId.isDefined() ? -1 : 1);
+          break;
+        case "authorId":
+          sortedRows = sortedRows.sort((a, b) => {
+            const name = (e: CustomEmoji) => (e.authorId.map(id => authorsMap.get(id)?.name ?? '').getOrElse(''));
+            return name(a).localeCompare(name(b));
+          });
+          break;
+        case "numUses":
+          sortedRows = sortedRows.sort((a, b) => a.numUses - b.numUses);
+          break;
+        default:
+          sortedRows = sortedRows.sort((a, b) => a.priority - b.priority)
+          console.log("HELOLO")
+      }
+      console.log(sortedRows);
+      return sort.get.direction === "DESC" ? sortedRows.reverse() : sortedRows;
+    }
+    return commands;
+  }, [filteredList, sort]);
+
+
+  const onSort = (column: string, direction: SortDirection): void => {
+    console.log(column);
+    console.log(direction);
+    setSort(
+      direction !== "NONE"
+        ? Some({ column: column as ColumnKey, direction })
+        : None);
+  };
+
+  interface ConfData {
+    enabled: boolean;
+    architus_limit: number | "unlimited";
+    discord_limit: number;
+  };
+  const [managerConf, onManagerConf] = useState<ConfData>({enabled: false, architus_limit: "unlimited", discord_limit: 50})
+  useEffect(() => {
+    fetch(`${API_BASE}/emojis/${guild.id}/conf`, { credentials: "include" })
+        .then(response => response.json())
+        .then(data => onManagerConf(data));
+  }, [guild]);
+
   return (
     <>
       <Styled.PageOuter>
@@ -376,11 +444,11 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
           <h2>Emoji Manager</h2>
         </Styled.Header>
         <ManagerJumbotron
-          enabled={true}
+          enabled={managerConf.enabled}
           current={emojiList.length}
-          discordLimit={50}
-          architusLimit={"unlimited"}
-          docsLink="https://docs.archit.us/"
+          discordLimit={managerConf.discord_limit}
+          architusLimit={managerConf.architus_limit}
+          docsLink="https://docs.archit.us/features/emoji-manager/"
           onChangeEnabled={(): void => undefined}
         />
         <Styled.DataGridWrapper>
@@ -392,7 +460,10 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
           />
           <DataGrid<CustomEmoji, "id", {}>
             rowHeight={52}
-            rows={filteredList || []}
+            rows={getSortedRows || []}
+            sortColumn={sort.getOrElse(undefined)?.column}
+            sortDirection={sort.getOrElse(undefined)?.direction}
+            onSort={onSort}
             columns={columns as readonly Column<CustomEmoji, {}>[]}
             rowKey="id"
           />
