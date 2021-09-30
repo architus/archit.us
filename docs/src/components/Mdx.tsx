@@ -18,6 +18,7 @@ import Demo from "@docs/components/Demo";
 import ExternalSnippet from "@docs/components/ExternalSnippet";
 import { createHeading } from "@docs/components/Heading";
 import Iframe from "@docs/components/Iframe";
+import InlineSpoilerMockup from "@docs/components/InlineSpoilerMockup";
 import Overview from "@docs/components/Overview";
 import RestRoute from "@docs/components/RestRoute";
 import Table from "@docs/components/Table";
@@ -63,6 +64,7 @@ export const shortcodes = {
     </Alert>
   ),
   ExternalSnippet,
+  InlineSpoilerMockup,
 } as const;
 
 // React components that replace HTML components in the markdown
