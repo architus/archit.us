@@ -8,7 +8,7 @@ const Styled = {
   SpoilerMockup: styled.span`
     display: inline;
     background-color: ${color("bg-10")};
-    border-radius: 2;
+    border-radius: 4px;
     padding: 4px 8px;
   `,
   SpoilerIcon: styled(FaEyeSlash)`
