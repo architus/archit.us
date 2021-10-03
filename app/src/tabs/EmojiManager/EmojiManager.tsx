@@ -28,6 +28,9 @@ import { isDefined } from "@architus/lib/utility";
 import { Column, SortDirection } from "react-data-grid";
 import { padding } from "polished";
 import { API_BASE } from "@app/api";
+import EmojiChart from "./EmojiChart2";
+import Tooltip from "@architus/facade/components/Tooltip";
+import { CustomEmojiIcon } from "@app/components/CustomEmoji";
 
 const Styled = {
   Layout: styled.div`
@@ -161,6 +164,7 @@ function rightHeader(item: MutableRefObject<CustomEmoji>) {
 function creatBtn(
   x: boolean,
   author: boolean,
+  admin: boolean,
   dispatch: Dispatch,
   emojiId: HoarFrost,
   guildId: Snowflake
@@ -168,10 +172,11 @@ function creatBtn(
   const colorMode = useColorMode();
   if (x == true) {
     return (
+
       <Button
         type="solid"
         size="compact"
-        disabled={!author && x}
+        disabled={!author && x && !admin}
         color={hybridColor("bg+10", colorMode)}
         onClick={() => {
           console.log("dispatch cache")
@@ -179,34 +184,41 @@ function creatBtn(
         }
         }
       >
+              <Tooltip maxWidth="auto" tooltip={<p>Cache Emoji</p>}>
+
         <Styled.IconWrapper>
           <FaUpload
             color={color("info")}
 
           />
         </Styled.IconWrapper>
+        </Tooltip>
+
       </Button>
     );
   }
   return (
     <Button
-      type="solid"
-      size="compact"
-      disabled={!author && x}
-      color={hybridColor("bg+10", colorMode)}
-      onClick={() => {
-        console.log("dispatch load")
-        dispatch(loadCustomEmoji({ routeData: { guildId, emojiId } }))
-      }
-      }
-    >
-      <Styled.IconWrapper>
-        <FaDownload
-          color={color("success")}
+        type="solid"
+        size="compact"
+        disabled={!author && x && !admin}
+        color={hybridColor("bg+10", colorMode)}
+        onClick={() => {
+          console.log("dispatch load")
+          dispatch(loadCustomEmoji({ routeData: { guildId, emojiId } }))
+        }
+        }
+      >
+            <Tooltip maxWidth="auto" tooltip={<p>Load Emoji</p>}>
 
-        />
-      </Styled.IconWrapper>
-    </Button>
+        <Styled.IconWrapper>
+          <FaDownload
+            color={color("success")}
+          />
+        </Styled.IconWrapper>
+        </Tooltip>
+
+      </Button>
   );
 }
 
@@ -283,9 +295,17 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
       width: 100,
       headerRenderer: centerHeader,
       formatter: ({ row }: { row: CustomEmoji }) => (
-        <Styled.ImageWrapper>
+/*         <Styled.ImageWrapper>
           <img src={row.url} />
+        </Styled.ImageWrapper> */
+        <Styled.ImageWrapper>
+                      <CustomEmojiIcon
+                      emoji={row}
+                      author={authorsMap.get(row.authorId.getOrElse('0' as Snowflake))}
+                      key={row.id}
+                    />
         </Styled.ImageWrapper>
+
       ),
     },
     {
@@ -343,6 +363,7 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
               {creatBtn(
                 row.discordId.isDefined(),
                 isAuthor(currentUser, row),
+                guild.architus_admin,
                 dispatch,
                 row.id,
                 guild.id
@@ -406,9 +427,7 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
           break;
         default:
           sortedRows = sortedRows.sort((a, b) => a.priority - b.priority)
-          console.log("HELOLO")
       }
-      console.log(sortedRows);
       return sort.get.direction === "DESC" ? sortedRows.reverse() : sortedRows;
     }
     return commands;
@@ -416,8 +435,6 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
 
 
   const onSort = (column: string, direction: SortDirection): void => {
-    console.log(column);
-    console.log(direction);
     setSort(
       direction !== "NONE"
         ? Some({ column: column as ColumnKey, direction })
@@ -446,10 +463,17 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
         <ManagerJumbotron
           enabled={managerConf.enabled}
           current={emojiList.length}
+          loaded={emojiList.filter((e) => e.discordId.isDefined()).length}
           discordLimit={managerConf.discord_limit}
           architusLimit={managerConf.architus_limit}
           docsLink="https://docs.archit.us/features/emoji-manager/"
           onChangeEnabled={(): void => undefined}
+        />
+        <EmojiChart
+          current={emojiList.length}
+          loaded={emojiList.filter((e) => e.discordId.isDefined()).length}
+          limit={200}
+          discordLimit={managerConf.discord_limit}
         />
         <Styled.DataGridWrapper>
           <GridHeader

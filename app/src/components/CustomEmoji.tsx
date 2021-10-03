@@ -11,6 +11,7 @@ import {
   formatDateExtraShort,
   formatNum,
 } from "@architus/lib/utility";
+import { gap } from "@architus/facade/theme/spacing";
 
 const Styled = {
   TooltipName: styled.strong`
@@ -22,29 +23,35 @@ const Styled = {
   `,
   OuterContainer: styled.div`
     display: flex;
+    align-items: center;
+    justify-content: center;
+    img {
+      object-fit: cover;
+      width: 100%;
+      height: 90px;
+      margin-right: ${gap.pico}
+      max-width: 300px;
+    }
+  `,
+  InnerContainer: styled.div`
+    display: flex;
     flex-direction: column;
+    flex-shrink: 0;
   `,
   ImageContainer: styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
     height: 100%;
-  `,
 
-  Image: styled.img`
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-  `,
-  Mention: styled.div`
-    max-width: max-content;
-    color: ${OtherColors.Discord};
-    background-color: ${transparentize(0.85, OtherColors.Discord)};
-
-    &:hover {
-      color: white;
-      background-color: ${transparentize(0.25, OtherColors.Discord)};
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
     }
+  `,
+  PreviewContainer: styled.div`
+
   `,
 };
 
@@ -65,7 +72,7 @@ export const CustomEmojiIcon: React.FC<CustomEmojiProps> = ({
   className,
 }) => {
   let authorName = null;
-  if (isDefined(author) && author.id === emoji.authorId) {
+  if (isDefined(author) && author.id === emoji.authorId.getOrElse("0" as Snowflake)) {
     authorName = (
       <Styled.TooltipElevated>
         {author.name}#{author.discriminator}
@@ -85,17 +92,20 @@ export const CustomEmojiIcon: React.FC<CustomEmojiProps> = ({
       maxWidth={"auto"}
       tooltip={
         <Styled.OuterContainer>
-          <Styled.TooltipName>:{emoji.name}:</Styled.TooltipName>
-          {authorName}
-          <Styled.TooltipElevated>{date}</Styled.TooltipElevated>
-          <Styled.TooltipElevated>
-            uses: {formatNum(emoji.numUses)}
-          </Styled.TooltipElevated>
+          <img className={className} style={style} src={emoji.url} />
+          <Styled.InnerContainer>
+            <Styled.TooltipName>:{emoji.name}:</Styled.TooltipName>
+            {authorName}
+            <Styled.TooltipElevated>{date}</Styled.TooltipElevated>
+            <Styled.TooltipElevated>
+              uses: {formatNum(emoji.numUses)}
+            </Styled.TooltipElevated>
+          </Styled.InnerContainer>
         </Styled.OuterContainer>
       }
     >
       <Styled.ImageContainer>
-        <Styled.Image className={className} style={style} src={emoji.url} />
+        <img className={className} style={style} src={emoji.url} />
       </Styled.ImageContainer>
     </Tooltip>
   );

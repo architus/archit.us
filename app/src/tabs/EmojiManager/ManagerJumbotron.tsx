@@ -14,6 +14,7 @@ import { color } from "@architus/facade/theme/color";
 import { down, up } from "@architus/facade/theme/media";
 import { shadow } from "@architus/facade/theme/shadow";
 import { gap } from "@architus/facade/theme/spacing";
+import EmojiChart from "./EmojiChart";
 
 const Section = styled.div`
   background-color: ${color("bg-10")};
@@ -25,8 +26,8 @@ const Section = styled.div`
 
 const Styled = {
   Outer: styled.div`
-    border-radius: ${gap.pico};
-    margin: 0 0 ${gap.micro};
+    border-radius: ${gap.pico} ${gap.pico} 0 0;
+    //margin: 0 0 ${gap.micro};
     overflow: hidden;
     display: flex;
     flex-direction: row;
@@ -56,7 +57,7 @@ const Styled = {
   `,
   SectionGrid: styled.div`
     background-color: ${color("border")};
-    max-width: 700px;
+    max-width: 740px;
     width: 100%;
     display: grid;
     grid-auto-flow: row;
@@ -100,6 +101,7 @@ export type ManagerJumbotronProps = {
   enabled: boolean;
   onChangeEnabled: (next: boolean) => boolean;
   current: number;
+  loaded: number;
   discordLimit: number;
   architusLimit: number | "unlimited";
 };
@@ -112,6 +114,7 @@ export default function ManagerJumbotron({
   enabled,
   onChangeEnabled,
   current,
+  loaded,
   discordLimit,
   architusLimit,
 }: ManagerJumbotronProps): React.ReactElement {
@@ -124,12 +127,15 @@ export default function ManagerJumbotron({
             <Switch onChange={onChangeEnabled} checked={enabled} />
           </Styled.EnabledSection>
           <Styled.TopRowSectionOnMedium>
-            <Styled.SectionTitle>Current</Styled.SectionTitle>
+            <Styled.SectionTitle>Total</Styled.SectionTitle>
             <Styled.Count>{current}</Styled.Count>
+            {/* <EmojiChart /> */}
           </Styled.TopRowSectionOnMedium>
           <Styled.TopRowSectionOnMedium>
-            <Styled.SectionTitle>Discord Limit</Styled.SectionTitle>
-            <Styled.Count>{discordLimit}</Styled.Count>
+            <Styled.SectionTitle>Loaded</Styled.SectionTitle>
+            <div>
+            <Styled.Count>{loaded} / {discordLimit}</Styled.Count>
+            </div>
           </Styled.TopRowSectionOnMedium>
           <Styled.Section>
             <Styled.SectionTitle>Architus Limit</Styled.SectionTitle>
