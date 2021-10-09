@@ -6,6 +6,7 @@ export enum ZIndex {
   ModalOverlay = 800,
   Drawer = 899,
   Modal = 900,
+  Dialog = 905,
   Header = 1000,
   ModalDrawer = 1050,
   ModalDrawerButton = 1051,

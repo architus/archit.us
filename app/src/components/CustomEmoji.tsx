@@ -29,7 +29,7 @@ const Styled = {
       object-fit: cover;
       width: 100%;
       height: 90px;
-      margin-right: ${gap.pico}
+      margin-right: ${gap.nano};
       max-width: 300px;
     }
   `,

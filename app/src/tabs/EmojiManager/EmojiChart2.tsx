@@ -19,17 +19,17 @@ import { transition } from "@architus/facade/theme/motion";
 
 const Styled = {
   Outer: styled.div`
-    width: 100%;
+    //width: 100%;
     //height: 100px;
     //display: flex;
     justify-content: center;
     align-items: center;
     //margin-bottom: ${gap.nano};
     margin-top: -5px;
-    padding-right: 58px;
+    //padding-right: 58px;
     ${up("md")} {
       margin-left: calc(${gap.milli} - 5px);
-      margin-right: ${gap.milli};
+      margin-right: calc(${gap.milli} - 5px);
     }
 
     ${down("md")} {
@@ -78,19 +78,12 @@ const tooltipRenderer = (
   );
 };
 
-var tooltip: string;
-const CustomTooltip = ({ active, payload }) => {
-    if (!active || !tooltip)    return null
-    for (const bar of payload)
-        if (bar.dataKey === tooltip)
-            return <Styled.TooltipContainer>{ bar.name }<br/>{ bar.value }</Styled.TooltipContainer>
-    return null
-}
+
 
 export type EmojiChartProps = {
   current: number,
   loaded: number,
-  limit: number,
+  limit: number | 'unlimited',
   discordLimit: number,
 };
 
@@ -104,12 +97,22 @@ const COLORS = ['#5850ba', '#844ea3', '#ba5095', '#ffbfa7'];
 const EmojiChart: React.FC<EmojiChartProps> = React.memo(({
   current, loaded, limit, discordLimit
 }) => {
+  var tooltip: string;
+  const CustomTooltip = ({ active, payload }) => {
+      if (!active || !tooltip)    return null
+      for (const bar of payload)
+          if (bar.dataKey === tooltip)
+              return <Styled.TooltipContainer>{ bar.name }<br/>{ bar.value }<br/>{((loaded / discordLimit) * 100).toFixed(1)}% of discord capacity <br/>{capacity}% of architus capacity</Styled.TooltipContainer>
+      return null
+  }
+  const architusLimit = limit === 'unlimited' ? Math.round(current / 50) * 50 + 50 : limit;
+  const capacity = limit === 'unlimited' ? 0 : ((current / architusLimit) * 100).toFixed(1);
   const data = [
     {
       name: 'Page A',
       loaded: loaded,
       cached: current - loaded,
-      free: limit - current + 10
+      free: architusLimit - current
     },
 
   ];
@@ -127,12 +130,12 @@ const EmojiChart: React.FC<EmojiChartProps> = React.memo(({
           axisLine={false}
             type="number"
            
-            ticks={[discordLimit, limit]}
+            ticks={[discordLimit, architusLimit]}
             //tickFormatter={(tick) => tick === discordLimit ? "Discord Limit (50)" : "Architus Limit (200)"}
-            scale="sqrt"
+            scale="linear"
              />
           <ReferenceLine x={discordLimit} fill={color('bg+10')} />
-          <ReferenceLine x={limit} fill={color('bg+10')} />
+          <ReferenceLine x={architusLimit} fill={color('bg+10')} />
           <YAxis dataKey="name" type="category" hide />
           <Tooltip wrapperStyle={{zIndex: 100}} content={<CustomTooltip/>} isAnimationActive={false}/>
           <Bar dataKey="loaded" stackId={0} fill={COLORS[0]} radius={[0, 0, 0, 10]} name="Loaded" onMouseOver={ () => tooltip="loaded" }/>

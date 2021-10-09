@@ -31,6 +31,8 @@ import { API_BASE } from "@app/api";
 import EmojiChart from "./EmojiChart2";
 import Tooltip from "@architus/facade/components/Tooltip";
 import { CustomEmojiIcon } from "@app/components/CustomEmoji";
+import Dialog from "@architus/facade/components/Dialog";
+
 
 const Styled = {
   Layout: styled.div`
@@ -275,6 +277,8 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
     return authors;
   }, [authorEntries]);
 
+  const [show, setShow] = useState(false);
+
   const mayManageEmojis = !!(guild.permissions & 1073741824);
   const colorMode = useColorMode();
 
@@ -373,6 +377,7 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
                 disabled={!isAuthor(currentUser, row)}
                 size="compact"
                 type="solid"
+                onClick={() => setShow(true)}
                 color={hybridColor("bg+10", colorMode)}
               >
                 <Styled.IconWrapper>
@@ -455,6 +460,11 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
 
   return (
     <>
+      <Dialog
+          show={show}
+          onClose={() => setShow(false)}
+          header="Delete this emoji?"
+        />
       <Styled.PageOuter>
         <PageTitle title="Emoji Manager" />
         <Styled.Header>
@@ -465,14 +475,16 @@ const EmojiManager: React.FC<TabProps> = ({ guild }) => {
           current={emojiList.length}
           loaded={emojiList.filter((e) => e.discordId.isDefined()).length}
           discordLimit={managerConf.discord_limit}
-          architusLimit={managerConf.architus_limit}
+          architusLimit={250}
           docsLink="https://docs.archit.us/features/emoji-manager/"
           onChangeEnabled={(): void => undefined}
         />
         <EmojiChart
           current={emojiList.length}
           loaded={emojiList.filter((e) => e.discordId.isDefined()).length}
-          limit={200}
+          //limit={250}
+          //discordLimit={managerConf.discord_limit}
+          limit={250}
           discordLimit={managerConf.discord_limit}
         />
         <Styled.DataGridWrapper>

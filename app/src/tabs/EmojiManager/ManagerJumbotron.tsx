@@ -129,7 +129,6 @@ export default function ManagerJumbotron({
           <Styled.TopRowSectionOnMedium>
             <Styled.SectionTitle>Total</Styled.SectionTitle>
             <Styled.Count>{current}</Styled.Count>
-            {/* <EmojiChart /> */}
           </Styled.TopRowSectionOnMedium>
           <Styled.TopRowSectionOnMedium>
             <Styled.SectionTitle>Loaded</Styled.SectionTitle>

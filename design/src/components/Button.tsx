@@ -150,6 +150,9 @@ const typeClasses = {
 } as const;
 
 const sizeClasses = {
+  compacter: css`
+    --button-padding: ${gap.femto};
+  `,
   compact: css`
     --button-padding: ${gap.pico};
   `,
@@ -161,7 +164,7 @@ const sizeClasses = {
   `,
 } as const;
 
-export type ButtonSize = "compact" | "normal" | "large";
+export type ButtonSize = "compact" | "normal" | "large" | "compacter";
 export type ButtonType = "solid" | "outline" | "ghost";
 
 type BaseProps<As> = {
