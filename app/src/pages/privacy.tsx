@@ -97,12 +97,12 @@ const Styled = {
   `,
 };
 
-export type NotFoundPageProps = {
+export type PrivacyPageProps = {
   fromApp?: boolean;
 };
 
 
-const NotFoundPage: React.FC<NotFoundPageProps> = ({ fromApp = false }) => (
+const PrivacyPage: React.FC<PrivacyPageProps> = ({ fromApp = false }) => (
   <Layout seo={{ title: "Privacy Policy" }} noHeader={fromApp}>
     <Styled.Layout>
       <Styled.Content>
@@ -146,4 +146,4 @@ const NotFoundPage: React.FC<NotFoundPageProps> = ({ fromApp = false }) => (
   </Layout>
 );
 
-export default NotFoundPage;
+export default PrivacyPage;
