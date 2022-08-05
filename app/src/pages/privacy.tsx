@@ -125,7 +125,7 @@ const PrivacyPage: React.FC<PrivacyPageProps> = ({ fromApp = false }) => (
 
           You may opt out of aggregate message statistics by running <AutoLink href="https://docs.archit.us/commands/statistics/#optout">this command</AutoLink> in any server with architus. <br/><br/>
           
-          Please <AutoLink href="https://forms.gle/bLAsdkUxaq2btB6V7">this link</AutoLink> or contact us <AutoLink href="https://discord.gg/svrRrSe">in discord</AutoLink> to have your data removed from architus servers.
+          Please fill out <AutoLink href="https://forms.gle/bLAsdkUxaq2btB6V7">this form</AutoLink> or contact us <AutoLink href="https://discord.gg/svrRrSe">in discord</AutoLink> to have your data removed from architus servers.
         </Styled.Paragraph>
         <Styled.Subtitle>Cookies</Styled.Subtitle>
         <Styled.Paragraph>
