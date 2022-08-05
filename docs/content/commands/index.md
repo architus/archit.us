@@ -53,7 +53,6 @@ Architus commands are the primary way of interacting with the bot through the Di
 * [`spellcheck`](/commands/statistics/#spellcheck) - Checks the spelling of a user
 * [`joins`](/commands/statistics/#joins) - See member growth in a graph
 * [`optout`](/commands/statistics/#optout) - Stop your stats from being tracked
-* [`corona`](/commands/statistics/#corona) - See corona virus stats
 
 ## Settings
 

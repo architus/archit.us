@@ -8,7 +8,6 @@ Major release with lots of bugs, bugfixes, and improvements!
 
 ### Features
 
-* `corona` gives an up-to-date graph on coronairus information in the US
 * `xpoll` same as `poll` but users can only choose one option at a time
 * `price` allows you to check the price of a company's shares
 * `settings` allows you to change the prefix Architus uses on a server basis
