@@ -9,7 +9,6 @@ See various statistics about the server and the world.
 - [`joins`](./#joins) - See member growth over time
 - [`messagecount`](./#messagecount) - See top message senders and how many messages a member has sent
 - [`optout`](./#optout) - Opt out of statistics tracking
-- [`corona`](./#corona) - Graph of corona virus statistics
 
 ## Spellcheck
 ### Usage
@@ -58,13 +57,3 @@ member is specified, their specific message stats will also be sent.
 Run this command to remove your stats from anything that architus sends to the server. This
 command is a toggle so it can be run again to opt back in to stats tracking.
 
-## Corona
-### Usage
-```
-!corona
-```
-
-This will print out a graph of the current number of deaths and cases of the Corona virus.
-
-The graph uses [this](https://coronavirusapi.com/) dataset which will accurately reflect the current
-numbers reported by all 50 US states and the District of Columbia.

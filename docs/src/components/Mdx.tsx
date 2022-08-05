@@ -17,7 +17,9 @@ import Collapse from "@docs/components/Collapse";
 import Demo from "@docs/components/Demo";
 import ExternalSnippet from "@docs/components/ExternalSnippet";
 import { createHeading } from "@docs/components/Heading";
+import HorizontalRule from "@docs/components/HorizontalRule";
 import Iframe from "@docs/components/Iframe";
+import InlineSpoilerMockup from "@docs/components/InlineSpoilerMockup";
 import Overview from "@docs/components/Overview";
 import RestRoute from "@docs/components/RestRoute";
 import Table from "@docs/components/Table";
@@ -63,6 +65,7 @@ export const shortcodes = {
     </Alert>
   ),
   ExternalSnippet,
+  InlineSpoilerMockup,
 } as const;
 
 // React components that replace HTML components in the markdown
@@ -96,6 +99,7 @@ export const overrides = {
   h4: createHeading({ component: "h4" }),
   h5: createHeading({ component: "h5" }),
   h6: createHeading({ component: "h6", right: true }),
+  hr: HorizontalRule,
 } as const;
 
 /**

@@ -7,6 +7,13 @@ Logs are a major upcoming feature of Architus that expands on Discord's audit lo
 
 The service will also serve as a centralized mechanism for centralized logging for internal actions/diagnostics that will be hidden from end-users unless they're relevant to their currently selected guild.
 
+
+<Alert type="warning">
+
+**Note:** This information may be out-of-date.
+
+</Alert>
+
 ## Implementation Details
 
 ### Log Action Object

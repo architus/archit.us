@@ -44,6 +44,10 @@ export const siteMetadata = {
         href: "https://docs.archit.us/",
         text: "Documentation",
       },
+      {
+        href: "/privacy",
+        text: "Privacy policy",
+      },
       ...(process.env.SITE_ROOT !== "https://archit.us"
         ? [
             {
