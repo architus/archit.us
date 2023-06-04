@@ -75,9 +75,9 @@ const Styled = {
 
         ${Card} {
           background-color: ${lighten(
-            0.02,
-            dynamicColor("bg", ColorMode.Dark)
-          )};
+    0.02,
+    dynamicColor("bg", ColorMode.Dark)
+  )};
         }
       }
     }
@@ -147,14 +147,14 @@ const LeadStyled = {
 
     ${mode(ColorMode.Dark)} {
       background-image: ${pattern("cube")(
-        transparentize(0.95, staticColor("light"))
-      )};
+    transparentize(0.95, staticColor("light"))
+  )};
     }
 
     ${mode(ColorMode.Light)} {
       background-image: ${pattern("cube")(
-        transparentize(0.94, staticColor("dark"))
-      )};
+    transparentize(0.94, staticColor("dark"))
+  )};
     }
 
     ${down("md")} {
@@ -318,16 +318,16 @@ const FeaturesStyled = {
 
     ${mode(ColorMode.Dark)} {
       border-bottom-color: ${transparentize(
-        0.2,
-        dynamicColor("primary", ColorMode.Dark)
-      )};
+    0.2,
+    dynamicColor("primary", ColorMode.Dark)
+  )};
     }
 
     ${mode(ColorMode.Light)} {
       border-bottom-color: ${transparentize(
-        0.2,
-        dynamicColor("primary", ColorMode.Light)
-      )};
+    0.2,
+    dynamicColor("primary", ColorMode.Light)
+  )};
     }
   `,
   RaisedWindow: styled(Window)`
@@ -473,11 +473,11 @@ const TryCtaStyled = {
 
     & svg {
       margin-left: ${(props): string =>
-        props.side === "left" ? "0" : gap.nano};
+      props.side === "left" ? "0" : gap.nano};
       margin-right: ${(props): string =>
-        props.side === "left" ? gap.nano : "0"};
+      props.side === "left" ? gap.nano : "0"};
       transform: ${(props): string =>
-        props.side === "left" ? "rotate(180deg)" : "none"};
+      props.side === "left" ? "rotate(180deg)" : "none"};
 
       ${down("lg")} {
         transform: rotate(90deg);
@@ -579,14 +579,14 @@ const FeatureStyled = {
 
       ${mode(ColorMode.Light)} {
         background: ${pattern("dotGrid")(
-          transparentize(0.6, staticColor("dark"))
-        )};
+    transparentize(0.6, staticColor("dark"))
+  )};
       }
 
       ${mode(ColorMode.Dark)} {
         background: ${pattern("dotGrid")(
-          transparentize(0.65, staticColor("light"))
-        )};
+    transparentize(0.65, staticColor("light"))
+  )};
       }
     }
 
@@ -712,7 +712,8 @@ const MinorFeatures: React.FC<MinorFeatures> = () => (
     <Container>
       <MinorFeaturesStyled.Layout>
         <MinorFeature
-          header="Message history statistics/analytics"
+          header={<span>Message history statistics/analytics{" "}
+            <Badge variant="primary">Coming soon</Badge></span>}
           icon={StatisticsSvg}
           text={
             <p>
@@ -743,9 +744,7 @@ const MinorFeatures: React.FC<MinorFeatures> = () => (
           icon={MusicSvg}
           text={
             <p>
-              Play music from Spotify and Youtube directly in voice chat using{" "}
-              <code>!play</code>, or defer to other music playing bots if
-              available.
+              Play music from Youtube directly in voice chat using <code>/play</code>.
             </p>
           }
         />
@@ -756,7 +755,7 @@ const MinorFeatures: React.FC<MinorFeatures> = () => (
             <p>
               Control which users have permissions to configure architus
               settings on a per server basis, and let users automatically assign
-              themselves roles using <code>!role</code>.
+              themselves roles using reactions. Get started with <code>/role-setup</code>.
             </p>
           }
         />
@@ -854,14 +853,14 @@ const BottomCtaStyled = {
 
     ${mode(ColorMode.Dark)} {
       background-image: ${pattern("cube")(
-        transparentize(0.95, staticColor("light"))
-      )};
+    transparentize(0.95, staticColor("light"))
+  )};
     }
 
     ${mode(ColorMode.Light)} {
       background-image: ${pattern("cube")(
-        transparentize(0.94, staticColor("dark"))
-      )};
+    transparentize(0.94, staticColor("dark"))
+  )};
     }
 
     /* Add inner shadows to the top and bottom */
