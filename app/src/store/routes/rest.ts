@@ -79,8 +79,8 @@ export const sessionEnd = makeRoute()({
 
 export type GuildCountLoadResponse = t.TypeOf<typeof GuildCountLoadResponse>;
 export const GuildCountLoadResponse = t.interface({
-  guildCount: t.number,
-  userCount: t.number,
+  guild_count: t.number,
+  user_count: t.number,
 });
 
 /**

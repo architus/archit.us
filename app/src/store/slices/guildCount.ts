@@ -26,7 +26,10 @@ const slice = createSlice({
       if (guildCount.match(action)) {
         const decoded = guildCount.decode(action.payload);
         if (decoded.isDefined()) {
-          return decoded.get;
+          return {
+            guildCount: decoded.get.guild_count,
+            userCount: decoded.get.user_count,
+          };
         }
       }
       return state;
