@@ -35,7 +35,6 @@ export type TokenExchangeResponse = t.TypeOf<typeof TokenExchangeResponse>;
 export const TokenExchangeResponse = t.interface({
   user: User,
   access: Access,
-  gatewayNonce: t.number,
 });
 
 /**

@@ -13,13 +13,16 @@ import {
   Member,
   Channel,
   CustomEmoji,
+  PartialGuild,
+  PartialUser,
 } from "@app/utility/types";
 import { Option, None, Some } from "@architus/lib/option";
 
 export type AllPoolTypes = {
   guild: Guild;
-  user: User;
-  autoResponse: AutoResponse;
+  partial_guild: PartialGuild;
+  partial_user: PartialUser;
+  auto_response: AutoResponse;
   member: Member;
   channel: Channel;
   customEmoji: CustomEmoji;
@@ -28,16 +31,21 @@ export type AllPoolTypes = {
 // Runtime io-ts types
 export const AllPoolTypes = {
   guild: Guild,
-  user: User,
-  autoResponse: AutoResponse,
+  partial_guild: PartialGuild,
+  partial_user: PartialUser,
+  auto_response: AutoResponse,
   member: Member,
   channel: Channel,
   customEmoji: CustomEmoji,
 };
 
-export const guildAgnosticPools = ["user", "guild"] as const;
+export const guildAgnosticPools = [
+  "partial_user",
+  "partial_guild",
+  "guild",
+] as const;
 export const guildSpecificPools = [
-  "autoResponse",
+  "auto_response",
   "member",
   "channel",
   "customEmoji",
@@ -54,7 +62,7 @@ export type Pool<T extends PoolType> = {
   // We use a `Record` here instead of an `Array` to allow for fast existence checking
   // and we prefer it over a `Set` to allow for native JSON serialization as a Redux
   // best practice. It is functionally equivalent to a `Set<string>`, however
-  nonexistantSet: Record<string, null>;
+  nonexistentSet: Record<string, null>;
   // Same reasoning as above
   pressuredIdsSet: Record<string, null>;
   loadingSets: Record<number, string[]>;
@@ -77,7 +85,7 @@ export type Pools = {
 
 export type DistributePoolTypes<A = {}, S = A> =
   | (A & { type: keyof AgnosticPools })
-  | (S & { type: keyof SpecificPools; guildId: Snowflake });
+  | (S & { type: keyof SpecificPools; guild_id: Snowflake });
 export type MoveToLoadingPayload = {
   requestId: number;
 } & DistributePoolTypes<
@@ -85,7 +93,7 @@ export type MoveToLoadingPayload = {
   { ids: AllPoolTypes[keyof SpecificPools]["id"][] }
 >;
 export type LoadPayload = {
-  nonexistant: string[];
+  nonexistent: string[];
   finished: boolean;
   method: "partial" | "full";
   requestId: number;
@@ -139,7 +147,7 @@ const slice = createSlice({
         : getSpecificPool(
             state,
             type,
-            (action.payload as { guildId: Snowflake }).guildId
+            (action.payload as { guild_id: Snowflake }).guild_id
           );
 
       effectiveIds.forEach((i) => {
@@ -158,7 +166,7 @@ const slice = createSlice({
         : getSpecificPool(
             state,
             type,
-            (action.payload as { guildId: Snowflake }).guildId
+            (action.payload as { guild_id: Snowflake }).guild_id
           );
       pool.pressuredIdsSet = {};
       pool.loadingSets[requestId] = ids;
@@ -177,7 +185,7 @@ const slice = createSlice({
         : getSpecificPool(
             state,
             type,
-            (action.payload as { guildId: Snowflake }).guildId
+            (action.payload as { guild_id: Snowflake }).guild_id
           );
       pool.allLoading = true;
       // Clear the pressured ids to prevent future loading of specific pool entities
@@ -189,7 +197,7 @@ const slice = createSlice({
       const {
         type,
         entities,
-        nonexistant,
+        nonexistent,
         finished,
         method,
         requestId,
@@ -200,7 +208,7 @@ const slice = createSlice({
         : getSpecificPool(
             state,
             type,
-            (action.payload as { guildId: Snowflake }).guildId
+            (action.payload as { guild_id: Snowflake }).guild_id
           );
 
       entities.forEach((entity: AllPoolTypes[PoolType]) => {
@@ -210,8 +218,8 @@ const slice = createSlice({
         }
       });
 
-      nonexistant.forEach((id) => {
-        pool.nonexistantSet[id] = null;
+      nonexistent.forEach((id) => {
+        pool.nonexistentSet[id] = null;
         if (isPartial && id in pool.loadingSetsReverse) {
           delete pool.loadingSetsReverse[id];
         }
@@ -257,7 +265,7 @@ export const applyFullPressure = createAction<ApplyFullPressurePayload>(
 function initializePool<T extends PoolType = PoolType>(): CombinedPools[T] {
   return {
     pool: {},
-    nonexistantSet: {},
+    nonexistentSet: {},
     pressuredIdsSet: {},
     loadingSets: {},
     loadingSetsReverse: {},
@@ -483,7 +491,7 @@ export function usePool<T extends PoolType>(
         applyFullPressure(
           isAgnostic(type)
             ? { type: type as keyof AgnosticPools }
-            : { type: type as keyof SpecificPools, guildId }
+            : { type: type as keyof SpecificPools, guild_id: guildId }
         )
       );
     }
@@ -510,7 +518,7 @@ export function usePool<T extends PoolType>(
 
 export interface PoolEntityProvider<T extends PoolType> {
   entity: Option<AllPoolTypes[T]>;
-  nonexistant: boolean;
+  nonexistent: boolean;
   isLoaded: boolean;
   loading: boolean;
 }
@@ -560,7 +568,7 @@ export function usePoolEntity<T extends PoolType>(
 
     let pressured: boolean;
     let loading: boolean;
-    let nonexistant: boolean;
+    let nonexistent: boolean;
     let isLoaded: boolean;
 
     let shouldPressure: boolean;
@@ -573,14 +581,14 @@ export function usePoolEntity<T extends PoolType>(
         loadingSetsReverse,
         pressuredIdsSet,
         pool: entityPool,
-        nonexistantSet,
+        nonexistentSet,
       } = pool;
 
       pressured = id in pressuredIdsSet;
       loading = allLoading || id in loadingSetsReverse;
-      nonexistant =
-        id in nonexistantSet || (fullyPopulated && !(id in entityPool));
-      isLoaded = id in entityPool || nonexistant;
+      nonexistent =
+        id in nonexistentSet || (fullyPopulated && !(id in entityPool));
+      isLoaded = id in entityPool || nonexistent;
 
       shouldPressure = !(isLoaded || pressured || loading);
       entity = entityPool[id];
@@ -588,7 +596,7 @@ export function usePoolEntity<T extends PoolType>(
       // If the pool doesn't exist, then it is completely empty and should be pressured
       pressured = false;
       loading = false;
-      nonexistant = false;
+      nonexistent = false;
       isLoaded = false;
 
       shouldPressure = true;
@@ -600,7 +608,7 @@ export function usePoolEntity<T extends PoolType>(
       // value from changing after pressuring when the `shouldPressure` inner value becomes
       // false (effectively only causes updates on the rising edge of `shouldPressure`)
       shouldBePressured: shouldPressure || hasPressuredRef.current,
-      nonexistant,
+      nonexistent,
       isLoaded,
       loading,
       entity,
@@ -609,7 +617,7 @@ export function usePoolEntity<T extends PoolType>(
   // Destructure in two steps to prevent shadowing in the inner scope
   const {
     shouldBePressured,
-    nonexistant,
+    nonexistent,
     loading,
     isLoaded,
     entity,
@@ -629,7 +637,7 @@ export function usePoolEntity<T extends PoolType>(
             : {
                 id: id as AllPoolTypes[keyof SpecificPools]["id"],
                 type: type as keyof SpecificPools,
-                guildId,
+                guild_id: guildId,
               }
         )
       );
@@ -641,7 +649,7 @@ export function usePoolEntity<T extends PoolType>(
 
   return {
     entity: entityOption,
-    nonexistant,
+    nonexistent,
     isLoaded,
     loading,
   };
@@ -705,7 +713,7 @@ export function usePoolEntities<T extends PoolType>(
         ) as Pool<T> | undefined);
 
     let loadingIds: Set<AllPoolTypes[T]["id"]>;
-    let nonexistantIds: Set<AllPoolTypes[T]["id"]>;
+    let nonexistentIds: Set<AllPoolTypes[T]["id"]>;
     let isLoadedIds: Set<AllPoolTypes[T]["id"]>;
 
     let entities: (AllPoolTypes[T] | Nil)[];
@@ -718,20 +726,20 @@ export function usePoolEntities<T extends PoolType>(
         loadingSetsReverse,
         pressuredIdsSet,
         pool: entityPool,
-        nonexistantSet,
+        nonexistentSet,
       } = pool;
 
       loadingIds = new Set(
         ids.filter((id) => allLoading || id in loadingSetsReverse)
       );
-      nonexistantIds = new Set(
+      nonexistentIds = new Set(
         ids.filter(
           (id) =>
-            id in nonexistantSet || (fullyPopulated && !(id in entityPool))
+            id in nonexistentSet || (fullyPopulated && !(id in entityPool))
         )
       );
       isLoadedIds = new Set(
-        ids.filter((id) => id in entityPool || id in nonexistantIds)
+        ids.filter((id) => id in entityPool || id in nonexistentIds)
       );
 
       entities = ids.map((id) => entityPool[id]);
@@ -742,7 +750,7 @@ export function usePoolEntities<T extends PoolType>(
     } else {
       // If the pool doesn't exist, then it is completely empty and should be pressured
       loadingIds = new Set();
-      nonexistantIds = new Set();
+      nonexistentIds = new Set();
       isLoadedIds = new Set();
 
       entities = Array(ids.length).fill(null);
@@ -758,7 +766,7 @@ export function usePoolEntities<T extends PoolType>(
       // false (effectively only causes updates on the rising edge of `shouldPressure`)
       shouldBePressured: toPressure.length > 0 || hasPressuredRef.current,
       loadingIds,
-      nonexistantIds,
+      nonexistentIds,
       isLoadedIds,
       entities,
     };
@@ -767,7 +775,7 @@ export function usePoolEntities<T extends PoolType>(
   const {
     shouldBePressured,
     loadingIds,
-    nonexistantIds,
+    nonexistentIds,
     isLoadedIds,
     entities,
   } = selectorResults;
@@ -787,7 +795,7 @@ export function usePoolEntities<T extends PoolType>(
             : {
                 ids: toPressure as AllPoolTypes[keyof SpecificPools]["id"][],
                 type: type as keyof SpecificPools,
-                guildId,
+                guild_id: guildId,
               }
         )
       );
@@ -800,7 +808,7 @@ export function usePoolEntities<T extends PoolType>(
     const newProvider: AggregatePoolEntityProvider<T> = {
       id,
       loading: loadingIds.has(id),
-      nonexistant: nonexistantIds.has(id),
+      nonexistent: nonexistentIds.has(id),
       isLoaded: isLoadedIds.has(id),
       entity: Option.from(entities[index]),
     };

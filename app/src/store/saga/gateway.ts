@@ -1,12 +1,11 @@
 import { SagaIterator, EventChannel, eventChannel } from "@redux-saga/core";
 import { take, race, call, put, fork } from "@redux-saga/core/effects";
 import { PayloadAction } from "@reduxjs/toolkit";
-import { isRight, Either, either } from "fp-ts/lib/Either";
+import { isRight, Either, either, isLeft } from "fp-ts/lib/Either";
 import * as t from "io-ts";
 import { Errors } from "io-ts";
 import { failure } from "io-ts/lib/PathReporter";
 import { AnyAction } from "redux";
-import io from "socket.io-client";
 
 import { GATEWAY_API_BASE } from "@app/api";
 import { signOut, loadSession } from "@app/store/actions";
@@ -23,13 +22,20 @@ import {
   isGatewayEvent,
   GatewayErrorEvent,
   gatewayError,
+  GatewayUnknownEvent,
 } from "@app/store/api/gateway";
 import * as events from "@app/store/routes/events";
 import { select } from "@app/store/saga/utility";
 import { isDefined, warn } from "@app/utility";
+import {
+  ExponentialBackoff,
+  Websocket,
+  WebsocketBuilder,
+  WebsocketEvents,
+} from "websocket-ts";
 
 type LoadSessionAction = ReturnType<typeof loadSession>;
-type Socket = SocketIOClient.Socket;
+type Socket = Websocket;
 
 /**
  * Handles the main gateway connection, usage, and termination state throughout the entire
@@ -106,7 +112,7 @@ function* dispatchHandler(socket: Socket): SagaIterator {
         "A route marked as elevated was dispatched without elevation! Skipping."
       );
     } else {
-      socket.emit(event, data);
+      socket.send(JSON.stringify({ _event: event, ...(data as object) }));
       yield put(
         gatewaySend({ event, data, timestamp: performance.now(), elevated })
       );
@@ -121,20 +127,22 @@ function* dispatchHandler(socket: Socket): SagaIterator {
 function createGatewayEventChannel(socket: Socket): EventChannel<AnyAction> {
   return eventChannel((emitter) => {
     // Basic lifecycle events
-    socket.on("connect", () => {
+    socket.addEventListener(WebsocketEvents.open, () => {
       emitter(gatewayConnect());
     });
 
-    socket.on("disconnect", () => {
+    socket.addEventListener(WebsocketEvents.close, () => {
       emitter(gatewayDisconnect());
     });
 
-    socket.on("reconnect", () => {
+    socket.addEventListener(WebsocketEvents.retry, () => {
+      // TODO(johny) retry != reconnect
       emitter(gatewayReconnect());
     });
 
     // Handle gateway error events with their own action
-    socket.on("error", (data: unknown) => {
+    // TODO(johny) this event handler will never produce a valid gateway error
+    socket.addEventListener(WebsocketEvents.error, (_, data) => {
       const decodeResult = either.chain(
         t.object.decode(data),
         GatewayErrorEvent.decode
@@ -163,8 +171,55 @@ function createGatewayEventChannel(socket: Socket): EventChannel<AnyAction> {
       }
     });
 
+    const gatewayEvents = Object.values(events).filter((eventExport) =>
+      isGatewayEvent(eventExport)
+    );
+    const eventDecodes = new Map(
+      gatewayEvents.map((eventExport) => {
+        const { _event, decode } = eventExport;
+        return [_event, decode];
+      })
+    );
+    console.log(eventDecodes);
+
+    socket.addEventListener(
+      WebsocketEvents.message,
+      (_, e) => {
+        const data = JSON.parse(e.data);
+        console.log("Websocket message", data);
+        const decodeResult = GatewayUnknownEvent.decode(data);
+        console.log(decodeResult);
+        if (isRight(decodeResult)) {
+          const eventType = decodeResult.right._event;
+          const decode = eventDecodes.get(eventType);
+          if (decode) {
+            const decodeResult = decode(data) as Either<Errors, unknown>;
+            if (isRight(decodeResult)) {
+              console.log("success!");
+              emitter(
+                gatewayEvent({
+                  event: eventType,
+                  data: decodeResult.right,
+                  timestamp: performance.now(),
+                })
+              );
+            } else {
+              console.error("malformed", eventType, decodeResult.left);
+            }
+          } else {
+            console.error("unknown event");
+          }
+        } else {
+          console.error("this could be parsed");
+          console.error(decodeResult.left);
+        }
+      }
+      //events.
+      //const decodeResult = decode(e) as Either<Errors, unknown>;
+    );
+
     // Subscribe to each known event
-    Object.values(events).forEach((eventExport) => {
+    /*Object.values(events).forEach((eventExport) => {
       // Filter only gateway events (and not, for example, io-ts types)
       if (isGatewayEvent(eventExport)) {
         const { event, decode } = eventExport;
@@ -195,7 +250,7 @@ function createGatewayEventChannel(socket: Socket): EventChannel<AnyAction> {
           }
         });
       }
-    });
+    });*/
 
     return (): void => {
       socket.close();
@@ -212,32 +267,12 @@ function* initializeConnection(): SagaIterator<{
   socket: Socket;
   wasElevated: boolean;
 }> {
-  const initialState = yield* select((store) => store.session.state);
-  if (initialState === "connected") {
-    // Wait for (successful) token exchange to finish and then use nonce to
-    // initialize gateway connection
-    const { success } = yield race({
-      success: take(loadSession.type),
-      failure: take(signOut.type),
-    });
-
-    if (isDefined(success)) {
-      const { payload } = success as LoadSessionAction;
-      if (payload.mode === "tokenExchange") {
-        const { gatewayNonce } = payload;
-        return {
-          socket: io(`${GATEWAY_API_BASE}/?nonce=${gatewayNonce}`),
-          wasElevated: true,
-        };
-      }
-    }
-  }
-
-  const currentState = yield* select((store) => store.session.state);
   return {
-    socket: io(GATEWAY_API_BASE),
+    socket: new WebsocketBuilder(`${GATEWAY_API_BASE}/authenticated`)
+      .withBackoff(new ExponentialBackoff(100, 7))
+      .build(),
     // If initialized from anything but `none`, then there should be a valid
     // token/session
-    wasElevated: currentState !== "none",
+    wasElevated: true,
   };
 }

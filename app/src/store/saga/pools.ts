@@ -113,14 +113,14 @@ function* connectionCheck(): SagaIterator<boolean> {
  * Constructs the effective payload shape according to the `DistributePoolTypes`
  * helper conditional type
  * @param key - The pool type used for this request
- * @param guildId - The optional guildId (if specific), or `null`/`undefined`
+ * @param guild_id - The optional guild_id (if specific), or `null`/`undefined`
  */
 function constructPayload(
   key: PoolType,
-  guildId: Snowflake | Nil
+  guild_id: Snowflake | Nil
 ): DistributePoolTypes {
-  return isDefined(guildId)
-    ? { type: key as keyof SpecificPools, guildId }
+  return isDefined(guild_id)
+    ? { type: key as keyof SpecificPools, guild_id }
     : { type: key as keyof AgnosticPools };
 }
 
@@ -216,11 +216,11 @@ function* createPoolHandler(key: PoolType): SagaIterator {
       type ActionIntersection = ReturnType<typeof applyPressure> &
         ReturnType<typeof applyFullPressure>;
       const { payload } = (partial || full) as ActionIntersection;
-      const { guildId } = payload as { guildId: Snowflake | undefined };
+      const { guild_id } = payload as { guild_id: Snowflake | undefined };
 
-      if (isDefined(guildId)) {
-        const task = partialPressureTimeouts.specific.get(guildId);
-        partialPressureTimeouts.specific.delete(guildId);
+      if (isDefined(guild_id)) {
+        const task = partialPressureTimeouts.specific.get(guild_id);
+        partialPressureTimeouts.specific.delete(guild_id);
         yield call(cancelIfRunning, Option.from(task));
       } else {
         yield call(cancelIfRunning, partialPressureTimeouts.agnostic);
@@ -232,16 +232,16 @@ function* createPoolHandler(key: PoolType): SagaIterator {
     // timeout
     if (isDefined(partial)) {
       const { payload } = partial as ReturnType<typeof applyPressure>;
-      const { guildId } = payload as { guildId: Snowflake | undefined };
+      const { guild_id } = payload as { guild_id: Snowflake | undefined };
 
       const task = yield fork(
         beginPressureReleaseTimeout,
         key,
-        guildId,
+        guild_id,
         partialExecutingRequests
       );
-      if (isDefined(guildId)) {
-        partialPressureTimeouts.specific.set(guildId, task);
+      if (isDefined(guild_id)) {
+        partialPressureTimeouts.specific.set(guild_id, task);
       } else {
         partialPressureTimeouts.agnostic = Some(task);
       }
@@ -251,8 +251,8 @@ function* createPoolHandler(key: PoolType): SagaIterator {
     // (don't use a timeout)
     if (isDefined(full)) {
       const { payload } = full as ReturnType<typeof applyFullPressure>;
-      const { guildId } = payload as { guildId: Snowflake | undefined };
-      yield fork(handleFullPoolRequest, key, guildId, fullExecutingRequests);
+      const { guild_id } = payload as { guild_id: Snowflake | undefined };
+      yield fork(handleFullPoolRequest, key, guild_id, fullExecutingRequests);
     }
   }
 }
@@ -261,26 +261,26 @@ function* createPoolHandler(key: PoolType): SagaIterator {
  * Begins the pressure release timeout, spawning a new detached task to
  * perform the actual partial pool request at the end.
  * @param key - The pool type used for this request
- * @param guildId - The optional guildId (if specific), or `null`/`undefined`
+ * @param guild_id - The optional guild_id (if specific), or `null`/`undefined`
  */
 function* beginPressureReleaseTimeout(
   key: PoolType,
-  guildId: Snowflake | Nil,
+  guild_id: Snowflake | Nil,
   executionCache: PoolCache<Set<string>>
 ): SagaIterator {
   yield delay(PRESSURE_TIMEOUT);
   // Spawn detached saga so the task can't be cancelled anymore
-  yield spawn(handlePartialPoolRequest, key, guildId, executionCache);
+  yield spawn(handlePartialPoolRequest, key, guild_id, executionCache);
 }
 
 /**
  * Begins the partial pool request flow, occurring after the batching timeout
  * @param key - The pool type used for this request
- * @param guildId - The optional guildId (if specific), or `null`/`undefined`
+ * @param guild_id - The optional guild_id (if specific), or `null`/`undefined`
  */
 function* handlePartialPoolRequest(
   key: PoolType,
-  guildId: Snowflake | Nil,
+  guild_id: Snowflake | Nil,
   executionCache: PoolCache<Set<string>>
 ): SagaIterator {
   // Make sure we are connected/elevated before proceeding
@@ -288,14 +288,14 @@ function* handlePartialPoolRequest(
 
   // Extract the list of loading Ids for the current request
   const ids = yield* select((store) => {
-    const pool = tryGetPool(store.pools, key, guildId);
+    const pool = tryGetPool(store.pools, key, guild_id);
     return pool.map((p) => p.pressuredIdsSet ?? {}).getOrElse({});
   });
 
   // Calculate the ids in this request that aren't currently executing
   const idSet = new Set(Object.keys(ids));
-  const executingIdSet = isDefined(guildId)
-    ? executionCache.specific.get(guildId)
+  const executingIdSet = isDefined(guild_id)
+    ? executionCache.specific.get(guild_id)
     : executionCache.agnostic.getOrElse(undefined);
   const derivedIdSet = isDefined(executingIdSet)
     ? difference(idSet, executingIdSet)
@@ -308,8 +308,8 @@ function* handlePartialPoolRequest(
       derivedIds.forEach((id) => executingIdSet.add(id));
     } else {
       const executingIds = new Set(derivedIds);
-      if (isDefined(guildId)) {
-        executionCache.specific.set(guildId, executingIds);
+      if (isDefined(guild_id)) {
+        executionCache.specific.set(guild_id, executingIds);
       } else {
         // eslint-disable-next-line no-param-reassign
         executionCache.agnostic = Some(executingIds);
@@ -320,7 +320,7 @@ function* handlePartialPoolRequest(
     // Mark the ids as loading
     yield put(
       moveToLoading({
-        ...constructPayload(key, guildId),
+        ...constructPayload(key, guild_id),
         ids: derivedIds,
         requestId,
       } as MoveToLoadingPayload)
@@ -329,18 +329,18 @@ function* handlePartialPoolRequest(
     // Dispatch the actual gateway request route
     yield put(
       poolRequest({
-        ...constructPayload(key, guildId),
-        _id: requestId,
+        ...constructPayload(key, guild_id),
+        _seq: requestId,
         ids: derivedIds,
       } as PoolRequest)
     );
 
     // Delegate the loading loop to the common loading code
-    yield call(loadLoop, key, guildId, requestId, "partial");
+    yield call(loadLoop, key, guild_id, requestId, "partial");
 
     // Once finished, remove the ids from the execution cache
-    const finalExecutingIdsSet = isDefined(guildId)
-      ? executionCache.specific.get(guildId)
+    const finalExecutingIdsSet = isDefined(guild_id)
+      ? executionCache.specific.get(guild_id)
       : executionCache.agnostic.getOrElse(undefined);
     derivedIds.forEach((id) => {
       finalExecutingIdsSet?.delete(id);
@@ -352,30 +352,30 @@ function* handlePartialPoolRequest(
  * Begins the full pool request flow, occurring immediately after the full
  * pool pressure application
  * @param key - The pool type used for this request
- * @param guildId - The optional guildId (if specific), or `null`/`undefined`
+ * @param guild_id - The optional guild_id (if specific), or `null`/`undefined`
  */
 function* handleFullPoolRequest(
   key: PoolType,
-  guildId: Snowflake | Nil,
+  guild_id: Snowflake | Nil,
   executionCache: PoolCache<boolean>
 ): SagaIterator {
   // Make sure we are connected/elevated before proceeding
   if (!(yield call(connectionCheck))) return;
 
   // Use the execution cache to make sure the given pool isn't already being loaded
-  const isExecuting = !!(isDefined(guildId)
-    ? executionCache.specific.get(guildId)
+  const isExecuting = !!(isDefined(guild_id)
+    ? executionCache.specific.get(guild_id)
     : executionCache.agnostic.getOrElse(false));
   // Also ensure that the full pool isn't already loaded
   const isLoaded = yield* select((store) => {
-    const pool = tryGetPool(store.pools, key, guildId);
+    const pool = tryGetPool(store.pools, key, guild_id);
     return pool.map((p) => p.fullyPopulated).getOrElse(false);
   });
   if (isExecuting || isLoaded) return;
 
   // Flag that the current request has started execution in the cache
-  if (isDefined(guildId)) {
-    executionCache.specific.set(guildId, true);
+  if (isDefined(guild_id)) {
+    executionCache.specific.set(guild_id, true);
   } else {
     // eslint-disable-next-line no-param-reassign
     executionCache.agnostic = Some(true);
@@ -383,21 +383,21 @@ function* handleFullPoolRequest(
 
   const requestId = yield call(generateRequestId);
   // Mark the full pool as
-  yield put(startLoadingAll(constructPayload(key, guildId)));
+  yield put(startLoadingAll(constructPayload(key, guild_id)));
   // Dispatch the actual gateway request route
   yield put(
     poolAllRequest({
-      ...constructPayload(key, guildId),
-      _id: requestId,
+      ...constructPayload(key, guild_id),
+      _seq: requestId,
     })
   );
 
   // Delegate the loading loop to the common loading code
-  yield call(loadLoop, key, guildId, requestId, "full");
+  yield call(loadLoop, key, guild_id, requestId, "full");
 
   // Once finished, remove the pool from the execution cache
-  if (isDefined(guildId)) {
-    executionCache.specific.delete(guildId);
+  if (isDefined(guild_id)) {
+    executionCache.specific.delete(guild_id);
   } else {
     // eslint-disable-next-line no-param-reassign
     executionCache.agnostic = None;
@@ -409,14 +409,14 @@ function* handleFullPoolRequest(
  * `take(action => poolResponse.match(action))` until a poolResponse event arrives
  * that is marked as `finished`
  * @param key - The pool type used for this request
- * @param guildId - The optional guildId (if specific), or `null`/`undefined`
+ * @param guild_id - The optional guild_id (if specific), or `null`/`undefined`
  * @param requestId - The original request Id of the pool request gateway route
  * @param method - The method of pool load (`"partial"` or `"full"`); passed to
  * the `load` action factory's payload
  */
 function* loadLoop(
   key: PoolType,
-  guildId: Snowflake | Nil,
+  guild_id: Snowflake | Nil,
   requestId: number,
   method: "partial" | "full"
 ): SagaIterator {
@@ -425,7 +425,7 @@ function* loadLoop(
       responseEvent: take(
         (action: Action<unknown>) =>
           // eslint-disable-next-line no-underscore-dangle
-          poolResponse.match(action) && action.payload.data._id === requestId
+          poolResponse.match(action) && action.payload.data.seq === requestId
       ),
       signOutAction: take(signOut.type),
     });
@@ -434,9 +434,9 @@ function* loadLoop(
       // Mark the load as finished
       yield put(
         load({
-          ...constructPayload(key, guildId),
+          ...constructPayload(key, guild_id),
           finished: true,
-          nonexistant: [],
+          nonexistent: [],
           entities: [],
           method,
           requestId,
@@ -446,7 +446,7 @@ function* loadLoop(
     }
 
     if (isDefined(responseEvent) && poolResponse.match(responseEvent)) {
-      const { nonexistant, data, finished } = responseEvent.payload.data;
+      const { nonexistent, data, finished } = responseEvent.payload.data;
 
       // Filter the data by successful decodes
       const runtimeType = AllPoolTypes[key];
@@ -456,6 +456,7 @@ function* loadLoop(
         if (isRight<Errors, AllPoolTypes[PoolType]>(decodeResult)) {
           entities.push(decodeResult.right as AllPoolTypes[PoolType]);
         } else {
+          console.error("hello", decodeResult);
           yield put(
             gatewayMalformed({
               event: responseEvent.payload.event,
@@ -472,8 +473,8 @@ function* loadLoop(
 
       yield put(
         load({
-          ...constructPayload(key, guildId),
-          nonexistant,
+          ...constructPayload(key, guild_id),
+          nonexistent,
           finished,
           entities,
           method,

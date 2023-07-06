@@ -5,14 +5,14 @@ import { withPathPrefix } from "@architus/lib/path";
  */
 export const API_BASE: string = process.env.GATSBY_PRODUCTION
   ? "https://api.archit.us"
-  : "https://api.develop.archit.us";
+  : "http://localhost:8132";
 
 /**
  * Gets the Gateway API base URL to use
  */
 export const GATEWAY_API_BASE: string = process.env.GATSBY_PRODUCTION
   ? "https://gateway.archit.us"
-  : "https://gateway.develop.archit.us";
+  : "ws://localhost:8133";
 
 /**
  * resolves a path with the optional base path

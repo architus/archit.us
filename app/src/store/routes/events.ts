@@ -8,6 +8,7 @@ import {
   BaseGatewayPacket,
   TSnowflake,
   THoarFrost,
+  BaseGatewayPacketRx,
 } from "@app/utility/types";
 
 export type MockBotEventAction = t.TypeOf<typeof MockBotEventAction>;
@@ -57,7 +58,7 @@ export const mockBotEvent = makeGatewayEvent({
 export type PoolResponse = t.TypeOf<typeof PoolResponse>;
 export const PoolResponse = t.intersection(
   [
-    BaseGatewayPacket,
+    BaseGatewayPacketRx,
     t.type({
       finished: t.boolean,
       // The type union to make this work is impossible without knowing the original "type",
@@ -66,7 +67,7 @@ export const PoolResponse = t.intersection(
       // so we loosely type the following two entries so that we can decode them later in the
       // pools saga
       data: t.array(t.object),
-      nonexistant: t.array(t.union([TSnowflake, THoarFrost], "SomeId")),
+      nonexistent: t.array(t.union([TSnowflake, THoarFrost], "SomeId")),
     }),
   ],
   "PoolResponse"

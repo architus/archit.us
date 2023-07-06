@@ -80,7 +80,7 @@ const InviteScreen: React.FC<InviteScreenProps> = () => {
   // Load all guilds that the user has "Manage guilds" permission for
   // and Architus is not in them
   const { all: guilds, isLoaded: guildsLoaded } = usePool({
-    type: "guild",
+    type: "partial_guild",
     filter: isDiscordAdminWithoutArchitus,
   });
 
@@ -107,7 +107,7 @@ const InviteScreen: React.FC<InviteScreenProps> = () => {
             <GuildCard
               id={guild.id}
               name={guild.name}
-              members={guild.member_count.orNull()}
+              members={guild.member_count}
               icon={guild.icon.orUndefined()}
               key={guild.id}
               thumbnailSize="52px"

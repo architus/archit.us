@@ -101,7 +101,7 @@ export const SelectionFormatter: (
 }): React.ReactElement | null => {
   if (
     canDeleteAny ||
-    (row.authorId.isDefined() && selfAuthor.id === row.authorId.get)
+    (row.author_id.isDefined() && selfAuthor.id === row.author_id.get)
   ) {
     return (
       <SelectCellFormatter
@@ -129,8 +129,8 @@ export const RowRenderer: (
       rowIdx: props.rowIdx,
       canDelete:
         canDeleteAny ||
-        (props.row.authorId.isDefined() &&
-          selfAuthor.id === props.row.authorId.get),
+        (props.row.author_id.isDefined() &&
+          selfAuthor.id === props.row.author_id.get),
     })}
   >
     <GridRow {...props} />
@@ -252,7 +252,11 @@ export const AuthorFormatter: React.FC<FormatterProps<
   <Styled.AuthorWrapper>
     <Styled.Avatar avatarUrl={row.authorData.avatarUrl} circle size={28} />
     <Styled.Name>{row.authorData.username}</Styled.Name>
-    {isEmptyOrNil(row.authorData.discriminator) ? null : (
+    {isEmptyOrNil(
+      row.authorData.discriminator
+        ? row.authorData.discriminator.toString()
+        : null
+    ) ? null : (
       <Styled.Discriminator>{`#${row.authorData.discriminator}`}</Styled.Discriminator>
     )}
   </Styled.AuthorWrapper>

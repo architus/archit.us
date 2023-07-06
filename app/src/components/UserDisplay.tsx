@@ -99,11 +99,6 @@ const UserDisplay: React.FC<UserDisplayProps> = ({
               <Skeleton.Text placeholder="username" variant="light" />
             )}
           </Styled.Username>
-          <Styled.Discriminator>
-            {derivedDiscriminator ?? (
-              <Skeleton.Text placeholder="#0000" variant="light" />
-            )}
-          </Styled.Discriminator>
         </Styled.NameWrapper>
       )}
     </Styled.UserDisplay>

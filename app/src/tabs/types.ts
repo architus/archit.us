@@ -1,5 +1,5 @@
 import { PageProps } from "@app/components/Router";
-import { Guild } from "@app/utility/types";
+import { PartialGuild } from "@app/utility/types";
 
 export interface BaseAppProps extends PageProps {
   // Callback function is used to prevent the drawer from opening
@@ -12,7 +12,7 @@ export interface BaseAppProps extends PageProps {
  * Props injected to each tab component
  */
 export interface TabProps extends BaseAppProps {
-  guild: Guild;
+  guild: PartialGuild;
 }
 
 /**

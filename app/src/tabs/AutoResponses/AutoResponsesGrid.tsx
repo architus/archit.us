@@ -79,7 +79,7 @@ function filterAuthors(
 ): TransformedAutoResponse[] {
   const selfAuthorFilter = filterSelfAuthored
     ? (c: TransformedAutoResponse): boolean =>
-        c.authorId.map((id) => id === currentUser.id).getOrElse(false)
+        c.author_id.map((id) => id === currentUser.id).getOrElse(false)
     : (): boolean => true;
   const includeFilter = filter.isDefined()
     ? (c: TransformedAutoResponse): boolean =>
@@ -243,8 +243,8 @@ export class AutoResponsesGrid extends React.Component<
       const ids: Set<HoarFrost> = new Set();
       for (const command of commands) {
         if (
-          command.authorId.isDefined() &&
-          command.authorId.get === currentUser.id
+          command.author_id.isDefined() &&
+          command.author_id.get === currentUser.id
         ) {
           ids.add(command.id);
         }

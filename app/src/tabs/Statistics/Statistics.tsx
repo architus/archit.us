@@ -9,6 +9,21 @@ import { TabProps } from "@app/tabs/types";
 import { User } from "@app/utility/types";
 import { Option } from "@architus/lib/option";
 import { Statistics } from "src/store/slices/statistics";
+import { styled } from "linaria/react";
+import { color } from "@architus/facade/theme/color";
+import { appVerticalPadding, appHorizontalPadding } from "@app/layout";
+import Badge from "@architus/facade/components/Badge";
+
+const Styled = {
+  Layout: styled.div`
+    padding: ${appVerticalPadding} ${appHorizontalPadding};
+  `,
+  Title: styled.h2`
+    color: ${color("textStrong")};
+    font-size: 1.9rem;
+    font-weight: 300;
+  `,
+};
 
 /**
  * Bootstrap StatisticsDashboard.
@@ -44,12 +59,17 @@ const StatisticsProvider: React.FC<TabProps> = (tabProps) => {
 
   if (currentUser.isDefined())
     return (
-      <StatisticsDashboard
+      <Styled.Layout>
+        <Styled.Title>
+          Settings <Badge variant="primary">Coming (back) Soon</Badge>
+        </Styled.Title>
+      </Styled.Layout>
+      /*       <StatisticsDashboard
         currentUser={currentUser.get}
         isArchitusAdmin={false}
         stats={guildStats}
         {...tabProps}
-      />
+      /> */
     );
 
   return null;
