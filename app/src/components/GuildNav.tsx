@@ -7,7 +7,7 @@ import GuildIcon, {
   textButton,
   bgColorVar,
 } from "@app/components/GuildIcon";
-import { Snowflake, Guild } from "@app/utility/types";
+import { Snowflake, Guild, PartialGuild } from "@app/utility/types";
 import Skeleton from "@architus/facade/components/Skeleton";
 import Tooltip from "@architus/facade/components/Tooltip";
 import { color, mode, ColorMode } from "@architus/facade/theme/color";
@@ -148,7 +148,7 @@ const Styled = {
 
 export type GuildNavProps = {
   loaded: boolean;
-  guilds: Guild[];
+  guilds: PartialGuild[];
   currentGuild: Option<Snowflake>;
   backgroundColor: string;
   addActive?: boolean;
@@ -158,9 +158,9 @@ export type GuildNavProps = {
   style?: React.CSSProperties;
 };
 
-const architusAdminGuildsFilter = (guild: Guild): boolean =>
+const architusAdminGuildsFilter = (guild: PartialGuild): boolean =>
   guild.has_architus && guild.architus_admin;
-const otherGuildsFilter = (guild: Guild): boolean =>
+const otherGuildsFilter = (guild: PartialGuild): boolean =>
   guild.has_architus && !guild.architus_admin;
 
 /**
@@ -244,7 +244,7 @@ export default GuildNav;
 // ? =================
 
 type SectionProps = {
-  guilds: Guild[];
+  guilds: PartialGuild[];
   onClickGuild: (id: Snowflake) => void;
   activeGuildId: Snowflake | null;
   elevated?: boolean;

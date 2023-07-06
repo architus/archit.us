@@ -38,7 +38,7 @@ export type MockUserEvent =
   | ClientInterpretReact
   | ClientInterpretUnreact;
 export const mockUserEvent = makeGatewayRoute<MockUserEvent>()({
-  event: "mock_user_event",
+  event: "ping",
   elevated: false,
 });
 

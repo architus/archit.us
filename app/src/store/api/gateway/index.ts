@@ -38,13 +38,19 @@ export interface GatewayDispatch {
   data: unknown;
 }
 
+export type GatewayUnknownEvent = t.TypeOf<typeof GatewayErrorEvent>;
+export const GatewayUnknownEvent = t.type({
+  _event: t.string,
+});
+
 export type GatewayErrorEvent = t.TypeOf<typeof GatewayErrorEvent>;
 export const GatewayErrorEvent = t.interface({
+  _event: t.literal("error"),
   message: t.string,
   human: option(t.string),
   details: option(t.string),
   context: option(t.unknown),
-  _id: option(t.number),
+  seq: option(t.number),
   code: t.number,
 });
 
@@ -82,7 +88,7 @@ export interface GatewayEvent<
   TResponse = object
 > {
   type: "gatewayEvent";
-  event: TEvent;
+  _event: TEvent;
   match: (
     action: AnyAction
   ) => action is PayloadAction<GatewayEventAction<TDecoded>>;
@@ -110,7 +116,7 @@ export function makeGatewayEvent<
 ): GatewayEvent<TEvent, TDecoded, TResponse> {
   return {
     type: "gatewayEvent",
-    event: config.event,
+    _event: config.event,
     decode: config.decode,
     match: (
       action: AnyAction

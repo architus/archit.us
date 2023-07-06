@@ -262,8 +262,10 @@ export const THoarFrost = new t.Type<HoarFrost, string, unknown>(
  * The format comes from {@link https://discordapp.com/developers/docs/resources/user#user-object-premium-types | the Discord API docs}
  */
 export enum PremiumType {
+  None = 0,
   NitroClassic = 1,
   Nitro = 2,
+  NitroBasic = 3,
 }
 
 /**
@@ -283,12 +285,13 @@ const TUser = t.interface({
   discriminator: t.string,
   avatar: option(t.string),
   bot: option(t.boolean),
-  system: option(t.boolean),
+  //system: option(t.boolean),
   mfa_enabled: option(t.boolean),
   locale: option(t.string),
-  verified: option(t.boolean),
-  email: option(t.string),
+  //verified: option(t.boolean),
+  //email: option(t.string),
   flags: option(t.number),
+  accent_color: option(t.number),
   premium_type: option(TPremiumType),
 });
 
@@ -309,15 +312,26 @@ export interface User extends t.TypeOf<typeof TUser> {}
  */
 export const User = alias(TUser)<User>();
 
+const TPartialUser = t.interface({
+  id: TSnowflake,
+  username: t.string,
+  discriminator: t.number,
+  avatar: option(t.string),
+});
+
+export interface PartialUser extends t.TypeOf<typeof TPartialUser> {}
+
+export const PartialUser = alias(TPartialUser)<PartialUser>();
+
 const TAccess = t.type({
-  issuedAt: TimeFromString,
-  expiresIn: t.number,
-  refreshIn: t.number,
+  issued_at: TimeFromString,
+  expires_in: t.number,
+  refresh_in: t.number,
 });
 export interface Access extends t.TypeOf<typeof TAccess> {}
 export const Access = alias(TAccess)<Access>();
 export function expiresAt(access: Access): Date {
-  return new Date(access.issuedAt + access.expiresIn * 1000);
+  return new Date(access.issued_at + access.expires_in * 1000);
 }
 
 const TPersistentSession = t.type({
@@ -421,6 +435,18 @@ const TGuild = t.interface({
 });
 export interface Guild extends t.TypeOf<typeof TGuild> {}
 export const Guild = alias(TGuild)<Guild>();
+
+const TPartialGuild = t.interface({
+  id: TSnowflake,
+  name: t.string,
+  architus_admin: t.boolean,
+  has_architus: t.boolean,
+  icon: option(t.string),
+  permissions: option(t.number),
+  member_count: t.number,
+});
+export interface PartialGuild extends t.TypeOf<typeof TPartialGuild> {}
+export const PartialGuild = alias(TPartialGuild)<PartialGuild>();
 
 // Mock Discord types
 
@@ -552,7 +578,12 @@ export enum LogEvents {
 
 export type BaseGatewayPacket = t.TypeOf<typeof BaseGatewayPacket>;
 export const BaseGatewayPacket = t.type({
-  _id: t.number,
+  _seq: t.number,
+});
+
+export type BaseGatewayPacketRx = t.TypeOf<typeof BaseGatewayPacket>;
+export const BaseGatewayPacketRx = t.type({
+  seq: t.number,
 });
 
 export enum AutoResponseTriggerMode {
@@ -570,11 +601,11 @@ export const AutoResponse = t.type({
   id: THoarFrost,
   trigger: t.string,
   response: t.string,
-  authorId: option(TSnowflake),
-  guildId: TSnowflake,
-  triggerRegex: t.string,
-  triggerPunctuation: t.array(t.string),
-  responseTokens: t.array(t.tuple([t.string, t.string])),
+  author_id: option(TSnowflake),
+  guild_id: TSnowflake,
+  trigger_regex: t.string,
+  trigger_punctuation: t.array(t.string),
+  response_tokens: t.array(t.tuple([t.string, t.string])),
   count: t.number,
   mode: TAutoResponseTriggerMode,
 });
@@ -584,7 +615,10 @@ export const AutoResponse = t.type({
  * used to type methods that can accept both.
  */
 export type UserLike = {
-  [K in keyof User & keyof Member]: User[K] | Member[K];
+  [K in keyof User & keyof Member & keyof PartialUser]:
+    | User[K]
+    | Member[K]
+    | PartialUser[K];
 } &
   // One of username or name must be defined
   // Username: from User
@@ -604,7 +638,7 @@ export type NormalizedUserLike = {
 export function normalizeUserLike(userLike: UserLike): NormalizedUserLike {
   return {
     id: userLike.id,
-    discriminator: userLike.discriminator,
+    discriminator: userLike.discriminator.toString(),
     avatar: userLike.avatar,
     username: isDefined((userLike as { username: string | Nil }).username)
       ? (userLike as { username: string }).username

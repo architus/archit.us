@@ -35,6 +35,8 @@ import {
   HoarFrost,
   NormalizedUserLike,
   normalizeUserLike,
+  PartialUser,
+  PartialGuild,
 } from "@app/utility/types";
 import Card from "@architus/facade/components/Card";
 import Logo from "@architus/facade/components/Logo";
@@ -269,7 +271,7 @@ type StatisticsDashboardProps = {
   isArchitusAdmin: boolean;
   currentUser: User;
   stats: Option<GuildStatistics>;
-  guild: Guild;
+  guild: PartialGuild;
 } & TabProps;
 
 const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
@@ -295,12 +297,12 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
   }, [memberEntries]);
 
   const userEntries = usePoolEntities({
-    type: "user",
-    ids: memberEntries.filter((m) => m.nonexistant).map((m) => m.id),
+    type: "partial_user",
+    ids: memberEntries.filter((m) => m.nonexistent).map((m) => m.id),
   });
 
   const users = useMemo(() => {
-    const usersMap: Map<Snowflake, User> = new Map();
+    const usersMap: Map<Snowflake, PartialUser> = new Map();
     for (const userEntry of userEntries) {
       if (userEntry.isLoaded && userEntry.entity.isDefined()) {
         usersMap.set(userEntry.entity.get.id, userEntry.entity.get);
@@ -310,7 +312,7 @@ const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({
   }, [userEntries]);
 
   const membersClosure = (id: string): NormalizedUserLike | undefined => {
-    let member: Member | User | undefined = members.get(id as Snowflake);
+    let member: Member | PartialUser | undefined = members.get(id as Snowflake);
     member = member ?? users.get(id as Snowflake);
     return isDefined(member) ? normalizeUserLike(member) : undefined;
   };

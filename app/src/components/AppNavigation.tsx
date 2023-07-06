@@ -18,7 +18,12 @@ import { headerHeight, minimizeBreakpoint } from "@app/layout";
 import { usePool } from "@app/store/slices/pools";
 import { TabDefinition } from "@app/tabs/types";
 import { useCallbackOnce, usePrevious } from "@app/utility";
-import { Snowflake, Guild, isSnowflake } from "@app/utility/types";
+import {
+  Snowflake,
+  Guild,
+  isSnowflake,
+  PartialGuild,
+} from "@app/utility/types";
 import { color } from "@architus/facade/theme/color";
 import { down, up } from "@architus/facade/theme/media";
 import { hiddenScrollbar, blankButton } from "@architus/facade/theme/mixins";
@@ -223,7 +228,9 @@ const AppNavigation: React.FC<AppNavigationProps> = ({
   );
 
   // Navigation logic
-  const { isLoaded: guildsLoaded, all: guilds } = usePool({ type: "guild" });
+  const { isLoaded: guildsLoaded, all: guilds } = usePool({
+    type: "partial_guild",
+  });
   const pathPrefix = usePathPrefix().getOrElse("/");
   const tagNavigate = useCallback(
     (t: string) => {
@@ -335,7 +342,7 @@ export function navigateToTab(
   appPrefix: string,
   pathPrefix: string,
   guildsLoaded: boolean,
-  guilds: Guild[]
+  guilds: PartialGuild[]
 ): void {
   const fragments = getFragments(withPathPrefix(appPrefix, pathPrefix));
   if (fragments.length >= 1) {

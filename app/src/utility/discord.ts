@@ -1,6 +1,6 @@
 import { isDefined } from "./data";
 import { constructAvatarUrl } from "./network";
-import { Snowflake, MockUser, Guild } from "./types";
+import { Snowflake, MockUser, Guild, PartialGuild } from "./types";
 
 const architusId: Snowflake = "448546825532866560" as Snowflake;
 const architusAvatar = "99de1e495875fb5c27ba9ac7303b45b7";
@@ -29,11 +29,11 @@ const MANAGE_SERVERS = 32; // 0x20
  * user is a Discord admin (candidate for adding architus to)
  * @param guild - Guild to examine
  */
-export function isDiscordAdminWithoutArchitus(guild: Guild): boolean {
+export function isDiscordAdminWithoutArchitus(guild: PartialGuild): boolean {
   return (
     isDefined(guild.permissions) &&
     // eslint-disable-next-line no-bitwise
-    !!(guild.permissions & MANAGE_SERVERS) &&
+    !!(guild.permissions.getOrElse(0) & MANAGE_SERVERS) &&
     !guild.has_architus
   );
 }

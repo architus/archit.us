@@ -70,7 +70,7 @@ const AutoResponses: React.FC<TabProps> = (pageProps) => {
   const { guild } = pageProps;
   const currentUser: Option<User> = useCurrentUser();
   const { all: commands, isLoaded: hasLoaded } = usePool({
-    type: "autoResponse",
+    type: "auto_response",
     guildId: guild.id,
   });
 
@@ -78,14 +78,14 @@ const AutoResponses: React.FC<TabProps> = (pageProps) => {
   const allAuthorIds = useMemo(() => {
     const ids: Set<Snowflake> = new Set();
     for (const command of commands) {
-      if (command.authorId.isDefined()) {
-        ids.add(command.authorId.get);
+      if (command.author_id.isDefined()) {
+        ids.add(command.author_id.get);
       }
     }
     return Array.from(ids);
   }, [commands]);
   const authorEntries = usePoolEntities({
-    type: "user",
+    type: "partial_user",
     ids: allAuthorIds,
   });
   const authorsMap = useMemo(() => {
@@ -157,7 +157,7 @@ function foldAuthorData(
   autoResponse: AutoResponse,
   authors: Map<Snowflake, Author>
 ): AuthorData {
-  const id = autoResponse.authorId;
+  const id = autoResponse.author_id;
   const authorOption = id.flatMapNil((i) => authors.get(i));
   if (authorOption.isDefined()) {
     const { username, discriminator } = authorOption.get;
@@ -172,7 +172,7 @@ function foldAuthorData(
   return {
     author: "unknown",
     username: "unknown",
-    discriminator: "0000",
+    discriminator: 0,
     avatarUrl: "/img/unknown.png",
   };
 }

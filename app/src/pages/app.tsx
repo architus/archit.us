@@ -132,7 +132,7 @@ type TabRendererProps = {
 const TabRenderer: React.FC<TabRendererProps> = ({ tab, guildId, ...rest }) => {
   const id = (guildId ?? "0") as Snowflake;
   const { component: Component, placeholder } = tab;
-  const { entity: guildOption } = usePoolEntity({ type: "guild", id });
+  const { entity: guildOption } = usePoolEntity({ type: "partial_guild", id });
   const appProps = useAppProps();
   return guildOption.match({
     Some: (guild) => <Component guild={guild} {...appProps} {...rest} />,
