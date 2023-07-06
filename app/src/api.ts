@@ -11,7 +11,7 @@ export const API_BASE: string = process.env.GATSBY_PRODUCTION
  * Gets the Gateway API base URL to use
  */
 export const GATEWAY_API_BASE: string = process.env.GATSBY_PRODUCTION
-  ? "https://gateway.archit.us"
+  ? "wss://gateway.archit.us"
   : "ws://localhost:8133";
 
 /**
