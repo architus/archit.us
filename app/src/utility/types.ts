@@ -604,7 +604,7 @@ export const AutoResponse = t.type({
   author_id: option(TSnowflake),
   guild_id: TSnowflake,
   trigger_regex: t.string,
-  trigger_punctuation: t.array(t.string),
+  trigger_punctuation: t.string,
   response_tokens: t.array(t.tuple([t.string, t.string])),
   count: t.number,
   mode: TAutoResponseTriggerMode,
